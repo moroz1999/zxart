@@ -8,7 +8,43 @@
   "common": {
     "not-found": "Page not found",
     "remove": "Remove",
-    "choose-file": "Choose file"
+    "choose-file": "Choose file",
+    "nothing-found": "Nothing found"
+  },
+  "form": {
+    "selected-count": "Selected: {{count}}",
+    "filter": "Filter…",
+    "search": "Search…",
+    "move-left": "Move left",
+    "move-right": "Move right",
+    "drop-image": "Drop an image here",
+    "drop-file": "Drop a file here",
+    "drop-hint": "or choose from disk",
+    "add-author": "Add member by nick…",
+    "add-role": "+ Role",
+    "date-from": "from",
+    "date-to": "to",
+    "cancel": "Cancel",
+    "identification": "Identification",
+    "classification": "Classification",
+    "relations": "Relations",
+    "authors": "Authors",
+    "members": "Members",
+    "media": "Media & files",
+    "files": "Files",
+    "images": "Images",
+    "image": "Image",
+    "description": "Description",
+    "restrictions": "Restrictions",
+    "characteristics": "Characteristics",
+    "technical": "Technical parameters",
+    "geography": "Geography",
+    "period": "Period",
+    "links": "Links",
+    "display": "Display",
+    "origin": "Origin",
+    "conversion": "Works conversion",
+    "subgroups": "Subgroups"
   },
   "party-form": {
     "title": "Name",
@@ -40,7 +76,7 @@
     "real-name": "Real name",
     "country": "Country",
     "city": "City",
-    "art-city": "Art city",
+    "artcity-id": "Artcity ID",
     "wiki": "Wikipedia link",
     "zxtunes-id": "ZXTunes ID",
     "image": "Photo",
@@ -56,6 +92,7 @@
     "error-save": "Failed to save"
   },
   "group-form": {
+    "add-subgroup": "Add subgroup…",
     "title": "Name",
     "type": "Type",
     "abbreviation": "Abbreviation",
@@ -114,8 +151,8 @@
     "partyplace": "Party place",
     "year": "Year",
     "youtube-id": "YouTube id",
-    "compilation-items": "Compilation items",
-    "series-prods": "Series",
+    "compilation-items": "Compilation prods",
+    "series-prods": "Series prods",
     "html-description": "HTML description",
     "description": "Description",
     "instructions": "Instructions",
@@ -402,7 +439,8 @@
       "organizer": "Organizer",
       "hardware": "Hardware",
       "tester": "Tester",
-      "gamedesigner": "Game designer"
+      "gamedesigner": "Game designer",
+      "unknown": "Unknown"
     },
     "connections": {
       "title": "Connections",
@@ -1380,7 +1418,7 @@
     "instructions-download": "Download",
     "instructions-loading": "Loading...",
     "instructions-error": "Failed to load file",
-    "see-also": "See also"
+    "links": "Links"
   },
   "release-details": {
     "actions": "Release actions",

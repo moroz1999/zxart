@@ -1,5 +1,5 @@
 <ng-container *ngIf="details$ | async as details; else loading">
-  <zx-hero media="lg">
+  <zx-hero media="half">
     <zx-tune-player zxHeroMedia [tune]="details"></zx-tune-player>
 
     <zx-hero-title [title]="details.title" [entityId]="details.id" [year]="details.year">
@@ -33,7 +33,7 @@
       </zx-inline>
     </zx-stack>
 
-    <div *ngIf="details.description" appText="body" tone="primary" [innerHTML]="details.description"></div>
+    <div *ngIf="details.description" class="tune-details__description" appText="body" tone="primary">{{ details.description }}</div>
 
     <zx-added-by
       *ngIf="details.dateCreated"

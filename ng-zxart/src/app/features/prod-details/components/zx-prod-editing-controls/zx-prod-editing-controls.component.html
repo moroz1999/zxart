@@ -5,3 +5,12 @@
   presentation="popover"
   [popoverAriaLabel]="'prod-details.actions' | translate"
 ></zx-editing-controls>
+<zx-editing-controls
+  [elementId]="elementId"
+  [actions]="addActions"
+  [buildActionUrl]="buildAddActionUrl"
+  presentation="popover"
+  triggerIcon="plus"
+  navigation="document"
+  [popoverAriaLabel]="'prod-details.add-actions' | translate"
+></zx-editing-controls>

@@ -1,0 +1,42 @@
+<zx-table size="md">
+  <table aria-hidden="true">
+    <thead>
+      <tr>
+        @if (showRowNumbers) {
+          <th class="col-num"></th>
+        }
+        <th class="col-title">{{ 'group-browser.columns.title' | translate }}</th>
+        <th class="col-type">{{ 'group-browser.columns.type' | translate }}</th>
+        <th class="col-realname">{{ 'group-browser.columns.realname' | translate }}</th>
+        <th class="col-country">{{ 'group-browser.columns.country' | translate }}</th>
+        <th class="col-city">{{ 'group-browser.columns.city' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows; track row) {
+        <tr>
+          @if (showRowNumbers) {
+            <td class="col-num">
+              <zx-skeleton-bone class="skeleton-cell skeleton-cell--number" [inline]="true"></zx-skeleton-bone>
+            </td>
+          }
+          <td class="col-title">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--title" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-type">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--type" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-realname">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--realname" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-country">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--location" [inline]="true"></zx-skeleton-bone>
+          </td>
+          <td class="col-city">
+            <zx-skeleton-bone class="skeleton-cell skeleton-cell--location" [inline]="true"></zx-skeleton-bone>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</zx-table>

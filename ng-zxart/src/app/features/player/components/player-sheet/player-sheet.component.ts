@@ -12,6 +12,7 @@ import {PlayerState} from '../../models/player-state';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxCloseButtonComponent} from '../../../../shared/ui/zx-close-button/zx-close-button.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxInputRangeComponent} from '../../../../shared/ui/zx-input-range/zx-input-range.component';
@@ -40,6 +41,7 @@ type PartyValue = 'any' | 'yes' | 'no';
   selector: 'zx-player-sheet',
   standalone: true,
   imports: [
+    ZxCloseButtonComponent,
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,

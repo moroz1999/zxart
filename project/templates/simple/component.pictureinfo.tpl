@@ -1,4 +1,4 @@
-{if $element->description}{$element->description}<br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>{/if}
+{if $element->description}<div class="picture_details_description">{$element->description}</div><br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>{/if}
 	<b>{translations name='field.title'}:</b> {$element->title}	<br>
 	<b>{translations name='field.author'}:</b> {foreach from=$element->getAuthorsList() item=author name=authors}
 		<a href='{$author->getUrl()}'>{$author->title}</a>

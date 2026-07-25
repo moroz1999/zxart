@@ -2,7 +2,11 @@
   <img zxHeroMedia [src]="core.imageUrl" [alt]="core.title" class="pp-header__logo-img"/>
 
   <zx-hero-title [title]="core.title" [entityId]="core.id">
-    <zx-party-editing-controls zxHeroEdit [elementId]="core.id"></zx-party-editing-controls>
+    <zx-party-editing-controls
+      zxHeroEdit
+      [elementId]="core.id"
+      [addActionBaseUrl]="core.addActionBaseUrl"
+    ></zx-party-editing-controls>
   </zx-hero-title>
 
   <zx-facts>

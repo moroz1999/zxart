@@ -11,6 +11,7 @@ import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-error
 import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx-form-actions.component';
 import {ZxFormControlComponent} from '../../shared/ui/zx-form/zx-form-control/zx-form-control.component';
 import {ZxFormFieldComponent} from '../../shared/ui/zx-form/zx-form-field/zx-form-field.component';
+import {ZxFormRowComponent} from '../../shared/ui/zx-form/zx-form-row/zx-form-row.component';
 import {ZxFormLabelComponent} from '../../shared/ui/zx-form/zx-form-label/zx-form-label.component';
 import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
@@ -20,11 +21,16 @@ import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-se
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ZxCategoryTreeSelectComponent} from '../../shared/ui/zx-category-tree-select/zx-category-tree-select.component';
-import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
+import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.component';
+import {FileMove, ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
+import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.component';
 import {CategoryTreeNode, EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
+import {ScreenshotMoveApiService} from '../../features/prod-details/services/screenshot-move-api.service';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -41,7 +47,7 @@ const LEGAL_STATUSES = [
 
 /** expectedFields preserved unchanged on save until they get dedicated UI. */
 const PASSTHROUGH_FIELDS: string[] = [];
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
 
 /** Routed page for `prod/:id/edit`. */
 @Component({
@@ -57,6 +63,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxFormActionsComponent,
     ZxFormControlComponent,
     ZxFormFieldComponent,
+    ZxFormRowComponent,
     ZxFormLabelComponent,
     ZxFormMessageComponent,
     ZxFormDirective,
@@ -66,9 +73,13 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxEntityAutocompleteComponent,
     ZxMultiEntityAutocompleteComponent,
     ZxCategoryTreeSelectComponent,
+    ZxMultiSelectFilterComponent,
     ZxFileSelectorComponent,
+    ZxTagsFieldComponent,
     ZxMemberRoleEditorComponent,
-    ZxStackComponent,
+    ZxCheckboxGroupComponent,
+    ZxButtonControlsComponent,
+    ZxFormSectionComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -138,6 +149,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     private readonly translate: TranslateService,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly screenshotMove: ScreenshotMoveApiService,
   ) {}
 
   ngOnInit(): void {
@@ -208,6 +220,33 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.formSave.deleteFileElement(fileId).subscribe());
   }
 
+  /** Live-reorder the prod screenshots (connectedFile) via the move endpoint. */
+  onSelectorMove(prop: string, move: FileMove): void {
+    if (prop !== 'connectedFile') {
+      return;
+    }
+    this.subscriptions.add(
+      this.screenshotMove.move(this.elementId, move.fileId, move.direction).subscribe(files => {
+        if (files !== null) {
+          this.fileSelectors = {
+            ...this.fileSelectors,
+            [prop]: files.map(file => ({
+              id: file.id,
+              title: file.title,
+              isImage: file.isImage,
+              imageUrl: file.imageUrl,
+            })),
+          };
+          this.cdr.markForCheck();
+        }
+      }),
+    );
+  }
+
+  onCancel(): void {
+    this.router.navigateByUrl(`/prod/${this.elementId}`);
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -243,7 +282,6 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           tagsText: value.tagsText,
           denyVoting: value.denyVoting ? '1' : '',
           denyComments: value.denyComments ? '1' : '',
-          addAuthor: this.memberFields.addAuthor,
           addAuthorRole: this.memberFields.addAuthorRole,
         },
       }).subscribe({

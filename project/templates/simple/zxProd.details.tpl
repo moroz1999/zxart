@@ -58,7 +58,7 @@
 {/if}
 <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
 {if $description = $element->getDescription()}
-    {$description}
+    <div class="zxprod_details_description{if !$element->isHtmlDescription()} zxprod_details_description_plain{/if}">{$description}</div>
     <br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>
 {/if}
 

@@ -10,9 +10,7 @@
       (input)="onQueryChange($any($event.target).value)"
       (keydown)="onKeyDown($event)"
     />
-    <zx-button color="transparent" [square]="true" [ariaLabel]="'header.search.close' | translate" (click)="close()">
-      <svg-icon name="close" class="sd-close-icon"></svg-icon>
-    </zx-button>
+    <zx-close-button size="md" [ariaLabel]="'header.search.close' | translate" (closed)="close()"></zx-close-button>
   </div>
 
   @if (loading) {

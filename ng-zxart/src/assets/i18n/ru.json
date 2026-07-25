@@ -8,7 +8,43 @@
   "common": {
     "not-found": "Страница не найдена",
     "remove": "Удалить",
-    "choose-file": "Выбрать файл"
+    "choose-file": "Выбрать файл",
+    "nothing-found": "Ничего не найдено"
+  },
+  "form": {
+    "selected-count": "Выбрано: {{count}}",
+    "filter": "Фильтр…",
+    "move-left": "Сдвинуть влево",
+    "move-right": "Сдвинуть вправо",
+    "search": "Поиск…",
+    "drop-image": "Перетащите изображение",
+    "drop-file": "Перетащите файл",
+    "drop-hint": "или выберите на диске",
+    "add-author": "Добавить участника по нику…",
+    "add-role": "+ Роль",
+    "date-from": "с",
+    "date-to": "по",
+    "cancel": "Отмена",
+    "identification": "Идентификация",
+    "classification": "Классификация",
+    "relations": "Связи",
+    "authors": "Авторы",
+    "members": "Участники",
+    "media": "Медиа и файлы",
+    "files": "Файлы",
+    "images": "Изображения",
+    "image": "Изображение",
+    "description": "Описание",
+    "restrictions": "Ограничения",
+    "characteristics": "Характеристики",
+    "technical": "Технические параметры",
+    "geography": "География",
+    "period": "Период",
+    "links": "Ссылки",
+    "display": "Отображение",
+    "origin": "Происхождение",
+    "conversion": "Конверсия работ",
+    "subgroups": "Подгруппы"
   },
   "party-form": {
     "title": "Название",
@@ -40,7 +76,7 @@
     "real-name": "Настоящее имя",
     "country": "Страна",
     "city": "Город",
-    "art-city": "Город творчества",
+    "artcity-id": "Artcity ID",
     "wiki": "Ссылка на Википедию",
     "zxtunes-id": "ZXTunes ID",
     "image": "Фото",
@@ -56,6 +92,7 @@
     "error-save": "Не удалось сохранить"
   },
   "group-form": {
+    "add-subgroup": "Добавить подгруппу…",
     "title": "Название",
     "type": "Тип",
     "abbreviation": "Аббревиатура",
@@ -114,8 +151,8 @@
     "partyplace": "Место на пати",
     "year": "Год",
     "youtube-id": "YouTube id",
-    "compilation-items": "Элементы компиляции",
-    "series-prods": "Серия",
+    "compilation-items": "Программы компиляции",
+    "series-prods": "Программы серии",
     "html-description": "HTML-описание",
     "description": "Описание",
     "instructions": "Инструкции",
@@ -402,7 +439,8 @@
       "organizer": "Организатор",
       "hardware": "Железо",
       "tester": "Тестер",
-      "gamedesigner": "Геймдизайнер"
+      "gamedesigner": "Геймдизайнер",
+      "unknown": "Неизвестно"
     },
     "connections": {
       "title": "Связи",
@@ -1378,7 +1416,7 @@
     "instructions-download": "Скачать",
     "instructions-loading": "Загрузка...",
     "instructions-error": "Не удалось загрузить файл",
-    "see-also": "См. также"
+    "links": "Ссылки"
   },
   "release-details": {
     "actions": "Действия с релизом",

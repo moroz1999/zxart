@@ -10,14 +10,13 @@ import {ActiveAuthorsService} from '../../services/active-authors.service';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../../../shared/ui/zx-select/zx-select.component';
-import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
-  ZxSkeletonVisibilityDirective
-} from '../../../../shared/ui/zx-skeleton/zx-skeleton-visibility.directive';
+  ZxActiveAuthorsSkeletonComponent
+} from '../zx-active-authors-skeleton/zx-active-authors-skeleton.component';
 
 const DEFAULT_ACTIVE_YEARS = 2;
 const MIN_ACTIVE_YEARS = 1;
@@ -34,12 +33,11 @@ const MAX_ACTIVE_YEARS = 5;
     ZxInlineComponent,
     ZxPanelComponent,
     ZxSelectComponent,
-    ZxSkeletonBoneComponent,
     ZxStackComponent,
     HeadingDirective,
     TextDirective,
     InViewportDirective,
-    ZxSkeletonVisibilityDirective,
+    ZxActiveAuthorsSkeletonComponent,
   ],
   templateUrl: './zx-active-authors.component.html',
   styleUrls: ['./zx-active-authors.component.scss'],
@@ -50,7 +48,6 @@ export class ZxActiveAuthorsComponent implements OnInit, OnDestroy {
 
   authors: ActiveAuthor[] = [];
   loading = true;
-  readonly skeletonItems = Array.from({length: 18});
   yearsOptions: ZxSelectOption[] = [];
   selectedYears = String(DEFAULT_ACTIVE_YEARS);
   requested = false;

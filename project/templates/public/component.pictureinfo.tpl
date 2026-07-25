@@ -1,5 +1,5 @@
 {if $element->description}
-<p>
+<p class="picture_details_description">
 	{$element->description}
 </p>
 {/if}

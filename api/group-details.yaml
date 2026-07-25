@@ -316,6 +316,7 @@ components:
         - title
         - abbreviation
         - url
+        - addActionBaseUrl
         - type
         - slogan
         - imageUrl
@@ -343,6 +344,9 @@ components:
           type: string
         url:
           type: string
+        addActionBaseUrl:
+          type: string
+          description: Legacy entity URL used as the parent path for add-content forms.
         type:
           type: string
         slogan:

@@ -2,30 +2,36 @@
   display: block;
 }
 
-.zx-file-upload {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.zx-file-upload__current {
+.zx-drop {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-12);
+  padding: var(--space-12);
+  background: var(--background-deep);
+  border: 1px dashed var(--secondary-400);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--animation-sm), background var(--animation-sm);
+
+  &:hover {
+    border-color: var(--primary-500);
+  }
 }
 
-.zx-file-upload__name {
+.zx-drop__body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.zx-drop__title {
+  color: var(--text-color);
+  font-size: var(--zx-font-size-sm);
+  font-weight: 700;
   word-break: break-all;
 }
 
-.zx-file-upload__picker {
-  cursor: pointer;
-}
-
-.zx-file-upload__button {
-  display: inline-block;
-  padding: 4px 10px;
-  border: var(--zx-tags-input-dropdown-border);
-  border-radius: var(--zx-tags-input-dropdown-radius);
-  background: var(--zx-tags-input-dropdown-bg);
+.zx-drop__hint {
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-xs);
 }

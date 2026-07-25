@@ -75,6 +75,7 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input() popoverAriaLabel = '';
   @Input() size: 'xs' | 'sm' | 'md' | null = null;
   @Input() triggerIcon = 'edit';
+  @Input() navigation: 'router' | 'document' = 'router';
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
   readonly skeletonItems = [0, 1, 2];
@@ -154,6 +155,11 @@ export class ZxEditingControlsComponent implements OnChanges {
       if (!confirmed) {
         return;
       }
+    }
+
+    if (this.navigation === 'document') {
+      window.location.href = item.url;
+      return;
     }
 
     void this.router.navigateByUrl(item.url);

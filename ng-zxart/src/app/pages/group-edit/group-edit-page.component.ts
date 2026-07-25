@@ -3,7 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -16,11 +16,13 @@ import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
+import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
-import {ZxSubgroupsEditorComponent, SubgroupItem} from '../../shared/ui/zx-subgroups-editor/zx-subgroups-editor.component';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -28,7 +30,7 @@ import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
 const GROUP_TYPES = ['company', 'studio', 'scene', 'store', 'education'];
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
 
 /** Routed page for `group/:id/edit`. */
 @Component({
@@ -48,10 +50,12 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxFormDirective,
     ZxInputComponent,
     ZxEntityAutocompleteComponent,
+    ZxMultiEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxMemberRoleEditorComponent,
-    ZxSubgroupsEditorComponent,
-    ZxStackComponent,
+    ZxSelectComponent,
+    ZxFormSectionComponent,
+    ZxButtonControlsComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -60,7 +64,10 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupEditPageComponent implements OnInit, OnDestroy {
-  readonly groupTypes = GROUP_TYPES;
+  readonly groupTypeOptions: ZxSelectOption[] = GROUP_TYPES.map(value => ({
+    value,
+    label: this.translate.instant(`group-details.type.${value}`),
+  }));
 
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
@@ -73,6 +80,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     startDate: this.fb.nonNullable.control(''),
     endDate: this.fb.nonNullable.control(''),
     slogan: this.fb.nonNullable.control(''),
+    subgroups: this.fb.nonNullable.control<EntityRef[]>([]),
   });
 
   readonly titleMessages = {required: 'group-form.error-title-required'};
@@ -83,17 +91,16 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   imageUrl: string | null = null;
   members: MemberRoleItem[] = [];
   roles: string[] = [];
-  subgroups: SubgroupItem[] = [];
 
   private elementId = 0;
   private imageFile: File | null = null;
   private removeImage = false;
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
-  private subgroupIds: number[] = [];
   private readonly subscriptions = new Subscription();
 
   constructor(
     private readonly fb: FormBuilder,
+    private readonly translate: TranslateService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
@@ -117,11 +124,11 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
             startDate: String(data.fields['startDate'] ?? ''),
             endDate: String(data.fields['endDate'] ?? ''),
             slogan: String(data.fields['slogan'] ?? ''),
+            subgroups: data.subgroups,
           });
           this.imageUrl = data.images['image'] ?? null;
           this.members = data.members;
           this.roles = data.roles;
-          this.subgroups = data.subgroups;
           this.loading = false;
           this.cdr.markForCheck();
         },
@@ -138,6 +145,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  onCancel(): void {
+    this.router.navigateByUrl(`/group/${this.elementId}`);
+  }
+
   onImageChanged(change: ImageUploadChange): void {
     this.imageFile = change.file;
     this.removeImage = change.removed;
@@ -145,10 +156,6 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
 
   onMemberFields(fields: MemberFields): void {
     this.memberFields = fields;
-  }
-
-  onSubgroupIds(ids: number[]): void {
-    this.subgroupIds = ids;
   }
 
   onRemoveMember(authorId: number): void {
@@ -177,11 +184,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
           startDate: value.startDate,
           endDate: value.endDate,
           slogan: value.slogan,
-          addAuthor: this.memberFields.addAuthor,
           addAuthorRole: this.memberFields.addAuthorRole,
           addAuthorStartDate: this.memberFields.addAuthorStartDate,
           addAuthorEndDate: this.memberFields.addAuthorEndDate,
-          subGroupsSelector: this.subgroupIds.map(String),
+          subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
         },
         image: {field: 'image', file: this.imageFile, remove: this.removeImage},
       }).subscribe({

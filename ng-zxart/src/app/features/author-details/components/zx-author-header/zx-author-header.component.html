@@ -1,6 +1,9 @@
-<zx-hero media="xs">
-  <div zxHeroMedia class="ap-avatar--empty">
-    <svg-icon name="person" aria-hidden="true"></svg-icon>
+<zx-hero media="sm">
+  <div zxHeroMedia>
+    <img *ngIf="core.imageUrl" [src]="core.imageUrl" [alt]="core.title" class="ap-header__avatar-img"/>
+    <div *ngIf="!core.imageUrl" class="ap-avatar--empty">
+      <svg-icon name="person" aria-hidden="true"></svg-icon>
+    </div>
   </div>
 
   <zx-hero-title [title]="core.title" [entityId]="core.id">
@@ -15,7 +18,8 @@
     <zx-author-editing-controls
       zxHeroEdit
       [elementId]="core.id"
-      [entityType]="core.entityType">
+      [entityType]="core.entityType"
+      [addActionBaseUrl]="core.addActionBaseUrl">
     </zx-author-editing-controls>
   </zx-hero-title>
 
@@ -51,7 +55,7 @@
   </zx-meta-row>
 
   <zx-meta-row *ngIf="core.aliases.length" [label]="'author-details.header.aliases' | translate">
-    <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item">
+    <span *ngFor="let alias of visibleAliases; let last = last" class="ap-aliases__item" appText="label">
       <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
     </span>
     <zx-button

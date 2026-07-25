@@ -1,0 +1,7 @@
+/* styles.css — root entry point for the ZXArt design system.
+   Consuming projects can link this single file instead of wiring up the
+   foundational stylesheets individually. It pulls in the design tokens
+   (colors, type, spacing, radii, shadows) and the shared component layer. */
+
+@import url("./colors_and_type.css");
+@import url("./preview/components.css");

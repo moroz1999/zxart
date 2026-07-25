@@ -1,3 +1,5 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -5,6 +7,52 @@
   min-width: 0;
 }
 
-h3 {
+.zx-form-section__header {
+  display: flex;
+  align-items: center;
+  gap: var(--zx-form-legend-gap);
+  padding-bottom: var(--zx-form-section-header-padding);
+  border-bottom: 1px solid var(--zx-form-section-header-border);
+}
+
+.zx-form-section__icon {
+  width: var(--zx-form-section-icon-size);
+  height: var(--zx-form-section-icon-size);
+  color: var(--zx-form-section-icon-color);
+}
+
+.zx-form-section__title {
   margin: 0;
+  color: var(--zx-form-legend-color);
+  font-size: var(--zx-form-legend-font-size);
+  font-weight: var(--zx-form-legend-font-weight);
+  letter-spacing: var(--zx-form-legend-letter-spacing);
+  text-transform: uppercase;
+}
+
+.zx-form-section__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-gap);
+  min-width: 0;
+}
+
+// Two-column field grid: driven by [zxForm][columns]="2" or a per-section [columns]="2".
+:host(.zx-form-section--cols-2) .zx-form-section__fields,
+:host-context(.zx-form--cols-2) .zx-form-section__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--zx-form-cols-row-gap) var(--zx-form-cols-column-gap);
+
+  // Collapse to a single column on narrow screens so cells never get too small.
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Explicit single-column override wins even inside a two-column form.
+:host(.zx-form-section--cols-1) .zx-form-section__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-form-gap);
 }

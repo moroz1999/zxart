@@ -32,7 +32,10 @@
 
   <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'group-browser.recent' | translate }}</h2>
 
-  <zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
+  <zx-groups-table-skeleton
+    *ngIf="groups === null && !error"
+    [count]="skeletonCount"
+  ></zx-groups-table-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'group-browser.error' | translate }}</div>
   <div *ngIf="!loading && !error && groups !== null && groups.length === 0"

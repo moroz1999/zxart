@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/zxart-design-system-019de4f4-c135-78fe-8fc9-07092d59d88b/colors_and_type.css">
+<link rel="stylesheet" href="_ds/zxart-design-system-019de4f4-c135-78fe-8fc9-07092d59d88b/preview/components.css">
+<link rel="stylesheet" href="_ds/zxart-design-system-019de4f4-c135-78fe-8fc9-07092d59d88b/styles.css">
+<script src="_ds/zxart-design-system-019de4f4-c135-78fe-8fc9-07092d59d88b/_ds_bundle.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  a { color: var(--zx-link-color); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .zf-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+  .zf-scroll::-webkit-scrollbar-thumb { background: var(--secondary-300); border-radius: 999px; }
+
+  /* ---- form controls (grounded in DS tokens; classes carry focus/hover states inline can't) ---- */
+  .zf-input, .zf-textarea, .zf-select {
+    width: 100%; font-family: var(--font-sans); font-size: var(--zx-input-size);
+    line-height: var(--zx-input-line-height); color: var(--text-color); background: var(--surface);
+    border: 1px solid var(--border-form); border-radius: var(--radius-md);
+    padding: 7px 10px; transition: border-color var(--animation-sm), box-shadow var(--animation-sm);
+  }
+  .zf-textarea { resize: vertical; min-height: 72px; display: block; }
+  .zf-select { appearance: none; padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%23737373'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center; }
+  .zf-input:hover, .zf-textarea:hover, .zf-select:hover { border-color: var(--secondary-500); }
+  .zf-input:focus, .zf-textarea:focus, .zf-select:focus {
+    outline: none; border-color: var(--border-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 22%, transparent); }
+  .zf-input::placeholder, .zf-textarea::placeholder { color: var(--secondary-400); }
+
+  .zf-searchbox { position: relative; }
+  .zf-searchbox .zf-input { padding-left: 32px; }
+  .zf-searchbox > svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--secondary-400); pointer-events: none; }
+
+  .zf-pill { font-size: var(--font-sm); line-height: 1; padding: 6px 11px; cursor: pointer;
+    border: 1px solid var(--border-form); border-radius: 999px; background: var(--surface);
+    color: var(--text-light-color); transition: background var(--animation-sm), color var(--animation-sm), border-color var(--animation-sm); user-select: none; }
+  .zf-pill:hover { border-color: var(--secondary-500); }
+  .zf-pill.is-on { background: var(--primary-500); border-color: var(--primary-500); color: #fff; }
+
+  .zf-chip { display: inline-flex; align-items: center; gap: 6px; font-size: var(--font-sm);
+    padding: 4px 6px 4px 10px; border-radius: var(--radius-md); background: var(--background-deep);
+    border: 1px solid var(--border-light, var(--secondary-200)); color: var(--text-color); }
+  .zf-chip button { border: 0; background: none; cursor: pointer; color: var(--secondary-500);
+    display: inline-flex; padding: 2px; border-radius: 999px; line-height: 0; }
+  .zf-chip button:hover { background: var(--secondary-200); color: var(--text-color); }
+
+  .zf-check { display: inline-flex; align-items: center; gap: 9px; cursor: pointer;
+    font-size: var(--font-md); color: var(--text-color); user-select: none; }
+  .zf-check .box { width: 18px; height: 18px; flex: none; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-form); background: var(--surface); display: inline-flex;
+    align-items: center; justify-content: center; transition: background var(--animation-sm), border-color var(--animation-sm); }
+  .zf-check .box svg { width: 14px; height: 14px; color: #fff; opacity: 0; }
+  .zf-check.is-on .box { background: var(--primary-500); border-color: var(--primary-500); }
+  .zf-check.is-on .box svg { opacity: 1; }
+  .zf-check:hover .box { border-color: var(--secondary-500); }
+
+  .zf-drop { border: 1px dashed var(--secondary-400); border-radius: var(--radius-lg);
+    background: var(--background-deep); padding: 14px; display: flex; align-items: center; gap: 12px;
+    transition: border-color var(--animation-sm), background var(--animation-sm); }
+  .zf-drop:hover { border-color: var(--primary-500); }
+  .zf-thumb { width: 56px; height: 42px; flex: none; border-radius: var(--radius-sm);
+    background: var(--secondary-200); display: flex; align-items: center; justify-content: center;
+    color: var(--secondary-500); overflow: hidden; image-rendering: pixelated; }
+
+  .zf-navlink { display: block; padding: 6px 12px; border-radius: var(--radius-md);
+    color: var(--text-light-color); font-size: var(--font-sm); border-left: 2px solid transparent;
+    transition: background var(--animation-sm), color var(--animation-sm); }
+  .zf-navlink:hover { background: var(--background-deep); color: var(--text-color); text-decoration: none; }
+  .zf-navlink.is-active { color: var(--primary-600); border-left-color: var(--primary-500);
+    background: var(--background-deep); font-weight: 700; }
+
+  .zf-seg { border: 0; background: none; cursor: pointer; font-family: var(--font-sans);
+    font-size: var(--font-sm); font-weight: 700; padding: 8px 14px; border-radius: var(--radius-md);
+    color: var(--text-light-color); display: inline-flex; align-items: center; gap: 7px;
+    transition: background var(--animation-sm), color var(--animation-sm); white-space: nowrap; }
+  .zf-seg:hover { color: var(--text-color); }
+  .zf-seg.is-on { background: var(--surface); color: var(--text-color); box-shadow: var(--shadow-sm); }
+  .zf-seg svg { width: 16px; height: 16px; }
+
+  .zf-icobtn { border: 1px solid var(--border-form); background: var(--surface); cursor: pointer;
+    width: 34px; height: 34px; border-radius: var(--radius-md); color: var(--text-light-color);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background var(--animation-sm), color var(--animation-sm); }
+  .zf-icobtn:hover { background: var(--background-deep); color: var(--text-color); }
+
+  .zf-opt:hover { background: var(--background-deep); }
+  .zf-memgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 900px) { .zf-memgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .zf-memgrid { grid-template-columns: 1fr; } }
+  .zf-memrow { display: grid; grid-template-columns: 1fr 200px 34px; gap: 8px; align-items: center; }
+  @media (max-width: 640px) { .zf-memrow { grid-template-columns: 1fr; } }
+</style>
+</helmet>
+<div class="zf-root light-mode" ref="{{ rootRef }}" style="min-height: 100vh; background: var(--background-page); color: var(--text-color); font-family: var(--font-sans);">
+
+  <header style="position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--border-form); box-shadow: var(--shadow-sm);">
+    <div style="max-width: 1160px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 16px;">
+      <img src="_ds/zxart-design-system-019de4f4-c135-78fe-8fc9-07092d59d88b/assets/logo.png" alt="zxart" style="height: 30px; image-rendering: pixelated;" onerror="this.style.display='none'">
+      <div style="display: flex; flex-direction: column; line-height: 1.1;">
+        <span style="font-weight: 700; font-size: var(--font-md);">Редактор элемента</span>
+        <span style="font-size: var(--font-xs); color: var(--text-light-color);">унифицированная форма · feature/routing</span>
+      </div>
+      <div style="flex: 1;"></div>
+      <div style="display: flex; align-items: center; gap: 8px; background: var(--background-deep); padding: 4px; border-radius: var(--radius-lg); overflow-x: auto;" class="zf-scroll">
+        <sc-for list="{{ entities }}" as="e" hint-placeholder-count="6">
+          <button type="button" class="zf-seg {{ e.cls }}" onClick="{{ e.onSelect }}">{{ e.label }}</button>
+        </sc-for>
+      </div>
+      <button type="button" class="zf-icobtn" onClick="{{ toggleTheme }}" title="Сменить тему" aria-label="Сменить тему">{{ themeIcon }}</button>
+    </div>
+  </header>
+
+  <div style="max-width: 1160px; margin: 0 auto; padding: 28px 24px 120px; display: grid; grid-template-columns: 210px 1fr; gap: 32px; align-items: start;">
+
+    <aside style="position: sticky; top: 78px;">
+      <div style="font-size: var(--font-xs); letter-spacing: 1px; text-transform: uppercase; color: var(--text-light-color); font-weight: 700; padding: 0 12px 8px;">Разделы</div>
+      <nav style="display: flex; flex-direction: column; gap: 2px;">
+        <sc-for list="{{ navSections }}" as="n" hint-placeholder-count="6">
+          <a class="zf-navlink {{ n.cls }}" href="{{ n.href }}">{{ n.title }}</a>
+        </sc-for>
+      </nav>
+    </aside>
+
+    <form style="min-width: 0; background: var(--surface); border: 1px solid var(--border-form); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden;" onSubmit="{{ onSubmit }}">
+      <div style="padding: 22px 28px 6px;">
+        <h1 style="font-size: var(--zx-headline-size); font-weight: 700; margin: 0;">{{ formTitle }}</h1>
+        <p style="margin: 6px 0 0; color: var(--text-light-color); font-size: var(--font-sm);">{{ formSubtitle }}</p>
+      </div>
+
+      <div style="padding: 12px 28px 24px; display: flex; flex-direction: column; gap: 28px;">
+        <sc-for list="{{ sections }}" as="sec" hint-placeholder-count="5">
+          <section id="{{ sec.id }}" style="scroll-margin-top: 90px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--background-dark);">
+              <span style="color: var(--primary-500); display: inline-flex;">{{ sec.icon }}</span>
+              <h3 style="font-size: var(--font-xs); letter-spacing: 1px; text-transform: uppercase; color: var(--text-light-color); font-weight: 700; margin: 0;">{{ sec.title }}</h3>
+            </div>
+            <div>{{ sec.fieldsEl }}</div>
+          </section>
+        </sc-for>
+      </div>
+
+      <footer style="position: sticky; bottom: 0; background: var(--background-deep); border-top: 1px solid var(--border-form); padding: 14px 28px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: var(--font-sm); color: var(--text-light-color);">{{ dirtyLabel }}</span>
+        <div style="flex: 1;"></div>
+        <x-import component-from-global-scope="ZXArtDesignSystem_019de4.ZxButton" variant="ghost" hint-size="auto,36px">Отмена</x-import>
+        <x-import component-from-global-scope="ZXArtDesignSystem_019de4.ZxButton" color="primary" hint-size="auto,36px">Сохранить</x-import>
+      </footer>
+    </form>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1160, &quot;height&quot;: 900}}">
+const h = React.createElement;
+
+const ICON = {
+  info: 'M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z',
+  tag: 'M21.41 11.58l-9-9A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .59 1.42l9 9a2 2 0 0 0 2.82 0l7-7a2 2 0 0 0 0-2.84zM6.5 8A1.5 1.5 0 1 1 8 6.5 1.5 1.5 0 0 1 6.5 8z',
+  person: 'M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z',
+  link: 'M3.9 12a3.1 3.1 0 0 1 3.1-3.1h4V7H7a5 5 0 0 0 0 10h4v-1.9H7A3.1 3.1 0 0 1 3.9 12zM8 13h8v-2H8zm9-6h-4v1.9h4a3.1 3.1 0 0 1 0 6.2h-4V17h4a5 5 0 0 0 0-10z',
+  image: 'M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5z',
+  disc: 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 13.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z',
+  cog: 'M19.14 12.94a7.6 7.6 0 0 0 0-1.88l2-1.56-2-3.46-2.4 1a7.3 7.3 0 0 0-1.62-.94L14.7 3h-4l-.42 2.6a7.3 7.3 0 0 0-1.62.94l-2.4-1-2 3.46 2 1.56a7.6 7.6 0 0 0 0 1.88l-2 1.56 2 3.46 2.4-1a7.3 7.3 0 0 0 1.62.94L10.3 21h4l.42-2.6a7.3 7.3 0 0 0 1.62-.94l2.4 1 2-3.46zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z',
+  doc: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm2 16H8v-2h8zm0-4H8v-2h8zm-3-5V3.5L18.5 9z',
+  block: 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zM4 12a8 8 0 0 1 12.9-6.32L5.68 16.9A7.94 7.94 0 0 1 4 12zm8 8a7.94 7.94 0 0 1-4.9-1.68L18.32 7.1A8 8 0 0 1 12 20z',
+  group: 'M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h7v-2.5A4.6 4.6 0 0 1 9.6 13 9.8 9.8 0 0 0 8 13zm8 0a9 9 0 0 0-1.6.14A4.4 4.4 0 0 1 16 16.5V19h7v-2.5c0-2.33-4.67-3.5-7-3.5z',
+  cal: 'M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14z',
+  eye: 'M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5S21.3 16.4 23 12c-1.7-4.4-6-7.5-11-7.5zm0 12a4.5 4.5 0 1 1 4.5-4.5 4.5 4.5 0 0 1-4.5 4.5zm0-7A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z',
+  globe: 'M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm6.9 6h-2.6a15.7 15.7 0 0 0-1.4-3.6A8 8 0 0 1 18.9 8zM12 4a14 14 0 0 1 1.9 4h-3.8A14 14 0 0 1 12 4zM4.3 14a7.8 7.8 0 0 1 0-4h3a17.6 17.6 0 0 0 0 4zm.8 2h2.6a15.7 15.7 0 0 0 1.4 3.6A8 8 0 0 1 5.1 16zm2.6-8H5.1a8 8 0 0 1 4-3.6A15.7 15.7 0 0 0 7.7 8zM12 20a14 14 0 0 1-1.9-4h3.8A14 14 0 0 1 12 20zm2.3-6H9.7a15.5 15.5 0 0 1 0-4h4.6a15.5 15.5 0 0 1 0 4zm.6 5.6a15.7 15.7 0 0 0 1.4-3.6h2.6a8 8 0 0 1-4 3.6zm2.1-5.6a17.6 17.6 0 0 0 0-4h3a7.8 7.8 0 0 1 0 4z',
+};
+function icon(name, size) {
+  size = size || 16;
+  return h('svg', {width: size, height: size, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true},
+    h('path', {d: ICON[name] || ICON.info}));
+}
+
+const ENTITIES = [
+  {id: 'prod', label: 'Prod', ic: 'disc'},
+  {id: 'release', label: 'Release', ic: 'tag'},
+  {id: 'author', label: 'Author', ic: 'person'},
+  {id: 'group', label: 'Group', ic: 'group'},
+  {id: 'picture', label: 'Picture', ic: 'image'},
+  {id: 'music', label: 'Music', ic: 'disc'},
+];
+
+const ENUMS = {
+  legalStatus: ['Неизвестно', 'Разрешено', 'Разрешено (zxart)', 'Запрещено', 'MIA', 'Не выпущено', 'Восстановлено', 'Donationware'],
+  compo: ['—', 'Standard', 'Old school', 'Real time', '1K intro', '4K intro', 'Wild', 'AI-assisted'],
+  language: ['English', 'Russian', 'Spanish', 'German', 'French', 'Italian', 'Polish', 'Czech', 'Slovak', 'Hungarian', 'Dutch', 'Portuguese', 'Swedish', 'Norwegian', 'Danish', 'Finnish', 'Greek', 'Turkish', 'Ukrainian', 'Belarusian', 'Bulgarian', 'Serbian', 'Croatian', 'Romanian', 'Lithuanian', 'Latvian', 'Estonian', 'Japanese', 'Chinese', 'Korean', 'Hebrew', 'Arabic', 'Hindi', 'Catalan', 'Basque', 'Galician', 'Welsh', 'Irish', 'Icelandic', 'Slovenian', 'Macedonian', 'Esperanto'],
+  roles: ['Code', 'Graphics', 'Music', 'Design', 'Port', 'Text', 'Idea', 'Founder', 'Cracker', 'Member', 'Organizer'],
+  releaseType: ['Original', 'Compilation', 'Re-release', 'Crack', 'Demo version', 'Localization'],
+  releaseFormat: ['TAP', 'TZX', 'TRD', 'SCL', 'FDI', 'TD0', 'UDI', 'DSK', 'MGT', 'IMG', 'D80', 'MBD', 'OPD', 'Z80', 'SNA', 'SZX', 'SLT', 'AIR', 'POK', 'BIN', 'ROM', 'RZX', 'PZX', 'CSW', 'WAV', 'MP3', 'Hobeta', 'SP', 'ZIP', 'DCK'],
+  hardware: ['48K', '128K', '+2', '+3', 'Pentagon', 'Scorpion', 'General Sound', 'Kempston', 'AY'],
+  palette: ['Standard', 'Pulsar', 'ULAplus', 'Custom'],
+  picType: ['Standard', 'Multicolor', 'Gigascreen', 'Border art', 'Tricolor', 'Character'],
+  border: ['Black', 'Blue', 'Red', 'Magenta', 'Green', 'Cyan', 'Yellow', 'White'],
+  rotation: ['0°', '90°', '180°', '270°'],
+  chipType: ['AY-3-8910', 'YM2149'],
+  channels: ['ABC', 'ACB', 'BAC', 'Mono'],
+  frequency: ['1.7734 MHz', '1.75 MHz', '2 MHz'],
+  intFreq: ['50 Hz', '48.828 Hz'],
+  formatGroup: ['AY/YM', 'Beeper', 'Digital Beeper', 'Digital AY, Covox, SD', 'Turbo Sound', 'FM', 'Turbo Sound FM', 'AY/YM + Beeper', 'SAA'],
+  groupType: ['company', 'studio', 'scene', 'store', 'education'],
+};
+
+// Simulated remote tag search pool + suggestions (mirrors zx-tags-input search).
+const TAG_POOL = ['demo', '3d', 'realtime', 'fantasy', 'fire', 'chiptune', 'ay', 'beeper', 'game', 'arcade',
+  'platformer', 'rpg', 'puzzle', 'intro', 'megademo', 'oldschool', 'pixelart', 'dithering', 'gigascreen',
+  'multicolor', 'party', 'compo', 'winner', 'russian', 'english', 'cover', 'remix', 'sci-fi', 'horror', 'humor'];
+const SUGGESTED_TAGS = ['demo', 'realtime', 'pixelart', '3d'];
+
+// Prod category tree — flat depth-first list with levels (mirrors /formdata categoriesTree).
+const CATEGORY_TREE = [
+  {id: 1, t: 'Software', lvl: 0}, {id: 2, t: 'Game', lvl: 1}, {id: 3, t: 'Action', lvl: 2},
+  {id: 4, t: 'Arcade', lvl: 2}, {id: 5, t: 'Adventure', lvl: 2}, {id: 6, t: 'RPG', lvl: 2},
+  {id: 7, t: 'Strategy', lvl: 2}, {id: 8, t: 'Puzzle', lvl: 2}, {id: 9, t: 'Simulation', lvl: 2},
+  {id: 10, t: 'Sport', lvl: 2}, {id: 11, t: 'Board & card', lvl: 2},
+  {id: 12, t: 'Demo', lvl: 1}, {id: 13, t: 'Demo', lvl: 2}, {id: 14, t: 'Intro', lvl: 2},
+  {id: 15, t: '1K intro', lvl: 2}, {id: 16, t: '4K intro', lvl: 2}, {id: 17, t: 'Megademo', lvl: 2},
+  {id: 18, t: 'Invitation', lvl: 2}, {id: 19, t: 'Diskmag', lvl: 2}, {id: 20, t: 'Wild', lvl: 2},
+  {id: 21, t: 'Utility', lvl: 1}, {id: 22, t: 'Editor', lvl: 2}, {id: 23, t: 'Compiler', lvl: 2},
+  {id: 24, t: 'Player', lvl: 2}, {id: 25, t: 'Converter', lvl: 2}, {id: 26, t: 'System', lvl: 2},
+  {id: 27, t: 'Music', lvl: 1}, {id: 28, t: 'AY tune', lvl: 2}, {id: 29, t: 'Beeper tune', lvl: 2},
+  {id: 30, t: 'Digital', lvl: 2}, {id: 31, t: 'Musicdisk', lvl: 2},
+  {id: 32, t: 'Graphics', lvl: 1}, {id: 33, t: 'Standard', lvl: 2}, {id: 34, t: 'Multicolor', lvl: 2},
+  {id: 35, t: 'Gigascreen', lvl: 2}, {id: 36, t: 'Charset', lvl: 2}, {id: 37, t: 'Tile / sprite', lvl: 2},
+];
+
+const HW_GROUPS = [
+  {g: 'Компьютеры', items: ['16K', '48K', '128K', '+2', '+2A', '+3', 'Pentagon 128', 'Pentagon 512', 'Scorpion ZS-256', 'ATM Turbo', 'Timex TC2048', 'TS2068', 'ZX Spectrum Next']},
+  {g: 'Накопители', items: ['Beta Disk (TR-DOS)', '+3 DOS', 'Opus Discovery', 'DivIDE', 'DivMMC', 'Microdrive', 'Wafadrive']},
+  {g: 'Звук', items: ['AY-3-8910', 'Turbo Sound', 'General Sound', 'Covox', 'SounDrive', 'SAA1099', 'MoonSound']},
+  {g: 'Управление', items: ['Kempston joystick', 'Sinclair joystick', 'Cursor joystick', 'Kempston mouse', 'AMX mouse', 'Light gun']},
+  {g: 'Прочее', items: ['Multiface', 'ULAplus', 'Interface 1', 'ZX Printer']},
+];
+
+const ROLES = {
+  author: ['Code', 'Additional code', 'Graphics', 'Additional graphics', 'Pixel art', 'Font', 'Music',
+    'Additional music', 'Sound FX', 'Text', 'Story', 'Translation', 'Design', 'Concept', 'Idea', 'Direction',
+    'Port', 'Crack', 'Fix', 'Level design', 'Testing', 'Loader', 'Compression', '3D models', 'Voice'],
+  member: ['Founder', 'Leader', 'Coder', 'Artist', 'Musician', 'Organizer', 'Swapper', 'Cracker', 'Trainer',
+    'Modem trader', 'Ascii artist', 'Sysop', 'Editor', 'Member', 'Ex-member', 'Guest'],
+};
+
+// span: 'full' spans the whole row; otherwise takes one grid cell.
+const SCHEMAS = {
+  prod: {
+    title: 'Sunset', subtitle: 'Демо · zxProd #21456',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'disc', fields: [
+        {k: 'title', l: 'Название', t: 'text', span: 'full', req: 1},
+        {k: 'altTitle', l: 'Альтернативное название', t: 'text'},
+        {k: 'year', l: 'Год', t: 'text'},
+        {k: 'externalLink', l: 'Внешняя ссылка', t: 'text', span: 'full', ph: 'https://'},
+      ]},
+      {id: 'class', title: 'Классификация', icon: 'tag', fields: [
+        {k: 'legalStatus', l: 'Правовой статус', t: 'select', o: 'legalStatus'},
+        {k: 'categories', l: 'Категории', t: 'tree', span: 'full'},
+        {k: 'language', l: 'Язык', t: 'multifilter', o: 'language', span: 'full'},
+      ]},
+      {id: 'rel', title: 'Связи', icon: 'link', fields: [
+        {k: 'party', l: 'Пати', t: 'search', ph: 'Найти пати'},
+        {k: 'partyplace', l: 'Место на пати', t: 'text'},
+        {k: 'compo', l: 'Компо', t: 'select', o: 'compo'},
+        {k: 'groups', l: 'Группы', t: 'chips', span: 'full', ph: 'Добавить группу'},
+        {k: 'publishers', l: 'Издатели', t: 'chips', span: 'full', ph: 'Добавить издателя'},
+        {k: 'compilationItems', l: 'Элементы компиляции', t: 'chips', span: 'full', ph: 'Добавить prod / release'},
+        {k: 'seriesProds', l: 'Проды серии', t: 'chips', span: 'full', ph: 'Добавить prod'},
+      ]},
+      {id: 'authors', title: 'Авторы', icon: 'person', fields: [
+        {k: 'authors', l: '', t: 'members', span: 'full'},
+      ]},
+      {id: 'media', title: 'Медиа и файлы', icon: 'image', fields: [
+        {k: 'youtubeId', l: 'YouTube ID', t: 'text'},
+        {k: 'screenshots', l: 'Скриншоты', t: 'gallery', span: 'full'},
+        {k: 'inlays', l: 'Инлеи', t: 'gallery', span: 'full'},
+        {k: 'maps', l: 'Карты', t: 'gallery', span: 'full'},
+        {k: 'rzx', l: 'RZX-записи', t: 'files'},
+      ]},
+      {id: 'desc', title: 'Описание', icon: 'doc', fields: [
+        {k: 'htmlDescription', l: 'HTML в описании', t: 'check', span: 'full'},
+        {k: 'description', l: 'Описание', t: 'textarea', span: 'full', rows: 5},
+        {k: 'instructions', l: 'Инструкции', t: 'textarea', span: 'full', rows: 3},
+        {k: 'tagsText', l: 'Теги', t: 'tags', span: 'full'},
+      ]},
+      {id: 'restrict', title: 'Ограничения', icon: 'block', fields: [
+        {k: '_deny', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'denyVoting', l: 'Запретить голосование'},
+          {k: 'denyComments', l: 'Запретить комментарии'},
+        ]},
+      ]},
+    ],
+  },
+  release: {
+    title: 'Sunset +3 Edition', subtitle: 'Релиз · zxRelease #88210',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'tag', fields: [
+        {k: 'title', l: 'Название', t: 'text', span: 'full', req: 1},
+        {k: 'prod', l: 'Прод', t: 'search', span: 'full', ph: 'Привязать к prod'},
+        {k: 'version', l: 'Версия', t: 'text'},
+        {k: 'year', l: 'Год', t: 'text'},
+      ]},
+      {id: 'spec', title: 'Характеристики', icon: 'cog', fields: [
+        {k: 'releaseType', l: 'Тип релиза', t: 'select', o: 'releaseType'},
+        {k: 'releaseFormat', l: 'Формат', t: 'multifilter', o: 'releaseFormat', span: 'full'},
+        {k: 'language', l: 'Язык', t: 'multifilter', o: 'language', span: 'full'},
+        {k: 'hardwareRequired', l: 'Требуемое железо', t: 'groupmulti', g: 'hardware', span: 'full'},
+      ]},
+      {id: 'rel', title: 'Связи', icon: 'link', fields: [
+        {k: 'publishers', l: 'Издатели', t: 'chips', span: 'full', ph: 'Добавить издателя'},
+      ]},
+      {id: 'authors', title: 'Авторы', icon: 'person', fields: [
+        {k: 'authors', l: '', t: 'members', span: 'full'},
+      ]},
+      {id: 'files', title: 'Файлы', icon: 'image', fields: [
+        {k: 'file', l: 'Основной файл', t: 'file', span: 'full'},
+        {k: 'screenshots', l: 'Скриншоты', t: 'gallery', span: 'full'},
+        {k: 'inlays', l: 'Инлеи', t: 'gallery', span: 'full'},
+        {k: 'adFiles', l: 'Реклама', t: 'gallery', span: 'full'},
+        {k: 'infoFiles', l: 'Info-файлы', t: 'files'},
+      ]},
+      {id: 'desc', title: 'Описание', icon: 'doc', fields: [
+        {k: 'description', l: 'Описание', t: 'textarea', span: 'full', rows: 4},
+      ]},
+      {id: 'restrict', title: 'Ограничения', icon: 'block', fields: [
+        {k: '_deny', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'denyVoting', l: 'Запретить голосование'},
+          {k: 'denyComments', l: 'Запретить комментарии'},
+        ]},
+      ]},
+    ],
+  },
+  author: {
+    title: 'Diver', subtitle: 'Автор · author #1203',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'person', fields: [
+        {k: 'title', l: 'Ник', t: 'text', span: 'full', req: 1},
+        {k: 'realName', l: 'Настоящее имя', t: 'multilang', span: 'full'},
+      ]},
+      {id: 'geo', title: 'География', icon: 'globe', fields: [
+        {k: 'country', l: 'Страна', t: 'search', ph: 'Найти страну'},
+        {k: 'city', l: 'Город', t: 'search', ph: 'Найти город'},
+      ]},
+      {id: 'links', title: 'Ссылки', icon: 'link', fields: [
+        {k: 'speccyWiki', l: 'SpeccyWiki', t: 'text', pre: 'speccy.info/', ph: 'slug, напр. Diver'},
+        {k: 'zxTunesId', l: 'ZXTunes ID', t: 'text'},
+      ]},
+      {id: 'image', title: 'Изображение', icon: 'image', fields: [
+        {k: 'image', l: 'Фото', t: 'image', span: 'full'},
+      ]},
+      {id: 'display', title: 'Отображение', icon: 'eye', fields: [
+        {k: '_disp', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'displayInMusic', l: 'Показывать в музыке'},
+          {k: 'displayInGraphics', l: 'Показывать в графике'},
+        ]},
+      ]},
+      {id: 'conv', title: 'Конверсия работ', icon: 'cog', emptyHint: 'Включите «Показывать в музыке» или «Показывать в графике», чтобы настроить конверсию.', fields: [
+        {k: 'ayChipType', l: 'AY chip type', t: 'select', o: 'chipType', showIf: 'displayInMusic'},
+        {k: 'ayChannels', l: 'AY channel layout', t: 'select', o: 'channels', showIf: 'displayInMusic'},
+        {k: 'ayFrequency', l: 'AY frequency', t: 'select', o: 'frequency', showIf: 'displayInMusic'},
+        {k: 'intFrequency', l: 'INT frequency', t: 'select', o: 'intFreq', showIf: 'displayInMusic'},
+        {k: 'palette', l: 'Palette', t: 'select', o: 'palette', showIf: 'displayInGraphics'},
+      ]},
+      {id: 'restrict', title: 'Ограничения', icon: 'block', fields: [
+        {k: '_deny', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'denyVoting', l: 'Запретить голосование'},
+          {k: 'denyComments', l: 'Запретить комментарии'},
+          {k: 'deny3a', l: 'Запретить 3A'},
+        ]},
+      ]},
+    ],
+  },
+  group: {
+    title: 'RAZOR 1911', subtitle: 'Группа · group #442',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'group', fields: [
+        {k: 'title', l: 'Название', t: 'text', span: 'full', req: 1},
+        {k: 'type', l: 'Тип', t: 'select', o: 'groupType'},
+        {k: 'abbreviation', l: 'Аббревиатура', t: 'text'},
+        {k: 'slogan', l: 'Слоган', t: 'text', span: 'full'},
+      ]},
+      {id: 'geo', title: 'География', icon: 'globe', fields: [
+        {k: 'country', l: 'Страна', t: 'search', ph: 'Найти страну'},
+        {k: 'city', l: 'Город', t: 'search', ph: 'Найти город'},
+      ]},
+      {id: 'period', title: 'Период', icon: 'cal', fields: [
+        {k: 'startDate', l: 'Дата начала', t: 'text', ph: 'ГГГГ-ММ-ДД'},
+        {k: 'endDate', l: 'Дата окончания', t: 'text', ph: 'ГГГГ-ММ-ДД'},
+      ]},
+      {id: 'links', title: 'Ссылки', icon: 'link', fields: [
+        {k: 'wikiLink', l: 'Wikipedia', t: 'text', ph: 'https://'},
+        {k: 'website', l: 'Сайт', t: 'text', ph: 'https://'},
+      ]},
+      {id: 'image', title: 'Изображение', icon: 'image', fields: [
+        {k: 'image', l: 'Логотип', t: 'image', span: 'full'},
+      ]},
+      {id: 'members', title: 'Участники', icon: 'person', fields: [
+        {k: 'members', l: '', t: 'members', span: 'full', rolesKey: 'member'},
+      ]},
+      {id: 'sub', title: 'Подгруппы', icon: 'group', fields: [
+        {k: 'subgroups', l: '', t: 'chips', span: 'full', ph: 'Добавить подгруппу'},
+      ]},
+    ],
+  },
+  picture: {
+    title: 'Eternal Flame', subtitle: 'Графика · zxPicture #55021',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'image', fields: [
+        {k: 'title', l: 'Название', t: 'text', span: 'full', req: 1},
+      ]},
+      {id: 'authors', title: 'Авторы', icon: 'person', fields: [
+        {k: 'authors', l: 'Авторы', t: 'chips', span: 'full', ph: 'Добавить автора'},
+        {k: 'originalAuthors', l: 'Автор оригинала (для ремиксов)', t: 'chips', span: 'full', ph: 'Добавить автора'},
+      ]},
+      {id: 'origin', title: 'Происхождение', icon: 'tag', fields: [
+        {k: 'game', l: 'Релиз', t: 'search', span: 'full', ph: 'Привязать к release'},
+        {k: 'party', l: 'Пати', t: 'search', ph: 'Найти пати'},
+        {k: 'partyplace', l: 'Место на пати', t: 'text'},
+        {k: 'compo', l: 'Компо', t: 'select', o: 'compo'},
+        {k: 'year', l: 'Год', t: 'text'},
+      ]},
+      {id: 'tech', title: 'Технические параметры', icon: 'cog', fields: [
+        {k: 'type', l: 'Тип', t: 'select', o: 'picType'},
+        {k: 'palette', l: 'Палитра', t: 'select', o: 'palette'},
+        {k: 'border', l: 'Бордюр', t: 'select', o: 'border'},
+        {k: 'rotation', l: 'Поворот', t: 'select', o: 'rotation'},
+      ]},
+      {id: 'media', title: 'Изображения', icon: 'image', fields: [
+        {k: 'image', l: 'Основное', t: 'image'},
+        {k: 'inspired', l: 'Inspired', t: 'image'},
+        {k: 'inspired2', l: 'Inspired 2', t: 'image'},
+        {k: 'sequence', l: 'Sequence', t: 'image'},
+        {k: 'exeFile', l: 'EXE-файл', t: 'file', span: 'full'},
+      ]},
+      {id: 'desc', title: 'Описание', icon: 'doc', fields: [
+        {k: 'description', l: 'Описание', t: 'textarea', span: 'full', rows: 4},
+        {k: 'tagsText', l: 'Теги', t: 'tags', span: 'full'},
+      ]},
+      {id: 'restrict', title: 'Ограничения', icon: 'block', fields: [
+        {k: '_deny', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'denyVoting', l: 'Запретить голосование'},
+          {k: 'denyComments', l: 'Запретить комментарии'},
+        ]},
+      ]},
+    ],
+  },
+  music: {
+    title: 'Robocop', subtitle: 'Музыка · zxMusic #33019',
+    sections: [
+      {id: 'ident', title: 'Идентификация', icon: 'disc', fields: [
+        {k: 'title', l: 'Название', t: 'text', span: 'full', req: 1},
+        {k: 'authors', l: 'Авторы', t: 'chips', span: 'full', ph: 'Добавить автора'},
+      ]},
+      {id: 'origin', title: 'Происхождение', icon: 'tag', fields: [
+        {k: 'game', l: 'Релиз', t: 'search', span: 'full', ph: 'Привязать к release'},
+        {k: 'party', l: 'Пати', t: 'search', ph: 'Найти пати'},
+        {k: 'partyplace', l: 'Место на пати', t: 'text'},
+        {k: 'compo', l: 'Компо', t: 'select', o: 'compo'},
+        {k: 'year', l: 'Год', t: 'text'},
+      ]},
+      {id: 'tech', title: 'Технические параметры', icon: 'cog', fields: [
+        {k: 'formatGroup', l: 'Тип звучания', t: 'select', o: 'formatGroup', span: 'full'},
+        {k: 'chipType', l: 'Тип чипа', t: 'select', o: 'chipType'},
+        {k: 'channelsType', l: 'Тип каналов', t: 'select', o: 'channels'},
+        {k: 'frequency', l: 'Частота', t: 'select', o: 'frequency'},
+        {k: 'intFrequency', l: 'Прерывания', t: 'select', o: 'intFreq'},
+      ]},
+      {id: 'files', title: 'Файлы', icon: 'image', fields: [
+        {k: 'file', l: 'Файл, проигрываемый ZXTune', t: 'file'},
+        {k: 'trackerFile', l: 'Архивный исходник', t: 'file'},
+      ]},
+      {id: 'desc', title: 'Описание', icon: 'doc', fields: [
+        {k: 'description', l: 'Описание', t: 'textarea', span: 'full', rows: 4},
+        {k: 'tagsText', l: 'Теги', t: 'tags', span: 'full'},
+      ]},
+      {id: 'restrict', title: 'Ограничения', icon: 'block', fields: [
+        {k: '_deny', l: '', t: 'checkgroup', span: 'full', items: [
+          {k: 'denyPlaying', l: 'Запретить проигрывание'},
+          {k: 'denyVoting', l: 'Запретить голосование'},
+          {k: 'denyComments', l: 'Запретить комментарии'},
+        ]},
+      ]},
+    ],
+  },
+};
+
+const SEED = {
+  prod: {title: 'Sunset', year: '2003', compo: 'Real time', legalStatus: 'Разрешено (zxart)', language: ['English'],
+    groups: ['4D', 'Sundry'], publishers: [], party: 'Chaos Constructions 2003', partyplace: '2',
+    description: 'Realtime 3D demo shown at the party hall.', tagsText: ['demo', '3d', 'realtime'],
+    authors: [{n: 'Diver', roles: ['Code', 'Design']}, {n: 'Manwe', roles: ['Graphics']}]},
+  release: {title: 'Sunset +3 Edition', prod: 'Sunset', version: '1.2', year: '2004', releaseType: 'Re-release',
+    releaseFormat: ['TRD', 'SCL'], language: ['English'], hardwareRequired: ['128K', 'Pentagon 128', 'AY-3-8910', 'Kempston joystick'], publishers: ['Sundry'],
+    authors: [{n: 'Diver', roles: ['Port']}]},
+  author: {title: 'Diver', country: 'Russia', city: 'Moscow', speccyWiki: 'Diver', zxTunesId: '4021',
+    displayInGraphics: true, displayInMusic: true, ayChipType: 'AY-3-8910', ayChannels: 'ABC', ayFrequency: '1.7734 MHz', intFrequency: '50 Hz', palette: 'Standard'},
+  group: {title: 'RAZOR 1911', type: 'scene', abbreviation: 'RZR', slogan: 'The oldest still active cracking crew',
+    country: 'Norway', startDate: '1985-10-01', website: '',
+    members: [{n: 'Insane TÖRD', roles: ['Founder', 'Organizer']}, {n: 'Sector9', roles: ['Cracker']}], subgroups: ['RAZOR CB', 'Fairlight']},
+  picture: {title: 'Eternal Flame', authors: ['Diver'], year: '2003', compo: 'Standard', type: 'Multicolor',
+    palette: 'Standard', border: 'Black', rotation: '0°', party: 'Chaos Constructions 2003', partyplace: '1',
+    game: '', description: 'Multicolor pixel work.', tagsText: ['fantasy', 'fire']},
+  music: {title: 'Robocop', authors: ['Tim Follin'], year: '1988', compo: 'Standard', formatGroup: 'AY/YM',
+    chipType: 'AY-3-8910', channelsType: 'ABC', frequency: '1.7734 MHz', intFrequency: '50 Hz',
+    description: 'AY arrangement of the arcade theme.', tagsText: ['game', 'ay']},
+};
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const values = {};
+    for (const e of Object.keys(SEED)) values[e] = Object.assign({}, SEED[e]);
+    this.state = {entity: 'prod', active: '', values, theme: 'light'};
+    this.rootRef = React.createRef();
+  }
+
+  componentDidMount() {
+    const first = SCHEMAS[this.state.entity].sections[0];
+    if (first) this.setState({active: first.id});
+  }
+
+  cur() { return this.state.values[this.state.entity] || {}; }
+  get(k) { return this.cur()[k]; }
+  set(k, v) {
+    this.setState(s => {
+      const values = Object.assign({}, s.values);
+      values[s.entity] = Object.assign({}, values[s.entity], {[k]: v});
+      return {values};
+    });
+  }
+
+  toggleTheme = () => {
+    const theme = this.state.theme === 'light' ? 'dark' : 'light';
+    const el = this.rootRef.current;
+    if (el) { el.classList.toggle('dark-mode', theme === 'dark'); el.classList.toggle('light-mode', theme === 'light'); }
+    this.setState({theme});
+  };
+
+  // ---- control renderers ----
+  ctrl(f) {
+    const v = this.get(f.k);
+    switch (f.t) {
+      case 'text': {
+        const inp = h('input', {className: 'zf-input', type: 'text', value: v || '', placeholder: f.ph || '',
+          style: f.pre ? {borderTopLeftRadius: 0, borderBottomLeftRadius: 0} : null,
+          onChange: e => this.set(f.k, e.target.value)});
+        if (!f.pre) return inp;
+        return h('div', {style: {display: 'flex', alignItems: 'stretch'}},
+          h('span', {style: {display: 'inline-flex', alignItems: 'center', padding: '0 10px', fontSize: 'var(--font-sm)',
+            color: 'var(--text-light-color)', background: 'var(--background-deep)', border: '1px solid var(--border-form)',
+            borderRight: 0, borderRadius: 'var(--radius-md) 0 0 var(--radius-md)', whiteSpace: 'nowrap'}}, f.pre), inp);
+      }
+      case 'textarea': return h('textarea', {className: 'zf-textarea', rows: f.rows || 4, value: v || '',
+        onChange: e => this.set(f.k, e.target.value)});
+      case 'select': return h('select', {className: 'zf-select', value: v || '', onChange: e => this.set(f.k, e.target.value)},
+        ENUMS[f.o].map(o => h('option', {key: o, value: o}, o)));
+      case 'multi': return this.multi(f, v || []);
+      case 'multifilter': return this.multifilter(f, v || []);
+      case 'groupmulti': return this.groupmulti(f, v || []);
+      case 'tags': return this.tags(f, v || []);
+      case 'search': return this.search(f, v || '');
+      case 'chips': return this.chips(f, v || []);
+      case 'check': return this.check(f.k, f.l, !!v);
+      case 'checkgroup': return this.checkgroup(f);
+      case 'image': return this.upload(f, 'image');
+      case 'file': return this.upload(f, 'file');
+      case 'gallery': return this.gallery(f, true);
+      case 'files': return this.gallery(f, false);
+      case 'members': return this.members(f, v || []);
+      case 'tree': return this.tree(f);
+      case 'multilang': return this.multilang(f);
+      default: return null;
+    }
+  }
+
+  multi(f, sel) {
+    return h('div', {style: {display: 'flex', flexWrap: 'wrap', gap: '6px'}},
+      ENUMS[f.o].map(o => {
+        const on = sel.includes(o);
+        return h('span', {key: o, className: 'zf-pill' + (on ? ' is-on' : ''),
+          onClick: () => this.set(f.k, on ? sel.filter(x => x !== o) : sel.concat(o))}, o);
+      }));
+  }
+
+  closeIcon() {
+    return h('svg', {width: 12, height: 12, viewBox: '0 0 24 24', fill: 'currentColor'},
+      h('path', {d: 'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'}));
+  }
+  chipList(items, onRemove) {
+    return h('div', {style: {display: 'flex', flexWrap: 'wrap', gap: '6px'}},
+      items.map((c, i) => h('span', {key: c + i, className: 'zf-chip'}, c,
+        h('button', {type: 'button', title: 'Убрать', onClick: () => onRemove(i)}, this.closeIcon()))));
+  }
+
+  multifilter(f, sel) {
+    const q = (this.get(f.k + '__q') || '').toLowerCase();
+    const opts = ENUMS[f.o].filter(o => o.toLowerCase().includes(q));
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '8px'}},
+      sel.length ? this.chipList(sel, i => this.set(f.k, sel.filter((_, j) => j !== i))) : null,
+      h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+        h('input', {className: 'zf-input', type: 'text', value: this.get(f.k + '__q') || '',
+          placeholder: 'Фильтр (' + ENUMS[f.o].length + ') …', onChange: e => this.set(f.k + '__q', e.target.value)})),
+      h('div', {className: 'zf-scroll', style: {border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)',
+        background: 'var(--surface)', maxHeight: '176px', overflow: 'auto', padding: '8px 12px',
+        display: 'flex', flexDirection: 'column', gap: '7px'}},
+        opts.length ? opts.map(o => h('div', {key: o},
+          this.check2(o, sel.includes(o), () => this.set(f.k, sel.includes(o) ? sel.filter(x => x !== o) : sel.concat(o)))))
+          : h('span', {style: {color: 'var(--text-light-color)', fontSize: 'var(--font-sm)'}}, 'Ничего не найдено')));
+  }
+
+  groupmulti(f, sel) {
+    const groups = f.g === 'hardware' ? HW_GROUPS : [];
+    const total = groups.reduce((n, g) => n + g.items.length, 0);
+    const q = (this.get(f.k + '__q') || '').toLowerCase();
+    const toggle = x => this.set(f.k, sel.includes(x) ? sel.filter(y => y !== x) : sel.concat(x));
+    const shown = groups.map(g => ({g: g.g, items: g.items.filter(o => o.toLowerCase().includes(q))})).filter(g => g.items.length);
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '8px'}},
+      sel.length ? this.chipList(sel, i => this.set(f.k, sel.filter((_, j) => j !== i))) : null,
+      h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+        h('input', {className: 'zf-input', type: 'text', value: this.get(f.k + '__q') || '',
+          placeholder: 'Фильтр (' + total + ') …', onChange: e => this.set(f.k + '__q', e.target.value)})),
+      h('div', {className: 'zf-scroll', style: {border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)',
+        background: 'var(--surface)', maxHeight: '224px', overflow: 'auto', padding: '8px 12px'}},
+        shown.length ? shown.map(g => h('div', {key: g.g, style: {marginBottom: '4px'}},
+          h('div', {style: {fontWeight: 700, fontSize: 'var(--font-xs)', textTransform: 'uppercase',
+            letterSpacing: '1px', color: 'var(--text-light-color)', margin: '6px 0 5px'}}, g.g),
+          h('div', {style: {display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: '6px 12px'}},
+            g.items.map(o => h('div', {key: o}, this.check2(o, sel.includes(o), () => toggle(o)))))))
+          : h('span', {style: {color: 'var(--text-light-color)', fontSize: 'var(--font-sm)'}}, 'Ничего не найдено')),
+      h('span', {style: {fontSize: 'var(--font-xs)', color: 'var(--text-light-color)'}}, 'Выбрано: ' + sel.length));
+  }
+
+  tags(f, arr) {
+    const q = this.get(f.k + '__q') || '';
+    const ql = q.trim().toLowerCase();
+    const results = ql ? TAG_POOL.filter(t => t.toLowerCase().includes(ql) && !arr.includes(t)).slice(0, 6) : [];
+    const exact = arr.some(t => t.toLowerCase() === ql) || TAG_POOL.some(t => t.toLowerCase() === ql);
+    const add = t => { if (t && !arr.includes(t)) this.set(f.k, arr.concat(t)); this.set(f.k + '__q', ''); };
+    const sugg = SUGGESTED_TAGS.filter(t => !arr.includes(t));
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '8px'}},
+      arr.length ? this.chipList(arr, i => this.set(f.k, arr.filter((_, j) => j !== i))) : null,
+      h('div', {style: {position: 'relative'}},
+        h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+          h('input', {className: 'zf-input', type: 'text', value: q, placeholder: 'Поиск тега…',
+            onChange: e => this.set(f.k + '__q', e.target.value),
+            onKeyDown: e => { if (e.key === 'Enter') { e.preventDefault(); add(q.trim()); } }})),
+        (results.length || (ql && !exact)) ? h('div', {className: 'zf-scroll', style: {position: 'absolute', zIndex: 5, top: '100%',
+          left: 0, right: 0, marginTop: '4px', background: 'var(--surface)', border: '1px solid var(--border-form)',
+          borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)', maxHeight: '190px', overflow: 'auto', padding: '4px'}},
+          results.map(t => h('div', {key: t, className: 'zf-opt', onClick: () => add(t),
+            style: {padding: '7px 10px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 'var(--font-sm)'},
+            onMouseDown: e => e.preventDefault()}, t)),
+          (ql && !exact) ? h('div', {onClick: () => add(q.trim()), onMouseDown: e => e.preventDefault(),
+            style: {padding: '7px 10px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 'var(--font-sm)',
+              color: 'var(--primary-600)', fontWeight: 700}}, '+ Добавить «' + q.trim() + '»') : null) : null),
+      sugg.length ? h('div', {style: {display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px'}},
+        h('span', {style: {fontSize: 'var(--font-xs)', color: 'var(--text-light-color)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700, marginRight: '2px'}}, 'Похожие'),
+        sugg.map(t => h('span', {key: t, className: 'zf-pill', onClick: () => this.set(f.k, arr.concat(t))}, '+ ' + t))) : null);
+  }
+
+  search(f, v) {
+    if (v) return h('div', {style: {display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap'}},
+      h('span', {className: 'zf-chip'}, v, h('button', {type: 'button', title: 'Убрать', onClick: () => this.set(f.k, '')}, this.closeIcon())));
+    return h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+      h('input', {className: 'zf-input', type: 'text', placeholder: f.ph || 'Поиск…',
+        onChange: e => this.set(f.k, e.target.value)}));
+  }
+  searchIcon() {
+    return h('svg', {viewBox: '0 0 24 24', fill: 'currentColor'},
+      h('path', {d: 'M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z'}));
+  }
+
+  chips(f, arr) {
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '8px'}},
+      arr.length ? h('div', {style: {display: 'flex', flexWrap: 'wrap', gap: '6px'}},
+        arr.map((c, i) => h('span', {key: c + i, className: 'zf-chip'}, c,
+          h('button', {type: 'button', title: 'Убрать', onClick: () => this.set(f.k, arr.filter((_, j) => j !== i))},
+            h('svg', {width: 12, height: 12, viewBox: '0 0 24 24', fill: 'currentColor'}, h('path', {d: 'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'})))))) : null,
+      h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+        h('input', {className: 'zf-input', type: 'text', placeholder: f.ph || 'Добавить…',
+          onKeyDown: e => { if (e.key === 'Enter' && e.target.value.trim()) { e.preventDefault(); this.set(f.k, arr.concat(e.target.value.trim())); e.target.value = ''; } }})));
+  }
+
+  check(k, label, on) {
+    return h('label', {className: 'zf-check' + (on ? ' is-on' : ''), onClick: e => { e.preventDefault(); this.set(k, !on); }},
+      h('span', {className: 'box'}, h('svg', {viewBox: '0 0 24 24', fill: 'currentColor'}, h('path', {d: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}))),
+      h('span', null, label));
+  }
+
+  checkgroup(f) {
+    return h('div', {style: {display: 'flex', flexWrap: 'wrap', gap: '10px 22px', padding: '14px 16px',
+      border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)', background: 'var(--background-deep)'}},
+      f.items.map(it => h('div', {key: it.k}, this.check(it.k, it.l, !!this.get(it.k)))));
+  }
+
+  upload(f, kind) {
+    const has = this.get(f.k + '__file') || (kind === 'image' && (f.k === 'image'));
+    return h('div', {className: 'zf-drop'},
+      h('div', {className: 'zf-thumb'}, icon(kind === 'image' ? 'image' : 'doc', 22)),
+      h('div', {style: {flex: 1, minWidth: 0}},
+        h('div', {style: {fontSize: 'var(--font-sm)', color: 'var(--text-color)', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}},
+          kind === 'image' ? 'Перетащите изображение' : 'Перетащите файл'),
+        h('div', {style: {fontSize: 'var(--font-xs)', color: 'var(--text-light-color)'}}, 'или выберите на диске')),
+      h(window.ZXArtDesignSystem_019de4.ZxButton, {variant: 'outlined', size: 'sm'}, 'Обзор'));
+  }
+
+  gallery(f) {
+    const isFiles = f.t === 'files';
+    const arr = this.get(f.k) || (isFiles ? [{id: 1, n: 'file_a.scl'}, {id: 2, n: 'file_b.trd'}] : [{id: 1}, {id: 2}, {id: 3}]);
+    const move = (i, d) => { const n = arr.slice(); const j = i + d; if (j < 0 || j >= n.length) return; const t = n[i]; n[i] = n[j]; n[j] = t; this.set(f.k, n); };
+    const del = i => this.set(f.k, arr.filter((_, j) => j !== i));
+    const arw = d => h('svg', {width: 14, height: 14, viewBox: '0 0 24 24', fill: 'currentColor'}, h('path', {d}));
+    const trash = 'M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z';
+    const ctrls = (i) => h('div', {style: {display: 'flex', gap: '4px', justifyContent: 'center', marginTop: '4px'}},
+      h('button', {type: 'button', className: 'zf-icobtn', title: 'Раньше', style: {width: '26px', height: '26px', opacity: i === 0 ? 0.35 : 1}, onClick: () => move(i, -1)}, arw('M14 7l-5 5 5 5z')),
+      h('button', {type: 'button', className: 'zf-icobtn', title: 'Удалить', style: {width: '26px', height: '26px'}, onClick: () => del(i)}, arw(trash)),
+      h('button', {type: 'button', className: 'zf-icobtn', title: 'Позже', style: {width: '26px', height: '26px', opacity: i === arr.length - 1 ? 0.35 : 1}, onClick: () => move(i, 1)}, arw('M10 7l5 5-5 5z')));
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '10px'}},
+      arr.length ? (isFiles
+        ? h('div', {style: {display: 'flex', flexDirection: 'column', gap: '6px'}},
+            arr.map((it, i) => h('div', {key: it.id, style: {display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 10px',
+              border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)', background: 'var(--surface)'}},
+              h('span', {style: {color: 'var(--secondary-500)', display: 'inline-flex'}}, icon('doc', 18)),
+              h('span', {style: {flex: 1, fontSize: 'var(--font-sm)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}, it.n || ('файл ' + it.id)),
+              h('button', {type: 'button', className: 'zf-icobtn', title: 'Раньше', style: {width: '28px', height: '28px', opacity: i === 0 ? 0.35 : 1}, onClick: () => move(i, -1)}, arw('M7 14l5-5 5 5z')),
+              h('button', {type: 'button', className: 'zf-icobtn', title: 'Позже', style: {width: '28px', height: '28px', opacity: i === arr.length - 1 ? 0.35 : 1}, onClick: () => move(i, 1)}, arw('M7 10l5 5 5-5z')),
+              h('button', {type: 'button', className: 'zf-icobtn', title: 'Удалить', style: {width: '28px', height: '28px'}, onClick: () => del(i)}, arw(trash)))))
+        : h('div', {style: {display: 'flex', gap: '10px', flexWrap: 'wrap'}},
+            arr.map((it, i) => h('div', {key: it.id, style: {width: '96px'}},
+              h('div', {className: 'zf-thumb', style: {width: '96px', height: '72px'}}, icon('image', 22)),
+              ctrls(i))))) : null,
+      h('div', {className: 'zf-drop', style: {padding: '10px 14px'}},
+        h('div', {style: {flex: 1, fontSize: 'var(--font-sm)', color: 'var(--text-light-color)'}}, arr.length + ' элемент(ов) · перетащите файлы для добавления'),
+        h(window.ZXArtDesignSystem_019de4.ZxButton, {variant: 'outlined', size: 'sm'}, 'Обзор')));
+  }
+
+  rolePicker(f, i, m, roleList, mroles, toggleRole) {
+    const roles = mroles(m);
+    const qk = f.k + '__rq' + i;
+    const ok = f.k + '__ro' + i;
+    const q = (this.get(qk) || '').toLowerCase();
+    const open = !!this.get(ok);
+    const opts = roleList.filter(r => r.toLowerCase().includes(q) && !roles.includes(r));
+    return h('div', {style: {display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px'}},
+      roles.map(r => h('span', {key: r, className: 'zf-chip', style: {background: 'var(--surface)', padding: '3px 5px 3px 9px', fontSize: 'var(--font-xs)'}}, r,
+        h('button', {type: 'button', title: 'Убрать роль', onClick: () => toggleRole(i, m, r)}, this.closeIcon()))),
+      h('div', {style: {position: 'relative', flex: '1 1 130px', minWidth: '130px'}},
+        h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+          h('input', {className: 'zf-input', type: 'text', value: this.get(qk) || '',
+            placeholder: '+ Роль (' + roleList.length + ')', style: {height: '27px', fontSize: 'var(--font-sm)', paddingTop: '3px', paddingBottom: '3px'},
+            onFocus: () => this.set(ok, true), onBlur: () => setTimeout(() => this.set(ok, false), 150),
+            onChange: e => this.set(qk, e.target.value)})),
+        open ? h('div', {className: 'zf-scroll', style: {position: 'absolute', zIndex: 6, top: '100%', left: 0, minWidth: '190px',
+          marginTop: '4px', background: 'var(--surface)', border: '1px solid var(--border-form)',
+          borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)', maxHeight: '184px', overflow: 'auto', padding: '4px'}},
+          opts.length ? opts.map(r => h('div', {key: r, className: 'zf-opt', onMouseDown: e => e.preventDefault(),
+            onClick: () => { toggleRole(i, m, r); this.set(qk, ''); },
+            style: {padding: '6px 10px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 'var(--font-sm)', whiteSpace: 'nowrap'}}, r))
+            : h('div', {style: {padding: '6px 10px', fontSize: 'var(--font-sm)', color: 'var(--text-light-color)'}}, 'Ничего не найдено')) : null));
+  }
+
+  members(f, arr) {
+    const trash = h('svg', {width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor'},
+      h('path', {d: 'M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z'}));
+    const roleList = ROLES[f.rolesKey] || ROLES.author;
+    const mroles = m => m.roles || (m.r ? [m.r] : []);
+    const setMember = (i, m) => { const next = arr.slice(); next[i] = m; this.set(f.k, next); };
+    const toggleRole = (i, m, r) => {
+      const cur = mroles(m);
+      const roles = cur.includes(r) ? cur.filter(x => x !== r) : cur.concat(r);
+      setMember(i, Object.assign({}, m, {roles}));
+    };
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '10px'}},
+      h('div', {className: 'zf-memgrid'},
+      arr.map((m, i) => h('div', {key: i, style: {border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)',
+        background: 'var(--background-deep)', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: '9px'}},
+        h('div', {style: {display: 'flex', alignItems: 'center', gap: '8px'}},
+          h('span', {style: {display: 'inline-flex', alignItems: 'center', gap: '7px', fontWeight: 700, fontSize: 'var(--font-md)'}}, icon('person', 15), m.n),
+          h('span', {style: {flex: 1}}),
+          h('button', {type: 'button', className: 'zf-icobtn', title: 'Убрать', style: {width: '30px', height: '30px'},
+            onClick: () => this.set(f.k, arr.filter((_, j) => j !== i))}, trash)),
+        this.rolePicker(f, i, m, roleList, mroles, toggleRole)))),
+      h('div', {className: 'zf-searchbox', style: {marginTop: '2px'}}, this.searchIcon(),
+        h('input', {className: 'zf-input', type: 'text', placeholder: 'Добавить участника по нику… (Enter)',
+          onKeyDown: e => { if (e.key === 'Enter' && e.target.value.trim()) { e.preventDefault(); this.set(f.k, arr.concat({n: e.target.value.trim(), roles: []})); e.target.value = ''; } }})));
+  }
+
+  tree(f) {
+    const sel = this.get(f.k) || [17];
+    const q = (this.get(f.k + '__q') || '').toLowerCase();
+    const toggle = id => this.set(f.k, sel.includes(id) ? sel.filter(y => y !== id) : sel.concat(id));
+    // When filtering, keep a parent visible if any descendant (deeper level before next same/upper) matches.
+    let rows = CATEGORY_TREE;
+    if (q) {
+      const keep = new Set();
+      const stack = [];
+      for (const n of CATEGORY_TREE) {
+        while (stack.length && stack[stack.length - 1].lvl >= n.lvl) stack.pop();
+        if (n.t.toLowerCase().includes(q)) { keep.add(n.id); for (const a of stack) keep.add(a.id); }
+        stack.push(n);
+      }
+      rows = CATEGORY_TREE.filter(n => keep.has(n.id));
+    }
+    const selCount = sel.length;
+    return h('div', {style: {display: 'flex', flexDirection: 'column', gap: '8px'}},
+      h('div', {className: 'zf-searchbox'}, this.searchIcon(),
+        h('input', {className: 'zf-input', type: 'text', value: this.get(f.k + '__q') || '',
+          placeholder: 'Фильтр категорий (' + CATEGORY_TREE.length + ') …',
+          onChange: e => this.set(f.k + '__q', e.target.value)})),
+      h('div', {className: 'zf-scroll', style: {border: '1px solid var(--border-form)', borderRadius: 'var(--radius-md)',
+        background: 'var(--surface)', padding: '8px 12px', maxHeight: '210px', overflow: 'auto',
+        display: 'flex', flexDirection: 'column', gap: '5px'}},
+        rows.length ? rows.map(n => n.lvl === 0
+          ? h('div', {key: n.id, style: {fontWeight: 700, fontSize: 'var(--font-xs)', textTransform: 'uppercase',
+              letterSpacing: '1px', color: 'var(--text-light-color)', margin: '6px 0 2px'}}, n.t)
+          : h('div', {key: n.id, style: {paddingLeft: ((n.lvl - 1) * 16) + 'px'}},
+              this.check2(n.t, sel.includes(n.id), () => toggle(n.id))))
+          : h('span', {style: {color: 'var(--text-light-color)', fontSize: 'var(--font-sm)'}}, 'Ничего не найдено')),
+      h('span', {style: {fontSize: 'var(--font-xs)', color: 'var(--text-light-color)'}}, 'Выбрано: ' + selCount));
+  }
+  check2(label, on, onClick) {
+    return h('label', {className: 'zf-check' + (on ? ' is-on' : ''), onClick: e => { e.preventDefault(); onClick(); }, style: {fontSize: 'var(--font-sm)'}},
+      h('span', {className: 'box', style: {width: '16px', height: '16px'}}, h('svg', {viewBox: '0 0 24 24', fill: 'currentColor'}, h('path', {d: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'}))),
+      h('span', null, label));
+  }
+
+  multilang(f) {
+    const langs = ['EN', 'RU', 'ES'];
+    const vals = this.get(f.k) || {EN: 'Vitaly', RU: 'Виталий', ES: ''};
+    return h('div', {style: {display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '8px'}},
+      langs.map(L => h('div', {key: L, style: {display: 'flex', alignItems: 'stretch'}},
+        h('span', {style: {display: 'inline-flex', alignItems: 'center', padding: '0 9px', fontSize: 'var(--font-xs)',
+          fontWeight: 700, color: 'var(--text-light-color)', background: 'var(--background-deep)',
+          border: '1px solid var(--border-form)', borderRight: 0, borderRadius: 'var(--radius-md) 0 0 var(--radius-md)'}}, L),
+        h('input', {className: 'zf-input', type: 'text', value: vals[L] || '', placeholder: 'Имя (' + L + ')',
+          style: {borderTopLeftRadius: 0, borderBottomLeftRadius: 0},
+          onChange: e => this.set(f.k, Object.assign({}, vals, {[L]: e.target.value}))}))));
+  }
+
+  field(f) {
+    const span = f.span === 'full' ? {gridColumn: '1 / -1'} : {};
+    const labelRow = f.l ? h('div', {style: {display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '5px'}},
+      h('label', {style: {fontSize: 'var(--font-sm)', fontWeight: 500, color: 'var(--text-color)'}}, f.l),
+      f.req ? h('span', {style: {color: 'var(--error-color)', fontSize: 'var(--font-sm)'}}, '*') : null) : null;
+    return h('div', {key: f.k, style: Object.assign({minWidth: 0}, span)}, labelRow, this.ctrl(f));
+  }
+
+  sectionFields(sec) {
+    const visible = sec.fields.filter(f => !f.showIf || !!this.get(f.showIf));
+    if (!visible.length) return h('div', {style: {fontSize: 'var(--font-sm)', color: 'var(--text-light-color)',
+      padding: '10px 12px', background: 'var(--background-deep)', borderRadius: 'var(--radius-md)'}},
+      sec.emptyHint || 'Нет доступных полей.');
+    return h('div', {style: {display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px 20px'}},
+      visible.map(f => this.field(f)));
+  }
+
+  renderVals() {
+    const schema = SCHEMAS[this.state.entity];
+    const entities = ENTITIES.map(e => ({
+      label: e.label, cls: e.id === this.state.entity ? 'is-on' : '',
+      onSelect: () => { const s = SCHEMAS[e.id]; this.setState({entity: e.id, active: s.sections[0].id}); },
+    }));
+    const navSections = schema.sections.map(s => ({
+      title: s.title, href: '#' + s.id, cls: s.id === this.state.active ? 'is-active' : '',
+    }));
+    const sections = schema.sections.map(s => ({
+      id: s.id, title: s.title, icon: icon(s.icon, 15), fieldsEl: this.sectionFields(s),
+    }));
+    const themeIcon = h('svg', {width: 18, height: 18, viewBox: '0 0 24 24', fill: 'currentColor'},
+      this.state.theme === 'light'
+        ? h('path', {d: 'M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4A5.39 5.39 0 0 1 13.36 3.1 8.99 8.99 0 0 0 12 3z'})
+        : h('path', {d: 'M12 7a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0-5h-1v3h2V2zm0 17h-1v3h2v-3zM4.2 5.6 5.6 4.2l-2-2L2.2 3.6zM20.4 4.2 19 5.6l2 2 1.4-1.4zM2 11v2h3v-2zm17 0v2h3v-2zM4.2 18.4l1.4 1.4 2-2-1.4-1.4zm14.8 1.4 1.4-1.4-2-2-1.4 1.4z'}));
+
+    return {
+      entities, navSections, sections,
+      formTitle: schema.title, formSubtitle: schema.subtitle,
+      dirtyLabel: 'Все изменения применяются к элементу',
+      toggleTheme: this.toggleTheme, themeIcon,
+      rootRef: this.rootRef,
+      onSubmit: e => e.preventDefault(),
+    };
+  }
+}
+</script>
+</body>
+</html>

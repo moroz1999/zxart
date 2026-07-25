@@ -2,14 +2,16 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {TranslateModule} from '@ngx-translate/core';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {EntityRef} from '../../models/entity-ref';
 import {EntitySearchService} from '../../services/entity-search.service';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
-import {ZxButtonComponent} from '../zx-button/zx-button.component';
+import {ZxCloseButtonComponent} from '../zx-close-button/zx-close-button.component';
 import {DropdownPopoverAnimation} from '../../animations/popover-animations';
+import {listKeyboardNav} from '../../utils/list-keyboard-nav';
 
 /**
  * Single-select relation picker (country, city, author, group, party, …) for
@@ -22,11 +24,12 @@ import {DropdownPopoverAnimation} from '../../animations/popover-animations';
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
     ZxInputComponent,
     ZxSpinnerComponent,
-    ZxButtonComponent,
+    ZxCloseButtonComponent,
   ],
   templateUrl: './zx-entity-autocomplete.component.html',
   styleUrl: './zx-entity-autocomplete.component.scss',
@@ -50,6 +53,7 @@ export class ZxEntityAutocompleteComponent implements OnInit, OnDestroy, Control
   query = '';
   searchResults: EntityRef[] = [];
   loading = false;
+  activeIndex = 0;
 
   readonly positions: ConnectedPosition[] = [
     {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4},
@@ -78,6 +82,7 @@ export class ZxEntityAutocompleteComponent implements OnInit, OnDestroy, Control
         switchMap(query => this.entitySearch.search(this.types, query)),
       ).subscribe(results => {
         this.searchResults = results;
+        this.activeIndex = 0;
         this.loading = false;
         this.cdr.markForCheck();
       }),
@@ -95,6 +100,31 @@ export class ZxEntityAutocompleteComponent implements OnInit, OnDestroy, Control
   onQueryChange(value: string): void {
     this.query = value;
     this.querySubject.next(value);
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.dropdownOpen) {
+      return;
+    }
+    const action = listKeyboardNav(event.key, this.activeIndex, this.searchResults.length);
+    switch (action.kind) {
+      case 'move':
+        event.preventDefault();
+        this.activeIndex = action.index;
+        break;
+      case 'select': {
+        // Prevent the surrounding form from submitting on selection.
+        event.preventDefault();
+        const active = this.searchResults[action.index];
+        if (active) {
+          this.onSelect(active);
+        }
+        break;
+      }
+      case 'close':
+        this.closeDropdown();
+        break;
+    }
   }
 
   onSelect(ref: EntityRef): void {

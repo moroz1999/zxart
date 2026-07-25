@@ -36,6 +36,27 @@ a:focus {
   text-decoration: var(--zx-link-hover-decoration);
 }
 
+// Default heading styles for plain content (e.g. rendered descriptions) so bare
+// h1/h2/h3 match the typography scale without needing the appHeading directive.
+// Mirrors .app-typography-display / -headline / -title from the typography theme.
+h1 {
+  font-size: var(--app-typography-display-size);
+  font-weight: var(--app-typography-display-weight);
+  line-height: var(--app-typography-display-line-height);
+}
+
+h2 {
+  font-size: var(--app-typography-headline-size);
+  font-weight: var(--app-typography-headline-weight);
+  line-height: var(--app-typography-headline-line-height);
+}
+
+h3 {
+  font-size: var(--app-typography-title-size);
+  font-weight: var(--app-typography-title-weight);
+  line-height: var(--app-typography-title-line-height);
+}
+
 // angular-svg-icon: custom elements are display:inline by default, which ignores CSS width/height.
 // Setting display:inline-flex makes the host respect explicit dimensions,
 // and width/height:100% on the inner svg ensures it fills the container in all browsers including Safari.

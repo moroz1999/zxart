@@ -375,6 +375,7 @@ components:
         description:
           type: string
           nullable: true
+          description: Plain description text without presentation wrapper markup.
         tags:
           type: array
           items:

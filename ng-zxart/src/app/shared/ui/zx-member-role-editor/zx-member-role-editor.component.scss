@@ -1,45 +1,133 @@
+@use 'shared/breakpoints' as bp;
+
 :host {
   display: block;
 }
 
-.zx-member-role-editor {
+.zx-mre {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
-.zx-member-role-editor__row,
-.zx-member-role-editor__add {
+.zx-mre__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-12);
+
+  @include bp.media-breakpoint-down(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include bp.media-breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.zx-mre__card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
-  border: var(--zx-tags-input-dropdown-border);
-  border-radius: var(--zx-tags-input-dropdown-radius);
+  gap: var(--space-8);
+  padding: var(--space-12);
+  background: var(--background-deep);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
 }
 
-.zx-member-role-editor__name {
+.zx-mre__head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  font-weight: 500;
+  gap: var(--space-8);
 }
 
-.zx-member-role-editor__roles {
+// Typography comes from the appText directive (bodySm / strong tone) in the
+// template; the class only owns the card-head layout and truncation flexing.
+.zx-mre__name {
+  flex: 1;
+  min-width: 0;
+}
+
+.zx-mre__roles {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
-}
-
-.zx-member-role-editor__role {
-  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.9em;
+  gap: var(--space-4);
 }
 
-.zx-member-role-editor__dates {
+
+
+.zx-mre__role-add {
+  position: relative;
+  flex: 0 0 100%;
+}
+
+.zx-mre__role-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--zx-font-size-sm);
+  color: var(--text-color);
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+  transition: border-color var(--animation-sm);
+
+  &::placeholder {
+    color: var(--secondary-400);
+  }
+
+  &:hover {
+    border-color: var(--secondary-500);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--border-primary);
+  }
+}
+
+// Rendered in the CDK overlay layer (see the component template), so it floats
+// above the card grid instead of being clipped by it.
+.zx-mre__role-options {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 160px;
+  max-height: 160px;
+  padding: var(--space-4);
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.zx-mre__role-option {
+  padding: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-color);
+  font-size: var(--zx-font-size-sm);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--background-deep);
+  }
+}
+
+.zx-mre__role-option--active {
+  background: var(--background-deep);
+}
+
+.zx-mre__role-empty {
+  padding: var(--space-8);
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-sm);
+}
+
+.zx-mre__dates {
+  display: flex;
+  gap: var(--space-8);
 }

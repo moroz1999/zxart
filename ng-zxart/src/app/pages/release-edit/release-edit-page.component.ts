@@ -25,7 +25,10 @@ import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entit
 import {FileUploadChange, ZxFileUploadComponent} from '../../shared/ui/zx-file-upload/zx-file-upload.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
+import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -33,7 +36,7 @@ import {FileUploadField} from '../../shared/services/form-save-api.service';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
 
 /** Routed page for `release/:id/edit`. */
 @Component({
@@ -60,7 +63,10 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthor: '', addAuthorRole: {}, add
     ZxEntityAutocompleteComponent,
     ZxMultiEntityAutocompleteComponent,
     ZxFileUploadComponent,
-    ZxStackComponent,
+    ZxFormSectionComponent,
+    ZxCheckboxGroupComponent,
+    ZxButtonControlsComponent,
+    ZxMultiSelectFilterComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -158,6 +164,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  onCancel(): void {
+    this.router.navigateByUrl(`/release/${this.elementId}`);
+  }
+
   onMemberFields(fields: MemberFields): void {
     this.memberFields = fields;
   }
@@ -209,7 +219,6 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
           description: value.description,
           denyVoting: value.denyVoting ? '1' : '',
           denyComments: value.denyComments ? '1' : '',
-          addAuthor: this.memberFields.addAuthor,
           addAuthorRole: this.memberFields.addAuthorRole,
         },
       }).subscribe({

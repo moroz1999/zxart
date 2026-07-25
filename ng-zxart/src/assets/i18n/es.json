@@ -8,7 +8,43 @@
   "common": {
     "not-found": "Página no encontrada",
     "remove": "Eliminar",
-    "choose-file": "Elegir archivo"
+    "choose-file": "Elegir archivo",
+    "nothing-found": "No se encontró nada"
+  },
+  "form": {
+    "selected-count": "Seleccionado: {{count}}",
+    "filter": "Filtrar…",
+    "move-left": "Mover a la izquierda",
+    "move-right": "Mover a la derecha",
+    "search": "Buscar…",
+    "drop-image": "Arrastra una imagen aquí",
+    "drop-file": "Arrastra un archivo aquí",
+    "drop-hint": "o elige desde el disco",
+    "add-author": "Añadir miembro por apodo…",
+    "add-role": "+ Rol",
+    "date-from": "desde",
+    "date-to": "hasta",
+    "cancel": "Cancelar",
+    "identification": "Identificación",
+    "classification": "Clasificación",
+    "relations": "Relaciones",
+    "authors": "Autores",
+    "members": "Miembros",
+    "media": "Medios y archivos",
+    "files": "Archivos",
+    "images": "Imágenes",
+    "image": "Imagen",
+    "description": "Descripción",
+    "restrictions": "Restricciones",
+    "characteristics": "Características",
+    "technical": "Parámetros técnicos",
+    "geography": "Geografía",
+    "period": "Período",
+    "links": "Enlaces",
+    "display": "Visualización",
+    "origin": "Origen",
+    "conversion": "Conversión de obras",
+    "subgroups": "Subgrupos"
   },
   "party-form": {
     "title": "Nombre",
@@ -40,7 +76,7 @@
     "real-name": "Nombre real",
     "country": "País",
     "city": "Ciudad",
-    "art-city": "Ciudad de arte",
+    "artcity-id": "Artcity ID",
     "wiki": "Enlace de Wikipedia",
     "zxtunes-id": "ZXTunes ID",
     "image": "Foto",
@@ -56,6 +92,7 @@
     "error-save": "No se pudo guardar"
   },
   "group-form": {
+    "add-subgroup": "Añadir subgrupo…",
     "title": "Nombre",
     "type": "Tipo",
     "abbreviation": "Abreviatura",
@@ -114,8 +151,8 @@
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
     "youtube-id": "YouTube id",
-    "compilation-items": "Elementos de compilación",
-    "series-prods": "Serie",
+    "compilation-items": "Programas de la compilación",
+    "series-prods": "Programas de la serie",
     "html-description": "Descripción HTML",
     "description": "Descripción",
     "instructions": "Instrucciones",
@@ -402,7 +439,8 @@
       "organizer": "Organizador",
       "hardware": "Hardware",
       "tester": "Tester",
-      "gamedesigner": "Diseñador de juegos"
+      "gamedesigner": "Diseñador de juegos",
+      "unknown": "Desconocido"
     },
     "connections": {
       "title": "Conexiones",
@@ -1377,7 +1415,7 @@
     "instructions-download": "Descargar",
     "instructions-loading": "Cargando...",
     "instructions-error": "Error al cargar el archivo",
-    "see-also": "Véase también"
+    "links": "Enlaces"
   },
   "release-details": {
     "actions": "Acciones del lanzamiento",

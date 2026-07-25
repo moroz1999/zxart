@@ -13,6 +13,7 @@ use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Repositories\ReleasesRepository;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
+use ZxArt\Shared\DescriptionFormatter;
 use zxReleaseElement;
 
 readonly class ProdReleasesService
@@ -21,6 +22,7 @@ readonly class ProdReleasesService
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private ProdMediaService $prodMediaService,
         private ReleasesRepository $releasesRepository,
@@ -87,7 +89,7 @@ readonly class ProdReleasesService
                 ? $this->infoBuilder->translate('zxRelease.type_' . $release->releaseType)
                 : null,
             hardwareRequired: $release->hardwareRequired,
-            description: (string)$release->description,
+            description: $this->descriptionFormatter->decode((string)$release->description),
             isRealtime: $release->isRealtime(),
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),

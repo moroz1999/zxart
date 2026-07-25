@@ -23,6 +23,7 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-search-groups-skeleton/zx-search-groups-skeleton.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
+import {ZxCloseButtonComponent} from '../../../../shared/ui/zx-close-button/zx-close-button.component';
 import {environment} from '../../../../../environments/environment';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {Router, RouterLink} from '@angular/router';
@@ -38,6 +39,7 @@ const ICONS = ['person', 'list', 'videogame-asset', 'image', 'music-note'];
     TranslateModule,
     SvgIconComponent,
     ZxDialogComponent,
+    ZxCloseButtonComponent,
     ZxButtonComponent,
     ZxSearchGroupsSkeletonComponent,
     ZxButtonControlsComponent,

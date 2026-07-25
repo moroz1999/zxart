@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+.zx-msf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.zx-msf__search {
+  position: relative;
+}
+
+.zx-msf__search-icon {
+  position: absolute;
+  left: var(--space-8);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--secondary-400);
+  pointer-events: none;
+}
+
+.zx-msf__search-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-32);
+  font-size: var(--zx-input-size);
+  line-height: var(--zx-input-line-height);
+  color: var(--text-color);
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+  transition: border-color var(--animation-sm), box-shadow var(--animation-sm);
+
+  &::placeholder {
+    color: var(--secondary-400);
+  }
+
+  &:hover {
+    border-color: var(--secondary-500);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--border-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 22%, transparent);
+  }
+}
+
+.zx-msf__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-height: 200px;
+  padding: var(--space-8) var(--space-12);
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+}
+
+.zx-msf__group {
+  margin: var(--space-4) 0 var(--space-4);
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.zx-msf__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--space-4) var(--space-12);
+}
+
+.zx-msf__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--zx-font-size-sm);
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.zx-msf__empty {
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-sm);
+}
+
+.zx-msf__count {
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-xs);
+}

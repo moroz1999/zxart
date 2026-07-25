@@ -120,3 +120,4 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 8. game links music to game (for soundtracks)
 9. inspired points to original composition (for covers and remixes)
 10. Turbosound (6 channels) requires special chip or emulation of two AY chips
+11. OpenGraph metadata includes `og:audio` only when an MP3 file is available

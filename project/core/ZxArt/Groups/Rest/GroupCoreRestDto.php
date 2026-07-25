@@ -25,6 +25,7 @@ readonly class GroupCoreRestDto
         public string $title,
         public string $abbreviation,
         public string $url,
+        public string $addActionBaseUrl,
         public string $type,
         public string $slogan,
         public string $imageUrl,

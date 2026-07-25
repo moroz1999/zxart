@@ -17,6 +17,15 @@ const GROUP_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'convertToGroup', privilege: 'convertToGroup', labelKey: 'group-details.action.convertToGroup', color: 'secondary'},
 ];
 
+const ADD_ACTIONS: readonly ZxEditingControlAction[] = [
+  {
+    action: 'zxProdsUploadForm.batchUploadForm',
+    privilege: 'zxProdsUploadForm.batchUploadForm',
+    labelKey: 'group-details.action.upload-prods',
+    color: 'secondary',
+  },
+];
+
 @Component({
   selector: 'zx-group-editing-controls',
   standalone: true,
@@ -28,8 +37,10 @@ const GROUP_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxGroupEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'group' | 'groupAlias';
+  @Input({required: true}) addActionBaseUrl!: string;
 
   editActions: readonly ZxEditingControlAction[] = GROUP_EDIT_ACTIONS;
+  readonly addActions = ADD_ACTIONS;
 
   ngOnChanges(): void {
     this.editActions = this.entityType === 'groupAlias' ? GROUP_ALIAS_EDIT_ACTIONS : GROUP_EDIT_ACTIONS;
@@ -47,5 +58,13 @@ export class ZxGroupEditingControlsComponent implements OnChanges {
       default:
         return `/${base}/${elementId}/edit`;
     }
+  };
+
+  readonly buildAddActionUrl = (action: string): string => {
+    const separatorIndex = action.indexOf('.');
+    const type = action.substring(0, separatorIndex);
+    const legacyAction = action.substring(separatorIndex + 1);
+
+    return `${this.addActionBaseUrl}type:${type}/action:${legacyAction}/`;
   };
 }

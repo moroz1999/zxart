@@ -17,8 +17,8 @@ import {
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxGroupsTableComponent} from '../../../../entities/zx-groups-table/zx-groups-table.component';
 import {
-  ZxRowSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+  ZxGroupsTableSkeletonComponent
+} from '../../../../entities/zx-groups-table-skeleton/zx-groups-table-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxNavChipsComponent} from '../../../../shared/ui/zx-nav-chips/zx-nav-chips.component';
@@ -37,7 +37,7 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
     ZxFilterPickerComponent,
     ZxInputComponent,
     ZxGroupsTableComponent,
-    ZxRowSkeletonComponent,
+    ZxGroupsTableSkeletonComponent,
     ZxFilterBarComponent,
     ZxStackComponent,
     ZxNavChipsComponent,
@@ -205,6 +205,10 @@ export class ZxGroupBrowserComponent implements OnInit, OnDestroy {
   get rowStartIndex(): number {
     const pageLimit = Number(this.limit) || 50;
     return (this.currentPage - 1) * pageLimit;
+  }
+
+  get skeletonCount(): number {
+    return Number(this.limit) || 50;
   }
 
   get letterChips(): ZxNavChip[] {

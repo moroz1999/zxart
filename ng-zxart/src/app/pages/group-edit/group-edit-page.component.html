@@ -4,9 +4,9 @@
   <zx-spinner size="lg"></zx-spinner>
 </div>
 
-<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
-    <zx-form-field>
+<form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-form-section [title]="'form.identification' | translate" icon="group">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label for="group-title" [required]="true">{{ 'group-form.title' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-input id="group-title" formControlName="title" type="text"></zx-input>
@@ -17,10 +17,12 @@
     <zx-form-field>
       <zx-form-label for="group-type">{{ 'group-form.type' | translate }}</zx-form-label>
       <zx-form-control>
-        <select id="group-type" formControlName="type" class="group-edit__select">
-          <option value="">—</option>
-          <option *ngFor="let t of groupTypes" [value]="t">{{ 'group-details.type.' + t | translate }}</option>
-        </select>
+        <zx-select
+          id="group-type"
+          formControlName="type"
+          [options]="groupTypeOptions"
+          placeholder="—"
+        ></zx-select>
       </zx-form-control>
     </zx-form-field>
 
@@ -29,11 +31,13 @@
       <zx-form-control><zx-input id="group-abbr" formControlName="abbreviation" type="text"></zx-input></zx-form-control>
     </zx-form-field>
 
-    <zx-form-field>
+    <zx-form-field [fullWidth]="true">
       <zx-form-label for="group-slogan">{{ 'group-form.slogan' | translate }}</zx-form-label>
       <zx-form-control><zx-input id="group-slogan" formControlName="slogan" type="text"></zx-input></zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
+  <zx-form-section [title]="'form.geography' | translate" icon="location">
     <zx-form-field>
       <zx-form-label>{{ 'group-form.country' | translate }}</zx-form-label>
       <zx-form-control>
@@ -49,7 +53,9 @@
           [placeholder]="'group-form.search-placeholder' | translate"></zx-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
+  <zx-form-section [title]="'form.period' | translate" icon="calendar">
     <zx-form-field>
       <zx-form-label for="group-start">{{ 'group-form.start-date' | translate }}</zx-form-label>
       <zx-form-control><zx-input id="group-start" formControlName="startDate" type="text"></zx-input></zx-form-control>
@@ -59,7 +65,9 @@
       <zx-form-label for="group-end">{{ 'group-form.end-date' | translate }}</zx-form-label>
       <zx-form-control><zx-input id="group-end" formControlName="endDate" type="text"></zx-input></zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
+  <zx-form-section [title]="'form.links' | translate" icon="open-in-new">
     <zx-form-field>
       <zx-form-label for="group-wiki">{{ 'group-form.wiki' | translate }}</zx-form-label>
       <zx-form-control><zx-input id="group-wiki" formControlName="wikiLink" type="text"></zx-input></zx-form-control>
@@ -69,39 +77,53 @@
       <zx-form-label for="group-website">{{ 'group-form.website' | translate }}</zx-form-label>
       <zx-form-control><zx-input id="group-website" formControlName="website" type="text"></zx-input></zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
+  <zx-form-section [title]="'form.image' | translate" icon="image">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'group-form.image' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-image-upload [imageUrl]="imageUrl" (changed)="onImageChanged($event)"></zx-image-upload>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-form-label>{{ 'group-form.members' | translate }}</zx-form-label>
+  <zx-form-section [title]="'form.members' | translate" icon="person">
+    <zx-form-field [fullWidth]="true">
       <zx-form-control>
         <zx-member-role-editor
           [members]="members"
           [availableRoles]="roles"
           roleLabelKey="group-details.roles"
+          [addPlaceholder]="'form.add-author' | translate"
+          [roleAddPlaceholder]="'form.add-role' | translate"
           (fieldsChange)="onMemberFields($event)"
           (removeMember)="onRemoveMember($event)"
         ></zx-member-role-editor>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
+  <zx-form-section [title]="'form.subgroups' | translate" icon="group">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'group-form.subgroups' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-subgroups-editor [subgroups]="subgroups" (idsChange)="onSubgroupIds($event)"></zx-subgroups-editor>
+        <zx-multi-entity-autocomplete
+          formControlName="subgroups"
+          types="group"
+          [placeholder]="'group-form.add-subgroup' | translate"
+        ></zx-multi-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
 
-    <zx-form-actions align="start">
+  <zx-form-actions [sticky]="true" align="end">
+    <zx-button-controls>
+      <zx-button color="secondary" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'group-form.save' | translate }}</zx-button>
-    </zx-form-actions>
-  </zx-stack>
+    </zx-button-controls>
+  </zx-form-actions>
 </form>
 </zx-page-layout>

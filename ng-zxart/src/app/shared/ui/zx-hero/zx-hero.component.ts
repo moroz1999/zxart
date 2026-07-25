@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 
 /** Width token of the hero media column. `none` collapses the hero to one column. */
-export type ZxHeroMedia = 'none' | 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type ZxHeroMedia = 'none' | 'auto' | 'half' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 /**
  * Entity hero shell: the panel every detail page opens with. It owns the

@@ -10,7 +10,8 @@ import {CurrentRouteService} from '../../../header/services/current-route.servic
 import {isSpaUrl} from '../../../../shared/utils/spa-url';
 
 
-import {RouterLink} from '@angular/router';@Component({
+import {NavigationEnd, Router, RouterLink} from '@angular/router';
+import {Subscription, filter} from 'rxjs';@Component({
   selector: 'zx-menu-block',
   standalone: true,
   imports: [RouterLink, 
@@ -38,16 +39,25 @@ export class MenuBlockComponent implements OnDestroy {
   ];
 
   private closeTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly routerSub: Subscription;
 
   constructor(
     private routeService: CurrentRouteService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    router: Router,
+  ) {
+    // Active highlighting reads window.location; re-check it after each SPA
+    // navigation so the highlight follows client-side route changes.
+    this.routerSub = router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => this.cdr.markForCheck());
+  }
 
   ngOnDestroy(): void {
     if (this.closeTimer !== null) {
       clearTimeout(this.closeTimer);
     }
+    this.routerSub.unsubscribe();
   }
 
   isPopoverOpen(item: MenuEntry): boolean {

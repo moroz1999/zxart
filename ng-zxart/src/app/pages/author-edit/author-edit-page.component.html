@@ -4,9 +4,9 @@
   <zx-spinner size="lg"></zx-spinner>
 </div>
 
-<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
-    <zx-form-field>
+<form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-form-section [title]="'form.identification' | translate" icon="person">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label for="author-title" [required]="true">{{ 'author-form.title' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-input id="author-title" formControlName="title" type="text"></zx-input>
@@ -14,13 +14,15 @@
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field>
+    <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'author-form.real-name' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-multilang-field formControlName="realName" [languages]="languages"></zx-multilang-field>
+        <zx-multilang-field formControlName="realName" [languages]="languages" [columns]="3"></zx-multilang-field>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
+  <zx-form-section [title]="'form.geography' | translate" icon="location">
     <zx-form-field>
       <zx-form-label>{{ 'author-form.country' | translate }}</zx-form-label>
       <zx-form-control>
@@ -37,14 +39,9 @@
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field>
-      <zx-form-label>{{ 'author-form.art-city' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-entity-autocomplete formControlName="artCity" types="city"
-          [placeholder]="'author-form.search-placeholder' | translate"></zx-entity-autocomplete>
-      </zx-form-control>
-    </zx-form-field>
+  </zx-form-section>
 
+  <zx-form-section [title]="'form.links' | translate" icon="open-in-new">
     <zx-form-field>
       <zx-form-label for="author-wiki">{{ 'author-form.wiki' | translate }}</zx-form-label>
       <zx-form-control>
@@ -60,37 +57,52 @@
     </zx-form-field>
 
     <zx-form-field>
+      <zx-form-label for="author-artcity">{{ 'author-form.artcity-id' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="author-artcity" formControlName="artCityId" type="text"></zx-input>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.image' | translate" icon="image">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'author-form.image' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-image-upload [imageUrl]="imageUrl" (changed)="onImageChanged($event)"></zx-image-upload>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-checkbox-field formControlName="displayInMusic" [label]="'author-form.display-in-music' | translate"></zx-checkbox-field>
+  <zx-form-section [title]="'form.display' | translate" icon="eye">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-control>
+        <zx-checkbox-group>
+          <zx-checkbox-field formControlName="displayInMusic" [label]="'author-form.display-in-music' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="displayInGraphics" [label]="'author-form.display-in-graphics' | translate"></zx-checkbox-field>
+        </zx-checkbox-group>
+      </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-checkbox-field formControlName="displayInGraphics" [label]="'author-form.display-in-graphics' | translate"></zx-checkbox-field>
+  <zx-form-section [title]="'form.restrictions' | translate" icon="cancel">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-control>
+        <zx-checkbox-group>
+          <zx-checkbox-field formControlName="denyVoting" [label]="'author-form.deny-voting' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="denyComments" [label]="'author-form.deny-comments' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="deny3a" [label]="'author-form.deny-3a' | translate"></zx-checkbox-field>
+        </zx-checkbox-group>
+      </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-checkbox-field formControlName="denyVoting" [label]="'author-form.deny-voting' | translate"></zx-checkbox-field>
-    </zx-form-field>
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
 
-    <zx-form-field>
-      <zx-checkbox-field formControlName="denyComments" [label]="'author-form.deny-comments' | translate"></zx-checkbox-field>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-checkbox-field formControlName="deny3a" [label]="'author-form.deny-3a' | translate"></zx-checkbox-field>
-    </zx-form-field>
-
-    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
-
-    <zx-form-actions align="start">
+  <zx-form-actions [sticky]="true" align="end">
+    <zx-button-controls>
+      <zx-button color="secondary" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'author-form.save' | translate }}</zx-button>
-    </zx-form-actions>
-  </zx-stack>
+    </zx-button-controls>
+  </zx-form-actions>
 </form>
 </zx-page-layout>

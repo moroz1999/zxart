@@ -25,6 +25,7 @@ use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
 use ZxArt\Releases\Dto\ReleaseProdRefDto;
 use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Shared\StructureType;
 use zxProdCategoryElement;
 use zxProdElement;
@@ -36,6 +37,7 @@ readonly class ReleaseDetailsService
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
         private ProdMediaService $prodMediaService,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private controller $controller,
@@ -86,7 +88,7 @@ readonly class ReleaseDetailsService
                 ? $this->infoBuilder->translate('zxRelease.type_' . $release->releaseType)
                 : null,
             hardwareRequired: $release->hardwareRequired,
-            description: (string)$release->description,
+            description: $this->descriptionFormatter->decode((string)$release->description),
             isRealtime: $release->isRealtime(),
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),

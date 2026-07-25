@@ -1,25 +1,36 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {TranslateModule} from '@ngx-translate/core';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../environments/environment';
 import {CategoryTreeNode} from '../../models/form-data-response';
+import {ChipItem} from '../../models/chip-item';
+import {ZxCheckboxComponent} from '../zx-checkbox/zx-checkbox.component';
+import {ZxChipsComponent} from '../zx-chips/zx-chips.component';
 
 interface CategoryRow {
   id: number;
   title: string;
+  level: number;
   indent: number;
+  isGroup: boolean;
 }
 
 /**
  * Multi-select picker over the prod-category tree. Implements
  * ControlValueAccessor: the value is the list of selected category ids
  * (`number[]`), which the form posts as `categories[]`. The tree comes from
- * `/formdata/` as a flat, depth-first list with a `level`; rows are indented by
- * their relative depth.
+ * `/formdata/` as a flat, depth-first list with a `level`.
+ *
+ * Top-level nodes render as uppercase group headers; deeper nodes render as
+ * indented checkboxes. A search box filters the list (keeping ancestors of
+ * matches visible) and a running count of selected categories is shown below.
  */
 @Component({
   selector: 'zx-category-tree-select',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule, SvgIconComponent, ZxCheckboxComponent, ZxChipsComponent],
   templateUrl: './zx-category-tree-select.component.html',
   styleUrl: './zx-category-tree-select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,26 +42,67 @@ interface CategoryRow {
     },
   ],
 })
-export class ZxCategoryTreeSelectComponent implements ControlValueAccessor {
+export class ZxCategoryTreeSelectComponent implements ControlValueAccessor, OnInit {
   @Input()
   set nodes(value: CategoryTreeNode[]) {
     const minLevel = value.length ? Math.min(...value.map(n => n.level)) : 0;
-    this.rows = value.map(n => ({id: n.id, title: n.title, indent: n.level - minLevel}));
-    this.cdr.markForCheck();
+    this.allRows = value.map(node => {
+      const relativeLevel = node.level - minLevel;
+      return {
+        id: node.id,
+        title: node.title,
+        level: relativeLevel,
+        indent: Math.max(0, relativeLevel - 1),
+        isGroup: relativeLevel === 0,
+      };
+    });
+    this.rebuild();
   }
 
-  rows: CategoryRow[] = [];
-  disabled = false;
+  @Input() searchPlaceholder = '';
 
+  query = '';
+  disabled = false;
+  rows: CategoryRow[] = [];
+  chips: ChipItem[] = [];
+  totalCount = 0;
+  selectedCount = 0;
+
+  private allRows: CategoryRow[] = [];
   private selected = new Set<number>();
 
   private onChange: (value: number[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly iconRegistry: SvgIconRegistryService,
+  ) {}
+
+  ngOnInit(): void {
+    this.iconRegistry.loadSvg(`${environment.svgUrl}search.svg`, 'search')?.subscribe();
+  }
 
   isSelected(id: number): boolean {
     return this.selected.has(id);
+  }
+
+  onChipRemoved(chip: ChipItem): void {
+    this.deselect(Number(chip.id));
+  }
+
+  deselect(id: number): void {
+    if (this.disabled) {
+      return;
+    }
+    this.selected.delete(id);
+    this.onChange([...this.selected]);
+    this.onTouched();
+    this.rebuild();
+  }
+
+  onQuery(): void {
+    this.rebuild();
   }
 
   onToggle(id: number, checked: boolean): void {
@@ -61,11 +113,12 @@ export class ZxCategoryTreeSelectComponent implements ControlValueAccessor {
     }
     this.onChange([...this.selected]);
     this.onTouched();
+    this.rebuild();
   }
 
   writeValue(value: number[] | null): void {
     this.selected = new Set(value ?? []);
-    this.cdr.markForCheck();
+    this.rebuild();
   }
 
   registerOnChange(fn: (value: number[]) => void): void {
@@ -78,6 +131,39 @@ export class ZxCategoryTreeSelectComponent implements ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this.cdr.markForCheck();
+  }
+
+  private rebuild(): void {
+    this.totalCount = this.allRows.filter(row => !row.isGroup).length;
+    this.selectedCount = this.selected.size;
+    this.chips = this.allRows
+      .filter(row => !row.isGroup && this.selected.has(row.id))
+      .map(row => ({id: row.id, title: row.title}));
+
+    const query = this.query.trim().toLowerCase();
+    if (!query) {
+      this.rows = this.allRows;
+      this.cdr.markForCheck();
+      return;
+    }
+
+    // Keep matching rows and all of their ancestors (nearest lower-level rows above).
+    const keep = new Set<number>();
+    const stack: CategoryRow[] = [];
+    for (const row of this.allRows) {
+      while (stack.length && stack[stack.length - 1].level >= row.level) {
+        stack.pop();
+      }
+      if (row.title.toLowerCase().includes(query)) {
+        keep.add(row.id);
+        for (const ancestor of stack) {
+          keep.add(ancestor.id);
+        }
+      }
+      stack.push(row);
+    }
+    this.rows = this.allRows.filter(row => keep.has(row.id));
     this.cdr.markForCheck();
   }
 }

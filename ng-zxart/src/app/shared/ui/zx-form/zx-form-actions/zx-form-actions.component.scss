@@ -21,3 +21,13 @@
 :host(.zx-form-actions--between) {
   justify-content: space-between;
 }
+
+:host(.zx-form-actions--sticky) {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--zx-form-footer-z-index);
+  padding: var(--zx-form-footer-padding);
+  background: var(--zx-form-footer-bg);
+  border-top: 1px solid var(--zx-form-footer-border);
+}
+

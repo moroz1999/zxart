@@ -35,5 +35,5 @@
   /* Player-sized media column (tune). */
   --zx-hero-media-width-lg: 300px;
   /* Video-sized media column (prod). */
-  --zx-hero-media-width-xl: 320px;
+  --zx-hero-media-width-xl: calc((var(--space-64) * 7) + var(--space-32));
 }

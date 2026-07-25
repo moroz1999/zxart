@@ -88,6 +88,7 @@ components:
             type: string
         description:
           type: string
+          description: HTML-entity-decoded sanitized HTML description content without API-added presentation wrapper markup.
         isRealtime:
           type: boolean
         party:

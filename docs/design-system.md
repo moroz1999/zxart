@@ -57,6 +57,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-pagination](design-system/zx-pagination.md) — page navigation
 - [zx-nav-chips](design-system/zx-nav-chips.md) — strip of link chips (A–Z letters, years) with one active
 - [zx-filter-picker](design-system/zx-filter-picker.md) — popover filter with checkboxes
+- [zx-multi-select-filter](design-system/zx-multi-select-filter.md) — inline multi-select with search, chips and a (optionally grouped) checkbox list
 - [zx-form](design-system/zx-form.md) — form layout family: `[zxForm]` directive, fields, labels, fieldsets, sections, actions
 - [zx-user](design-system/zx-user.md) — user name with status badges
 - [Skeletons](design-system/skeletons.md) — loading placeholders

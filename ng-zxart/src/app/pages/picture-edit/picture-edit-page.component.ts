@@ -13,14 +13,18 @@ import {ZxFormControlComponent} from '../../shared/ui/zx-form/zx-form-control/zx
 import {ZxFormFieldComponent} from '../../shared/ui/zx-form/zx-form-field/zx-form-field.component';
 import {ZxFormLabelComponent} from '../../shared/ui/zx-form/zx-form-label/zx-form-label.component';
 import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
+import {ZxFormRowComponent} from '../../shared/ui/zx-form/zx-form-row/zx-form-row.component';
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
+import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.component';
 import {ZxTextareaComponent} from '../../shared/ui/zx-textarea/zx-textarea.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ImageUploadChange, ZxImageUploadComponent} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxFileUploadComponent} from '../../shared/ui/zx-file-upload/zx-file-upload.component';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
+import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -75,15 +79,19 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
     ZxFormFieldComponent,
     ZxFormLabelComponent,
     ZxFormMessageComponent,
+    ZxFormRowComponent,
     ZxFormDirective,
     ZxInputComponent,
+    ZxTagsFieldComponent,
     ZxTextareaComponent,
     ZxSelectComponent,
     ZxEntityAutocompleteComponent,
     ZxMultiEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxFileUploadComponent,
-    ZxStackComponent,
+    ZxFormSectionComponent,
+    ZxCheckboxGroupComponent,
+    ZxButtonControlsComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -183,6 +191,10 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  onCancel(): void {
+    this.router.navigateByUrl(`/picture/${this.elementId}`);
   }
 
   onImageChanged(field: string, change: ImageUploadChange): void {

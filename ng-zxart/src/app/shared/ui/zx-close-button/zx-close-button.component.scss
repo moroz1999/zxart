@@ -1,0 +1,72 @@
+:host {
+  display: inline-flex;
+}
+
+.zx-close-button {
+  // Size tokens overridden by the size modifiers below.
+  --zx-close-button-icon: 16px;
+  --zx-close-button-box: 24px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: var(--zx-close-button-box);
+  height: var(--zx-close-button-box);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--secondary-500);
+  cursor: pointer;
+  transition: background var(--animation-xs) ease, color var(--animation-xs) ease;
+}
+
+.zx-close-button:hover:not(:disabled) {
+  background: var(--secondary-200);
+  color: var(--text-color);
+}
+
+.zx-close-button:focus-visible {
+  outline: 2px solid var(--border-primary);
+  outline-offset: 1px;
+}
+
+.zx-close-button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.zx-close-button__icon {
+  display: block;
+  width: var(--zx-close-button-icon);
+  height: var(--zx-close-button-icon);
+}
+
+// Size tiers: icon glyph size + circular hit/backing area.
+.zx-close-button--sm {
+  --zx-close-button-icon: 12px;
+  --zx-close-button-box: 18px;
+}
+
+.zx-close-button--md {
+  --zx-close-button-icon: 16px;
+  --zx-close-button-box: 24px;
+}
+
+.zx-close-button--lg {
+  --zx-close-button-icon: 20px;
+  --zx-close-button-box: 32px;
+}
+
+// Persistent circular backing (for closes floating over content / media).
+.zx-close-button--round {
+  background: var(--secondary-200);
+  color: var(--secondary-700);
+}
+
+.zx-close-button--round:hover:not(:disabled) {
+  background: var(--secondary-300);
+  color: var(--text-color);
+}

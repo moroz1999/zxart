@@ -7,6 +7,7 @@ namespace ZxArt\Tunes\Services;
 use structureManager;
 use translationsManager;
 use ZxArt\Prods\ProdInfoBuilder;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Tunes\Dto\TuneDetailsDto;
 use ZxArt\Tunes\Dto\TuneDownloadDto;
 use ZxArt\Tunes\Dto\TunePartyContextDto;
@@ -30,6 +31,7 @@ readonly class TuneDetailsService
         private translationsManager $translationsManager,
         private TunesTransformer $tunesTransformer,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
     ) {
     }
 
@@ -65,7 +67,7 @@ readonly class TuneDetailsService
             originalFileUrl: $tune->originalFileUrl,
             trackerFileUrl: $tune->trackerFileUrl,
             description: $element->description
-                ? $this->infoBuilder->decodeText((string)$element->description)
+                ? $this->descriptionFormatter->decode((string)$element->description)
                 : null,
             tags: $this->buildTags($element),
             partyContext: $this->buildPartyContext($element, $tune->party?->place),

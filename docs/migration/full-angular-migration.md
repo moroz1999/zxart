@@ -154,7 +154,7 @@ Entity edit/add forms follow the same shape — a fresh, clean REST contract (no
 ## PART 3 — Form components (build / adapt)
 
 Already present in `ng-zxart/src/app/shared/ui/`: `zx-input`, `zx-textarea`, `zx-checkbox(-field)`,
-`zx-toggle`, `zx-select`, `zx-tags-input`, `zx-tags-chips`, `zx-input-range`, `zx-min-max-range`,
+`zx-toggle`, `zx-select`, `zx-tags-input`, `zx-chips`, `zx-input-range`, `zx-min-max-range`,
 `zx-sort-select`, `zx-filter-picker`, `zx-button`, `zx-dialog`, `zx-confirm-dialog`, and the
 `zx-form/*` scaffolding (field, label, message, section, actions, fieldset, control-errors).
 

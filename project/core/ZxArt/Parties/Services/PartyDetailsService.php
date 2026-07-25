@@ -56,6 +56,7 @@ readonly class PartyDetailsService
             abbreviation: $this->decode((string)$party->abbreviation),
             originalName: $this->decode((string)$party->originalName),
             url: $this->entityUrlResolver->urlFor($party),
+            addActionBaseUrl: (string)$party->getUrl(),
             imageUrl: $party->getImageUrl(),
             year: ($year = $party->getYear()) !== '' ? $year : null,
             location: $this->buildLocation($party),

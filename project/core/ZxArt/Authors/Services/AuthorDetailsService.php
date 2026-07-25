@@ -7,6 +7,7 @@ namespace ZxArt\Authors\Services;
 use authorAliasElement;
 use authorElement;
 use breadcrumbsManager;
+use controller;
 use groupAliasElement;
 use groupElement;
 use structureManager;
@@ -35,6 +36,7 @@ readonly class AuthorDetailsService
     public function __construct(
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
+        private controller $controller,
         private AuthorshipRepository $authorshipRepository,
         private AuthorProdsRepository $authorProdsRepository,
         private EntityUrlResolver $entityUrlResolver,
@@ -70,6 +72,8 @@ readonly class AuthorDetailsService
             title: $this->resolveTitle($author),
             realName: $profileAuthor instanceof authorElement ? (string)$profileAuthor->realName : '',
             url: $this->entityUrlResolver->resolve($author) ?? (string)$author->getUrl(),
+            imageUrl: $this->buildImageUrl($profileAuthor),
+            addActionBaseUrl: (string)$author->getUrl(),
             parentUrl: $parentUrl,
             parentTitle: $parentTitle,
             primaryAuthor: $this->buildPrimaryAuthor($author, $profileAuthor),
@@ -100,6 +104,17 @@ readonly class AuthorDetailsService
         $title = $author instanceof authorElement ? (string)$author->getTitle() : (string)$author->title;
 
         return html_entity_decode($title, ENT_QUOTES);
+    }
+
+    private function buildImageUrl(?authorElement $author): string
+    {
+        if (!$author instanceof authorElement || !$author->image || $author->originalName === '') {
+            return '';
+        }
+
+        return $this->controller->baseURL
+            . 'image/type:authorPhoto/id:' . $author->image
+            . '/filename:' . rawurlencode($author->originalName);
     }
 
     private function resolveUserElement(?authorElement $author): ?userElement

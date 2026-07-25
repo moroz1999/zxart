@@ -34,7 +34,7 @@ components:
       properties:
         description:
           type: string
-          description: HTML-entity-decoded description text (may contain HTML if htmlDescription is true)
+          description: HTML-entity-decoded description content. It contains sanitized HTML only when htmlDescription is true; plain text has no presentation wrapper markup.
         htmlDescription:
           type: boolean
           description: Whether the description field contains HTML markup

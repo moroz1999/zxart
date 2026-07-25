@@ -12,6 +12,15 @@ const PROD_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showSplitForm', privilege: 'showSplitForm', labelKey: 'prod-details.split', color: 'secondary'},
 ];
 
+const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
+  {
+    action: 'zxRelease.publicAdd',
+    privilege: 'zxRelease.publicAdd',
+    labelKey: 'prod-details.addrelease',
+    color: 'secondary',
+  },
+];
+
 @Component({
   selector: 'zx-prod-editing-controls',
   standalone: true,
@@ -22,8 +31,10 @@ const PROD_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxProdEditingControlsComponent {
   @Input({required: true}) elementId!: number;
+  @Input({required: true}) addReleaseUrl!: string;
 
   readonly editActions = PROD_EDIT_ACTIONS;
+  readonly addActions = PROD_ADD_ACTIONS;
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
     switch (action) {
@@ -37,4 +48,6 @@ export class ZxProdEditingControlsComponent {
         return `/prod/${elementId}/edit`;
     }
   };
+
+  readonly buildAddActionUrl = (): string => this.addReleaseUrl;
 }

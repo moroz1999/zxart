@@ -4,9 +4,9 @@
   <zx-spinner size="lg"></zx-spinner>
 </div>
 
-<form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-stack spacing="lg">
-    <zx-form-field>
+<form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-form-section [title]="'form.identification' | translate" icon="music-note">
+    <zx-form-field [fullWidth]="true">
       <zx-form-label for="tune-title" [required]="true">{{ 'tune-form.title' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-input id="tune-title" formControlName="title" type="text"></zx-input>
@@ -15,32 +15,50 @@
     </zx-form-field>
 
     <zx-form-field>
+      <zx-form-label for="tune-year">{{ 'tune-form.year' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="tune-year" formControlName="year" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'tune-form.authors' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-multi-entity-autocomplete formControlName="authors" types="author,authorAlias" [placeholder]="'tune-form.add-author' | translate"></zx-multi-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-form-label for="tune-format">{{ 'tune-form.format-group' | translate }}</zx-form-label>
-      <zx-form-control><zx-select id="tune-format" formControlName="formatGroup" [options]="formatGroupOptions"></zx-select></zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-form-label>{{ 'tune-form.party' | translate }}</zx-form-label>
+  <zx-form-section [title]="'form.origin' | translate" icon="tag">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label>{{ 'tune-form.release' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-entity-autocomplete formControlName="party" types="party" [placeholder]="'tune-form.party' | translate"></zx-entity-autocomplete>
+        <zx-entity-autocomplete formControlName="game" types="zxRelease" [placeholder]="'tune-form.release' | translate"></zx-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field>
-      <zx-form-label for="tune-partyplace">{{ 'tune-form.partyplace' | translate }}</zx-form-label>
-      <zx-form-control><zx-input id="tune-partyplace" formControlName="partyplace" type="text"></zx-input></zx-form-control>
-    </zx-form-field>
+    <zx-form-row [columns]="3">
+      <zx-form-field>
+        <zx-form-label>{{ 'tune-form.party' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-entity-autocomplete formControlName="party" types="party" [placeholder]="'tune-form.party' | translate"></zx-entity-autocomplete>
+        </zx-form-control>
+      </zx-form-field>
 
-    <zx-form-field>
-      <zx-form-label for="tune-compo">{{ 'tune-form.compo' | translate }}</zx-form-label>
-      <zx-form-control><zx-select id="tune-compo" formControlName="compo" [options]="enums['compo'] || []"></zx-select></zx-form-control>
+      <zx-form-field>
+        <zx-form-label for="tune-partyplace">{{ 'tune-form.partyplace' | translate }}</zx-form-label>
+        <zx-form-control><zx-input id="tune-partyplace" formControlName="partyplace" type="text"></zx-input></zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="tune-compo">{{ 'tune-form.compo' | translate }}</zx-form-label>
+        <zx-form-control><zx-select id="tune-compo" formControlName="compo" [options]="enums['compo'] || []"></zx-select></zx-form-control>
+      </zx-form-field>
+    </zx-form-row>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.technical' | translate" icon="settings">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="tune-format">{{ 'tune-form.format-group' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="tune-format" formControlName="formatGroup" [options]="formatGroupOptions"></zx-select></zx-form-control>
     </zx-form-field>
 
     <zx-form-field>
@@ -62,41 +80,9 @@
       <zx-form-label for="tune-int-frequency">{{ 'tune-form.int-frequency' | translate }}</zx-form-label>
       <zx-form-control><zx-select id="tune-int-frequency" formControlName="intFrequency" [options]="enums['intFrequency'] || []"></zx-select></zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-field>
-      <zx-form-label for="tune-year">{{ 'tune-form.year' | translate }}</zx-form-label>
-      <zx-form-control><zx-input id="tune-year" formControlName="year" type="text"></zx-input></zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-form-label>{{ 'tune-form.release' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-entity-autocomplete formControlName="game" types="zxRelease" [placeholder]="'tune-form.release' | translate"></zx-entity-autocomplete>
-      </zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-form-label for="tune-tags">{{ 'tune-form.tags-text' | translate }}</zx-form-label>
-      <zx-form-control><zx-input id="tune-tags" formControlName="tagsText" type="text"></zx-input></zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-form-label for="tune-description">{{ 'tune-form.description' | translate }}</zx-form-label>
-      <zx-form-control><zx-textarea id="tune-description" formControlName="description" [rows]="4"></zx-textarea></zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-checkbox-field formControlName="denyPlaying" [label]="'tune-form.deny-playing' | translate"></zx-checkbox-field>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-checkbox-field formControlName="denyVoting" [label]="'tune-form.deny-voting' | translate"></zx-checkbox-field>
-    </zx-form-field>
-
-    <zx-form-field>
-      <zx-checkbox-field formControlName="denyComments" [label]="'tune-form.deny-comments' | translate"></zx-checkbox-field>
-    </zx-form-field>
-
+  <zx-form-section [title]="'form.files' | translate" icon="download">
     <zx-form-field>
       <zx-form-label>{{ 'tune-form.file' | translate }}</zx-form-label>
       <zx-form-control>
@@ -110,12 +96,39 @@
         <zx-file-upload [fileName]="fileNames['trackerFile'] || null" (changed)="onFileChanged('trackerFile', $event)"></zx-file-upload>
       </zx-form-control>
     </zx-form-field>
+  </zx-form-section>
 
-    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+  <zx-form-section [title]="'form.description' | translate" icon="file">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="tune-description">{{ 'tune-form.description' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="tune-description" formControlName="description" [rows]="4"></zx-textarea></zx-form-control>
+    </zx-form-field>
 
-    <zx-form-actions align="start">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="tune-tags">{{ 'tune-form.tags-text' | translate }}</zx-form-label>
+      <zx-form-control><zx-tags-field formControlName="tagsText"></zx-tags-field></zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.restrictions' | translate" icon="cancel">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-control>
+        <zx-checkbox-group>
+          <zx-checkbox-field formControlName="denyPlaying" [label]="'tune-form.deny-playing' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="denyVoting" [label]="'tune-form.deny-voting' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="denyComments" [label]="'tune-form.deny-comments' | translate"></zx-checkbox-field>
+        </zx-checkbox-group>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+  <zx-form-actions [sticky]="true" align="end">
+    <zx-button-controls>
+      <zx-button color="secondary" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
       <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'tune-form.save' | translate }}</zx-button>
-    </zx-form-actions>
-  </zx-stack>
+    </zx-button-controls>
+  </zx-form-actions>
 </form>
 </zx-page-layout>

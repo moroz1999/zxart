@@ -12,8 +12,14 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 })
 export class ZxFormActionsComponent {
   @Input() align: 'start' | 'center' | 'end' | 'between' = 'end';
+  /** Pins the action row to the bottom of the viewport as a footer strip. */
+  @Input() sticky = false;
 
   @HostBinding('class') get hostClass(): string {
-    return `zx-form-actions--${this.align}`;
+    const classes = [`zx-form-actions--${this.align}`];
+    if (this.sticky) {
+      classes.push('zx-form-actions--sticky');
+    }
+    return classes.join(' ');
   }
 }

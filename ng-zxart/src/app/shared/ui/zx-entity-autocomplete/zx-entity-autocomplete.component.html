@@ -1,13 +1,14 @@
 <div cdkOverlayOrigin #searchOrigin="cdkOverlayOrigin">
-  <div *ngIf="value" class="zx-entity-autocomplete__selected">
-    <span class="zx-entity-autocomplete__selected-title">{{ value.title }}</span>
-    <zx-button
-      *ngIf="!disabled"
-      size="sm"
-      color="transparent"
-      extraClass="zx-entity-autocomplete__clear"
-      (click)="onClear()"
-    >×</zx-button>
+  <div *ngIf="value" class="zx-entity-autocomplete__chips">
+    <span class="zx-entity-autocomplete__chip">
+      <span class="zx-entity-autocomplete__chip-title">{{ value.title }}</span>
+      <zx-close-button
+        *ngIf="!disabled"
+        size="sm"
+        [ariaLabel]="'common.remove' | translate"
+        (closed)="onClear()"
+      ></zx-close-button>
+    </span>
   </div>
 
   <zx-input
@@ -16,6 +17,7 @@
     [disabled]="disabled"
     [(ngModel)]="query"
     (ngModelChange)="onQueryChange($event)"
+    (keydown)="onKeydown($event)"
   ></zx-input>
 </div>
 
@@ -34,13 +36,14 @@
     </div>
 
     <div *ngIf="!loading" class="zx-entity-autocomplete__options">
-      <zx-button
-        *ngFor="let result of searchResults"
-        size="sm"
-        color="transparent"
-        extraClass="zx-entity-autocomplete__option-button"
+      <button
+        *ngFor="let result of searchResults; let i = index"
+        type="button"
+        class="zx-entity-autocomplete__option"
+        [class.zx-entity-autocomplete__option--active]="i === activeIndex"
+        (mouseenter)="activeIndex = i"
         (click)="onSelect(result)"
-      >{{ result.title }}</zx-button>
+      >{{ result.title }}</button>
     </div>
   </div>
 </ng-template>

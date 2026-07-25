@@ -1,12 +1,12 @@
 <zx-stack spacing="sm">
-  <zx-tags-chips
+  <zx-chips
     *ngIf="tags.length > 0"
-    [tags]="tags"
+    [items]="tags"
     [removable]="true"
     [disabled]="disabled"
-    [removeButtonAriaLabel]="removeButtonAriaLabel"
-    (tagRemoved)="onRemoveTag($event)"
-  ></zx-tags-chips>
+    [removeAriaLabel]="removeButtonAriaLabel"
+    (removed)="onRemoveTag($event)"
+  ></zx-chips>
 
   <div cdkOverlayOrigin #searchOrigin="cdkOverlayOrigin">
     <zx-input

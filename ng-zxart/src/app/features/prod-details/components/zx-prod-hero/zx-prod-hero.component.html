@@ -6,11 +6,15 @@
   </zx-youtube-embed>
 
   <zx-hero-title [title]="core.title" [entityId]="core.elementId" [year]="core.year">
-    <zx-prod-editing-controls zxHeroEdit [elementId]="core.elementId"></zx-prod-editing-controls>
+    <zx-prod-editing-controls
+      zxHeroEdit
+      [elementId]="core.elementId"
+      [addReleaseUrl]="core.addReleaseUrl"
+    ></zx-prod-editing-controls>
   </zx-hero-title>
 
   <zx-facts *ngIf="core.altTitle">
-    <zx-fact>{{ 'prod-details.altTitle' | translate }} <em>{{ core.altTitle }}</em></zx-fact>
+    <zx-fact>{{ 'prod-details.altTitle' | translate }} {{ core.altTitle }}</zx-fact>
   </zx-facts>
 
   <zx-inline *ngIf="leafCategories.length || core.languages.length || showLegalStatus" spacing="sm" align="center" [wrap]="true">
@@ -29,7 +33,7 @@
     <zx-party-provenance [party]="core.party"></zx-party-provenance>
   </zx-callout>
 
-  <zx-meta-row *ngIf="externalLinks.length" [label]="'prod-details.see-also' | translate">
+  <zx-meta-row *ngIf="externalLinks.length" [label]="'prod-details.links' | translate">
     <zx-ext-links [links]="externalLinks"></zx-ext-links>
   </zx-meta-row>
 

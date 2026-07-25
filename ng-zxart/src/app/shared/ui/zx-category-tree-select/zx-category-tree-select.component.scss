@@ -2,25 +2,94 @@
   display: block;
 }
 
-.zx-category-tree-select {
+.zx-cat {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  max-height: 320px;
-  overflow: auto;
-  border: var(--zx-tags-input-dropdown-border);
-  border-radius: var(--zx-tags-input-dropdown-radius);
-  padding: var(--zx-tags-input-dropdown-padding);
-  background: var(--zx-tags-input-dropdown-bg);
+  gap: var(--space-8);
 }
 
-.zx-category-tree-select__row {
+.zx-cat__search {
+  position: relative;
+}
+
+.zx-cat__search-icon {
+  position: absolute;
+  left: var(--space-8);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--secondary-400);
+  pointer-events: none;
+}
+
+.zx-cat__search-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-32);
+  font-size: var(--zx-input-size);
+  line-height: var(--zx-input-line-height);
+  color: var(--text-color);
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+  transition: border-color var(--animation-sm), box-shadow var(--animation-sm);
+
+  &::placeholder {
+    color: var(--secondary-400);
+  }
+
+  &:hover {
+    border-color: var(--secondary-500);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--border-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 22%, transparent);
+  }
+}
+
+.zx-cat__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-height: 210px;
+  padding: var(--space-8) var(--space-12);
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+}
+
+.zx-cat__group {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.zx-cat__row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-8);
+  font-size: var(--zx-font-size-sm);
+  color: var(--text-color);
   cursor: pointer;
 }
 
-.zx-category-tree-select__title {
+.zx-cat__title {
   flex: 1;
+}
+
+.zx-cat__empty {
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-sm);
+}
+
+.zx-cat__count {
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-xs);
 }

@@ -73,6 +73,7 @@ export interface GroupCoreDto {
   title: string;
   abbreviation: string;
   url: string;
+  addActionBaseUrl: string;
   type: string;
   slogan: string;
   imageUrl: string;

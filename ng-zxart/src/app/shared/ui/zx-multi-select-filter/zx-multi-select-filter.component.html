@@ -1,0 +1,49 @@
+<div class="zx-msf">
+  @if (chips.length > 0) {
+    <zx-chips
+      [items]="chips"
+      [removable]="true"
+      [disabled]="disabled"
+      [removeAriaLabel]="'common.remove' | translate"
+      (removed)="onChipRemoved($event)"
+    ></zx-chips>
+  }
+
+  <div class="zx-msf__search">
+    <svg-icon name="search" class="zx-msf__search-icon" aria-hidden="true"></svg-icon>
+    <input
+      type="text"
+      class="zx-msf__search-input"
+      [placeholder]="searchPlaceholder"
+      [disabled]="disabled"
+      [(ngModel)]="query"
+      (ngModelChange)="onQuery()"
+    />
+  </div>
+
+  <div class="zx-msf__list">
+    @if (hasResults) {
+      @for (group of renderGroups; track group.label) {
+        @if (group.label !== '') {
+          <div class="zx-msf__group">{{ group.label }}</div>
+        }
+        <div class="zx-msf__options">
+          @for (option of group.options; track option.value) {
+            <label class="zx-msf__option">
+              <zx-checkbox
+                [checked]="isSelected(option.value)"
+                [disabled]="disabled"
+                (checkedChange)="toggle(option.value, $event)"
+              ></zx-checkbox>
+              <span>{{ option.label }}</span>
+            </label>
+          }
+        </div>
+      }
+    } @else {
+      <span class="zx-msf__empty">{{ 'common.nothing-found' | translate }}</span>
+    }
+  </div>
+
+  <span class="zx-msf__count">{{ 'form.selected-count' | translate:{count: selectedCount} }}</span>
+</div>

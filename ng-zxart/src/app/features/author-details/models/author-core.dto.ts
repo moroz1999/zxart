@@ -68,6 +68,8 @@ export interface AuthorCoreDto {
   title: string;
   realName: string;
   url: string;
+  imageUrl: string;
+  addActionBaseUrl: string;
   parentUrl: string | null;
   parentTitle: string | null;
   primaryAuthor: AuthorAliasRefDto | null;

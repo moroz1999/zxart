@@ -53,6 +53,7 @@ export interface PartyCoreDto {
   readonly abbreviation: string;
   readonly originalName: string;
   readonly url: string;
+  readonly addActionBaseUrl: string;
   readonly imageUrl: string;
   readonly year: string | null;
   readonly location: PartyLocationDto;

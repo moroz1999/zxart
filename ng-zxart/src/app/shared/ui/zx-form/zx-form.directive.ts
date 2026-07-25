@@ -16,6 +16,8 @@ export class ZxFormDirective {
   @Input() sectionWrap = false;
   /** Bordered appearance: fieldsets/sections separated by divider lines, action row as a footer strip. */
   @Input() divided = false;
+  /** Number of columns the section field grids default to (1 or 2). */
+  @Input() columns: 1 | 2 = 1;
 
   @HostBinding('class') get hostClass(): string {
     const classes = ['zx-form'];
@@ -30,6 +32,9 @@ export class ZxFormDirective {
     }
     if (this.divided) {
       classes.push('zx-form--divided');
+    }
+    if (this.columns === 2) {
+      classes.push('zx-form--cols-2');
     }
     return classes.join(' ');
   }

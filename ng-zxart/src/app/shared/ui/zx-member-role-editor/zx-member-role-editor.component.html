@@ -1,49 +1,76 @@
-<div class="zx-member-role-editor">
-  <div *ngFor="let member of editable" class="zx-member-role-editor__row">
-    <div class="zx-member-role-editor__name">
-      {{ member.title }}
-      <zx-button size="sm" color="danger" extraClass="zx-member-role-editor__remove" (click)="onRemove(member.id)">×</zx-button>
-    </div>
+<div class="zx-mre">
+  @if (editable.length > 0) {
+    <div class="zx-mre__grid">
+      @for (member of editable; track member.id) {
+        <div class="zx-mre__card">
+          <div class="zx-mre__head">
+            <span class="zx-mre__name" appText="bodySm" tone="strong" [truncate]="true">{{ member.title }}</span>
+            <zx-close-button size="md" [ariaLabel]="'common.remove' | translate" (closed)="onRemove(member)"></zx-close-button>
+          </div>
 
-    <div class="zx-member-role-editor__roles">
-      <label *ngFor="let role of availableRoles" class="zx-member-role-editor__role">
-        <input
-          type="checkbox"
-          [checked]="hasRole(member.roles, role)"
-          (change)="toggleRole(member.roles, role, $any($event.target).checked)"
-        />
-        {{ roleLabelKey + '.' + role | translate }}
-      </label>
-    </div>
+          <div class="zx-mre__roles">
+            @if (member.roles.size > 0) {
+              <zx-chips
+                [items]="roleChips(member.roles)"
+                [removable]="true"
+                variant="surface"
+                [removeAriaLabel]="'common.remove' | translate"
+                (removed)="onRoleChipRemoved(member.roles, $event)"
+              ></zx-chips>
+            }
+            <div class="zx-mre__role-add" cdkOverlayOrigin #memberRoleOrigin="cdkOverlayOrigin">
+              <input
+                type="text"
+                class="zx-mre__role-input"
+                [placeholder]="roleAddPlaceholder"
+                [ngModel]="member.roleQuery"
+                (ngModelChange)="onRoleQueryChange(member, $event)"
+                (keydown)="onRoleKeydown(member, $event)"
+                (focus)="member.roleFocused = true; member.roleActiveIndex = 0"
+                (blur)="onRoleBlur(member)"
+              />
+            </div>
+            <ng-template
+              cdkConnectedOverlay
+              [cdkConnectedOverlayOrigin]="memberRoleOrigin"
+              [cdkConnectedOverlayOpen]="member.roleFocused"
+              [cdkConnectedOverlayPositions]="rolePositions"
+              [cdkConnectedOverlayWidth]="memberRoleOrigin.elementRef.nativeElement.offsetWidth"
+            >
+              <div class="zx-mre__role-options" @dropdownPopover>
+                @for (role of availableFor(member.roles, member.roleQuery); track role; let i = $index) {
+                  <button
+                    type="button"
+                    class="zx-mre__role-option"
+                    [class.zx-mre__role-option--active]="i === member.roleActiveIndex"
+                    (mouseenter)="member.roleActiveIndex = i"
+                    (mousedown)="$event.preventDefault()"
+                    (click)="addRole(member.roles, role)"
+                  >{{ roleLabelKey + '.' + role | translate }}</button>
+                } @empty {
+                  <span class="zx-mre__role-empty">{{ 'common.nothing-found' | translate }}</span>
+                }
+              </div>
+            </ng-template>
+          </div>
 
-    <div *ngIf="showDates" class="zx-member-role-editor__dates">
-      <zx-input [(ngModel)]="member.startDate" (ngModelChange)="onChanged()" type="text" placeholder="from"></zx-input>
-      <zx-input [(ngModel)]="member.endDate" (ngModelChange)="onChanged()" type="text" placeholder="to"></zx-input>
+          @if (showDates) {
+            <div class="zx-mre__dates">
+              <zx-input [(ngModel)]="member.startDate" (ngModelChange)="onChanged()" type="text" [placeholder]="'form.date-from' | translate"></zx-input>
+              <zx-input [(ngModel)]="member.endDate" (ngModelChange)="onChanged()" type="text" [placeholder]="'form.date-to' | translate"></zx-input>
+            </div>
+          }
+        </div>
+      }
     </div>
-  </div>
+  }
 
-  <div class="zx-member-role-editor__add">
+  <div class="zx-mre__add">
     <zx-entity-autocomplete
-      [(ngModel)]="newAuthor"
-      (ngModelChange)="onChanged()"
+      [ngModel]="newAuthor"
+      (ngModelChange)="onNewAuthorSelected($event)"
       [types]="memberTypes"
-      placeholder="Add member…"
+      [placeholder]="addPlaceholder"
     ></zx-entity-autocomplete>
-
-    <div *ngIf="newAuthor" class="zx-member-role-editor__roles">
-      <label *ngFor="let role of availableRoles" class="zx-member-role-editor__role">
-        <input
-          type="checkbox"
-          [checked]="hasRole(newRoles, role)"
-          (change)="toggleRole(newRoles, role, $any($event.target).checked)"
-        />
-        {{ roleLabelKey + '.' + role | translate }}
-      </label>
-    </div>
-
-    <div *ngIf="newAuthor && showDates" class="zx-member-role-editor__dates">
-      <zx-input [(ngModel)]="newStartDate" (ngModelChange)="onChanged()" type="text" placeholder="from"></zx-input>
-      <zx-input [(ngModel)]="newEndDate" (ngModelChange)="onChanged()" type="text" placeholder="to"></zx-input>
-    </div>
   </div>
 </div>

@@ -235,7 +235,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
 
   get skeletonCount(): number {
     const pageLimit = Number(this.limit) || 50;
-    return this.mode === 'simple' ? pageLimit : Math.min(pageLimit, 8);
+    return Math.min(pageLimit, 50);
   }
 
   /** No letter selected in full mode: list the most recently added authors instead of the full A–Z catalogue. */

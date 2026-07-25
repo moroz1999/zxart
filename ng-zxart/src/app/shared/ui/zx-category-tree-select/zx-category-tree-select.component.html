@@ -1,15 +1,46 @@
-<div class="zx-category-tree-select">
-  <label
-    *ngFor="let row of rows"
-    class="zx-category-tree-select__row"
-    [style.padding-left.px]="row.indent * 16"
-  >
-    <input
-      type="checkbox"
-      [checked]="isSelected(row.id)"
+<div class="zx-cat">
+  @if (chips.length > 0) {
+    <zx-chips
+      [items]="chips"
+      [removable]="true"
       [disabled]="disabled"
-      (change)="onToggle(row.id, $any($event.target).checked)"
+      [removeAriaLabel]="'common.remove' | translate"
+      (removed)="onChipRemoved($event)"
+    ></zx-chips>
+  }
+
+  <div class="zx-cat__search">
+    <svg-icon name="search" class="zx-cat__search-icon" aria-hidden="true"></svg-icon>
+    <input
+      type="text"
+      class="zx-cat__search-input"
+      [placeholder]="searchPlaceholder"
+      [disabled]="disabled"
+      [(ngModel)]="query"
+      (ngModelChange)="onQuery()"
     />
-    <span class="zx-category-tree-select__title">{{ row.title }}</span>
-  </label>
+  </div>
+
+  <div class="zx-cat__list">
+    @if (rows.length > 0) {
+      @for (row of rows; track row.id) {
+        @if (row.isGroup) {
+          <div class="zx-cat__group">{{ row.title }}</div>
+        } @else {
+          <label class="zx-cat__row" [style.padding-left.px]="row.indent * 16">
+            <zx-checkbox
+              [checked]="isSelected(row.id)"
+              [disabled]="disabled"
+              (checkedChange)="onToggle(row.id, $event)"
+            ></zx-checkbox>
+            <span class="zx-cat__title">{{ row.title }}</span>
+          </label>
+        }
+      }
+    } @else {
+      <span class="zx-cat__empty">{{ 'common.nothing-found' | translate }}</span>
+    }
+  </div>
+
+  <span class="zx-cat__count">{{ 'form.selected-count' | translate:{count: selectedCount} }}</span>
 </div>

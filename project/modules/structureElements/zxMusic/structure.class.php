@@ -46,7 +46,7 @@ class zxMusicElement extends ZxArtItem implements
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
-        $moduleStructure['description'] = 'pre';
+        $moduleStructure['description'] = 'text';
 
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
@@ -515,23 +515,23 @@ class zxMusicElement extends ZxArtItem implements
         return $data;
     }
 
-    /**
-     * @return (mixed|string)[]
-     *
-     * @psalm-return array{title: mixed, url: mixed, type: 'music:song', 'og:audio': mixed, image: '/images/logo_og.png', description: mixed, locale: mixed}
-     */
-    public function getOpenGraphData()
+    /** @return array<string, string> */
+    #[Override]
+    public function getOpenGraphData(): array
     {
         $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
-            'title' => $this->getMetaTitle(),
-            'url' => $this->getUrl(),
+            'title' => (string)$this->getMetaTitle(),
+            'url' => (string)$this->getUrl(),
             'type' => 'music:song',
-            'og:audio' => $this->getMp3FilePath(),
             'image' => '/images/logo_og.png',
-            'description' => $this->getMetaDescription(),
-            'locale' => $languagesManager->getCurrentLanguage()->iso6391,
+            'description' => (string)$this->getMetaDescription(),
+            'locale' => (string)$languagesManager->getCurrentLanguage()->iso6391,
         ];
+        $mp3FilePath = $this->getMp3FilePath();
+        if ($mp3FilePath !== false) {
+            $data['og:audio'] = $mp3FilePath;
+        }
         return $data;
     }
 }

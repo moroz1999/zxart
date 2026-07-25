@@ -21,10 +21,9 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* `auto` is for media that sizes itself and can outgrow the panel (the picture
-   viewer at 3x, the tune player). A wrapping flex row lets such media claim the
-   whole row and push the body below instead of squashing it, which a grid
-   track cannot do. */
+/* `auto` is for media that sizes itself and can outgrow the panel. A wrapping
+   flex row lets such media claim the whole row and push the body below instead
+   of squashing it, which a grid track cannot do. */
 :host.zx-hero--media-auto {
   display: flex;
   flex-wrap: wrap;
@@ -45,6 +44,7 @@
   }
 }
 
+:host.zx-hero--media-half { --zx-hero-media-width: minmax(0, 1fr); }
 :host.zx-hero--media-xs { --zx-hero-media-width: var(--zx-hero-media-width-xs); }
 :host.zx-hero--media-sm { --zx-hero-media-width: var(--zx-hero-media-width-sm); }
 :host.zx-hero--media-md { --zx-hero-media-width: var(--zx-hero-media-width-md); }

@@ -32,12 +32,13 @@ page, where several role ratings must be told apart.
 
 | Input | Values | Default |
 |---|---|---|
-| `media` | `none` \| `auto` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` | `auto` |
+| `media` | `none` \| `auto` \| `half` \| `xs` \| `sm` \| `md` \| `lg` \| `xl` | `auto` |
 
 `media` selects the width of the media column: `xs` avatars, `sm` party logos,
-`md` release screenshots, `lg` the tune player, `xl` the prod video, `auto` a
-content-sized column, `none` a single-column hero. The grid collapses to one
-column below the `md` breakpoint. Empty media and bar slots collapse.
+`md` release screenshots, `xl` the prod video, `half` equal media and body
+columns, `auto` a content-sized column, and `none` a single-column hero. The
+grid collapses to one column below the `md` breakpoint. Empty media and bar
+slots collapse.
 
 ```html
 <zx-hero media="xs">

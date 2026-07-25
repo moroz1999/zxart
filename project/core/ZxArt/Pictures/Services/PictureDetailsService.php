@@ -19,6 +19,7 @@ use ZxArt\Pictures\Exception\PictureDetailsException;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\ProdInfoBuilder;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Shared\Dto\AuthorDto;
 use zxPictureElement;
 
@@ -37,6 +38,7 @@ readonly class PictureDetailsService
         private translationsManager $translationsManager,
         private PicturesTransformer $picturesTransformer,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
         private PageMetadataService $pageMetadataService,
     ) {
     }
@@ -75,7 +77,7 @@ readonly class PictureDetailsService
             denyVoting: $picture->denyVoting,
             commentsAmount: $picture->commentsAmount,
             description: $element->description
-                ? $this->infoBuilder->decodeText((string)$element->description)
+                ? $this->descriptionFormatter->decode((string)$element->description)
                 : null,
             originalAuthors: $this->buildAuthors($element->getOriginalAuthorsList() ?: []),
             tags: $this->buildTags($element),

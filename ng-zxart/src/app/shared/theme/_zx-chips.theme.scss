@@ -1,0 +1,22 @@
+:root {
+  /* Gap between chips. */
+  --zx-chips-gap: var(--space-4);
+  /* Gap between chip text and remove control. */
+  --zx-chips-chip-gap: var(--space-4);
+  /* Chip background. */
+  --zx-chips-chip-bg: var(--secondary-100);
+  /* Chip text color. */
+  --zx-chips-chip-text: var(--text-light-color);
+  /* Chip border. */
+  --zx-chips-chip-border: var(--border-light);
+  /* Chip border radius (pill). */
+  --zx-chips-chip-radius: 999px;
+  /* Chip inner padding. */
+  --zx-chips-chip-padding: var(--space-2) var(--space-8);
+  /* Chip font size. */
+  --zx-chips-chip-font-size: var(--zx-font-size-sm);
+  /* Hover background for link chips. */
+  --zx-chips-chip-hover-bg: var(--secondary-200);
+  /* Hover text color for link chips. */
+  --zx-chips-chip-hover-text: var(--text-color);
+}

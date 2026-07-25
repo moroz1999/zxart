@@ -3,15 +3,12 @@
     <h2 class="zx-dialog__title" appHeading="headline" *ngIf="titleKey || title">
       {{ titleKey ? (titleKey | translate) : title }}
     </h2>
-    <zx-button
+    <zx-close-button
       *ngIf="showClose"
-      color="transparent"
-      [square]="true"
+      size="md"
       ariaLabel="Close"
-      (click)="closeClick.emit()"
-    >
-      <svg-icon name="close" class="zx-dialog__close-icon"></svg-icon>
-    </zx-button>
+      (closed)="closeClick.emit()"
+    ></zx-close-button>
   </ng-template>
   <ng-container *ngIf="customHeader; else defaultHeader">
     <ng-content select="[zxDialogHeader]"></ng-content>

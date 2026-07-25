@@ -20,7 +20,9 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-multilang-field.component';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
+import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -51,7 +53,9 @@ const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequen
     ZxEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxMultilangFieldComponent,
-    ZxStackComponent,
+    ZxFormSectionComponent,
+    ZxCheckboxGroupComponent,
+    ZxButtonControlsComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -65,7 +69,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     realName: this.fb.nonNullable.control<Record<string, string>>({}),
     country: this.fb.control<EntityRef | null>(null),
     city: this.fb.control<EntityRef | null>(null),
-    artCity: this.fb.control<EntityRef | null>(null),
+    artCityId: this.fb.nonNullable.control(''),
     wikiLink: this.fb.nonNullable.control(''),
     zxTunesId: this.fb.nonNullable.control(''),
     denyVoting: this.fb.nonNullable.control(false),
@@ -101,7 +105,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['country', 'city', 'artCityId']).subscribe({
+      this.formData.load(this.elementId, ['country', 'city']).subscribe({
         next: data => {
           this.languages = data.languages;
           this.form.patchValue({
@@ -109,7 +113,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
             realName: data.multilang['realName'] ?? {},
             country: data.refs['country'] ?? null,
             city: data.refs['city'] ?? null,
-            artCity: data.refs['artCityId'] ?? null,
+            artCityId: String(data.fields['artCityId'] ?? ''),
             wikiLink: String(data.fields['wikiLink'] ?? ''),
             zxTunesId: String(data.fields['zxTunesId'] ?? ''),
             denyVoting: !!Number(data.fields['denyVoting']),
@@ -138,6 +142,10 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  onCancel(): void {
+    this.router.navigateByUrl(`/author/${this.elementId}`);
+  }
+
   onImageChanged(change: ImageUploadChange): void {
     this.imageFile = change.file;
     this.removeImage = change.removed;
@@ -159,7 +167,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
           title: value.title,
           country: value.country ? String(value.country.id) : '',
           city: value.city ? String(value.city.id) : '',
-          artCityId: value.artCity ? String(value.artCity.id) : '',
+          artCityId: value.artCityId,
           wikiLink: value.wikiLink,
           zxTunesId: value.zxTunesId,
           denyVoting: value.denyVoting ? '1' : '',

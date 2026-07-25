@@ -1,11 +1,11 @@
 <ng-container *ngIf="vm$ | async as vm">
-    <zx-tags-chips
+    <zx-chips
         *ngIf="tagsSelector.length > 0"
-        [tags]="tagsSelector"
+        [items]="tagsSelector"
         [removable]="true"
-        [removeButtonAriaLabel]="'tags-quick-form.remove-tag' | translate"
-        (tagRemoved)="remove($event)"
-    ></zx-tags-chips>
+        [removeAriaLabel]="'tags-quick-form.remove-tag' | translate"
+        (removed)="remove($event)"
+    ></zx-chips>
 
     <zx-input
         #zxInput

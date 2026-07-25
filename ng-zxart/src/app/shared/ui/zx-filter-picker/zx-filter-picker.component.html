@@ -22,15 +22,13 @@
     </span>
     <span class="zx-filter-picker__chevron" aria-hidden="true"></span>
   </button>
-  <button
+  <zx-close-button
     *ngIf="hasSelection"
-    type="button"
+    size="sm"
     class="zx-filter-picker__clear"
-    [attr.aria-label]="'player.filters.clear' | translate"
-    (click)="clearSelection($event)"
-  >
-    <svg-icon name="close" class="zx-filter-picker__clear-icon"></svg-icon>
-  </button>
+    [ariaLabel]="'player.filters.clear' | translate"
+    (closed)="clearSelection($event)"
+  ></zx-close-button>
 </div>
 
 <div

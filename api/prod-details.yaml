@@ -41,6 +41,8 @@ components:
         - youtubeId
         - generatedDescription
         - dateCreated
+        - canAddRelease
+        - addReleaseUrl
         - downloadsCount
         - playsCount
         - categoriesPaths
@@ -82,6 +84,10 @@ components:
         generatedDescription:
           type: string
         dateCreated:
+          type: string
+        canAddRelease:
+          type: boolean
+        addReleaseUrl:
           type: string
         downloadsCount:
           type: integer

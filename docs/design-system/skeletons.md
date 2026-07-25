@@ -8,9 +8,11 @@ Do not add a facade skeleton component that imports multiple variants.
 
 ## Components
 
+- `zx-active-authors-skeleton`
 - `zx-card-skeleton`
 - `zx-authors-table-skeleton`
 - `zx-comment-skeleton`
+- `zx-groups-table-skeleton`
 - `zx-picture-card-skeleton`
 - `zx-picture-details-skeleton`
 - `zx-picture-grid-skeleton`

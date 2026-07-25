@@ -24,6 +24,8 @@ readonly class AuthorCoreRestDto
         public string $title,
         public string $realName,
         public string $url,
+        public string $imageUrl,
+        public string $addActionBaseUrl,
         public ?string $parentUrl,
         public ?string $parentTitle,
         public ?AuthorAliasRefRestDto $primaryAuthor,

@@ -2,13 +2,13 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {TagChipItem} from '../../models/tag-chip-item';
+import {ChipItem} from '../../models/chip-item';
 import {TagItem} from '../../models/tag-item';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 import {ZxStackComponent} from '../zx-stack/zx-stack.component';
-import {ZxTagsChipsComponent} from '../zx-tags-chips/zx-tags-chips.component';
+import {ZxChipsComponent} from '../zx-chips/zx-chips.component';
 import {DropdownPopoverAnimation} from '../../animations/popover-animations';
 
 @Component({
@@ -23,7 +23,7 @@ import {DropdownPopoverAnimation} from '../../animations/popover-animations';
     ZxInputComponent,
     ZxSpinnerComponent,
     ZxStackComponent,
-    ZxTagsChipsComponent,
+    ZxChipsComponent,
   ],
   templateUrl: './zx-tags-input.component.html',
   styleUrl: './zx-tags-input.component.scss',
@@ -86,7 +86,7 @@ export class ZxTagsInputComponent {
     this.clearQuery();
   }
 
-  onRemoveTag(tag: TagChipItem): void {
+  onRemoveTag(tag: ChipItem): void {
     this.tagRemoved.emit(tag as TagItem);
   }
 

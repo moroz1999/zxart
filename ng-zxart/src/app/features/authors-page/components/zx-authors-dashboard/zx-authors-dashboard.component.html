@@ -10,6 +10,12 @@
 
   <zx-stack spacing="sm">
     <h2 appHeading="title">{{ 'authors-page.latest.' + items | translate }}</h2>
-    <zx-author-browser mode="simple" [loadOnViewport]="true" sorting="id,desc" limit="100" [items]="items"></zx-author-browser>
+    <zx-author-browser
+      mode="simple"
+      [loadOnViewport]="true"
+      sorting="id,desc"
+      limit="100"
+      [items]="items"
+    ></zx-author-browser>
   </zx-stack>
 </zx-stack>

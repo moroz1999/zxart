@@ -1,9 +1,12 @@
-<div class="zx-image-upload">
-  <img *ngIf="displayUrl" [src]="displayUrl" class="zx-image-upload__preview" alt="" />
-  <div class="zx-image-upload__controls">
-    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
-    <zx-button *ngIf="displayUrl" size="sm" color="danger" (click)="onRemove()">
-      {{ 'common.remove' | translate }}
-    </zx-button>
-  </div>
+<div class="zx-drop">
+  <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+  <span class="zx-drop__thumb">
+    <img *ngIf="displayUrl" [src]="displayUrl" class="zx-drop__img" alt="" />
+  </span>
+  <span class="zx-drop__body">
+    <span class="zx-drop__title">{{ 'form.drop-image' | translate }}</span>
+    <span class="zx-drop__hint">{{ 'form.drop-hint' | translate }}</span>
+  </span>
+  <zx-button size="sm" color="outlined" (click)="fileInput.click()">{{ 'common.choose-file' | translate }}</zx-button>
+  <zx-button *ngIf="displayUrl" size="sm" color="danger" (click)="onRemove()">{{ 'common.remove' | translate }}</zx-button>
 </div>

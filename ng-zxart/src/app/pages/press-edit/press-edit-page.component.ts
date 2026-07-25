@@ -17,7 +17,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxTextareaComponent} from '../../shared/ui/zx-textarea/zx-textarea.component';
 import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-multilang-field.component';
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
-import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
+import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -57,7 +58,8 @@ const RELATION_TYPES: Record<string, string> = {
     ZxTextareaComponent,
     ZxMultilangFieldComponent,
     ZxMultiEntityAutocompleteComponent,
-    ZxStackComponent,
+    ZxFormSectionComponent,
+    ZxButtonControlsComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -137,6 +139,10 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  onCancel(): void {
+    this.router.navigateByUrl(`/press/${this.elementId}`);
   }
 
   onSubmit(): void {

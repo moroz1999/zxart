@@ -25,7 +25,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['title'] = 'text';
 
         $moduleStructure['pictureTitle'] = 'text';
-        $moduleStructure['description'] = 'pre';
+        $moduleStructure['description'] = 'text';
         $moduleStructure['border'] = 'text';
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
