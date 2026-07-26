@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {catchError, shareReplay} from 'rxjs/operators';
 import {FormDataResponse} from '../models/form-data-response';
 import {FormCreateEntityType} from '../models/form-create-entity-type';
 
@@ -21,7 +22,7 @@ export class FormDataApiService {
     if (refs.length > 0) {
       params['refs'] = refs.join(',');
     }
-    return this.http.get<FormDataResponse>('/formdata/', {params});
+    return this.request(params);
   }
 
   /**
@@ -44,6 +45,37 @@ export class FormDataApiService {
     if (parentId !== undefined) {
       params['parentId'] = String(parentId);
     }
-    return this.http.get<FormDataResponse>('/formdata/', {params});
+    return this.request(params);
+  }
+
+  private request(params: Record<string, string>): Observable<FormDataResponse> {
+    return this.http.get<FormDataResponse>('/formdata/', {params}).pipe(
+      catchError(error => of(this.emptyResponse(error?.error?.errorMessage ?? 'form.error-load'))),
+      shareReplay({bufferSize: 1, refCount: true}),
+    );
+  }
+
+  private emptyResponse(errorMessage: string): FormDataResponse {
+    return {
+      errorMessage,
+      entityTitle: '',
+      fields: {},
+      multilang: {},
+      refs: {},
+      multiRefs: {},
+      images: {},
+      files: {},
+      fileSelectors: {},
+      aiStatuses: {},
+      splitGroups: [],
+      languages: [],
+      members: [],
+      roles: [],
+      subgroups: [],
+      categoriesTree: [],
+      authorRefs: [],
+      originalAuthorRefs: [],
+      enums: {},
+    };
   }
 }

@@ -5,8 +5,8 @@ import {EMPTY, merge, Observable, Subject} from 'rxjs';
 import {filter, map, startWith, switchMap} from 'rxjs/operators';
 import {shareReplay} from 'rxjs/operators';
 import {BreadcrumbItemDto} from '../ui/zx-breadcrumbs/zx-breadcrumbs.component';
-import {findMenuTrail} from '../../features/menu/menu-trail';
-import {MenuEntry} from '../../features/menu/menu.config';
+import {findMenuTrail} from '../navigation/menu-trail';
+import {MenuEntry} from '../navigation/menu.config';
 
 /**
  * A resolved breadcrumb trail: the linked ancestor `items` (root-first, never

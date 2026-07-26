@@ -1,21 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, Observable, of, tap} from 'rxjs';
+import {catchError, map, Observable, of, tap} from 'rxjs';
 import {PlaylistDto} from '../models/playlist.model';
 import {JsonResponse} from '../models/json-response';
-
-interface PlaylistItemData {
-  id: number;
-  playlistIds: number[];
-}
-
-interface PlaylistResponseData {
-  zxMusic?: PlaylistItemData[];
-  zxPicture?: PlaylistItemData[];
-  zxProd?: PlaylistItemData[];
-  zxRelease?: PlaylistItemData[];
-  playlist?: PlaylistDto[];
-}
+import {PlaylistItemData, PlaylistResponseData} from '../models/playlist-response-data';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +25,7 @@ export class PlaylistService {
     const params = {id: elementId, action: 'getPlaylistIds'};
     return this.http.get<JsonResponse<PlaylistResponseData>>(this.apiUrl, {params: params as any}).pipe(
       map(response => this.extractPlaylistIds(response.responseData, elementId)),
+      catchError(() => of([])),
     );
   }
 
@@ -51,6 +40,7 @@ export class PlaylistService {
       {headers: {'Content-Type': 'application/x-www-form-urlencoded'}},
     ).pipe(
       map(response => this.extractPlaylistIds(response.responseData, elementId)),
+      catchError(() => of([])),
     );
   }
 
@@ -65,6 +55,7 @@ export class PlaylistService {
       {headers: {'Content-Type': 'application/x-www-form-urlencoded'}},
     ).pipe(
       map(response => this.extractPlaylistIds(response.responseData, elementId)),
+      catchError(() => of([])),
     );
   }
 
@@ -96,6 +87,7 @@ export class PlaylistService {
         }
       }),
       map(() => this.playlists),
+      catchError(() => of(this.playlists)),
     );
   }
 

@@ -18,6 +18,8 @@ export class ZxEditButtonComponent implements OnInit {
   @Input() ariaLabel = '';
   @Input() title = '';
   @Input() routerLink: string | null = null;
+  /** Internal URL with query parameters; `zx-button` navigates it client-side. */
+  @Input() href: string | null = null;
   @Input() size: 'xs' | 'sm' | 'md' = 'sm';
   @Input() color: 'primary' | 'secondary' | 'danger' | 'transparent' | 'outlined' = 'primary';
   @Input() expanded: boolean | null = null;

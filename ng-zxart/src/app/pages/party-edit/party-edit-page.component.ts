@@ -101,6 +101,12 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formData.load(this.elementId, ['country', 'city']).subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
@@ -158,6 +164,12 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'party-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/party/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

@@ -44,8 +44,10 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
   - Link through `partyPicture`
 
 #### Related Works
-- **game** - related game (zxProd ID)
+- **game** - related production or release (`gameLink`)
   - For loading screens and game graphics
+  - Holds a zxProd in almost every case, but a release is allowed too, so the
+    form offers both
   - Picture list cards display the linked zxProd or zxRelease title when available
 - **inspired** - inspiration source (image file ID)
   - Original work that inspired the author

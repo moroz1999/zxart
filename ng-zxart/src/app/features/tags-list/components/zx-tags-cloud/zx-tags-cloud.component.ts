@@ -34,7 +34,7 @@ import {
   ZxTagsCloudSkeletonComponent,
 } from '../zx-tags-cloud-skeleton/zx-tags-cloud-skeleton.component';
 
-const DEFAULT_MINIMUM_AMOUNT = '10';
+const DEFAULT_MINIMUM_AMOUNT = '3';
 const TAG_FONT_SIZES = ['small', 'medium', 'large', 'extra-large'] as const;
 
 type TagFontSize = typeof TAG_FONT_SIZES[number];
@@ -66,9 +66,8 @@ const INITIAL_VM: TagsCloudVm = {
 };
 
 /**
- * Tag cloud for a collection section (graphics/music). Each tag links to the
- * matching search entrypoint with the tag pre-applied (`tagsInclude`). Font size
- * scales with the tag's usage amount.
+ * Tag cloud for a collection section. Each tag links to its dedicated browser
+ * page. Font size scales with the tag's usage amount.
  */
 @Component({
   selector: 'zx-tags-cloud',
@@ -93,12 +92,8 @@ const INITIAL_VM: TagsCloudVm = {
 export class ZxTagsCloudComponent implements OnChanges {
   /** Collection section: 'graphics' or 'music'. */
   @Input() section = 'graphics';
-  /** SPA search route the tags link to (e.g. '/pictures/search'). */
-  @Input() searchBasePath = '/pictures/search';
-  /** Search query parameter receiving the selected tag. */
-  @Input() tagQueryParam = 'tagsInclude';
-  /** Whether the search filter expects a tag title or numeric id. */
-  @Input() tagQueryValue: 'id' | 'title' = 'title';
+  /** SPA route containing the selected tag pages. */
+  @Input() tagBasePath = '/pictures/tags';
 
   selectedMinimumAmount = DEFAULT_MINIMUM_AMOUNT;
 
@@ -157,12 +152,6 @@ export class ZxTagsCloudComponent implements OnChanges {
       Math.floor(amount / maxAmount * TAG_FONT_SIZES.length),
     );
     return TAG_FONT_SIZES[index];
-  }
-
-  queryParamsFor(tag: TagListItem): Record<string, string> {
-    return {
-      [this.tagQueryParam]: this.tagQueryValue === 'id' ? String(tag.id) : tag.title,
-    };
   }
 
   private requestTags(reset: boolean): void {

@@ -1,12 +1,12 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'picture-details.edit' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">{{ (batchUpload ? 'picture-form.batch-title' : 'picture-details.edit') | translate }}</h1>
 <div *ngIf="loading" class="picture-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>
 
 <form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
   <zx-form-section [title]="'form.identification' | translate" icon="image">
-    <zx-form-field [fullWidth]="true">
+    <zx-form-field [fullWidth]="!batchUpload">
       <zx-form-label for="picture-title" [required]="true">{{ 'picture-form.title' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-input id="picture-title" formControlName="title" type="text"></zx-input>
@@ -39,9 +39,9 @@
 
   <zx-form-section [title]="'form.origin' | translate" icon="tag">
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'picture-form.release' | translate }}</zx-form-label>
+      <zx-form-label>{{ 'picture-form.prod-or-release' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-entity-autocomplete formControlName="game" types="zxRelease" [placeholder]="'picture-form.release' | translate"></zx-entity-autocomplete>
+        <zx-entity-autocomplete formControlName="game" types="zxProd,zxRelease" [placeholder]="'picture-form.prod-or-release' | translate"></zx-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
 
@@ -89,9 +89,10 @@
 
   <zx-form-section [title]="'form.images' | translate" icon="image">
     <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
-      <zx-form-label>{{ 'picture-form.batch-images' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'picture-form.batch-images' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+        <zx-control-errors [control]="form.controls['batchFiles']" [messages]="batchFilesMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 

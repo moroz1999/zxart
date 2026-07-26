@@ -7,8 +7,11 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use controller;
 use Monolog\Logger;
+use Override;
+use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Users\PasswordChangeResult;
+use ZxArt\Users\Rest\UserProfileRestDto;
 use ZxArt\Users\UserProfileService;
 
 /**
@@ -25,16 +28,19 @@ class ProfileData extends LoggedControllerApplication
         controller $controller,
         Logger $logger,
         private readonly UserProfileService $userProfileService,
+        private readonly ObjectMapper $objectMapper,
     ) {
         parent::__construct($controller, $logger);
     }
 
+    #[Override]
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    #[Override]
     public function execute($controller): void
     {
         try {
@@ -77,7 +83,7 @@ class ProfileData extends LoggedControllerApplication
             $this->assignError('Unauthorized', 401);
             return;
         }
-        $this->renderer->assign('body', $profile);
+        $this->renderer->assign('body', $this->objectMapper->map($profile, UserProfileRestDto::class));
     }
 
     private function assignError(string $message, int $statusCode = 500): void
@@ -86,6 +92,7 @@ class ProfileData extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
+    #[Override]
     public function getUrlName(): string
     {
         return '';

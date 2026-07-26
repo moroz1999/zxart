@@ -35,7 +35,7 @@
 	<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->id}/filename:{$element->getFileName()}">{translations name='label.download'} {$element->getFileName('original', false)}</a><br>
 {/if}
 {if $element->getTagsList()}
-	<b>{translations name='field.tags'}: </b>{foreach from=$element->getTagsList() item=tag name=tags}<a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+	<b>{translations name='field.tags'}: </b>{foreach from=$element->getTagsList() item=tag name=tags}<a href="/pictures/tags/{$tag->id}">{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
 {/foreach}
 <br>{/if}
 {if $userElement = $element->getUserElement()}

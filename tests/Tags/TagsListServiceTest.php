@@ -32,11 +32,11 @@ final class TagsListServiceTest extends TestCase
         self::assertSame([10, 5], array_map(static fn(TagListItemDto $item): int => $item->amount, $items));
     }
 
-    public function testDefaultMinimumIsTen(): void
+    public function testDefaultMinimumIsThree(): void
     {
         $service = $this->createService([
             new TagElementStub(1, 'Included'),
-        ], [1 => 10]);
+        ], [1 => 3]);
 
         $items = $service->getSectionTags('music');
 

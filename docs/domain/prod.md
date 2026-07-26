@@ -45,10 +45,23 @@ under that element, and the uploaded productions are attached to it. Pictures an
 music have the same routes (`…/pictures/add`, `…/music/add`) backed by the
 `picturesUploadForm` and `musicUploadForm` pipelines, and a production's releases
 are added at `/prod/:id/releases/add`.
+
+The batch form shows every field its upload pipeline accepts; the values are
+shared by all works created from the selected files. `/formdata/` echoes the
+`parentId` back as `parent` (id, title, structure type) and the form prefills the
+field that element belongs in: the author becomes the works' author (a member for
+productions), the party their release party, the group their developer, and a
+browsed category the productions' category. The catalogue's upload button
+therefore carries the browsed category as `?cat=`. Fields the pipeline cannot
+apply are hidden in batch mode (for a production: compilation items, series and
+the extra file selectors; for a tune: the playback restriction).
 Catalogue responses expose entity identifiers and structure types. Angular
 templates build internal routes from those identifiers and do not receive routed
 URLs from the API.
-The catalogue breadcrumbs show the selected category chain. The categories
+When a category is browsed it becomes the page's subject: its name replaces the
+section name in the `<h1>` and in the document title, and the catalogue root
+restores the route title. The catalogue breadcrumbs show the selected category
+chain. The categories
 selector marks the whole ancestor chain of the current category as selected, so
 the chain is derived from the loaded selector and its links are built from the
 category identifiers as `/prods?cat={id}`. At the catalogue root the trail falls

@@ -10,12 +10,15 @@ use DbLoggableApplication;
 use imageDataChunk;
 use LanguagesManager;
 use Monolog\Logger;
-use RuntimeException;
+use Override;
 use structureElement;
 use structureManager;
 use Throwable;
+use translationsManager;
 use ZxArt\ElementPrivileges\ElementPrivilegesService;
 use ZxArt\Forms\FormCreateService;
+use ZxArt\Forms\SubmittedFormFields;
+use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Shared\EntityType;
@@ -43,16 +46,19 @@ class Formdata extends LoggedControllerApplication
         private readonly ElementPrivilegesService $elementPrivilegesService,
         private readonly LanguagesManager $languagesManager,
         private readonly FormCreateService $formCreateService,
+        private readonly translationsManager $translationsManager,
     ) {
         parent::__construct($controller, $logger);
     }
 
+    #[Override]
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    #[Override]
     public function execute($controller): void
     {
         $this->startDbLogging();
@@ -80,34 +86,40 @@ class Formdata extends LoggedControllerApplication
                         );
                     } else {
                         $draft = $this->formCreateService->createDraft($formType, $year, $parentId);
-                        $this->assignSuccess($this->buildFormData($draft, $this->getRefFields()));
+                        $this->assignSuccess([
+                            ...$this->buildFormData($draft, $this->getRefFields()),
+                            'parent' => $this->buildParentRef($parentId),
+                        ]);
                     }
                 }
             } catch (FormValidationException $e) {
                 $this->logThrowable('Formdata::execute create', $e);
                 $this->assignError($e->getMessage(), 422);
-            } catch (RuntimeException $e) {
+            } catch (FormCreateException $e) {
                 $this->logThrowable('Formdata::execute create', $e);
-                $this->assignError('Forbidden', 403);
+                $this->assignError($e->getMessage(), $e->getStatusCode());
             } catch (Throwable $e) {
                 $this->logThrowable('Formdata::execute create', $e);
                 $this->assignError('Internal server error', 500);
             }
         } else {
-            $id = (int)$this->getParameter('id');
-            if (!$id || !$this->hasPrivilege($id, 'showPublicForm')) {
-                $this->assignError('Forbidden', 403);
-            } else {
-                try {
+            try {
+                $id = (int)$this->getParameter('id');
+                if ($id <= 0) {
+                    $this->assignError('Missing required parameter: id', 400);
+                } else {
                     $element = $this->structureManager->getElementById($id);
                     if (!$element instanceof structureElement) {
-                        throw new RuntimeException('Element not found');
+                        $this->assignError('Element not found', 404);
+                    } elseif (!$this->hasPrivilege($id, 'showPublicForm')) {
+                        $this->assignError('Forbidden', 403);
+                    } else {
+                        $this->assignSuccess($this->buildFormData($element, $this->getRefFields()));
                     }
-                    $this->assignSuccess($this->buildFormData($element, $this->getRefFields()));
-                } catch (Throwable $e) {
-                    $this->logThrowable('Formdata::execute', $e);
-                    $this->assignError('Element not found', 404);
                 }
+            } catch (Throwable $e) {
+                $this->logThrowable('Formdata::execute', $e);
+                $this->assignError('Internal server error', 500);
             }
         }
 
@@ -121,32 +133,42 @@ class Formdata extends LoggedControllerApplication
     }
 
     /**
-     * @return array<string, int|string|array<array-key, int|string|array<array-key, int|string>>>
+     * @return array<string, mixed>
      */
     private function getCreateFields(): array
     {
-        /** @var array<string, array<array-key, int|string|array<array-key, int|string>>> $uploadedFields */
+        /** @var array<string, array<string, mixed>> $uploadedFields */
         $uploadedFields = $_FILES['fields'] ?? [];
-        $fields = [];
-        foreach ($uploadedFields as $fileProperty => $fieldValues) {
-            foreach ($fieldValues as $fieldName => $fieldValue) {
-                $fieldKey = (string)$fieldName;
-                $fields[$fieldKey][$fileProperty] = $fieldValue;
-            }
-        }
-
-        /** @var array<array-key, int|string|array<array-key, int|string|array<array-key, int|string>>> $postedFields */
+        /** @var array<string, mixed> $postedFields */
         $postedFields = $_POST['fields'] ?? [];
-        foreach ($postedFields as $fieldName => $fieldValue) {
-            $fieldKey = (string)$fieldName;
-            if (isset($fields[$fieldKey]) && is_array($fields[$fieldKey]) && is_array($fieldValue)) {
-                $fields[$fieldKey] = array_merge($fields[$fieldKey], $fieldValue);
-            } else {
-                $fields[$fieldKey] = $fieldValue;
-            }
+
+        return SubmittedFormFields::merge($uploadedFields, $postedFields);
+    }
+
+    /**
+     * The element a creation form was started from, so the form can prefill the
+     * field that element belongs in (the author of uploaded works, the party
+     * they were released at, the category productions go to).
+     *
+     * @return array{id: int, title: string, structureType: string}|null
+     */
+    private function buildParentRef(?int $parentId): ?array
+    {
+        if ($parentId === null || $parentId <= 0) {
+            return null;
+        }
+        // playlists and other elements outside the public tree need the fallback
+        $parent = $this->structureManager->getElementById($parentId)
+            ?? $this->structureManager->getElementById($parentId, null, true);
+        if (!$parent instanceof structureElement) {
+            return null;
         }
 
-        return $fields;
+        return [
+            'id' => (int)$parent->getId(),
+            'title' => $this->decode((string)$parent->getTitle()),
+            'structureType' => (string)$parent->structureType,
+        ];
     }
 
     /** @return string[] */
@@ -171,7 +193,7 @@ class Formdata extends LoggedControllerApplication
         $multiRefs = [];
         $images = [];
         $files = [];
-        $baseUrl = (string)controller::getInstance()->baseURL;
+        $baseUrl = (string)$this->controller->baseURL;
 
         foreach ($element->getFormData() as $field => $value) {
             if (is_array($value)) {
@@ -355,7 +377,6 @@ class Formdata extends LoggedControllerApplication
         if (!$specs) {
             return [];
         }
-        $tm = $this->getService(\translationsManager::class);
         $enums = [];
         foreach ($specs as $field => $spec) {
             if (!method_exists($element, $spec['method'])) {
@@ -363,7 +384,10 @@ class Formdata extends LoggedControllerApplication
             }
             $options = [];
             if (isset($spec['emptyLabelKey'])) {
-                $options[] = ['value' => '', 'label' => (string)$tm->getTranslationByName($spec['emptyLabelKey'])];
+                $options[] = [
+                    'value' => '',
+                    'label' => (string)$this->translationsManager->getTranslationByName($spec['emptyLabelKey']),
+                ];
             } elseif (!empty($spec['emptyBlank'])) {
                 $options[] = ['value' => '', 'label' => ''];
             }
@@ -384,11 +408,11 @@ class Formdata extends LoggedControllerApplication
                 if ($mode === 'map') {
                     // method returns [value => translationKey]
                     $value = (string)$key;
-                    $label = (string)$tm->getTranslationByName((string)$item);
+                    $label = (string)$this->translationsManager->getTranslationByName((string)$item);
                 } else {
                     $value = (string)$item;
                     $labelKey = !empty($spec['stripDots']) ? str_replace('.', '', $value) : $value;
-                    $label = (string)$tm->getTranslationByName($spec['prefix'] . $labelKey);
+                    $label = (string)$this->translationsManager->getTranslationByName($spec['prefix'] . $labelKey);
                 }
                 $options[] = ['value' => $value, 'label' => $label !== '' ? $label : $value];
             }
@@ -412,6 +436,13 @@ class Formdata extends LoggedControllerApplication
                 'frequency' => ['method' => 'getFrequencies', 'prefix' => 'zxmusic.frequency_', 'emptyLabelKey' => 'zxmusic.frequency_default'],
                 'intFrequency' => ['method' => 'getIntFrequencies', 'prefix' => 'zxmusic.intfrequency_', 'stripDots' => true, 'emptyLabelKey' => 'zxmusic.frequency_default'],
             ],
+            'musicUploadForm' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'musiccompo.compo_', 'emptyBlank' => true],
+                'chipType' => ['method' => 'getChipTypes', 'prefix' => 'zxmusic.chiptype_', 'emptyLabelKey' => 'zxmusic.chiptype_default'],
+                'channelsType' => ['method' => 'getChannelsTypes', 'prefix' => 'zxmusic.channelstype_', 'emptyLabelKey' => 'zxmusic.channelstype_default'],
+                'frequency' => ['method' => 'getFrequencies', 'prefix' => 'zxmusic.frequency_', 'emptyLabelKey' => 'zxmusic.frequency_default'],
+                'intFrequency' => ['method' => 'getIntFrequencies', 'prefix' => 'zxmusic.intfrequency_', 'stripDots' => true, 'emptyLabelKey' => 'zxmusic.frequency_default'],
+            ],
             'zxProd' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
                 'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
@@ -421,6 +452,11 @@ class Formdata extends LoggedControllerApplication
                 'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
             ],
             'zxPicture' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'zxPicture.compo_', 'emptyBlank' => true],
+                'palette' => ['method' => 'getPaletteTypes', 'prefix' => 'zxpicture.palette_', 'emptyLabelKey' => 'zxpicture.palette_auto'],
+                'type' => ['method' => 'getZxPictureTypes', 'mode' => 'map'],
+            ],
+            'picturesUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'zxPicture.compo_', 'emptyBlank' => true],
                 'palette' => ['method' => 'getPaletteTypes', 'prefix' => 'zxpicture.palette_', 'emptyLabelKey' => 'zxpicture.palette_auto'],
                 'type' => ['method' => 'getZxPictureTypes', 'mode' => 'map'],
@@ -569,11 +605,7 @@ class Formdata extends LoggedControllerApplication
 
     private function hasPrivilege(int $id, string $privilege): bool
     {
-        try {
-            return $this->elementPrivilegesService->getPrivileges($id, [$privilege])->privileges[$privilege] ?? false;
-        } catch (Throwable $e) {
-            return false;
-        }
+        return $this->elementPrivilegesService->getPrivileges($id, [$privilege])->privileges[$privilege] ?? false;
     }
 
     private function assignSuccess(mixed $data): void
@@ -587,7 +619,8 @@ class Formdata extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
-    public function getUrlName()
+    #[Override]
+    public function getUrlName(): string
     {
         return '';
     }

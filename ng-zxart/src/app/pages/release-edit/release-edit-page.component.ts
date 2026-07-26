@@ -33,7 +33,7 @@ import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filt
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
-import {FileUploadField} from '../../shared/services/form-save-api.service';
+import {FileUploadField} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -148,6 +148,12 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
@@ -247,6 +253,12 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'release-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/release/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

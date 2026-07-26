@@ -35,7 +35,7 @@
 {/if}
 {if $element->getTagsList()}
 <b>{translations name='zxprod.tags'}:</b>{foreach from=$element->getTagsList() item=tag name=tags}
-        <a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+        <a href="/prods/tags/{$tag->id}">{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
     {/foreach}<br>
 {/if}
 {include file=$theme->template('component.links.tpl')}

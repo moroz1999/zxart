@@ -28,6 +28,8 @@ get 401.
 Every response returns the complete list, so the frontend re-renders from a
 single source of truth instead of patching local state. Each entry carries its
 content counts (`pictures`, `tunes`, `prods`), read from the `playlist` links.
+Unknown actions return 400, blank titles return 422, and playlists outside the
+current user's owned list return 404.
 
 A single playlist's contents are loaded per work type: pictures from
 `/picturelist/?elementId=`, tunes from `/musiclist/?elementId=`, and software

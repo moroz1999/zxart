@@ -6,7 +6,6 @@ namespace ZxArt\Forms;
 
 use controller;
 use LanguagesManager;
-use RuntimeException;
 use structureElement;
 use structureManager;
 use ZxArt\Shared\StructureType;
@@ -83,7 +82,7 @@ final readonly class FormCreateService
 
         $isSubmitted = $element->executeAction($submitAction);
         if ($isSubmitted !== true) {
-            throw new RuntimeException('Form submission is forbidden');
+            throw new FormCreateException('Form submission is forbidden', 403);
         }
         // The action reports a failed validator only by leaving the element
         // unsaved (it falls back to re-rendering the form), so an element that is
@@ -108,17 +107,18 @@ final readonly class FormCreateService
             FormCreateType::MusicBatch => StructureType::MusicUploadForm,
             FormCreateType::Release => StructureType::ZxRelease,
         };
-        // A batch upload started from an author, group or party attaches its works
-        // to that element, so the form is created under it. Without a parent the
-        // works land in the catalogue root.
+        // A batch upload started from an author, group, party or category attaches
+        // its works to that element, so the form is created under it. Pictures and
+        // music are only ever uploaded from such a page, and a release belongs to
+        // its production, so those have no parentless fallback.
         $parentId ??= match ($formType) {
             FormCreateType::Author => $this->getCatalogue(StructureType::AuthorsCatalogue)->getId(),
             FormCreateType::Group => $this->getCatalogue(StructureType::GroupsCatalogue)->getId(),
             FormCreateType::Party => $this->getPartyYear($year)->getId(),
             FormCreateType::ProdBatch => $this->getCatalogue(StructureType::ZxProdCategoriesCatalogue)->getId(),
-            FormCreateType::PictureBatch => $this->getCatalogue(StructureType::PicturesCatalogue)->getId(),
-            FormCreateType::MusicBatch => $this->getCatalogue(StructureType::MusicCatalogue)->getId(),
-            FormCreateType::Release => throw new RuntimeException('A release needs its production'),
+            FormCreateType::PictureBatch,
+            FormCreateType::MusicBatch => throw new FormCreateException('A batch upload needs its element', 400),
+            FormCreateType::Release => throw new FormCreateException('A release needs its production', 400),
         };
 
         return $this->createTransientElement($structureType, $this->getFormAction($formType), $parentId);
@@ -132,7 +132,7 @@ final readonly class FormCreateService
     {
         $element = $this->structureManager->createElement($structureType->value, $formAction, $parentId);
         if (!$element instanceof structureElement) {
-            throw new RuntimeException('Form creation is forbidden');
+            throw new FormCreateException('Form creation is forbidden', 403);
         }
 
         return $element;
@@ -161,7 +161,7 @@ final readonly class FormCreateService
         );
         $catalogue = reset($catalogues);
         if (!$catalogue instanceof structureElement) {
-            throw new RuntimeException($catalogueType->value . ' not found');
+            throw new FormCreateException($catalogueType->value . ' not found', 500);
         }
 
         return $catalogue;
@@ -170,7 +170,7 @@ final readonly class FormCreateService
     private function getPartyYear(?int $year): structureElement
     {
         if ($year === null || $year <= 0) {
-            throw new RuntimeException('Party year is required');
+            throw new FormCreateException('Party year is required', 400);
         }
         foreach ($this->structureManager->getElementsByType(StructureType::Year->value) as $yearElement) {
             if ((int)$yearElement->getTitle() === $year) {
@@ -178,6 +178,6 @@ final readonly class FormCreateService
             }
         }
 
-        throw new RuntimeException('Party year not found');
+        throw new FormCreateException('Party year not found', 404);
     }
 }

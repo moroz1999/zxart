@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Parties\Dto;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use ZxArt\Parties\Rest\PartyRestDto;
+
+#[Map(target: PartyRestDto::class)]
 readonly class PartyDto
 {
     public function __construct(

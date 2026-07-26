@@ -92,6 +92,12 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
       this.subscriptions.add(
         this.authorAliasFormApi.getForm(routeId).subscribe({
           next: data => {
+            if (data.errorMessage) {
+              this.loading = false;
+              this.errorMessage = data.errorMessage;
+              this.cdr.markForCheck();
+              return;
+            }
             this.form.patchValue({author: data.author});
             this.loading = false;
             this.cdr.markForCheck();
@@ -110,6 +116,12 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formData.load(this.elementId, ['authorId']).subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
@@ -167,6 +179,12 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'author-alias-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/author/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

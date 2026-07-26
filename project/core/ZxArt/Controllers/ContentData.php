@@ -8,6 +8,7 @@ use CmsHttpResponse;
 use controller;
 use LanguagesManager;
 use Monolog\Logger;
+use Override;
 use Throwable;
 use ZxArt\Content\ContentService;
 
@@ -24,12 +25,14 @@ class ContentData extends LoggedControllerApplication
         parent::__construct($controller, $logger);
     }
 
+    #[Override]
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    #[Override]
     public function execute($controller): void
     {
         try {
@@ -55,6 +58,7 @@ class ContentData extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
+    #[Override]
     public function getUrlName(): string
     {
         return '';

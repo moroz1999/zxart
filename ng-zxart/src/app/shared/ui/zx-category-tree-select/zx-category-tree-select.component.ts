@@ -14,7 +14,8 @@ interface CategoryRow {
   title: string;
   level: number;
   indent: number;
-  isGroup: boolean;
+  /** Root of a branch — styled as a heading, but selectable like any other. */
+  isTopLevel: boolean;
 }
 
 /**
@@ -23,9 +24,11 @@ interface CategoryRow {
  * (`number[]`), which the form posts as `categories[]`. The tree comes from
  * `/formdata/` as a flat, depth-first list with a `level`.
  *
- * Top-level nodes render as uppercase group headers; deeper nodes render as
- * indented checkboxes. A search box filters the list (keeping ancestors of
- * matches visible) and a running count of selected categories is shown below.
+ * Every node is selectable, including the roots of the tree ("games", "misc"…):
+ * they are ordinary categories a production can belong to. Roots are only styled
+ * as headings and their children are indented under them. A search box filters
+ * the list (keeping ancestors of matches visible) and a running count of selected
+ * categories is shown below.
  */
 @Component({
   selector: 'zx-category-tree-select',
@@ -52,8 +55,8 @@ export class ZxCategoryTreeSelectComponent implements ControlValueAccessor, OnIn
         id: node.id,
         title: node.title,
         level: relativeLevel,
-        indent: Math.max(0, relativeLevel - 1),
-        isGroup: relativeLevel === 0,
+        indent: relativeLevel,
+        isTopLevel: relativeLevel === 0,
       };
     });
     this.rebuild();
@@ -65,7 +68,6 @@ export class ZxCategoryTreeSelectComponent implements ControlValueAccessor, OnIn
   disabled = false;
   rows: CategoryRow[] = [];
   chips: ChipItem[] = [];
-  totalCount = 0;
   selectedCount = 0;
 
   private allRows: CategoryRow[] = [];
@@ -135,10 +137,9 @@ export class ZxCategoryTreeSelectComponent implements ControlValueAccessor, OnIn
   }
 
   private rebuild(): void {
-    this.totalCount = this.allRows.filter(row => !row.isGroup).length;
     this.selectedCount = this.selected.size;
     this.chips = this.allRows
-      .filter(row => !row.isGroup && this.selected.has(row.id))
+      .filter(row => this.selected.has(row.id))
       .map(row => ({id: row.id, title: row.title}));
 
     const query = this.query.trim().toLowerCase();

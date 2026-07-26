@@ -72,4 +72,19 @@ bumps `dateModified`, which invalidates outstanding reset links.
 
 ## Password recovery
 
-The public `/password-reminder` Angular route requests and applies password-reset links through `POST /password-reminder-data/`. A reset token is invalidated when the user's `dateModified` value changes.
+The public `/password-reminder` Angular route requests and applies password-reset
+links through `POST /password-reminder-data/`. The endpoint returns the same
+successful request response whether or not the email belongs to an account.
+
+Reset tokens are timestamped HMAC values with a one-hour lifetime. The user's
+current password hash is the HMAC key, and the signed payload includes the
+account id, normalized email, `dateModified`, and issue time. Changing the
+password or `dateModified` therefore invalidates every outstanding token.
+Password-reset links use the application's configured public `baseURL`.
+
+## Registration
+
+`POST /register-data/` creates public accounts through `RegistrationService`.
+Invalid fields return 422, duplicate accounts and already-authenticated requests
+return 409, and successful creation returns 201. The service applies the
+registration element's default groups and sends its verification email.

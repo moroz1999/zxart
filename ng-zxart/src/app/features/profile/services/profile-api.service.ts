@@ -16,7 +16,9 @@ export class ProfileApiService {
   }
 
   /** Replaces the account password; the backend rejects a wrong current password. */
-  changePassword(request: PasswordChangeRequest): Observable<UserProfileDto> {
-    return this.http.post<UserProfileDto>(`${this.apiUrl}?action=change-password`, request);
+  changePassword(request: PasswordChangeRequest): Observable<UserProfileDto | null> {
+    return this.http.post<UserProfileDto>(`${this.apiUrl}?action=change-password`, request).pipe(
+      catchError(() => of(null)),
+    );
   }
 }

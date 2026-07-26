@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Press\Rest;
 
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use Symfony\Component\ObjectMapper\Transform\MapCollection;
+
 /**
- * Rich DTO consumed by the Angular <zx-press-details> page. Built directly by
- * {@see \ZxArt\Press\Services\PressDetailsService} and serialised by the json
- * renderer.
+ * Rich response consumed by the Angular press details page.
  */
 readonly class PressDetailsRestDto
 {
@@ -28,13 +29,21 @@ readonly class PressDetailsRestDto
         public ?string $externalLink,
         public ?string $introduction,
         public ?string $content,
+        #[Map(transform: MapCollection::class)]
         public array $tags,
+        #[Map(transform: MapCollection::class)]
         public array $authors,
+        #[Map(transform: MapCollection::class)]
         public array $people,
+        #[Map(transform: MapCollection::class)]
         public array $groups,
+        #[Map(transform: MapCollection::class)]
         public array $software,
+        #[Map(transform: MapCollection::class)]
         public array $pictures,
+        #[Map(transform: MapCollection::class)]
         public array $tunes,
+        #[Map(transform: MapCollection::class)]
         public array $parties,
         public ?PressMentionRestDto $publication,
     ) {

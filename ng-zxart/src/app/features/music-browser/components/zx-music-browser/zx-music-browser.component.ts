@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {map} from 'rxjs';
@@ -35,6 +35,8 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxMusicBrowserComponent extends BrowserBaseComponent {
+  @Input() linkType = 'structure';
+
   tunes: ZxTuneDto[] = [];
   private playlistId = '';
 
@@ -72,7 +74,8 @@ export class ZxMusicBrowserComponent extends BrowserBaseComponent {
   }
 
   protected override fetchPage(start: number, limit: number): void {
-    this.musicBrowserService.getPaged(this.elementId, start, limit, this.sorting).subscribe({
+    this.playlistId = `music-browser-${this.linkType}-${this.elementId}`;
+    this.musicBrowserService.getPaged(this.elementId, start, limit, this.sorting, this.linkType).subscribe({
       next: response => {
         this.loading = false;
         this.tunes = response.items;

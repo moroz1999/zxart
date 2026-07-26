@@ -31,6 +31,8 @@ paths:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /tags/:
     $ref: 'tags.yaml#/paths/~1tags~1'
+  /tag-details/:
+    $ref: 'tag-details.yaml#/paths/~1tag-details~1'
   /element-privileges/:
     $ref: 'element-privileges.yaml#/paths/~1element-privileges~1'
   /prod-details/:
@@ -99,6 +101,8 @@ components:
       $ref: 'tags.yaml#/components/schemas/TagItem'
     TagsPayload:
       $ref: 'tags.yaml#/components/schemas/TagsPayload'
+    TagPage:
+      $ref: 'tag-details.yaml#/components/schemas/TagPage'
     ProdCorePayload:
       $ref: 'prod-details.yaml#/components/schemas/ProdCorePayload'
     ProdDescriptionPayload:

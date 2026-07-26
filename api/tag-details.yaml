@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: ZX-Art tag page API
+  version: 1.0.0
+paths:
+  /tag-details/:
+    get:
+      summary: Localized heading and metadata for a section-specific tag page
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: section
+          required: true
+          schema:
+            type: string
+            enum: [graphics, music, software]
+      responses:
+        '200':
+          description: Tag page data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagPage'
+        '400':
+          description: Invalid id or section
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+        '404':
+          description: Tag not found in the selected section
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    TagPage:
+      type: object
+      required: [id, section, title, heading, metadata]
+      properties:
+        id:
+          type: integer
+        section:
+          type: string
+          enum: [graphics, music, software]
+        title:
+          type: string
+        heading:
+          type: string
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

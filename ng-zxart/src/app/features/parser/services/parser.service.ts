@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {JsonResponse} from '../models/json-response';
-import {ParserData} from '../../features/parser/models/parser-data';
+import {catchError, map} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {JsonResponse} from '../../../shared/models/json-response';
+import {ParserData} from '../models/parser-data';
 
 @Injectable({
     providedIn: 'root',
@@ -29,6 +29,7 @@ export class ParserService {
                     return [] as ParserData[];
                 },
             ),
+            catchError(() => of([])),
         );
     }
 }

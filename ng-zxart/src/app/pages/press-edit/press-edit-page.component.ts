@@ -111,6 +111,12 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formData.load(this.elementId).subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.languages = data.languages;
           this.form.patchValue({
@@ -174,6 +180,12 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
         },
       }).subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'press-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/press/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

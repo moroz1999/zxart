@@ -33,7 +33,8 @@ paths:
             type: integer
           description: >
             Element the form was started from. Batch uploads attach their works to
-            it (author, group or party); a release requires the production id.
+            it (author, group, party or production category); a release requires
+            the production id. Echoed back as `parent`.
         - in: query
           name: refs
           schema:
@@ -52,11 +53,30 @@ paths:
                   entityTitle:
                     type: string
                     description: Localized display title of the existing entity; empty for a creation draft.
+                  parent:
+                    nullable: true
+                    type: object
+                    description: >
+                      Creation forms started from an element only: that element, so
+                      the form can prefill the field it belongs in.
+                    required:
+                      - id
+                      - title
+                      - structureType
+                    properties:
+                      id:
+                        type: integer
+                      title:
+                        type: string
+                      structureType:
+                        type: string
                 additionalProperties: true
+        '400':
+          description: Missing id or required creation context
         '403':
           description: Opening the form is forbidden
         '404':
-          description: Existing entity not found
+          description: Existing entity or requested party year not found
         '500':
           description: Internal server error
     post:
@@ -106,12 +126,12 @@ paths:
                   id:
                     type: integer
         '400':
-          description: Unsupported entity type
+          description: Unsupported entity type or missing required creation context
         '403':
           description: Creation is forbidden or failed
         '422':
           description: >
             The submitted values were rejected by the element's validators and
-            nothing was created (a release without its production).
+            nothing was created.
         '500':
           description: Internal server error

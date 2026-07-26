@@ -240,7 +240,7 @@
 		</td>
 		<td class='info_table_value'>
 			{foreach from=$element->getTagsList() item=tag name=tags}
-				<a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+				<a href="/music/tags/{$tag->id}">{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
 			{/foreach}
 		</td>
 	</tr>

@@ -62,15 +62,6 @@
   border-radius: var(--radius-md);
 }
 
-.zx-cat__group {
-  margin: var(--space-4) 0 var(--space-2);
-  color: var(--text-light-color);
-  font-size: var(--zx-font-size-xs);
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
 .zx-cat__row {
   display: flex;
   align-items: center;
@@ -78,6 +69,17 @@
   font-size: var(--zx-font-size-sm);
   color: var(--text-color);
   cursor: pointer;
+}
+
+/* A branch root is still a selectable category, only set apart from its children. */
+.zx-cat__row--top {
+  margin-top: var(--space-4);
+
+  .zx-cat__title {
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
 }
 
 .zx-cat__title {

@@ -272,10 +272,13 @@ components:
 
     TuneTagDto:
       type: object
+      required:
+        - id
+        - title
       properties:
+        id:
+          type: integer
         title:
-          type: string
-        url:
           type: string
 
     TunePartyContextDto:

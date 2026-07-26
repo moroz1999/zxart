@@ -8,14 +8,13 @@ use pressArticleElement;
 use structureElement;
 use structureManager;
 use ZxArt\Press\Exception\PressDetailsException;
-use ZxArt\Press\Rest\PressDetailsRestDto;
-use ZxArt\Press\Rest\PressMentionRestDto;
-use ZxArt\Press\Rest\PressTagRestDto;
+use ZxArt\Press\Dto\PressDetailsDto;
+use ZxArt\Press\Dto\PressMentionDto;
+use ZxArt\Press\Dto\PressTagDto;
 use ZxArt\Urls\EntityUrlResolver;
 
 /**
- * Builds the {@see PressDetailsRestDto} consumed by the Angular
- * <zx-press-details> page. Mirrors the other *DetailsService classes.
+ * Builds press article details independently of the transport representation.
  */
 readonly class PressDetailsService
 {
@@ -25,7 +24,7 @@ readonly class PressDetailsService
     ) {
     }
 
-    public function getDetails(int $articleId): PressDetailsRestDto
+    public function getDetails(int $articleId): PressDetailsDto
     {
         $element = $this->structureManager->getElementById($articleId);
         if (!$element instanceof pressArticleElement) {
@@ -34,7 +33,7 @@ readonly class PressDetailsService
 
         $parent = $element->getParent();
 
-        return new PressDetailsRestDto(
+        return new PressDetailsDto(
             id: (int)$element->getId(),
             title: $this->decode($element->getH1()),
             url: $this->entityUrlResolver->urlFor($element),
@@ -55,7 +54,7 @@ readonly class PressDetailsService
 
     /**
      * @param mixed $elements
-     * @return list<PressMentionRestDto>
+     * @return list<PressMentionDto>
      */
     private function buildMentions($elements): array
     {
@@ -68,29 +67,29 @@ readonly class PressDetailsService
                 $mentions[] = $this->buildMention($element);
             }
         }
-        usort($mentions, static fn(PressMentionRestDto $a, PressMentionRestDto $b) => strcmp($a->title, $b->title));
+        usort($mentions, static fn(PressMentionDto $a, PressMentionDto $b) => strcmp($a->title, $b->title));
         return $mentions;
     }
 
-    private function buildMention(structureElement $element): PressMentionRestDto
+    private function buildMention(structureElement $element): PressMentionDto
     {
         $title = method_exists($element, 'getSearchTitle')
             ? (string)$element->getSearchTitle()
             : (string)$element->getTitle();
-        return new PressMentionRestDto(
+        return new PressMentionDto(
             id: (int)$element->getId(),
             title: $this->decode($title),
             url: $this->entityUrlResolver->urlFor($element),
         );
     }
 
-    /** @return list<PressTagRestDto> */
+    /** @return list<PressTagDto> */
     private function buildTags(pressArticleElement $element): array
     {
         $tags = [];
         foreach ($element->getTagsList() as $tag) {
             if ($tag instanceof structureElement) {
-                $tags[] = new PressTagRestDto(
+                $tags[] = new PressTagDto(
                     title: $this->decode((string)$tag->title),
                     url: $this->entityUrlResolver->urlFor($tag),
                 );

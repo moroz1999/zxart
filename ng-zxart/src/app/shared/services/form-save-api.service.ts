@@ -1,35 +1,9 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {from, Observable} from 'rxjs';
-import {concatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {from, Observable, of} from 'rxjs';
+import {catchError, concatMap, map, switchMap, toArray} from 'rxjs/operators';
 import {FormCreateEntityType} from '../models/form-create-entity-type';
-
-/**
- * A form field value posted as `formData[{id}][field]...`. Supports the legacy
- * structures: a scalar, a list (`field[]=v`) or a keyed map (`field[key]=v`,
- * e.g. per-member roles).
- */
-export type FormFieldValue = string | readonly FormFieldValue[] | {readonly [key: string]: FormFieldValue};
-
-/** An uploaded file/image field: a new `file` to store and/or `remove` the existing one. */
-export interface FileUploadField {
-  field: string;
-  file: File | null;
-  remove: boolean;
-}
-
-export interface FormSavePayload {
-  /** scalar / list / keyed fields → `formData[{id}][field]...` */
-  fields: Record<string, FormFieldValue>;
-  /** multi-language fields → `formData[{id}][langId][field]` (language is the outer key) */
-  multilang?: Record<string, Record<string, string>>;
-  /** single image field (uploaded file and/or removal) — convenience for one-image forms */
-  image?: FileUploadField;
-  /** multiple file/image fields (uploaded files and/or removals) */
-  files?: FileUploadField[];
-  /** multi-file selectors → `formData[{id}][prop][]` (new files appended; deletes are live) */
-  fileSelectors?: Record<string, File[]>;
-}
+import {FileUploadField, FormFieldValue, FormSavePayload, FormSaveResult} from '../models/form-save';
 
 /**
  * Generic entity form save. Existing entities use `/ajax/`; new entities use
@@ -44,7 +18,7 @@ export class FormSaveApiService {
    * @param action legacy entity action to run (default `publicReceive`); pass e.g.
    *   `receiveAiForm` for the AI re-queue form. Must use `respondFormSaved` to return `{id}`.
    */
-  save(id: number, payload: FormSavePayload, action = 'publicReceive'): Observable<{id: number}> {
+  save(id: number, payload: FormSavePayload, action = 'publicReceive'): Observable<FormSaveResult> {
     const base = `formData[${id}]`;
     const body = new FormData();
     body.append('id', String(id));
@@ -65,9 +39,10 @@ export class FormSaveApiService {
             map(() => saved),
           ),
         ),
+        catchError(error => of(this.failedResult(error))),
       );
     }
-    return save$;
+    return save$.pipe(catchError(error => of(this.failedResult(error))));
   }
 
   create(
@@ -75,7 +50,7 @@ export class FormSaveApiService {
     payload: FormSavePayload,
     year?: number,
     parentId?: number,
-  ): Observable<{id: number}> {
+  ): Observable<FormSaveResult> {
     const body = new FormData();
     body.append('entityType', entityType);
     if (year !== undefined) {
@@ -85,7 +60,9 @@ export class FormSaveApiService {
       body.append('parentId', String(parentId));
     }
     this.appendPayload(body, 'fields', payload);
-    return this.http.post<{id: number}>('/formdata/', body);
+    return this.http.post<FormSaveResult>('/formdata/', body).pipe(
+      catchError(error => of(this.failedResult(error))),
+    );
   }
 
   private appendPayload(body: FormData, base: string, payload: FormSavePayload): void {
@@ -134,13 +111,13 @@ export class FormSaveApiService {
       .set('id', String(id))
       .set('action', 'deleteAuthor')
       .set('authorId', String(authorId));
-    return this.http.get('/ajax/', {params, responseType: 'text'});
+    return this.http.get('/ajax/', {params, responseType: 'text'}).pipe(catchError(() => of(null)));
   }
 
   /** Deletes one file element of a multi-file selector live (shared `delete` action). */
   deleteFileElement(fileId: number): Observable<unknown> {
     const params = new HttpParams().set('id', String(fileId)).set('action', 'delete');
-    return this.http.get('/ajax/', {params, responseType: 'text'});
+    return this.http.get('/ajax/', {params, responseType: 'text'}).pipe(catchError(() => of(null)));
   }
 
   private deleteFile(id: number, field: string): Observable<unknown> {
@@ -148,6 +125,15 @@ export class FormSaveApiService {
       .set('id', String(id))
       .set('action', 'deleteFile')
       .set('file', field);
-    return this.http.get('/ajax/', {params, responseType: 'text'});
+    return this.http.get('/ajax/', {params, responseType: 'text'}).pipe(catchError(() => of(null)));
+  }
+
+  private failedResult(error: unknown): FormSaveResult {
+    return {
+      id: 0,
+      errorMessage: error instanceof HttpErrorResponse
+        ? error.error?.errorMessage ?? 'form.error-save'
+        : 'form.error-save',
+    };
   }
 }

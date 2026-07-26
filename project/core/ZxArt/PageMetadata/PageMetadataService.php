@@ -16,6 +16,8 @@ use translationsManager;
 use TwitterDataProviderInterface;
 use ZxArt\Shared\StructureType;
 use ZxArt\Spa\SpaRouter;
+use ZxArt\Tags\TagPageService;
+use ZxArt\Tags\TagSection;
 
 final readonly class PageMetadataService
 {
@@ -25,11 +27,31 @@ final readonly class PageMetadataService
         private translationsManager $translationsManager,
         private LanguageLinksService $languageLinksService,
         private SpaRouter $spaRouter,
+        private TagPageService $tagPageService,
     ) {
     }
 
     public function getForPath(string $path): PageMetadataDto
     {
+        $tagRequest = $this->parseTagRequest($path);
+        if ($tagRequest !== null) {
+            $tagPage = $this->tagPageService->get($tagRequest['id'], $tagRequest['section']);
+            if ($tagPage !== null) {
+                $metadata = $tagPage->metadata;
+                return new PageMetadataDto(
+                    title: $metadata->title,
+                    description: $metadata->description,
+                    noIndex: $metadata->noIndex || $this->isCurrentLanguageHidden(),
+                    openGraph: $metadata->openGraph,
+                    twitter: $metadata->twitter,
+                    languageLinks: $metadata->languageLinks,
+                    structuredData: $metadata->structuredData,
+                );
+            }
+
+            return new PageMetadataDto($this->getSiteName(), '', true, [], [], [], null);
+        }
+
         $element = $this->resolveElement($path);
         $siteName = $this->getSiteName();
         if ($element === null) {
@@ -70,11 +92,30 @@ final readonly class PageMetadataService
     public function pathExists(string $path): bool
     {
         $routePath = (string)(parse_url($path, PHP_URL_PATH) ?? '');
+        $tagRequest = $this->parseTagRequest($routePath);
+        if ($tagRequest !== null) {
+            return $this->tagPageService->get($tagRequest['id'], $tagRequest['section']) !== null;
+        }
+
         if (preg_match('#^/(?:author|author-alias|group|group-alias|party|prod|release|picture|tune|press)/(\d+)(?:/|$)#', $routePath) === 1) {
             return $this->resolveElement($routePath) !== null;
         }
 
         return $this->spaRouter->isSpaRequest($routePath);
+    }
+
+    /**
+     * @return array{id: int, section: TagSection}|null
+     */
+    private function parseTagRequest(string $path): ?array
+    {
+        $routePath = (string)(parse_url($path, PHP_URL_PATH) ?? '');
+        if (preg_match('#^/(prods|pictures|music)/tags/(\d+)/?$#', $routePath, $matches) !== 1) {
+            return null;
+        }
+
+        $section = TagSection::fromRoutePrefix($matches[1]);
+        return $section === null ? null : ['id' => (int)$matches[2], 'section' => $section];
     }
 
     private function resolveElement(string $path): ?structureElement
@@ -174,14 +215,14 @@ final readonly class PageMetadataService
     }
 
     /**
-     * @param array<string, string> $values
+     * @param array<string, mixed> $values
      * @return array<string, string>
      */
     private function decodeStringMap(array $values): array
     {
         $result = [];
         foreach ($values as $key => $value) {
-            $result[$key] = $this->decode($value);
+            $result[$key] = $this->decode(is_scalar($value) ? (string)$value : '');
         }
 
         return $result;

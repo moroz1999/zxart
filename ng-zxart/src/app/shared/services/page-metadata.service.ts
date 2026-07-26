@@ -70,6 +70,14 @@ export class PageMetadataService {
     this.translatedTitle.next({url: this.router.url, titleKey, params});
   }
 
+  /**
+   * Title for a page whose subject is only known once its data has loaded (the
+   * selected software category). The route title stays the fallback.
+   */
+  applyPlainTitle(title: string): void {
+    this.title.setTitle(`${title} - ZX-Art`);
+  }
+
   applyFormTitle(route: ActivatedRouteSnapshot, entityTitle: string): void {
     const titleKey = route.data['formTitleKey'] as string | undefined;
     if (titleKey) {

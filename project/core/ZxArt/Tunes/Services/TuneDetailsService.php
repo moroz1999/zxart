@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Tunes\Services;
 
 use structureManager;
+use tagElement;
 use translationsManager;
 use ZxArt\Prods\ProdInfoBuilder;
 use ZxArt\Shared\DescriptionFormatter;
@@ -107,9 +108,12 @@ readonly class TuneDetailsService
     {
         $result = [];
         foreach (($element->getTagsList() ?: []) as $tag) {
+            if (!$tag instanceof tagElement) {
+                continue;
+            }
             $result[] = new TuneTagDto(
+                id: $tag->getId(),
                 title: $this->infoBuilder->decodeText((string)$tag->getTitle()),
-                url: (string)$tag->getUrl(),
             );
         }
         return $result;

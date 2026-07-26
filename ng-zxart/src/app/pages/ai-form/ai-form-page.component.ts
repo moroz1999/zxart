@@ -85,6 +85,12 @@ export class AiFormPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formData.load(this.elementId).subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.statuses = data.aiStatuses;
           this.loading = false;
@@ -114,6 +120,12 @@ export class AiFormPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formSave.save(this.elementId, {fields}, 'receiveAiForm').subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'ai-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/${this.entityPath}/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

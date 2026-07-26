@@ -152,6 +152,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
             'party',
             'partyplace',
             'type',
+            'palette',
             'image',
             'tagsText',
             'description',

@@ -2,6 +2,7 @@ import {EntityRef} from '../../../shared/models/entity-ref';
 
 export interface AuthorAliasFormDto {
   author: EntityRef;
+  errorMessage?: string;
 }
 
 export interface AuthorAliasCreateDto {
@@ -15,4 +16,5 @@ export interface AuthorAliasCreateDto {
 
 export interface AuthorAliasCreatedDto {
   id: number;
+  errorMessage?: string;
 }

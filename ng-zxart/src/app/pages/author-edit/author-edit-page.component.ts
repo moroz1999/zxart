@@ -121,6 +121,12 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.languages = data.languages;
           this.form.patchValue({
@@ -199,6 +205,12 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'author-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/author/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

@@ -1,5 +1,5 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'tune-details.edit' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">{{ (batchUpload ? 'tune-form.batch-title' : 'tune-details.edit') | translate }}</h1>
 <div *ngIf="loading" class="tune-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>
@@ -30,9 +30,9 @@
 
   <zx-form-section [title]="'form.origin' | translate" icon="tag">
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'tune-form.release' | translate }}</zx-form-label>
+      <zx-form-label>{{ 'tune-form.prod-or-release' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-entity-autocomplete formControlName="game" types="zxRelease" [placeholder]="'tune-form.release' | translate"></zx-entity-autocomplete>
+        <zx-entity-autocomplete formControlName="game" types="zxProd,zxRelease" [placeholder]="'tune-form.prod-or-release' | translate"></zx-entity-autocomplete>
       </zx-form-control>
     </zx-form-field>
 
@@ -85,9 +85,10 @@
 
   <zx-form-section [title]="'form.files' | translate" icon="download">
     <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
-      <zx-form-label>{{ 'tune-form.batch-files' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'tune-form.batch-files' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+        <zx-control-errors [control]="form.controls['batchFiles']" [messages]="batchFilesMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 
@@ -122,7 +123,7 @@
     <zx-form-field [fullWidth]="true">
       <zx-form-control>
         <zx-checkbox-group>
-          <zx-checkbox-field formControlName="denyPlaying" [label]="'tune-form.deny-playing' | translate"></zx-checkbox-field>
+          <zx-checkbox-field *ngIf="!batchUpload" formControlName="denyPlaying" [label]="'tune-form.deny-playing' | translate"></zx-checkbox-field>
           <zx-checkbox-field formControlName="denyVoting" [label]="'tune-form.deny-voting' | translate"></zx-checkbox-field>
           <zx-checkbox-field formControlName="denyComments" [label]="'tune-form.deny-comments' | translate"></zx-checkbox-field>
         </zx-checkbox-group>

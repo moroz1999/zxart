@@ -117,7 +117,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.patchState({submitting: true, changed: false, errorMessage: ''});
     this.subscriptions.add(
       this.api.changePassword(this.form.getRawValue()).subscribe({
-        next: () => {
+        next: profile => {
+          if (profile === null) {
+            this.patchState({submitting: false, errorMessage: 'profile.error-save'});
+            return;
+          }
           this.form.reset();
           this.patchState({submitting: false, changed: true});
         },

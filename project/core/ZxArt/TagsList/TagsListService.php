@@ -19,7 +19,7 @@ use ZxArt\TagsList\Repositories\TagsListRepository;
 readonly class TagsListService
 {
     public const int MINIMUM_ALLOWED_AMOUNT = 1;
-    public const int DEFAULT_MINIMUM_AMOUNT = 10;
+    public const int DEFAULT_MINIMUM_AMOUNT = 3;
 
     public function __construct(
         private TagsListRepository $tagsListRepository,

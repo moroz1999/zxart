@@ -7,7 +7,7 @@ namespace ZxArt\Users;
 use App\Users\CurrentUserService;
 use structureManager;
 use userElement;
-use ZxArt\Users\Rest\UserProfileRestDto;
+use ZxArt\Users\Dto\UserProfileDto;
 
 /**
  * Self-service account handling for the authenticated user.
@@ -24,14 +24,14 @@ readonly class UserProfileService
     ) {
     }
 
-    public function getProfile(): ?UserProfileRestDto
+    public function getProfile(): ?UserProfileDto
     {
         $element = $this->getCurrentUserElement();
         if ($element === null) {
             return null;
         }
 
-        return new UserProfileRestDto(
+        return new UserProfileDto(
             userName: $element->userName,
             email: $element->email,
         );
@@ -67,7 +67,7 @@ readonly class UserProfileService
     private function getCurrentUserElement(): ?userElement
     {
         $user = $this->currentUserService->getCurrentUser();
-        if (empty($user->id)) {
+        if (empty($user->id) || $user->userName === 'anonymous') {
             return null;
         }
         // user elements sit under the `users` catalogue, which regular users cannot

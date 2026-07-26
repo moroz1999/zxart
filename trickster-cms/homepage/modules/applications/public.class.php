@@ -5,6 +5,7 @@ use ZxArt\PageMetadata\PageMetadataDto;
 use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Spa\SpaRouter;
+use ZxArt\Tags\TagSection;
 use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\UserPreferences\CurrentThemeProvider;
 
@@ -91,7 +92,12 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
             return;
         }
 
-        $spaUrl = $this->getService(EntityUrlResolver::class)->resolve($currentElement);
+        $spaUrl = null;
+        if ($currentElement instanceof tagElement) {
+            $section = TagSection::tryFrom((string)$this->getService(SectionLogics::class)->getArtItemsType());
+            $spaUrl = $section?->tagPath($currentElement->getId());
+        }
+        $spaUrl ??= $this->getService(EntityUrlResolver::class)->resolve($currentElement);
         if ($spaUrl === null) {
             return;
         }

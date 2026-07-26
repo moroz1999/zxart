@@ -94,10 +94,14 @@ export class ZxFeedbackFormComponent implements OnDestroy {
 
     this.subscriptions.add(
       this.feedbackApiService.submit(this.elementId, this.form.getRawValue()).subscribe({
-        next: () => {
+        next: result => {
           this.submitting = false;
-          this.submitted = true;
-          this.form.reset();
+          this.submitted = result.success;
+          if (result.success) {
+            this.form.reset();
+          } else {
+            this.errorMessage = this.translate.instant('feedback.error-send');
+          }
           this.cdr.markForCheck();
         },
         error: (error: unknown) => {

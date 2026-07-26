@@ -15,7 +15,7 @@ paths:
           schema:
             type: integer
             minimum: 1
-            default: 10
+            default: 3
           description: Minimum usage count within the requested section
       responses:
         '200':

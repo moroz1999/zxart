@@ -2,18 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, defer, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-
-export interface UserPlaylist {
-  id: number;
-  title: string;
-  pictures: number;
-  tunes: number;
-  prods: number;
-}
-
-interface PlaylistsResponse {
-  playlists: UserPlaylist[];
-}
+import {PlaylistsResponse, UserPlaylist} from '../models/user-playlist';
 
 /**
  * Self-service management of the current user's playlists via `/playlists-data/`.

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Directive, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {ZxSelectOption} from './ui/zx-select/zx-select.component';
 
 export const BROWSER_SORT_KEYS = [
@@ -16,8 +16,10 @@ const SORT_TRANSLATION_PREFIX = 'prods-list.sorting.';
 @Directive()
 export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
+  @Input() elementIdParam: string | null = null;
   @Input() fixedSorting: string | null = null;
   @Input() showSorting = true;
+  @Input() sortingKeys: readonly string[] = BROWSER_SORT_KEYS;
 
   loading = true;
   error = false;
@@ -28,7 +30,6 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   sortingOptions: ZxSelectOption[] = [];
 
   protected readonly subscriptions = new Subscription();
-  protected readonly sortKeys: string[] = BROWSER_SORT_KEYS;
   protected readonly itemsPerPage: number = 50;
 
   /**
@@ -48,8 +49,8 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.onBeforeInit();
     this.subscriptions.add(
-      this.translateService.stream(this.sortKeys.map(k => SORT_TRANSLATION_PREFIX + k)).subscribe(translations => {
-        this.sortingOptions = this.sortKeys.map(k => ({
+      this.translateService.stream(this.sortingKeys.map(k => SORT_TRANSLATION_PREFIX + k)).subscribe(translations => {
+        this.sortingOptions = this.sortingKeys.map(k => ({
           value: k,
           label: translations[SORT_TRANSLATION_PREFIX + k] ?? k,
         }));
@@ -57,7 +58,10 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.add(this.route.queryParams.subscribe(params => {
+    this.subscriptions.add(combineLatest([this.route.paramMap, this.route.queryParams]).subscribe(([routeParams, params]) => {
+      if (this.elementIdParam !== null) {
+        this.elementId = Number(routeParams.get(this.elementIdParam) ?? 0);
+      }
       this.currentPage = params['page'] ? +params['page'] : 1;
       this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
       this.onQueryParams(params);
@@ -82,7 +86,11 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
 
   /** Filter state carried by the pagination links. */
   get paginationQueryParams(): Params {
-    return this.filterParams;
+    const params = {...this.filterParams};
+    if (this.fixedSorting === null && this.sorting && this.sorting !== 'title,asc') {
+      params['sorting'] = this.sorting;
+    }
+    return params;
   }
 
   /** Read the browser's own filter params before the page loads. */

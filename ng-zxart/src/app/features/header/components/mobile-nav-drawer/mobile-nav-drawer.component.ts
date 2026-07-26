@@ -6,7 +6,7 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {CurrentRouteService} from '../../services/current-route.service';
-import {MAIN_MENU, MenuEntry} from '../../../menu/menu.config';
+import {MAIN_MENU, MenuEntry} from '../../../../shared/navigation/menu.config';
 import {ThemeTriggerComponent} from '../theme-trigger/theme-trigger.component';
 import {
   PictureSettingsTriggerComponent

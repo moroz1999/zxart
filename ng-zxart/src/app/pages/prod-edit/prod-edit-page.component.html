@@ -129,7 +129,7 @@
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true" *ngFor="let def of (batchUpload ? batchFileSelectorDefs : fileSelectorDefs)">
-      <zx-form-label>{{ def.labelKey | translate }}</zx-form-label>
+      <zx-form-label [required]="batchUpload && def.prop === 'file'">{{ def.labelKey | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-selector
           [files]="batchUpload ? emptyFiles : (fileSelectors[def.prop] || [])"
@@ -138,12 +138,17 @@
           (removeExisting)="onSelectorRemove($event)"
           (move)="onSelectorMove(def.prop, $event)"
         ></zx-file-selector>
+        <zx-control-errors
+          *ngIf="batchUpload && def.prop === 'file'"
+          [control]="form.controls['batchFiles']"
+          [messages]="batchFilesMessages"
+        ></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
   </zx-form-section>
 
   <zx-form-section [title]="'form.description' | translate" icon="file">
-    <zx-form-field *ngIf="!batchUpload" [fullWidth]="true">
+    <zx-form-field [fullWidth]="true">
       <zx-checkbox-field formControlName="htmlDescription" [label]="'prod-form.html-description' | translate"></zx-checkbox-field>
     </zx-form-field>
 

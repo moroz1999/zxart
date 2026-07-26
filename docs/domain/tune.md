@@ -16,8 +16,11 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 - **type** - file type/format:
   - Tracker formats (PT3, STC, ASC, FTC, etc.)
   - Chip formats (AY, YM, etc.)
+  - Filled in automatically from the uploaded file by the conversion service, so
+    no form offers it. Exposed to the frontend as `format`.
 - **formatGroup** - format group
   - Groups similar formats for filtering
+  - Chosen by the author in the form, unlike `type`
 
 #### Sound Characteristics
 - **chipType** - sound chip type:
@@ -71,8 +74,10 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
   - Link through `partyMusic`
 
 #### Related Works
-- **game** - related game (zxProd ID)
+- **game** - related production or release (`gameLink`)
   - For music from games
+  - Holds a zxProd in almost every case, but a release is allowed too, so the
+    form offers both
 - **inspired** - inspiration source (text)
   - Original composition or melody
 

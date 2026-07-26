@@ -50,7 +50,6 @@ export interface ProdGroupRefDto {
 export interface ProdTagRefDto {
   id: number;
   title: string;
-  url: string;
 }
 
 export interface ProdVotingDto {

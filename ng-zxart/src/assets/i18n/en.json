@@ -206,6 +206,7 @@
     "error-categories-required": "Select at least one category"
   },
   "tune-form": {
+    "batch-title": "Upload tunes",
     "title": "Title",
     "authors": "Authors",
     "add-author": "Add author…",
@@ -213,7 +214,7 @@
     "party": "Party",
     "partyplace": "Party place",
     "year": "Year",
-    "release": "Release",
+    "prod-or-release": "Program or release",
     "tags-text": "Tags",
     "description": "Description",
     "deny-playing": "Disable playback",
@@ -235,14 +236,15 @@
     "error-authors-required": "Select at least one author"
   },
   "picture-form": {
+    "batch-title": "Upload pictures",
     "title": "Title",
     "authors": "Authors",
-    "original-authors": "Original authors",
+    "original-authors": "Original author (for remixes)",
     "add-author": "Add author…",
     "party": "Party",
     "partyplace": "Party place",
     "year": "Year",
-    "release": "Release",
+    "prod-or-release": "Program or release",
     "tags-text": "Tags",
     "description": "Description",
     "deny-voting": "Disable voting",

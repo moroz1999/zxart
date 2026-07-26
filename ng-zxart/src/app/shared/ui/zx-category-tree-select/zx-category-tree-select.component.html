@@ -24,18 +24,18 @@
   <div class="zx-cat__list">
     @if (rows.length > 0) {
       @for (row of rows; track row.id) {
-        @if (row.isGroup) {
-          <div class="zx-cat__group">{{ row.title }}</div>
-        } @else {
-          <label class="zx-cat__row" [style.padding-left.px]="row.indent * 16">
-            <zx-checkbox
-              [checked]="isSelected(row.id)"
-              [disabled]="disabled"
-              (checkedChange)="onToggle(row.id, $event)"
-            ></zx-checkbox>
-            <span class="zx-cat__title">{{ row.title }}</span>
-          </label>
-        }
+        <label
+          class="zx-cat__row"
+          [class.zx-cat__row--top]="row.isTopLevel"
+          [style.padding-left.px]="row.indent * 16"
+        >
+          <zx-checkbox
+            [checked]="isSelected(row.id)"
+            [disabled]="disabled"
+            (checkedChange)="onToggle(row.id, $event)"
+          ></zx-checkbox>
+          <span class="zx-cat__title">{{ row.title }}</span>
+        </label>
       }
     } @else {
       <span class="zx-cat__empty">{{ 'common.nothing-found' | translate }}</span>

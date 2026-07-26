@@ -123,7 +123,15 @@ export class JoinFormPageComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.subscriptions.add(
       this.formSave.save(this.elementId, {fields}, 'join').subscribe({
-        next: () => this.router.navigateByUrl(this.entityUrl),
+        next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'join-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
+          this.router.navigateByUrl(this.entityUrl);
+        },
         error: (err: HttpErrorResponse) => {
           this.submitting = false;
           this.errorMessage = err.error?.errorMessage ?? 'join-form.error-save';

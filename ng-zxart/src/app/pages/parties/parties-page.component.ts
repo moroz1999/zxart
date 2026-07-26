@@ -9,7 +9,7 @@ import {
   PartyListViewMode,
   ZxPartiesListComponent,
 } from '../../entities/zx-parties-list/zx-parties-list.component';
-import {PARTY_YEARS} from '../../features/menu/menu.config';
+import {PARTY_YEARS} from '../../shared/navigation/menu.config';
 import {ZxNavChipsComponent} from '../../shared/ui/zx-nav-chips/zx-nav-chips.component';
 import {ZxNavChip} from '../../shared/ui/zx-nav-chips/nav-chip';
 import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';

@@ -24,7 +24,7 @@ import {ZxCategoryTreeSelectComponent} from '../../shared/ui/zx-category-tree-se
 import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.component';
 import {FileMove, ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.component';
-import {CategoryTreeNode, EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
+import {CategoryTreeNode, EnumOption, FileSelectorItem, FormParentRef} from '../../shared/models/form-data-response';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ScreenshotMoveApiService} from '../../features/prod-details/services/screenshot-move-api.service';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
@@ -37,7 +37,7 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
-import {FormFieldValue} from '../../shared/services/form-save-api.service';
+import {FormFieldValue} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -106,6 +106,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     compilationItems: this.fb.nonNullable.control<EntityRef[]>([]),
     seriesProds: this.fb.nonNullable.control<EntityRef[]>([]),
     categories: this.fb.nonNullable.control<number[]>([], nonEmptyArray),
+    /** Batch mode only: the uploaded software files, validated like any other required field. */
+    batchFiles: this.fb.nonNullable.control<File[]>([]),
     htmlDescription: this.fb.nonNullable.control(false),
     description: this.fb.nonNullable.control(''),
     instructions: this.fb.nonNullable.control(''),
@@ -116,6 +118,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
 
   readonly titleMessages = {required: 'prod-form.error-title-required'};
   readonly categoriesMessages = {required: 'prod-form.error-categories-required'};
+  readonly batchFilesMessages = {required: 'prod-form.error-files-required'};
   readonly legalStatusOptions: ZxSelectOption[] = LEGAL_STATUSES.map(value => ({
     value,
     label: this.translate.instant(`prod-form.legal.${value}`),
@@ -146,6 +149,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   ];
 
   private elementId = 0;
+  /** Element the batch upload was started from (author, group, party or category). */
+  private parentId = 0;
+  private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private passthrough: Record<string, FormFieldValue> = {};
   private selectorFiles: Record<string, File[]> = {};
@@ -168,15 +174,30 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     if (this.batchUpload) {
       this.form.controls['title'].clearValidators();
       this.form.controls['title'].updateValueAndValidity();
+      this.form.controls['batchFiles'].setValidators(nonEmptyArray);
+      this.form.controls['batchFiles'].updateValueAndValidity();
+      // started from an entity page (author, group, party) or from a browsed category
+      const entityPath = this.route.snapshot.data['entityPath'] as string | undefined;
+      this.parentId = Number(this.route.snapshot.paramMap.get('id'))
+        || Number(this.route.snapshot.queryParamMap.get('cat'))
+        || 0;
+      this.returnUrl = entityPath && this.parentId ? `/${entityPath}/${this.parentId}` : '/prods';
     } else {
       this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/prod/${this.elementId}`;
     }
     const formData$ = this.batchUpload
-      ? this.formData.loadCreate('prodBatch', ['party'])
+      ? this.formData.loadCreate('prodBatch', ['party'], undefined, this.parentId || undefined)
       : this.formData.load(this.elementId, ['party']);
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields[this.batchUpload ? 'prodTitle' : 'title'] ?? ''),
@@ -204,6 +225,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           this.members = data.members;
           this.roles = data.roles;
           this.categoriesTree = data.categoriesTree;
+          this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
           this.fileSelectors = data.fileSelectors;
           for (const field of PASSTHROUGH_FIELDS) {
@@ -236,8 +258,39 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.formSave.deleteMember(this.elementId, authorId).subscribe());
   }
 
+  /**
+   * An upload started from an author, group, party or category page belongs to
+   * that element, so the matching field is filled in for the whole batch. The
+   * author becomes a member, because that is how a production carries authorship.
+   */
+  private prefillFromParent(parent: FormParentRef | null): void {
+    if (!this.batchUpload || parent === null) {
+      return;
+    }
+    const ref: EntityRef = {id: parent.id, title: parent.title};
+    switch (parent.structureType) {
+      case 'author':
+      case 'authorAlias':
+        this.members = [{id: parent.id, title: parent.title, startDate: '', endDate: '', roles: []}];
+        break;
+      case 'group':
+      case 'groupAlias':
+        this.form.controls['groups'].setValue([ref]);
+        break;
+      case 'party':
+        this.form.controls['party'].setValue(ref);
+        break;
+      case 'zxProdCategory':
+        this.form.controls['categories'].setValue([parent.id]);
+        break;
+    }
+  }
+
   onSelectorFiles(prop: string, files: File[]): void {
     this.selectorFiles[prop] = files;
+    if (prop === 'file') {
+      this.form.controls['batchFiles'].setValue(files);
+    }
   }
 
   onSelectorRemove(fileId: number): void {
@@ -268,7 +321,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(this.batchUpload ? '/prods' : `/prod/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onSubmit(): void {
@@ -276,11 +329,6 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
       return;
     }
-    if (this.batchUpload && (this.selectorFiles['file']?.length ?? 0) === 0) {
-      this.errorMessage = 'prod-form.error-files-required';
-      return;
-    }
-
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
@@ -301,17 +349,23 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       tagsText: value.tagsText,
       denyVoting: value.denyVoting ? '1' : '',
       denyComments: value.denyComments ? '1' : '',
+      htmlDescription: value.htmlDescription ? '1' : '',
       addAuthorRole: this.memberFields.addAuthorRole,
     };
     const save$ = this.batchUpload
-      ? this.formSave.create('prodBatch', {
-        fileSelectors: this.selectorFiles,
-        fields: {
-          ...commonFields,
-          prodTitle: value.title,
-          prodAltTitle: value.altTitle,
+      ? this.formSave.create(
+        'prodBatch',
+        {
+          fileSelectors: this.selectorFiles,
+          fields: {
+            ...commonFields,
+            prodTitle: value.title,
+            prodAltTitle: value.altTitle,
+          },
         },
-      })
+        undefined,
+        this.parentId || undefined,
+      )
       : this.formSave.save(this.elementId, {
         fileSelectors: this.selectorFiles,
         fields: {
@@ -321,12 +375,17 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           altTitle: value.altTitle,
           compilationItems: value.compilationItems.map((ref: EntityRef) => String(ref.id)),
           seriesProds: value.seriesProds.map((ref: EntityRef) => String(ref.id)),
-          htmlDescription: value.htmlDescription ? '1' : '',
         },
       });
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'prod-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/prod/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

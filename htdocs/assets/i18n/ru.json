@@ -206,6 +206,7 @@
     "error-categories-required": "Выберите хотя бы одну категорию"
   },
   "tune-form": {
+    "batch-title": "Загрузить мелодии",
     "title": "Название",
     "authors": "Авторы",
     "add-author": "Добавить автора…",
@@ -213,7 +214,7 @@
     "party": "Пати",
     "partyplace": "Место на пати",
     "year": "Год",
-    "release": "Релиз",
+    "prod-or-release": "Программа или релиз",
     "tags-text": "Теги",
     "description": "Описание",
     "deny-playing": "Отключить воспроизведение",
@@ -235,14 +236,15 @@
     "error-authors-required": "Выберите хотя бы одного автора"
   },
   "picture-form": {
+    "batch-title": "Загрузить картинки",
     "title": "Название",
     "authors": "Авторы",
-    "original-authors": "Оригинальные авторы",
+    "original-authors": "Автор оригинала (для ремиксов)",
     "add-author": "Добавить автора…",
     "party": "Пати",
     "partyplace": "Место на пати",
     "year": "Год",
-    "release": "Релиз",
+    "prod-or-release": "Программа или релиз",
     "tags-text": "Теги",
     "description": "Описание",
     "deny-voting": "Отключить голосование",

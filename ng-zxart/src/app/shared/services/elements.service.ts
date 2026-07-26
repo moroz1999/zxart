@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {EMPTY, Observable} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {JsonResponse} from '../models/json-response';
 import {StructureElement} from '../models/structure-element';
 import {ElementResponseData} from '../models/element-response-data';
@@ -39,6 +39,7 @@ export class ElementsService {
                 map(response => {
                     return new className(response.responseData.elementData);
                 }),
+                catchError(() => EMPTY),
             );
     }
 }

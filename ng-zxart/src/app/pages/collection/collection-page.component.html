@@ -1,11 +1,11 @@
 <zx-page-layout *ngIf="vm$ | async as vm">
   <zx-inline zxPageHeader spacing="sm" align="center">
-    <h1 appHeading="display">{{ vm.titleKey | translate }}</h1>
+    <h1 appHeading="display">{{ categoryTitle || (vm.titleKey | translate) }}</h1>
     <zx-edit-button
       *ngIf="vm.kind === 'prods' && (isAuthenticated$ | async)"
       icon="plus"
       size="md"
-      routerLink="/prods/batch-upload"
+      [href]="batchUploadUrl"
       [title]="'prods-list.batch-upload' | translate"
       [ariaLabel]="'prods-list.batch-upload' | translate"
     ></zx-edit-button>

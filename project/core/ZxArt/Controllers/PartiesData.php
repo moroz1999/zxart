@@ -7,7 +7,11 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use controller;
 use Monolog\Logger;
+use Override;
+use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
+use ZxArt\Parties\Dto\PartyDto;
+use ZxArt\Parties\Rest\PartyRestDto;
 use ZxArt\Parties\Services\PartiesService;
 
 /**
@@ -25,20 +29,28 @@ class PartiesData extends LoggedControllerApplication
         controller $controller,
         Logger $logger,
         private readonly PartiesService $partiesService,
+        private readonly ObjectMapper $objectMapper,
     ) {
         parent::__construct($controller, $logger);
     }
 
+    #[Override]
     public function initialize(): void
     {
         $this->startSession('public');
         $this->createRenderer();
     }
 
+    #[Override]
     public function execute($controller): void
     {
         try {
-            $this->renderer->assign('body', ['parties' => $this->buildParties()]);
+            $this->renderer->assign('body', [
+                'parties' => array_map(
+                    fn(PartyDto $party): PartyRestDto => $this->objectMapper->map($party, PartyRestDto::class),
+                    $this->buildParties(),
+                ),
+            ]);
         } catch (Throwable $e) {
             $this->logThrowable('PartiesData::execute', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');
@@ -59,6 +71,7 @@ class PartiesData extends LoggedControllerApplication
         return $this->partiesService->getRecent(self::RECENT_LIMIT);
     }
 
+    #[Override]
     public function getUrlName(): string
     {
         return '';

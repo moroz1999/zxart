@@ -191,10 +191,10 @@ readonly class ProdCoreService
             if (!$tag instanceof tagElement) {
                 continue;
             }
+            $title = $this->infoBuilder->decodeText($tag->title);
             $tags[] = new ProdTagRefDto(
                 id: $tag->getId(),
-                title: $this->infoBuilder->decodeText($tag->title),
-                url: (string)$tag->getUrl(),
+                title: $title,
             );
         }
         return $tags;

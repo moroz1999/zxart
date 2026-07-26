@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
@@ -13,6 +13,7 @@ import {ZxEditButtonComponent} from '../../shared/ui/zx-edit-button/zx-edit-butt
 import {CurrentUserService} from '../../shared/services/current-user.service';
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {BreadcrumbService} from '../../shared/services/breadcrumb.service';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {CategorySelectorDto} from '../../entities/zx-prods-category/models/categories-selector-dto';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
@@ -48,6 +49,10 @@ interface CollectionVm {
 })
 export class CollectionPageComponent {
   readonly isAuthenticated$ = this.currentUserService.isAuthenticated$;
+  /** Batch upload link, carrying the browsed category so the form can prefill it. */
+  batchUploadUrl = '/prods/batch-upload';
+  /** Browsed software category; empty at the catalogue root. */
+  categoryTitle = '';
   readonly vm$: Observable<CollectionVm> = this.route.paramMap.pipe(
     map(params => ({
       kind: this.kind,
@@ -69,6 +74,8 @@ export class CollectionPageComponent {
     private readonly currentUserService: CurrentUserService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translate: TranslateService,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   groupAddUrl(vm: CollectionVm): string {
@@ -76,19 +83,26 @@ export class CollectionPageComponent {
   }
 
   /**
-   * Renders the selected category chain as breadcrumbs. The catalogue root emits
-   * an empty chain and keeps the route-driven trail built from the menu.
+   * The browsed category is the page's subject: it names the heading and the
+   * document title and closes the breadcrumb trail. The catalogue root emits an
+   * empty chain, which restores the route-driven title and trail.
    */
   onCategoryPath(path: CategorySelectorDto[]): void {
-    if (!path.length) {
+    const current = path.length ? path[path.length - 1] : null;
+    // an upload started here belongs to the browsed category
+    this.batchUploadUrl = current ? `/prods/batch-upload?cat=${current.id}` : '/prods/batch-upload';
+    this.categoryTitle = current?.name ?? '';
+    this.cdr.markForCheck();
+    if (current === null) {
       return;
     }
+    this.pageMetadata.applyPlainTitle(current.name);
     this.breadcrumbService.setEntityTrail({
       items: [
         {title: this.translate.instant('menu.software'), url: '/prods'},
         ...path.slice(0, -1).map(category => ({title: category.name, url: '/prods', queryParams: {cat: category.id}})),
       ],
-      currentTitle: path[path.length - 1].name,
+      currentTitle: current.name,
     });
   }
 }

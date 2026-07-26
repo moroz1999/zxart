@@ -31,6 +31,20 @@ Every component referenced by a route is stored in `pages/` and composed with
 `<h1 appHeading="display" zxPageHeader>`; the layout owns spacing below the
 header and between independent page content blocks.
 
+#### Form Select Options
+
+Options of entity select fields (compos, chip and channel types, frequencies,
+palettes, languages, release types, hardware) are not enumerated in Angular. The
+element exposes them through a provider method (`getCompoTypes()`,
+`getPaletteTypes()`, …), `Formdata::enumSpecs()` maps each field to that method
+and a translation prefix, and the labels arrive already translated in the
+`enums` map of the `/formdata/` response. A form renders `enums['<field>']`.
+
+Every element type whose form has such a field needs its own entry in
+`enumSpecs()` — including the transient upload-form elements, whose selects stay
+empty otherwise. Only lists that are fixed by the hardware (border colour,
+rotation angles) are constants in the component.
+
 #### Pagination and URL
 
 Components with pagination **must** reflect the current page in the URL and restore it on load.

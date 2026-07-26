@@ -32,8 +32,8 @@ import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layo
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
-import {EnumOption} from '../../shared/models/form-data-response';
-import {FileUploadField, FormFieldValue} from '../../shared/services/form-save-api.service';
+import {EnumOption, FormParentRef} from '../../shared/models/form-data-response';
+import {FileUploadField, FormFieldValue} from '../../shared/models/form-save';
 import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
@@ -107,6 +107,8 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
     authors: this.fb.nonNullable.control<EntityRef[]>([], nonEmptyArray),
+    /** Batch mode only: the uploaded files, validated like any other required field. */
+    batchFiles: this.fb.nonNullable.control<File[]>([]),
     originalAuthors: this.fb.nonNullable.control<EntityRef[]>([]),
     party: this.fb.control<EntityRef | null>(null),
     partyplace: this.fb.nonNullable.control(''),
@@ -125,6 +127,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   readonly titleMessages = {required: 'picture-form.error-title-required'};
   readonly authorsMessages = {required: 'picture-form.error-authors-required'};
+  readonly batchFilesMessages = {required: 'picture-form.error-files-required'};
   readonly borderOptions = BORDER_OPTIONS;
   readonly rotationOptions = ROTATION_OPTIONS;
 
@@ -168,6 +171,8 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
       // the batch title is optional: each picture falls back to its file name
       this.form.controls['title'].clearValidators();
       this.form.controls['title'].updateValueAndValidity();
+      this.form.controls['batchFiles'].setValidators(nonEmptyArray);
+      this.form.controls['batchFiles'].updateValueAndValidity();
       this.parentId = Number(this.route.snapshot.paramMap.get('id')) || 0;
       this.returnUrl = `/${this.route.snapshot.data['entityPath']}/${this.parentId}`;
     } else {
@@ -180,6 +185,12 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          if (data.errorMessage) {
+            this.loading = false;
+            this.errorMessage = data.errorMessage;
+            this.cdr.markForCheck();
+            return;
+          }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields[this.batchUpload ? 'pictureTitle' : 'title'] ?? ''),
@@ -199,6 +210,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
             denyVoting: !!Number(data.fields['denyVoting']),
             denyComments: !!Number(data.fields['denyComments']),
           });
+          this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
           this.imageUrls = data.images;
           this.fileNames = data.files;
@@ -229,18 +241,30 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     this.fileChanges[field] = change;
   }
 
+  /**
+   * An upload started from an author or party page belongs to that element, so
+   * the matching field is filled in for the whole batch.
+   */
+  private prefillFromParent(parent: FormParentRef | null): void {
+    if (!this.batchUpload || parent === null) {
+      return;
+    }
+    const ref: EntityRef = {id: parent.id, title: parent.title};
+    if (parent.structureType === 'author' || parent.structureType === 'authorAlias') {
+      this.form.controls['authors'].setValue([ref]);
+    } else if (parent.structureType === 'party') {
+      this.form.controls['party'].setValue(ref);
+    }
+  }
+
   onBatchFiles(files: File[]): void {
     this.batchFiles = files;
+    this.form.controls['batchFiles'].setValue(files);
   }
 
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      return;
-    }
-
-    if (this.batchUpload && this.batchFiles.length === 0) {
-      this.errorMessage = 'picture-form.error-files-required';
       return;
     }
 
@@ -283,6 +307,12 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
+          if (result.id <= 0) {
+            this.submitting = false;
+            this.errorMessage = result.errorMessage ?? 'picture-form.error-save';
+            this.cdr.markForCheck();
+            return;
+          }
           this.router.navigateByUrl(`/picture/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

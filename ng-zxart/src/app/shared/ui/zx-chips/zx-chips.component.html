@@ -1,5 +1,14 @@
 <ng-container *ngFor="let item of items">
-  <a *ngIf="item.url" [href]="item.url" class="zx-chips__chip zx-chips__chip--link">{{ item.title }}</a>
+  <a
+    *ngIf="item.url && isInternalUrl(item.url)"
+    [routerLink]="item.url"
+    class="zx-chips__chip zx-chips__chip--link"
+  >{{ item.title }}</a>
+  <a
+    *ngIf="item.url && !isInternalUrl(item.url)"
+    [href]="item.url"
+    class="zx-chips__chip zx-chips__chip--link"
+  >{{ item.title }}</a>
   <div *ngIf="!item.url" class="zx-chips__chip">
     <span>{{ item.title }}</span>
     <zx-close-button

@@ -59,6 +59,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
   @Input() label = '';
   @Input() bordered = false;
   @Input() editAriaLabel = '';
+  @Input() tagBasePath = '';
 
   hasEditPrivilege = false;
   editExpanded = false;
@@ -86,7 +87,14 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   get visibleTags(): ReadonlyArray<ChipItem> {
-    return this.savedTags ?? this.inputTags;
+    const tags = this.savedTags ?? this.inputTags;
+    if (this.tagBasePath === '') {
+      return tags;
+    }
+    return tags.map(tag => ({
+      ...tag,
+      url: tag.id == null ? undefined : `${this.tagBasePath}/${tag.id}`,
+    }));
   }
 
   get shouldRender(): boolean {
@@ -175,7 +183,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
       this.tagsApiService.saveTags(this.elementId, tags).subscribe({
         next: response => {
           this.applyTagsPayload(response);
-          this.savedTags = response.tags.map(tag => ({title: tag.title}));
+          this.savedTags = response.tags.map(tag => ({id: tag.id, title: tag.title}));
           this.saving = false;
           this.searchLoading = false;
           this.searchResults = [];

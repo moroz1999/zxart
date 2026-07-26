@@ -299,13 +299,10 @@ components:
       required:
         - id
         - title
-        - url
       properties:
         id:
           type: integer
         title:
-          type: string
-        url:
           type: string
 
     ProdVoting:

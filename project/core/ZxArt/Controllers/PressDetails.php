@@ -10,8 +10,10 @@ use LanguagesManager;
 use Monolog\Logger;
 use Override;
 use structureManager;
+use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Press\Exception\PressDetailsException;
+use ZxArt\Press\Rest\PressDetailsRestDto;
 use ZxArt\Press\Services\PressDetailsService;
 
 /**
@@ -28,6 +30,7 @@ class PressDetails extends LoggedControllerApplication
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
         private readonly PressDetailsService $pressDetailsService,
+        private readonly ObjectMapper $objectMapper,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -45,7 +48,8 @@ class PressDetails extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $this->renderer->assign('body', $this->pressDetailsService->getDetails($this->getArticleId()));
+            $dto = $this->pressDetailsService->getDetails($this->getArticleId());
+            $this->renderer->assign('body', $this->objectMapper->map($dto, PressDetailsRestDto::class));
         } catch (PressDetailsException $e) {
             $this->logThrowable('PressDetails::execute', $e);
             $this->assignError($e->getMessage(), $e->getStatusCode());
@@ -73,6 +77,7 @@ class PressDetails extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
+    #[Override]
     public function getUrlName(): string
     {
         return '';

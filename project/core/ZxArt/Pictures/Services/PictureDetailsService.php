@@ -6,6 +6,7 @@ namespace ZxArt\Pictures\Services;
 
 use controller;
 use structureManager;
+use tagElement;
 use translationsManager;
 use ZxArt\Pictures\Dto\PictureDetailsDto;
 use ZxArt\Pictures\Dto\PictureDownloadDto;
@@ -128,9 +129,12 @@ readonly class PictureDetailsService
     {
         $result = [];
         foreach (($element->getTagsList() ?: []) as $tag) {
+            if (!$tag instanceof tagElement) {
+                continue;
+            }
             $result[] = new PictureTagDto(
+                id: $tag->getId(),
                 title: $this->infoBuilder->decodeText((string)$tag->getTitle()),
-                url: (string)$tag->getUrl(),
             );
         }
         return $result;

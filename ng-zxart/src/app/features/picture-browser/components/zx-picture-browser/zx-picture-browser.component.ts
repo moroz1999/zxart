@@ -58,8 +58,9 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
   }
 
   protected override onQueryParams(params: Params): void {
-    this.tagId = params['tag'] ? +params['tag'] : 0;
-    this.filterParams = this.tagId > 0 ? {tag: this.tagId} : {};
+    const queryTagId = params['tag'] ? +params['tag'] : 0;
+    this.tagId = this.elementId > 0 ? this.elementId : queryTagId;
+    this.filterParams = this.elementId === 0 && queryTagId > 0 ? {tag: queryTagId} : {};
   }
 
   protected override fetchPage(start: number, limit: number): void {

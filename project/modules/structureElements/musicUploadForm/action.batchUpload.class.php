@@ -126,8 +126,6 @@ class batchUploadMusicUploadForm extends structureElementAction
             'year',
             'party',
             'partyplace',
-            'type',
-            'music',
             'tagsText',
             'description',
             'chipType',

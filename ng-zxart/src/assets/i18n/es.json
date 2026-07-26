@@ -206,6 +206,7 @@
     "error-categories-required": "Selecciona al menos una categoría"
   },
   "tune-form": {
+    "batch-title": "Subir melodías",
     "title": "Título",
     "authors": "Autores",
     "add-author": "Añadir autor…",
@@ -213,7 +214,7 @@
     "party": "Fiesta",
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
-    "release": "Lanzamiento",
+    "prod-or-release": "Programa o versión",
     "tags-text": "Etiquetas",
     "description": "Descripción",
     "deny-playing": "Desactivar reproducción",
@@ -235,14 +236,15 @@
     "error-authors-required": "Selecciona al menos un autor"
   },
   "picture-form": {
+    "batch-title": "Subir imágenes",
     "title": "Título",
     "authors": "Autores",
-    "original-authors": "Autores originales",
+    "original-authors": "Autor original (para remixes)",
     "add-author": "Añadir autor…",
     "party": "Fiesta",
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
-    "release": "Lanzamiento",
+    "prod-or-release": "Programa o versión",
     "tags-text": "Etiquetas",
     "description": "Descripción",
     "deny-voting": "Desactivar votación",

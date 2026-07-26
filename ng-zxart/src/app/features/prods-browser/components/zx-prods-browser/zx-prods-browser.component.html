@@ -51,6 +51,7 @@
   *ngIf="pagesAmount > 1"
   [currentPage]="currentPage"
   [pagesAmount]="pagesAmount"
-    [loading]="loading"
+  [queryParams]="paginationQueryParams"
+  [loading]="loading"
   (pageChange)="onPageChange($event)"
 ></zx-pagination>

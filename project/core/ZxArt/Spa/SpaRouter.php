@@ -33,6 +33,7 @@ final class SpaRouter
         '#^/prods/batch-upload/?$#',
         '#^/prods/tags/?$#',
         '#^/(pictures|music)/(search|tags|top)/?$#',
+        '#^/(prods|pictures|music)/tags/\d+/?$#',
         '#^/(groups|authors)(/[a-zA-Z])?/add/?$#',
         '#^/(groups|authors|artists|musicians)(/[a-zA-Z])?/?$#',
         '#^/parties/\d+/add/?$#',

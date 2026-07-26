@@ -2,6 +2,8 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {ChipItem} from '../../models/chip-item';
 import {ZxCloseButtonComponent} from '../zx-close-button/zx-close-button.component';
+import {RouterLink} from '@angular/router';
+import {isSpaUrl} from '../../utils/spa-url';
 
 /** Chip fill: `default` (subtle grey, for white/surface backgrounds) or
  * `surface` (raised white, so chips read against a tinted/deep container). */
@@ -17,6 +19,7 @@ export type ZxChipsVariant = 'default' | 'surface';
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     ZxCloseButtonComponent,
   ],
   templateUrl: './zx-chips.component.html',
@@ -34,6 +37,10 @@ export class ZxChipsComponent {
   @HostBinding('class.zx-chips--surface')
   get isSurface(): boolean {
     return this.variant === 'surface';
+  }
+
+  isInternalUrl(url: string | undefined): boolean {
+    return isSpaUrl(url);
   }
 
   onRemove(item: ChipItem): void {

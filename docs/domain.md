@@ -85,7 +85,7 @@ Dashboard of collection counts by year, daily activity, distributions and most a
 Detailed logic and structure: [domain/stats.md](domain/stats.md)
 
 ### tags
-Tag clouds per collection section, linking into the section search.
+Tag clouds and selected-tag browsers for graphics, music, and software.
 Detailed logic and structure: [domain/tags.md](domain/tags.md)
 
 ### static content pages

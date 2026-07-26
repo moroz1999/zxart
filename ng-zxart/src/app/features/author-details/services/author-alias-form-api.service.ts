@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, shareReplay} from 'rxjs/operators';
 import {
   AuthorAliasCreateDto,
   AuthorAliasCreatedDto,
@@ -18,11 +18,20 @@ export class AuthorAliasFormApiService {
     return this.http.get<AuthorAliasFormDto>(this.apiUrl, {
       params: {authorId},
     }).pipe(
+      catchError(error => of({
+        author: {id: 0, title: ''},
+        errorMessage: error?.error?.errorMessage ?? 'author-alias-form.error-load',
+      })),
       shareReplay({bufferSize: 1, refCount: false}),
     );
   }
 
   create(request: AuthorAliasCreateDto): Observable<AuthorAliasCreatedDto> {
-    return this.http.post<AuthorAliasCreatedDto>(this.apiUrl, request);
+    return this.http.post<AuthorAliasCreatedDto>(this.apiUrl, request).pipe(
+      catchError(error => of({
+        id: 0,
+        errorMessage: error?.error?.errorMessage ?? 'author-alias-form.error-save',
+      })),
+    );
   }
 }

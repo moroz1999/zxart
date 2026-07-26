@@ -9,10 +9,8 @@ import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layo
 
 interface TagsVm {
   section: string;
-  searchBasePath: string;
+  tagBasePath: string;
   titleKey: string;
-  tagQueryParam: string;
-  tagQueryValue: 'id' | 'title';
 }
 
 /** Routed tag-cloud entrypoint; section and target search filter come from route data. */
@@ -27,10 +25,8 @@ export class TagsPageComponent {
   readonly vm$: Observable<TagsVm> = this.route.data.pipe(
     map(data => ({
       section: (data['section'] ?? 'graphics') as string,
-      searchBasePath: (data['searchBasePath'] ?? '/pictures/search') as string,
+      tagBasePath: (data['tagBasePath'] ?? '/pictures/tags') as string,
       titleKey: (data['titleKey'] ?? 'menu.gfx.tags') as string,
-      tagQueryParam: (data['tagQueryParam'] ?? 'tagsInclude') as string,
-      tagQueryValue: (data['tagQueryValue'] ?? 'title') as 'id' | 'title',
     })),
   );
 
