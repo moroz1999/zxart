@@ -1,4 +1,13 @@
-@if (title !== '') {
-  <h3 appHeading="title">{{ title }}</h3>
+@if (title !== '' || icon !== '') {
+  <div class="zx-form-section__header">
+    @if (icon !== '') {
+      <svg-icon [name]="icon" class="zx-form-section__icon" aria-hidden="true"></svg-icon>
+    }
+    @if (title !== '') {
+      <h3 class="zx-form-section__title">{{ title }}</h3>
+    }
+  </div>
 }
-<ng-content></ng-content>
+<div class="zx-form-section__fields">
+  <ng-content></ng-content>
+</div>

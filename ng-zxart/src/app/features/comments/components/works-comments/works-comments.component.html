@@ -4,7 +4,7 @@
   </zx-panel>
 } @else if (totalCount() > 0) {
   <zx-panel [title]="title">
-    <zx-stack spacing="lg" [class.works-comments--loading]="loading()">
+    <zx-stack spacing="lg" [zxLoadingState]="loading()">
       <zx-comment
         *ngFor="let comment of comments()"
         [comment]="comment"

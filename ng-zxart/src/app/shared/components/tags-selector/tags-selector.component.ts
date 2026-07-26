@@ -3,11 +3,11 @@ import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {TagChipItem} from '../../models/tag-chip-item';
+import {ChipItem} from '../../models/chip-item';
 import {TagsSearchService} from '../../services/tags-search.service';
 import {Tag} from '../../models/tag';
 import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
-import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.component';
+import {ZxChipsComponent} from '../../ui/zx-chips/zx-chips.component';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, shareReplay, startWith, switchMap} from 'rxjs/operators';
 import {TextDirective} from '../../ui/typography/directives/text.directive';
@@ -34,7 +34,7 @@ interface TagsSelectorVm {
         CdkConnectedOverlay,
         CdkOverlayOrigin,
         ZxInputComponent,
-        ZxTagsChipsComponent,
+        ZxChipsComponent,
         TextDirective,
     ],
 })
@@ -79,7 +79,7 @@ export class TagsSelectorComponent {
         this.searchQuery$.next(value);
     }
 
-    remove(tag: TagChipItem): void {
+    remove(tag: ChipItem): void {
         this.tagsSelector = this.tagsSelector.filter(t => t !== tag);
         this.tagsSelected.emit(this.tagsSelector);
     }

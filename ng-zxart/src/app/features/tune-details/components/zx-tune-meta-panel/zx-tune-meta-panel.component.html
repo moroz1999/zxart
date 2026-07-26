@@ -5,9 +5,9 @@
         {{ tune.year }}
       </zx-item-data-item>
       <zx-item-data-item [label]="'tune-details.format' | translate">
-        <a *ngIf="musicBaseUrl$ | async as baseUrl; else plainFormat"
-           [href]="baseUrl + 'format:' + tune.format + '/'" appText="body" tone="link">{{ tune.format }}</a>
-        <ng-template #plainFormat>{{ tune.format }}</ng-template>
+        <a routerLink="/music/search"
+           [queryParams]="{format: tune.format}"
+           appText="body" tone="link">{{ tune.format }}</a>
       </zx-item-data-item>
       <zx-item-data-item *ngIf="tune.chip" [label]="'tune-details.chip' | translate">
         {{ tune.chip }}
@@ -28,7 +28,7 @@
         {{ tune.tracker }}
       </zx-item-data-item>
       <zx-item-data-item *ngIf="tune.partyContext" [label]="'tune-details.compo' | translate">
-        <a [href]="tune.partyContext.url" appText="body" tone="link">{{ tune.partyContext.title }}</a>
+        <a [routerLink]="tune.partyContext.url" appText="body" tone="link">{{ tune.partyContext.title }}</a>
         <span *ngIf="tune.partyContext.compoLabel" appText="body" tone="muted"> · {{ tune.partyContext.compoLabel }}</span>
       </zx-item-data-item>
     </zx-stack>

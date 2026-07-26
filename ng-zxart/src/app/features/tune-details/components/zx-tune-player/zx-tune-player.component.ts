@@ -12,11 +12,9 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import AudioMotionAnalyzer from 'audiomotion-analyzer';
 import {TuneDetailsDto} from '../../models/tune-details.dto';
-import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {PlayerService} from '../../../player/services/player.service';
 import {PlayerState} from '../../../player/models/player-state';
 
@@ -29,11 +27,9 @@ const DEFAULT_ANALYSER_MODE = ANALYSER_MODES[0];
   imports: [
     CommonModule,
     TranslateModule,
-    ZxPanelComponent,
     ZxStackComponent,
     ZxInlineComponent,
     ZxButtonComponent,
-    TextDirective,
   ],
   templateUrl: './zx-tune-player.component.html',
   styleUrls: ['./zx-tune-player.component.scss'],

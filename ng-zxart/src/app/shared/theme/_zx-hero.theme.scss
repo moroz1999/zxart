@@ -1,0 +1,39 @@
+:root {
+  /* Hero panel surface. */
+  --zx-hero-bg: var(--surface);
+  /* Hero panel outline. */
+  --zx-hero-border: var(--border-light);
+  /* Hero panel corner radius. */
+  --zx-hero-radius: var(--radius-lg);
+  /* Hero panel inner padding. */
+  --zx-hero-padding: var(--space-20);
+  /* Hero panel elevation. */
+  --zx-hero-shadow: var(--shadow-sm);
+
+  /* Gap between the media column and the body column. */
+  --zx-hero-column-gap: var(--space-24);
+  /* Gap between the grid rows (body and action bar). */
+  --zx-hero-row-gap: var(--space-16);
+  /* Vertical rhythm between the body slots (title, facts, tech, credits...). */
+  --zx-hero-body-gap: var(--space-12);
+
+  /* Space above the action bar content, below its rule. */
+  --zx-hero-bar-gap: var(--space-12);
+  /* Rule separating the action bar from the hero body. */
+  --zx-hero-bar-border: var(--border-light);
+
+  /* Media column width when no size token applies (`auto` sizes to content). */
+  --zx-hero-media-width: auto;
+  /* Width the body keeps in `auto` mode before wrapping below the media. */
+  --zx-hero-body-min-width: calc(var(--space-64) * 5);
+  /* Avatar-sized media column (author, group). */
+  --zx-hero-media-width-xs: 110px;
+  /* Logo-sized media column (party). */
+  --zx-hero-media-width-sm: 195px;
+  /* Thumbnail-sized media column (release screenshot). */
+  --zx-hero-media-width-md: 220px;
+  /* Player-sized media column (tune). */
+  --zx-hero-media-width-lg: 300px;
+  /* Video-sized media column (prod). */
+  --zx-hero-media-width-xl: calc((var(--space-64) * 7) + var(--space-32));
+}

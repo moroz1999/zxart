@@ -5,6 +5,10 @@
   --zx-form-max-width: 640px;
   /* Minimum section width used as flex-basis in sectionWrap mode */
   --zx-form-section-min-width: 280px;
+  /* Max width of a two-column form ([zxForm][columns]="2") */
+  --zx-form-cols-max-width: 920px;
+  /* Vertical gap between sections in a two-column form */
+  --zx-form-sections-gap: var(--space-32);
   /* Gap between label and control inside a vertical form field */
   --zx-form-field-gap: var(--space-4);
   /* Gap between label column and control column in horizontal layout */
@@ -18,17 +22,28 @@
   /* Field label typography */
   --zx-form-label-color: var(--text-color);
   --zx-form-label-font-size: var(--zx-font-size-sm);
-  --zx-form-label-font-weight: 700;
+  --zx-form-label-font-weight: 500;
   /* Fieldset legend (group title) typography */
   --zx-form-legend-color: var(--text-light-color);
   --zx-form-legend-font-size: var(--zx-font-size-xs);
-  --zx-form-legend-font-weight: 700;
+  --zx-form-legend-font-weight: 500;
   --zx-form-legend-letter-spacing: 1px;
   /* Gap between the legend icon and the legend text */
   --zx-form-legend-gap: var(--space-8);
   /* Legend icon size and color */
   --zx-form-legend-icon-size: 16px;
   --zx-form-legend-icon-color: var(--text-light-color);
+  /* Section header (icon + uppercase title with underline) */
+  --zx-form-section-header-padding: var(--space-4);
+  --zx-form-section-header-border: var(--border-light);
+  --zx-form-section-icon-size: 18px;
+  --zx-form-section-icon-color: var(--primary-500);
+  /* Row/column gaps of the two-column section field grid */
+  --zx-form-cols-row-gap: var(--space-16);
+  --zx-form-cols-column-gap: var(--space-20);
+  /* Sticky action footer strip */
+  --zx-form-footer-border: var(--border-form);
+  --zx-form-footer-z-index: 5;
   /* Gap between the legend and the fieldset fields */
   --zx-form-fieldset-gap: var(--space-12);
   /* Divider line used by the divided form appearance */

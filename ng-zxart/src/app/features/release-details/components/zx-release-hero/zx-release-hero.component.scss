@@ -1,4 +1,17 @@
 :host {
   display: block;
-  margin-bottom: var(--zx-release-hero-mb);
+}
+
+/* Positioning context for the absolutely positioned screenshot gallery. */
+.rp-screenshot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--zx-release-hero-screenshot-ratio);
+  border-radius: var(--zx-release-hero-screenshot-radius);
+  overflow: hidden;
+}
+
+.rp-cta-icon {
+  width: var(--zx-release-hero-cta-icon-size);
+  height: var(--zx-release-hero-cta-icon-size);
 }

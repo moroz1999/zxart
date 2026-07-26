@@ -1,0 +1,54 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.main_block {
+  position: relative;
+  margin: 0 auto;
+
+  @include bp.media-breakpoint-down(md) {
+    padding-top: var(--header-height-mobile);
+  }
+}
+
+.center_block {
+  position: relative;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: var(--content-padding) var(--content-padding) var(--center-block-padding-bottom) var(--content-padding);
+  z-index: 3;
+  width: 100%;
+  max-width: var(--layout-max-width);
+
+  @include bp.media-breakpoint-down(md) {
+    padding-right: var(--content-padding-mobile);
+    padding-left: var(--content-padding-mobile);
+  }
+}
+
+.columns_table {
+  display: flex;
+  gap: var(--space-32);
+}
+
+.center_column {
+  position: relative;
+  min-width: 0; // prevents flex children from overflowing the column
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+.right_column {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--right-column-gap);
+  width: 20%;
+  box-sizing: border-box;
+
+  @include bp.media-breakpoint-down(md) {
+    display: none;
+  }
+}

@@ -249,6 +249,7 @@ components:
         - title
         - realName
         - url
+        - imageUrl
         - parentUrl
         - parentTitle
         - primaryAuthor
@@ -265,6 +266,7 @@ components:
         - ratings
         - tabs
         - breadcrumbs
+        - metadata
       properties:
         id:
           type: integer
@@ -276,6 +278,8 @@ components:
         realName:
           type: string
         url:
+          type: string
+        imageUrl:
           type: string
         parentUrl:
           type: string
@@ -330,6 +334,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AuthorBreadcrumb'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
 
     AuthorshipRef:
       type: object

@@ -1,18 +1,16 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 import {ReleaseDetailsDto} from '../../models/release-details.dto';
 import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
 import {ZxReleaseDetailsSkeletonComponent} from '../zx-release-details-skeleton/zx-release-details-skeleton.component';
-import {ZxReleaseParentAnchorComponent} from '../zx-release-parent-anchor/zx-release-parent-anchor.component';
 import {ZxReleaseHeroComponent} from '../zx-release-hero/zx-release-hero.component';
-import {ZxReleaseActionBarComponent} from '../zx-release-action-bar/zx-release-action-bar.component';
 import {ZxReleaseScreenshotsSectionComponent} from '../zx-release-screenshots-section/zx-release-screenshots-section.component';
 import {ZxReleaseInlaysSectionComponent} from '../zx-release-inlays-section/zx-release-inlays-section.component';
 import {ZxReleaseInstructionsSectionComponent} from '../zx-release-instructions-section/zx-release-instructions-section.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -22,19 +20,16 @@ import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-r
 import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/zx-prod-pictures-section/zx-prod-pictures-section.component';
 
 @Component({
-  selector: 'zx-release-details',
+  selector: 'zx-release-details-view',
   standalone: true,
   imports: [
     CommonModule,
     TranslateModule,
     ZxReleaseDetailsSkeletonComponent,
-    ZxReleaseParentAnchorComponent,
     ZxReleaseHeroComponent,
-    ZxReleaseActionBarComponent,
     ZxReleaseScreenshotsSectionComponent,
     ZxReleaseInlaysSectionComponent,
     ZxReleaseInstructionsSectionComponent,
-    ZxBreadcrumbsComponent,
     ZxStackComponent,
     HeadingDirective,
     TextDirective,
@@ -47,19 +42,43 @@ import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/z
   styleUrl: './zx-release-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxReleaseDetailsComponent implements OnInit {
+export class ZxReleaseDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<ReleaseDetailsDto | null> = of(null);
 
-  constructor(private readonly api: ReleaseDetailsApiService) {}
+  constructor(
+    private readonly api: ReleaseDetailsApiService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
+  ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          const categories = details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : [];
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.software'), url: '/prods'},
+              ...categories.map(category => ({title: category.title, url: '/prods', queryParams: {cat: category.id}})),
+              {title: details.prod.title, url: details.prod.url},
+            ],
+            currentTitle: details.title,
+          });
+        }
+      }),
+      shareReplay(1),
+    );
   }
 
 }

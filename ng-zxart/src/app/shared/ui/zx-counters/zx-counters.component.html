@@ -1,0 +1,6 @@
+<span
+  *ngFor="let item of items; trackBy: trackByLabel"
+  class="zx-counters__item"
+  appText="caption"
+  tone="muted"
+><b class="zx-counters__value" appText="caption" tone="strong">{{ item.value }}</b> {{ item.labelKey | translate }}</span>

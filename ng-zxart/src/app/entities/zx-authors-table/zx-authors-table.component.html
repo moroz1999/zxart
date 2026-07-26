@@ -1,4 +1,4 @@
-<zx-table size="md" [class.loading]="loading">
+<zx-table size="md" [zxLoadingState]="loading">
   <table>
     <thead>
     <tr>
@@ -16,24 +16,24 @@
     <tr *ngFor="let author of authors; let i = index">
       <td *ngIf="showRowNumbers" class="col-num">{{ rowStartIndex + i + 1 }}</td>
       <td class="col-nick">
-        <a [href]="author.url">{{ author.title || 'n/a' }}</a>
+        <a [routerLink]="author.url">{{ author.title || 'n/a' }}</a>
       </td>
       <td class="col-groups">
         <ng-container *ngFor="let group of author.groups; let last = last">
-          <a [href]="group.url">{{ group.title }}</a>
+          <a [routerLink]="group.url">{{ group.title }}</a>
           <ng-container *ngIf="!last">, </ng-container>
         </ng-container>
       </td>
       <td class="col-realname">
-        <a *ngIf="author.realNameUrl; else plainRealName" [href]="author.realNameUrl">{{ author.realName }}</a>
+        <a *ngIf="author.realNameUrl; else plainRealName" [routerLink]="author.realNameUrl">{{ author.realName }}</a>
         <ng-template #plainRealName>{{ author.realName }}</ng-template>
       </td>
       <td class="col-country">
-        <a *ngIf="author.countryUrl; else countryText" [href]="author.countryUrl">{{ author.countryTitle }}</a>
+        <a *ngIf="author.countryUrl; else countryText" [routerLink]="author.countryUrl">{{ author.countryTitle }}</a>
         <ng-template #countryText>{{ author.countryTitle }}</ng-template>
       </td>
       <td class="col-city">
-        <a *ngIf="author.cityUrl; else cityText" [href]="author.cityUrl">{{ author.cityTitle }}</a>
+        <a *ngIf="author.cityUrl; else cityText" [routerLink]="author.cityUrl">{{ author.cityTitle }}</a>
         <ng-template #cityText>{{ author.cityTitle }}</ng-template>
       </td>
       <td class="col-rating">

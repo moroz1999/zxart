@@ -2,8 +2,60 @@
 @use 'shared/breakpoints' as breakpoints;
 @use 'app/shared/ui/zx-grid/zx-grid-item.directive';
 @use 'app/shared/ui/zx-form/zx-form.directive';
+@use 'app/shared/ui/zx-loading-state/zx-loading-state.directive';
 
+// Base document styles. The SPA shell no longer loads the legacy CSS bundle,
+// so the base font and body reset live here. The Roboto webfont is linked from
+// the PHP shell head (index.head.extra.tpl).
+html,
+input,
+textarea,
+select {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
+html {
+  color: var(--text-color);
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  background-color: var(--main-background);
+}
+
+a {
+  color: var(--zx-link-color);
+  text-decoration: var(--zx-link-decoration);
+}
+
+a:hover,
+a:focus {
+  text-decoration: var(--zx-link-hover-decoration);
+}
+
+// Default heading styles for plain content (e.g. rendered descriptions) so bare
+// h1/h2/h3 match the typography scale without needing the appHeading directive.
+// Mirrors .app-typography-display / -headline / -title from the typography theme.
+h1 {
+  font-size: var(--app-typography-display-size);
+  font-weight: var(--app-typography-display-weight);
+  line-height: var(--app-typography-display-line-height);
+}
+
+h2 {
+  font-size: var(--app-typography-headline-size);
+  font-weight: var(--app-typography-headline-weight);
+  line-height: var(--app-typography-headline-line-height);
+}
+
+h3 {
+  font-size: var(--app-typography-title-size);
+  font-weight: var(--app-typography-title-weight);
+  line-height: var(--app-typography-title-line-height);
+}
 
 // angular-svg-icon: custom elements are display:inline by default, which ignores CSS width/height.
 // Setting display:inline-flex makes the host respect explicit dimensions,

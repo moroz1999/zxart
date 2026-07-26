@@ -17,13 +17,13 @@ import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-control
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-
+import {RouterLink} from '@angular/router';
 const PAGE_SIZE = 20;
 
 @Component({
   selector: 'zx-recent-ratings',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxTableComponent,

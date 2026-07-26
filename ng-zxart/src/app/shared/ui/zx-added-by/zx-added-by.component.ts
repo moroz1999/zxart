@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-
+import {RouterLink} from '@angular/router';
 export interface AddedBySubmitterDto {
   userName: string;
   url: string;
@@ -10,7 +10,7 @@ export interface AddedBySubmitterDto {
 @Component({
   selector: 'zx-added-by',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [RouterLink, CommonModule, TranslateModule],
   templateUrl: './zx-added-by.component.html',
   styleUrls: ['./zx-added-by.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

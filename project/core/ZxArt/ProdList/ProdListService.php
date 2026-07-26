@@ -15,6 +15,9 @@ readonly class ProdListService
 {
     public const array ALLOWED_SORT_COLUMNS = ['title', 'date', 'year', 'votes'];
 
+    /** Link types a prod list may be requested for. */
+    public const array ALLOWED_LINK_TYPES = ['tagLink', 'playlist'];
+
     public function __construct(
         private structureManager $structureManager,
         private ProdsTransformer $prodsTransformer,
@@ -47,5 +50,21 @@ readonly class ProdListService
         }
 
         return ['total' => $total, 'items' => $items];
+    }
+
+    /**
+     * Every prod linked to an element, for lists that are shown in full (a user
+     * playlist holds a handful of entries and has no pagination).
+     *
+     * @return array{total: int, items: ProdDto[]}
+     */
+    public function getAllByLinkedElement(int $elementId, string $linkType, SortingParams $sorting): array
+    {
+        $total = $this->prodsRepository->countByLinkedElement($elementId, $linkType);
+        if ($total === 0) {
+            return ['total' => 0, 'items' => []];
+        }
+
+        return $this->getPagedByLinkedElement($elementId, $linkType, $sorting, 0, $total);
     }
 }

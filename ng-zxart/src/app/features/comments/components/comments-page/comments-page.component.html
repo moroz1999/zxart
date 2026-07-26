@@ -8,7 +8,7 @@
       <zx-comment-skeleton [count]="5"></zx-comment-skeleton>
     } @else {
       @if (data(); as listData) {
-        <div class="comments-content" [class.loading]="paginationLoading()">
+        <div [zxLoadingState]="paginationLoading()">
           <zx-stack spacing="md">
             @for (comment of listData.comments; track comment.id) {
               <zx-comment [comment]="comment" (commentChanged)="onCommentChanged($event)"></zx-comment>
@@ -19,7 +19,6 @@
         <zx-pagination
           [currentPage]="listData.currentPage"
           [pagesAmount]="listData.pagesAmount"
-          [urlBase]="urlBase"
           [loading]="paginationLoading()"
           (pageChange)="onPageChange($event)"
         ></zx-pagination>

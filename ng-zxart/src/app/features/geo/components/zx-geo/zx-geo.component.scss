@@ -67,7 +67,7 @@
 .zx-geo__eyebrow,
 .zx-geo__section-head {
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .zx-geo__title {
@@ -170,14 +170,6 @@
   flex: 1;
 }
 
-.zx-geo__list {
-  transition: opacity var(--animation-sm) ease;
-}
-
-.zx-geo__list--loading {
-  opacity: var(--zx-geo-loading-opacity);
-}
-
 .zx-geo__item {
   flex-direction: column;
   padding: var(--zx-geo-row-padding);
@@ -187,7 +179,7 @@
 }
 
 .zx-geo__item-title {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .zx-geo__empty {
@@ -216,7 +208,7 @@
   border-radius: var(--zx-geo-marker-radius);
   background: var(--zx-geo-country-marker-background);
   color: var(--zx-geo-marker-text);
-  font-weight: 700;
+  font-weight: 500;
   font-size: var(--zx-geo-marker-font-size);
   line-height: 1;
   white-space: nowrap;

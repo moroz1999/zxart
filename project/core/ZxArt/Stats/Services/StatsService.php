@@ -354,18 +354,21 @@ readonly class StatsService
     {
         $all = $this->repository->countByYear($table);
         $rated = $this->repository->countRatedByYear($table, $this->averageVote());
+        $averages = $this->repository->averageVoteByYear($table);
 
         $years = array_keys($all);
         sort($years);
 
         $allValues = [];
         $ratedValues = [];
+        $averageValues = [];
         foreach ($years as $year) {
             $allValues[] = $all[$year];
             $ratedValues[] = $rated[$year] ?? 0;
+            $averageValues[] = $averages[$year] ?? 0.0;
         }
 
-        return [$years, new StatsYearSeriesDto($years, $allValues, $ratedValues)];
+        return [$years, new StatsYearSeriesDto($years, $allValues, $ratedValues, $averageValues)];
     }
 
     /**

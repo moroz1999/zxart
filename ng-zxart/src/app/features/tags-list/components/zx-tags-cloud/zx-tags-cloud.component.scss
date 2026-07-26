@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.tags-cloud__item--small {
+  font-size: var(--zx-tags-cloud-font-size-small);
+}
+
+.tags-cloud__item--medium {
+  font-size: var(--zx-tags-cloud-font-size-medium);
+}
+
+.tags-cloud__item--large {
+  font-size: var(--zx-tags-cloud-font-size-large);
+}
+
+.tags-cloud__item--extra-large {
+  font-size: var(--zx-tags-cloud-font-size-extra-large);
+}

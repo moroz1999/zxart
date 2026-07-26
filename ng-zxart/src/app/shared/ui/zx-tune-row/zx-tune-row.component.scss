@@ -7,6 +7,7 @@ td {
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   white-space: nowrap;
+  color: var(--app-text-color-muted);
 
   :host:last-child & {
     border-bottom: none;
@@ -38,6 +39,13 @@ td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--app-text-color-link);
+}
+
+.tune-authors a,
+.tune-party a,
+.tune-release a {
+  color: var(--app-text-color-muted-link);
 }
 
 .tune-realtime {

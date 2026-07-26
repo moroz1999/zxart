@@ -16,3 +16,26 @@
     display: none;
   }
 }
+
+.lt-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--zx-popover-menu-item-padding);
+  font-size: var(--zx-popover-menu-item-font-size);
+  border: none;
+  border-radius: var(--zx-popover-menu-item-radius);
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color var(--animation-xs);
+
+  &:hover {
+    background-color: var(--zx-popover-menu-item-hover-bg);
+  }
+}
+
+.lt-option--active {
+  font-weight: 600;
+  background-color: var(--zx-popover-menu-item-active-bg);
+}

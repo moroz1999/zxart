@@ -47,8 +47,6 @@ class groupsCatalogueElement extends structureElement
 
                     foreach ($this->replacementElements as $letter) {
                         $letter->columns = $this->columns;
-                        $letter->setViewName('groups');
-                        $letter->template = 'letter.groups.tpl';
                     }
                 }
             }

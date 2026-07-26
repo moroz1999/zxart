@@ -1,10 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {Router, RouterLink, UrlTree} from '@angular/router';
+import {isSpaUrl} from '../../utils/spa-url';
 
 @Component({
   selector: 'zx-button',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './zx-button.component.html',
   styleUrl: './zx-button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +17,8 @@ export class ZxButtonComponent implements OnDestroy {
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() href: string | null = null;
+  /** In-app SPA route; when set, the button renders a routerLink anchor. */
+  @Input() routerLink: string | null = null;
   @Input() target: '_self' | '_blank' | '_parent' | '_top' | null = null;
   @Input() rel: string | null = null;
   @Input() square = false;
@@ -28,7 +32,10 @@ export class ZxButtonComponent implements OnDestroy {
   rippleActive = false;
   private rippleTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly router: Router,
+  ) {}
 
   @HostBinding('class.zx-button-host--block')
   get blockHostClass(): boolean {
@@ -37,6 +44,15 @@ export class ZxButtonComponent implements OnDestroy {
 
   get isLink(): boolean {
     return !!this.href;
+  }
+
+  /** An internal `href` (no explicit routerLink) is navigated client-side. */
+  get isInternalHref(): boolean {
+    return !this.routerLink && isSpaUrl(this.href);
+  }
+
+  get internalUrlTree(): UrlTree | null {
+    return this.isInternalHref && this.href ? this.router.parseUrl(this.href) : null;
   }
 
   get classList(): string {

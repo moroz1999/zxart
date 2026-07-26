@@ -1,8 +1,6 @@
 <zx-picture-gallery-host></zx-picture-gallery-host>
 
 <zx-stack gap="lg">
-  <h1 appHeading="display">{{ 'picture-search.title' | translate }}</h1>
-
   <zx-panel variant="elevated" radius="lg" padding="none">
     <form zxForm [sectionWrap]="true" [divided]="true" (ngSubmit)="onSubmit()">
       @if (isMobile) {
@@ -179,6 +177,11 @@
               [(ngModel)]="filters.stages"
               [label]="'picture-search.stages' | translate"
             ></zx-checkbox-field>
+            <zx-checkbox-field
+              name="fromGame"
+              [(ngModel)]="filters.fromGame"
+              [label]="'picture-search.from-game' | translate"
+            ></zx-checkbox-field>
           </zx-form-fieldset>
 
           <zx-form-fieldset icon="list" [legend]="'picture-search.section-results' | translate">
@@ -281,7 +284,7 @@
   @if (error) {
     <div appText="caption" tone="danger">{{ 'picture-search.error' | translate }}</div>
   } @else if (resultsType === 'zxitem') {
-    @if (loading) {
+    @if (initialLoading) {
       <div zxPicturesGrid>
         <zx-picture-card-skeleton
           *ngFor="let i of skeletonItems"
@@ -291,7 +294,7 @@
     } @else if (pictures.length === 0) {
       <div appText="bodySm" tone="muted">{{ 'picture-search.empty' | translate }}</div>
     } @else {
-      <div zxPicturesGrid>
+      <div zxPicturesGrid [zxLoadingState]="loading">
         <zx-picture-card
           *ngFor="let pic of pictures; let i = index"
           [picture]="pic"
@@ -301,7 +304,7 @@
       </div>
     }
   } @else {
-    @if (!loading && authors.length === 0) {
+    @if (!initialLoading && authors.length === 0) {
       <div appText="bodySm" tone="muted">{{ 'picture-search.empty' | translate }}</div>
     } @else {
       <zx-authors-table
@@ -316,7 +319,6 @@
     *ngIf="pagesAmount > 1"
     [currentPage]="currentPage"
     [pagesAmount]="pagesAmount"
-    [urlBase]="paginationUrlBase"
     [loading]="loading"
     (pageChange)="onPageChange($event)"
   ></zx-pagination>

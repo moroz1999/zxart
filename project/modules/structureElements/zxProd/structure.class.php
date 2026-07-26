@@ -916,8 +916,8 @@ class zxProdElement extends ZxArtItem implements
         foreach ($this->publishers as $publisher) {
             $publishersInfo[] = [
                 'id' => $publisher->getId(),
+                'structureType' => $publisher->structureType,
                 'title' => html_entity_decode($publisher->title, ENT_QUOTES),
-                'url' => $publisher->getUrl(),
             ];
         }
         return $publishersInfo;
@@ -929,8 +929,8 @@ class zxProdElement extends ZxArtItem implements
         foreach ($this->groups as $group) {
             $groupsInfo[] = [
                 'id' => $group->getId(),
+                'structureType' => $group->structureType,
                 'title' => html_entity_decode($group->title, ENT_QUOTES),
-                'url' => $group->getUrl(),
             ];
         }
         return $groupsInfo;
@@ -964,7 +964,6 @@ class zxProdElement extends ZxArtItem implements
                     $this->languagesInfo[] = [
                         'id' => $languageCode,
                         'title' => $translationsManager->getTranslationByName('language.item_' . $languageCode),
-                        'url' => null,
                     ];
                 }
                 $this->setCacheKey('li' . $this->currentLanguage, $this->languagesInfo, 24 * 60 * 60);
@@ -978,8 +977,8 @@ class zxProdElement extends ZxArtItem implements
     {
         return [
             'id' => $category->id,
+            'structureType' => $category->structureType,
             'title' => html_entity_decode($category->title, ENT_QUOTES),
-            'url' => $category->getUrl(),
         ];
     }
 
@@ -1079,8 +1078,8 @@ class zxProdElement extends ZxArtItem implements
         if ($party = $this->getPartyElement()) {
             return [
                 'id' => $party->id,
+                'structureType' => $party->structureType,
                 'title' => $party->title,
-                'url' => $party->getUrl(),
             ];
         }
         return '';
@@ -1277,6 +1276,11 @@ class zxProdElement extends ZxArtItem implements
                 $checkedCategories[] = $categoryId;
             }
         }
+        // a prod's categories are its structural parents; never leave it
+        // orphaned (e.g. when a form posts an empty set) — fall back to MISC.
+        if (!$checkedCategories) {
+            $checkedCategories[] = CategoryIds::MISC->value;
+        }
         $this->categories = $checkedCategories;
         $this->checkLinks('categories', 'zxProdCategory');
     }
@@ -1299,12 +1303,7 @@ class zxProdElement extends ZxArtItem implements
 
     public function getCatalogueUrl($parameters): string
     {
-        $categoriesCatalogue = $this->getCategoriesCatalogue();
-        $url = $categoriesCatalogue ? $categoriesCatalogue->getUrl() : "";
-        foreach ($parameters as $key => $value) {
-            $url .= $key . ':' . $value . '/';
-        }
-        return $url;
+        return '/prods?' . http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
     }
 
     public function getEmulatorType(): ?string

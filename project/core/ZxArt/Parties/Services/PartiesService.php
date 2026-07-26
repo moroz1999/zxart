@@ -47,7 +47,23 @@ class PartiesService extends ElementsManager
      */
     public function getRecent(int $limit): array
     {
-        $ids = $this->partiesRepository->getRecentIds($limit);
+        return $this->getByIds($this->partiesRepository->getRecentIds($limit));
+    }
+
+    /**
+     * @return PartyDto[]
+     */
+    public function getByYear(int $year): array
+    {
+        return $this->getByIds($this->partiesRepository->getIdsByYear($year));
+    }
+
+    /**
+     * @param int[] $ids
+     * @return PartyDto[]
+     */
+    private function getByIds(array $ids): array
+    {
         $result = [];
         foreach ($ids as $id) {
             $element = $this->structureManager->getElementById($id);

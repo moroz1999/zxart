@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit,} from '@angular/core';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subject, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
+import {combineLatest, Subject, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
 import {AuthorFilterOption} from '../../models/author-filter-options';
@@ -16,10 +17,14 @@ import {
 import {ZxInputComponent} from '../../../../shared/ui/zx-input/zx-input.component';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {
-  ZxRowSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
+  ZxAuthorsTableSkeletonComponent
+} from '../../../../entities/zx-authors-table-skeleton/zx-authors-table-skeleton.component';
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxNavChipsComponent} from '../../../../shared/ui/zx-nav-chips/zx-nav-chips.component';
+import {buildLetterChips, ZxNavChip} from '../../../../shared/ui/zx-nav-chips/nav-chip';
+import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 
 @Component({
   selector: 'zx-author-browser, zx-author-browser-view',
@@ -33,9 +38,12 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     ZxFilterPickerComponent,
     ZxInputComponent,
     ZxAuthorsTableComponent,
-    ZxRowSkeletonComponent,
+    ZxAuthorsTableSkeletonComponent,
     ZxFilterBarComponent,
     ZxStackComponent,
+    ZxNavChipsComponent,
+    HeadingDirective,
+    InViewportDirective,
   ],
   templateUrl: './zx-author-browser.component.html',
   styleUrls: ['./zx-author-browser.component.scss'],
@@ -53,8 +61,12 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() letter = '';
   /** Comma-separated entity types to include: 'author', 'authorAlias' */
   @Input() types = '';
-  /** Content type of the authors list: 'music', 'graphics', or 'all' */
+  /** Content type of the authors list: 'music', 'graphics', or '' (all) */
   @Input() items = '';
+  /** Base route the browser builds letter, filter and pagination links against */
+  @Input() basePath = '/authors';
+  /** Defers the initial request until the browser enters the viewport. */
+  @Input() loadOnViewport = false;
 
   loading = true;
   error = false;
@@ -69,10 +81,12 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   countryOptions: ZxFilterPickerItem[] = [];
   cityOptions: ZxFilterPickerItem[] = [];
 
-  protected urlBase = '';
+  loadStarted = false;
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   constructor(
     private readonly authorBrowserService: AuthorBrowserService,
@@ -81,58 +95,35 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Full mode owns the page URL: letter, filters and page live in the route.
     if (this.mode === 'full') {
-      this.urlBase = this.parseUrlBase();
-      this.currentPage = this.parsePageFromUrl();
-      this.parseFiltersFromUrl();
-
-      this.loadFilterOptions();
-
       this.subscriptions.add(
         this.searchSubject.pipe(
           debounceTime(300),
           distinctUntilChanged(),
-          tap(() => {
-            this.currentPage = 1;
-            this.updateUrl();
-            this.loading = true;
-            this.error = false;
-            this.cdr.markForCheck();
-          }),
-          switchMap(() => {
-            const pageLimit = Number(this.limit) || 50;
-            return this.authorBrowserService.getPaged(
-              this.elementId,
-              0,
-              pageLimit,
-              this.sorting,
-              this.search,
-              this.activeCountryId,
-              this.activeCityId,
-              this.letter,
-              this.types,
-              this.items,
-            );
-          }),
-        ).subscribe({
-          next: response => {
-            this.loading = false;
-            const pageLimit = Number(this.limit) || 50;
-            this.authors = response.items;
-            this.total = response.total;
-            this.pagesAmount = Math.ceil(this.total / pageLimit);
-            this.cdr.markForCheck();
-          },
-          error: () => {
-            this.loading = false;
-            this.error = true;
-            this.cdr.markForCheck();
-          },
-        }),
+        ).subscribe(() => this.navigateWithFilters()),
       );
+
+      this.subscriptions.add(combineLatest([
+        this.route.paramMap,
+        this.route.queryParamMap,
+      ]).subscribe(([pathParams, queryParams]) => {
+        this.letter = pathParams.get('letter') ?? '';
+        this.search = queryParams.get('q') ?? '';
+        this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
+        this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
+        this.currentPage = Math.max(1, Number(queryParams.get('page')) || 1);
+        this.loadFilterOptions();
+        this.loadPage();
+      }));
+      return;
     }
 
-    this.loadPage();
+    // Simple mode is an embedded widget with a fixed query and no URL state.
+    if (!this.loadOnViewport) {
+      this.loadStarted = true;
+      this.loadPage();
+    }
   }
 
   ngOnDestroy(): void {
@@ -149,21 +140,30 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   onCountryChange(ids: string[]): void {
     this.selectedCountryIds = ids;
     this.currentPage = 1;
-    this.updateUrl();
-    this.loadPage();
+    this.navigateWithFilters();
   }
 
   onCityChange(ids: string[]): void {
     this.selectedCityIds = ids;
     this.currentPage = 1;
-    this.updateUrl();
-    this.loadPage();
+    this.navigateWithFilters();
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updateUrl();
+    this.navigateWithFilters();
+  }
+
+  onInViewport(): void {
+    if (!this.loadOnViewport || this.loadStarted) {
+      return;
+    }
+    this.loadStarted = true;
     this.loadPage();
+  }
+
+  get letterChips(): ZxNavChip[] {
+    return buildLetterChips(this.basePath, this.letter);
   }
 
   get activeCountryId(): number | null {
@@ -179,14 +179,27 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     return (this.currentPage - 1) * pageLimit;
   }
 
-  private loadPage(): void {
-    if (!this.elementId) {
-      this.loading = false;
-      this.error = true;
-      this.cdr.markForCheck();
-      return;
-    }
+  get skeletonCount(): number {
+    const pageLimit = Number(this.limit) || 50;
+    return Math.min(pageLimit, 50);
+  }
 
+  /** No letter selected in full mode: list the most recently added authors instead of the full A–Z catalogue. */
+  get isRecentView(): boolean {
+    return this.mode === 'full' && !this.letter;
+  }
+
+  get effectiveSorting(): string {
+    return this.isRecentView ? 'id,desc' : this.sorting;
+  }
+
+  /** The "recently added" heading belongs to the default listing only, not to search/filter results. */
+  get showRecentHeading(): boolean {
+    return this.isRecentView && !this.search && this.activeCountryId === null && this.activeCityId === null;
+  }
+
+  private loadPage(): void {
+    // elementId 0 = SPA collection mount: the author list resolves globally on the backend.
     this.loading = true;
     this.error = false;
     const pageLimit = Number(this.limit) || 50;
@@ -197,7 +210,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
         this.elementId,
         start,
         pageLimit,
-        this.sorting,
+        this.effectiveSorting,
         this.mode === 'full' ? this.search : '',
         this.mode === 'full' ? this.activeCountryId : null,
         this.mode === 'full' ? this.activeCityId : null,
@@ -236,50 +249,31 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     );
   }
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    if (match) {
-      const page = parseInt(match[1], 10);
-      return page > 0 ? page : 1;
-    }
-    return 1;
+  /** Writes the filter state to the URL; the query-param subscription reloads. */
+  private navigateWithFilters(): void {
+    this.router.navigate([], {relativeTo: this.route, queryParams: this.filterQueryParams});
   }
 
-  private parseUrlBase(): string {
-    const cleanPath = window.location.pathname.replace(/\/page:\d+\/?/, '');
-    return cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
+  /** Filter state carried by the pagination links. */
+  get paginationQueryParams(): Params {
+    const {page, ...withoutPage} = this.filterQueryParams;
+    return withoutPage;
   }
 
-  private parseFiltersFromUrl(): void {
-    const params = new URLSearchParams(window.location.search);
-    this.search = params.get('q') ?? '';
-    const countryId = params.get('country');
-    const cityId = params.get('city');
-    this.selectedCountryIds = countryId ? [countryId] : [];
-    this.selectedCityIds = cityId ? [cityId] : [];
-  }
-
-  private updateUrl(): void {
-    if (this.mode !== 'full') {
-      return;
-    }
-    const pagePath = this.currentPage > 1
-      ? this.urlBase + 'page:' + this.currentPage + '/'
-      : this.urlBase;
-
-    const params = new URLSearchParams();
+  private get filterQueryParams(): Params {
+    const params: Params = {};
     if (this.search) {
-      params.set('q', this.search);
+      params['q'] = this.search;
     }
     if (this.activeCountryId !== null) {
-      params.set('country', String(this.activeCountryId));
+      params['country'] = this.activeCountryId;
     }
     if (this.activeCityId !== null) {
-      params.set('city', String(this.activeCityId));
+      params['city'] = this.activeCityId;
     }
-
-    const queryString = params.toString();
-    const newUrl = queryString ? pagePath + '?' + queryString : pagePath;
-    window.history.pushState(null, '', newUrl);
+    if (this.currentPage > 1) {
+      params['page'] = this.currentPage;
+    }
+    return params;
   }
 }

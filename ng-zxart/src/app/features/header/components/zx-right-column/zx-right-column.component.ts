@@ -6,7 +6,6 @@ import {map} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
 import {ZxBreakpoints} from '../../../../shared/breakpoints';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
-import {BackendLinksService} from '../../services/backend-links.service';
 import {RadioRemoteComponent} from '../../../radio-remote/components/radio-remote/radio-remote.component';
 import {LatestCommentsComponent} from '../../../comments/components/latest-comments/latest-comments.component';
 import {
@@ -16,7 +15,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 
 @Component({
-  selector: 'zx-right-column',
+  selector: 'zx-right-column, zx-right-column-view',
   standalone: true,
   imports: [
     TranslateModule,
@@ -33,7 +32,6 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 export class ZxRightColumnComponent {
   private readonly bp = inject(BreakpointObserver);
   private readonly currentUserService = inject(CurrentUserService);
-  private readonly backendLinksService = inject(BackendLinksService);
   private readonly renderer = inject(Renderer2);
 
   readonly isDesktop = toSignal(
@@ -41,10 +39,6 @@ export class ZxRightColumnComponent {
     {requireSync: true},
   );
   readonly user = toSignal(this.currentUserService.user$);
-  readonly supportUrl = toSignal(
-    this.backendLinksService.links$.pipe(map(l => l.supportUrl)),
-    {initialValue: null},
-  );
 
   constructor(@Inject(DOCUMENT) private readonly doc: Document) {
     afterNextRender(() => this.initAds());

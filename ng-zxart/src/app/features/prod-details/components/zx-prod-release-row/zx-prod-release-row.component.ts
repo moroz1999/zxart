@@ -18,10 +18,11 @@ import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {animate, style, transition, trigger} from '@angular/animations';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'tr[zxProdReleaseRow]',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

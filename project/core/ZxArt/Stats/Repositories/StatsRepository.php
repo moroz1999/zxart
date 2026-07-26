@@ -18,6 +18,8 @@ final readonly class StatsRepository extends AbstractRepository
 {
     private const string VOTES_HISTORY_USER_INDEX = 'userId';
 
+    private const int AVERAGE_VOTE_PRECISION = 2;
+
     public function __construct(
         private Connection $db,
         private LanguagesManager $languagesManager,
@@ -50,6 +52,29 @@ final readonly class StatsRepository extends AbstractRepository
     public function countRatedByYear(DatabaseTable $table, float $averageVote): array
     {
         return $this->yearCounts($this->baseYearQuery($table)->where('votes', '>', $averageVote));
+    }
+
+    /**
+     * @return array<int, float> year => average vote of the works that have been rated
+     */
+    public function averageVoteByYear(DatabaseTable $table): array
+    {
+        $query = $this->baseYearQuery($table)
+            ->where('votes', '>', 0)
+            ->select(['year'])
+            ->selectRaw('AVG(votes) AS amount');
+
+        /** @var array<int, array{year: int|string, amount: float|string}> $rows */
+        $rows = $this->groupBy($query, 'year')
+            ->orderBy('year')
+            ->get();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int)$row['year']] = round((float)$row['amount'], self::AVERAGE_VOTE_PRECISION);
+        }
+
+        return $result;
     }
 
     /**

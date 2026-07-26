@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, signal} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentChangeEvent} from '../../models/comment-change-event';
@@ -53,6 +54,8 @@ export class CommentsListComponent {
 
   reloadSubject = new Subject<void>();
 
+  private readonly route = inject(ActivatedRoute);
+
   constructor(private commentsService: CommentsService) {}
 
   getCommentsLoader = (): Observable<CommentDto[]> => {
@@ -79,11 +82,12 @@ export class CommentsListComponent {
     this.showForm.set(false);
   }
 
+  /** Scrolls to the comment named by the route fragment (`#comment-123`). */
   private scrollToHashedComment(): void {
-    const hash = window.location.hash;
-    if (!hash) return;
+    const fragment = this.route.snapshot.fragment;
+    if (!fragment) return;
     setTimeout(() => {
-      const el = document.querySelector(hash);
+      const el = document.getElementById(fragment);
       el?.scrollIntoView({behavior: 'smooth', block: 'start'});
     }, 100);
   }

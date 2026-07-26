@@ -1,28 +1,34 @@
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of, Subscription} from 'rxjs';
-import {filter, shareReplay, take} from 'rxjs/operators';
-import {PictureDetailsDto} from '../../models/picture-details.dto';
+import {filter, shareReplay, take, tap} from 'rxjs/operators';
+import {PictureDetailsDto, PictureDownloadDto} from '../../models/picture-details.dto';
 import {PictureDetailsApiService} from '../../services/picture-details-api.service';
 import {AnalyticsService} from '../../../../shared/services/analytics.service';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
-import {ZxBadgeComponent} from '../../../../shared/ui/zx-badge/zx-badge.component';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
-import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
 import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
-import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
+import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
 import {ZxProdContextComponent} from '../../../../entities/zx-prod-context/components/zx-prod-context/zx-prod-context.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxHeroComponent} from '../../../../shared/ui/zx-hero/zx-hero.component';
+import {ZxHeroTitleComponent} from '../../../../shared/ui/zx-hero-title/zx-hero-title.component';
+import {ZxHeroBarComponent} from '../../../../shared/ui/zx-hero-bar/zx-hero-bar.component';
+import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
+import {ZxCreditGroup, ZxCreditsRowComponent} from '../../../../shared/ui/zx-credits-row/zx-credits-row.component';
+import {ZxDownloadButtonComponent} from '../../../../shared/ui/zx-download-button/zx-download-button.component';
 
 import {ZxPictureViewerComponent} from '../zx-picture-viewer/zx-picture-viewer.component';
 import {ZxPictureMetaPanelComponent} from '../zx-picture-meta-panel/zx-picture-meta-panel.component';
@@ -36,28 +42,33 @@ import {ZxPictureDetailsSkeletonComponent} from '../zx-picture-details-skeleton/
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 
-@Component({
-  selector: 'zx-picture-details',
+
+import {RouterLink} from '@angular/router';@Component({
+  selector: 'zx-picture-details-view',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxPanelComponent,
     ZxStackComponent,
     ZxInlineComponent,
     ZxGridComponent,
     ZxGridItemDirective,
-    ZxBadgeComponent,
     TagsListComponent,
     ZxItemControlsComponent,
-    ZxRatingStripComponent,
     ZxCalloutComponent,
     ZxAddedByComponent,
-    ZxPartyPlaceComponent,
+    ZxPartyProvenanceComponent,
     ZxProdContextComponent,
-    HeadingDirective,
     TextDirective,
+    ZxHeroComponent,
+    ZxHeroTitleComponent,
+    ZxHeroBarComponent,
+    ZxChipComponent,
+    ZxButtonControlsComponent,
+    ZxCountersComponent,
+    ZxCreditsRowComponent,
+    ZxDownloadButtonComponent,
     ZxPictureViewerComponent,
     ZxPictureMetaPanelComponent,
     ZxPictureDownloadsPanelComponent,
@@ -73,8 +84,9 @@ import {RatingsListComponent} from '../../../ratings/components/ratings-list/rat
   styleUrls: ['./zx-picture-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
+export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
   @Input() elementId = 0;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   details$: Observable<PictureDetailsDto | null> = of(null);
 
@@ -83,14 +95,37 @@ export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly api: PictureDetailsApiService,
     private readonly analytics: AnalyticsService,
+    private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
+
+    this.viewSubscription?.unsubscribe();
     if (!this.elementId || +this.elementId <= 0) {
       this.details$ = of(null);
       return;
     }
-    this.details$ = this.api.getDetails(+this.elementId).pipe(shareReplay(1));
+    this.details$ = this.api.getDetails(+this.elementId).pipe(
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          this.pageMetadataService.applyEntityMetadata(details.metadata);
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.graphics'), url: '/pictures'},
+              ...(details.authors.length ? [{title: details.authors[0].name, url: details.authors[0].url}] : []),
+            ],
+            currentTitle: details.title,
+          });
+        }
+      }),
+      shareReplay(1),
+    );
 
     // Log the view once, after the details have loaded (replaces the legacy
     // server-side/AJAX logging) and report the tracking goal as in legacy.
@@ -104,5 +139,37 @@ export class ZxPictureDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.viewSubscription?.unsubscribe();
+  }
+
+  formatSearchUrl(details: PictureDetailsDto): string {
+    return `/pictures/search?pictureType=${encodeURIComponent(details.type)}`;
+  }
+
+  creditGroups(details: PictureDetailsDto): ZxCreditGroup[] {
+    return [
+      {
+        labelKey: 'picture-details.artist',
+        people: details.authors.map(author => ({title: author.name, url: author.url})),
+      },
+      {
+        labelKey: 'picture-details.original-author',
+        people: details.originalAuthors.map(author => ({title: author.name, url: author.url})),
+      },
+    ];
+  }
+
+  counters(details: PictureDetailsDto): ZxCounterItem[] {
+    const items: ZxCounterItem[] = [];
+    if (details.votes > 0) {
+      items.push({value: details.votes.toFixed(2), labelKey: 'hero.rating'});
+    }
+    items.push({value: details.votesAmount, labelKey: 'hero.votes'});
+    items.push({value: details.views, labelKey: 'picture-details.views'});
+    return items;
+  }
+
+  /** The main file offered in the hero bar; the full list stays in the downloads panel. */
+  primaryDownload(details: PictureDetailsDto): PictureDownloadDto | null {
+    return details.downloads[0] ?? null;
   }
 }

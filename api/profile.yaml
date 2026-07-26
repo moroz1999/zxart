@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Profile API
+  version: 1.0.0
+  description: >
+    Self-service account endpoint for the current user. Name and email identify
+    the account and are read-only; the password is the only thing an account may
+    change about itself.
+
+paths:
+  /profile-data/:
+    get:
+      summary: The current user's account
+      responses:
+        '200':
+          description: Account identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDto'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Change the account password
+      description: >
+        Requires the current password, so an unattended session cannot be turned
+        into a permanent takeover. A successful change bumps the user's
+        `dateModified`, invalidating any outstanding password-reset link.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [change-password]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                password:
+                  type: string
+                passwordRepeat:
+                  type: string
+              required:
+                - currentPassword
+                - password
+                - passwordRepeat
+      responses:
+        '200':
+          description: Password changed; the account is returned unchanged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDto'
+        '400':
+          description: New passwords do not match, or the new password is empty
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Current password is wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    UserProfileDto:
+      type: object
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+      required:
+        - userName
+        - email
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: >
+            Either a plain message ("Unauthorized") or a frontend translation key
+            (`profile.error-password-wrong`, `profile.error-password-match`).

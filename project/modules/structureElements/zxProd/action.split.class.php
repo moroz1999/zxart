@@ -16,7 +16,7 @@ class splitZxProd extends structureElementAction
 
             if ($structureElement->splitData) {
                 if ($newElement = $prodsService->splitZxProd($structureElement->getId(), $structureElement->splitData)) {
-                    $controller->redirect($newElement->getUrl());
+                    $this->respondFormSaved($controller, $newElement); return;
                 }
             }
         }

@@ -1,4 +1,6 @@
 <zx-stack spacing="md">
+  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
+
   <zx-filter-bar *ngIf="mode === 'full'">
     <zx-input
       class="filter-search"
@@ -28,7 +30,12 @@
     ></zx-filter-picker>
   </zx-filter-bar>
 
-  <zx-row-skeleton *ngIf="groups === null && !error" [count]="30"></zx-row-skeleton>
+  <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'group-browser.recent' | translate }}</h2>
+
+  <zx-groups-table-skeleton
+    *ngIf="groups === null && !error"
+    [count]="skeletonCount"
+  ></zx-groups-table-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'group-browser.error' | translate }}</div>
   <div *ngIf="!loading && !error && groups !== null && groups.length === 0"
@@ -46,7 +53,7 @@
     *ngIf="mode === 'full' && pagesAmount > 1"
     [currentPage]="currentPage"
     [pagesAmount]="pagesAmount"
-    [urlBase]="urlBase"
+    [queryParams]="paginationQueryParams"
     [loading]="loading"
     (pageChange)="onPageChange($event)"
   ></zx-pagination>

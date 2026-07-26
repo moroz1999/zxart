@@ -26,6 +26,7 @@ use ZxArt\Shared\EntityType;
 readonly class GroupDetailsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
         private PressArticlePreviewFactory $pressArticlePreviewFactory,
@@ -50,7 +51,7 @@ readonly class GroupDetailsService
             entityType: ($group instanceof groupElement ? EntityType::Group : EntityType::GroupAlias)->value,
             title: $this->decode((string)$group->getTitle()),
             abbreviation: $profileGroup instanceof groupElement ? $this->decode((string)$profileGroup->abbreviation) : '',
-            url: (string)$group->getUrl(),
+            url: $this->entityUrlResolver->urlFor($group),
             type: $profileGroup instanceof groupElement ? (string)$profileGroup->type : '',
             slogan: $profileGroup instanceof groupElement ? $this->decode((string)$profileGroup->slogan) : '',
             imageUrl: $profileGroup instanceof groupElement ? $profileGroup->getImageUrl() : '',
@@ -87,14 +88,14 @@ readonly class GroupDetailsService
         if ($cityElement = $group->getCityElement()) {
             $city = new GroupLocationItemDto(
                 title: $this->decode((string)$cityElement->title),
-                url: (string)$cityElement->getUrl('group'),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $group->getCountryElement()) {
             $country = new GroupLocationItemDto(
                 title: $this->decode((string)$countryElement->title),
-                url: (string)$countryElement->getUrl('group'),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new GroupLocationDto(city: $city, country: $country);
@@ -156,7 +157,7 @@ readonly class GroupDetailsService
             $parents[] = new GroupRefDto(
                 id: (int)$parentGroup->getId(),
                 title: $this->decode((string)$parentGroup->getTitle()),
-                url: (string)$parentGroup->getUrl(),
+                url: $this->entityUrlResolver->urlFor($parentGroup),
                 years: null,
             );
         }
@@ -179,7 +180,7 @@ readonly class GroupDetailsService
             $aliases[] = new GroupRefDto(
                 id: (int)$aliasElement->getId(),
                 title: $this->decode((string)$aliasElement->title),
-                url: (string)$aliasElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($aliasElement),
                 years: $this->buildYears($aliasElement),
             );
         }

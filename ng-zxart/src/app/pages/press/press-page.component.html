@@ -1,0 +1,7 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ title }}</h1>
+  <zx-press-details-view
+    [elementId]="(elementId$ | async) ?? 0"
+    (pageTitleChange)="title = $event"
+  ></zx-press-details-view>
+</zx-page-layout>

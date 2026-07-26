@@ -1,16 +1,12 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
-import {shareReplay, switchMap} from 'rxjs/operators';
 import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
-import {MenuService} from '../../../menu/services/menu.service';
 import {CurrentRouteService} from '../../services/current-route.service';
-import {CurrentLanguageService} from '../../services/current-language.service';
-import {MenuItem} from '../../../menu/models/menu-item';
+import {MAIN_MENU, MenuEntry} from '../../../../shared/navigation/menu.config';
 import {ThemeTriggerComponent} from '../theme-trigger/theme-trigger.component';
 import {
   PictureSettingsTriggerComponent
@@ -40,14 +36,9 @@ import {environment} from '../../../../../environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileNavDrawerComponent {
-  readonly items$: Observable<MenuItem[]> = this.languageService.languageCode$.pipe(
-    switchMap(code => this.menuService.getMenuItems(code)),
-    shareReplay({bufferSize: 1, refCount: false}),
-  );
+  readonly items: MenuEntry[] = MAIN_MENU;
 
   constructor(
-    private menuService: MenuService,
-    private languageService: CurrentLanguageService,
     private routeService: CurrentRouteService,
     private iconReg: SvgIconRegistryService,
     private dialog: Dialog,
@@ -78,7 +69,7 @@ export class MobileNavDrawerComponent {
     });
   }
 
-  isActive(item: MenuItem): boolean {
+  isActive(item: MenuEntry): boolean {
     return this.routeService.isActive(item.url);
   }
 }

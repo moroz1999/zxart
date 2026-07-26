@@ -5,7 +5,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
-import {BackendLinksService} from '../../services/backend-links.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxFormDirective} from '../../../../shared/ui/zx-form/zx-form.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -35,7 +34,6 @@ import {environment} from '../../../../../environments/environment';
 })
 export class LoginTriggerComponent {
   readonly user$ = this.currentUserService.user$;
-  readonly links$ = this.backendLinksService.links$;
 
   popoverOpen = false;
 
@@ -52,7 +50,6 @@ export class LoginTriggerComponent {
 
   constructor(
     private currentUserService: CurrentUserService,
-    private backendLinksService: BackendLinksService,
     private iconReg: SvgIconRegistryService,
     private cdr: ChangeDetectorRef,
   ) {

@@ -26,13 +26,15 @@
 :host ::ng-deep .zx-table-content table {
   width: 100%;
   border-collapse: collapse;
+  /* Inherited cell size: plain cells adopt it; cells with a typography directive still win. */
+  font-size: var(--zx-table-font-size);
 
   thead th {
     font-size: var(--zx-table-header-font-size);
     color: var(--zx-table-header-color);
     padding: var(--zx-table-header-padding);
     text-align: left;
-    font-weight: 600;
+    font-weight: 500;
     background: var(--zx-table-header-bg);
     vertical-align: bottom;
   }

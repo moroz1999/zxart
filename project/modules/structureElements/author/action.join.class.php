@@ -22,7 +22,7 @@ class joinAuthor extends structureElementAction
             }
             $structureElement->recalculate();
 
-            $controller->redirect($structureElement->getUrl());
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

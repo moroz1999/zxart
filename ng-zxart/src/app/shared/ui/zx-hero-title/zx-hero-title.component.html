@@ -1,0 +1,5 @@
+<p class="zx-hero-title__text" appHeading="display">{{ title }}</p>
+<zx-badge *ngIf="entityId" class="zx-hero-title__id" variant="secondary">#{{ entityId }}</zx-badge>
+<span *ngIf="hasYear" class="zx-hero-title__year" appText="body" tone="muted">{{ year }}</span>
+<ng-content></ng-content>
+<span class="zx-hero-title__edit"><ng-content select="[zxHeroEdit]"></ng-content></span>

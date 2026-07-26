@@ -1,0 +1,62 @@
+<div class="zx-file-selector">
+  <div *ngIf="visibleFiles.length" class="zx-file-selector__grid">
+    <figure
+      *ngFor="let file of visibleFiles; trackBy: trackById"
+      class="zx-file-selector__item"
+    >
+      <ng-container *ngIf="file.isImage && file.imageUrl; else fileRow">
+        <div class="zx-file-selector__thumb-wrap">
+          <img [src]="file.imageUrl" [alt]="file.title" class="zx-file-selector__thumb" loading="lazy" />
+
+          <zx-close-button
+            class="zx-file-selector__remove"
+            size="sm"
+            [round]="true"
+            [ariaLabel]="'common.remove' | translate"
+            (closed)="onRemoveExisting(file.id)"
+          ></zx-close-button>
+
+          <div *ngIf="reorderable" class="zx-file-selector__controls">
+            <zx-button
+              size="xs"
+              color="secondary"
+              [disabled]="isFirst(file)"
+              [attr.aria-label]="'form.move-left' | translate"
+              (click)="onMove(file, 'left')"
+            ><svg-icon name="skip-previous" class="zx-file-selector__ctrl-icon"></svg-icon></zx-button>
+            <zx-button
+              size="xs"
+              color="secondary"
+              [disabled]="isLast(file)"
+              [attr.aria-label]="'form.move-right' | translate"
+              (click)="onMove(file, 'right')"
+            ><svg-icon name="skip-next" class="zx-file-selector__ctrl-icon"></svg-icon></zx-button>
+          </div>
+        </div>
+        <figcaption class="zx-file-selector__name">{{ file.title }}</figcaption>
+      </ng-container>
+
+      <ng-template #fileRow>
+        <div class="zx-file-selector__file">
+          <span class="zx-file-selector__file-name">{{ file.title }}</span>
+          <zx-close-button
+            size="sm"
+            [ariaLabel]="'common.remove' | translate"
+            (closed)="onRemoveExisting(file.id)"
+          ></zx-close-button>
+        </div>
+      </ng-template>
+    </figure>
+  </div>
+
+  <input #fileInput type="file" multiple [accept]="accept" (change)="onFilesSelected($event)" hidden />
+  <div>
+    <zx-button type="button" color="outlined" size="sm" (click)="fileInput.click()">
+      {{ 'common.choose-file' | translate }}
+    </zx-button>
+  </div>
+
+  <ul *ngIf="stagedFiles.length" class="zx-file-selector__staged">
+    <li *ngFor="let file of stagedFiles; trackBy: trackByName">{{ file.name }}</li>
+  </ul>
+</div>

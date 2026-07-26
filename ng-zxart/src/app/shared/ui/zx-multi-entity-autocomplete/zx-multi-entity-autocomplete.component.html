@@ -1,0 +1,47 @@
+<div class="zx-mea">
+  <zx-chips
+    *ngIf="chips.length"
+    [items]="chips"
+    [removable]="!disabled"
+    [disabled]="disabled"
+    (removed)="onRemoveChip($event)"
+  ></zx-chips>
+
+  <div #search class="zx-mea__search" cdkOverlayOrigin #origin="cdkOverlayOrigin">
+    <zx-input
+      *ngIf="!disabled"
+      [placeholder]="placeholder"
+      [(ngModel)]="query"
+      (ngModelChange)="onQueryChange($event)"
+      (keydown)="onKeydown($event)"
+    ></zx-input>
+  </div>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="dropdownOpen"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayWidth]="overlayWidth"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  (backdropClick)="closeDropdown()"
+>
+  <div class="zx-mea__dropdown" @dropdownPopover>
+    <div *ngIf="loading" class="zx-mea__loading">
+      <zx-spinner size="md"></zx-spinner>
+    </div>
+
+    <div *ngIf="!loading" class="zx-mea__options">
+      <button
+        *ngFor="let result of visibleResults; let i = index"
+        type="button"
+        class="zx-mea__option"
+        [class.zx-mea__option--active]="i === activeIndex"
+        (mouseenter)="activeIndex = i"
+        (click)="onSelect(result)"
+      >{{ result.title }}</button>
+    </div>
+  </div>
+</ng-template>

@@ -7,6 +7,7 @@ namespace ZxArt\Authors\Services;
 use authorAliasElement;
 use authorElement;
 use breadcrumbsManager;
+use controller;
 use groupAliasElement;
 use groupElement;
 use structureManager;
@@ -25,16 +26,21 @@ use ZxArt\Authors\Dto\AuthorTechDto;
 use ZxArt\Authors\Repositories\AuthorProdsRepository;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\LinkTypes;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Shared\EntityType;
+use ZxArt\Urls\EntityUrlResolver;
 
 readonly class AuthorDetailsService
 {
     public function __construct(
         private structureManager $structureManager,
         private breadcrumbsManager $breadcrumbsManager,
+        private controller $controller,
         private AuthorshipRepository $authorshipRepository,
         private AuthorProdsRepository $authorProdsRepository,
+        private EntityUrlResolver $entityUrlResolver,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -65,7 +71,8 @@ readonly class AuthorDetailsService
             entityType: ($author instanceof authorElement ? EntityType::Author : EntityType::AuthorAlias)->value,
             title: $this->resolveTitle($author),
             realName: $profileAuthor instanceof authorElement ? (string)$profileAuthor->realName : '',
-            url: (string)$author->getUrl(),
+            url: $this->entityUrlResolver->resolve($author) ?? (string)$author->getUrl(),
+            imageUrl: $this->buildImageUrl($profileAuthor),
             parentUrl: $parentUrl,
             parentTitle: $parentTitle,
             primaryAuthor: $this->buildPrimaryAuthor($author, $profileAuthor),
@@ -82,6 +89,7 @@ readonly class AuthorDetailsService
             ratings: $ratings,
             tabs: $tabs,
             breadcrumbs: $breadcrumbs,
+            metadata: $this->pageMetadataService->getForPath('/author/' . $authorId),
         );
     }
 
@@ -95,6 +103,17 @@ readonly class AuthorDetailsService
         $title = $author instanceof authorElement ? (string)$author->getTitle() : (string)$author->title;
 
         return html_entity_decode($title, ENT_QUOTES);
+    }
+
+    private function buildImageUrl(?authorElement $author): string
+    {
+        if (!$author instanceof authorElement || !$author->image || $author->originalName === '') {
+            return '';
+        }
+
+        return $this->controller->baseURL
+            . 'image/type:authorPhoto/id:' . $author->image
+            . '/filename:' . rawurlencode($author->originalName);
     }
 
     private function resolveUserElement(?authorElement $author): ?userElement
@@ -122,7 +141,7 @@ readonly class AuthorDetailsService
         return new AuthorAliasRefDto(
             id: (int)$profileAuthor->id,
             title: html_entity_decode((string)$profileAuthor->getTitle(), ENT_QUOTES),
-            url: (string)$profileAuthor->getUrl(),
+            url: $this->entityUrlResolver->resolve($profileAuthor) ?? (string)$profileAuthor->getUrl(),
         );
     }
 
@@ -135,14 +154,14 @@ readonly class AuthorDetailsService
         if ($cityElement = $author->getCityElement()) {
             $city = new AuthorLocationItemDto(
                 title: (string)$cityElement->title,
-                url: (string)$cityElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $author->getCountryElement()) {
             $country = new AuthorLocationItemDto(
                 title: (string)$countryElement->title,
-                url: (string)$countryElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new AuthorLocationDto(city: $city, country: $country);
@@ -166,7 +185,7 @@ readonly class AuthorDetailsService
             $groups[] = new AuthorGroupDto(
                 id: (int)$element->id,
                 title: html_entity_decode((string)$element->title, ENT_QUOTES),
-                url: (string)$element->getUrl(),
+                url: $this->entityUrlResolver->resolve($element) ?? (string)$element->getUrl(),
                 years: $years,
             );
         }
@@ -187,7 +206,7 @@ readonly class AuthorDetailsService
             $aliases[] = new AuthorAliasRefDto(
                 id: (int)$alias->id,
                 title: html_entity_decode((string)$alias->title, ENT_QUOTES),
-                url: (string)$alias->getUrl(),
+                url: $this->entityUrlResolver->resolve($alias) ?? (string)$alias->getUrl(),
             );
         }
         return $aliases;
@@ -206,7 +225,7 @@ readonly class AuthorDetailsService
         }
         $wikiSlug = (string)$author->wikiLink;
         if ($wikiSlug !== '') {
-            $links[] = new AuthorLinkDto(url: 'https://speccy.info/' . $wikiSlug, label: 'Speccy.info');
+            $links[] = new AuthorLinkDto(url: 'https://speccy.info/' . $wikiSlug, label: 'SpeccyWiki');
         }
         $zxTunesId = (int)$author->zxTunesId;
         if ($zxTunesId > 0) {

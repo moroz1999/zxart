@@ -6,7 +6,7 @@
     titleLevel="h2"
     variant="elevated">
     <div class="gp-subs__grid">
-      <a *ngFor="let subgroup of roster.subgroups" [href]="subgroup.url" class="gp-sub-card">
+      <a *ngFor="let subgroup of roster.subgroups" [routerLink]="subgroup.url" class="gp-sub-card">
         <span appText="bodySm" tone="strong" [truncate]="true">{{ subgroup.title }}</span>
         <div class="gp-sub-card__meta">
           <span appText="caption" tone="muted">{{ 'group-details.subgroups.members' | translate: {count: subgroup.membersCount} }}</span>
@@ -62,7 +62,7 @@
       </zx-stack>
 
       <div class="gp-roster__grid">
-        <a *ngFor="let member of filteredMembers(roster)" [href]="member.url" class="gp-member">
+        <a *ngFor="let member of filteredMembers(roster)" [routerLink]="member.url" class="gp-member">
           <div class="gp-member__avatar">
             <svg-icon name="person" aria-hidden="true"></svg-icon>
           </div>

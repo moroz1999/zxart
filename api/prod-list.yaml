@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Prod List API
+  version: 1.0.0
+  description: Software linked to an element, used by the tags browser and by user playlists.
+
+paths:
+  /prodlist/:
+    get:
+      summary: List the software linked to an element
+      parameters:
+        - in: query
+          name: elementId
+          required: true
+          schema:
+            type: integer
+          description: The element the software is linked to (a tag or a playlist).
+        - in: query
+          name: linkType
+          schema:
+            type: string
+            enum:
+              - tagLink
+              - playlist
+            default: tagLink
+          description: Which link connects the software to the element.
+        - in: query
+          name: start
+          schema:
+            type: integer
+            default: 0
+          description: Offset of the requested page; ignored without `limit`.
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Page size. Omit to get every linked prod in one response.
+        - in: query
+          name: sorting
+          schema:
+            type: string
+            default: title,asc
+          description: '`column,direction`; column is one of title, date, year, votes.'
+      responses:
+        '200':
+          description: The linked software
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - total
+                  - items
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of linked prods, ignoring pagination.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '400':
+          description: Missing element id or unsupported link type
+        '500':
+          description: Internal server error

@@ -41,7 +41,9 @@ components:
         - youtubeId
         - generatedDescription
         - dateCreated
-        - catalogueYearUrl
+        - canAddRelease
+        - downloadsCount
+        - playsCount
         - categoriesPaths
         - languages
         - hardware
@@ -54,6 +56,7 @@ components:
         - voting
         - submitter
         - tabs
+        - metadata
       properties:
         elementId:
           type: integer
@@ -81,8 +84,14 @@ components:
           type: string
         dateCreated:
           type: string
-        catalogueYearUrl:
-          type: string
+        canAddRelease:
+          type: boolean
+        downloadsCount:
+          type: integer
+          description: Total downloads summed over the prod's releases.
+        playsCount:
+          type: integer
+          description: Total online plays summed over the prod's releases.
         categoriesPaths:
           type: array
           items:
@@ -129,6 +138,8 @@ components:
           nullable: true
         tabs:
           $ref: '#/components/schemas/ProdTabs'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
 
     ProdTabs:
       type: object
@@ -176,13 +187,10 @@ components:
       required:
         - id
         - title
-        - url
       properties:
         id:
           type: integer
         title:
-          type: string
-        url:
           type: string
 
     ProdCategoryPath:
@@ -201,7 +209,6 @@ components:
         - code
         - title
         - emoji
-        - catalogueUrl
       properties:
         code:
           type: string
@@ -209,18 +216,13 @@ components:
           type: string
         emoji:
           type: string
-        catalogueUrl:
-          type: string
 
     ProdHardwareInfo:
       type: object
       required:
         - id
-        - catalogueUrl
       properties:
         id:
-          type: string
-        catalogueUrl:
           type: string
 
     ProdLinkInfo:
@@ -297,13 +299,10 @@ components:
       required:
         - id
         - title
-        - url
       properties:
         id:
           type: integer
         title:
-          type: string
-        url:
           type: string
 
     ProdVoting:

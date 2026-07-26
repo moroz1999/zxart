@@ -15,9 +15,10 @@ export interface PaginatedPicturesResponse {
 export class PictureBrowserService {
   constructor(private http: HttpClient) {}
 
-  getPaged(elementId: number, start: number, limit: number, sorting: string): Observable<PaginatedPicturesResponse> {
+  /** `tagId` 0 browses the whole picture collection; a tag id narrows it to that tag. */
+  getPaged(tagId: number, start: number, limit: number, sorting: string): Observable<PaginatedPicturesResponse> {
     return this.http.get<PaginatedPicturesResponse>('/picturelist/', {
-      params: {elementId: String(elementId), start: String(start), limit: String(limit), sorting},
+      params: {tagId: String(tagId), start: String(start), limit: String(limit), sorting},
     }).pipe(
       catchError(() => of({total: 0, items: []}))
     );

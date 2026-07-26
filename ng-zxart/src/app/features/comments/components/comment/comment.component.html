@@ -3,11 +3,11 @@
     <zx-inline class="comment-layout" gap="lg">
       @if (comment.target && hasImage) {
         <zx-stack class="comment-target" gap="sm">
-          <a [href]="comment.target.url" class="comment-target-image">
+          <a [routerLink]="comment.target.url" class="comment-target-image">
             <img [src]="comment.target.imageUrl" [alt]="comment.target.title" loading="lazy"/>
           </a>
           <zx-stack class="comment-target-info" gap="xs">
-            <a [href]="comment.target.url" appText="label" tone="link" class="comment-target-title">{{ comment.target.title }}</a>
+            <a [routerLink]="comment.target.url" appText="label" tone="link" class="comment-target-title">{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
               <span appText="label" tone="muted" class="comment-target-author">{{ comment.target.authorName }}</span>
             }
@@ -18,7 +18,7 @@
       <div class="comment-main">
         @if (showTarget && comment.target && !hasImage) {
           <zx-inset class="comment-target-inline" padding="md" side="bottom">
-            <a [href]="comment.target.url" appText="body" tone="link">{{ comment.target.title }}</a>
+            <a [routerLink]="comment.target.url" appText="body" tone="link">{{ comment.target.title }}</a>
             @if (comment.target.authorName) {
               <span appText="label" tone="muted"> - {{ comment.target.authorName }}</span>
             }

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
-import {ParserService} from '../../shared/services/parser.service';
+import {ParserService} from './services/parser.service';
 import {ParserData} from './models/parser-data';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';

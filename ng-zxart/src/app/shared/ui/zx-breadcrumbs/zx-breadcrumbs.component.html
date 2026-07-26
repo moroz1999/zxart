@@ -12,18 +12,28 @@
   </ng-container>
 
   <ng-template #breadcrumbsContent>
-    <ng-container *ngIf="homeUrl$ | async as homeUrl">
-      <a *ngIf="homeUrl" [href]="homeUrl" class="zx-breadcrumbs__item">ZX-Art</a>
-      <span *ngIf="homeUrl && (categories.length || parentItem || currentTitle)" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-    </ng-container>
+    <a routerLink="/" class="zx-breadcrumbs__item">ZX-Art</a>
+    <span *ngIf="categories.length || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
 
     <ng-container *ngFor="let cat of categories; let last = last">
-      <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <a *ngIf="categoryCataloguePath && cat.id; else categoryUrl"
+         [routerLink]="categoryCataloguePath"
+         [queryParams]="{cat: cat.id}"
+         class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <ng-template #categoryUrl>
+        <a *ngIf="cat.url && cat.url.startsWith('/'); else externalCategory"
+           [routerLink]="cat.url"
+           [queryParams]="cat.queryParams ?? null"
+           class="zx-breadcrumbs__item">{{ cat.title }}</a>
+        <ng-template #externalCategory>
+          <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+        </ng-template>
+      </ng-template>
       <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
     </ng-container>
 
     <ng-container *ngIf="parentItem">
-      <a [href]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
+      <a [routerLink]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
       <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
     </ng-container>
 

@@ -72,3 +72,33 @@ a.zx-chip--filled.zx-chip--primary:hover {
   border-color: currentColor;
   background: transparent;
 }
+
+/* Technical chips: monospace, square corners, color set by the variant alone. */
+.zx-chip--mono,
+.zx-chip--mono-outline {
+  gap: var(--zx-chip-mono-gap);
+  border-radius: var(--zx-chip-mono-radius);
+  font-family: var(--zx-chip-mono-font-family);
+  font-weight: var(--zx-chip-mono-font-weight);
+}
+
+.zx-chip--mono {
+  color: var(--zx-chip-mono-text);
+  border-color: var(--zx-chip-mono-border);
+  background: var(--zx-chip-mono-bg);
+}
+
+a.zx-chip--mono {
+  color: var(--zx-chip-mono-link-text);
+}
+
+a.zx-chip--mono:hover {
+  background: var(--zx-chip-mono-hover-bg);
+}
+
+.zx-chip--mono-outline {
+  color: var(--zx-chip-mono-outline-text);
+  border-style: dashed;
+  border-color: var(--zx-chip-mono-outline-border);
+  background: transparent;
+}

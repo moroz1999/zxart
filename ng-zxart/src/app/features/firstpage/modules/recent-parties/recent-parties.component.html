@@ -9,8 +9,6 @@
     [empty]="vm.empty"
   >
     <zx-prods-list-skeleton loadingSkeleton [count]="settings.limit"></zx-prods-list-skeleton>
-    <zx-grid desktopColumns="5" tabletColumns="3" mobileColumns="1" gap="lg">
-      <zx-party-card *ngFor="let party of vm.items" [party]="party"></zx-party-card>
-    </zx-grid>
+    <zx-parties-list [parties]="vm.items"></zx-parties-list>
   </zx-firstpage-module-wrapper>
 </ng-container>

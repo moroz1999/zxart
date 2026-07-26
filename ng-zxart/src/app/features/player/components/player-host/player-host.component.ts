@@ -4,7 +4,7 @@ import {PlayerService} from '../../services/player.service';
 import {PlayerSheetComponent} from '../player-sheet/player-sheet.component';
 
 @Component({
-  selector: 'zx-player',
+  selector: 'zx-player, zx-player-view',
   standalone: true,
   imports: [CommonModule, PlayerSheetComponent],
   templateUrl: './player-host.component.html',

@@ -1,0 +1,32 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <zx-inline zxPageHeader spacing="sm" align="center">
+    <h1 appHeading="display">{{ categoryTitle || (vm.titleKey | translate) }}</h1>
+    <zx-edit-button
+      *ngIf="vm.kind === 'prods' && (isAuthenticated$ | async)"
+      icon="plus"
+      size="md"
+      [href]="batchUploadUrl"
+      [title]="'prods-list.batch-upload' | translate"
+      [ariaLabel]="'prods-list.batch-upload' | translate"
+    ></zx-edit-button>
+    <zx-edit-button
+      *ngIf="vm.kind === 'groups' && (isAuthenticated$ | async)"
+      icon="plus"
+      size="md"
+      [routerLink]="groupAddUrl(vm)"
+      [title]="'group-browser.add-group' | translate"
+      [ariaLabel]="'group-browser.add-group' | translate"
+    ></zx-edit-button>
+  </zx-inline>
+  <ng-container [ngSwitch]="vm.kind">
+    <zx-prods-category
+      *ngSwitchCase="'prods'"
+      rootType="zxProdCategoriesCatalogue"
+      [showHeading]="false"
+      (categoryPathChange)="onCategoryPath($event)"
+    ></zx-prods-category>
+    <zx-group-browser *ngSwitchCase="'groups'" [letter]="vm.letter"></zx-group-browser>
+    <zx-pictures-home *ngSwitchCase="'pictures'"></zx-pictures-home>
+    <zx-music-home *ngSwitchCase="'music'"></zx-music-home>
+  </ng-container>
+</zx-page-layout>

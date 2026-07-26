@@ -1,3 +1,9 @@
-<a *ngIf="href" class="zx-callout__link" [href]="href" [attr.aria-label]="ariaLabel || label || null"></a>
+@if (href) {
+  @if (isInternal) {
+    <a class="zx-callout__link" [routerLink]="href" [attr.aria-label]="ariaLabel || label || null"></a>
+  } @else {
+    <a class="zx-callout__link" [href]="href" [attr.aria-label]="ariaLabel || label || null"></a>
+  }
+}
 <span *ngIf="label" appText="caption" tone="muted" class="zx-callout__label">{{ label }}</span>
 <ng-content></ng-content>

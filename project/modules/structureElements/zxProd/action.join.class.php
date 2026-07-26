@@ -18,7 +18,7 @@ class joinZxProd extends structureElementAction
                 $prodsService->joinDeleteZxProd($structureElement->getId(), $structureElement->joinAndDelete, $structureElement->releasesOnly);
             }
 
-            $controller->redirect($structureElement->getUrl());
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

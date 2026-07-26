@@ -21,7 +21,7 @@ class joinGroup extends structureElementAction
                 $groupsService->joinDeleteGroup($structureElement->getId(), $structureElement->joinAndDelete);
             }
 
-            $controller->redirect($structureElement->getUrl());
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

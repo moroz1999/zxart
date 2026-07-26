@@ -1,0 +1,46 @@
+:root {
+  /* Catalogue title placeholder width. */
+  --zx-prods-category-skeleton-title-width: 32%;
+
+  /* Catalogue title placeholder height. */
+  --zx-prods-category-skeleton-title-height: var(--space-32);
+
+  /* Space below the catalogue title placeholder. */
+  --zx-prods-category-skeleton-title-margin: var(--margin-lg);
+
+  /* Gap between preset placeholder pills. */
+  --zx-prods-category-skeleton-presets-gap: var(--gap-lg);
+
+  /* Space below the presets row. */
+  --zx-prods-category-skeleton-presets-margin: var(--margin-xxl);
+
+  /* Preset pill placeholder width. */
+  --zx-prods-category-skeleton-preset-width: calc(var(--space-64) + var(--space-32));
+
+  /* Height of button-like control placeholders (presets, filters, selectors). */
+  --zx-prods-category-skeleton-control-height: var(--space-32);
+
+  /* Corner radius of button-like control placeholders. */
+  --zx-prods-category-skeleton-control-radius: var(--radius-lg);
+
+  /* Gap between the filter rail and the content column. */
+  --zx-prods-category-skeleton-content-gap: var(--gap-xxl);
+
+  /* Vertical gap between filter placeholders in the rail. */
+  --zx-prods-category-skeleton-rail-gap: var(--gap-lg);
+
+  /* Filter rail width on desktop. */
+  --zx-prods-category-skeleton-rail-width: 15%;
+
+  /* Minimum filter rail width before the layout collapses. */
+  --zx-prods-category-skeleton-rail-min-width: calc((var(--space-64) * 3) + var(--space-48));
+
+  /* Gap between selector placeholders in the selectors bar. */
+  --zx-prods-category-skeleton-selectors-gap: var(--gap-lg);
+
+  /* Space below the selectors bar. */
+  --zx-prods-category-skeleton-selectors-margin: var(--margin-lg);
+
+  /* Selector placeholder width. */
+  --zx-prods-category-skeleton-selector-width: calc(var(--space-64) + var(--space-40));
+}

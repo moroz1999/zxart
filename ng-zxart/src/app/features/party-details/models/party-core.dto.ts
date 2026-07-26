@@ -1,5 +1,3 @@
-import {BreadcrumbItemDto} from '../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
-
 export type PartyCompoMedium = 'prod' | 'picture' | 'music';
 
 export interface PartyLocationItemDto {
@@ -62,5 +60,4 @@ export interface PartyCoreDto {
   readonly zipUrl: string;
   readonly counters: PartyCountersDto;
   readonly tabs: PartyTabsDto;
-  readonly breadcrumbs: BreadcrumbItemDto[];
 }

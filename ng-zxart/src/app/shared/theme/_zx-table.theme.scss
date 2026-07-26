@@ -24,8 +24,8 @@
 
   /* Size: md — cell padding */
   --zx-table-cell-padding-md: var(--space-8) var(--space-16);
-  /* Size: md — cell font size (16px) */
-  --zx-table-font-size-md: 16px;
+  /* Size: md — cell font size (body, for the main author/group/prod lists) */
+  --zx-table-font-size-md: var(--zx-font-size-md);
 }
 
 .dark-mode {

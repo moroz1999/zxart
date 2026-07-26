@@ -19,20 +19,20 @@
     </div>
   </div>
   <div class="picture-info">
-    <a [href]="picture.url" class="picture-title" appText="body" tone="link">{{ picture.title }}</a>
+    <a [routerLink]="picture.url" class="picture-title" appText="body" tone="link">{{ picture.title }}</a>
     <div class="picture-authors" *ngIf="picture.authors.length" appText="caption" tone="muted">
       <ng-container *ngFor="let author of picture.authors; last as last">
-        <a [href]="author.url" appText="caption" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
+        <a [routerLink]="author.url" appText="caption" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
       </ng-container>
     </div>
     <div class="picture-party" *ngIf="picture.party">
       <zx-party-place [place]="picture.party.place"></zx-party-place>
-      <a [href]="picture.party.url" appText="caption" tone="muted-link">{{ picture.party.title }}</a>
+      <a [routerLink]="picture.party.url" appText="caption" tone="muted-link">{{ picture.party.title }}</a>
     </div>
     <a
       *ngIf="picture.release"
       class="picture-release"
-      [href]="picture.release.url"
+      [routerLink]="picture.release.url"
       appText="caption"
       tone="muted-link"
     >{{ picture.release.title }}</a>

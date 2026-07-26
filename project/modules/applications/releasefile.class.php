@@ -1,0 +1,88 @@
+<?php
+
+class releasefileApplication extends controllerApplication
+{
+    use CrawlerFilterTrait;
+
+    protected $applicationName = 'releasefile';
+    protected $id;
+    protected $fileName;
+    protected $mode;
+    public $rendererName = 'fileReader';
+
+    /**
+     * @return void
+     */
+    public function initialize()
+    {
+        $this->startSession('public');
+        $this->createRenderer();
+    }
+
+    /**
+     * @return void
+     */
+    public function execute($controller)
+    {
+        /**
+         * @var Cache $cache
+         */
+        $cache = $this->getService(Cache::class);
+        $cache->enable(true, true, true);
+
+        $structureManager = $this->getService(
+            'structureManager',
+            [
+                'rootUrl' => $controller->rootURL,
+                'rootMarker' => $this->getService(ConfigManager::class)->get('main.rootMarkerPublic'),
+            ],
+            true
+        );
+
+        $this->processRequestParameters();
+        $play = (bool)$controller->getParameter('play');
+        if ($element = $structureManager->getElementById($this->id)) {
+            $filePath = $this->pathsManager->getPath('releases') . $element->file;
+            if (strpos($this->id, '/') === false && strpos($this->id, '\\') === false && is_file($filePath)) {
+                if ($element->structureType == 'zxRelease' && !$this->isCrawlerDetected()) {
+                    if ($play) {
+                        $element->incrementPlays();
+                    } else {
+                        $element->incrementDownloads();
+                    }
+                    $structureManager->clearElementCache($element->id);
+                }
+                if ($this->mode == 'view') {
+                    $this->renderer->setContentDisposition('inline');
+                } else {
+                    $this->renderer->setContentDisposition('attachment');
+                }
+
+                $this->renderer->assign('filePath', $filePath);
+                $this->renderer->assign('fileName', $element->fileName);
+                $this->renderer->display();
+            } else {
+                $this->renderer->fileNotFound();
+            }
+        } else {
+            $this->logError('Release download element is not loaded: ' . $this->id);
+            $this->renderer->fileNotFound();
+        }
+    }
+
+    public function processRequestParameters(): void
+    {
+        $controller = controller::getInstance();
+        if ($controller->getParameter('id')) {
+            $this->id = $controller->getParameter('id');
+        }
+        if ($controller->getParameter('filename')) {
+            $this->fileName = $controller->getParameter('filename');
+        }
+        if ($controller->getParameter('mode')) {
+            $this->mode = $controller->getParameter('mode');
+        }
+    }
+}
+
+

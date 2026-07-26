@@ -1,0 +1,146 @@
+<zx-page-layout>
+<h1 zxPageHeader appHeading="display">{{ (batchUpload ? 'picture-form.batch-title' : 'picture-details.edit') | translate }}</h1>
+<div *ngIf="loading" class="picture-edit__loading">
+  <zx-spinner size="lg"></zx-spinner>
+</div>
+
+<form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <zx-form-section [title]="'form.identification' | translate" icon="image">
+    <zx-form-field [fullWidth]="!batchUpload">
+      <zx-form-label for="picture-title" [required]="true">{{ 'picture-form.title' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-input id="picture-title" formControlName="title" type="text"></zx-input>
+        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="picture-year">{{ 'picture-form.year' | translate }}</zx-form-label>
+      <zx-form-control><zx-input id="picture-year" formControlName="year" type="text"></zx-input></zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.authors' | translate" icon="person">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label [required]="true">{{ 'picture-form.authors' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="authors" types="author,authorAlias" [placeholder]="'picture-form.add-author' | translate"></zx-multi-entity-autocomplete>
+        <zx-control-errors [control]="form.controls['authors']" [messages]="authorsMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label>{{ 'picture-form.original-authors' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-entity-autocomplete formControlName="originalAuthors" types="author,authorAlias" [placeholder]="'picture-form.add-author' | translate"></zx-multi-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.origin' | translate" icon="tag">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label>{{ 'picture-form.prod-or-release' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-entity-autocomplete formControlName="game" types="zxProd,zxRelease" [placeholder]="'picture-form.prod-or-release' | translate"></zx-entity-autocomplete>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-row [columns]="3">
+      <zx-form-field>
+        <zx-form-label>{{ 'picture-form.party' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-entity-autocomplete formControlName="party" types="party" [placeholder]="'picture-form.party' | translate"></zx-entity-autocomplete>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="picture-partyplace">{{ 'picture-form.partyplace' | translate }}</zx-form-label>
+        <zx-form-control><zx-input id="picture-partyplace" formControlName="partyplace" type="text"></zx-input></zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="picture-compo">{{ 'picture-form.compo' | translate }}</zx-form-label>
+        <zx-form-control><zx-select id="picture-compo" formControlName="compo" [options]="enums['compo'] || []"></zx-select></zx-form-control>
+      </zx-form-field>
+    </zx-form-row>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.technical' | translate" icon="settings">
+    <zx-form-field>
+      <zx-form-label for="picture-type">{{ 'picture-form.type' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="picture-type" formControlName="type" [options]="enums['type'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="picture-palette">{{ 'picture-form.palette' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="picture-palette" formControlName="palette" [options]="enums['palette'] || []"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="picture-border">{{ 'picture-form.border' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="picture-border" formControlName="border" [options]="borderOptions"></zx-select></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field>
+      <zx-form-label for="picture-rotation">{{ 'picture-form.rotation' | translate }}</zx-form-label>
+      <zx-form-control><zx-select id="picture-rotation" formControlName="rotation" [options]="rotationOptions"></zx-select></zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.images' | translate" icon="image">
+    <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
+      <zx-form-label [required]="true">{{ 'picture-form.batch-images' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+        <zx-control-errors [control]="form.controls['batchFiles']" [messages]="batchFilesMessages"></zx-control-errors>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let field of (batchUpload ? emptyImageFields : imageFields)">
+      <zx-form-label>{{ 'picture-form.' + field | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-image-upload [imageUrl]="imageUrls[field] || null" (changed)="onImageChanged(field, $event)"></zx-image-upload>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngIf="!batchUpload" [fullWidth]="true">
+      <zx-form-label>{{ 'picture-form.exe-file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload [fileName]="fileNames['exeFile'] || null" (changed)="onImageChanged('exeFile', $event)"></zx-file-upload>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.description' | translate" icon="file">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="picture-description">{{ 'picture-form.description' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="picture-description" formControlName="description" [rows]="4"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="picture-tags">{{ 'picture-form.tags-text' | translate }}</zx-form-label>
+      <zx-form-control><zx-tags-field formControlName="tagsText"></zx-tags-field></zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'form.restrictions' | translate" icon="cancel">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-control>
+        <zx-checkbox-group>
+          <zx-checkbox-field formControlName="denyVoting" [label]="'picture-form.deny-voting' | translate"></zx-checkbox-field>
+          <zx-checkbox-field formControlName="denyComments" [label]="'picture-form.deny-comments' | translate"></zx-checkbox-field>
+        </zx-checkbox-group>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+  <zx-form-actions [sticky]="true" align="end">
+    <zx-button-controls>
+      <zx-button color="secondary" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'picture-form.save' | translate }}</zx-button>
+    </zx-button-controls>
+  </zx-form-actions>
+</form>
+</zx-page-layout>

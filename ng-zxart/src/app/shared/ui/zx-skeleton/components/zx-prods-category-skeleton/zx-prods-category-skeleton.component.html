@@ -1,0 +1,25 @@
+@if (showHeading) {
+  <zx-skeleton-bone class="skeleton-title" [animated]="animated"></zx-skeleton-bone>
+}
+
+<div class="skeleton-presets">
+  @for (i of presets; track i) {
+    <zx-skeleton-bone class="skeleton-control skeleton-preset" [animated]="animated"></zx-skeleton-bone>
+  }
+</div>
+
+<div class="skeleton-content">
+  <div class="skeleton-rail">
+    @for (i of filters; track i) {
+      <zx-skeleton-bone class="skeleton-control skeleton-filter" [animated]="animated"></zx-skeleton-bone>
+    }
+  </div>
+  <div class="skeleton-main">
+    <div class="skeleton-selectors">
+      @for (i of selectors; track i) {
+        <zx-skeleton-bone class="skeleton-control skeleton-selector" [animated]="animated"></zx-skeleton-bone>
+      }
+    </div>
+    <zx-prods-list-skeleton [count]="cardCount" [animated]="animated"></zx-prods-list-skeleton>
+  </div>
+</div>

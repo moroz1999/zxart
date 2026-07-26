@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
-
+import {RouterLink} from '@angular/router';
 export interface ZxArticlePreviewAuthor {
   readonly title: string;
   readonly url: string;
@@ -19,7 +19,7 @@ export interface ZxArticlePreviewPublication {
 @Component({
   selector: 'zx-article-preview',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TextDirective,
     ZxButtonComponent,

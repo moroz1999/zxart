@@ -30,20 +30,18 @@
 </div>
 
 <div class="mn-items">
-  @if (items$ | async; as items) {
-    @for (item of items; track item.id) {
-      <zx-popover-menu-item [href]="item.url" [active]="isActive(item)">
-        {{ item.title }}
-      </zx-popover-menu-item>
-      @if (item.children.length > 0 && isActive(item)) {
-        <div class="mn-submenu">
-          @for (child of item.children; track child.id) {
-            <zx-popover-menu-item [href]="child.url">
-              {{ child.title }}
-            </zx-popover-menu-item>
-          }
-        </div>
-      }
+  @for (item of items; track item.url) {
+    <zx-popover-menu-item [href]="item.url" [queryParams]="item.queryParams ?? null" [active]="isActive(item)">
+      {{ item.labelKey ? (item.labelKey | translate) : item.label }}
+    </zx-popover-menu-item>
+    @if (item.children.length > 0 && isActive(item)) {
+      <div class="mn-submenu">
+        @for (child of item.children; track child.url) {
+          <zx-popover-menu-item [href]="child.url" [queryParams]="child.queryParams ?? null">
+            {{ child.labelKey ? (child.labelKey | translate) : child.label }}
+          </zx-popover-menu-item>
+        }
+      </div>
     }
   }
 </div>

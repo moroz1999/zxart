@@ -14,7 +14,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return html_entity_decode($element->title, ENT_QUOTES);
             },
             'searchTitle' => 'getSearchTitle',
-            'url' => 'getUrl',
             'structureType' => 'structureType',
             'dateCreated' => static function ($element) {
                 return $element->getValue('dateCreated');
@@ -218,7 +217,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
     /**
      * @return string[][]
      *
-     * @psalm-return array{ai: list{'title', 'description', 'languageString', 'partyString', 'year', 'description', 'groupsString', 'publishersString', 'authorsInfoString', 'hardwareString', 'manualString', 'releaseFileDescription', 'categoriesString', 'isPlayable', 'compilationItems', 'seriesProds'}, api: list{'id', 'title', 'url', 'dateCreated', 'dateModified', 'language', 'partyId', 'partyPlace', 'compo', 'year', 'youtubeId', 'description', 'legalStatus', 'groupsIds', 'publishersIds', 'releasesIds', 'imagesUrls', 'maps', 'authorsInfo', 'importIds', 'votes', 'userVote', 'rzx', 'externalLink', 'compilationItems', 'seriesProds'}, apiShort: list{'id', 'dateModified', 'releasesIds'}, list: list{'id', 'structureType', 'title', 'dateCreated', 'url', 'inlaysUrls', 'listImagesUrls', 'hardwareInfo', 'votes', 'userVote', 'year', 'partyPlace', 'partyInfo', 'languagesInfo', 'categoriesInfo', 'groupsInfo', 'publishersInfo', 'authorsInfoShort', 'youtubeId', 'denyVoting', 'legalStatus', 'externalLink'}, search: list{'id', 'searchTitle', 'url', 'structureType'}}
      */
     protected function getPresetsStructure()
     {
@@ -245,7 +243,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'api' => [
                 'id',
                 'title',
-                'url',
                 'dateCreated',
                 'dateModified',
                 'language',
@@ -290,7 +287,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 'structureType',
                 'title',
                 'dateCreated',
-                'url',
                 'inlaysUrls',
                 'listImagesUrls',
                 'hardwareInfo',
@@ -313,7 +309,6 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             'search' => [
                 'id',
                 'searchTitle',
-                'url',
                 'structureType',
             ],
             'offline' => [
@@ -329,4 +324,5 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
             ]
         ];
     }
+
 }

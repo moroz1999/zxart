@@ -1,0 +1,44 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <zx-page-layout>
+    <h1 zxPageHeader appHeading="display">{{ vm.userName || ('profile.title' | translate) }}</h1>
+
+    <zx-stack *ngIf="vm.loading" align="center">
+      <zx-spinner size="lg"></zx-spinner>
+    </zx-stack>
+
+    <zx-panel *ngIf="!vm.loading && !vm.authenticated">
+      <zx-form-message variant="error">{{ 'profile.please-log-in' | translate }}</zx-form-message>
+    </zx-panel>
+
+    <ng-container *ngIf="!vm.loading && vm.authenticated">
+      <zx-panel>
+        <zx-item-data>
+          <zx-item-data-item [label]="'profile.user-name' | translate">{{ vm.userName }}</zx-item-data-item>
+          <zx-item-data-item [label]="'profile.email' | translate">{{ vm.email }}</zx-item-data-item>
+        </zx-item-data>
+      </zx-panel>
+
+      <zx-panel [title]="'profile.change-password' | translate" titleLevel="h2">
+        <form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+          <zx-form-field *ngFor="let item of passwordFields">
+            <zx-form-label [for]="'profile-' + item.field">{{ item.labelKey | translate }}</zx-form-label>
+            <zx-form-control>
+              <zx-input
+                [id]="'profile-' + item.field"
+                [formControlName]="item.field"
+                type="password"
+              ></zx-input>
+            </zx-form-control>
+          </zx-form-field>
+
+          <zx-form-message *ngIf="vm.errorMessage" variant="error">{{ vm.errorMessage | translate }}</zx-form-message>
+          <zx-form-message *ngIf="vm.changed" variant="success">{{ 'profile.password-changed' | translate }}</zx-form-message>
+
+          <zx-form-actions align="start">
+            <zx-button color="primary" type="submit" [disabled]="vm.submitting">{{ 'profile.save' | translate }}</zx-button>
+          </zx-form-actions>
+        </form>
+      </zx-panel>
+    </ng-container>
+  </zx-page-layout>
+</ng-container>

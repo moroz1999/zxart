@@ -79,11 +79,11 @@ class Picturelist extends LoggedControllerApplication
                         ]);
                     }
                 }
-            } elseif ($elementId <= 0) {
-                $this->assignError('elementId is required', 400);
             } elseif ($limit !== null) {
+                // Paged collection browsing: the whole catalogue, optionally narrowed to one tag.
+                $tagId = (int)($this->getParameter('tagId') ?? 0);
                 $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
-                $result = $this->pictureListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
+                $result = $this->pictureListService->getPagedCollection($tagId, $sorting, $start, $limit);
                 $this->assignSuccess([
                     'total' => $result['total'],
                     'items' => array_map(
@@ -91,6 +91,8 @@ class Picturelist extends LoggedControllerApplication
                         $result['items']
                     ),
                 ]);
+            } elseif ($elementId <= 0) {
+                $this->assignError('elementId is required', 400);
             } else {
                 $dtos = $this->pictureListService->getPictures($elementId, $compoType);
                 $restDtos = array_map(

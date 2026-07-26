@@ -1,32 +1,27 @@
 import {ModuleType} from './firstpage-config';
 
-export interface CatalogueBaseUrlsResponse {
-  prodCatalogueBaseUrl: string | null;
-  graphicsBaseUrl: string | null;
-  musicBaseUrl: string | null;
-}
-
-export type CatalogueCategory = 'zxProd' | 'zxRelease' | 'graphics' | 'music';
+const DEMOS_CATEGORY_ID = 92159;
+const GAMES_CATEGORY_ID = 92177;
 
 export interface ModuleLinkConfig {
-  category: CatalogueCategory;
-  searchParams: string;
   titleKey: string;
+  spaUrl: string;
 }
 
 export const MODULE_LINK_CONFIG: Record<ModuleType, ModuleLinkConfig | null> = {
-  newProds: {category: 'zxProd', searchParams: 'software-categories/years:this/', titleKey: 'firstpage.modules.viewAllButton.newProds'},
-  bestNewDemos: {category: 'zxProd', searchParams: 'demoscene/years:this/', titleKey: 'firstpage.modules.viewAllButton.bestNewDemos'},
-  bestNewGames: {category: 'zxProd', searchParams: 'games/years:this/', titleKey: 'firstpage.modules.viewAllButton.bestNewGames'},
-  latestAddedProds: {category: 'zxProd', searchParams: 'software-categories/sorting:date,desc/', titleKey: 'firstpage.modules.viewAllButton.latestAddedProds'},
-  latestAddedReleases: {category: 'zxRelease', searchParams: 'software-categories/sorting:date,desc/releases:1/', titleKey: 'firstpage.modules.viewAllButton.latestAddedReleases'},
-  supportProds: {category: 'zxProd', searchParams: 'games/statuses:insales,donationware/', titleKey: 'firstpage.modules.viewAllButton.supportProds'},
-  newPictures: {category: 'graphics', searchParams: 'sortParameter:date/sortOrder:desc/page:1/', titleKey: 'firstpage.modules.viewAllButton.newPictures'},
-  randomGoodPictures: {category: 'graphics', searchParams: 'rating:4/sortParameter:votes/sortOrder:rand/page:1/', titleKey: 'firstpage.modules.viewAllButton.randomGoodPictures'},
-  newTunes: {category: 'music', searchParams: 'sortParameter:date/sortOrder:desc/page:1/', titleKey: 'firstpage.modules.viewAllButton.newTunes'},
-  randomGoodTunes: {category: 'music', searchParams: 'rating:4/sortParameter:votes/sortOrder:rand/page:1/', titleKey: 'firstpage.modules.viewAllButton.randomGoodTunes'},
+  newProds: {spaUrl: '/prods?years=this', titleKey: 'firstpage.modules.viewAllButton.newProds'},
+  bestNewDemos: {spaUrl: `/prods?cat=${DEMOS_CATEGORY_ID}&years=this`, titleKey: 'firstpage.modules.viewAllButton.bestNewDemos'},
+  bestNewGames: {spaUrl: `/prods?cat=${GAMES_CATEGORY_ID}&years=this`, titleKey: 'firstpage.modules.viewAllButton.bestNewGames'},
+  latestAddedProds: {spaUrl: '/prods?sorting=date%2Cdesc', titleKey: 'firstpage.modules.viewAllButton.latestAddedProds'},
+  latestAddedReleases: {spaUrl: '/prods?sorting=date%2Cdesc&releases=1', titleKey: 'firstpage.modules.viewAllButton.latestAddedReleases'},
+  supportProds: {spaUrl: `/prods?cat=${GAMES_CATEGORY_ID}&statuses=insales%2Cdonationware`, titleKey: 'firstpage.modules.viewAllButton.supportProds'},
+  newPictures: {spaUrl: '/pictures/search', titleKey: 'firstpage.modules.viewAllButton.newPictures'},
+  randomGoodPictures: {spaUrl: '/pictures/search?rating=4&sortParameter=votes&sortOrder=rand', titleKey: 'firstpage.modules.viewAllButton.randomGoodPictures'},
+  newTunes: {spaUrl: '/music/search', titleKey: 'firstpage.modules.viewAllButton.newTunes'},
+  randomGoodTunes: {spaUrl: '/music/search?rating=4&sortParameter=votes&sortOrder=rand', titleKey: 'firstpage.modules.viewAllButton.randomGoodTunes'},
   recentParties: null,
   bestPicturesOfMonth: null,
+  bestTunesOfMonth: null,
   unvotedPictures: null,
   unvotedTunes: null,
 };

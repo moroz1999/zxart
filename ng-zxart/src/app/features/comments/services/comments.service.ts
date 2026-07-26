@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, switchMap, take} from 'rxjs/operators';
 import {CommentDto, CommentsListDto} from '../models/comment.dto';
-import {CurrentLanguageService} from '../../header/services/current-language.service';
+import {LanguageService} from '../../settings/services/language.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,46 +11,46 @@ import {CurrentLanguageService} from '../../header/services/current-language.ser
 export class CommentsService {
   constructor(
     private http: HttpClient,
-    private currentLanguageService: CurrentLanguageService,
+    private languageService: LanguageService,
   ) {}
 
   getLatestComments(limit: number = 10): Observable<CommentDto[]> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
-      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments/?action=latest&limit=${limit}&lang=${languageCode}`)),
+      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments-data/?action=latest&limit=${limit}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
     );
   }
 
   getComments(elementId: number): Observable<CommentDto[]> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
-      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments/id:${elementId}/?lang=${languageCode}`)),
+      switchMap(languageCode => this.http.get<CommentDto[]>(`/comments-data/id:${elementId}/?lang=${languageCode}`)),
       map(comments => this.normalizeComments(comments)),
       catchError(err => throwError(() => err))
     );
   }
 
   getAllComments(page: number = 1): Observable<CommentsListDto> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
-      switchMap(languageCode => this.http.get<CommentsListDto>(`/comments/?action=list&page=${page}&lang=${languageCode}`)),
+      switchMap(languageCode => this.http.get<CommentsListDto>(`/comments-data/?action=list&page=${page}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
     );
   }
 
   getAuthorComments(authorId: number, page = 1, perPage = 50): Observable<CommentsListDto> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
       switchMap(languageCode => this.http.get<CommentsListDto>(
-        `/comments/?action=byAuthor&id=${authorId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
+        `/comments-data/?action=byAuthor&id=${authorId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
       )),
       catchError(() => of({comments: [], currentPage: 1, pagesAmount: 0, totalCount: 0})),
     );
   }
 
   getGroupComments(groupId: number, page = 1, perPage = 50): Observable<CommentsListDto> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
       switchMap(languageCode => this.http.get<CommentsListDto>(
         `/group-comments/?id=${groupId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
@@ -60,7 +60,7 @@ export class CommentsService {
   }
 
   getPartyComments(partyId: number, page = 1, perPage = 50): Observable<CommentsListDto> {
-    return this.currentLanguageService.languageCode$.pipe(
+    return this.languageService.languageCode$.pipe(
       take(1),
       switchMap(languageCode => this.http.get<CommentsListDto>(
         `/party-comments/?id=${partyId}&page=${page}&perPage=${perPage}&lang=${languageCode}`
@@ -75,7 +75,7 @@ export class CommentsService {
       .set('content', content)
       .set('action', 'add');
 
-    return this.http.post<CommentDto>('/comments/', body, {
+    return this.http.post<CommentDto>('/comments-data/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
       catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to add comment')))
@@ -88,7 +88,7 @@ export class CommentsService {
       .set('content', content)
       .set('action', 'update');
 
-    return this.http.post<CommentDto>('/comments/', body, {
+    return this.http.post<CommentDto>('/comments-data/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
       catchError(err => throwError(() => new Error(err.error?.errorMessage || 'Failed to update comment')))
@@ -100,7 +100,7 @@ export class CommentsService {
       .set('id', commentId.toString())
       .set('action', 'delete');
 
-    return this.http.post<null>('/comments/', body, {
+    return this.http.post<null>('/comments-data/', body, {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).pipe(
       map(() => void 0),

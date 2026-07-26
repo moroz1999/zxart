@@ -1,28 +1,81 @@
-### Angular Integration into Legacy (Smarty)
+### Angular SPA Shell
 
-The integration of Angular components into existing legacy Smarty templates is implemented using Custom Elements (Web Components).
+Canonical public routes render `index.spa.tpl`. Historical structure URLs are
+resolved by the backend and redirected to clean SPA URLs with HTTP 301. Unknown
+routes are logged by the backend and return the Angular shell with HTTP 404.
 
-#### Core Principles
-1. **Standalone Components**: All Angular components MUST be standalone. `AppModule` is used only for bootstrapping and registering custom elements.
-2. **Custom Elements**: Angular components are registered in `AppModule` as custom elements with a `zx-` prefix. This allows them to be used like standard HTML tags within `.tpl` files.
-    - If a component is registered as a custom element for legacy templates and also reused inside Angular templates, provide a separate Angular-only selector for internal usage. Do not nest the registered custom element tag inside Angular templates, because the browser custom element lifecycle can conflict with Angular input binding.
-3. **Data Passing**:
-    - **Attributes**: Element IDs and simple settings are passed via tag attributes (e.g., `element-id="{$element->id}"`). These attributes are received in Angular components using the `@Input()` decorator.
+The Smarty shell body contains only the `<app-root>` host. Its head contains the
+Angular assets and server-rendered crawler metadata. After client-side navigation,
+Angular applies entity-page metadata from each entity's core response and builds
+fixed-route metadata from route translation keys. Form routes provide a static
+translated title immediately; existing-entity forms replace it after loading with
+a translated action title containing the localized `entityTitle` from the
+form-data response. Canonical links are not emitted.
 
-#### Routing and Navigation
-Currently, the legacy part of the system is responsible for routing. Clicking on links results in a full browser page reload. Angular components are initialized "on the fly" during page load if the corresponding tag is present in the rendered HTML.
+The shell must **not** contain a `<base>` element: the browser resolves bare
+`#anchor` links against the document base URL, so a `<base href="/">` would send
+every in-page anchor to the home page. The router gets its base href from the
+`APP_BASE_HREF` provider in `app.config.ts` instead.
+
+All Angular components MUST be standalone. The application is bootstrapped with
+`bootstrapApplication`, and public navigation is owned by the Angular router.
+
+The SPA is the only public frontend: `bootstrapApplication` mounts `<app-root>`
+and nothing else. No component is registered as a custom element, no component
+reads prefetched data from `window`, and every component that owns URL state
+goes through the router. Components embedded in a page (dashboards, widgets)
+take their query as inputs and neither read nor write the URL.
+
+Every component referenced by a route is stored in `pages/` and composed with
+`zx-page-layout`. Each routed page provides one page-level
+`<h1 appHeading="display" zxPageHeader>`; the layout owns spacing below the
+header and between independent page content blocks.
+
+#### Form Select Options
+
+Options of entity select fields (compos, chip and channel types, frequencies,
+palettes, languages, release types, hardware) are not enumerated in Angular. The
+element exposes them through a provider method (`getCompoTypes()`,
+`getPaletteTypes()`, …), `Formdata::enumSpecs()` maps each field to that method
+and a translation prefix, and the labels arrive already translated in the
+`enums` map of the `/formdata/` response. A form renders `enums['<field>']`.
+
+Every element type whose form has such a field needs its own entry in
+`enumSpecs()` — including the transient upload-form elements, whose selects stay
+empty otherwise. Only lists that are fixed by the hardware (border colour,
+rotation angles) are constants in the component.
 
 #### Pagination and URL
 
 Components with pagination **must** reflect the current page in the URL and restore it on load.
 
 **Rules:**
-- On init: parse the page number from `window.location.pathname` using the pattern `/page:(\d+)/`.
-- On page change: call `window.history.pushState(null, '', newPath)` — no full reload.
-- `urlBase` (path without the `page:N` segment) must be passed to `<zx-pagination [urlBase]="urlBase">` so page links have correct `href` attributes (required for right-click → open in new tab).
-- Page 1 must produce a clean URL (no `page:1` segment).
+- Routed SPA pages store the page in the `page` query parameter and navigate with
+  Angular Router.
+- Pass the remaining filter state to `<zx-pagination [queryParams]="params">` so
+  page links have correct shareable `href` attributes.
+- Page 1 omits the `page` query parameter.
+- `zx-pagination` builds its links from the router only; there is no path-based
+  (`page:N/`) pagination and no `window.history` manipulation anywhere.
+- A `BrowserBaseComponent` subclass reads its own filter query params in
+  `onQueryParams` and stores them in `filterParams`; the base keeps them in the URL
+  on page/sorting changes and exposes them as `paginationQueryParams` for
+  `<zx-pagination [queryParams]>`. Filters must not be passed in as `@Input()` — the
+  router emits the new params before input bindings are updated.
 
 **Reference implementation:** `CommentsPageComponent` (`features/comments/components/comments-page/`) and `BrowserBaseComponent` (`shared/browser-base.component.ts`).
+
+Entity detail tabs paginate the same way: the tab component reads `page` from
+`ActivatedRoute.queryParamMap` and writes it back with
+`queryParamsHandling: 'merge'`.
+
+#### Tabs
+
+`zx-tabs` renders a tab with an `href` as a `routerLink` anchor. Switching such
+a tab is an ordinary navigation: the route changes, the parent recomputes the
+active index from the route and feeds it back through `initialActiveIndex`. Tab
+hrefs must therefore be real routed URLs (`/author/:id/:tab`). Tabs without an
+`href` stay local and only swap the rendered template.
 
 #### Build and Verification
 After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:
@@ -33,12 +86,18 @@ After making any changes to the Angular part of the project (`ng-zxart`), includ
 **Note: Any change to angular files requires a mandatory Angular build to reflect changes in the application.**
 
 #### Local Dev Server
-For live Angular changes inside legacy Smarty pages, start the stack with Docker Compose:
+For live Angular changes, start the stack with Docker Compose:
 `docker compose up`.
 
 The first run installs npm dependencies into the `node_modules_ng` Docker volume when Angular CLI is missing.
 
-The PHP app uses `NG_DEV_SERVER_URL` to load Angular dev-server modules instead of `htdocs/js/ng-zxart/manifest.json`. Without this environment variable, legacy pages use the production manifest generated by the Angular build.
+The PHP app uses `NG_DEV_SERVER_URL` to load Angular dev-server modules instead of `htdocs/js/ng-zxart/manifest.json`. Without this environment variable, the public SPA shell uses the production manifest generated by the Angular build.
+
+### Analytics
+
+`AnalyticsService` initializes Yandex Metrika in Angular. A page view is sent
+after route metadata has been applied on every completed navigation. Google
+Analytics and Google Ads scripts are not loaded by the public frontend.
 
 ### Architecture and Code Structure
 
@@ -64,9 +123,35 @@ General Angular documentation must contain domain-neutral architecture rules onl
 
 When adding a reusable Angular pattern, document the generic rule here and place concrete entity examples in the relevant domain document.
 
-### Static Backend Section Links
+### Interface Language
 
-All static section URLs (comments, support, search, registration, password reminder, profile, playlists, home, catalogue base URLs) for the current language are fetched via a single `GET /backend-links/?lang={code}` call. Use `BackendLinksService.links$` (`features/header/services/backend-links.service.ts`) to access them. The service caches results in LocalStorage per language code and emits once via a BehaviorSubject — all consumers subscribe and wait for the single emission.
+The SPA owns the interface language (`LanguageService`, `shared/services/`). The
+selected language lives in localStorage; `languageInterceptor`
+(`shared/interceptors/`) sends it to every same-origin request as an `X-Language`
+header so backend responses are localized. Never read the language from the URL or
+the backend session. Full behavior: [domain/language-auth.md](domain/language-auth.md).
+
+### Internal Links
+
+Links to routed SPA pages use Angular `RouterLink` directly on the anchor. Build
+internal routes in the template from entity identifiers, for example
+`<a [routerLink]="['/prod', prod.id]">`. API DTOs do not contain internal routed
+URLs. Keep plain `[href]` for external and download URLs. Do not add global click
+interception.
+
+### Route Guards
+
+Cross-cutting per-navigation logic belongs in a route guard, not in components.
+`authGuard` (a blocking `canActivateChild` on a pathless parent that wraps all
+routes) resolves the current user before the first render (auto-login) and applies
+the user's language once. Guards that must complete before rendering return an
+Observable that emits when ready.
+
+### Reused Parameterized Routes
+
+Angular reuses a routed component when only a route parameter changes. A child
+detail component that receives the parameter through an input must reload its
+data when that input changes; initialization-only loading is not sufficient.
 
 ### LocalStorage
 
@@ -251,7 +336,7 @@ Only when Angular-external async callbacks (e.g., `IntersectionObserver`, `setTi
 
 If an `@Input()` exists only to be forwarded to a child — remove it. The child injects the service directly.
 
-This applies to `BackendLinksService` URLs, `CurrentUserService` data, and any other shared state — do not pass them down the component tree as inputs.
+This applies to `CurrentUserService` data and any other shared state — do not pass them down the component tree as inputs.
 
 ### Deprecated Practices
 1. **Material UI**: No new Material imports anywhere. Existing Material usage will be replaced in phases (see design-system.md, section 9).

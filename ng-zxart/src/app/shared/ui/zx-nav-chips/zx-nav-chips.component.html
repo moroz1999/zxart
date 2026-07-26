@@ -1,0 +1,10 @@
+<zx-inline gap="xs" [wrap]="true">
+  <zx-button
+    *ngFor="let chip of chips; trackBy: trackChip"
+    [size]="size"
+    [square]="square"
+    [color]="chip.active ? 'primary' : 'transparent'"
+    [href]="chip.href ?? null"
+    (click)="onClick(chip)"
+  >{{ chip.label }}</zx-button>
+</zx-inline>

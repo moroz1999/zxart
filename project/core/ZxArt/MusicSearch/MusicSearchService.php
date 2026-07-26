@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace ZxArt\MusicSearch;
 
-use ApiQueriesManager;
 use authorElement;
 use controller;
 use Illuminate\Database\Connection;
 use LanguagesManager;
 use structureManager;
 use ZxArt\AuthorList\AuthorListTransformer;
+use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\Dto\MusicSearchResult;
+use ZxArt\MusicSearch\Repositories\MusicSearchRepository;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\PictureSearchResultsType;
+use ZxArt\Tunes\Services\TunesManager;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
 
@@ -26,7 +28,9 @@ readonly class MusicSearchService
     private const string AUTHORS_EXPORT_TYPE = 'author';
 
     public function __construct(
-        private ApiQueriesManager $apiQueriesManager,
+        private MusicSearchRepository $musicSearchRepository,
+        private TunesManager $tunesManager,
+        private AuthorsService $authorsService,
         private TunesTransformer $tunesTransformer,
         private AuthorListTransformer $authorListTransformer,
         private LanguagesManager $languagesManager,
@@ -38,29 +42,32 @@ readonly class MusicSearchService
 
     public function search(MusicSearchQuery $query): MusicSearchResult
     {
-        $filtrationParameters = $this->buildFiltrationParameters($query);
-        $exportType = $this->resolveExportType($query->resultsType);
         $order = [$query->sortParameter->value => $query->sortOrder->value];
 
-        $apiQuery = $this->apiQueriesManager->getQuery();
-        $apiQuery->setFiltrationParameters($filtrationParameters);
-        $apiQuery->setExportType($exportType);
-        $apiQuery->setOrder($order);
-        $apiQuery->setStart($query->start);
-        $apiQuery->setLimit($query->limit);
-        $queryResult = (array)$apiQuery->getQueryResult();
+        if ($query->resultsType === PictureSearchResultsType::Authors) {
+            $authorsQuery = $this->musicSearchRepository->buildAuthorsQuery($query);
+            $totalAmount = (clone $authorsQuery)->count();
+            /** @var \structureElement[] $authorElements */
+            $authorElements = $this->authorsService->getElementsByQuery($authorsQuery, $order, $query->start, $query->limit);
+            $tunes = [];
+            $authors = $this->transformAuthors($authorElements);
+        } else {
+            $tunesQuery = $this->musicSearchRepository->buildTunesQuery($query);
+            $totalAmount = (clone $tunesQuery)->count();
+            /** @var \structureElement[] $tuneElements */
+            $tuneElements = $this->tunesManager->getElementsByQuery($tunesQuery, $order, $query->start, $query->limit);
+            $tunes = $this->transformTunes($tuneElements);
+            $authors = [];
+        }
 
-        $elements = array_filter(
-            (array)($queryResult[$exportType] ?? []),
-            static fn(mixed $element): bool => is_object($element),
-        );
-        $totalAmount = (int)($queryResult['totalAmount'] ?? 0);
+        $filtrationParameters = $this->buildFiltrationParameters($query);
+        $exportType = $this->resolveExportType($query->resultsType);
 
         return new MusicSearchResult(
             totalAmount: $totalAmount,
             resultsType: $query->resultsType,
-            tunes: $this->transformTunes($elements),
-            authors: $this->transformAuthors($elements),
+            tunes: $tunes,
+            authors: $authors,
             formats: $this->getMusicFormats(),
             apiUrl: $this->buildApiUrl($filtrationParameters, $exportType, $query),
             zipUrl: $this->buildZipUrl($filtrationParameters, $exportType),

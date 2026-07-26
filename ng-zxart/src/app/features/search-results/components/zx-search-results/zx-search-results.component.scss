@@ -36,26 +36,9 @@
 }
 
 .zx-search-results__body {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-24);
-  transition: opacity var(--animation-sm) ease-out;
-}
-
-.zx-search-results__body--loading {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.zx-search-results__overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: var(--space-32);
-  pointer-events: none;
 }
 
 .zx-search-results__set {

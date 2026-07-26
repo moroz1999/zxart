@@ -72,6 +72,13 @@ paths:
             enum: ['1']
           description: Only pictures with work stages images when set to 1
         - in: query
+          name: fromGame
+          required: false
+          schema:
+            type: string
+            enum: ['1']
+          description: Only pictures that belong to a game when set to 1
+        - in: query
           name: tagsInclude
           required: false
           schema:

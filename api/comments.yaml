@@ -5,7 +5,7 @@ info:
   description: API for managing comments. All endpoints return data directly as the response body (HTTP 200), not wrapped in a responseData envelope.
 
 paths:
-  /comments/id:{id}/:
+  /comments-data/id:{id}/:
     get:
       summary: Get comments tree for an entity
       description: Returns a hierarchical tree of comments associated with the specified element ID.
@@ -37,7 +37,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
-  /comments/?action=latest:
+  /comments-data/?action=latest:
     get:
       summary: Get latest comments
       description: Returns the most recent comments across all entities, sorted by date descending.
@@ -74,7 +74,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
-  /comments/?action=list:
+  /comments-data/?action=list:
     get:
       summary: Get paginated list of all comments
       parameters:
@@ -107,7 +107,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
-  /comments/?action=byAuthor:
+  /comments-data/?action=byAuthor:
     get:
       summary: Get paginated comments on an author's works
       parameters:
@@ -152,7 +152,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalError'
 
-  /comments/:
+  /comments-data/:
     post:
       summary: Comment actions (Add, Update, Delete)
       description: Performs actions on comments based on the 'action' parameter. Uses application/x-www-form-urlencoded.

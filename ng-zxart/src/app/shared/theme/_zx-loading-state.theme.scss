@@ -1,0 +1,14 @@
+:root {
+  /* Opacity applied while displayed content is being refreshed. */
+  --zx-loading-state-opacity: 0.55;
+  /* Blur applied together with the opacity; soft enough to keep the layout readable. */
+  --zx-loading-state-blur: 1px;
+  /* Duration of the loading-state opacity and blur transition. */
+  --zx-loading-state-transition: var(--animation-md);
+  /* Idle time before the overlay spinner starts to appear, so short reloads never flash it. */
+  --zx-loading-state-spinner-delay: 350ms;
+  /* Fade-in of the overlay spinner: slow, it must not steal attention from the content. */
+  --zx-loading-state-spinner-enter: 400ms;
+  /* Fade-out of the overlay spinner: quick, the fresh content is already there. */
+  --zx-loading-state-spinner-leave: var(--animation-md);
+}

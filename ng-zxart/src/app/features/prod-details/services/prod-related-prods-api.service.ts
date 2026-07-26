@@ -30,9 +30,9 @@ export class ProdRelatedProdsApiService {
     );
   }
 
-  getSeriesUrl(elementId: number): Observable<string | null> {
+  getSeriesId(elementId: number): Observable<number | null> {
     return this.getSeriesPayload(elementId).pipe(
-      map(response => response.seriesUrl ?? null),
+      map(response => response.seriesId ?? null),
     );
   }
 
@@ -53,7 +53,7 @@ export class ProdRelatedProdsApiService {
 
     const params = new HttpParams().set('id', String(elementId));
     const request = this.http.get<ProdSummariesPayload>('/prod-series/', {params}).pipe(
-      catchError(() => of({prods: [], seriesUrl: null})),
+      catchError(() => of({prods: [], seriesId: null})),
       shareReplay({bufferSize: 1, refCount: false}),
     );
     this.seriesPayloadRequests.set(elementId, request);
@@ -64,7 +64,6 @@ export class ProdRelatedProdsApiService {
     const dto: ZxProdDto = {
       id: summary.id,
       title: summary.title,
-      url: summary.url,
       structureType: 'zxProd',
       dateCreated: 0,
       year: String(summary.year || ''),

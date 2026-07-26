@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {map} from 'rxjs';
@@ -14,6 +14,7 @@ import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sor
 import {PlayerService} from '../../../player/services/player.service';
 import {MusicBrowserService} from '../../services/music-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 @Component({
   selector: 'zx-music-browser',
@@ -27,12 +28,15 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     TextDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-music-browser.component.html',
   styleUrls: ['./zx-music-browser.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxMusicBrowserComponent extends BrowserBaseComponent {
+  @Input() linkType = 'structure';
+
   tunes: ZxTuneDto[] = [];
   private playlistId = '';
 
@@ -70,7 +74,8 @@ export class ZxMusicBrowserComponent extends BrowserBaseComponent {
   }
 
   protected override fetchPage(start: number, limit: number): void {
-    this.musicBrowserService.getPaged(this.elementId, start, limit, this.sorting).subscribe({
+    this.playlistId = `music-browser-${this.linkType}-${this.elementId}`;
+    this.musicBrowserService.getPaged(this.elementId, start, limit, this.sorting, this.linkType).subscribe({
       next: response => {
         this.loading = false;
         this.tunes = response.items;

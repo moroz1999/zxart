@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Parties API
+  version: 1.0.0
+paths:
+  /parties-data/:
+    get:
+      summary: Get recent parties or parties from one year
+      parameters:
+        - in: query
+          name: year
+          required: false
+          schema:
+            type: integer
+          description: Party year. When omitted, the 20 most recent parties are returned.
+      responses:
+        '200':
+          description: Party collection
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [parties]
+                properties:
+                  parties:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Party'
+components:
+  schemas:
+    Party:
+      type: object
+      required: [id, title, url, year, imageUrl]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string

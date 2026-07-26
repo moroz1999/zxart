@@ -1,0 +1,137 @@
+openapi: 3.0.0
+paths:
+  /formdata/:
+    get:
+      summary: Load an Angular form
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          description: Existing entity identifier.
+        - in: query
+          name: entityType
+          schema:
+            type: string
+            enum:
+              - author
+              - group
+              - party
+              - prodBatch
+              - pictureBatch
+              - musicBatch
+              - release
+          description: Creation form type; used instead of id.
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Required for a party creation form.
+        - in: query
+          name: parentId
+          schema:
+            type: integer
+          description: >
+            Element the form was started from. Batch uploads attach their works to
+            it (author, group, party or production category); a release requires
+            the production id. Echoed back as `parent`.
+        - in: query
+          name: refs
+          schema:
+            type: string
+          description: Comma-separated relation fields to resolve.
+      responses:
+        '200':
+          description: Form values and supporting options
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - entityTitle
+                properties:
+                  entityTitle:
+                    type: string
+                    description: Localized display title of the existing entity; empty for a creation draft.
+                  parent:
+                    nullable: true
+                    type: object
+                    description: >
+                      Creation forms started from an element only: that element, so
+                      the form can prefill the field it belongs in.
+                    required:
+                      - id
+                      - title
+                      - structureType
+                    properties:
+                      id:
+                        type: integer
+                      title:
+                        type: string
+                      structureType:
+                        type: string
+                additionalProperties: true
+        '400':
+          description: Missing id or required creation context
+        '403':
+          description: Opening the form is forbidden
+        '404':
+          description: Existing entity or requested party year not found
+        '500':
+          description: Internal server error
+    post:
+      summary: Create an entity from an Angular form
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - entityType
+                - fields
+              properties:
+                entityType:
+                  type: string
+                  enum:
+                    - author
+                    - group
+                    - party
+                    - prodBatch
+                    - pictureBatch
+                    - musicBatch
+                    - release
+                year:
+                  type: integer
+                  description: Required for a party; identifies its parent year.
+                parentId:
+                  type: integer
+                  description: >
+                    Element the works are created under (author, group or party for
+                    a batch upload, the production for a release).
+                fields:
+                  type: object
+                  additionalProperties: true
+                  description: Form values and uploaded files keyed by entity field name.
+      responses:
+        '200':
+          description: Created entity identifier
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+        '400':
+          description: Unsupported entity type or missing required creation context
+        '403':
+          description: Creation is forbidden or failed
+        '422':
+          description: >
+            The submitted values were rejected by the element's validators and
+            nothing was created.
+        '500':
+          description: Internal server error

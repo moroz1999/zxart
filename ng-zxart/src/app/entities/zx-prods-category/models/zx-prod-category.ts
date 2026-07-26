@@ -27,7 +27,7 @@ export class ZxProdCategory extends StructureElement {
     constructor(
         data: ZxProdCategoryDto,
     ) {
-        super(data);
+        super({...data, url: '/prods'});
         this.h1 = data.h1;
         this.title = data.title;
         if (data.prods) {

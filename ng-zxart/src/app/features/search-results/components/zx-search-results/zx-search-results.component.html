@@ -32,10 +32,6 @@
 
   <ng-template #dataTpl>
     <zx-stack spacing="md">
-      <h1 appHeading="display" class="zx-search-results__heading">
-        {{ headingTranslationKey() | translate: { phrase: phrase, page: currentPage } }}
-      </h1>
-
       <zx-filter-bar *ngIf="typeFilters.length > 1" class="zx-search-results__filters">
         <span appText="caption" tone="muted" class="zx-search-results__filters-label">{{ 'search.filters.types' | translate }}</span>
         <div class="zx-search-results__filter-options">
@@ -53,7 +49,7 @@
         >{{ 'search.filters.selectAll' | translate }}</zx-button>
       </zx-filter-bar>
 
-      <div class="zx-search-results__body" [class.zx-search-results__body--loading]="pageLoading">
+      <div class="zx-search-results__body" [zxLoadingState]="pageLoading">
         <ng-container *ngIf="data && data.sets.length > 0; else emptyTpl">
           <ng-container *ngFor="let set of data.sets; trackBy: trackBySetType">
             <div class="zx-search-results__set">
@@ -138,17 +134,13 @@
         <ng-template #emptyTpl>
           <p appText="bodySm" tone="muted" class="zx-search-results__empty">{{ 'search.empty' | translate }}</p>
         </ng-template>
-
-        <div *ngIf="pageLoading" class="zx-search-results__overlay" aria-live="polite">
-          <zx-spinner size="lg"></zx-spinner>
-        </div>
       </div>
 
       <zx-pagination
         *ngIf="pagesAmount > 1"
         [currentPage]="currentPage"
         [pagesAmount]="pagesAmount"
-        [urlBase]="urlBase"
+        [queryParams]="paginationQueryParams"
         [loading]="pageLoading"
         (pageChange)="onPageChange($event)"
       ></zx-pagination>

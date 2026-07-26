@@ -1,79 +1,56 @@
-<section class="gp-header">
-  <div class="gp-header__avatar">
+<zx-hero media="xs">
+  <div zxHeroMedia>
     <img *ngIf="core.imageUrl" [src]="core.imageUrl" [alt]="core.title" class="gp-header__avatar-img"/>
     <div *ngIf="!core.imageUrl" class="gp-avatar--empty">
       <svg-icon name="person" aria-hidden="true"></svg-icon>
     </div>
   </div>
 
-  <div class="gp-header__body">
-    <div class="gp-header__title-row">
-      <h1 appHeading="headline" class="gp-header__name">{{ core.title }}</h1>
+  <zx-hero-title [title]="core.title" [entityId]="core.id">
+    <zx-chip *ngFor="let nature of core.nature" variant="opaque" [color]="natureColor(nature)">
+      {{ 'group-details.nature.' + nature | translate }}
+    </zx-chip>
 
-      <zx-group-editing-controls
-        [elementId]="core.id"
-        [entityType]="core.entityType"
-        [groupUrl]="core.url">
-      </zx-group-editing-controls>
+    <zx-group-editing-controls
+      zxHeroEdit
+      [elementId]="core.id"
+      [entityType]="core.entityType">
+    </zx-group-editing-controls>
+  </zx-hero-title>
 
-      <zx-inline *ngIf="core.nature.length" gap="sm" [wrap]="true">
-        <zx-chip *ngFor="let nature of core.nature" variant="opaque" [color]="natureColor(nature)">
-          {{ 'group-details.nature.' + nature | translate }}
-        </zx-chip>
-      </zx-inline>
-    </div>
+  <zx-facts>
+    <zx-fact *ngIf="core.abbreviation">
+      <zx-chip variant="mono">{{ core.abbreviation }}</zx-chip>
+    </zx-fact>
 
-    <div class="gp-header__bio">
-      <span *ngIf="core.abbreviation" class="gp-bio__abbr">{{ core.abbreviation }}</span>
+    <zx-fact *ngIf="core.type && core.type !== 'unknown'">
+      {{ 'group-details.type.' + core.type | translate }}
+    </zx-fact>
 
-      <ng-container *ngIf="core.type && core.type !== 'unknown'">
-        <span *ngIf="core.abbreviation" class="gp-bio__sep">·</span>
-        <span>{{ 'group-details.type.' + core.type | translate }}</span>
-      </ng-container>
+    <zx-fact *ngIf="core.location.city || core.location.country">
+      <zx-location [city]="core.location.city" [country]="core.location.country"></zx-location>
+    </zx-fact>
 
-      <ng-container *ngIf="core.location.city || core.location.country">
-        <span class="gp-bio__sep">·</span>
-        <span class="gp-bio__loc">
-          <svg-icon name="location" aria-hidden="true"></svg-icon>
-          <a *ngIf="core.location.city" [href]="core.location.city.url">{{ core.location.city.title }}</a>
-          <ng-container *ngIf="core.location.city && core.location.country">, </ng-container>
-          <a *ngIf="core.location.country" [href]="core.location.country.url">{{ core.location.country.title }}</a>
-        </span>
-      </ng-container>
+    <zx-fact *ngIf="core.years">
+      <zx-chip variant="mono">{{ core.years }}</zx-chip>
+    </zx-fact>
+  </zx-facts>
 
-      <ng-container *ngIf="core.years">
-        <span class="gp-bio__sep">·</span>
-        <code>{{ core.years }}</code>
-      </ng-container>
-    </div>
+  <p *ngIf="core.slogan" appText="body" tone="muted" class="gp-header__slogan">{{ core.slogan }}</p>
 
-    <p *ngIf="core.slogan" appText="body" class="gp-header__slogan">{{ core.slogan }}</p>
+  <zx-meta-row *ngIf="core.parentGroups.length" [label]="'group-details.header.parent-groups' | translate">
+    <zx-chip *ngFor="let parent of core.parentGroups" variant="filled" color="primary" [href]="parent.url">
+      {{ parent.title }}
+    </zx-chip>
+  </zx-meta-row>
 
-    <div class="gp-meta-row" *ngIf="core.parentGroups.length">
-      <span class="gp-meta-row__label">{{ 'group-details.header.parent-groups' | translate }}:</span>
-      <zx-inline gap="sm" [wrap]="true">
-        <zx-chip *ngFor="let parent of core.parentGroups" variant="filled" color="primary" [href]="parent.url">
-          {{ parent.title }}
-        </zx-chip>
-      </zx-inline>
-    </div>
+  <zx-meta-row *ngIf="core.aliases.length" [label]="'group-details.header.aliases' | translate">
+    <span *ngFor="let alias of core.aliases; let last = last" class="gp-aliases__item">
+      <a [routerLink]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
+    </span>
+  </zx-meta-row>
 
-    <div class="gp-meta-row" *ngIf="core.aliases.length">
-      <span class="gp-meta-row__label">{{ 'group-details.header.aliases' | translate }}:</span>
-      <div class="gp-aliases">
-        <span *ngFor="let alias of core.aliases; let last = last" class="gp-aliases__item">
-          <a [href]="alias.url">{{ alias.title }}</a><ng-container *ngIf="!last">,</ng-container>
-        </span>
-      </div>
-    </div>
-
-    <div class="gp-meta-row" *ngIf="core.links.length">
-      <span class="gp-meta-row__label">{{ 'group-details.header.links' | translate }}:</span>
-      <div class="gp-ext-links">
-        <a *ngFor="let link of core.links" [href]="link.url" target="_blank" rel="noopener noreferrer">
-          {{ link.label }}
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+  <zx-meta-row *ngIf="core.links.length" [label]="'group-details.header.links' | translate">
+    <zx-ext-links [links]="core.links"></zx-ext-links>
+  </zx-meta-row>
+</zx-hero>

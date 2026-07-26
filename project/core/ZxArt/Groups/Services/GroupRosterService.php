@@ -17,8 +17,10 @@ use ZxArt\Shared\EntityType;
 
 readonly class GroupRosterService
 {
-    public function __construct(private structureManager $structureManager)
-    {
+    public function __construct(
+        private structureManager $structureManager,
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+    ) {
     }
 
     public function getRoster(int $groupId): GroupRosterDto
@@ -76,7 +78,7 @@ readonly class GroupRosterService
                 id: $subgroup->getId(),
                 title: $this->decode((string)$subgroup->getTitle()),
                 abbreviation: $this->decode($subgroup->abbreviation),
-                url: (string)$subgroup->getUrl(),
+                url: $this->entityUrlResolver->urlFor($subgroup),
                 membersCount: $this->countMembers($subgroup),
                 prodsCount: count($subgroup->getGroupProds()),
                 years: $this->buildYears($subgroup),
@@ -105,7 +107,7 @@ readonly class GroupRosterService
             $members[] = new GroupMemberDto(
                 id: $authorId,
                 title: $this->decode((string)$authorElement->getTitle()),
-                url: (string)$authorElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($authorElement),
                 realName: $authorElement instanceof authorElement ? $this->decode($authorElement->realName) : '',
                 roles: $roles,
                 years: $this->joinYears(

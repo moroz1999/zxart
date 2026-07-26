@@ -1,0 +1,34 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <zx-inline zxPageHeader spacing="sm" align="center">
+    <h1 zxPageHeader appHeading="display">{{ 'menu.parties' | translate }}</h1>
+    <zx-edit-button
+      *ngIf="isAuthenticated$ | async"
+      icon="plus"
+      size="md"
+      [routerLink]="partyAddUrl(vm.selectedYear)"
+      [title]="'parties-page.add-party' | translate"
+      [ariaLabel]="'parties-page.add-party' | translate"
+    ></zx-edit-button>
+  </zx-inline>
+  <zx-toggle
+    *ngIf="viewToggleOptions$ | async as viewToggleOptions"
+    zxPageHeader
+    size="sm"
+    [options]="viewToggleOptions"
+    [value]="viewMode"
+    (valueChange)="setViewMode($event)"
+  ></zx-toggle>
+  <zx-nav-chips [chips]="yearChips(vm.selectedYear)"></zx-nav-chips>
+  <zx-stack spacing="sm">
+    <h2 *ngIf="!vm.selectedYear" appHeading="title">{{ 'parties-page.recent' | translate }}</h2>
+    <zx-parties-list-skeleton
+      *ngIf="vm.parties === null"
+      [viewMode]="viewMode"
+    ></zx-parties-list-skeleton>
+    <zx-parties-list
+      *ngIf="vm.parties !== null"
+      [parties]="vm.parties"
+      [viewMode]="viewMode"
+    ></zx-parties-list>
+  </zx-stack>
+</zx-page-layout>

@@ -1,4 +1,305 @@
 {
+  "tags-cloud": {
+    "error": "No se pudieron cargar las etiquetas.",
+    "empty": "No se encontraron etiquetas.",
+    "minimumAmount": "Mínimo de obras por etiqueta",
+    "allTags": "Todas las etiquetas"
+  },
+  "common": {
+    "not-found": "Página no encontrada",
+    "remove": "Eliminar",
+    "choose-file": "Elegir archivo",
+    "nothing-found": "No se encontró nada"
+  },
+  "form": {
+    "selected-count": "Seleccionado: {{count}}",
+    "filter": "Filtrar…",
+    "move-left": "Mover a la izquierda",
+    "move-right": "Mover a la derecha",
+    "search": "Buscar…",
+    "drop-image": "Arrastra una imagen aquí",
+    "drop-file": "Arrastra un archivo aquí",
+    "drop-hint": "o elige desde el disco",
+    "add-author": "Añadir miembro por apodo…",
+    "add-role": "+ Rol",
+    "date-from": "desde",
+    "date-to": "hasta",
+    "cancel": "Cancelar",
+    "identification": "Identificación",
+    "classification": "Clasificación",
+    "relations": "Relaciones",
+    "authors": "Autores",
+    "members": "Miembros",
+    "media": "Medios y archivos",
+    "files": "Archivos",
+    "images": "Imágenes",
+    "image": "Imagen",
+    "description": "Descripción",
+    "restrictions": "Restricciones",
+    "characteristics": "Características",
+    "technical": "Parámetros técnicos",
+    "geography": "Geografía",
+    "period": "Período",
+    "links": "Enlaces",
+    "display": "Visualización",
+    "origin": "Origen",
+    "conversion": "Conversión de obras",
+    "subgroups": "Subgrupos",
+    "ok": "OK"
+  },
+  "form-page-title": {
+    "edit-author": "Edición del autor «{{title}}»",
+    "edit-author-alias": "Edición del alias de autor «{{title}}»",
+    "edit-group": "Edición del grupo «{{title}}»",
+    "edit-group-alias": "Edición del alias de grupo «{{title}}»",
+    "edit-party": "Edición de la party «{{title}}»",
+    "edit-prod": "Edición del programa «{{title}}»",
+    "edit-release": "Edición de la versión «{{title}}»",
+    "edit-picture": "Edición de la imagen «{{title}}»",
+    "edit-tune": "Edición de la melodía «{{title}}»",
+    "edit-press": "Edición del artículo «{{title}}»",
+    "ai-prod": "Procesamiento con IA del programa «{{title}}»",
+    "ai-press": "Procesamiento con IA del artículo «{{title}}»",
+    "split-prod": "División del programa «{{title}}»"
+  },
+  "party-form": {
+    "title": "Nombre",
+    "abbreviation": "Abreviatura",
+    "country": "País",
+    "city": "Ciudad",
+    "image": "Logo",
+    "search-placeholder": "Empieza a escribir para buscar…",
+    "save": "Guardar",
+    "error-title-required": "El nombre es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar"
+  },
+  "author-alias-form": {
+    "title": "Alias",
+    "author": "Autor real",
+    "start-date": "Usado desde (año)",
+    "end-date": "Usado hasta (año)",
+    "display-in-music": "Mostrar en música",
+    "display-in-graphics": "Mostrar en gráficos",
+    "search-placeholder": "Empieza a escribir para buscar…",
+    "save": "Guardar",
+    "error-title-required": "El alias es obligatorio",
+    "error-author-required": "El autor es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar"
+  },
+  "author-form": {
+    "title": "Nombre",
+    "real-name": "Nombre real",
+    "country": "País",
+    "city": "Ciudad",
+    "artcity-id": "Artcity ID",
+    "wiki": "Enlace de SpeccyWiki",
+    "zxtunes-id": "ZXTunes ID",
+    "image": "Foto",
+    "display-in-music": "Mostrar en música",
+    "display-in-graphics": "Mostrar en gráficos",
+    "deny-voting": "Desactivar votación",
+    "deny-comments": "Desactivar comentarios",
+    "deny-3a": "Ocultar enlaces a zxaaa.net",
+    "search-placeholder": "Empieza a escribir para buscar…",
+    "save": "Guardar",
+    "error-title-required": "El nombre es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar"
+  },
+  "group-form": {
+    "add-subgroup": "Añadir subgrupo…",
+    "title": "Nombre",
+    "type": "Tipo",
+    "abbreviation": "Abreviatura",
+    "slogan": "Eslogan",
+    "country": "País",
+    "city": "Ciudad",
+    "start-date": "Fundado (año)",
+    "end-date": "Disuelto (año)",
+    "wiki": "Enlace de SpeccyWiki",
+    "website": "Sitio web",
+    "image": "Logo",
+    "members": "Miembros",
+    "subgroups": "Subgrupos",
+    "search-placeholder": "Empieza a escribir para buscar…",
+    "save": "Guardar",
+    "error-title-required": "El nombre es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar"
+  },
+  "release-form": {
+    "title": "Título",
+    "version": "Versión",
+    "year": "Año",
+    "description": "Descripción",
+    "deny-voting": "Desactivar votación",
+    "deny-comments": "Desactivar comentarios",
+    "authors": "Autores",
+    "save": "Guardar",
+    "error-title-required": "El título es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar",
+    "screenshots": "Capturas",
+    "inlays": "Inlays",
+    "info-files": "Archivos de información",
+    "ad-files": "Archivos publicitarios",
+    "prod": "Producción",
+    "release-type": "Tipo de lanzamiento",
+    "release-format": "Formato",
+    "language": "Idioma",
+    "hardware-required": "Hardware requerido",
+    "publishers": "Editores",
+    "add-publisher": "Añadir editor…",
+    "file": "Archivo",
+    "error-prod-required": "Se requiere la producción"
+  },
+  "prod-form": {
+    "files": "Archivos de software",
+    "title": "Título",
+    "alt-title": "Título alternativo",
+    "external-link": "Enlace externo",
+    "legal-status": "Estado legal",
+    "groups": "Grupos",
+    "publishers": "Editores",
+    "add-group": "Añadir grupo…",
+    "add-publisher": "Añadir editor…",
+    "add-item": "Añadir…",
+    "party": "Fiesta",
+    "partyplace": "Puesto en la fiesta",
+    "year": "Año",
+    "youtube-id": "YouTube id",
+    "compilation-items": "Programas de la compilación",
+    "series-prods": "Programas de la serie",
+    "html-description": "Descripción HTML",
+    "description": "Descripción",
+    "instructions": "Instrucciones",
+    "tags-text": "Etiquetas",
+    "deny-voting": "Desactivar votación",
+    "deny-comments": "Desactivar comentarios",
+    "authors": "Autores",
+    "save": "Guardar",
+    "error-title-required": "El título es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar",
+    "error-files-required": "Seleccione al menos un archivo de software",
+    "legal": {
+      "unknown": "Desconocido",
+      "allowed": "Permitido",
+      "allowedzxart": "Permitido para ZXArt",
+      "forbidden": "Prohibido",
+      "forbiddenzxart": "Prohibido para ZXArt",
+      "insales": "En venta",
+      "mia": "Perdido",
+      "unreleased": "No publicado",
+      "recovered": "Recuperado",
+      "donationware": "Donationware"
+    },
+    "categories": "Categorías",
+    "compo": "Competición",
+    "screenshots": "Capturas",
+    "inlays": "Inlays",
+    "maps": "Mapas",
+    "rzx": "RZX",
+    "language": "Idioma",
+    "error-categories-required": "Selecciona al menos una categoría"
+  },
+  "tune-form": {
+    "batch-title": "Subir melodías",
+    "title": "Título",
+    "authors": "Autores",
+    "add-author": "Añadir autor…",
+    "format-group": "Formato",
+    "party": "Fiesta",
+    "partyplace": "Puesto en la fiesta",
+    "year": "Año",
+    "prod-or-release": "Programa o versión",
+    "tags-text": "Etiquetas",
+    "description": "Descripción",
+    "deny-playing": "Desactivar reproducción",
+    "deny-voting": "Desactivar votación",
+    "deny-comments": "Desactivar comentarios",
+    "save": "Guardar",
+    "error-title-required": "El título es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar",
+    "compo": "Competición",
+    "chip-type": "Tipo de chip",
+    "channels-type": "Canales",
+    "frequency": "Frecuencia",
+    "int-frequency": "Frecuencia de interrupción",
+    "file": "Archivo reproducible",
+    "tracker-file": "Archivo fuente/tracker",
+    "batch-files": "Archivos de música",
+    "error-files-required": "Selecciona al menos un archivo de música",
+    "error-authors-required": "Selecciona al menos un autor"
+  },
+  "picture-form": {
+    "batch-title": "Subir imágenes",
+    "title": "Título",
+    "authors": "Autores",
+    "original-authors": "Autor original (para remixes)",
+    "add-author": "Añadir autor…",
+    "party": "Fiesta",
+    "partyplace": "Puesto en la fiesta",
+    "year": "Año",
+    "prod-or-release": "Programa o versión",
+    "tags-text": "Etiquetas",
+    "description": "Descripción",
+    "deny-voting": "Desactivar votación",
+    "deny-comments": "Desactivar comentarios",
+    "save": "Guardar",
+    "error-title-required": "El título es obligatorio",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar",
+    "compo": "Competición",
+    "type": "Formato",
+    "palette": "Paleta",
+    "border": "Borde",
+    "rotation": "Rotación",
+    "image": "Imagen",
+    "inspired": "Fuente de inspiración",
+    "inspired2": "Fuente de inspiración 2",
+    "sequence": "Secuencia de animación",
+    "exe-file": "Archivo ejecutable",
+    "batch-images": "Imágenes",
+    "error-files-required": "Selecciona al menos una imagen",
+    "error-authors-required": "Selecciona al menos un autor"
+  },
+  "press-form": {
+    "title": "Título",
+    "external-link": "Enlace externo",
+    "authors": "Autores",
+    "people": "Personas",
+    "software": "Software",
+    "groups": "Grupos",
+    "parties": "Fiestas",
+    "tunes": "Música",
+    "pictures": "Gráficos",
+    "add": "Añadir…",
+    "introduction": "Introducción",
+    "content": "Contenido",
+    "original-content": "Contenido original",
+    "allow-comments": "Permitir comentarios",
+    "save": "Guardar",
+    "error-load": "No se pudo cargar el formulario",
+    "error-save": "No se pudo guardar"
+  },
+  "press-details": {
+    "edit": "Editar",
+    "tags": "Etiquetas",
+    "source": "Fuente",
+    "authors": "Autores",
+    "people": "Personas",
+    "groups": "Grupos",
+    "software": "Software",
+    "pictures": "Gráficos",
+    "tunes": "Música",
+    "parties": "Fiestas",
+    "morefromsame": "Más de la misma publicación",
+    "ai": "IA"
+  },
   "feedback": {
     "name": "Nombre",
     "email": "Email",
@@ -35,8 +336,13 @@
       "activity": "Actividad"
     },
     "header": {
-      "stats": "{{compos}} competiciones, {{entries}} trabajos de {{authors}} autores.",
-      "download-zip": "Descargar archivo ZIP"
+      "download-zip": "Descargar archivo ZIP",
+      "links": "Enlaces",
+      "counter": {
+        "compos": "concursos",
+        "entries": "obras",
+        "authors": "autores"
+      }
     },
     "overview": {
       "prods": "Ganadores: software",
@@ -162,7 +468,8 @@
       "organizer": "Organizador",
       "hardware": "Hardware",
       "tester": "Tester",
-      "gamedesigner": "Diseñador de juegos"
+      "gamedesigner": "Diseñador de juegos",
+      "unknown": "Desconocido"
     },
     "connections": {
       "title": "Conexiones",
@@ -180,6 +487,7 @@
   },
   "prods-list": {
     "unknown-year": "Año de lanzamiento desconocido",
+    "batch-upload": "Carga masiva",
     "include-subcategories-prods": "Mostrar programas de subcategorías",
     "presets": {
       "year": "Este año",
@@ -358,6 +666,17 @@
     "theme.light": "Claro",
     "theme.dark": "Oscuro"
   },
+  "top-pictures": {
+    "title": "Top de gráficos",
+    "filter": {
+      "all": "Todos",
+      "loading-screens": "Pantallas de carga",
+      "game-graphics": "Gráficos del juego"
+    }
+  },
+  "top-music": {
+    "title": "Top de música"
+  },
   "firstpage": {
     "title": "Juegos, Demoscene, Graficos y Musica de ZX Spectrum",
     "configure": "Configurar página principal",
@@ -368,12 +687,13 @@
     "realtime": "Tiempo real",
     "modules": {
       "newProds": "Nuevos programas",
-      "newPictures": "Nuevas imágenes",
-      "newTunes": "Nueva música",
+      "newPictures": "Imágenes añadidas recientemente",
+      "newTunes": "Melodías añadidas recientemente",
       "bestNewDemos": "Mejores demos nuevas",
       "bestNewGames": "Mejores juegos nuevos",
       "recentParties": "Parties recientes",
       "bestPicturesOfMonth": "Mejores imágenes del mes",
+      "bestTunesOfMonth": "Mejores melodías del mes",
       "latestAddedProds": "Últimos programas añadidos",
       "latestAddedReleases": "Últimos lanzamientos añadidos",
       "supportProds": "Apoyar con compra",
@@ -520,7 +840,6 @@
     "votes": "{{count}} votos"
   },
   "zx-rating-strip": {
-    "label": "Calificación:",
     "artist": "artista",
     "musician": "músico"
   },
@@ -563,7 +882,8 @@
     "delete-confirm-title": "Eliminar melodía",
     "delete-confirm-message": "¿Seguro que quieres eliminar esta melodía?",
     "delete-confirm-yes": "Eliminar",
-    "delete-confirm-cancel": "Cancelar"
+    "delete-confirm-cancel": "Cancelar",
+    "musician": "Músico"
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -616,7 +936,8 @@
     "delete-confirm-title": "Eliminar imagen",
     "delete-confirm-message": "¿Seguro que quieres eliminar esta imagen?",
     "delete-confirm-yes": "Eliminar",
-    "delete-confirm-cancel": "Cancelar"
+    "delete-confirm-cancel": "Cancelar",
+    "artist": "Artista"
   },
   "header": {
     "language-trigger": {
@@ -850,9 +1171,33 @@
       "read": "Leer artículo"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Artistas activos",
+      "music": "Músicos activos",
+      "period": "Período de actividad",
+      "yearsShort": "{{count}} a.",
+      "empty": "No hay autores activos"
+    },
+    "top": {
+      "graphics": "Mejores artistas",
+      "music": "Mejores músicos"
+    },
+    "latest": {
+      "graphics": "Artistas añadidos recientemente",
+      "music": "Músicos añadidos recientemente"
+    }
+  },
   "author-browser": {
+    "add-author": "Añadir autor",
+    "title": {
+      "all": "Autores",
+      "graphics": "Artistas",
+      "music": "Músicos"
+    },
     "error": "Error al cargar autores",
     "empty": "No se encontraron autores",
+    "recent": "Autores añadidos recientemente",
     "search": {
       "placeholder": "Buscar por nick, nombre o alias..."
     },
@@ -892,8 +1237,10 @@
     }
   },
   "group-browser": {
+    "add-group": "Añadir grupo",
     "error": "Error al cargar grupos",
     "empty": "No se encontraron grupos",
+    "recent": "Grupos añadidos recientemente",
     "search": {
       "placeholder": "Buscar por nombre o abreviatura..."
     },
@@ -1023,7 +1370,6 @@
     "groups": "Producido por",
     "publishers": "Editores",
     "authors": "Autores",
-    "party": "Competencia",
     "year": "Año de publicación",
     "tags": "Etiquetas",
     "links": "Enlaces",
@@ -1146,14 +1492,11 @@
     "donate": "Donar",
     "buy": "Compra",
     "description": "Descripción",
-    "version-label": "Versión:",
-    "format-label": "Formato:",
-    "language-label": "Idioma:",
-    "hardware-label": "Hardware:",
     "screenshots": "Capturas del lanzamiento",
     "inlays": "Carátulas",
     "instructions": "Instrucciones",
-    "back-to-prod": "volver al programa"
+    "back-to-prod": "volver al programa",
+    "version": "Versión"
   },
   "release-row": {
     "col-title": "Título",
@@ -1470,6 +1813,7 @@
     "realtime": "Entradas de compo en tiempo real",
     "inspiration": "Tiene imágenes de referencia",
     "stages": "Tiene imágenes de etapas",
+    "from-game": "De juegos",
     "results-type": "Tipo de resultados",
     "results-type-zxitem": "Trabajos",
     "results-type-author": "Autores",
@@ -1653,6 +1997,9 @@
       "gfx": "Imágenes por año"
     },
     "days30": "30 días",
+    "section": {
+      "avg": "Valoración media por año"
+    },
     "legend": {
       "all": "el resto",
       "rated": "valorado por encima de la media",
@@ -1691,5 +2038,193 @@
       "comments": "coment.",
       "tags": "etiquetas"
     }
+  },
+  "ai-form": {
+    "title": "Procesamiento con IA",
+    "submit": "Reejecutar IA",
+    "prod-seo": "Reiniciar SEO",
+    "prod-intro": "Reiniciar introducción",
+    "prod-categories": "Reiniciar categorías y etiquetas",
+    "press-fix": "Reiniciar corrección",
+    "press-translate": "Reiniciar traducción",
+    "press-parse": "Reiniciar análisis",
+    "press-seo": "Reiniciar SEO",
+    "error-load": "No se pudo cargar",
+    "error-save": "No se pudo guardar"
+  },
+  "profile": {
+    "title": "Perfil",
+    "user-name": "Cuenta",
+    "email": "Email",
+    "change-password": "Cambiar contraseña",
+    "current-password": "Contraseña actual",
+    "new-password": "Nueva contraseña",
+    "repeat-password": "Repite la nueva contraseña",
+    "save": "Cambiar contraseña",
+    "password-changed": "Contraseña cambiada.",
+    "please-log-in": "Inicia sesión para ver tu perfil.",
+    "error-save": "No se pudo guardar",
+    "error-password-wrong": "La contraseña actual es incorrecta.",
+    "error-password-match": "Las nuevas contraseñas no coinciden o están vacías."
+  },
+  "playlists": {
+    "title": "Mis listas",
+    "playlist-title": "Lista",
+    "new-title": "Nueva lista",
+    "new-label": "Nombre",
+    "new-placeholder": "Nombre de la nueva lista",
+    "create": "Crear",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "empty": "Todavía no tienes listas.",
+    "no-items": "Vacía",
+    "delete-confirm-title": "Eliminar lista",
+    "delete-confirm-message": "¿Eliminar la lista «{{title}}»? Las obras no se eliminan.",
+    "counter": {
+      "pictures": "imágenes",
+      "tunes": "melodías",
+      "prods": "programas"
+    }
+  },
+  "register": {
+    "title": "Registro",
+    "username": "Usuario",
+    "email": "Email",
+    "password": "Contraseña",
+    "password-repeat": "Repetir contraseña",
+    "first-name": "Nombre",
+    "last-name": "Apellido",
+    "company": "Empresa",
+    "website": "Sitio web",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "post-index": "Código postal",
+    "country": "País",
+    "submit": "Registrarse",
+    "error-username": "El usuario es obligatorio",
+    "error-email": "El email es obligatorio",
+    "error-email-format": "Introduce un email válido",
+    "error-password": "La contraseña es obligatoria",
+    "error-password-match": "Las contraseñas no coinciden",
+    "error-generic": "Error en el registro"
+  },
+  "join-form": {
+    "author-as-alias": "Busca un autor y adjúntalo como alias",
+    "author-merge": "Busca un autor y adjúntalo mediante fusión",
+    "group-as-alias": "Busca un grupo y adjúntalo como alias",
+    "group-merge": "Busca un grupo y adjúntalo mediante fusión",
+    "prod-merge": "Busca una producción y adjúntala mediante fusión",
+    "releases-only": "Mover solo los lanzamientos",
+    "search": "Empieza a escribir para buscar…",
+    "submit": "Fusionar",
+    "error-no-target": "Elige un destino primero",
+    "error-save": "Error al fusionar"
+  },
+  "convert": {
+    "confirm": "Convertir",
+    "failed": "Error en la conversión",
+    "author-to-group": "¿Convertir este autor en un grupo?",
+    "group-to-author": "¿Convertir este grupo en un autor?",
+    "alias-to-author": "¿Convertir este alias en un autor independiente?",
+    "alias-to-group": "¿Convertir este alias en un grupo independiente?"
+  },
+  "split-form": {
+    "intro": "Selecciona los elementos para separarlos en una nueva producción.",
+    "nothing": "Nada que dividir.",
+    "submit": "Dividir",
+    "error-empty": "Selecciona al menos un elemento",
+    "error-load": "No se pudo cargar",
+    "error-save": "Error al dividir"
+  },
+  "claim": {
+    "message": "Solicita ser reconocido como este autor. Los moderadores revisarán tu solicitud.",
+    "confirm": "Enviar solicitud",
+    "sent": "Tu solicitud ha sido enviada.",
+    "failed": "No se pudo enviar la solicitud (quizá ya estás vinculado a un autor)."
+  },
+  "parties-page": {
+    "add-party": "Añadir fiesta",
+    "recent": "Parties recientes",
+    "view-cards": "Tarjetas",
+    "view-table": "Tabla",
+    "col-title": "Título",
+    "col-year": "Año",
+    "col-country": "País",
+    "col-city": "Ciudad"
+  },
+  "menu": {
+    "home": "Inicio",
+    "software": "Software",
+    "graphics": "Gráficos",
+    "music": "Música",
+    "authors": "Autores",
+    "parties": "Fiestas",
+    "groups": "Grupos",
+    "comments": "Comentarios",
+    "countries": "Países",
+    "about": "Acerca de",
+    "soft": {
+      "demoscene": "Demoscene",
+      "games": "Juegos",
+      "system": "Software de sistema",
+      "misc": "Varios",
+      "educational": "Educativo",
+      "compilation": "Recopilaciones",
+      "press": "Prensa",
+      "applications": "Aplicaciones",
+      "series": "Series",
+      "tags": "Etiquetas"
+    },
+    "gfx": {
+      "home": "Inicio",
+      "search": "Búsqueda en la base",
+      "authors": "Artistas",
+      "top": "Top",
+      "tags": "Etiquetas"
+    },
+    "music-sub": {
+      "home": "Inicio",
+      "search": "Búsqueda en la base",
+      "authors": "Músicos",
+      "top": "Top",
+      "tags": "Etiquetas"
+    },
+    "about-sub": {
+      "stats": "Estadísticas",
+      "faq": "FAQ",
+      "feedback": "Contacto",
+      "api": "API",
+      "simple": "Versión simple para clientes ZX",
+      "telegram": "Canal de Telegram",
+      "daily": "ZX-Art Daily (Telegram)",
+      "filesearch": "Búsqueda de archivos",
+      "support": "Apoyar el proyecto"
+    }
+  },
+  "content": {
+    "error": "No se pudo cargar el contenido."
+  },
+  "password-reminder": {
+    "title": "Recuperación de contraseña",
+    "email": "Correo electrónico",
+    "password": "Nueva contraseña",
+    "password-repeat": "Repetir contraseña",
+    "request": "Enviar enlace",
+    "reset": "Cambiar contraseña",
+    "requested": "Si existe una cuenta con este correo, se ha enviado un enlace de recuperación.",
+    "changed": "La contraseña ha sido cambiada.",
+    "error-email": "Introduce un correo válido.",
+    "error-password": "Introduce una nueva contraseña.",
+    "error-password-match": "Las contraseñas no coinciden.",
+    "error-invalid": "Este enlace no es válido o ha caducado.",
+    "error-generic": "No se pudo recuperar la contraseña. Inténtalo más tarde."
+  },
+  "hero": {
+    "rating": "valoración",
+    "votes": "valoraciones",
+    "downloads": "descargas",
+    "plays": "reproducciones"
   }
 }

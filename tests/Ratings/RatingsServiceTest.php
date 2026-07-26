@@ -11,6 +11,7 @@ use LanguagesManager;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use structureElement;
 use structureManager;
 use userElement;
 use ZxArt\Comments\CommentAuthorDto;
@@ -18,6 +19,7 @@ use ZxArt\Ratings\Dto\ElementRatingsListDto;
 use ZxArt\Ratings\Dto\RecentRatingDto;
 use ZxArt\Ratings\Dto\RecentRatingsListDto;
 use ZxArt\Ratings\RatingsService;
+use ZxArt\Urls\EntityUrlResolver;
 use ZxArtItem;
 
 #[AllowMockObjectsWithoutExpectations]
@@ -27,6 +29,7 @@ class RatingsServiceTest extends TestCase
     private LanguagesManager&MockObject $languagesManager;
     private Cache&MockObject $cache;
     private Connection&MockObject $db;
+    private EntityUrlResolver $entityUrlResolver;
     private RatingsService $service;
 
     private const int LANGUAGE_ID = 1;
@@ -34,6 +37,11 @@ class RatingsServiceTest extends TestCase
 
     protected function setUp(): void
     {
+        // urlFor() falls back to the element's own URL, which is what the element
+        // mocks below provide
+        $this->entityUrlResolver = $this->createMock(EntityUrlResolver::class);
+        $this->entityUrlResolver->method('urlFor')
+            ->willReturnCallback(static fn(structureElement $element): string => (string)$element->getUrl());
         $this->structureManager = $this->createMock(structureManager::class);
         $this->languagesManager = $this->createMock(LanguagesManager::class);
         $this->languagesManager->method('getCurrentLanguageId')->willReturn(self::LANGUAGE_ID);
@@ -41,6 +49,7 @@ class RatingsServiceTest extends TestCase
         $this->db = $this->createMock(Connection::class);
 
         $this->service = new RatingsService(
+            $this->entityUrlResolver,
             $this->structureManager,
             $this->languagesManager,
             $this->cache,
@@ -358,12 +367,19 @@ class RatingsServiceTest extends TestCase
         return $element;
     }
 
+    /**
+     * The recent-ratings list uses the user's own URL; per-element ratings link to
+     * the user's connected author page instead, so both are stubbed.
+     */
     private function createUserElementMock(string $userName, string $url, array $badges): userElement&MockObject
     {
         $user = $this->createMock(userElement::class);
+        $author = $this->createMock(structureElement::class);
+        $author->method('getUrl')->willReturn($url);
 
         $user->method('getTitle')->willReturn($userName);
         $user->method('getUrl')->willReturn($url);
+        $user->method('getAuthorElement')->willReturn($author);
         $user->method('getBadgetTypes')->willReturn($badges);
 
         return $user;

@@ -103,9 +103,38 @@ readonly class PictureListService
         int $start,
         int $limit,
     ): array {
-        $total = $this->picturesRepository->countByLinkedElement($elementId, $linkType);
-        $ids = $this->picturesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
+        return [
+            'total' => $this->picturesRepository->countByLinkedElement($elementId, $linkType),
+            'items' => $this->loadPictures(
+                $this->picturesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
+            ),
+        ];
+    }
 
+    /**
+     * Returns a paginated+sorted page of the whole picture collection, optionally
+     * narrowed to the pictures carrying a single tag.
+     *
+     * @return array{total: int, items: PictureDto[]}
+     */
+    public function getPagedCollection(int $tagId, SortingParams $sorting, int $start, int $limit): array
+    {
+        if ($tagId > 0) {
+            return $this->getPagedByLinkedElement($tagId, LinkTypes::TAG->value, $sorting, $start, $limit);
+        }
+
+        return [
+            'total' => $this->picturesRepository->countAll(),
+            'items' => $this->loadPictures($this->picturesRepository->findPagedIds($sorting, $start, $limit)),
+        ];
+    }
+
+    /**
+     * @param int[] $ids
+     * @return PictureDto[]
+     */
+    private function loadPictures(array $ids): array
+    {
         $items = [];
         foreach ($ids as $id) {
             $element = $this->structureManager->getElementById($id)
@@ -114,8 +143,7 @@ readonly class PictureListService
                 $items[] = $this->picturesTransformer->toDto($element);
             }
         }
-
-        return ['total' => $total, 'items' => $items];
+        return $items;
     }
 
     /**

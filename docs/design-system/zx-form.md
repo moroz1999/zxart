@@ -13,6 +13,7 @@ form[zxForm]
 │   └── zx-form-control    (second child — control cell wrapper)
 │       ├── <control>          (zx-input / zx-textarea / zx-select …)
 │       └── zx-control-errors  (per-control validation message)
+├── zx-form-row           (groups several zx-form-field on one row)
 ├── zx-form-fieldset
 ├── zx-form-section
 ├── zx-form-message       (form-wide status message)
@@ -37,15 +38,41 @@ Applied to a native `<form>` element. Styles live in `zx-form.directive.scss` (l
 | `mobileFieldsLayout` | `horizontal` \| `vertical` | `vertical` |
 | `sectionWrap` | boolean | `false` |
 | `divided` | boolean | `false` |
+| `columns` | `1` \| `2` | `1` |
 
 - `horizontal` renders each `zx-form-field` as a two-column grid row: fixed-width label column + control column.
 - `mobileFieldsLayout="vertical"` collapses horizontal rows to stacked label/control on mobile.
 - `sectionWrap` lays `zx-form-section` children out as a flex-wrap row (side-by-side sections) and removes the form's default `max-width`. Sections collapse to a single column on narrow screens automatically via flex-basis.
 - `divided` switches to the bordered appearance: fieldsets get their own padding (`--zx-form-fieldset-padding`) and are separated by divider lines, side-by-side sections get a vertical divider (horizontal on mobile), and `zx-form-actions` becomes a footer strip with `--zx-form-footer-bg`. Combine with `zx-panel padding="none"` so the form owns all panel padding.
+- `columns="2"` lays each `zx-form-section`'s fields out in a two-column grid and widens the form to `--zx-form-cols-max-width`. Individual fields opt into spanning the full row with `<zx-form-field [fullWidth]="true">`. A section can override the form default with its own `[columns]` input.
 
 ## `zx-form-field`
 
 One form row. Always two children: `zx-form-label` first, `zx-form-control` second.
+
+## `zx-form-row`
+
+Groups several `zx-form-field` children onto a single row. Spans the full width of a two-column section (like a `fullWidth` field) and lays its children out as equal-width columns, collapsing to a single stacked column on narrow screens (`md` breakpoint down). Use for compact, related inputs that read best side by side (e.g. party / place / compo).
+
+| Prop | Values | Default |
+|---|---|---|
+| `columns` | number | `3` |
+
+`columns` sets how many equal tracks the row uses — set it to the number of fields you place inside.
+
+```html
+<zx-form-row [columns]="3">
+  <zx-form-field>…</zx-form-field>
+  <zx-form-field>…</zx-form-field>
+  <zx-form-field>…</zx-form-field>
+</zx-form-row>
+```
+
+## `zx-multilang-field`
+
+Renders one input per available language. Set `[columns]="3"` for short values
+that should appear in one three-column row; the fields stack on narrow screens.
+Multiline values use the default single-column layout.
 
 ## `zx-form-label`
 
@@ -98,11 +125,13 @@ A field-like unit with one common `legend` and several related `zx-form-field` c
 
 ## `zx-form-section`
 
-Use only when there is a real section title / visual block. Do not wrap fieldsets into sections by default. `title` is optional — omit it when sections are purely structural (e.g. a two-column layout without headings).
+Use only when there is a real section title / visual block. Do not wrap fieldsets into sections by default. `title` is optional — omit it when sections are purely structural (e.g. a two-column layout without headings). When `title` or `icon` is set, the section renders an underlined header (small uppercase title with an optional leading icon).
 
 | Prop | Values | Default |
 |---|---|---|
 | `title` | string | `''` |
+| `icon` | string (svg asset name, e.g. `tag`) | `''` |
+| `columns` | `1` \| `2` \| `null` (inherit form) | `null` |
 
 ## `zx-form-message`
 
@@ -130,6 +159,9 @@ Action row for `zx-button` elements.
 | Prop | Values | Default |
 |---|---|---|
 | `align` | `start` \| `center` \| `end` \| `between` | `end` |
+| `sticky` | boolean | `false` |
+
+`sticky` pins the action row to the bottom of the viewport as a footer strip (top border + `--zx-form-footer-bg`). Combine with `align="between"` to place a status note on the left and the buttons on the right.
 
 ## Example
 

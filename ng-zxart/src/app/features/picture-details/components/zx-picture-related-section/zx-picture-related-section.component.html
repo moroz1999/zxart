@@ -6,7 +6,7 @@
         <a
           *ngFor="let item of rail.items"
           class="pix-mini"
-          [href]="item.url"
+          [routerLink]="item.url"
         >
           <zx-inline align="center" spacing="sm" [wrap]="false">
             <img class="pix-mini__thumb" [src]="item.imageUrl" [alt]="item.title" loading="lazy" />

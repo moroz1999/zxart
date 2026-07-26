@@ -15,9 +15,15 @@ export interface PaginatedTunesResponse {
 export class MusicBrowserService {
   constructor(private http: HttpClient) {}
 
-  getPaged(elementId: number, start: number, limit: number, sorting: string): Observable<PaginatedTunesResponse> {
+  getPaged(
+    elementId: number,
+    start: number,
+    limit: number,
+    sorting: string,
+    linkType = 'structure',
+  ): Observable<PaginatedTunesResponse> {
     return this.http.get<PaginatedTunesResponse>('/musiclist/', {
-      params: {elementId: String(elementId), start: String(start), limit: String(limit), sorting},
+      params: {elementId: String(elementId), start: String(start), limit: String(limit), sorting, linkType},
     }).pipe(
       catchError(() => of({total: 0, items: []}))
     );

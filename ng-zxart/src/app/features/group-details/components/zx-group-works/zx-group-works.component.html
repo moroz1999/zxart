@@ -3,7 +3,7 @@
     *ngIf="core.tabs.hasProds"
     [label]="'group-details.works.own' | translate">
     <ng-template zxTabContent>
-      <zx-group-prods-tab [elementId]="core.id" scope="own" [urlBase]="urlBase"></zx-group-prods-tab>
+      <zx-group-prods-tab [elementId]="core.id" scope="own"></zx-group-prods-tab>
     </ng-template>
   </zx-tab>
 
@@ -11,7 +11,7 @@
     *ngIf="core.tabs.hasPublished"
     [label]="'group-details.works.published' | translate">
     <ng-template zxTabContent>
-      <zx-group-prods-tab [elementId]="core.id" scope="published" [urlBase]="urlBase"></zx-group-prods-tab>
+      <zx-group-prods-tab [elementId]="core.id" scope="published"></zx-group-prods-tab>
     </ng-template>
   </zx-tab>
 
@@ -19,7 +19,7 @@
     *ngIf="core.tabs.hasReleases"
     [label]="'group-details.works.releases' | translate">
     <ng-template zxTabContent>
-      <zx-group-prods-tab [elementId]="core.id" scope="releases" [urlBase]="urlBase"></zx-group-prods-tab>
+      <zx-group-prods-tab [elementId]="core.id" scope="releases"></zx-group-prods-tab>
     </ng-template>
   </zx-tab>
 </zx-tabs>

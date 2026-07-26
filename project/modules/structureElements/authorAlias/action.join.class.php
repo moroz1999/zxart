@@ -17,7 +17,7 @@ class joinAuthorAlias extends structureElementAction
             if ($structureElement->joinAndDelete) {
                 $authorsManager->joinDeleteAuthor($structureElement->getId(), $structureElement->joinAndDelete);
             }
-            $controller->redirect($structureElement->getUrl());
+            $this->respondFormSaved($controller, $structureElement); return;
         }
 
         $structureElement->setViewName('form');

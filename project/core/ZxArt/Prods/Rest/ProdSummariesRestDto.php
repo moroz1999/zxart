@@ -15,7 +15,7 @@ readonly class ProdSummariesRestDto
     public function __construct(
         #[Map(transform: MapCollection::class)]
         public array $prods,
-        public ?string $seriesUrl = null,
+        public ?int $seriesId = null,
     ) {
     }
 }

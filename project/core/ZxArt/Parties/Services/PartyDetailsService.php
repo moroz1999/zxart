@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Parties\Services;
 
-use breadcrumbsManager;
 use partyElement;
 use structureManager;
-use ZxArt\Parties\Dto\PartyBreadcrumbDto;
 use ZxArt\Parties\Dto\PartyCompoDto;
 use ZxArt\Parties\Dto\PartyCoreDto;
 use ZxArt\Parties\Dto\PartyCountersDto;
@@ -33,8 +31,8 @@ readonly class PartyDetailsService
     ];
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
-        private breadcrumbsManager $breadcrumbsManager,
         private PartyCompoNameResolver $compoNameResolver,
         private PartiesRepository $partiesRepository,
         private PartyAuthorsRepository $partyAuthorsRepository,
@@ -56,7 +54,7 @@ readonly class PartyDetailsService
             title: $this->decode((string)$party->getTitle()),
             abbreviation: $this->decode((string)$party->abbreviation),
             originalName: $this->decode((string)$party->originalName),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             imageUrl: $party->getImageUrl(),
             year: ($year = $party->getYear()) !== '' ? $year : null,
             location: $this->buildLocation($party),
@@ -66,7 +64,6 @@ readonly class PartyDetailsService
             zipUrl: $party->getSaveUrl(),
             counters: $counters,
             tabs: $this->buildTabs($counters),
-            breadcrumbs: $this->buildBreadcrumbs($party),
         );
     }
 
@@ -137,14 +134,14 @@ readonly class PartyDetailsService
         if ($cityElement = $party->getCityElement()) {
             $city = new PartyLocationItemDto(
                 title: $this->decode((string)$cityElement->title),
-                url: (string)$cityElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($cityElement),
             );
         }
         $country = null;
         if ($countryElement = $party->getCountryElement()) {
             $country = new PartyLocationItemDto(
                 title: $this->decode((string)$countryElement->title),
-                url: (string)$countryElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($countryElement),
             );
         }
         return new PartyLocationDto(city: $city, country: $country);
@@ -186,7 +183,7 @@ readonly class PartyDetailsService
             $editions[] = new PartyEditionDto(
                 id: (int)$edition->getId(),
                 year: $year,
-                url: (string)$edition->getUrl(),
+                url: $this->entityUrlResolver->urlFor($edition),
                 current: (int)$edition->getId() === (int)$party->getId(),
             );
         }
@@ -194,30 +191,6 @@ readonly class PartyDetailsService
         usort($editions, static fn(PartyEditionDto $a, PartyEditionDto $b): int => $a->year <=> $b->year);
 
         return $editions;
-    }
-
-    /**
-     * @return PartyBreadcrumbDto[]
-     */
-    private function buildBreadcrumbs(partyElement $party): array
-    {
-        $partyUrl = (string)$party->getUrl();
-        $path = trim((string)parse_url($partyUrl, PHP_URL_PATH), '/');
-        if ($path === '') {
-            return [];
-        }
-        $segments = array_values(array_filter(explode('/', $path)));
-        /** @var array<array{title: string, URL: string}> $ancestors */
-        $ancestors = array_slice($this->breadcrumbsManager->getBreadcrumbsForPath($segments), 1, -1);
-
-        $breadcrumbs = [];
-        foreach ($ancestors as $item) {
-            $breadcrumbs[] = new PartyBreadcrumbDto(
-                title: $this->decode($item['title']),
-                url: $item['URL'],
-            );
-        }
-        return $breadcrumbs;
     }
 
     private function extractDomain(string $url): string

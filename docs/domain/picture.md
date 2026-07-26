@@ -31,6 +31,9 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
 
 #### Authorship
 - **author** - picture authors (array of IDs)
+  - Authorship drives the picture's placement and author pages, so it is never
+    left empty: the Angular form requires at least one author, and the backend
+    falls back to the "unknown author" element when none is submitted.
 - **originalAuthor** - original authors (array of IDs)
   - Used for ported/remade works
 
@@ -41,8 +44,10 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
   - Link through `partyPicture`
 
 #### Related Works
-- **game** - related game (zxProd ID)
+- **game** - related production or release (`gameLink`)
   - For loading screens and game graphics
+  - Holds a zxProd in almost every case, but a release is allowed too, so the
+    form offers both
   - Picture list cards display the linked zxProd or zxRelease title when available
 - **inspired** - inspiration source (image file ID)
   - Original work that inspired the author
@@ -64,7 +69,7 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
 
 #### Special Tags
 - `"Loading Screen"` - game loading screen
-- `"Game graphics"` - game graphics
+- `"Game Graphics"` - game graphics
 
 ### Voting and Statistics
 - **votes** - average rating
@@ -78,6 +83,25 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
 - **dateAdded** - date added
 - **userId** - ID of user who added the element
 - **artCityId** - city ID (for Art City projects)
+
+### Top Graphics Route
+- `/pictures/top` is the dedicated top-graphics page.
+- Author picture lists and picture view logging use the `/pictures-data/` JSON endpoint.
+- The page encapsulates the picture browser with descending vote sorting and does not expose the generic sorting control.
+- A chip strip above the browser narrows the top to a single tag: all graphics,
+  the "Loading Screen" tag (game loading screens) or the "Game Graphics" tag.
+  The selected tag id lives in the `tag` query param and is preserved by the
+  pagination links.
+
+### Picture List Endpoint
+`GET /picturelist/` (`ZxArt\Controllers\Picturelist`) serves three shapes:
+- `limit` present — a paged, sorted slice of the whole picture collection.
+  The optional `tagId` narrows it to the pictures carrying that tag. Sortable by
+  `title`, `date`, `year`, `votes`; the response is `{total, items}`.
+- `action=related&pictureId=…` — related pictures, with `kind` selecting the
+  relation (`author`, `tags`, `prod`).
+- `elementId=…` without `limit` — the pictures of a single element (release,
+  party compo, …), optionally narrowed by `compoType`.
 
 ### Constraints and Rules
 1. Image must be in one of native ZX Spectrum formats

@@ -17,6 +17,9 @@ Concrete release (version) of software production. Contains files specific to th
 - **zxProd** - parent product (link `structure`, role child)
   - Each release must belong to one prod
   - Link through structural hierarchy
+  - Required in both the Angular form and the element action (`notEmpty`). Unlike
+    the other works there is no sensible fallback, so a release with no
+    production is rejected: creation answers 422 and nothing is stored.
 
 #### Authorship
 - **authors** - authors with roles (code, graphics, music, etc.)
@@ -75,6 +78,7 @@ Concrete release (version) of software production. Contains files specific to th
 - A release is downloadable when its (prod's) status is not `forbidden`/`forbiddenzxart`/`insales`, OR it is a `demoversion` release, OR the `downloadDenied` privilege is set, OR — for non-`insales` statuses only — the current user is authorized and the prod year is known and older than 20 years (the "old prods for registered users" case).
 - `insales` ("in sales") is always excluded, including from the old-prod allowance: such prods/releases must never expose a download link. The legacy release row shows a "purchase" external-link button instead.
 - API responses gate `downloadUrl` (and the parsed `fileStructure`) by `isDownloadable()`, evaluated per request against the current session, so authorized-only download URLs are never emitted to anonymous users.
+- The release hero bar offers the prod's external link as a call to action when the prod carries one: a "buy" button for `insales` and a "donate" button for `donationware` (`prodLegalStatus` and `prodExternalLink` on the release details response).
 - Known residual risk (pre-existing in legacy, UI-only protection): the `release` and `zxfile` download applications themselves do not enforce `isDownloadable()`; protection relies on hiding the link rather than blocking the endpoint.
 - Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
 - Parsed release structure can play TAP and supported TZX entries as generated browser audio from the Angular release details UI.

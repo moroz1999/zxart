@@ -3,7 +3,7 @@ import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ProdContextDto} from '../../models/prod-context.dto';
-
+import {RouterLink} from '@angular/router';
 /**
  * Provenance line linking an item back to the prod/release it is part of:
  * "From release «title» · year". Shared by the picture and tune detail pages.
@@ -11,7 +11,7 @@ import {ProdContextDto} from '../../models/prod-context.dto';
 @Component({
   selector: 'zx-prod-context',
   standalone: true,
-  imports: [NgIf, TranslateModule, TextDirective],
+  imports: [RouterLink, NgIf, TranslateModule, TextDirective],
   templateUrl: './zx-prod-context.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -5,7 +5,7 @@ import {TagDto} from '../../../shared/models/tag-dto';
 import {CategoriesSelectorDto} from './categories-selector-dto';
 import {SelectorValues} from './selector-values';
 
-export interface ZxProdCategoryDto extends StructureElementDto {
+export interface ZxProdCategoryDto extends Omit<StructureElementDto, 'url'> {
     readonly h1: string;
     readonly title: string;
     readonly prods?: Array<ZxProdDto>;

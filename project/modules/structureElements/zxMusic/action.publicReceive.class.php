@@ -64,7 +64,7 @@ class publicReceiveZxMusic extends structureElementAction
             $structureElement->persistElementData();
             $structureElement->updateMd5($this->getService(PathsManager::class)->getPath('uploads') . $structureElement->file, $structureElement->fileName);
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         } else {
             $structureElement->setViewName('form');
         }

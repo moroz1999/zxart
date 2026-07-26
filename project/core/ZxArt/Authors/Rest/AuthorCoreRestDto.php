@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Rest;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 readonly class AuthorCoreRestDto
 {
@@ -23,6 +24,7 @@ readonly class AuthorCoreRestDto
         public string $title,
         public string $realName,
         public string $url,
+        public string $imageUrl,
         public ?string $parentUrl,
         public ?string $parentTitle,
         public ?AuthorAliasRefRestDto $primaryAuthor,
@@ -43,6 +45,7 @@ readonly class AuthorCoreRestDto
         public AuthorTabsRestDto $tabs,
         #[Map(transform: MapCollection::class)]
         public array $breadcrumbs,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

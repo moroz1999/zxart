@@ -1,3 +1,13 @@
-<a [href]="href" class="pmi-link">
+<ng-template #label>
   <ng-content></ng-content>
-</a>
+</ng-template>
+
+@if (isInternal) {
+  <a class="pmi-link" [routerLink]="href" [queryParams]="queryParams">
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+  </a>
+} @else {
+  <a class="pmi-link" [href]="href">
+    <ng-container [ngTemplateOutlet]="label"></ng-container>
+  </a>
+}

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Dto;
 
+use ZxArt\PageMetadata\PageMetadataDto;
+
 readonly class ProdCoreDto
 {
     /**
@@ -30,9 +32,9 @@ readonly class ProdCoreDto
         public string $youtubeId,
         public string $generatedDescription,
         public string $dateCreated,
-        public string $catalogueYearUrl,
         public bool $canAddRelease,
-        public string $addReleaseUrl,
+        public int $downloadsCount,
+        public int $playsCount,
         public array $categoriesPaths,
         public array $languages,
         public array $hardware,
@@ -45,6 +47,7 @@ readonly class ProdCoreDto
         public ProdVotingDto $voting,
         public ?ProdSubmitterDto $submitter,
         public ProdTabsDto $tabs,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

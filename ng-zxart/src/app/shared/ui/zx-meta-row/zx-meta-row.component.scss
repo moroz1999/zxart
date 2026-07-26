@@ -1,0 +1,30 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  align-items: baseline;
+  gap: var(--zx-meta-row-gap);
+
+  @include bp.media-breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+.zx-meta-row__label {
+  flex-shrink: 0;
+  width: var(--zx-meta-row-label-width);
+  text-align: end;
+
+  @include bp.media-breakpoint-down(md) {
+    width: auto;
+    text-align: start;
+  }
+}
+
+.zx-meta-row__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-meta-row-value-gap);
+  min-width: 0;
+}

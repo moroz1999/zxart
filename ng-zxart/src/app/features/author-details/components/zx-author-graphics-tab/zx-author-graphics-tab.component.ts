@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
@@ -17,6 +18,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const PAGE_SIZE = 24;
 
@@ -43,6 +45,7 @@ interface YearGroup {
     ZxPictureGridSkeletonComponent,
     TextDirective,
     PictureGalleryHostComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-graphics-tab.component.html',
   styleUrl: './zx-author-graphics-tab.component.scss',
@@ -50,7 +53,6 @@ interface YearGroup {
 })
 export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  @Input() urlBase = '';
 
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
   private readonly formatStore = new BehaviorSubject<string>('');
@@ -71,6 +73,9 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
   get pagesAmount(): number { return Math.ceil(this.total / PAGE_SIZE); }
   get galleryIdValue(): string { return this.galleryId; }
 
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   constructor(
     private readonly authorPicturesService: AuthorPicturesService,
     private readonly pictureGalleryService: PictureGalleryService,
@@ -79,7 +84,13 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.pageStore = new BehaviorSubject<number>(this.parsePageFromUrl());
+    this.pageStore = new BehaviorSubject<number>(this.pageFromParams(this.route.snapshot.queryParamMap));
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      const page = this.pageFromParams(params);
+      if (page !== this.pageStore.getValue()) {
+        this.pageStore.next(page);
+      }
+    }));
     this.subscriptions.add(
       combineLatest([this.sortStore, this.formatStore, this.pageStore]).pipe(
         switchMap(([sort, format, page]) => {
@@ -115,30 +126,30 @@ export class ZxAuthorGraphicsTabComponent implements OnInit, OnDestroy {
 
   setSort(sort: string): void {
     this.sortStore.next(sort);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   setFormat(format: string): void {
     this.formatStore.next(format);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   onPageChange(page: number): void {
-    this.pageStore.next(page);
-    this.pushPageToUrl(page);
+    this.setPage(page);
     scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    const page = match ? parseInt(match[1], 10) : 1;
-    return page > 0 ? page : 1;
+  private pageFromParams(params: ParamMap): number {
+    return Math.max(1, Number(params.get('page')) || 1);
   }
 
-  private pushPageToUrl(page: number): void {
-    if (!this.urlBase) return;
-    const newUrl = page > 1 ? this.urlBase + 'page:' + page + '/' : this.urlBase;
-    window.history.pushState(null, '', newUrl);
+  /** The page lives in the `page` query param; the subscription reloads the list. */
+  private setPage(page: number): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {page: page > 1 ? page : null},
+      queryParamsHandling: 'merge',
+    });
   }
 
   private parseSortKey(sort: string): {column: string; dir: string} {

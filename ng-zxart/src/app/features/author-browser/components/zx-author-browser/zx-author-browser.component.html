@@ -1,4 +1,10 @@
-<zx-stack spacing="md">
+<zx-stack
+  spacing="md"
+  [appInViewport]="loadOnViewport && !loadStarted"
+  (inViewport)="onInViewport()"
+>
+  <zx-nav-chips *ngIf="mode === 'full'" [chips]="letterChips"></zx-nav-chips>
+
   <zx-filter-bar *ngIf="mode === 'full'">
     <zx-input
       class="filter-search"
@@ -28,7 +34,12 @@
     ></zx-filter-picker>
   </zx-filter-bar>
 
-  <zx-row-skeleton *ngIf="authors === null && !error" [count]="8"></zx-row-skeleton>
+  <h2 *ngIf="showRecentHeading" appHeading="title">{{ 'author-browser.recent' | translate }}</h2>
+
+  <zx-authors-table-skeleton
+    *ngIf="authors === null && !error"
+    [count]="skeletonCount"
+  ></zx-authors-table-skeleton>
 
   <div *ngIf="error" appText="caption" tone="danger">{{ 'author-browser.error' | translate }}</div>
   <div *ngIf="!loading && !error && authors !== null && authors.length === 0"
@@ -46,7 +57,8 @@
     *ngIf="mode === 'full' && pagesAmount > 1"
     [currentPage]="currentPage"
     [pagesAmount]="pagesAmount"
-    [urlBase]="urlBase"
+    [queryParams]="paginationQueryParams"
+    [queryParams]="{q: search || null, country: activeCountryId, city: activeCityId}"
     [loading]="loading"
     (pageChange)="onPageChange($event)"
   ></zx-pagination>

@@ -1,4 +1,4 @@
-<ng-container *ngIf="vm$ | async as vm">
+<ng-container *ngIf="active$ | async as active">
   <zx-button
     cdkOverlayOrigin
     #trigger="cdkOverlayOrigin"
@@ -8,8 +8,8 @@
     [attr.aria-expanded]="popoverOpen"
     (click)="togglePopover($event)"
   >
-    <span class="lt-flag">{{ vm.activeLanguage.flag }}</span>
-    <span class="lt-label">{{ vm.activeLanguage.title }}</span>
+    <span class="lt-flag">{{ active.flag }}</span>
+    <span class="lt-label">{{ active.title }}</span>
   </zx-button>
 
   <ng-template
@@ -23,11 +23,13 @@
     (overlayKeydown)="onOverlayKeydown($event)"
   >
     <zx-header-popover (click)="$event.stopPropagation()">
-      <zx-popover-menu-item
-        *ngFor="let lang of vm.languages"
-        [href]="lang.url"
-        [active]="lang.active"
-      >{{ lang.flag }} {{ lang.title }}</zx-popover-menu-item>
+      <button
+        *ngFor="let language of languages"
+        type="button"
+        class="lt-option"
+        [class.lt-option--active]="language.short === active.short"
+        (click)="choose(language)"
+      >{{ language.flag }} {{ language.title }}</button>
     </zx-header-popover>
   </ng-template>
 </ng-container>

@@ -1,0 +1,73 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: grid;
+  grid-template-columns: var(--zx-hero-media-width) minmax(0, 1fr);
+  column-gap: var(--zx-hero-column-gap);
+  row-gap: var(--zx-hero-row-gap);
+  box-sizing: border-box;
+  padding: var(--zx-hero-padding);
+  border: var(--zx-hero-border);
+  border-radius: var(--zx-hero-radius);
+  background: var(--zx-hero-bg);
+  box-shadow: var(--zx-hero-shadow);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+:host.zx-hero--media-none {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* `auto` is for media that sizes itself and can outgrow the panel. A wrapping
+   flex row lets such media claim the whole row and push the body below instead
+   of squashing it, which a grid track cannot do. */
+:host.zx-hero--media-auto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--zx-hero-row-gap) var(--zx-hero-column-gap);
+  grid-template-columns: none;
+
+  .zx-hero__media {
+    flex: 0 0 auto;
+  }
+
+  .zx-hero__body {
+    flex: 1 1 var(--zx-hero-body-min-width);
+  }
+
+  .zx-hero__bar {
+    flex: 1 1 100%;
+  }
+}
+
+:host.zx-hero--media-half { --zx-hero-media-width: minmax(0, 1fr); }
+:host.zx-hero--media-xs { --zx-hero-media-width: var(--zx-hero-media-width-xs); }
+:host.zx-hero--media-sm { --zx-hero-media-width: var(--zx-hero-media-width-sm); }
+:host.zx-hero--media-md { --zx-hero-media-width: var(--zx-hero-media-width-md); }
+:host.zx-hero--media-lg { --zx-hero-media-width: var(--zx-hero-media-width-lg); }
+:host.zx-hero--media-xl { --zx-hero-media-width: var(--zx-hero-media-width-xl); }
+
+.zx-hero__media {
+  min-width: 0;
+}
+
+.zx-hero__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-hero-body-gap);
+  min-width: 0;
+}
+
+.zx-hero__bar {
+  grid-column: 1 / -1;
+  padding-top: var(--zx-hero-bar-gap);
+  border-top: var(--zx-hero-bar-border);
+}
+
+.zx-hero__bar:empty {
+  display: none;
+}

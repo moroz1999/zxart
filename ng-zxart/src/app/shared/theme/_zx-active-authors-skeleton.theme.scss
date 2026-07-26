@@ -1,0 +1,14 @@
+:root {
+  /* Space below every active-author placeholder line. */
+  --zx-active-authors-skeleton-item-spacing: var(--space-8);
+  /* Placeholder height within the body-typography line box. */
+  --zx-active-authors-skeleton-bone-height: var(--space-16);
+  /* Default active-author placeholder width. */
+  --zx-active-authors-skeleton-bone-width-default: 75%;
+  /* Short active-author placeholder width. */
+  --zx-active-authors-skeleton-bone-width-short: 55%;
+  /* Long active-author placeholder width. */
+  --zx-active-authors-skeleton-bone-width-long: 85%;
+  /* Compact active-author placeholder width. */
+  --zx-active-authors-skeleton-bone-width-compact: 45%;
+}

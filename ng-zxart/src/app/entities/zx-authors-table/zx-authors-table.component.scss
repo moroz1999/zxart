@@ -2,15 +2,6 @@
   display: block;
 }
 
-zx-table {
-  transition: opacity var(--zx-author-browser-loading-transition) ease;
-}
-
-zx-table.loading {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 .col-num {
   width: var(--zx-author-browser-col-num-width);
 }

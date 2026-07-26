@@ -5,6 +5,7 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\EntityType;
+use ZxArt\Users\ClaimedAuthorService;
 
 /**
  * Class authorElement
@@ -198,6 +199,19 @@ class authorElement extends structureElement implements
             $result = array_merge($result, $this->worksList[$type]);
         }
         return $result;
+    }
+
+    /**
+     * The account claim is a plain `authorId` field on the user, not a structure
+     * link, so nothing drops it when the author goes away.
+     *
+     * @return void
+     */
+    #[Override]
+    public function deleteElementData()
+    {
+        $this->getService(ClaimedAuthorService::class)->reassign($this->getId(), 0);
+        parent::deleteElementData();
     }
 
     /**

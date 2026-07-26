@@ -26,6 +26,50 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **compo** - competition name (compo)
 - **language** - interface languages (array)
 
+### Catalogue Route
+
+The software catalogue uses `/prods` with Angular Router query parameters. Its
+filter state includes `cat`, `years`, `hw`, `languages`, `statuses`, `formats`,
+`types`, `letter`, `sorting`, `tags`, `countries`, `releases`,
+`includeSubcategoriesProds`, and `page`. Links from production and release
+details use the same query parameters.
+Authenticated users can open the Angular batch upload form from the catalogue
+page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
+The batch page reuses the Angular prod form with batch-specific file fields; it
+loads and submits its transient form through `/formdata/`.
+
+The same form is reachable from an author, group or party page
+(`/author/:id/prods/add`, `/group/:id/prods/add`, `/party/:id/prods/add`). The
+entity id is passed to `/formdata/` as `parentId`, the upload form is created
+under that element, and the uploaded productions are attached to it. Pictures and
+music have the same routes (`…/pictures/add`, `…/music/add`) backed by the
+`picturesUploadForm` and `musicUploadForm` pipelines, and a production's releases
+are added at `/prod/:id/releases/add`.
+
+The batch form shows every field its upload pipeline accepts; the values are
+shared by all works created from the selected files. `/formdata/` echoes the
+`parentId` back as `parent` (id, title, structure type) and the form prefills the
+field that element belongs in: the author becomes the works' author (a member for
+productions), the party their release party, the group their developer, and a
+browsed category the productions' category. The catalogue's upload button
+therefore carries the browsed category as `?cat=`. Fields the pipeline cannot
+apply are hidden in batch mode (for a production: compilation items, series and
+the extra file selectors; for a tune: the playback restriction).
+Catalogue responses expose entity identifiers and structure types. Angular
+templates build internal routes from those identifiers and do not receive routed
+URLs from the API.
+When a category is browsed it becomes the page's subject: its name replaces the
+section name in the `<h1>` and in the document title, and the catalogue root
+restores the route title. The catalogue breadcrumbs show the selected category
+chain. The categories
+selector marks the whole ancestor chain of the current category as selected, so
+the chain is derived from the loaded selector and its links are built from the
+category identifiers as `/prods?cat={id}`. At the catalogue root the trail falls
+back to the route-driven one built from the menu.
+Prod and release detail responses expose category IDs and raw language, hardware,
+year, and format values. Angular templates build catalogue filter links from
+those values.
+
 ### Relations with Other Entities
 
 #### Authorship
@@ -39,6 +83,9 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **categories** - production categories (array of IDs)
   - Define software type: games, demos, utilities, etc.
   - Special categories for compilations
+  - The categories are the production's structural parents, so it can never be
+    left without one: the Angular form requires at least one, and the backend
+    falls back to `misc` when the submitted set is empty.
 
 #### Production Hierarchy
 - **compilationItems** - compilation items (link `compilation`, role parent)
@@ -109,8 +156,9 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - Prod details core data includes the privilege-gated add-release URL. The button opens the legacy `zxRelease` public add form under the current prod.
 - Prod details tabs render real links and restore the selected tab from the `/tabs:{id}/` URL segment on load. Nested tab IDs such as `graphics`, `music`, or `series` activate their parent tab automatically.
 - The legacy details template mounts `zx-prod-details` directly; Angular renders the page title.
-- Prod details hero groups authors by roles before publishers, developer groups, and party metadata. Authors without roles remain under the generic authors label.
+- Prod details hero groups authors by roles before publishers and developer groups. Authors without roles remain under the generic authors label. The party appearance is rendered separately, in the hero provenance callout.
 - Prod details hero displays the `unknown` author role under the generic authors label, not under the global unknown-role translation.
+- Prod details core data includes `downloadsCount` and `playsCount` summed over the prod's releases: a prod owns no files of its own, so its hero statistics aggregate the release counters.
 - Prod details core data must include author/group aliases when they are stored directly in authorship, publishers, or developer group links.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.

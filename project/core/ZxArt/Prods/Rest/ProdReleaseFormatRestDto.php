@@ -10,7 +10,6 @@ readonly class ProdReleaseFormatRestDto
         public string $format,
         public string $label,
         public string $emoji,
-        public string $catalogueUrl,
     ) {
     }
 }

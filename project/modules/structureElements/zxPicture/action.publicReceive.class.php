@@ -73,7 +73,7 @@ class publicReceiveZxPicture extends structureElementAction
 
             $structureElement->deleteCachedImage();
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         } else {
             $structureElement->setViewName('form');
         }

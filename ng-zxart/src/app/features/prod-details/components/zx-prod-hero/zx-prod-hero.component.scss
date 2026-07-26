@@ -1,32 +1,3 @@
 :host {
   display: block;
 }
-
-.hero-year {
-  white-space: nowrap;
-}
-
-
-.hero-people__label {
-  color: var(--zx-prod-hero-people-label-color);
-  font-weight: 700;
-}
-
-.hero-people__link {
-  color: var(--zx-prod-hero-people-link-color);
-  text-decoration: underline;
-
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-.hero-people__sep {
-  color: var(--zx-prod-hero-people-sep-color);
-}
-
-.hero-cta-icon {
-  width: var(--zx-prod-hero-cta-icon-size);
-  height: var(--zx-prod-hero-cta-icon-size);
-}
-

@@ -1,4 +1,4 @@
-{if $element->description}{$element->description}<br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>{/if}
+{if $element->description}<div class="picture_details_description">{$element->description}</div><br>{include file=$theme->template("component.hr.tpl") symbol="-"}<br><br>{/if}
 	<b>{translations name='field.title'}:</b> {$element->title}	<br>
 	<b>{translations name='field.author'}:</b> {foreach from=$element->getAuthorsList() item=author name=authors}
 		<a href='{$author->getUrl()}'>{$author->title}</a>
@@ -35,7 +35,7 @@
 	<a rel="nofollow" class='picture_details_download' href="{$controller->baseURL}file/id:{$element->id}/filename:{$element->getFileName()}">{translations name='label.download'} {$element->getFileName('original', false)}</a><br>
 {/if}
 {if $element->getTagsList()}
-	<b>{translations name='field.tags'}: </b>{foreach from=$element->getTagsList() item=tag name=tags}<a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+	<b>{translations name='field.tags'}: </b>{foreach from=$element->getTagsList() item=tag name=tags}<a href="/pictures/tags/{$tag->id}">{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
 {/foreach}
 <br>{/if}
 {if $userElement = $element->getUserElement()}

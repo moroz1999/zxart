@@ -1,6 +1,6 @@
 :root {
   /* Size of the author avatar placeholder. */
-  --zx-author-details-skeleton-avatar-size: calc(var(--space-64) + var(--space-32));
+  --zx-author-details-skeleton-avatar-size: calc(var(--space-64) * 3);
   /* Radius of the author avatar placeholder. */
   --zx-author-details-skeleton-avatar-radius: var(--radius-sm);
   /* Width of the author title placeholder. */

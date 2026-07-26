@@ -1,5 +1,6 @@
 <zx-inline gap="sm" align="center" [wrap]="true">
-  <a *ngFor="let lang of languages" appText="label" tone="link" class="language-link" [href]="lang.catalogueUrl">
+  <a *ngFor="let lang of languages" appText="label" tone="link" class="language-link"
+     routerLink="/prods" [queryParams]="{languages: lang.code}">
     {{ lang.emoji }}<span class="language-link__title">{{ lang.title }}</span>
   </a>
 </zx-inline>

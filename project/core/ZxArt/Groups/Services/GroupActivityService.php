@@ -22,6 +22,7 @@ use ZxArtItem;
 readonly final class GroupActivityService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private GroupActivityRepository $activityRepository,
         private CommentsTransformer $commentsTransformer,
@@ -63,7 +64,7 @@ readonly final class GroupActivityService
                 ),
                 rating: (string)$vote['value'],
                 targetTitle: $this->decode((string)$target->getTitle()),
-                targetUrl: (string)$target->getUrl(),
+                targetUrl: $this->entityUrlResolver->urlFor($target),
             );
         }
 

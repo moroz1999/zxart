@@ -51,7 +51,6 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
                             }
                         }
                     }
-                    $parentTagElement->updateAmount();
                     $parentTagElement->persistElementData();
                     $joinedTagElement->deleteElementData();
                 }
@@ -253,7 +252,6 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     {
         if ($tagElement = $this->getTagElementByName($tagName, true)) {
             $this->getService(linksManager::class)->linkElements($tagElement->id, $elementId, 'tagLink', true);
-            $tagElement->updateAmount();
         }
         return $tagElement;
     }
@@ -262,7 +260,6 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     {
         if ($tagElement = $this->getTagElementByName($tagName, false)) {
             $this->getService(linksManager::class)->unLinkElements($tagElement->id, $elementId, 'tagLink');
-            $tagElement->updateAmount();
         }
     }
 }

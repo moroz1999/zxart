@@ -71,6 +71,7 @@ class Firstpage extends LoggedControllerApplication
                 'bestNewGames' => $this->handleBestNewGames(),
                 'recentParties' => $this->handleRecentParties(),
                 'bestPicturesOfMonth' => $this->handleBestPicturesOfMonth(),
+                'bestTunesOfMonth' => $this->handleBestTunesOfMonth(),
                 'latestAddedProds' => $this->handleLatestAddedProds(),
                 'latestAddedReleases' => $this->handleLatestAddedReleases(),
                 'supportProds' => $this->handleSupportProds(),
@@ -144,6 +145,13 @@ class Firstpage extends LoggedControllerApplication
         $limit = $this->getIntParam('limit', 12);
         $dtos = $this->picturesService->getBestOfMonth($limit);
         $this->assignSuccess($this->mapPictures($dtos));
+    }
+
+    protected function handleBestTunesOfMonth(): void
+    {
+        $limit = $this->getIntParam('limit', 10);
+        $dtos = $this->tunesService->getBestOfMonth($limit);
+        $this->assignSuccess($this->mapTunes($dtos));
     }
 
     protected function handleLatestAddedProds(): void

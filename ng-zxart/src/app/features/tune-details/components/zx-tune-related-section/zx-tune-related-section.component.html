@@ -6,7 +6,7 @@
         <a
           *ngFor="let item of rail.items"
           class="tn-mini"
-          [href]="item.url"
+          [routerLink]="item.url"
         >
           <zx-inline align="center" spacing="sm" [wrap]="false">
             <span class="tn-mini__body">

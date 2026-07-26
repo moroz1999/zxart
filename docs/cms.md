@@ -83,10 +83,13 @@ CMS content and functionality are organized as a hierarchy of "Structure Element
 - Element code is located in `{package}/modules/structureElements/{type}/`.
 - Main class: `structure.class.php`.
 - Definitions of available actions: `structure.actions.php`.
-- For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic string in the format `id/{parentId}/action/{actionName}/`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
+- For new elements that are not yet saved to the database, the `id` property is not `null`. It is a synthetic structure-path string ending in `type:{type}/action:{action}`. To check if an element is already persisted in the database, use `$element->hasActualStructureInfo()`.
+- Use `$element->getIdentifier()` when code must preserve a transient synthetic ID. `$element->getId()` returns the numeric persisted ID and therefore evaluates a transient ID as `0`.
 - Elements are linked to each other via links. The default link type is `structure`. 
 - Hardcoding link types is strictly prohibited. Use the `ZxArt\LinkTypes` enum instead.
 - When creating a new element using `structureManager::createElement()`, you can (and should, if it's not a standard parent-child relationship) specify a custom link type via the `$linkType` parameter. For example, comments are created using `LinkTypes::COMMENT_TARGET->value`.
+- Uploads submitted to a form arrive grouped by property (`$_FILES[...]['name'][field]`). A single-file chunk takes that map as is, but a multi-file selector (`filesDataChunk`) walks a list of files, so the values must be transposed per file index — `controller::parseFormData()` does it for legacy posts, `ZxArt\Forms\SubmittedFormFields` for `/formdata/`.
+- `structureManager::getElementsByType()` applies its `$limit` to the type query and filters by `$parentElementId` afterwards. Each language branch holds its own copy of section elements, so looking one up inside the current language must be done without a limit — a limit keeps only the lowest-id element and hides the other languages.
 
 ### Action System
 Actions on elements are implemented as separate classes in the module folder:

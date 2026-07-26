@@ -31,7 +31,6 @@ import {PictureGalleryHostComponent} from '../../../picture-gallery/components/p
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 
-
 @Component({
   selector: 'zx-author-mini-dashboard',
   standalone: true,
@@ -129,10 +128,9 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
       return;
     }
 
-    const baseUrl = this.parseBaseUrl();
-    this.gfxHref = baseUrl + 'tab:gfx/';
-    this.musicHref = baseUrl + 'tab:music/';
-    this.softwareHref = baseUrl + 'tab:software/';
+    this.gfxHref = this.tabHref('gfx');
+    this.musicHref = this.tabHref('music');
+    this.softwareHref = this.tabHref('software');
 
     const sectionCount = Number(this.tabs.hasPictures) + Number(this.tabs.hasTunes) + Number(this.tabs.hasProds);
     this.twoSectionLayout = sectionCount === 2;
@@ -178,10 +176,8 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     this.playerService.pause();
   }
 
-  private parseBaseUrl(): string {
-    let path = window.location.pathname;
-    path = path.replace(/\/tab:[^/]+/g, '');
-    path = path.replace(/\/page:\d+/g, '');
-    return path.endsWith('/') ? path : path + '/';
+  /** Sibling work tabs of the same author, as routed SPA URLs. */
+  private tabHref(tabId: string): string {
+    return `/author/${this.elementId}/${tabId}`;
   }
 }

@@ -61,7 +61,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
-        $moduleStructure['description'] = 'pre';
+        $moduleStructure['description'] = 'text';
         $moduleStructure['border'] = 'text';
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
@@ -303,34 +303,18 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
     public function getTextContent(): string
     {
         $translationsManager = $this->getService(translationsManager::class);
-        $parts = [];
-
-        $translation = $translationsManager->getTranslationByName("descriptions.picture") ?? '';
-        if ($translation !== '') {
-            $parts[] = $translation;
-        }
-
-        $parts[] = '"' . $this->title . '"';
-
-        if ($authorNames = $this->getAuthorNames()) {
-            $parts[] = 'от ' . implode(', ', $authorNames);
-        }
-
-        if ($partyElement = $this->getPartyElement()) {
-            $parts[] = $partyElement->title;
-        }
-
+        $description = (string)($translationsManager->getTranslationByName("descriptions.picture") ?? '');
+        $authorNames = implode(', ', array_map('strval', $this->getAuthorNames()));
+        $partyTitle = $this->getPartyElement()?->title ?? '';
         $releaseElement = $this->getReleaseElement();
-        $group = $releaseElement !== null ? $releaseElement->title : ($this->release ?? '');
-        if ($group !== '') {
-            $parts[] = $group;
-        }
+        $releaseTitle = (string)($releaseElement !== null ? $releaseElement->title : ($this->release ?? ''));
 
-        if ($this->year) {
-            $parts[] = $this->year;
-        }
-
-        return implode(', ', $parts);
+        $text = (string)str_ireplace(
+            ['%t', '%a', '%p', '%g', '%y'],
+            [$this->title, $authorNames, $partyTitle, $releaseTitle, $this->year],
+            $description,
+        );
+        return preg_replace('/,\s*,/u', ',', $text) ?? $text;
     }
 
     public function isFlickering(): bool

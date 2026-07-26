@@ -1,0 +1,8 @@
+:root {
+  /* Gap between "Role: names" groups. */
+  --zx-credits-row-group-gap: var(--space-8);
+  /* Gap between a role label and its names. */
+  --zx-credits-row-gap: var(--space-4);
+  /* Color of the `·` separator drawn between groups. */
+  --zx-credits-row-separator-color: var(--secondary-400);
+}

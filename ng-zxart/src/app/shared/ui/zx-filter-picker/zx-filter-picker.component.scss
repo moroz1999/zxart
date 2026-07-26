@@ -77,22 +77,9 @@
   transform: rotate(-135deg);
 }
 
+// Only the spacing hook remains; the button's own styles come from zx-close-button.
 .zx-filter-picker__clear {
   margin-right: var(--zx-filter-picker-clear-margin);
-  border: none;
-  background: none;
-  color: var(--zx-filter-picker-clear-color);
-  width: var(--zx-filter-picker-clear-size);
-  height: var(--zx-filter-picker-clear-size);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.zx-filter-picker__clear-icon {
-  width: var(--zx-filter-picker-clear-icon-size);
-  height: var(--zx-filter-picker-clear-icon-size);
 }
 
 .zx-filter-picker__popover {

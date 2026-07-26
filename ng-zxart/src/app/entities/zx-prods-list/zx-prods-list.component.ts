@@ -1,13 +1,10 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {ZxProdsList} from './models/zx-prods-list';
-import {ElementsService} from '../../shared/services/elements.service';
-import {ZxProdsListDto} from './models/zx-prods-list-dto';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {ZxProd} from '../../shared/models/zx-prod';
 import {TranslatePipe} from '@ngx-translate/core';
 import {ZxProdBlockComponent} from '../zx-prod-block/zx-prod-block.component';
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import {
   ZxProdsListSkeletonComponent
 } from '../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
@@ -31,64 +28,27 @@ interface ZxProdsListVm {
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdsListComponent implements OnInit {
-    @Input() public property: 'prods' | 'publishedProds' | 'releases' | 'compilations' | 'seriesProds' = 'prods';
-    @Input() elementId: number = 0;
+export class ZxProdsListComponent {
     @Input() layout: 'years' | 'list' = 'list';
     @Input() skeletonCount = 4;
     @Input() imagesLayout: 'loading' | 'screenshots' | 'inlays' | 'table' = 'loading';
+    /** Items as a stream, for callers that load them asynchronously. */
     @Input() set items$(value: Observable<ZxProd[] | null> | null) {
-        this.hasItemsObservableInput = value !== null;
-        if (value !== null) {
-            this.vm$ = value.pipe(map(items => this.buildVm(items)));
-        }
+        this.itemsSource.next(value ?? this.itemsStore);
     }
+
     @Input() set items(value: ZxProd[] | null) {
-        this.hasItemsInput = true;
         this.itemsStore.next(value);
-        if (this.initialized) {
-            this.useItemsInput();
-        }
+        this.itemsSource.next(this.itemsStore);
     }
 
-    public vm$: Observable<ZxProdsListVm | null> = of(null);
     private readonly itemsStore = new BehaviorSubject<ZxProd[] | null>(null);
-    private hasItemsObservableInput = false;
-    private hasItemsInput = false;
-    private initialized = false;
+    private readonly itemsSource = new BehaviorSubject<Observable<ZxProd[] | null>>(this.itemsStore);
 
-    constructor(
-        private elementsService: ElementsService,
-    ) {
-    }
-
-    ngOnInit(): void {
-        this.initialized = true;
-        if (this.hasItemsObservableInput) {
-            return;
-        }
-        if (this.hasItemsInput) {
-            this.useItemsInput();
-            return;
-        }
-        this.fetchPrefetchedModel();
-    }
-
-    private useItemsInput(): void {
-        this.vm$ = this.itemsStore.pipe(map(items => this.buildVm(items)));
-    }
-
-    private fetchPrefetchedModel(): void {
-        this.vm$ = this.elementsService.getPrefetchedModel<ZxProdsListDto, ZxProdsList>(
-            this.elementId,
-            ZxProdsList,
-        ).pipe(
-            map(model => {
-                const items = this.getItems(model);
-                return this.buildVm(items);
-            }),
-        );
-    }
+    public vm$: Observable<ZxProdsListVm | null> = this.itemsSource.pipe(
+        switchMap(items$ => items$),
+        map(items => this.buildVm(items)),
+    );
 
     private buildVm(items: ZxProd[] | null): ZxProdsListVm {
         return {
@@ -97,21 +57,6 @@ export class ZxProdsListComponent implements OnInit {
         };
     }
 
-    private getItems(model: ZxProdsList): ZxProd[] {
-        switch (this.property) {
-            case 'compilations':
-                return model.compilations;
-            case 'seriesProds':
-                return model.seriesProds;
-            case 'publishedProds':
-                return model.publishedProds;
-            case 'releases':
-                return model.releases;
-            case 'prods':
-            default:
-                return model.prods;
-        }
-    }
 
     private getYears(items: ZxProd[]): YearProds[] {
         let years = [] as Array<YearProds>;

@@ -1,0 +1,1308 @@
+<p>
+    Внимание: во всех запросах обязательно передавать непустой заголовок User Agent. Иначе IP будет заблокирован незамедлительно.
+</p>
+<h2>
+    Общее описание
+</h2>
+<ol>
+    <li>
+        API общедоступен по HTTP и отдаёт JSON
+    </li>
+    <li>
+        Точность информации не гарантируется, данные в базе постоянно чистятся, перепроверяются и дополняются.
+    </li>
+    <li>
+        Копирование, резервирование и использование информации в других базах данных всячески приветствуется
+    </li>
+    <li>
+        Формат API может измениться без предупреждения
+    </li>
+</ol>
+<h3>
+    Формат запроса
+</h3>
+<p>
+    Все параметры передаются в пути в виде пар name:value, разделённых слэшами, в произвольном порядке:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxPicture/limit:10/order:date,desc/">https://zxart.ee/api/export:zxPicture/limit:10/order:date,desc/</a>
+</p>
+<h3>
+    Общие параметры:
+</h3>
+<ul>
+    <li>
+        export - имя сущности, запрашиваемой у API. Все параметры фильтрации, ограничения и сортировки применяются именно к этому списку.<br>
+        Возможные значения:
+        <ul>
+            <li>
+                author
+            </li>
+            <li>
+                authorAlias
+            </li>
+            <li>
+                group
+            </li>
+            <li>
+                groupAlias
+            </li>
+            <li>
+                zxProdCategory
+            </li>
+            <li>
+                zxProd
+            </li>
+            <li>
+                zxRelease
+            </li>
+            <li>
+                zxPicture
+            </li>
+            <li>
+                zxMusic
+            </li>
+            <li>
+                party
+            </li>
+            <li>
+                country
+            </li>
+            <li>
+                city
+            </li>
+        </ul>
+    </li>
+    <li>
+        language - код языка для всей переводимой информации: названий стран, городов, категорий и тегов.<br>
+        Возможные значения:
+        <ul>
+            <li>
+                eng
+            </li>
+            <li>
+                rus
+            </li>
+            <li>
+                spa
+            </li>
+        </ul>
+    </li>
+    <li>
+        start - номер первого нужного элемента списка. По умолчанию ноль.
+    </li>
+    <li>
+        limit - количество элементов в списке. По умолчанию 1000.
+    </li>
+    <li>
+        order - сортировка списка в виде order:поле,направление. Направление - asc или desc, по умолчанию по возрастанию. Специальное значение order:rand возвращает элементы в случайном порядке. Поля сортировки различаются у разных сущностей и перечислены ниже в разделе каждой сущности.
+    </li>
+    <li>
+        filter - фильтрация списка, см. раздел «Фильтрация» ниже.
+    </li>
+</ul>
+<h3>
+    Формат ответа
+</h3>
+<p>
+    Ответ представляет собой JSON-объект со следующими ключами:
+</p>
+<ul>
+    <li>
+        responseStatus - success или fail
+    </li>
+    <li>
+        totalAmount - количество элементов, подходящих под фильтры, без учёта start и limit
+    </li>
+    <li>
+        start, limit - значения, применённые к этому ответу
+    </li>
+    <li>
+        responseData - объект, содержащий по одному ключу на каждое имя экспортируемой сущности со списком элементов
+    </li>
+</ul>
+<p>
+    Пустые значения не выводятся. Поле, равное нулю, пустой строке или пустому списку, вообще отсутствует в объекте элемента, поэтому отсутствующее поле всегда следует считать пустым значением.
+</p>
+<p>
+    Параметры start, limit и order не применяются к zxProdCategory, authorAlias, groupAlias, country и city. Эти сущности всегда возвращаются полным списком.
+</p>
+<h3>
+    Фильтрация
+</h3>
+<ul>
+    <li>
+        filter:name=value - один фильтр с одним значением
+    </li>
+    <li>
+        filter:name=value1,value2 - один фильтр с несколькими значениями, подходит любое из них
+    </li>
+    <li>
+        filter:name1=value1;name2=value2 - несколько фильтров, применяются все вместе
+    </li>
+    <li>
+        filter:name - фильтры-переключатели используются без значения
+    </li>
+</ul>
+<p>
+    Фильтр может относиться к сущности, отличной от экспортируемой. Например, filter:authorId=2333 вместе с export:zxPicture вернёт картины этого автора. Такое преобразование реализовано только для перечисленных ниже пар, а неподдерживаемая пара молча вернёт неотфильтрованный список:
+</p>
+<ul>
+    <li>
+        zxPicture фильтруется фильтрами author, party и zxProd
+    </li>
+    <li>
+        zxMusic фильтруется фильтрами author и party
+    </li>
+    <li>
+        zxProd фильтруется фильтрами author, zxPicture и zxRelease
+    </li>
+    <li>
+        zxRelease фильтруется фильтрами zxProd
+    </li>
+    <li>
+        author фильтруется фильтрами zxPicture, zxMusic и zxProd
+    </li>
+    <li>
+        authorAlias фильтруется фильтрами zxPicture и zxMusic
+    </li>
+    <li>
+        party фильтруется фильтрами zxPicture и zxMusic
+    </li>
+</ul>
+<h3>
+    Кодовые имена внешних баз данных:
+</h3>
+<p>
+    Эти кодовые имена используются в качестве ключей поля importIds.
+</p>
+<ul>
+    <li>
+        3a - ZXAAA
+    </li>
+    <li>
+        dzoo - DemoZoo
+    </li>
+    <li>
+        pouet - Pouet.net
+    </li>
+    <li>
+        sc - Spectrum Computing или ZXDB
+    </li>
+    <li>
+        wos - World Of Spectrum
+    </li>
+    <li>
+        vt - Virtual TR-DOS
+    </li>
+    <li>
+        zxd - Demotopia
+    </li>
+</ul>
+<h2>
+    Категория софта
+</h2>
+<p>
+    Все программные продукты сгруппированы по категориям софта в соответствии с жанром или типом.
+</p>
+<p>
+    Пример запроса всех доступных категорий софта:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/">https://zxart.ee/api/export:zxProdCategory/filter:zxProdCategoryAll/</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title
+    </li>
+    <li>
+        categories - список ID подкатегорий, находящихся в этой категории.
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        zxProdCategoryAll - всё дерево категорий
+    </li>
+    <li>
+        zxProdCategoryId - ID категорий
+    </li>
+</ul>
+<h2>
+    Программный продукт
+</h2>
+<p>
+    Эта сущность объединяет все связанные релизы на одной странице.
+</p>
+<p>
+    Первые 10 продуктов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProd/limit:10/">https://zxart.ee/api/export:zxProd/limit:10/</a>
+</p>
+<p>
+    Первые 10 продуктов, отсортированных по названию:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProd/limit:10/order:title,asc">https://zxart.ee/api/export:zxProd/limit:10/order:title,asc</a><br>
+    <br>
+    Последние 10 загруженных продуктов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProd/limit:10/order:date,desc">https://zxart.ee/api/export:zxProd/limit:10/order:date,desc</a>
+</p>
+<p>
+    Первые 10 продуктов категории с ID 92177:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/">https://zxart.ee/api/export:zxProd/start:0/limit:10/filter:zxProdCategory=92177/</a>
+</p>
+<p>
+    Продукт с ID 92841:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxProd/filter:zxProdId=92841">https://zxart.ee/api/export:zxProd/filter:zxProdId=92841</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        language - коды поддерживаемых языков по ISO 639-1
+    </li>
+    <li>
+        partyId - ID демопати или конкурса
+    </li>
+    <li>
+        partyPlace - место, занятое на пати
+    </li>
+    <li>
+        compo - название компо
+    </li>
+    <li>
+        year - год первой публикации
+    </li>
+    <li>
+        youtubeId - ID видео на youtube
+    </li>
+    <li>
+        description - текст описания
+    </li>
+    <li>
+        legalStatus - статус распространения
+        <ul>
+            <li>
+                unknown - неизвестен
+            </li>
+            <li>
+                allowed - распространение разрешено
+            </li>
+            <li>
+                allowedzxart - распространение разрешено только на ZX-Art
+            </li>
+            <li>
+                forbidden - распространение запрещено
+            </li>
+            <li>
+                forbiddenzxart - распространение запрещено только на ZX-Art
+            </li>
+            <li>
+                insales - всё ещё продаётся
+            </li>
+            <li>
+                donationware - donationware
+            </li>
+            <li>
+                recovered - восстановлен
+            </li>
+            <li>
+                unreleased - не выпускался
+            </li>
+            <li>
+                mia - утерян
+            </li>
+        </ul>
+    </li>
+    <li>
+        groupsIds - ID групп-разработчиков
+    </li>
+    <li>
+        publishersIds - ID групп-издателей
+    </li>
+    <li>
+        releasesIds - ID релизов
+    </li>
+    <li>
+        imagesUrls - список URL скриншотов
+    </li>
+    <li>
+        maps - список URL изображений карт игры
+    </li>
+    <li>
+        rzx - список URL записей прохождения в формате RZX
+    </li>
+    <li>
+        authorsInfo - информация об авторстве
+        <ul>
+            <li>
+                id - ID самой записи об авторстве
+            </li>
+            <li>
+                authorId
+            </li>
+            <li>
+                roles - список ролей, например code, graphics, music, gamedesign, text, unknown
+            </li>
+            <li>
+                startDate, endDate - период участия, если известен
+            </li>
+            <li>
+                type - сущность, к которой относится авторство, здесь prod
+            </li>
+        </ul>
+    </li>
+    <li>
+        connectedCategoriesIds - ID категорий, к которым относится продукт
+    </li>
+    <li>
+        categoriesString - полные пути категорий текстом, на выбранном языке
+    </li>
+    <li>
+        compilationItems - продукты, входящие в этот сборник
+    </li>
+    <li>
+        seriesProds - остальные продукты той же серии
+    </li>
+    <li>
+        votes - средний рейтинг
+    </li>
+    <li>
+        votesAmount - количество голосов
+    </li>
+    <li>
+        userVote - голос текущего пользователя, присутствует только для авторизованной сессии
+    </li>
+    <li>
+        externalLink - URL продукта на внешнем сайте
+    </li>
+    <li>
+        importIds - ID, используемые для этого продукта в других базах данных.
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date, year, votes, place
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        zxProdAll - все продукты
+    </li>
+    <li>
+        zxProdId - ID продуктов
+    </li>
+    <li>
+        zxProdCategory - ID категорий, включая подкатегории
+    </li>
+    <li>
+        zxProdCategoryStrict - ID категорий, без подкатегорий
+    </li>
+    <li>
+        zxProdYear - годы публикации. Значение this означает текущий и предыдущий год.
+    </li>
+    <li>
+        zxProdLanguage - коды языков по ISO 639-1
+    </li>
+    <li>
+        zxProdStatus - статусы распространения, см. поле legalStatus
+    </li>
+    <li>
+        zxProdNotStatus - исключает перечисленные статусы распространения
+    </li>
+    <li>
+        zxProdMinRating - минимальный рейтинг
+    </li>
+    <li>
+        zxProdCountryId - ID стран групп-разработчиков и авторов
+    </li>
+    <li>
+        zxProdFirstLetter - первая буква названия. Не-буквенное значение выбирает названия, не начинающиеся с латинской буквы.
+    </li>
+    <li>
+        zxProdTagsInclude - ID тегов
+    </li>
+    <li>
+        zxProdAddedDays - добавленные за последнее указанное количество дней
+    </li>
+    <li>
+        zxProdSearch - текст, который ищется в названии, альтернативном названии и описании
+    </li>
+</ul>
+<h2>
+    Релиз программного продукта
+</h2>
+<p>
+    Это версия или релиз программного продукта.
+</p>
+<p>
+    Первые 10 релизов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxRelease/limit:10/">https://zxart.ee/api/export:zxRelease/limit:10/</a>
+</p>
+<p>
+    Последние 10 загруженных релизов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxRelease/limit:10/order:date,desc">https://zxart.ee/api/export:zxRelease/limit:10/order:date,desc</a>
+</p>
+<p>
+    Релизы продукта с ID 92841:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxRelease/filter:zxProdId=92841">https://zxart.ee/api/export:zxRelease/filter:zxProdId=92841</a>
+</p>
+<p>
+    Релиз с ID 92844:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxRelease/filter:zxReleaseId=92844">https://zxart.ee/api/export:zxRelease/filter:zxReleaseId=92844</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title
+    </li>
+    <li>
+        prodId - ID родительского продукта
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        file - URL для скачивания файла
+    </li>
+    <li>
+        fileName - исходное имя файла
+    </li>
+    <li>
+        year - год первой публикации. Ноль, если совпадает с годом продукта
+    </li>
+    <li>
+        publishersIds - ID групп-издателей
+    </li>
+    <li>
+        language - коды поддерживаемых языков по ISO 639-1. Пусто, если совпадают с языками продукта
+    </li>
+    <li>
+        description - описание
+    </li>
+    <li>
+        authorsInfo - дополнительные авторы этого релиза, структура та же, что и у продукта, значение type равно release
+    </li>
+    <li>
+        hardwareRequired - список минимально необходимого железа, например zx48, zx128, kempston, ay, trdos
+    </li>
+    <li>
+        releaseType - тип релиза
+        <ul>
+            <li>
+                unknown - неизвестен
+            </li>
+            <li>
+                original - оригинал
+            </li>
+            <li>
+                rerelease - переиздание
+            </li>
+            <li>
+                adaptation - адаптация
+            </li>
+            <li>
+                localization - локализация
+            </li>
+            <li>
+                mod - модификация
+            </li>
+            <li>
+                crack - взлом
+            </li>
+            <li>
+                bugfix - исправление ошибок
+            </li>
+            <li>
+                mia - утерян
+            </li>
+            <li>
+                corrupted - повреждён
+            </li>
+            <li>
+                compilation - сборник
+            </li>
+            <li>
+                incomplete - неполный
+            </li>
+            <li>
+                demoversion - демоверсия
+            </li>
+        </ul>
+    </li>
+    <li>
+        releaseFormat - список форматов файлов релиза, например scl, tap, tzx, trd, z80, dsk, mgt, sna, rom, nex
+    </li>
+    <li>
+        releaseStructure - дерево файлов внутри архива релиза. Каждый элемент содержит id, parentId, elementId, fileName, size, md5, type, internalType, encoding, viewable и вложенный список items.
+    </li>
+    <li>
+        version - номер версии релиза
+    </li>
+    <li>
+        inlays - URL файлов обложек
+    </li>
+    <li>
+        ads - URL файлов рекламы
+    </li>
+    <li>
+        instructions - URL инструкций
+    </li>
+    <li>
+        votes - средний рейтинг
+    </li>
+    <li>
+        votesAmount - количество голосов
+    </li>
+    <li>
+        userVote - голос текущего пользователя, присутствует только для авторизованной сессии
+    </li>
+    <li>
+        importIds - ID, используемые для этого релиза в других базах данных.
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        zxReleaseId - ID релизов
+    </li>
+    <li>
+        zxReleaseFormat - форматы файлов, см. поле releaseFormat
+    </li>
+    <li>
+        zxReleaseReleaseType - типы релиза, см. поле releaseType
+    </li>
+    <li>
+        zxReleaseNotReleaseType - исключает перечисленные типы релиза
+    </li>
+    <li>
+        zxReleaseHardware - коды необходимого железа
+    </li>
+    <li>
+        zxReleaseLanguage - коды языков по ISO 639-1, при отсутствии собственных языков релиза используются языки продукта
+    </li>
+    <li>
+        zxReleaseSearch - текст, который ищется в названии и описании
+    </li>
+</ul>
+<h2>
+    Автор
+</h2>
+<p>
+    Автор - это человек.
+</p>
+<p>
+    Все авторы:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:author/limit:10/filter:authorAll">https://zxart.ee/api/export:author/limit:10/filter:authorAll</a>
+</p>
+<p>
+    10 последних добавленных авторов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc">https://zxart.ee/api/export:author/limit:10/filter:authorAll/order:date,desc</a>
+</p>
+<p>
+    Автор с ID 2202:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:author/filter:authorId=2202">https://zxart.ee/api/export:author/filter:authorId=2202</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - псевдоним автора
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated
+    </li>
+    <li>
+        dateModified
+    </li>
+    <li>
+        realName - настоящее имя
+    </li>
+    <li>
+        tunesQuantity - количество мелодий
+    </li>
+    <li>
+        picturesQuantity - количество картин
+    </li>
+    <li>
+        city - название города автора
+    </li>
+    <li>
+        country - название страны автора
+    </li>
+    <li>
+        importIds - ID, используемые для этого автора в других базах данных
+    </li>
+    <li>
+        aliases - список ID псевдонимов автора
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date, graphicsRating, musicRating
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        authorAll - все авторы
+    </li>
+    <li>
+        authorId - ID авторов
+    </li>
+    <li>
+        authorNickname - точные псевдонимы
+    </li>
+    <li>
+        authorFirstLetter - первая буква псевдонима
+    </li>
+    <li>
+        authorCity - ID городов
+    </li>
+    <li>
+        authorCountry - ID стран
+    </li>
+    <li>
+        authorOfItemType - authorPicture для авторов из раздела графики, authorMusic для авторов из раздела музыки
+    </li>
+    <li>
+        authorSearch - текст, который ищется в псевдониме и настоящем имени
+    </li>
+</ul>
+<h2>
+    Псевдоним автора
+</h2>
+<p>
+    Псевдоним автора - это альтернативный ник автора.
+</p>
+<p>
+    Все псевдонимы авторов:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:authorAlias/">https://zxart.ee/api/export:authorAlias/</a>
+</p>
+<p>
+    Псевдоним автора с ID 86146:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146">https://zxart.ee/api/export:authorAlias/filter:authorAliasId=86146</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - ник псевдонима автора
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated
+    </li>
+    <li>
+        dateModified
+    </li>
+    <li>
+        startDate, endDate - период, когда автор использовал этот ник
+    </li>
+    <li>
+        authorId - ID исходного автора
+    </li>
+    <li>
+        importIds - ID, используемые для этого псевдонима в других базах данных
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        authorAliasId - ID псевдонимов
+    </li>
+    <li>
+        authorAliasFirstLetter - первая буква ника
+    </li>
+    <li>
+        authorAliasSearch - текст, который ищется в нике
+    </li>
+</ul>
+<h2>
+    Картина
+</h2>
+<p>
+    Картина автора.
+</p>
+<p>
+    Первые 10 картин:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxPicture/filter:zxPictureAll/limit:10">https://zxart.ee/api/export:zxPicture/filter:zxPictureAll/limit:10</a>
+</p>
+<p>
+    10 последних добавленных картин:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxPicture/filter:zxPictureAll/limit:10/order:date,desc">https://zxart.ee/api/export:zxPicture/filter:zxPictureAll/limit:10/order:date,desc</a>
+</p>
+<p>
+    Картина с ID 2232:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232">https://zxart.ee/api/export:zxPicture/limit:10/filter:zxPictureId=2232</a>
+</p>
+<p>
+    Картины автора:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxPicture/limit:10/filter:authorId=2333">https://zxart.ee/api/export:zxPicture/limit:10/filter:authorId=2333</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название картины
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        partyId - ID демопати или конкурса
+    </li>
+    <li>
+        partyPlace - место, занятое на пати
+    </li>
+    <li>
+        compo - название компо
+    </li>
+    <li>
+        authorIds - список ID авторов картины
+    </li>
+    <li>
+        tags - названия тегов на выбранном языке
+    </li>
+    <li>
+        type - тип графического формата, например standard, attributes, gigascreen, chr$, sam4, sca, bsc, timex81, zxevo, nxi
+    </li>
+    <li>
+        rating - рейтинг ZX-Art
+    </li>
+    <li>
+        views - количество просмотров
+    </li>
+    <li>
+        year - год публикации
+    </li>
+    <li>
+        description - описание
+    </li>
+    <li>
+        imageUrl - URL изображения в формате PC
+    </li>
+    <li>
+        originalUrl - URL оригинального бинарного файла
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date, year, votes, views, place, commentsAmount
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        zxPictureAll - все картины
+    </li>
+    <li>
+        zxPictureId - ID картин
+    </li>
+    <li>
+        zxPictureNotId - исключает перечисленные ID картин
+    </li>
+    <li>
+        zxPictureType - типы графического формата, см. поле type
+    </li>
+    <li>
+        zxPictureNotType - исключает перечисленные типы графического формата
+    </li>
+    <li>
+        zxPictureYear - годы публикации. Значение this означает текущий и предыдущий год.
+    </li>
+    <li>
+        zxPictureCompo - названия компо
+    </li>
+    <li>
+        zxPicturePartyPlace - точные места, занятые на пати
+    </li>
+    <li>
+        zxPictureMinPartyPlace - место на пати не хуже указанного
+    </li>
+    <li>
+        zxPictureMinRating - минимальный рейтинг
+    </li>
+    <li>
+        zxPictureBestVotes - указанное количество картин с лучшим рейтингом
+    </li>
+    <li>
+        zxPictureTagsInclude - названия тегов
+    </li>
+    <li>
+        zxPictureTagsExclude - исключает указанные названия тегов
+    </li>
+    <li>
+        zxPictureStages - переключатель, выбирающий картины с промежуточными стадиями
+    </li>
+    <li>
+        zxPictureInspiration - переключатель, выбирающий картины, основанные на внешнем оригинале
+    </li>
+    <li>
+        zxPictureAddedDays - добавленные за последнее указанное количество дней
+    </li>
+    <li>
+        zxPictureTitleSearch - текст, который ищется в названии
+    </li>
+    <li>
+        zxPictureSearch - текст, который ищется в названии и описании
+    </li>
+</ul>
+<h2>
+    Мелодия
+</h2>
+<p>
+    Музыкальная композиция автора.
+</p>
+<p>
+    Первые 10 мелодий:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxMusic/limit:10/">https://zxart.ee/api/export:zxMusic/limit:10/</a>
+</p>
+<p>
+    Последние 10 добавленных мелодий:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxMusic/limit:10/order:date,desc">https://zxart.ee/api/export:zxMusic/limit:10/order:date,desc</a>
+</p>
+<p>
+    Мелодия с ID 19717:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717">https://zxart.ee/api/export:zxMusic/limit:10/filter:zxMusicId=19717</a>
+</p>
+<p>
+    Мелодии автора:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:zxMusic/limit:10/filter:authorId=2333">https://zxart.ee/api/export:zxMusic/limit:10/filter:authorId=2333</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название мелодии
+    </li>
+    <li>
+        internalTitle - название, записанное внутри файла модуля
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        time - длительность мелодии
+    </li>
+    <li>
+        partyId - ID демопати или конкурса
+    </li>
+    <li>
+        partyPlace - место, занятое на пати
+    </li>
+    <li>
+        compo - название компо
+    </li>
+    <li>
+        authorIds - список ID авторов мелодии
+    </li>
+    <li>
+        tags - названия тегов на выбранном языке
+    </li>
+    <li>
+        type - формат трекера, например PT3, PT2, STC, ASC, AY, SQT, VTX
+    </li>
+    <li>
+        rating - рейтинг ZX-Art
+    </li>
+    <li>
+        plays - количество прослушиваний
+    </li>
+    <li>
+        year - год публикации
+    </li>
+    <li>
+        description - описание
+    </li>
+    <li>
+        mp3FilePath - URL сконвертированного mp3-файла
+    </li>
+    <li>
+        originalUrl - URL оригинального бинарного файла
+    </li>
+    <li>
+        originalFileName - исходное имя файла
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date, year, votes, plays, place, commentsAmount
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        zxMusicAll - все мелодии
+    </li>
+    <li>
+        zxMusicId - ID мелодий
+    </li>
+    <li>
+        zxMusicFormat - форматы трекеров, см. поле type
+    </li>
+    <li>
+        zxMusicFormatGroup - семейства чипов, к которым относится формат: ay, beeper, digitalay, digitalbeeper, aybeeper, saa, fm, ts, tsfm
+    </li>
+    <li>
+        zxMusicYear - годы публикации
+    </li>
+    <li>
+        zxMusicCompo - названия компо
+    </li>
+    <li>
+        zxMusicMinPartyPlace - место на пати не хуже указанного
+    </li>
+    <li>
+        zxMusicMinRating - минимальный рейтинг
+    </li>
+    <li>
+        zxMusicBestVotes - указанное количество мелодий с лучшим рейтингом
+    </li>
+    <li>
+        zxMusicTagsInclude - названия тегов
+    </li>
+    <li>
+        zxMusicTagsExclude - исключает указанные названия тегов
+    </li>
+    <li>
+        zxMusicPlayable - переключатель, выбирающий мелодии, у которых есть mp3-версия
+    </li>
+    <li>
+        zxMusicGame - переключатель, выбирающий мелодии, относящиеся к игре
+    </li>
+    <li>
+        zxMusicLessListened - переключатель, выбирающий редко прослушиваемые мелодии
+    </li>
+    <li>
+        zxMusicAddedDays - добавленные за последнее указанное количество дней
+    </li>
+    <li>
+        zxMusicTitleSearch - текст, который ищется в названии и во внутреннем названии
+    </li>
+    <li>
+        zxMusicSearch - текст, который ищется в названии, внутреннем названии и описании
+    </li>
+</ul>
+<h2>
+    Группа
+</h2>
+<p>
+    Группой может быть демосценовая группа, издатель, компания или любое другое объединение авторов.
+</p>
+<p>
+    Первые 10 групп:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:group/limit:10/">https://zxart.ee/api/export:group/limit:10/</a>
+</p>
+<p>
+    Группа с ID 87126:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:group/filter:groupId=87126">https://zxart.ee/api/export:group/filter:groupId=87126</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название группы
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        city - название города группы
+    </li>
+    <li>
+        country - название страны группы
+    </li>
+    <li>
+        subGroupIds - подгруппы группы. Актуально для объединений.
+    </li>
+    <li>
+        importIds - ID, используемые для этой группы в других базах данных
+    </li>
+    <li>
+        aliases - список ID псевдонимов группы
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        groupId - ID групп
+    </li>
+    <li>
+        groupFirstLetter - первая буква названия
+    </li>
+    <li>
+        groupCity - ID городов
+    </li>
+    <li>
+        groupCountry - ID стран
+    </li>
+    <li>
+        groupSearch - текст, который ищется в названии
+    </li>
+</ul>
+<h2>
+    Псевдоним группы
+</h2>
+<p>
+    Псевдоним группы - это альтернативное название группы.
+</p>
+<p>
+    Все псевдонимы групп:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:groupAlias/">https://zxart.ee/api/export:groupAlias/</a>
+</p>
+<p>
+    Псевдоним группы с ID 176109:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:groupAlias/filter:groupAliasId=176109">https://zxart.ee/api/export:groupAlias/filter:groupAliasId=176109</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название псевдонима группы
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated - таймстамп даты создания
+    </li>
+    <li>
+        dateModified - таймстамп даты изменения
+    </li>
+    <li>
+        startDate, endDate - период, когда группа использовала это название
+    </li>
+    <li>
+        groupId - ID родительской группы
+    </li>
+    <li>
+        importIds - ID, используемые для этого псевдонима группы в других базах данных
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        groupAliasId - ID псевдонимов
+    </li>
+    <li>
+        groupAliasFirstLetter - первая буква названия
+    </li>
+    <li>
+        groupAliasSearch - текст, который ищется в названии
+    </li>
+</ul>
+<h2>
+    Демопати
+</h2>
+<p>
+    Демопати или любое другое соревнование, на котором показывались работы.
+</p>
+<p>
+    Все демопати:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:party/filter:partyAll">https://zxart.ee/api/export:party/filter:partyAll</a>
+</p>
+<p>
+    Демопати с ID 2201:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:party/filter:partyId=2201">https://zxart.ee/api/export:party/filter:partyId=2201</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название демопати
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+    <li>
+        dateCreated, dateModified - отформатированные даты, а не таймстампы
+    </li>
+    <li>
+        city - название города
+    </li>
+    <li>
+        country - название страны
+    </li>
+    <li>
+        year - год проведения демопати
+    </li>
+</ul>
+<h3>
+    Поля сортировки:
+</h3>
+<ul>
+    <li>
+        title, date
+    </li>
+</ul>
+<h3>
+    Фильтры:
+</h3>
+<ul>
+    <li>
+        partyAll - все демопати
+    </li>
+    <li>
+        partyId - ID демопати
+    </li>
+    <li>
+        partyCity - ID городов
+    </li>
+    <li>
+        partyCountry - ID стран
+    </li>
+    <li>
+        partyOfItemType - выбирает демопати, на которых есть работы указанного типа: zxPicture, zxMusic, zxProd
+    </li>
+    <li>
+        partySearch - текст, который ищется в названии
+    </li>
+</ul>
+<h2>
+    Страна и город
+</h2>
+<p>
+    Страны и города - это отдельные сущности. Их ID являются значениями фильтров authorCountry, authorCity, groupCountry, groupCity, partyCountry, partyCity и zxProdCountryId.
+</p>
+<p>
+    Все страны:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:country/">https://zxart.ee/api/export:country/</a>
+</p>
+<p>
+    Все города:<br>
+    <a target="_blank" rel="noopener noreferrer" href="https://zxart.ee/api/export:city/">https://zxart.ee/api/export:city/</a>
+</p>
+<h3>
+    Поля:
+</h3>
+<ul>
+    <li>
+        id
+    </li>
+    <li>
+        title - название на выбранном языке
+    </li>
+    <li>
+        url - URL на ZX-Art
+    </li>
+</ul>

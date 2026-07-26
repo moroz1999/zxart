@@ -1,0 +1,118 @@
+openapi: 3.0.0
+paths:
+  /authorlist/:
+    get:
+      summary: List authors and aliases or active authors
+      parameters:
+        - in: query
+          name: action
+          schema:
+            type: string
+            enum: [active, filters]
+        - in: query
+          name: items
+          schema:
+            type: string
+            enum: [graphics, music]
+        - in: query
+          name: years
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            default: 2
+      responses:
+        '200':
+          description: Paginated author list
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AuthorListResponse'
+                  - $ref: '#/components/schemas/ActiveAuthorsResponse'
+
+components:
+  schemas:
+    AuthorListResponse:
+      type: object
+      required: [total, items]
+      properties:
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorListItem'
+    AuthorListItem:
+      type: object
+      required: [id, url, entityType, title, realName, groups, musicRating, graphicsRating]
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        entityType:
+          type: string
+          enum: [author, authorAlias]
+        title:
+          type: string
+        realName:
+          type: string
+        realNameId:
+          type: integer
+          nullable: true
+        realNameUrl:
+          type: string
+          nullable: true
+        groups:
+          type: array
+          items:
+            type: object
+            required: [id, title, url]
+            properties:
+              id:
+                type: integer
+              title:
+                type: string
+              url:
+                type: string
+        countryId:
+          type: integer
+          nullable: true
+        countryTitle:
+          type: string
+          nullable: true
+        countryUrl:
+          type: string
+          nullable: true
+        cityId:
+          type: integer
+          nullable: true
+        cityTitle:
+          type: string
+          nullable: true
+        cityUrl:
+          type: string
+          nullable: true
+        musicRating:
+          type: number
+          format: float
+        graphicsRating:
+          type: number
+          format: float
+    ActiveAuthorsResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiveAuthor'
+    ActiveAuthor:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string

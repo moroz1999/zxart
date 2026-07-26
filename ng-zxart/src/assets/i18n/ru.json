@@ -1,4 +1,305 @@
 {
+  "tags-cloud": {
+    "error": "Не удалось загрузить теги.",
+    "empty": "Теги не найдены.",
+    "minimumAmount": "Минимум работ в теге",
+    "allTags": "Все теги"
+  },
+  "common": {
+    "not-found": "Страница не найдена",
+    "remove": "Удалить",
+    "choose-file": "Выбрать файл",
+    "nothing-found": "Ничего не найдено"
+  },
+  "form": {
+    "selected-count": "Выбрано: {{count}}",
+    "filter": "Фильтр…",
+    "move-left": "Сдвинуть влево",
+    "move-right": "Сдвинуть вправо",
+    "search": "Поиск…",
+    "drop-image": "Перетащите изображение",
+    "drop-file": "Перетащите файл",
+    "drop-hint": "или выберите на диске",
+    "add-author": "Добавить участника по нику…",
+    "add-role": "+ Роль",
+    "date-from": "с",
+    "date-to": "по",
+    "cancel": "Отмена",
+    "identification": "Идентификация",
+    "classification": "Классификация",
+    "relations": "Связи",
+    "authors": "Авторы",
+    "members": "Участники",
+    "media": "Медиа и файлы",
+    "files": "Файлы",
+    "images": "Изображения",
+    "image": "Изображение",
+    "description": "Описание",
+    "restrictions": "Ограничения",
+    "characteristics": "Характеристики",
+    "technical": "Технические параметры",
+    "geography": "География",
+    "period": "Период",
+    "links": "Ссылки",
+    "display": "Отображение",
+    "origin": "Происхождение",
+    "conversion": "Конверсия работ",
+    "subgroups": "Подгруппы",
+    "ok": "OK"
+  },
+  "form-page-title": {
+    "edit-author": "Редактирование автора «{{title}}»",
+    "edit-author-alias": "Редактирование псевдонима «{{title}}»",
+    "edit-group": "Редактирование группы «{{title}}»",
+    "edit-group-alias": "Редактирование псевдонима группы «{{title}}»",
+    "edit-party": "Редактирование пати «{{title}}»",
+    "edit-prod": "Редактирование программы «{{title}}»",
+    "edit-release": "Редактирование релиза «{{title}}»",
+    "edit-picture": "Редактирование картинки «{{title}}»",
+    "edit-tune": "Редактирование мелодии «{{title}}»",
+    "edit-press": "Редактирование статьи «{{title}}»",
+    "ai-prod": "Обработка программы «{{title}}» с помощью ИИ",
+    "ai-press": "Обработка статьи «{{title}}» с помощью ИИ",
+    "split-prod": "Разделение программы «{{title}}»"
+  },
+  "party-form": {
+    "title": "Название",
+    "abbreviation": "Аббревиатура",
+    "country": "Страна",
+    "city": "Город",
+    "image": "Логотип",
+    "search-placeholder": "Начните вводить для поиска…",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить"
+  },
+  "author-alias-form": {
+    "title": "Псевдоним",
+    "author": "Настоящий автор",
+    "start-date": "Использовался с (год)",
+    "end-date": "Использовался по (год)",
+    "display-in-music": "Показывать в музыке",
+    "display-in-graphics": "Показывать в графике",
+    "search-placeholder": "Начните вводить для поиска…",
+    "save": "Сохранить",
+    "error-title-required": "Укажите псевдоним",
+    "error-author-required": "Укажите автора",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить"
+  },
+  "author-form": {
+    "title": "Имя",
+    "real-name": "Настоящее имя",
+    "country": "Страна",
+    "city": "Город",
+    "artcity-id": "Artcity ID",
+    "wiki": "Ссылка на SpeccyWiki",
+    "zxtunes-id": "ZXTunes ID",
+    "image": "Фото",
+    "display-in-music": "Показывать в музыке",
+    "display-in-graphics": "Показывать в графике",
+    "deny-voting": "Отключить голосование",
+    "deny-comments": "Отключить комментарии",
+    "deny-3a": "Не показывать ссылки на zxaaa.net",
+    "search-placeholder": "Начните вводить для поиска…",
+    "save": "Сохранить",
+    "error-title-required": "Укажите имя",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить"
+  },
+  "group-form": {
+    "add-subgroup": "Добавить подгруппу…",
+    "title": "Название",
+    "type": "Тип",
+    "abbreviation": "Аббревиатура",
+    "slogan": "Слоган",
+    "country": "Страна",
+    "city": "Город",
+    "start-date": "Основана (год)",
+    "end-date": "Распущена (год)",
+    "wiki": "Ссылка на SpeccyWiki",
+    "website": "Сайт",
+    "image": "Логотип",
+    "members": "Участники",
+    "subgroups": "Подгруппы",
+    "search-placeholder": "Начните вводить для поиска…",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить"
+  },
+  "release-form": {
+    "title": "Название",
+    "version": "Версия",
+    "year": "Год",
+    "description": "Описание",
+    "deny-voting": "Отключить голосование",
+    "deny-comments": "Отключить комментарии",
+    "authors": "Авторы",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить",
+    "screenshots": "Скриншоты",
+    "inlays": "Инлеи",
+    "info-files": "Инфо-файлы",
+    "ad-files": "Рекламные файлы",
+    "prod": "Продукция",
+    "release-type": "Тип релиза",
+    "release-format": "Формат",
+    "language": "Язык",
+    "hardware-required": "Требуемое железо",
+    "publishers": "Издатели",
+    "add-publisher": "Добавить издателя…",
+    "file": "Файл",
+    "error-prod-required": "Укажите программу"
+  },
+  "prod-form": {
+    "files": "Файлы программ",
+    "title": "Название",
+    "alt-title": "Альтернативное название",
+    "external-link": "Внешняя ссылка",
+    "legal-status": "Правовой статус",
+    "groups": "Группы",
+    "publishers": "Издатели",
+    "add-group": "Добавить группу…",
+    "add-publisher": "Добавить издателя…",
+    "add-item": "Добавить…",
+    "party": "Пати",
+    "partyplace": "Место на пати",
+    "year": "Год",
+    "youtube-id": "YouTube id",
+    "compilation-items": "Программы компиляции",
+    "series-prods": "Программы серии",
+    "html-description": "HTML-описание",
+    "description": "Описание",
+    "instructions": "Инструкции",
+    "tags-text": "Теги",
+    "deny-voting": "Отключить голосование",
+    "deny-comments": "Отключить комментарии",
+    "authors": "Авторы",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить",
+    "error-files-required": "Выберите хотя бы один файл программы",
+    "legal": {
+      "unknown": "Неизвестно",
+      "allowed": "Разрешено",
+      "allowedzxart": "Разрешено для ZXArt",
+      "forbidden": "Запрещено",
+      "forbiddenzxart": "Запрещено для ZXArt",
+      "insales": "В продаже",
+      "mia": "Утрачено",
+      "unreleased": "Не выпущено",
+      "recovered": "Восстановлено",
+      "donationware": "Donationware"
+    },
+    "categories": "Категории",
+    "compo": "Конкурс",
+    "screenshots": "Скриншоты",
+    "inlays": "Инлеи",
+    "maps": "Карты",
+    "rzx": "RZX",
+    "language": "Язык",
+    "error-categories-required": "Выберите хотя бы одну категорию"
+  },
+  "tune-form": {
+    "batch-title": "Загрузить мелодии",
+    "title": "Название",
+    "authors": "Авторы",
+    "add-author": "Добавить автора…",
+    "format-group": "Формат",
+    "party": "Пати",
+    "partyplace": "Место на пати",
+    "year": "Год",
+    "prod-or-release": "Программа или релиз",
+    "tags-text": "Теги",
+    "description": "Описание",
+    "deny-playing": "Отключить воспроизведение",
+    "deny-voting": "Отключить голосование",
+    "deny-comments": "Отключить комментарии",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить",
+    "compo": "Конкурс",
+    "chip-type": "Тип чипа",
+    "channels-type": "Каналы",
+    "frequency": "Частота",
+    "int-frequency": "Частота прерываний",
+    "file": "Воспроизводимый файл",
+    "tracker-file": "Исходник/трекер",
+    "batch-files": "Файлы музыки",
+    "error-files-required": "Выберите хотя бы один музыкальный файл",
+    "error-authors-required": "Выберите хотя бы одного автора"
+  },
+  "picture-form": {
+    "batch-title": "Загрузить картинки",
+    "title": "Название",
+    "authors": "Авторы",
+    "original-authors": "Автор оригинала (для ремиксов)",
+    "add-author": "Добавить автора…",
+    "party": "Пати",
+    "partyplace": "Место на пати",
+    "year": "Год",
+    "prod-or-release": "Программа или релиз",
+    "tags-text": "Теги",
+    "description": "Описание",
+    "deny-voting": "Отключить голосование",
+    "deny-comments": "Отключить комментарии",
+    "save": "Сохранить",
+    "error-title-required": "Укажите название",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить",
+    "compo": "Конкурс",
+    "type": "Формат",
+    "palette": "Палитра",
+    "border": "Бордюр",
+    "rotation": "Поворот",
+    "image": "Изображение",
+    "inspired": "Источник вдохновения",
+    "inspired2": "Источник вдохновения 2",
+    "sequence": "Анимация",
+    "exe-file": "Исполняемый файл",
+    "batch-images": "Картинки",
+    "error-files-required": "Выберите хотя бы одну картинку",
+    "error-authors-required": "Выберите хотя бы одного автора"
+  },
+  "press-form": {
+    "title": "Заголовок",
+    "external-link": "Внешняя ссылка",
+    "authors": "Авторы",
+    "people": "Люди",
+    "software": "Софт",
+    "groups": "Группы",
+    "parties": "Пати",
+    "tunes": "Музыка",
+    "pictures": "Графика",
+    "add": "Добавить…",
+    "introduction": "Вступление",
+    "content": "Содержимое",
+    "original-content": "Оригинальный текст",
+    "allow-comments": "Разрешить комментарии",
+    "save": "Сохранить",
+    "error-load": "Не удалось загрузить форму",
+    "error-save": "Не удалось сохранить"
+  },
+  "press-details": {
+    "edit": "Редактировать",
+    "tags": "Теги",
+    "source": "Источник",
+    "authors": "Авторы",
+    "people": "Люди",
+    "groups": "Группы",
+    "software": "Софт",
+    "pictures": "Графика",
+    "tunes": "Музыка",
+    "parties": "Пати",
+    "morefromsame": "Ещё из этого издания",
+    "ai": "ИИ"
+  },
   "feedback": {
     "name": "Имя",
     "email": "Email",
@@ -35,8 +336,13 @@
       "activity": "Активность"
     },
     "header": {
-      "stats": "{{compos}} конкурсов, {{entries}} работ от {{authors}} авторов.",
-      "download-zip": "Скачать ZIP-архив"
+      "download-zip": "Скачать ZIP-архив",
+      "links": "Ссылки",
+      "counter": {
+        "compos": "конкурсов",
+        "entries": "работ",
+        "authors": "авторов"
+      }
     },
     "overview": {
       "prods": "Победители: программы",
@@ -162,7 +468,8 @@
       "organizer": "Организатор",
       "hardware": "Железо",
       "tester": "Тестер",
-      "gamedesigner": "Геймдизайнер"
+      "gamedesigner": "Геймдизайнер",
+      "unknown": "Неизвестно"
     },
     "connections": {
       "title": "Связи",
@@ -180,6 +487,7 @@
   },
   "prods-list": {
     "unknown-year": "Неизвестный год выпуска",
+    "batch-upload": "Массовая закачка",
     "include-subcategories-prods": "Показывать программы подкатегорий",
     "presets": {
       "year": "Лучшее за год",
@@ -358,6 +666,17 @@
     "theme.light": "Светлая",
     "theme.dark": "Тёмная"
   },
+  "top-pictures": {
+    "title": "Топ графики",
+    "filter": {
+      "all": "Все",
+      "loading-screens": "Игровые заставки",
+      "game-graphics": "Игровая графика"
+    }
+  },
+  "top-music": {
+    "title": "Топ музыки"
+  },
   "firstpage": {
     "title": "Игры, демосцена, графика и музыка ZX Spectrum",
     "configure": "Настроить главную",
@@ -368,18 +687,19 @@
     "realtime": "Реалтайм",
     "modules": {
       "newProds": "Новые программы",
-      "newPictures": "Новые картинки",
-      "newTunes": "Новая музыка",
+      "newPictures": "Новые добавленные картинки",
+      "newTunes": "Новые добавленные мелодии",
       "bestNewDemos": "Лучшие новые демо",
       "bestNewGames": "Лучшие новые игры",
       "recentParties": "Последние пати",
       "bestPicturesOfMonth": "Лучшие картинки месяца",
+      "bestTunesOfMonth": "Лучшие мелодии месяца",
       "latestAddedProds": "Последние добавленные программы",
       "latestAddedReleases": "Последние добавленные релизы",
       "supportProds": "Поддержать покупкой",
-      "unvotedPictures": "Неоцененные картинки",
+      "unvotedPictures": "Непроголосованные картинки",
       "randomGoodPictures": "Случайные хорошие картинки",
-      "unvotedTunes": "Неоцененная музыка",
+      "unvotedTunes": "Непроголосованные мелодии",
       "randomGoodTunes": "Случайная хорошая музыка",
       "viewAllButton": {
         "newProds": "Смотреть новые программы",
@@ -521,7 +841,6 @@
     "votes": "{{count}} голосов"
   },
   "zx-rating-strip": {
-    "label": "Рейтинг:",
     "artist": "художник",
     "musician": "музыкант"
   },
@@ -564,7 +883,8 @@
     "delete-confirm-title": "Удаление мелодии",
     "delete-confirm-message": "Вы уверены, что хотите удалить эту мелодию?",
     "delete-confirm-yes": "Удалить",
-    "delete-confirm-cancel": "Отмена"
+    "delete-confirm-cancel": "Отмена",
+    "musician": "Музыкант"
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -617,7 +937,8 @@
     "delete-confirm-title": "Удаление картинки",
     "delete-confirm-message": "Вы уверены, что хотите удалить эту картинку?",
     "delete-confirm-yes": "Удалить",
-    "delete-confirm-cancel": "Отмена"
+    "delete-confirm-cancel": "Отмена",
+    "artist": "Художник"
   },
   "header": {
     "language-trigger": {
@@ -851,9 +1172,33 @@
       "read": "Читать статью"
     }
   },
+  "authors-page": {
+    "active": {
+      "graphics": "Активные художники",
+      "music": "Активные музыканты",
+      "period": "Период активности",
+      "yearsShort": "{{count}} г.",
+      "empty": "Нет активных авторов"
+    },
+    "top": {
+      "graphics": "Топ художников",
+      "music": "Топ музыкантов"
+    },
+    "latest": {
+      "graphics": "Последние добавленные художники",
+      "music": "Последние добавленные музыканты"
+    }
+  },
   "author-browser": {
+    "add-author": "Добавить автора",
+    "title": {
+      "all": "Авторы",
+      "graphics": "Художники",
+      "music": "Музыканты"
+    },
     "error": "Не удалось загрузить авторов",
     "empty": "Авторы не найдены",
+    "recent": "Недавно добавленные авторы",
     "search": {
       "placeholder": "Поиск по нику, имени или алиасу..."
     },
@@ -893,8 +1238,10 @@
     }
   },
   "group-browser": {
+    "add-group": "Добавить группу",
     "error": "Не удалось загрузить группы",
     "empty": "Группы не найдены",
+    "recent": "Недавно добавленные группы",
     "search": {
       "placeholder": "Поиск по названию или аббревиатуре..."
     },
@@ -1024,7 +1371,6 @@
     "groups": "Производитель",
     "publishers": "Издатели",
     "authors": "Авторы",
-    "party": "Конкурс",
     "year": "Год публикации",
     "tags": "Теги",
     "links": "Ссылки",
@@ -1147,14 +1493,11 @@
     "donate": "Донатить",
     "buy": "Купить",
     "description": "Описание",
-    "version-label": "Версия:",
-    "format-label": "Формат:",
-    "language-label": "Язык:",
-    "hardware-label": "Железо:",
     "screenshots": "Скрины релиза",
     "inlays": "Обложки",
     "instructions": "Инструкция",
-    "back-to-prod": "к программе"
+    "back-to-prod": "к программе",
+    "version": "Версия"
   },
   "release-row": {
     "col-title": "Название",
@@ -1471,6 +1814,7 @@
     "realtime": "Работы Realtime-конкурса",
     "inspiration": "Имеет референсы",
     "stages": "Имеет стадии",
+    "from-game": "Из игр",
     "results-type": "Тип результатов",
     "results-type-zxitem": "Работы",
     "results-type-author": "Авторы",
@@ -1654,6 +1998,9 @@
       "gfx": "Картинки по годам"
     },
     "days30": "30 дней",
+    "section": {
+      "avg": "Средняя оценка по годам"
+    },
     "legend": {
       "all": "остальные",
       "rated": "с оценкой выше средней",
@@ -1692,5 +2039,193 @@
       "comments": "комм.",
       "tags": "тегов"
     }
+  },
+  "ai-form": {
+    "title": "Обработка ИИ",
+    "submit": "Перезапустить ИИ",
+    "prod-seo": "Перезапустить SEO",
+    "prod-intro": "Перезапустить интро",
+    "prod-categories": "Перезапустить категории и теги",
+    "press-fix": "Перезапустить исправление",
+    "press-translate": "Перезапустить перевод",
+    "press-parse": "Перезапустить парсинг",
+    "press-seo": "Перезапустить SEO",
+    "error-load": "Не удалось загрузить",
+    "error-save": "Не удалось сохранить"
+  },
+  "profile": {
+    "title": "Профиль",
+    "user-name": "Аккаунт",
+    "email": "Email",
+    "change-password": "Смена пароля",
+    "current-password": "Текущий пароль",
+    "new-password": "Новый пароль",
+    "repeat-password": "Новый пароль ещё раз",
+    "save": "Сменить пароль",
+    "password-changed": "Пароль изменён.",
+    "please-log-in": "Войдите, чтобы посмотреть профиль.",
+    "error-save": "Не удалось сохранить",
+    "error-password-wrong": "Текущий пароль неверен.",
+    "error-password-match": "Новые пароли не совпадают либо пароль пуст."
+  },
+  "playlists": {
+    "title": "Мои плейлисты",
+    "playlist-title": "Плейлист",
+    "new-title": "Новый плейлист",
+    "new-label": "Название",
+    "new-placeholder": "Название нового плейлиста",
+    "create": "Создать",
+    "rename": "Переименовать",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "empty": "У вас пока нет плейлистов.",
+    "no-items": "Пусто",
+    "delete-confirm-title": "Удаление плейлиста",
+    "delete-confirm-message": "Удалить плейлист «{{title}}»? Сами работы не удаляются.",
+    "counter": {
+      "pictures": "картин",
+      "tunes": "мелодий",
+      "prods": "программ"
+    }
+  },
+  "register": {
+    "title": "Регистрация",
+    "username": "Логин",
+    "email": "Email",
+    "password": "Пароль",
+    "password-repeat": "Повторите пароль",
+    "first-name": "Имя",
+    "last-name": "Фамилия",
+    "company": "Компания",
+    "website": "Сайт",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "city": "Город",
+    "post-index": "Индекс",
+    "country": "Страна",
+    "submit": "Зарегистрироваться",
+    "error-username": "Укажите логин",
+    "error-email": "Укажите email",
+    "error-email-format": "Введите корректный email",
+    "error-password": "Укажите пароль",
+    "error-password-match": "Пароли не совпадают",
+    "error-generic": "Не удалось зарегистрироваться"
+  },
+  "join-form": {
+    "author-as-alias": "Найти автора и присоединить его как псевдоним",
+    "author-merge": "Найти автора, и присоединить его через слияние",
+    "group-as-alias": "Найти группу и присоединить её как псевдоним",
+    "group-merge": "Найти группу, и присоединить её через слияние",
+    "prod-merge": "Найти программу, и присоединить её через слияние",
+    "releases-only": "Перенести только релизы",
+    "search": "Начните вводить для поиска…",
+    "submit": "Объединить",
+    "error-no-target": "Сначала выберите цель",
+    "error-save": "Не удалось объединить"
+  },
+  "convert": {
+    "confirm": "Преобразовать",
+    "failed": "Не удалось преобразовать",
+    "author-to-group": "Преобразовать этого автора в группу?",
+    "group-to-author": "Преобразовать эту группу в автора?",
+    "alias-to-author": "Преобразовать псевдоним в отдельного автора?",
+    "alias-to-group": "Преобразовать псевдоним в отдельную группу?"
+  },
+  "split-form": {
+    "intro": "Выберите элементы, которые нужно выделить в новую продукцию.",
+    "nothing": "Нечего разделять.",
+    "submit": "Разделить",
+    "error-empty": "Выберите хотя бы один элемент",
+    "error-load": "Не удалось загрузить",
+    "error-save": "Не удалось разделить"
+  },
+  "claim": {
+    "message": "Запросить привязку к этому автору. Модераторы рассмотрят заявку.",
+    "confirm": "Отправить заявку",
+    "sent": "Заявка отправлена.",
+    "failed": "Не удалось отправить заявку (возможно, вы уже привязаны к автору)."
+  },
+  "parties-page": {
+    "add-party": "Добавить пати",
+    "recent": "Последние пати",
+    "view-cards": "Карточки",
+    "view-table": "Таблица",
+    "col-title": "Название",
+    "col-year": "Год",
+    "col-country": "Страна",
+    "col-city": "Город"
+  },
+  "menu": {
+    "home": "Главная",
+    "software": "Софт",
+    "graphics": "Графика",
+    "music": "Музыка",
+    "authors": "Авторы",
+    "parties": "Пати",
+    "groups": "Группы",
+    "comments": "Комментарии",
+    "countries": "Страны",
+    "about": "Об архиве",
+    "soft": {
+      "demoscene": "Демосцена",
+      "games": "Игры",
+      "system": "Системное ПО",
+      "misc": "Разное",
+      "educational": "Образовательные",
+      "compilation": "Сборники",
+      "press": "Пресса",
+      "applications": "Прикладное ПО",
+      "series": "Серии",
+      "tags": "Теги"
+    },
+    "gfx": {
+      "home": "Главная",
+      "search": "Поиск по базе",
+      "authors": "Художники",
+      "top": "Топ",
+      "tags": "Теги"
+    },
+    "music-sub": {
+      "home": "Главная",
+      "search": "Поиск по базе",
+      "authors": "Музыканты",
+      "top": "Топ",
+      "tags": "Теги"
+    },
+    "about-sub": {
+      "stats": "Статистика",
+      "faq": "ЧаВо",
+      "feedback": "Обратная связь",
+      "api": "API",
+      "simple": "Упрощённая версия для ZX-клиентов",
+      "telegram": "Канал в Telegram",
+      "daily": "ZX-Art Daily (Телеграм)",
+      "filesearch": "Поиск по файлам",
+      "support": "Поддержать проект"
+    }
+  },
+  "content": {
+    "error": "Не удалось загрузить содержимое."
+  },
+  "password-reminder": {
+    "title": "Восстановление пароля",
+    "email": "Email",
+    "password": "Новый пароль",
+    "password-repeat": "Повторите пароль",
+    "request": "Отправить ссылку",
+    "reset": "Изменить пароль",
+    "requested": "Если аккаунт с таким email существует, ссылка для восстановления отправлена.",
+    "changed": "Пароль изменён.",
+    "error-email": "Введите корректный email.",
+    "error-password": "Введите новый пароль.",
+    "error-password-match": "Пароли не совпадают.",
+    "error-invalid": "Ссылка для восстановления недействительна или устарела.",
+    "error-generic": "Не удалось восстановить пароль. Попробуйте позже."
+  },
+  "hero": {
+    "rating": "рейтинг",
+    "votes": "оценок",
+    "downloads": "скачиваний",
+    "plays": "запусков"
   }
 }

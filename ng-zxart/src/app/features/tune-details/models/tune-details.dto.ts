@@ -1,8 +1,8 @@
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
 
 export interface TuneTagDto {
+  readonly id: number;
   readonly title: string;
-  readonly url: string;
 }
 
 export interface TunePartyContextDto {

@@ -6,72 +6,36 @@ import {
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
 const AUTHOR_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {
-    action: 'showPublicForm',
-    privilege: 'publicReceive',
-    labelKey: 'author-details.action.showPublicForm',
-  },
+  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
   {
     action: 'claim',
     privilege: 'claim',
     labelKey: 'author-details.action.claim',
     color: 'secondary',
+    confirm: {messageKey: 'claim.message', confirmLabelKey: 'claim.confirm'},
+    run: {action: 'claim', successKey: 'claim.sent', failureKey: 'claim.failed'},
   },
-  {
-    action: 'showJoinForm',
-    privilege: 'join',
-    labelKey: 'author-details.action.showJoinForm',
-    color: 'secondary',
-  },
+  {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
   {
     action: 'convertToGroup',
     privilege: 'convertToGroup',
     labelKey: 'author-details.action.convertToGroup',
     color: 'secondary',
-  },
-  {
-    action: 'publicDelete',
-    privilege: 'publicDelete',
-    labelKey: 'author-details.action.publicDelete',
-    color: 'danger',
-    confirm: {
-      titleKey: 'author-details.action.delete-confirm-title',
-      messageKey: 'author-details.action.delete-confirm-message',
-      confirmLabelKey: 'author-details.action.delete-confirm-yes',
-      cancelLabelKey: 'author-details.action.delete-confirm-cancel',
-    },
+    confirm: {messageKey: 'convert.author-to-group', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToGroup', targetPath: 'group', failureKey: 'convert.failed'},
   },
 ];
 
 const AUTHOR_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {
-    action: 'showPublicForm',
-    privilege: 'publicReceive',
-    labelKey: 'author-details.action.showPublicForm',
-  },
-  {
-    action: 'showJoinForm',
-    privilege: 'join',
-    labelKey: 'author-details.action.showJoinForm',
-    color: 'secondary',
-  },
+  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
+  {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
   {
     action: 'convertToAuthor',
     privilege: 'convertToAuthor',
     labelKey: 'author-details.action.convertToAuthor',
     color: 'secondary',
-  },
-  {
-    action: 'publicDelete',
-    privilege: 'publicDelete',
-    labelKey: 'author-details.action.publicDelete',
-    color: 'danger',
-    confirm: {
-      titleKey: 'author-details.action.delete-confirm-title',
-      messageKey: 'author-details.action.delete-confirm-message',
-      confirmLabelKey: 'author-details.action.delete-confirm-yes',
-      cancelLabelKey: 'author-details.action.delete-confirm-cancel',
-    },
+    confirm: {messageKey: 'convert.alias-to-author', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToAuthor', targetPath: 'author', failureKey: 'convert.failed'},
   },
 ];
 
@@ -80,6 +44,14 @@ const ADD_ALIAS_ACTION: ZxEditingControlAction = {
   privilege: 'authorAlias.showPublicForm',
   labelKey: 'author-details.action.add-alias',
   color: 'secondary',
+};
+
+/** Routed segment of each add action, appended to the entity URL. */
+const ADD_ACTION_SEGMENTS: Record<string, string> = {
+  'authorAlias.showPublicForm': 'aliases/add',
+  'picturesUploadForm.batchUploadForm': 'pictures/add',
+  'musicUploadForm.batchUploadForm': 'music/add',
+  'zxProdsUploadForm.batchUploadForm': 'prods/add',
 };
 
 const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
@@ -114,7 +86,6 @@ const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxAuthorEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'author' | 'authorAlias';
-  @Input({required: true}) authorUrl!: string;
 
   editActions: readonly ZxEditingControlAction[] = AUTHOR_EDIT_ACTIONS;
   addActions: readonly ZxEditingControlAction[] = [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
@@ -125,12 +96,13 @@ export class ZxAuthorEditingControlsComponent implements OnChanges {
   }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
-    if (action.includes('.')) {
-      const dot = action.indexOf('.');
-      const type = action.substring(0, dot);
-      const act = action.substring(dot + 1);
-      return `${this.authorUrl}type:${type}/action:${act}/`;
+    const base = this.entityType === 'authorAlias' ? 'author-alias' : 'author';
+    if (action === 'showJoinForm') {
+      return `/${base}/${elementId}/join`;
     }
-    return `${this.authorUrl}id:${elementId}/action:${action}/`;
+    return `/${base}/${elementId}/edit`;
   };
+
+  readonly buildAddActionUrl = (action: string, elementId: number): string =>
+    `/author/${elementId}/${ADD_ACTION_SEGMENTS[action] ?? ''}`;
 }

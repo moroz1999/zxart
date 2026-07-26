@@ -1,11 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {map} from 'rxjs/operators';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
-import {BackendLinksService} from '../../../header/services/backend-links.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {
   ZxTextSkeletonComponent
@@ -38,10 +35,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LatestCommentsComponent implements OnInit {
-  readonly allCommentsUrl = toSignal(
-    this.backendLinksService.links$.pipe(map(l => l.commentsUrl ?? '')),
-    {initialValue: ''},
-  );
+  readonly allCommentsUrl = signal('/comments');
 
   comments = signal<CommentDto[]>([]);
   loading = signal(false);
@@ -49,7 +43,6 @@ export class LatestCommentsComponent implements OnInit {
 
   constructor(
     private commentsService: CommentsService,
-    private backendLinksService: BackendLinksService,
     private sanitizer: DomSanitizer,
   ) {}
 

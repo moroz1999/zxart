@@ -15,6 +15,7 @@ use userElement;
 readonly class CommentsTransformer
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private privilegesManager $privilegesManager,
         private CurrentUserService $currentUserService,
     ) {
@@ -114,7 +115,7 @@ readonly class CommentsTransformer
 
         return new CommentTargetDto(
             title: html_entity_decode((string)$target->getTitle(), ENT_QUOTES),
-            url: $target->getUrl(),
+            url: $this->entityUrlResolver->urlFor($target),
             type: $type,
             imageUrl: $imageUrl,
             authorName: $authorName !== null ? html_entity_decode($authorName, ENT_QUOTES) : null,

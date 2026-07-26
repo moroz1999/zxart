@@ -1,0 +1,39 @@
+@if (vm$ | async; as vm) {
+  <zx-inset padding="lg">
+    <zx-stack spacing="md">
+      <zx-inline align="center" gap="sm">
+        <span appText="bodySm" tone="muted">{{ 'tags-cloud.minimumAmount' | translate }}</span>
+        <zx-select
+          [options]="(minimumAmountOptions$ | async) ?? []"
+          [ngModel]="selectedMinimumAmount"
+          [disabled]="vm.loading"
+          (ngModelChange)="onMinimumAmountChange($event)"
+        ></zx-select>
+      </zx-inline>
+
+      @if (vm.tags === null && vm.loading) {
+        <zx-tags-cloud-skeleton></zx-tags-cloud-skeleton>
+      } @else if (vm.error) {
+        <p appText="caption" tone="danger">{{ 'tags-cloud.error' | translate }}</p>
+      } @else if (vm.tags !== null && vm.tags.length === 0) {
+        <p appText="bodySm" tone="muted" [zxLoadingState]="vm.loading">
+          {{ 'tags-cloud.empty' | translate }}
+        </p>
+      } @else if (vm.tags !== null) {
+        <zx-inline
+          [wrap]="true"
+          align="baseline"
+          gap="md"
+          [zxLoadingState]="vm.loading"
+        >
+          @for (tag of vm.tags; track tag.id) {
+            <a
+              [class]="'tags-cloud__item tags-cloud__item--' + fontSize(tag.amount, vm.maxAmount)"
+              [routerLink]="[tagBasePath, tag.id]"
+            >{{ tag.title }}</a>
+          }
+        </zx-inline>
+      }
+    </zx-stack>
+  </zx-inset>
+}

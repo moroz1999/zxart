@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.col-num {
+  width: var(--zx-groups-table-skeleton-col-num-width);
+}
+
+.col-title {
+  min-width: var(--zx-groups-table-skeleton-col-title-min-width);
+}
+
+.col-type {
+  min-width: var(--zx-groups-table-skeleton-col-type-min-width);
+}
+
+.col-realname {
+  min-width: var(--zx-groups-table-skeleton-col-realname-min-width);
+}
+
+.col-country,
+.col-city {
+  min-width: var(--zx-groups-table-skeleton-col-location-min-width);
+}
+
+.skeleton-cell {
+  height: var(--zx-groups-table-skeleton-cell-height);
+}
+
+.skeleton-cell--number {
+  width: var(--zx-groups-table-skeleton-number-width);
+}
+
+.skeleton-cell--title {
+  width: var(--zx-groups-table-skeleton-title-width);
+}
+
+.skeleton-cell--type {
+  width: var(--zx-groups-table-skeleton-type-width);
+}
+
+.skeleton-cell--realname {
+  width: var(--zx-groups-table-skeleton-realname-width);
+}
+
+.skeleton-cell--location {
+  width: var(--zx-groups-table-skeleton-location-width);
+}

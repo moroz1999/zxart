@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace ZxArt\Tunes\Services;
 
 use structureManager;
+use tagElement;
 use translationsManager;
 use ZxArt\Prods\ProdInfoBuilder;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Tunes\Dto\TuneDetailsDto;
 use ZxArt\Tunes\Dto\TuneDownloadDto;
 use ZxArt\Tunes\Dto\TunePartyContextDto;
@@ -25,10 +27,12 @@ use zxMusicElement;
 readonly class TuneDetailsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private translationsManager $translationsManager,
         private TunesTransformer $tunesTransformer,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
     ) {
     }
 
@@ -64,7 +68,7 @@ readonly class TuneDetailsService
             originalFileUrl: $tune->originalFileUrl,
             trackerFileUrl: $tune->trackerFileUrl,
             description: $element->description
-                ? $this->infoBuilder->decodeText((string)$element->description)
+                ? $this->descriptionFormatter->decode((string)$element->description)
                 : null,
             tags: $this->buildTags($element),
             partyContext: $this->buildPartyContext($element, $tune->party?->place),
@@ -104,9 +108,12 @@ readonly class TuneDetailsService
     {
         $result = [];
         foreach (($element->getTagsList() ?: []) as $tag) {
+            if (!$tag instanceof tagElement) {
+                continue;
+            }
             $result[] = new TuneTagDto(
+                id: $tag->getId(),
                 title: $this->infoBuilder->decodeText((string)$tag->getTitle()),
-                url: (string)$tag->getUrl(),
             );
         }
         return $result;
@@ -125,7 +132,7 @@ readonly class TuneDetailsService
         }
         return new TunePartyContextDto(
             title: $this->infoBuilder->decodeText((string)$party->getTitle()),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             place: $place,
             compoLabel: $compoLabel,
         );

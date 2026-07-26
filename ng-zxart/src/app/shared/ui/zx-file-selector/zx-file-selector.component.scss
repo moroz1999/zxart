@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.zx-file-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.zx-file-selector__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+
+.zx-file-selector__item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+// Uniform 4:3 thumbnail box so every screenshot lines up regardless of its
+// intrinsic size.
+.zx-file-selector__thumb-wrap {
+  position: relative;
+  width: 160px;
+  height: 120px;
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+  background: var(--background-deep);
+  overflow: hidden;
+}
+
+.zx-file-selector__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.zx-file-selector__remove {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+}
+
+.zx-file-selector__controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: linear-gradient(to top, color-mix(in srgb, var(--black) 55%, transparent), transparent);
+  opacity: 0;
+  transition: opacity var(--animation-sm) ease;
+}
+
+.zx-file-selector__thumb-wrap:hover .zx-file-selector__controls,
+.zx-file-selector__thumb-wrap:focus-within .zx-file-selector__controls {
+  opacity: 1;
+}
+
+.zx-file-selector__ctrl-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.zx-file-selector__name {
+  width: 160px;
+  font-size: var(--zx-font-size-xs);
+  color: var(--text-light-color);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Non-image files: a compact filename row with the same delete control.
+.zx-file-selector__file {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-size: var(--zx-font-size-sm);
+}
+
+.zx-file-selector__file-name {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zx-file-selector__staged {
+  margin: 0;
+  padding-left: var(--space-20);
+  color: var(--text-light-color);
+  font-size: var(--zx-font-size-sm);
+}

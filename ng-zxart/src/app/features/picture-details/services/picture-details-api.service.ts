@@ -30,7 +30,7 @@ export class PictureDetailsApiService {
 
   logView(pictureId: number): Observable<void> {
     const params = new HttpParams().set('action', 'logView').set('id', String(pictureId));
-    return this.http.post<void>('/pictures/', {}, {params}).pipe(
+    return this.http.post<void>('/pictures-data/', {}, {params}).pipe(
       catchError(() => of(undefined)),
     );
   }

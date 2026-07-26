@@ -12,10 +12,8 @@ use Symfony\Component\ObjectMapper\ObjectMapper;
 use structureManager;
 use Throwable;
 use ZxArt\AuthorList\AuthorListService;
-use ZxArt\AuthorList\Dto\ActiveAuthorDto;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
-use ZxArt\AuthorList\Rest\ActiveAuthorRestDto;
 use ZxArt\AuthorList\Rest\AuthorFilterOptionRestDto;
 use ZxArt\AuthorList\Rest\AuthorFilterOptionsRestDto;
 use ZxArt\AuthorList\Rest\AuthorListItemRestDto;
@@ -48,13 +46,6 @@ class Authorlist extends LoggedControllerApplication
     public function execute($controller): void
     {
         $action = $this->getParameter('action') ?: '';
-        $elementId = (int)($this->getParameter('elementId') ?? 0);
-
-        if ($elementId <= 0) {
-            $this->assignError('elementId is required', 400);
-            $this->renderer->display();
-            return;
-        }
 
         try {
             if ($action === 'filters') {
@@ -70,6 +61,15 @@ class Authorlist extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    private function handleActive(): void
+    {
+        $items = $this->getParameter('items') ?: null;
+        $years = (int)($this->getParameter('years') ?: AuthorListService::ACTIVE_YEARS_DEFAULT);
+        $authors = $this->authorListService->getActive($items, $years);
+
+        $this->assignSuccess(['items' => $authors]);
     }
 
     private function handleList(): void
@@ -107,20 +107,6 @@ class Authorlist extends LoggedControllerApplication
             'items' => array_map(
                 fn(AuthorListItemDto $dto) => $this->objectMapper->map($dto, AuthorListItemRestDto::class),
                 $result['items']
-            ),
-        ]);
-    }
-
-    private function handleActive(): void
-    {
-        $items = $this->getParameter('items') ?: null;
-        $years = (int)($this->getParameter('years') ?: AuthorListService::ACTIVE_YEARS_DEFAULT);
-        $authors = $this->authorListService->getActive($items, $years);
-
-        $this->assignSuccess([
-            'items' => array_map(
-                fn(ActiveAuthorDto $dto) => $this->objectMapper->map($dto, ActiveAuthorRestDto::class),
-                $authors
             ),
         ]);
     }

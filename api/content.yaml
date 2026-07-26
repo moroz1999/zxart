@@ -1,0 +1,44 @@
+paths:
+  /content-data/:
+    get:
+      summary: Static content page HTML (About, FAQ, support, API)
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: string
+            enum: [about, faq, support, api]
+        - in: query
+          name: lang
+          required: false
+          schema:
+            type: string
+          description: Language code; falls back to English when the translation is missing
+      responses:
+        '200':
+          description: Content HTML for the page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentPayload'
+        '404':
+          description: Unknown page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    ContentPayload:
+      type: object
+      required: [html]
+      properties:
+        html:
+          type: string
+    ErrorPayload:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

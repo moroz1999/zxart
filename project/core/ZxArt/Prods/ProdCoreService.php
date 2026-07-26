@@ -12,6 +12,7 @@ use structureElement;
 use tagElement;
 use userElement;
 use privilegesManager;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
@@ -29,10 +30,12 @@ use zxProdElement;
 readonly class ProdCoreService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ProdTabsRepository $prodTabsRepository,
         private privilegesManager $privilegesManager,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -50,7 +53,7 @@ readonly class ProdCoreService
             elementId: $element->getId(),
             title: $this->infoBuilder->decodeText($element->title),
             altTitle: $this->infoBuilder->decodeText($element->altTitle),
-            prodUrl: (string)$element->getUrl(),
+            prodUrl: $this->entityUrlResolver->urlFor($element),
             h1: (string)$element->getH1(),
             metaTitle: (string)$element->getMetaTitle(),
             year: $year,
@@ -60,13 +63,13 @@ readonly class ProdCoreService
             youtubeId: $element->youtubeId,
             generatedDescription: (string)$element->getGeneratedDescription(),
             dateCreated: $element->dateCreated,
-            catalogueYearUrl: $year > 0 ? $element->getCatalogueUrl(['years' => $year]) : '',
             canAddRelease: $this->privilegesManager->checkPrivilegesForAction(
                 $element->getId(),
                 'publicAdd',
                 StructureType::ZxRelease->value,
             ) === true,
-            addReleaseUrl: (string)$element->getUrl() . 'type:' . StructureType::ZxRelease->value . '/action:publicAdd/',
+            downloadsCount: $this->sumReleaseDownloads($element),
+            playsCount: $this->sumReleasePlays($element),
             categoriesPaths: $this->buildCategoriesPaths($element),
             languages: $this->infoBuilder->buildLanguages($element),
             hardware: $this->infoBuilder->buildHardware($element),
@@ -79,7 +82,29 @@ readonly class ProdCoreService
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
             tabs: $this->prodTabsRepository->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
+            metadata: $this->pageMetadataService->getForPath('/prod/' . $elementId),
         );
+    }
+
+    /**
+     * A prod has no downloads of its own: the files belong to its releases.
+     */
+    private function sumReleaseDownloads(zxProdElement $element): int
+    {
+        $total = 0;
+        foreach ($element->getReleasesList() as $release) {
+            $total += $release->getDownloadsCount();
+        }
+        return $total;
+    }
+
+    private function sumReleasePlays(zxProdElement $element): int
+    {
+        $total = 0;
+        foreach ($element->getReleasesList() as $release) {
+            $total += $release->getPlaysCount();
+        }
+        return $total;
     }
 
     /**
@@ -97,7 +122,6 @@ readonly class ProdCoreService
                 $categories[] = new ProdCategoryRefDto(
                     id: $category->getId(),
                     title: $this->infoBuilder->decodeText($category->title),
-                    url: (string)$category->getUrl(),
                 );
             }
             if ($categories) {
@@ -125,7 +149,7 @@ readonly class ProdCoreService
             $authors[] = new ProdAuthorInfoDto(
                 id: $authorElement->getId(),
                 title: $this->infoBuilder->decodeText($authorElement->title),
-                url: (string)$authorElement->getUrl(),
+                url: $this->entityUrlResolver->urlFor($authorElement),
                 roles: $info['roles'] ?? [],
             );
         }
@@ -151,7 +175,7 @@ readonly class ProdCoreService
             $refs[] = new ProdGroupRefDto(
                 id: $group->getId(),
                 title: $this->infoBuilder->decodeText($group->title),
-                url: (string)$group->getUrl(),
+                url: $this->entityUrlResolver->urlFor($group),
             );
         }
         return $refs;
@@ -167,10 +191,10 @@ readonly class ProdCoreService
             if (!$tag instanceof tagElement) {
                 continue;
             }
+            $title = $this->infoBuilder->decodeText($tag->title);
             $tags[] = new ProdTagRefDto(
                 id: $tag->getId(),
-                title: $this->infoBuilder->decodeText($tag->title),
-                url: (string)$tag->getUrl(),
+                title: $title,
             );
         }
         return $tags;

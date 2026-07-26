@@ -17,6 +17,11 @@
   max-width: none;
 }
 
+.zx-form--cols-2 {
+  gap: var(--zx-form-sections-gap);
+  max-width: var(--zx-form-cols-max-width);
+}
+
 .zx-form--section-wrap > zx-form-section {
   flex: 1 1 var(--zx-form-section-min-width);
 }

@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentDto} from '../../models/comment.dto';
 import {CommentsService} from '../../services/comments.service';
@@ -36,7 +36,9 @@ export class CommentFormComponent implements OnInit {
   @Output() commentSaved = new EventEmitter<CommentDto>();
   @Output() cancelled = new EventEmitter<void>();
 
-  commentForm: FormGroup;
+  readonly commentForm = this.fb.group({
+    content: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
+  });
   isSubmitting = false;
   errorMessage?: string;
 
@@ -46,9 +48,6 @@ export class CommentFormComponent implements OnInit {
     private fb: FormBuilder,
     private commentsService: CommentsService,
   ) {
-    this.commentForm = this.fb.group({
-      content: ['', [Validators.required, Validators.minLength(2)]]
-    });
   }
 
   ngOnInit(): void {
@@ -67,7 +66,8 @@ export class CommentFormComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = undefined;
 
-    const {content} = this.commentForm.value;
+    // `value` omits disabled controls and so is partial; the raw value is complete
+    const {content} = this.commentForm.getRawValue();
 
     if (this.commentToEdit) {
       this.commentsService.updateComment(this.commentToEdit.id, content).subscribe({

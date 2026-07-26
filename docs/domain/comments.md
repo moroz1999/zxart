@@ -42,6 +42,7 @@
 
 ## Angular Integration
 - Comments are rendered with `<app-comments-list element-id="..."></app-comments-list>` in legacy detail templates.
-- The Angular comments component requests data through `CommentsService`; legacy templates do not include `component.comments.tpl` for the same comments list.
+- The Angular comments component requests data through `CommentsService` against `/comments-data/` (`ZxArt\Controllers\CommentsData`); legacy templates do not include `component.comments.tpl` for the same comments list.
+- The all-comments list is a standalone SPA route `/comments` (`pages/comments`), with the page number in the router query param.
 - REST responses expose `translated` for the requested `lang` query parameter. Angular displays `translated` when it is non-empty and falls back to `content`.
 - Links from latest comments to a product comment include the explicit `/tabs:discussion/` segment before the `#comment{id}` anchor.

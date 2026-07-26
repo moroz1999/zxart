@@ -1,0 +1,7 @@
+<zx-inline align="center" spacing="sm" [wrap]="true">
+  <zx-party-place [place]="party.place"></zx-party-place>
+  <span appText="body">
+    <a [routerLink]="party.url" appText="body" tone="link">{{ party.title }}</a>
+    <span *ngIf="party.compoLabel" appText="body" tone="muted"> · {{ party.compoLabel }}</span>
+  </span>
+</zx-inline>

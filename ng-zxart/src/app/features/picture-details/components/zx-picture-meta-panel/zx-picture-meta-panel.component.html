@@ -5,9 +5,9 @@
         {{ picture.year }}
       </zx-item-data-item>
       <zx-item-data-item [label]="'picture-details.format' | translate">
-        <a *ngIf="graphicsBaseUrl$ | async as baseUrl; else plainFormat"
-           [href]="baseUrl + 'pictureType:' + picture.type + '/'" appText="body" tone="link">{{ picture.formatLabel }}</a>
-        <ng-template #plainFormat>{{ picture.formatLabel }}</ng-template><span *ngIf="picture.resolution"> · {{ picture.resolution }}</span>
+        <a routerLink="/pictures/search"
+           [queryParams]="{pictureType: picture.type}"
+           appText="body" tone="link">{{ picture.formatLabel }}</a><span *ngIf="picture.resolution"> · {{ picture.resolution }}</span>
       </zx-item-data-item>
       <zx-item-data-item [label]="'picture-details.palette' | translate">
         {{ picture.paletteLabel }}
@@ -16,7 +16,7 @@
         {{ (picture.isRealtime ? 'picture-details.yes' : 'picture-details.no') | translate }}
       </zx-item-data-item>
       <zx-item-data-item *ngIf="picture.partyContext" [label]="'picture-details.party' | translate">
-        <a [href]="picture.partyContext.url" appText="body" tone="link">{{ picture.partyContext.title }}</a>
+        <a [routerLink]="picture.partyContext.url" appText="body" tone="link">{{ picture.partyContext.title }}</a>
         <span *ngIf="picture.partyContext.compoLabel" appText="body" tone="muted"> · {{ picture.partyContext.compoLabel }}</span>
       </zx-item-data-item>
       <zx-item-data-item *ngIf="picture.originalName" [label]="'picture-details.original-name' | translate">

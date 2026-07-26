@@ -1,5 +1,5 @@
 {if $element->description}
-<p>
+<p class="picture_details_description">
 	{$element->description}
 </p>
 {/if}
@@ -156,7 +156,7 @@
 		</td>
 		<td class='info_table_value'>
 			{foreach from=$element->getTagsList() item=tag name=tags}
-				<a href='{$tag->URL}'>{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
+				<a href="/pictures/tags/{$tag->id}">{$tag->title}</a>{if !$smarty.foreach.tags.last}, {/if}
 			{/foreach}
 		</td>
 	</tr>

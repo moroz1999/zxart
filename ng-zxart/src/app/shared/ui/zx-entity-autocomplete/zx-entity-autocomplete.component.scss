@@ -1,0 +1,76 @@
+:host {
+  display: block;
+}
+
+.zx-entity-autocomplete__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.zx-entity-autocomplete__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 100%;
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-8);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--background-deep);
+  color: var(--text-color);
+  font-size: var(--zx-font-size-sm);
+}
+
+.zx-entity-autocomplete__chip-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.zx-entity-autocomplete__dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-tags-input-dropdown-gap);
+  min-width: var(--zx-tags-input-dropdown-min-width);
+  max-width: var(--zx-tags-input-dropdown-max-width);
+  max-height: var(--zx-tags-input-dropdown-max-height);
+  overflow: auto;
+  border: var(--zx-tags-input-dropdown-border);
+  border-radius: var(--zx-tags-input-dropdown-radius);
+  padding: var(--zx-tags-input-dropdown-padding);
+  background: var(--zx-tags-input-dropdown-bg);
+  box-shadow: var(--zx-tags-input-dropdown-shadow);
+}
+
+.zx-entity-autocomplete__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--zx-tags-input-loading-padding);
+}
+
+.zx-entity-autocomplete__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-tags-input-option-gap);
+}
+
+.zx-entity-autocomplete__option {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text-color);
+  font-size: var(--zx-font-size-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--animation-xs) ease;
+}
+
+.zx-entity-autocomplete__option--active {
+  background: var(--secondary-200);
+}

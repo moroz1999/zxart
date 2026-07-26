@@ -1,0 +1,16 @@
+.content-page__body {
+  color: var(--text-color);
+  line-height: 1.6;
+
+  :where(p, ul, ol, h2, h3) {
+    margin-bottom: var(--space-12);
+  }
+
+  :where(a) {
+    color: var(--primary-500);
+  }
+}
+
+.content-page__status {
+  color: var(--text-light-color);
+}

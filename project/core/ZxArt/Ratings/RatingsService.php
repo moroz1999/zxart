@@ -6,6 +6,7 @@ namespace ZxArt\Ratings;
 use Cache;
 use Illuminate\Database\Connection;
 use LanguagesManager;
+use structureElement;
 use structureManager;
 use userElement;
 use ZxArt\Comments\CommentAuthorDto;
@@ -23,6 +24,7 @@ readonly class RatingsService
     private const int CACHE_TTL = 300;
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
         private Cache $cache,
@@ -80,7 +82,7 @@ readonly class RatingsService
                 ),
                 rating: $rating,
                 targetTitle: html_entity_decode((string)$targetElement->getTitle(), ENT_QUOTES),
-                targetUrl: (string)$targetElement->getUrl(),
+                targetUrl: $this->entityUrlResolver->urlFor($targetElement),
             );
         }
 
@@ -149,11 +151,24 @@ readonly class RatingsService
                 ),
                 rating: (string)$value,
                 targetTitle: html_entity_decode((string)$targetElement->getTitle(), ENT_QUOTES),
-                targetUrl: (string)$targetElement->getUrl(),
+                targetUrl: $this->entityUrlResolver->urlFor($targetElement),
             );
         }
 
         return new AuthorRatingsListDto($items, $page, $pagesAmount, $total);
+    }
+
+    /**
+     * Clean SPA URL for the user's connected author, or empty string when the
+     * user has no author. userElement::getUrl() returns the legacy author URL,
+     * which does not resolve as an SPA route.
+     */
+    private function buildUserUrl(userElement $user): string
+    {
+        $author = $user->getAuthorElement();
+        return $author instanceof structureElement
+            ? $this->entityUrlResolver->urlFor($author)
+            : '';
     }
 
     public function invalidateRecentRatingsCache(): void

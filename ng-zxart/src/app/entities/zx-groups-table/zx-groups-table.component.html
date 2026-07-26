@@ -1,4 +1,4 @@
-<zx-table size="md" [class.loading]="loading">
+<zx-table size="md" [zxLoadingState]="loading">
   <table>
     <thead>
     <tr>
@@ -14,21 +14,21 @@
     <tr *ngFor="let group of groups; let i = index">
       <td *ngIf="showRowNumbers" class="col-num">{{ rowStartIndex + i + 1 }}</td>
       <td class="col-title">
-        <a [href]="group.url">{{ group.title || 'n/a' }}</a>
+        <a [routerLink]="group.url">{{ group.title || 'n/a' }}</a>
       </td>
       <td class="col-type">
         <span *ngIf="group.groupType && group.groupType !== 'unknown'">{{ 'group-browser.types.' + group.groupType | translate }}</span>
       </td>
       <td class="col-realname">
-        <a *ngIf="group.realGroupUrl; else plainRealName" [href]="group.realGroupUrl">{{ group.realGroupTitle }}</a>
+        <a *ngIf="group.realGroupUrl; else plainRealName" [routerLink]="group.realGroupUrl">{{ group.realGroupTitle }}</a>
         <ng-template #plainRealName>{{ group.realGroupTitle }}</ng-template>
       </td>
       <td class="col-country">
-        <a *ngIf="group.countryUrl; else countryText" [href]="group.countryUrl">{{ group.countryTitle }}</a>
+        <a *ngIf="group.countryUrl; else countryText" [routerLink]="group.countryUrl">{{ group.countryTitle }}</a>
         <ng-template #countryText>{{ group.countryTitle }}</ng-template>
       </td>
       <td class="col-city">
-        <a *ngIf="group.cityUrl; else cityText" [href]="group.cityUrl">{{ group.cityTitle }}</a>
+        <a *ngIf="group.cityUrl; else cityText" [routerLink]="group.cityUrl">{{ group.cityTitle }}</a>
         <ng-template #cityText>{{ group.cityTitle }}</ng-template>
       </td>
     </tr>

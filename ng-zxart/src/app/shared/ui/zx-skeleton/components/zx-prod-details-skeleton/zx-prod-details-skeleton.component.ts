@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ZxSkeletonVisibilityDirective} from 'src/app/shared/ui/zx-skeleton/zx-skeleton-visibility.directive';
 import {ZxSkeletonBoneComponent} from '../zx-skeleton-bone/zx-skeleton-bone.component';
 import {ZxScreenshotGridSkeletonComponent} from '../zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
 import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.component';
 import {ZxStackComponent} from '../../../zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
-import {ZxBreadcrumbsComponent} from '../../../zx-breadcrumbs/zx-breadcrumbs.component';
 import {ZxGridComponent} from '../../../zx-grid/zx-grid.component';
 import {ZxGridItemDirective} from '../../../zx-grid/zx-grid-item.directive';
 import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skeleton.component';
@@ -13,6 +13,7 @@ import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skel
 @Component({
   selector: 'zx-prod-details-skeleton',
   standalone: true,
+  hostDirectives: [ZxSkeletonVisibilityDirective],
   imports: [
     ZxSkeletonBoneComponent,
     ZxScreenshotGridSkeletonComponent,
@@ -20,7 +21,6 @@ import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skel
     ZxStackComponent,
     ZxInlineComponent,
     ZxPanelComponent,
-    ZxBreadcrumbsComponent,
     ZxGridComponent,
     ZxGridItemDirective,
     ZxCommentSkeletonComponent,

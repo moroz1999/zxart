@@ -10,6 +10,7 @@ export interface AuthorListItem {
   entityType: 'author' | 'authorAlias';
   title: string;
   realName: string;
+  realNameId: number | null;
   realNameUrl: string | null;
   groups: AuthorGroup[];
   countryId: number | null;

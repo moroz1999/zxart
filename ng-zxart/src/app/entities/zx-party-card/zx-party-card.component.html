@@ -1,9 +1,9 @@
 <zx-panel radius="xl" padding="none" variant="elevated">
-  <a [href]="party.url" class="party-image">
+  <a [routerLink]="party.url" class="party-image">
     <img [src]="party.imageUrl" [alt]="party.title" loading="lazy" />
   </a>
   <div class="party-info">
-    <a [href]="party.url" class="party-title" appText="body" tone="link">{{ party.title }}</a>
+    <a [routerLink]="party.url" class="party-title" appText="body" tone="link">{{ party.title }}</a>
     <span class="party-year" *ngIf="party.year" appText="caption" tone="muted">{{ party.year }}</span>
   </div>
 </zx-panel>

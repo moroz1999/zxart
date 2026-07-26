@@ -9,6 +9,7 @@ use Symfony\Component\ObjectMapper\Transform\MapCollection;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
 use ZxArt\Shared\Dto\ReleaseInfoDto;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 readonly class PictureDetailsRestDto
 {
@@ -70,6 +71,7 @@ readonly class PictureDetailsRestDto
         public ?string $sequenceUrl,
         #[Map(transform: MapCollection::class)]
         public array $mentions,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-20);
+  padding: var(--space-12) var(--space-16);
+  background: var(--background-deep);
+  border: 1px solid var(--border-form);
+  border-radius: var(--radius-md);
+}

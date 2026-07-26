@@ -272,10 +272,13 @@ components:
 
     TuneTagDto:
       type: object
+      required:
+        - id
+        - title
       properties:
+        id:
+          type: integer
         title:
-          type: string
-        url:
           type: string
 
     TunePartyContextDto:
@@ -375,6 +378,7 @@ components:
         description:
           type: string
           nullable: true
+          description: Plain description text without presentation wrapper markup.
         tags:
           type: array
           items:

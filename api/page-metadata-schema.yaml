@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: Shared page metadata schema
+  version: 1.0.0
+components:
+  schemas:
+    PageMetadata:
+      type: object
+      required: [title, description, noIndex, openGraph, twitter, languageLinks, structuredData]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        noIndex:
+          type: boolean
+        openGraph:
+          type: object
+          additionalProperties:
+            type: string
+        twitter:
+          type: object
+          additionalProperties:
+            type: string
+        languageLinks:
+          type: object
+          additionalProperties:
+            type: string
+        structuredData:
+          nullable: true

@@ -23,15 +23,13 @@
   >
     <zx-header-popover class="lt-popover" (click)="$event.stopPropagation()">
       <div class="lt-content">
-        <ng-container *ngIf="links$ | async as links">
-
           <ng-container *ngIf="user.userName !== 'anonymous'; else loginForm">
             <div class="lt-user-name" appText="label" tone="muted">{{ user.userName }}</div>
             <div class="lt-menu-items">
-              <zx-popover-menu-item *ngIf="links.profileUrl" [href]="links.profileUrl!">
+              <zx-popover-menu-item href="/profile">
                 {{ 'login.account' | translate }}
               </zx-popover-menu-item>
-              <zx-popover-menu-item *ngIf="links.playlistsUrl" [href]="links.playlistsUrl!">
+              <zx-popover-menu-item href="/playlists">
                 {{ 'login.favourites' | translate }}
               </zx-popover-menu-item>
               <zx-popover-menu-item *ngIf="user.authorPageUrl" [href]="user.authorPageUrl!">
@@ -84,24 +82,20 @@
                 {{ 'login.submit' | translate }}
               </zx-button>
 
-              <div class="lt-links" *ngIf="links.registrationUrl || links.passwordReminderUrl">
+              <div class="lt-links">
                 <a
-                  *ngIf="links.registrationUrl"
-                  [href]="links.registrationUrl"
+                  href="/register"
                   class="lt-link"
                   appText="body" tone="link"
                 >{{ 'login.register' | translate }}</a>
                 <a
-                  *ngIf="links.passwordReminderUrl"
-                  [href]="links.passwordReminderUrl"
+                  href="/password-reminder"
                   class="lt-link"
                   appText="body" tone="link"
                 >{{ 'login.forgot-password' | translate }}</a>
               </div>
             </form>
           </ng-template>
-
-        </ng-container>
       </div>
     </zx-header-popover>
   </ng-template>

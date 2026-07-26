@@ -39,6 +39,9 @@ export class PictureSearchApiService {
     if (filters.stages) {
       params['stages'] = '1';
     }
+    if (filters.fromGame) {
+      params['fromGame'] = '1';
+    }
     this.setIfPresent(params, 'tagsInclude', filters.tagsInclude.join(','));
     this.setIfPresent(params, 'tagsExclude', filters.tagsExclude.join(','));
     this.setIfPresent(params, 'authorCountry', filters.authorCountryIds.join(','));

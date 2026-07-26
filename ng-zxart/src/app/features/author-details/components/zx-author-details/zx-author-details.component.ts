@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 import {AuthorCoreDto} from '../../models/author-core.dto';
 import {AuthorCoreApiService} from '../../services/author-core-api.service';
 import {ZxAuthorHeaderComponent} from '../zx-author-header/zx-author-header.component';
@@ -17,7 +18,7 @@ import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.di
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxSkeletonBoneComponent} from '../../../../shared/ui/zx-skeleton/components/zx-skeleton-bone/zx-skeleton-bone.component';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
@@ -26,7 +27,6 @@ import {ZxAuthorMusicTabComponent} from '../zx-author-music-tab/zx-author-music-
 import {ZxAuthorSoftwareTabComponent} from '../zx-author-software-tab/zx-author-software-tab.component';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
-
 type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'mentions' | 'discussion';
 
 @Component({
@@ -35,7 +35,6 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'me
   imports: [
     CommonModule,
     TranslateModule,
-    ZxBreadcrumbsComponent,
     ZxAuthorHeaderComponent,
     ZxAuthorCollaboratorsComponent,
     ZxStackComponent,
@@ -60,33 +59,49 @@ type AuthorTabId = 'best' | 'gfx' | 'music' | 'software' | 'collaborators' | 'me
   styleUrl: './zx-author-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorDetailsComponent implements OnInit {
+export class ZxAuthorDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  /** Active tab id from the route (`author/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
   @ViewChild(ZxTabsComponent, {read: ElementRef}) private tabsRef!: ElementRef<HTMLElement>;
 
   core$: Observable<AuthorCoreDto | null> = of(null);
 
-  constructor(private readonly api: AuthorCoreApiService) {}
+  constructor(
+    private readonly api: AuthorCoreApiService,
+    private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
+  ) {}
 
-  ngOnInit(): void {
-    if (!this.elementId || +this.elementId <= 0) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    if (!this.elementId || +this.elementId <= 0) {
+      this.core$ = of(null);
+      return;
+    }
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => {
+        if (core) {
+          this.pageTitleChange.emit(core.title);
+          this.pageMetadataService.applyEntityMetadata(core.metadata);
+          this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
+        }
+      }),
+      shareReplay(1),
+    );
   }
 
   getInitialTabIndex(core: AuthorCoreDto): number {
-    const requestedTab = this.getRequestedTabId();
-    const index = requestedTab ? this.getTabs(core).indexOf(requestedTab as AuthorTabId) : -1;
+    const index = this.activeTab ? this.getTabs(core).indexOf(this.activeTab as AuthorTabId) : -1;
 
     return index >= 0 ? index : 0;
   }
 
   getTabHref(tabId: AuthorTabId): string {
-    const path = window.location.pathname.replace(/\/tab:[^/]+(?=\/|$)/, '').replace(/\/page:\d+(?=\/|$)/, '');
-    const normalizedPath = path.endsWith('/') ? path : `${path}/`;
-
-    return `${normalizedPath}tab:${encodeURIComponent(tabId)}/`;
+    return `/author/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   private getTabs(core: AuthorCoreDto): AuthorTabId[] {
@@ -106,11 +121,5 @@ export class ZxAuthorDetailsComponent implements OnInit {
 
   onTabChange(_: number): void {
     scrollToElementIfHidden(this.tabsRef?.nativeElement);
-  }
-
-  private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tab:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
   }
 }

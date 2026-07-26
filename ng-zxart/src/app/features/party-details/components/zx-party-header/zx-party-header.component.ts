@@ -1,13 +1,19 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {PartyCoreDto} from '../../models/party-core.dto';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {environment} from '../../../../../environments/environment';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
+import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
+import {ZxHeroComponent} from '../../../../shared/ui/zx-hero/zx-hero.component';
+import {ZxHeroTitleComponent} from '../../../../shared/ui/zx-hero-title/zx-hero-title.component';
+import {ZxHeroBarComponent} from '../../../../shared/ui/zx-hero-bar/zx-hero-bar.component';
+import {ZxFactsComponent} from '../../../../shared/ui/zx-facts/zx-facts.component';
+import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component';
+import {ZxLocationComponent} from '../../../../shared/ui/zx-location/zx-location.component';
+import {ZxMetaRowComponent} from '../../../../shared/ui/zx-meta-row/zx-meta-row.component';
+import {ZxExtLinksComponent} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
+import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
+import {ZxDownloadButtonComponent} from '../../../../shared/ui/zx-download-button/zx-download-button.component';
 import {ZxPartyEditingControlsComponent} from '../zx-party-editing-controls/zx-party-editing-controls.component';
 
 @Component({
@@ -16,24 +22,32 @@ import {ZxPartyEditingControlsComponent} from '../zx-party-editing-controls/zx-p
   imports: [
     CommonModule,
     TranslateModule,
-    ZxInlineComponent,
-    ZxButtonComponent,
+    ZxButtonControlsComponent,
+    ZxChipComponent,
     ZxPartyEditingControlsComponent,
-    SvgIconComponent,
-    TextDirective,
-    HeadingDirective,
+    ZxHeroComponent,
+    ZxHeroTitleComponent,
+    ZxHeroBarComponent,
+    ZxFactsComponent,
+    ZxFactComponent,
+    ZxLocationComponent,
+    ZxMetaRowComponent,
+    ZxExtLinksComponent,
+    ZxCountersComponent,
+    ZxDownloadButtonComponent,
   ],
   templateUrl: './zx-party-header.component.html',
   styleUrl: './zx-party-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxPartyHeaderComponent implements OnInit {
+export class ZxPartyHeaderComponent {
   @Input() core!: PartyCoreDto;
 
-  constructor(private readonly iconReg: SvgIconRegistryService) {}
-
-  ngOnInit(): void {
-    this.iconReg.loadSvg(`${environment.svgUrl}location.svg`, 'location')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();
+  get counters(): ZxCounterItem[] {
+    return [
+      {value: this.core.counters.compos, labelKey: 'party-details.header.counter.compos'},
+      {value: this.core.counters.entries, labelKey: 'party-details.header.counter.entries'},
+      {value: this.core.counters.authors, labelKey: 'party-details.header.counter.authors'},
+    ];
   }
 }

@@ -1,19 +1,10 @@
 <ng-container *ngIf="details$ | async as details; else loading">
-  <zx-breadcrumbs
-    [categories]="details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : []"
-    [parentItem]="{title: details.prod.title, url: details.prod.url}"
-    [currentTitle]="details.title">
-  </zx-breadcrumbs>
-
-  <zx-release-parent-anchor [prod]="details.prod"></zx-release-parent-anchor>
-
   <zx-release-hero [details]="details"></zx-release-hero>
-  <zx-release-action-bar [details]="details"></zx-release-action-bar>
 
   <zx-stack spacing="xl">
     <section *ngIf="details.description">
       <h2 appHeading="headline">{{ 'release-details.description' | translate }}</h2>
-      <p appText="body" tone="primary" [innerHTML]="details.description"></p>
+      <p class="release-details__description" appText="body" tone="primary" [innerHTML]="details.description"></p>
     </section>
 
     <zx-release-screenshots-section

@@ -12,6 +12,7 @@ import {
   ZxCommentSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 /**
  * "Comments on works" list: paginated, lazy-loaded, rendered with the canonical rich
@@ -31,6 +32,7 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
     ZxPaginationComponent,
     ZxCommentSkeletonComponent,
     InViewportDirective,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './works-comments.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

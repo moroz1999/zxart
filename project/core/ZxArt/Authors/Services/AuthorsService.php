@@ -26,6 +26,7 @@ use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\EntityType;
+use ZxArt\Users\ClaimedAuthorService;
 
 class AuthorsService extends ElementsManager
 {
@@ -52,6 +53,7 @@ class AuthorsService extends ElementsManager
         protected readonly AuthorshipRepository $authorshipRepository,
         private readonly LabelResolver          $labelResolver,
         private readonly ImportIdOperator       $importIdOperator,
+        private readonly ClaimedAuthorService   $claimedAuthorService,
     )
     {
         $this->columnRelations = [
@@ -524,6 +526,9 @@ class AuthorsService extends ElementsManager
                     $this->db->table('import_origin')
                         ->where('elementId', '=', $joinedAuthorId)
                         ->update(['elementId' => $targetAuthorElement->getId()]);
+
+                    //accounts claiming the absorbed author now belong to the surviving one
+                    $this->claimedAuthorService->reassign($joinedAuthorId, $mainAuthorId);
 
                     $joinedAuthor->deleteElementData();
                 }

@@ -8,7 +8,6 @@ use ApiQueriesManager;
 use authorAliasElement;
 use authorElement;
 use structureManager;
-use ZxArt\AuthorList\Dto\ActiveAuthorDto;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
 use ZxArt\AuthorList\Repositories\AuthorListRepository;
@@ -30,43 +29,34 @@ readonly class AuthorListService
     }
 
     /**
-     * Authors with works (pictures or music) published within the last $yearsBack years.
-     *
-     * @return ActiveAuthorDto[]
+     * @return array<int, array{id: int, title: string}>
      */
     public function getActive(?string $items, int $yearsBack = self::ACTIVE_YEARS_DEFAULT): array
     {
         $yearsBack = max(self::ACTIVE_YEARS_MIN, min(self::ACTIVE_YEARS_MAX, $yearsBack));
-
         $currentYear = (int)date('Y');
         $years = [];
         for ($offset = 0; $offset < $yearsBack; $offset++) {
             $years[] = $currentYear - $offset;
         }
-
-        $parameters = [];
-        if ($items === 'music') {
-            $parameters['zxMusicYear'] = $years;
-        } else {
-            $parameters['zxPictureYear'] = $years;
-            $parameters['zxPictureNotType'] = 'attributes';
-        }
+        $parameters = $items === 'music'
+            ? ['zxMusicYear' => $years]
+            : ['zxPictureYear' => $years, 'zxPictureNotType' => 'attributes'];
 
         $query = $this->apiQueriesManager->getQuery();
         $query->setFiltrationParameters($parameters);
-        $query->setExportType('author');
+        $query->setExportType(EntityType::Author->value);
         $query->setOrder(['title' => 'asc']);
         $result = (array)$query->getQueryResult();
 
         $authors = [];
-        foreach ((array)($result['author'] ?? []) as $element) {
-            if ($element instanceof authorElement) {
-                $authors[] = new ActiveAuthorDto(
-                    id: (int)$element->id,
-                    title: html_entity_decode($element->title, ENT_QUOTES),
-                    url: $element->getUrl(),
-                );
-            }
+        /** @var authorElement[] $authorElements */
+        $authorElements = (array)($result[EntityType::Author->value] ?? []);
+        foreach ($authorElements as $element) {
+            $authors[] = [
+                'id' => (int)$element->id,
+                'title' => html_entity_decode($element->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            ];
         }
 
         return $authors;
@@ -148,7 +138,6 @@ readonly class AuthorListService
                 $options[] = new FilterOptionDto(
                     id: (int)$locationElement->id,
                     title: html_entity_decode($locationElement->title, ENT_QUOTES),
-                    url: $locationElement->getUrl(EntityType::Author->value),
                 );
             }
         }

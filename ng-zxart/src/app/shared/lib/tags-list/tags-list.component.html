@@ -7,7 +7,7 @@
   [wrap]="true"
 >
   <span *ngIf="label" appLabel tone="muted" class="zx-tags-list__label">{{ label }}</span>
-  <zx-tags-chips *ngIf="visibleTags.length" [tags]="visibleTags"></zx-tags-chips>
+  <zx-chips *ngIf="visibleTags.length" [items]="visibleTags"></zx-chips>
   <zx-edit-button
     *ngIf="hasEditPrivilege"
     [ariaLabel]="editAriaLabel"

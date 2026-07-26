@@ -44,7 +44,7 @@ class publicAddZxRelease extends structureElementAction
             $user->refreshPrivileges();
 
             $structureElement->updateFileStructure();
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
         $structureElement->setViewName('form');
     }

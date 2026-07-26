@@ -13,13 +13,16 @@ use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Repositories\ReleasesRepository;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
+use ZxArt\Shared\DescriptionFormatter;
 use zxReleaseElement;
 
 readonly class ProdReleasesService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private ProdMediaService $prodMediaService,
         private ReleasesRepository $releasesRepository,
@@ -78,7 +81,7 @@ readonly class ProdReleasesService
         return new ProdReleaseDto(
             id: $release->getId(),
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
-            url: (string)$release->getUrl(),
+            url: $this->entityUrlResolver->urlFor($release),
             year: $release->getYear() ?? 0,
             version: $release->version,
             releaseType: $release->releaseType,
@@ -86,7 +89,7 @@ readonly class ProdReleasesService
                 ? $this->infoBuilder->translate('zxRelease.type_' . $release->releaseType)
                 : null,
             hardwareRequired: $release->hardwareRequired,
-            description: (string)$release->description,
+            description: $this->descriptionFormatter->decode((string)$release->description),
             isRealtime: $release->isRealtime(),
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),
@@ -146,7 +149,6 @@ readonly class ProdReleasesService
                 format: $format,
                 label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
-                catalogueUrl: $release->getCatalogueUrlByFiletype($format),
             );
         }
         return $formats;

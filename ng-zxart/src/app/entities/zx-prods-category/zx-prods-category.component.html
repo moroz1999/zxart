@@ -1,5 +1,6 @@
+<zx-prods-category-skeleton *ngIf="!model" [showHeading]="showHeading"></zx-prods-category-skeleton>
 <div *ngIf="model">
-    <h1>{{ model.h1 }}</h1>
+    <h1 *ngIf="showHeading" appHeading="display">{{ model.h1 }}</h1>
     <div class="zx-prods-list-presets" #contentElement>
         <zx-button color="outlined" (click)="updatesPresetClicked()">{{ 'prods-list.presets.updates' | translate }}</zx-button>
         <zx-button color="outlined" *ngIf="yearPresetActive()" (click)="yearPresetClicked()">{{ 'prods-list.presets.year' | translate }}</zx-button>
@@ -67,6 +68,7 @@
                     class="selectors"
                     [ngClass]="{'disabled': loading}"
             >
+                <zx-stack gap="lg">
                 <div class="selectors-top">
                     <zx-dialog-selector
                             [selectorData]="model.yearsSelector"
@@ -103,14 +105,17 @@
                         ></zx-toggle>
                     </div>
                 </div>
-                <zx-letter-selector
-                        [lettersSelector]="model.lettersSelector"
-                        (letterSelected)="letterSelected($event)"
-                ></zx-letter-selector>
+                <zx-nav-chips
+                        *ngIf="letterChips.length"
+                        [chips]="letterChips"
+                        size="md"
+                        [square]="true"
+                        (chipSelect)="letterSelected($event)"
+                ></zx-nav-chips>
+                </zx-stack>
             </div>
             <div class="zx-prods-list-center">
-                <zx-spinner class="zx-prods-list-spinner" *ngIf="loading" size="xl"></zx-spinner>
-                <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [ngClass]="{'disabled': loading}">
+                <div *ngIf="model.prods && layout!=='table'" class="zx-prods-gallery" [zxLoadingState]="loading">
                     <zx-prod-block
                             *ngFor="let zxProd of model.prods"
                             [model]="zxProd"
@@ -121,7 +126,7 @@
                             (languageChanged)="languagesChanged($event)"
                     ></zx-prod-block>
                 </div>
-                <table *ngIf="layout==='table'" class="zx-prods-table" [ngClass]="{'disabled': loading}">
+                <table *ngIf="layout==='table'" class="zx-prods-table" [zxLoadingState]="loading">
                     <thead>
                     <tr>
                         <td class="zx-prods-table-sortable"
@@ -151,7 +156,7 @@
                         [pagesAmount]="pagesAmount"
                         [currentPage]="currentPage"
                         (pageChange)="setCurrentPage($event)"
-                        [urlBase]="urlBase"
+                        [queryParams]="paginationQueryParams"
                 ></zx-pagination>
             </div>
         </div>

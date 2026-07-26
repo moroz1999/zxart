@@ -45,8 +45,13 @@ class claimAuthor extends structureElementAction
         } else {
             $claimRequestResult = false;
         }
-        $structureElement->setViewName('claimed');
-        $renderer->assign('claimRequestResult', $claimRequestResult);
+        if ($renderer instanceof RendererPluginAppendInterface) {
+            // SPA (/ajax/) path — return the result as JSON
+            $renderer->assign('body', ['id' => $structureElement->getId(), 'success' => $claimRequestResult]);
+        } else {
+            $structureElement->setViewName('claimed');
+            $renderer->assign('claimRequestResult', $claimRequestResult);
+        }
     }
 }
 

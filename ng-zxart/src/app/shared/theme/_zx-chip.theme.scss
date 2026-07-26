@@ -4,7 +4,7 @@
   /* Border width. */
   --zx-chip-border-width: var(--border-width-thin);
   /* Font weight (bold labels). */
-  --zx-chip-font-weight: 700;
+  --zx-chip-font-weight: 500;
 
   /* Medium size: font and padding. */
   --zx-chip-md-font-size: var(--zx-font-size-xs);
@@ -43,4 +43,21 @@
 
   /* Intro opaque: orange text (for intro / design role). */
   --zx-chip-intro-opaque-text: var(--role-intro);
+
+  /* Technical chips: monospace face, square corners, regular weight. */
+  --zx-chip-mono-font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  --zx-chip-mono-font-weight: 400;
+  --zx-chip-mono-radius: var(--radius-sm);
+  --zx-chip-mono-gap: var(--space-4);
+
+  /* Mono filled: hardware and platform identifiers. */
+  --zx-chip-mono-text: var(--text-color);
+  --zx-chip-mono-border: var(--secondary-300);
+  --zx-chip-mono-bg: var(--secondary-100);
+  --zx-chip-mono-hover-bg: var(--secondary-200);
+  --zx-chip-mono-link-text: var(--zx-link-color);
+
+  /* Mono outline: dashed chip for formats and technical parameters. */
+  --zx-chip-mono-outline-text: var(--text-light-color);
+  --zx-chip-mono-outline-border: var(--secondary-400);
 }

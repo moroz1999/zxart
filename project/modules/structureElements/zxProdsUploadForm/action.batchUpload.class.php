@@ -15,6 +15,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
     /**
      * @param zxProdsUploadFormElement $structureElement
      */
+    #[Override]
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $firstProd = null;
@@ -58,6 +59,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->publishers = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->publishers);
                     $zxProdElement->year = $structureElement->year;
                     $zxProdElement->description = $structureElement->description;
+                    $zxProdElement->htmlDescription = $structureElement->htmlDescription;
                     $zxProdElement->instructions = $structureElement->instructions;
                     $zxProdElement->denyVoting = $structureElement->denyVoting;
                     $zxProdElement->denyComments = $structureElement->denyComments;
@@ -140,7 +142,10 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             }
             $user->refreshPrivileges();
         }
-        $controller->redirect($firstProd->URL);
+        if (!$firstProd instanceof zxProdElement) {
+            throw new RuntimeException('At least one software file is required');
+        }
+        $this->respondFormSaved($controller, $firstProd);
     }
 
     public function setExpectedFields(&$expectedFields): void
@@ -153,6 +158,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'compo',
             'year',
             'description',
+            'htmlDescription',
             'instructions',
             'categories',
             'publishers',

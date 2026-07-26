@@ -37,7 +37,7 @@ class publicReceiveZxProd extends structureElementAction
 
             $structureElement->executeAction('receiveFiles');
 
-            $controller->redirect($structureElement->URL);
+            $this->respondFormSaved($controller, $structureElement); return;
         }
         $structureElement->setViewName('form');
     }

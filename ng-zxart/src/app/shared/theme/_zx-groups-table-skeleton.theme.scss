@@ -1,0 +1,24 @@
+:root {
+  /* Row-number column width matching the groups table. */
+  --zx-groups-table-skeleton-col-num-width: var(--space-40);
+  /* Group-title column minimum width matching the groups table. */
+  --zx-groups-table-skeleton-col-title-min-width: calc(var(--space-40) * 3);
+  /* Group-type column minimum width matching the groups table. */
+  --zx-groups-table-skeleton-col-type-min-width: calc(var(--space-40) * 2);
+  /* Real-name column minimum width matching the groups table. */
+  --zx-groups-table-skeleton-col-realname-min-width: calc(var(--space-20) * 5);
+  /* Country and city column minimum width matching the groups table. */
+  --zx-groups-table-skeleton-col-location-min-width: calc(var(--space-40) * 2);
+  /* Text-height placeholder that preserves the real groups-table line box. */
+  --zx-groups-table-skeleton-cell-height: var(--zx-font-size-md);
+  /* Row-number placeholder width. */
+  --zx-groups-table-skeleton-number-width: 55%;
+  /* Group-title placeholder width. */
+  --zx-groups-table-skeleton-title-width: 72%;
+  /* Group-type placeholder width. */
+  --zx-groups-table-skeleton-type-width: 64%;
+  /* Real-name placeholder width. */
+  --zx-groups-table-skeleton-realname-width: 74%;
+  /* Country and city placeholder width. */
+  --zx-groups-table-skeleton-location-width: 66%;
+}

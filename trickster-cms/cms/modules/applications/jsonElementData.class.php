@@ -44,6 +44,10 @@ class jsonElementDataApplication extends controllerApplication
         $baseElement = null;
         if ($id = $controller->getParameter('elementId')) {
             $baseElement = $structureManager->getElementById($id);
+        } elseif ($structureType = $controller->getParameter('structureType')) {
+            // SPA collection pages resolve their catalogue root by type, not by a hardcoded id.
+            $elements = $structureManager->getElementsByType($structureType, $languagesManager->getCurrentLanguageId());
+            $baseElement = $elements ? reset($elements) : null;
         } else {
             $baseElement = $structureManager->getCurrentElement();
         }

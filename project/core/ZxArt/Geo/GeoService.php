@@ -15,12 +15,14 @@ use ZxArt\Geo\Dto\GeoMapDto;
 use ZxArt\Geo\Dto\GeoPartyListItemDto;
 use ZxArt\Geo\Repositories\GeoRepository;
 use ZxArt\Shared\SortDirection;
+use ZxArt\Urls\EntityUrlResolver;
 
 readonly class GeoService
 {
     public function __construct(
         private GeoRepository $repository,
         private structureManager $structureManager,
+        private EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -55,7 +57,7 @@ readonly class GeoService
             $countryDtos[] = new GeoCountryDto(
                 id: $countryId,
                 title: $country['title'],
-                url: $countryElement instanceof countryElement ? ($countryElement->getUrl() ?? '') : '',
+                url: $countryElement instanceof countryElement ? $this->entityUrlResolver->urlFor($countryElement) : '',
                 latitude: $country['latitude'],
                 longitude: $country['longitude'],
                 counters: $countryCounters,
@@ -134,7 +136,7 @@ readonly class GeoService
                 id: $cityId,
                 countryId: $countryId,
                 title: $city['title'],
-                url: $cityElement instanceof cityElement ? ($cityElement->getUrl() ?? '') : '',
+                url: $cityElement instanceof cityElement ? $this->entityUrlResolver->urlFor($cityElement) : '',
                 latitude: $city['latitude'],
                 longitude: $city['longitude'],
                 counters: $counters,
@@ -169,10 +171,10 @@ readonly class GeoService
             url: $element->getUrl() ?? '',
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
-            countryUrl: $countryElement?->getUrl(),
+            countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,
             cityId: $cityElement !== null ? (int)$cityElement->id : null,
             cityTitle: $cityElement !== null ? html_entity_decode($cityElement->title, ENT_QUOTES) : null,
-            cityUrl: $cityElement?->getUrl(),
+            cityUrl: $cityElement !== null ? $this->entityUrlResolver->urlFor($cityElement) : null,
             entries: $element->picturesQuantity + $element->tunesQuantity,
         );
     }

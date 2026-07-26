@@ -29,7 +29,6 @@ import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/
 import {ZxFilterBarComponent} from '../../../../shared/ui/zx-filter-bar/zx-filter-bar.component';
 import {ZxArticlePreviewComponent} from '../../../../entities/zx-article-preview/zx-article-preview.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {ZxGroupsTableComponent} from '../../../../entities/zx-groups-table/zx-groups-table.component';
 import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
@@ -46,6 +45,8 @@ import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const AUTHOR_SET_TYPE = 'author';
 const GROUP_SET_TYPE = 'group';
@@ -88,7 +89,6 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxCheckboxFieldComponent,
     ZxFilterBarComponent,
     ZxButtonComponent,
-    ZxSpinnerComponent,
     ZxAuthorsTableComponent,
     ZxGroupsTableComponent,
     ZxPictureCardComponent,
@@ -103,6 +103,7 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxStackComponent,
     TextDirective,
     HeadingDirective,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-search-results.component.html',
   styleUrls: ['./zx-search-results.component.scss'],
@@ -123,7 +124,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   phrase = '';
   currentPage = 1;
   pagesAmount = 0;
-  urlBase = '';
+  paginationQueryParams: Params = {};
 
   typeFilters: TypeFilterOption[] = [];
 
@@ -145,19 +146,11 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     private readonly playerService: PlayerService,
     private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
-    const parsed = this.parseUrl();
-    this.phrase = parsed.phrase;
-    this.currentPage = parsed.page;
-    this.urlBase = this.computeUrlBase();
-
-    const urlTypes = this.parseTypesParam();
-    if (urlTypes.length > 0) {
-      this.typeFilters = urlTypes.map(value => ({value, label: value, selected: true}));
-    }
-
     const filterStream$ = this.trigger.pipe(filter(t => t.kind === 'filter'), debounceTime(500));
     const immediateStream$ = this.trigger.pipe(filter(t => t.kind !== 'filter'));
     this.subscriptions.add(
@@ -173,7 +166,13 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.trigger.next({kind: 'initial'});
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      const page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
+      const types = (params.get('types') ?? '').split(',').map(value => value.trim()).filter(Boolean);
+      this.applyUrlState({phrase: params.get('phrase')?.trim() ?? '', page}, types);
+      this.updatePaginationQueryParams();
+      this.trigger.next({kind: this.data === null ? 'initial' : 'page'});
+    }));
   }
 
   ngOnDestroy(): void {
@@ -193,7 +192,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     }
     this.currentPage = page;
     this.updateUrl();
-    this.trigger.next({kind: 'page'});
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
@@ -201,7 +199,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     option.selected = checked;
     this.currentPage = 1;
     this.updateUrl();
-    this.trigger.next({kind: 'filter'});
   }
 
   onSelectAllTypes(): void {
@@ -212,7 +209,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.typeFilters = this.typeFilters.map(opt => ({...opt, selected: true}));
     this.currentPage = 1;
     this.updateUrl();
-    this.trigger.next({kind: 'filter'});
   }
 
   isAuthorSet(set: SearchResultSetDto): boolean {
@@ -273,10 +269,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
 
   setLabelKey(type: string): string {
     return 'search.types.' + type;
-  }
-
-  headingTranslationKey(): string {
-    return this.currentPage > 1 ? 'search.heading.with_page' : 'search.heading.first_page';
   }
 
   pictureGalleryId(set: SearchResultSetDto): string {
@@ -398,57 +390,31 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return selected;
   }
 
-  private parseUrl(): {phrase: string; page: number} {
-    const path = window.location.pathname;
-    const phraseMatch = path.match(/\/phrase:([^/]*)/);
-    const pageMatch = path.match(/\/page:(\d+)/);
-    return {
-      phrase: phraseMatch ? this.decodeUrlPhrase(decodeURIComponent(phraseMatch[1])) : '',
-      page: pageMatch ? Math.max(1, parseInt(pageMatch[1], 10)) : 1,
-    };
+  private applyUrlState(state: {phrase: string; page: number}, types: string[]): void {
+    this.phrase = state.phrase;
+    this.currentPage = state.page;
+    this.typeFilters = types.map(value => ({value, label: value, selected: true}));
   }
 
-  private decodeUrlPhrase(value: string): string {
-    return value.replace(/%s%/g, '/');
-  }
 
-  private encodeUrlPhrase(value: string): string {
-    return encodeURIComponent(value.replace(/\//g, '%s%'));
-  }
-
-  private parseTypesParam(): string[] {
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get('types');
-    if (!raw) {
-      return [];
-    }
-    return raw.split(',').map(p => p.trim()).filter(p => p.length > 0);
-  }
-
-  private computeUrlBase(): string {
-    if (this.baseUrl && this.elementId && this.phrase !== '') {
-      const base = this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/';
-      return base + 'action:perform/id:' + this.elementId + '/phrase:' + this.encodeUrlPhrase(this.phrase) + '/';
-    }
-    const cleanPath = window.location.pathname.replace(/\/page:\d+\/?/, '');
-    return cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
-  }
-
+  /** Writes phrase, types and page to the router query params; the subscription reloads. */
   private updateUrl(): void {
-    const pagePath = this.currentPage > 1
-      ? this.urlBase + 'page:' + this.currentPage + '/'
-      : this.urlBase;
+    const selectedTypes = this.selectedTypes();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        phrase: this.phrase || null,
+        types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
+        page: this.currentPage > 1 ? this.currentPage : null,
+      },
+    });
+  }
 
-    const params = new URLSearchParams(window.location.search);
-    const selected = this.typeFilters.filter(opt => opt.selected).map(opt => opt.value);
-    const allSelected = this.typeFilters.length > 0 && selected.length === this.typeFilters.length;
-    if (allSelected || selected.length === 0) {
-      params.delete('types');
-    } else {
-      params.set('types', selected.join(','));
-    }
-    const queryString = params.toString();
-    const newUrl = queryString ? pagePath + '?' + queryString : pagePath;
-    window.history.pushState(null, '', newUrl);
+  private updatePaginationQueryParams(): void {
+    const selectedTypes = this.selectedTypes();
+    this.paginationQueryParams = {
+      phrase: this.phrase || null,
+      types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
+    };
   }
 }

@@ -3,7 +3,7 @@
     <a
       *ngIf="imageUrl"
       class="zx-article-preview__image-link"
-      [href]="publication?.url || url"
+      [routerLink]="publication?.url || url"
     >
       <img
         class="zx-article-preview__image"
@@ -18,7 +18,7 @@
           <ng-container *ngIf="publication">
             <a
               class="zx-article-preview__link zx-article-preview__publication"
-              [href]="publication.url"
+              [routerLink]="publication.url"
               appText="body"
               tone="link"
             >{{ publication.title }}<ng-container *ngIf="publication.year"> ({{ publication.year }})</ng-container></a>
@@ -26,7 +26,7 @@
           </ng-container>
           <a
             class="zx-article-preview__link"
-            [href]="url"
+            [routerLink]="url"
             appText="body"
             tone="link"
             [innerHTML]="titleHtml ?? title"
@@ -37,7 +37,7 @@
           class="zx-article-preview__read"
           size="xs"
           color="outlined"
-          [href]="url"
+          [routerLink]="url"
         >{{ readLinkLabel }}</zx-button>
       </header>
 
@@ -46,7 +46,7 @@
         <span *ngIf="year" class="zx-article-preview__year">{{ year }}</span>
         <span *ngIf="authors.length > 0" class="zx-article-preview__authors">
           <ng-container *ngFor="let author of authors; let last = last">
-            <a [href]="author.url" appText="label" tone="muted-link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
+            <a [routerLink]="author.url" appText="label" tone="muted-link">{{ author.title }}</a><ng-container *ngIf="!last">, </ng-container>
           </ng-container>
         </span>
       </div>

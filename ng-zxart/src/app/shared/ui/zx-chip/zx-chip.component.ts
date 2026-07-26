@@ -1,14 +1,15 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-
-export type ZxChipVariant = 'opaque' | 'filled';
+import {Router, RouterLink, UrlTree} from '@angular/router';
+import {isSpaUrl} from '../../utils/spa-url';
+export type ZxChipVariant = 'opaque' | 'filled' | 'mono' | 'mono-outline';
 export type ZxChipColor = 'neutral' | 'primary' | 'artist' | 'code' | 'intro';
 export type ZxChipSize = 'sm' | 'md';
 
 @Component({
   selector: 'zx-chip',
   standalone: true,
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './zx-chip.component.html',
   styleUrl: './zx-chip.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +20,8 @@ export class ZxChipComponent {
   @Input() size: ZxChipSize = 'md';
   @Input() href: string | null = null;
 
+  constructor(private readonly router: Router) {}
+
   @HostBinding('class')
   get hostClass(): string { return 'zx-chip-host'; }
 
@@ -27,4 +30,10 @@ export class ZxChipComponent {
   }
 
   get isLink(): boolean { return this.href !== null; }
+
+  get isInternal(): boolean { return isSpaUrl(this.href); }
+
+  get internalUrlTree(): UrlTree | null {
+    return this.isInternal && this.href ? this.router.parseUrl(this.href) : null;
+  }
 }

@@ -6,6 +6,7 @@ namespace ZxArt\Pictures\Services;
 
 use controller;
 use structureManager;
+use tagElement;
 use translationsManager;
 use ZxArt\Pictures\Dto\PictureDetailsDto;
 use ZxArt\Pictures\Dto\PictureDownloadDto;
@@ -17,7 +18,9 @@ use ZxArt\Pictures\Dto\PictureSubmitterDto;
 use ZxArt\Pictures\Dto\PictureTagDto;
 use ZxArt\Pictures\Exception\PictureDetailsException;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\ProdInfoBuilder;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Shared\Dto\AuthorDto;
 use zxPictureElement;
 
@@ -30,11 +33,14 @@ readonly class PictureDetailsService
     private const string TYPE_SCA = 'sca';
 
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private controller $controller,
         private translationsManager $translationsManager,
         private PicturesTransformer $picturesTransformer,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -72,7 +78,7 @@ readonly class PictureDetailsService
             denyVoting: $picture->denyVoting,
             commentsAmount: $picture->commentsAmount,
             description: $element->description
-                ? $this->infoBuilder->decodeText((string)$element->description)
+                ? $this->descriptionFormatter->decode((string)$element->description)
                 : null,
             originalAuthors: $this->buildAuthors($element->getOriginalAuthorsList() ?: []),
             tags: $this->buildTags($element),
@@ -96,6 +102,7 @@ readonly class PictureDetailsService
                 ? $baseUrl . 'file/id:' . $element->sequence . '/filename:' . rawurlencode((string)$element->sequenceName)
                 : null,
             mentions: $this->buildMentions($element),
+            metadata: $this->pageMetadataService->getForPath('/picture/' . $pictureId),
         );
     }
 
@@ -109,7 +116,7 @@ readonly class PictureDetailsService
         foreach ($authors as $author) {
             $result[] = new AuthorDto(
                 name: $this->infoBuilder->decodeText((string)$author->getTitle()),
-                url: (string)$author->getUrl(),
+                url: $this->entityUrlResolver->urlFor($author),
             );
         }
         return $result;
@@ -122,9 +129,12 @@ readonly class PictureDetailsService
     {
         $result = [];
         foreach (($element->getTagsList() ?: []) as $tag) {
+            if (!$tag instanceof tagElement) {
+                continue;
+            }
             $result[] = new PictureTagDto(
+                id: $tag->getId(),
                 title: $this->infoBuilder->decodeText((string)$tag->getTitle()),
-                url: (string)$tag->getUrl(),
             );
         }
         return $result;
@@ -142,7 +152,7 @@ readonly class PictureDetailsService
         }
         return new PicturePartyContextDto(
             title: $this->infoBuilder->decodeText((string)$party->getTitle()),
-            url: (string)$party->getUrl(),
+            url: $this->entityUrlResolver->urlFor($party),
             place: (int)$element->partyplace ?: null,
             compoLabel: $compoLabel,
         );
@@ -156,7 +166,7 @@ readonly class PictureDetailsService
         }
         return new PictureProdContextDto(
             title: $this->infoBuilder->decodeText((string)$release->getTitle()),
-            url: (string)$release->getUrl(),
+            url: $this->entityUrlResolver->urlFor($release),
             year: $release->year ? (string)$release->year : null,
         );
     }

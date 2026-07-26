@@ -14,7 +14,6 @@ readonly class ProdReleaseFormatDto
         public string $format,
         public string $label,
         public string $emoji,
-        public string $catalogueUrl,
     ) {
     }
 }

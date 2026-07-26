@@ -1,0 +1,102 @@
+@use "shared/breakpoints" as breakpoints;
+
+:host {
+  display: block;
+}
+
+.zx-active-authors-skeleton__columns {
+  columns: 2;
+
+  @include breakpoints.media-breakpoint-up(sm) {
+    columns: 3;
+  }
+
+  @include breakpoints.media-breakpoint-up(md) {
+    columns: 4;
+  }
+
+  @include breakpoints.media-breakpoint-up(lg) {
+    columns: 5;
+  }
+
+  @include breakpoints.media-breakpoint-up(xl) {
+    columns: 6;
+  }
+
+  @include breakpoints.media-breakpoint-up(xxl) {
+    columns: 7;
+  }
+}
+
+.zx-active-authors-skeleton__item {
+  display: block;
+  padding-bottom: var(--zx-active-authors-skeleton-item-spacing);
+  break-inside: avoid;
+}
+
+.zx-active-authors-skeleton__item:nth-child(n + 31) {
+  display: none;
+}
+
+@include breakpoints.media-breakpoint-up(sm) {
+  .zx-active-authors-skeleton__item:nth-child(n + 31) {
+    display: block;
+  }
+
+  .zx-active-authors-skeleton__item:nth-child(n + 46) {
+    display: none;
+  }
+}
+
+@include breakpoints.media-breakpoint-up(md) {
+  .zx-active-authors-skeleton__item:nth-child(n + 46) {
+    display: block;
+  }
+
+  .zx-active-authors-skeleton__item:nth-child(n + 61) {
+    display: none;
+  }
+}
+
+@include breakpoints.media-breakpoint-up(lg) {
+  .zx-active-authors-skeleton__item:nth-child(n + 61) {
+    display: block;
+  }
+
+  .zx-active-authors-skeleton__item:nth-child(n + 76) {
+    display: none;
+  }
+}
+
+@include breakpoints.media-breakpoint-up(xl) {
+  .zx-active-authors-skeleton__item:nth-child(n + 76) {
+    display: block;
+  }
+
+  .zx-active-authors-skeleton__item:nth-child(n + 91) {
+    display: none;
+  }
+}
+
+@include breakpoints.media-breakpoint-up(xxl) {
+  .zx-active-authors-skeleton__item:nth-child(n + 91) {
+    display: block;
+  }
+}
+
+.zx-active-authors-skeleton__bone {
+  height: var(--zx-active-authors-skeleton-bone-height);
+  width: var(--zx-active-authors-skeleton-bone-width-default);
+}
+
+.zx-active-authors-skeleton__item:nth-child(4n + 1) .zx-active-authors-skeleton__bone {
+  width: var(--zx-active-authors-skeleton-bone-width-short);
+}
+
+.zx-active-authors-skeleton__item:nth-child(4n + 2) .zx-active-authors-skeleton__bone {
+  width: var(--zx-active-authors-skeleton-bone-width-long);
+}
+
+.zx-active-authors-skeleton__item:nth-child(4n + 3) .zx-active-authors-skeleton__bone {
+  width: var(--zx-active-authors-skeleton-bone-width-compact);
+}

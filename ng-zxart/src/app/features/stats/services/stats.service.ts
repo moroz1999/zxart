@@ -68,7 +68,7 @@ export class StatsService {
       return cached as Observable<T | null>;
     }
 
-    const request$ = this.http.get<T>('/stats/', {params: {action}}).pipe(
+    const request$ = this.http.get<T>('/stats-data/', {params: {action}}).pipe(
       catchError(() => of(null)),
       shareReplay({bufferSize: 1, refCount: false}),
     );

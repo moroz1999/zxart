@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Observable, of} from 'rxjs';
-import {shareReplay} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
-import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
@@ -36,30 +36,26 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxGridItemDirective} from '../../../../shared/ui/zx-grid/zx-grid-item.directive';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxTabsComponent} from '../../../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
-import {TranslateModule} from '@ngx-translate/core';
-import {ZxBreadcrumbsComponent} from '../../../../shared/ui/zx-breadcrumbs/zx-breadcrumbs.component';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
-
 type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
 type ProdMediaTabId = 'description' | 'inlays' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
 type ProdLinksTabId = 'articles' | 'series' | 'compilations';
 
 @Component({
-  selector: 'zx-prod-details',
+  selector: 'zx-prod-details-view',
   standalone: true,
   imports: [
     CommonModule,
     ZxProdDetailsSkeletonComponent,
-    ZxYoutubeEmbedComponent,
     ZxProdHeroComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,
@@ -80,16 +76,13 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
     ZxStackComponent,
     ZxGridComponent,
     ZxGridItemDirective,
-    ZxInlineComponent,
     ZxTabsComponent,
     ZxTabComponent,
     ZxTabContentDirective,
     TranslateModule,
     CommentsListComponent,
     RatingsListComponent,
-    ZxBreadcrumbsComponent,
     TextDirective,
-    HeadingDirective,
     TagsListComponent,
     ZxProdInstructionsSectionComponent,
   ],
@@ -97,19 +90,46 @@ type ProdLinksTabId = 'articles' | 'series' | 'compilations';
   styleUrls: ['./zx-prod-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdDetailsComponent implements OnInit {
+export class ZxProdDetailsComponent implements OnChanges {
   @Input() elementId = 0;
+  /** Active tab id from the route (`prod/:id/:tab`); null = default tab. */
+  @Input() activeTab: string | null = null;
+  @Output() pageTitleChange = new EventEmitter<string>();
 
   core$: Observable<ProdCoreDto | null> = of(null);
 
-  constructor(private readonly api: ProdCoreApiService) {}
+  constructor(
+    private readonly api: ProdCoreApiService,
+    private readonly pageMetadataService: PageMetadataService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
+  ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['elementId']) {
+      return;
+    }
     if (!this.elementId || +this.elementId <= 0) {
       this.core$ = of(null);
       return;
     }
-    this.core$ = this.api.getCore(+this.elementId).pipe(shareReplay(1));
+    this.core$ = this.api.getCore(+this.elementId).pipe(
+      tap(core => {
+        if (core) {
+          this.pageTitleChange.emit(core.h1);
+          this.pageMetadataService.applyEntityMetadata(core.metadata);
+          const categories = core.categoriesPaths.length ? core.categoriesPaths[0].categories : [];
+          this.breadcrumbService.setEntityTrail({
+            items: [
+              {title: this.translate.instant('menu.software'), url: '/prods'},
+              ...categories.map(category => ({title: category.title, url: '/prods', queryParams: {cat: category.id}})),
+            ],
+            currentTitle: core.h1,
+          });
+        }
+      }),
+      shareReplay(1),
+    );
   }
 
   getMainTabIndex(core: ProdCoreDto): number {
@@ -153,14 +173,7 @@ export class ZxProdDetailsComponent implements OnInit {
   }
 
   private getTabHref(tabId: string): string {
-    const url = this.getCurrentUrl();
-    url.pathname = this.replaceTabPath(url.pathname, tabId);
-    url.searchParams.delete('tab');
-    url.searchParams.delete('media');
-    url.searchParams.delete('links');
-    url.hash = '';
-
-    return this.formatUrl(url);
+    return `/prod/${this.elementId}/${encodeURIComponent(tabId)}`;
   }
 
   private getMainTabs(core: ProdCoreDto): ProdMainTabId[] {
@@ -224,23 +237,6 @@ export class ZxProdDetailsComponent implements OnInit {
   }
 
   private getRequestedTabId(): string | null {
-    const match = window.location.pathname.match(/\/tabs:([^/]+)(?=\/|$)/);
-
-    return match ? decodeURIComponent(match[1]) : null;
-  }
-
-  private getCurrentUrl(): URL {
-    return new URL(window.location.href);
-  }
-
-  private replaceTabPath(path: string, tabId: string): string {
-    const cleanPath = path.replace(/\/tabs:[^/]+(?=\/|$)/, '');
-    const normalizedPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
-
-    return `${normalizedPath}tabs:${encodeURIComponent(tabId)}/`;
-  }
-
-  private formatUrl(url: URL): string {
-    return `${url.pathname}${url.search}${url.hash}`;
+    return this.activeTab;
   }
 }

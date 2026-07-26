@@ -14,7 +14,7 @@ import {
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {catchError, debounceTime, distinctUntilChanged, map, of, Subject, Subscription, switchMap} from 'rxjs';
 import {Tag} from '../../models/tag';
-import {TagChipItem} from '../../models/tag-chip-item';
+import {ChipItem} from '../../models/chip-item';
 import {TagItem} from '../../models/tag-item';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
 import {TagsSearchService} from '../../services/tags-search.service';
@@ -27,7 +27,7 @@ import {ZxButtonComponent} from '../../ui/zx-button/zx-button.component';
 import {ZxInlineComponent} from '../../ui/zx-inline/zx-inline.component';
 import {ZxTextSkeletonComponent} from '../../ui/zx-skeleton/components/zx-text-skeleton/zx-text-skeleton.component';
 import {ZxStackComponent} from '../../ui/zx-stack/zx-stack.component';
-import {ZxTagsChipsComponent} from '../../ui/zx-tags-chips/zx-tags-chips.component';
+import {ZxChipsComponent} from '../../ui/zx-chips/zx-chips.component';
 import {TagsApiService} from './tags-api.service';
 import {TagsPayloadDto} from './tags-payload.dto';
 
@@ -43,7 +43,7 @@ import {TagsPayloadDto} from './tags-payload.dto';
     ZxEditButtonComponent,
     ZxInlineComponent,
     ZxStackComponent,
-    ZxTagsChipsComponent,
+    ZxChipsComponent,
     ZxTextSkeletonComponent,
   ],
   templateUrl: './tags-list.component.html',
@@ -51,7 +51,7 @@ import {TagsPayloadDto} from './tags-payload.dto';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
-  @Input({required: true}) set tags(value: ReadonlyArray<TagChipItem>) {
+  @Input({required: true}) set tags(value: ReadonlyArray<ChipItem>) {
     this.inputTags = [...value];
   }
 
@@ -59,6 +59,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
   @Input() label = '';
   @Input() bordered = false;
   @Input() editAriaLabel = '';
+  @Input() tagBasePath = '';
 
   hasEditPrivilege = false;
   editExpanded = false;
@@ -72,8 +73,8 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
   suggestedTags: TagItem[] = [];
   searchResults: TagItem[] = [];
 
-  private inputTags: TagChipItem[] = [];
-  private savedTags: TagChipItem[] | null = null;
+  private inputTags: ChipItem[] = [];
+  private savedTags: ChipItem[] | null = null;
   private readonly searchQuerySubject = new Subject<string>();
   private readonly subscriptions = new Subscription();
 
@@ -85,8 +86,15 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
     private readonly elementPrivilegesApiService: ElementPrivilegesApiService,
   ) {}
 
-  get visibleTags(): ReadonlyArray<TagChipItem> {
-    return this.savedTags ?? this.inputTags;
+  get visibleTags(): ReadonlyArray<ChipItem> {
+    const tags = this.savedTags ?? this.inputTags;
+    if (this.tagBasePath === '') {
+      return tags;
+    }
+    return tags.map(tag => ({
+      ...tag,
+      url: tag.id == null ? undefined : `${this.tagBasePath}/${tag.id}`,
+    }));
   }
 
   get shouldRender(): boolean {
@@ -175,7 +183,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
       this.tagsApiService.saveTags(this.elementId, tags).subscribe({
         next: response => {
           this.applyTagsPayload(response);
-          this.savedTags = response.tags.map(tag => ({title: tag.title}));
+          this.savedTags = response.tags.map(tag => ({id: tag.id, title: tag.title}));
           this.saving = false;
           this.searchLoading = false;
           this.searchResults = [];

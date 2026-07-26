@@ -9,8 +9,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 @Component({
   selector: 'zx-firstpage-module-wrapper',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     TranslateModule,
     ZxPanelComponent,
     HeadingDirective,

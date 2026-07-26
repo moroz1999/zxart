@@ -97,16 +97,12 @@
           <svg-icon [name]="expanded ? 'expand-more' : 'expand-less'" class="player-icon"></svg-icon>
         </zx-button>
 
-        <zx-button
-          size="sm"
-          color="transparent"
+        <zx-close-button
+          size="md"
           [round]="true"
           [ariaLabel]="'player.controls.close' | translate"
-          (click)="close()"
-          class="player-close"
-        >
-          <svg-icon name="close" class="player-icon"></svg-icon>
-        </zx-button>
+          (closed)="close()"
+        ></zx-close-button>
       </div>
     </div>
 

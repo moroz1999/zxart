@@ -26,23 +26,6 @@
 
 .zx-active-authors__item {
   display: block;
-  padding-bottom: var(--padding-sm);
+  padding-bottom: var(--zx-active-authors-item-spacing);
   break-inside: avoid;
-}
-
-.zx-active-authors__skeleton-bone {
-  height: 1em;
-  width: 75%;
-}
-
-.zx-active-authors__item:nth-child(4n + 1) .zx-active-authors__skeleton-bone {
-  width: 55%;
-}
-
-.zx-active-authors__item:nth-child(4n + 2) .zx-active-authors__skeleton-bone {
-  width: 85%;
-}
-
-.zx-active-authors__item:nth-child(4n + 3) .zx-active-authors__skeleton-bone {
-  width: 45%;
 }

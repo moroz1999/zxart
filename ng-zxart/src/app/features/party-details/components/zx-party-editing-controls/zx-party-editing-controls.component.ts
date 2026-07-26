@@ -5,22 +5,36 @@ import {
   ZxEditingControlsComponent,
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
-const DELETE_CONFIRM = {
-  titleKey: 'party-details.action.delete-confirm-title',
-  messageKey: 'party-details.action.delete-confirm-message',
-  confirmLabelKey: 'party-details.action.delete-confirm-yes',
-  cancelLabelKey: 'party-details.action.delete-confirm-cancel',
-};
-
 const PARTY_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'party-details.action.showPublicForm'},
-  {action: 'publicDelete', privilege: 'publicDelete', labelKey: 'party-details.action.publicDelete', color: 'danger', confirm: DELETE_CONFIRM},
 ];
 
+/** Routed segment of each add action, appended to the party URL. */
+const ADD_ACTION_SEGMENTS: Record<string, string> = {
+  'picturesUploadForm.batchUploadForm': 'pictures/add',
+  'musicUploadForm.batchUploadForm': 'music/add',
+  'zxProdsUploadForm.batchUploadForm': 'prods/add',
+};
+
 const PARTY_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'picturesUploadForm.batchUploadForm', privilege: 'picturesUploadForm.batchUploadForm', labelKey: 'party-details.action.upload-pictures', color: 'secondary'},
-  {action: 'musicUploadForm.batchUploadForm', privilege: 'musicUploadForm.batchUploadForm', labelKey: 'party-details.action.upload-music', color: 'secondary'},
-  {action: 'zxProdsUploadForm.batchUploadForm', privilege: 'zxProdsUploadForm.batchUploadForm', labelKey: 'party-details.action.upload-prods', color: 'secondary'},
+  {
+    action: 'picturesUploadForm.batchUploadForm',
+    privilege: 'picturesUploadForm.batchUploadForm',
+    labelKey: 'party-details.action.upload-pictures',
+    color: 'secondary',
+  },
+  {
+    action: 'musicUploadForm.batchUploadForm',
+    privilege: 'musicUploadForm.batchUploadForm',
+    labelKey: 'party-details.action.upload-music',
+    color: 'secondary',
+  },
+  {
+    action: 'zxProdsUploadForm.batchUploadForm',
+    privilege: 'zxProdsUploadForm.batchUploadForm',
+    labelKey: 'party-details.action.upload-prods',
+    color: 'secondary',
+  },
 ];
 
 @Component({
@@ -33,18 +47,12 @@ const PARTY_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxPartyEditingControlsComponent {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) partyUrl!: string;
 
   readonly editActions = PARTY_EDIT_ACTIONS;
   readonly addActions = PARTY_ADD_ACTIONS;
 
-  readonly buildActionUrl = (action: string, elementId: number): string => {
-    if (action.includes('.')) {
-      const dot = action.indexOf('.');
-      const type = action.substring(0, dot);
-      const act = action.substring(dot + 1);
-      return `${this.partyUrl}type:${type}/action:${act}/`;
-    }
-    return `${this.partyUrl}id:${elementId}/action:${action}/`;
-  };
+  readonly buildActionUrl = (_action: string, elementId: number): string => `/party/${elementId}/edit`;
+
+  readonly buildAddActionUrl = (action: string, elementId: number): string =>
+    `/party/${elementId}/${ADD_ACTION_SEGMENTS[action] ?? ''}`;
 }

@@ -9,13 +9,13 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
-
+import {RouterLink} from '@angular/router';
 const BEST_LIMIT = 5;
 
 @Component({
   selector: 'zx-group-best-works',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxProdBlockComponent,

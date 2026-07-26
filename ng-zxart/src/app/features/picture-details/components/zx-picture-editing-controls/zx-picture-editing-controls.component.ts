@@ -6,23 +6,7 @@ import {
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
 const PICTURE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {
-    action: 'showPublicForm',
-    privilege: 'showPublicForm',
-    labelKey: 'picture-details.edit',
-  },
-  {
-    action: 'publicDelete',
-    privilege: 'publicDelete',
-    labelKey: 'picture-details.delete',
-    color: 'danger',
-    confirm: {
-      titleKey: 'picture-details.delete-confirm-title',
-      messageKey: 'picture-details.delete-confirm-message',
-      confirmLabelKey: 'picture-details.delete-confirm-yes',
-      cancelLabelKey: 'picture-details.delete-confirm-cancel',
-    },
-  },
+  {action: 'showPublicForm', privilege: 'showPublicForm', labelKey: 'picture-details.edit'},
 ];
 
 @Component({
@@ -34,10 +18,8 @@ const PICTURE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxPictureEditingControlsComponent {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) pictureUrl!: string;
 
   readonly editActions = PICTURE_EDIT_ACTIONS;
 
-  readonly buildActionUrl = (action: string, elementId: number): string =>
-    `${this.pictureUrl}id:${elementId}/action:${action}/`;
+  readonly buildActionUrl = (_action: string, elementId: number): string => `/picture/${elementId}/edit`;
 }

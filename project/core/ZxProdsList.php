@@ -231,12 +231,10 @@ trait ZxProdsList
         if (!isset($this->yearsSelectorInfo)) {
             if ($yearsSelector = $this->getYearsSelector()) {
                 $this->yearsSelectorInfo = [];
-                $controller = $this->getService(controller::class);
-
                 if ($years = $yearsSelector[0]['values']) {
                     foreach ($years as $letter) {
                         $this->yearsSelectorInfo[] = [
-                            'url' => $controller->pathURL . 'year:' . $letter['value'],
+                            'url' => '/prods?years=' . rawurlencode((string)$letter['value']),
                             'title' => $letter['title'],
                         ];
                     }
@@ -319,7 +317,6 @@ trait ZxProdsList
         $data = [
             'name' => html_entity_decode($category->title, ENT_QUOTES),
             'id' => $category->id,
-            'url' => $category->getUrl(),
         ];
         if ($categories = $category->getCategories()) {
             $data['children'] = [];
@@ -657,12 +654,10 @@ trait ZxProdsList
         if (!isset($this->lettersSelectorInfo)) {
             if ($lettersSelector = $this->getLettersSelector()) {
                 $this->lettersSelectorInfo = [];
-                $controller = $this->getService(controller::class);
-
                 if ($letters = $lettersSelector[0]['values']) {
                     foreach ($letters as $letter) {
                         $this->lettersSelectorInfo[] = [
-                            'url' => $controller->pathURL . 'letter:' . $letter['value'],
+                            'url' => '/prods?letter=' . rawurlencode((string)$letter['value']),
                             'title' => $letter['title'],
                         ];
                     }

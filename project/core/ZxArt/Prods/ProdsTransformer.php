@@ -18,8 +18,8 @@ readonly class ProdsTransformer
         if ($partyElement) {
             $partyInfo = [
                 'id' => (int)$partyElement->id,
+                'structureType' => $partyElement->structureType,
                 'title' => html_entity_decode((string)$partyElement->getTitle(), ENT_QUOTES),
-                'url' => $partyElement->getUrl(),
             ];
             $partyPlace = (int)$element->partyplace;
         }
@@ -36,7 +36,6 @@ readonly class ProdsTransformer
 
         return new ProdDto(
             id: (int)$element->id,
-            url: $element->getUrl(),
             structureType: 'zxProd',
             dateCreated: (int)$element->dateAdded,
             title: html_entity_decode((string)$element->getTitle(), ENT_QUOTES),

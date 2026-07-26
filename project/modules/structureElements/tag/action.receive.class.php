@@ -7,6 +7,7 @@ class receiveTag extends structureElementAction
     /**
      * @param tagElement $structureElement
      */
+    #[\Override]
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
@@ -22,7 +23,6 @@ class receiveTag extends structureElementAction
             }
 
             $structureElement->persistElementData();
-            $structureElement->updateAmount();
 
             $controller->restart($structureElement->URL);
         }

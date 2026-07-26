@@ -30,7 +30,7 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {FadeInOut} from '../../shared/animations/fade-in-out';
 import {SlideInOut} from '../../shared/animations/slide-in-out';
-
+import {RouterLink} from '@angular/router';
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
 
 @Component({
@@ -40,7 +40,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     trigger('fadeInOut', FadeInOut),
     trigger('slideInOut', SlideInOut),
   ],
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

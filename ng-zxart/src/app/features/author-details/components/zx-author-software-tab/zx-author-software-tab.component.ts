@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry, AuthorProdsApiService} from '../../services/author-prods-api.service';
@@ -18,6 +19,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxProdsGridDirective} from '../../../../shared/directives/prods-grid.directive';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 const PAGE_SIZE = 15;
 
@@ -45,6 +47,7 @@ interface YearGroup {
     ZxInlineComponent,
     ZxProdsGridDirective,
     ZxProdReleaseCardComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-software-tab.component.html',
   styleUrl: './zx-author-software-tab.component.scss',
@@ -52,7 +55,6 @@ interface YearGroup {
 })
 export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  @Input() urlBase = '';
 
   private readonly roleStore = new BehaviorSubject<string>('');
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
@@ -71,6 +73,9 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   get currentPage(): number { return this.pageStore.getValue(); }
   get pagesAmount(): number { return Math.ceil(this.total / PAGE_SIZE); }
 
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   constructor(
     private readonly prodsApiService: AuthorProdsApiService,
     private readonly cdr: ChangeDetectorRef,
@@ -78,7 +83,13 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.pageStore = new BehaviorSubject<number>(this.parsePageFromUrl());
+    this.pageStore = new BehaviorSubject<number>(this.pageFromParams(this.route.snapshot.queryParamMap));
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      const page = this.pageFromParams(params);
+      if (page !== this.pageStore.getValue()) {
+        this.pageStore.next(page);
+      }
+    }));
     this.subscriptions.add(
       combineLatest([this.roleStore, this.sortStore, this.pageStore]).pipe(
         switchMap(([role, sort, page]) => {
@@ -111,30 +122,30 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
 
   setRole(role: string): void {
     this.roleStore.next(role);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   setSort(sort: string): void {
     this.sortStore.next(sort);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   onPageChange(page: number): void {
-    this.pageStore.next(page);
-    this.pushPageToUrl(page);
+    this.setPage(page);
     scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    const page = match ? parseInt(match[1], 10) : 1;
-    return page > 0 ? page : 1;
+  private pageFromParams(params: ParamMap): number {
+    return Math.max(1, Number(params.get('page')) || 1);
   }
 
-  private pushPageToUrl(page: number): void {
-    if (!this.urlBase) return;
-    const newUrl = page > 1 ? this.urlBase + 'page:' + page + '/' : this.urlBase;
-    window.history.pushState(null, '', newUrl);
+  /** The page lives in the `page` query param; the subscription reloads the list. */
+  private setPage(page: number): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {page: page > 1 ? page : null},
+      queryParamsHandling: 'merge',
+    });
   }
 
   getVisibleRoles(roles: string[]): string[] {

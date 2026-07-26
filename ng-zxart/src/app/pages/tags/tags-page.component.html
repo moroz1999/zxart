@@ -1,0 +1,7 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">{{ vm.titleKey | translate }}</h1>
+  <zx-tags-cloud
+    [section]="vm.section"
+    [tagBasePath]="vm.tagBasePath"
+  ></zx-tags-cloud>
+</zx-page-layout>

@@ -25,6 +25,7 @@ use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
 use ZxArt\Releases\Dto\ReleaseProdRefDto;
 use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Shared\StructureType;
 use zxProdCategoryElement;
 use zxProdElement;
@@ -33,8 +34,10 @@ use zxReleaseElement;
 readonly class ReleaseDetailsService
 {
     public function __construct(
+        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
+        private DescriptionFormatter $descriptionFormatter,
         private ProdMediaService $prodMediaService,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private controller $controller,
@@ -85,7 +88,7 @@ readonly class ReleaseDetailsService
                 ? $this->infoBuilder->translate('zxRelease.type_' . $release->releaseType)
                 : null,
             hardwareRequired: $release->hardwareRequired,
-            description: (string)$release->description,
+            description: $this->descriptionFormatter->decode((string)$release->description),
             isRealtime: $release->isRealtime(),
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),
@@ -158,7 +161,7 @@ readonly class ReleaseDetailsService
         return new ReleaseProdRefDto(
             id: $prod->getId(),
             title: $this->infoBuilder->decodeText($prod->title),
-            url: (string)$prod->getUrl(),
+            url: $this->entityUrlResolver->urlFor($prod),
             year: $prod->year,
             authorNames: $this->buildProdAuthorNames($prod),
             thumbnailUrl: $prod->getImageUrl(1) ?: null,
@@ -197,7 +200,6 @@ readonly class ReleaseDetailsService
                 $categories[] = new ProdCategoryRefDto(
                     id: $category->getId(),
                     title: $this->infoBuilder->decodeText($category->title),
-                    url: (string)$category->getUrl(),
                 );
             }
             if ($categories) {
@@ -221,7 +223,6 @@ readonly class ReleaseDetailsService
                 format: $format,
                 label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
-                catalogueUrl: $release->getCatalogueUrlByFiletype($format),
             );
         }
         return $formats;

@@ -14,7 +14,6 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return html_entity_decode($element->title, ENT_QUOTES);
             },
             'searchTitle' => 'getSearchTitle',
-            'url' => 'getUrl',
             'structureType' => 'structureType',
             'dateCreated' => function (zxReleaseElement $element) {
                 return $element->getValue('dateCreated');
@@ -117,7 +116,6 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'structureType',
                 'title',
                 'dateCreated',
-                'url',
                 'inlaysUrls',
                 'listImagesUrls',
                 'hardwareInfo',
@@ -137,12 +135,10 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 'structureType',
                 'title',
                 'playUrl',
-                'url',
             ],
             'search' => [
                 'id',
                 'searchTitle',
-                'url',
                 'structureType',
             ],
             'zxdb' => [

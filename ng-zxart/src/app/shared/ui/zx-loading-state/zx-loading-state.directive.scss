@@ -1,0 +1,36 @@
+.zx-loading-state {
+  transition:
+    opacity var(--zx-loading-state-transition) ease,
+    filter var(--zx-loading-state-transition) ease;
+}
+
+.zx-loading-state--loading {
+  opacity: var(--zx-loading-state-opacity);
+  filter: blur(var(--zx-loading-state-blur));
+  pointer-events: none;
+}
+
+/*
+ * Spinner pane of the directive, living in the CDK overlay container: a child of the host would be
+ * blurred by the filter above. The directive centres it on the visible part of the host.
+ *
+ * `.cdk-overlay-pane` is qualified on purpose: CDK injects its own pane styles at runtime, after
+ * this stylesheet, so a single class would lose `pointer-events` and keep catching clicks.
+ */
+.cdk-overlay-pane.zx-loading-state-spinner {
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity var(--zx-loading-state-spinner-leave) ease-in,
+    visibility 0s linear var(--zx-loading-state-spinner-leave);
+}
+
+.cdk-overlay-pane.zx-loading-state-spinner--visible {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--zx-loading-state-spinner-enter) ease-out var(--zx-loading-state-spinner-delay),
+    visibility 0s linear;
+}

@@ -1,6 +1,6 @@
 # zx-spinner
 
-Compact loading spinner. Use for pagination/reload states, not for initial page loads (use `zx-skeleton` instead).
+Compact loading spinner. Not for initial page loads (use a concrete skeleton) and not for page switching, which is owned by [zxLoadingState](loading-states.md).
 
 `ng-zxart/src/app/shared/ui/zx-spinner/`
 

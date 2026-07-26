@@ -1,21 +1,7 @@
 <ng-container *ngIf="core$ | async as core; else loading">
+  <zx-prod-hero [core]="core"></zx-prod-hero>
+
   <zx-stack spacing="xl" class="prod-details">
-    <zx-breadcrumbs
-      [categories]="core.categoriesPaths.length ? core.categoriesPaths[0].categories : []"
-      [currentTitle]="core.h1">
-    </zx-breadcrumbs>
-
-    <h1 appHeading="display">{{ core.h1 }}</h1>
-
-    <zx-inline class="prod-details__hero" gap="xl" align="start" [wrap]="true">
-      <zx-youtube-embed
-        *ngIf="core.youtubeId"
-        class="prod-details__cover"
-        [youtubeId]="core.youtubeId">
-      </zx-youtube-embed>
-      <zx-prod-hero class="prod-details__info" [core]="core"></zx-prod-hero>
-    </zx-inline>
-
     <zx-panel *ngIf="core.tabs.hasScreenshots" padding="md" variant="elevated">
       <zx-prod-screenshots-section [elementId]="core.elementId"></zx-prod-screenshots-section>
     </zx-panel>
@@ -30,6 +16,7 @@
         <zx-tags-list
           [tags]="core.tags"
           [elementId]="core.elementId"
+          tagBasePath="/prods/tags"
           [label]="'prod-details.tags' | translate"
           [editAriaLabel]="'tags-quick-form.title' | translate"
           [bordered]="true"

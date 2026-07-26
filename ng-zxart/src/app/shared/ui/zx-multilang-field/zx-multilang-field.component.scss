@@ -1,0 +1,27 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+}
+
+.zx-multilang-field {
+  display: grid;
+  grid-template-columns: repeat(var(--zx-multilang-field-columns), minmax(0, 1fr));
+  gap: var(--zx-multilang-field-gap);
+
+  @include bp.media-breakpoint-down(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.zx-multilang-field__row {
+  display: grid;
+  grid-template-columns: var(--zx-multilang-field-label-width) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--zx-multilang-field-label-gap);
+}
+
+.zx-multilang-field--multi-column .zx-multilang-field__row {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}

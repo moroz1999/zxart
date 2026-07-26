@@ -5,10 +5,11 @@ import {TextDirective} from '../typography/directives/text.directive';
 import {ProdReleaseInlayDto} from '../../../features/prod-details/models/prod-release-inlay.dto';
 import {ProdReleaseLabelPipe} from '../../../features/prod-details/pipes/prod-release-label.pipe';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-inlay-tile',
   standalone: true,
-  imports: [CommonModule, TranslateModule, TextDirective, ProdReleaseLabelPipe],
+  imports: [RouterLink, CommonModule, TranslateModule, TextDirective, ProdReleaseLabelPipe],
   templateUrl: './zx-inlay-tile.component.html',
   styleUrl: './zx-inlay-tile.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

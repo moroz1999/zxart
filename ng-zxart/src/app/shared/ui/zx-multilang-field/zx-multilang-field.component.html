@@ -1,0 +1,20 @@
+<div class="zx-multilang-field" [class.zx-multilang-field--multi-column]="columns > 1">
+  <div *ngFor="let lang of languages" class="zx-multilang-field__row">
+    <span class="zx-multilang-field__lang" appText="label" tone="muted">{{ lang.name }}</span>
+    <zx-textarea
+      *ngIf="multiline; else singleLine"
+      [ngModel]="valueFor(lang.id)"
+      (ngModelChange)="onInput(lang.id, $event)"
+      [disabled]="disabled"
+      [rows]="rows"
+    ></zx-textarea>
+    <ng-template #singleLine>
+      <zx-input
+        [ngModel]="valueFor(lang.id)"
+        (ngModelChange)="onInput(lang.id, $event)"
+        [disabled]="disabled"
+        type="text"
+      ></zx-input>
+    </ng-template>
+  </div>
+</div>

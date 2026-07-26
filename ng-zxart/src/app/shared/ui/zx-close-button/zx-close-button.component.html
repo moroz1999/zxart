@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="zx-close-button"
+  [class.zx-close-button--sm]="size === 'sm'"
+  [class.zx-close-button--md]="size === 'md'"
+  [class.zx-close-button--lg]="size === 'lg'"
+  [class.zx-close-button--round]="round"
+  [disabled]="disabled"
+  [attr.aria-label]="ariaLabel || null"
+  (click)="onClick($event)"
+>
+  <svg class="zx-close-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+  </svg>
+</button>

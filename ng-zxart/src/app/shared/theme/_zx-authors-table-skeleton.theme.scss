@@ -1,0 +1,26 @@
+:root {
+  /* Row-number column width matching the author table. */
+  --zx-authors-table-skeleton-col-num-width: 40px;
+  /* Nickname column minimum width matching the author table. */
+  --zx-authors-table-skeleton-col-nick-min-width: 120px;
+  /* Real-name column minimum width matching the author table. */
+  --zx-authors-table-skeleton-col-realname-min-width: 100px;
+  /* Country and city column minimum width matching the author table. */
+  --zx-authors-table-skeleton-col-location-min-width: 80px;
+  /* Rating column width matching the author table. */
+  --zx-authors-table-skeleton-col-rating-width: 60px;
+  /* Text-height placeholder that preserves the real author-table line box. */
+  --zx-authors-table-skeleton-cell-height: var(--zx-font-size-md);
+  /* Row-number placeholder width. */
+  --zx-authors-table-skeleton-number-width: 55%;
+  /* Nickname placeholder width. */
+  --zx-authors-table-skeleton-nick-width: 72%;
+  /* Groups placeholder width. */
+  --zx-authors-table-skeleton-groups-width: 68%;
+  /* Real-name placeholder width. */
+  --zx-authors-table-skeleton-realname-width: 74%;
+  /* Country and city placeholder width. */
+  --zx-authors-table-skeleton-location-width: 66%;
+  /* Rating placeholder width. */
+  --zx-authors-table-skeleton-rating-width: 64%;
+}

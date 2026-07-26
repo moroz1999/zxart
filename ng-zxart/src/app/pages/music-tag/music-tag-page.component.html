@@ -1,0 +1,16 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">
+    {{ vm.tag?.heading ?? (vm.titleKey | translate) }}
+  </h1>
+
+  <div *ngIf="!vm.loading && vm.tag === null" appText="bodySm" tone="muted">
+    {{ 'common.not-found' | translate }}
+  </div>
+
+  <zx-music-browser
+    *ngIf="vm.loading || vm.tag"
+    elementIdParam="id"
+    linkType="tagLink"
+    [sortingKeys]="sortingKeys"
+  ></zx-music-browser>
+</zx-page-layout>

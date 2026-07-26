@@ -1,10 +1,10 @@
 :host {
-  display: block;
+  /* Dissolve the feature host so its content blocks become direct flex items
+     of zx-page-layout's content area, which owns the page-level vertical
+     rhythm. See docs/design-system/zx-page-layout.md. */
+  display: contents;
 }
 
-/* Metadata column: takes the space beside the player, wraps below it when the
-   player block is too wide (handled by the wrapping hero row). */
-.tn-head {
-  flex: 1 1 320px;
-  min-width: 0;
+.tune-details__description {
+  white-space: pre-wrap;
 }

@@ -9,6 +9,9 @@ use App\Users\CurrentUserService;
  * @property string $userName
  * @property string $firstName
  * @property string $lastName
+ * @property string $email
+ * @property string $password reads back the stored hash; assigning a value hashes it
+ * @property int $authorId
  */
 class userElement extends structureElement
 {

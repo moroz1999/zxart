@@ -10,7 +10,8 @@ import {ZxPaginationComponent} from '../../shared/ui/zx-pagination/zx-pagination
 import {ZxRowSkeletonComponent} from '../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {InViewportDirective} from '../../shared/directives/in-viewport.directive';
-
+import {RouterLink} from '@angular/router';
+import {ZxLoadingStateDirective} from '../../shared/ui/zx-loading-state/zx-loading-state.directive';
 /**
  * Shared "votes on works" panel: a paginated, lazy-loaded list of votes rendered with
  * zx-table + zx-user. Reused by the author and group discussion tabs; the host supplies
@@ -19,7 +20,7 @@ import {InViewportDirective} from '../../shared/directives/in-viewport.directive
 @Component({
   selector: 'zx-works-ratings-panel',
   standalone: true,
-  imports: [
+  imports: [RouterLink, 
     CommonModule,
     TranslateModule,
     ZxPanelComponent,
@@ -29,6 +30,7 @@ import {InViewportDirective} from '../../shared/directives/in-viewport.directive
     ZxRowSkeletonComponent,
     TextDirective,
     InViewportDirective,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-works-ratings-panel.component.html',
   styleUrl: './zx-works-ratings-panel.component.scss',

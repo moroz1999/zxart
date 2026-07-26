@@ -1,5 +1,4 @@
 export interface ActiveAuthor {
-  id: number;
-  title: string;
-  url: string;
+  readonly id: number;
+  readonly title: string;
 }

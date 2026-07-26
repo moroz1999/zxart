@@ -16,8 +16,11 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 - **type** - file type/format:
   - Tracker formats (PT3, STC, ASC, FTC, etc.)
   - Chip formats (AY, YM, etc.)
+  - Filled in automatically from the uploaded file by the conversion service, so
+    no form offers it. Exposed to the frontend as `format`.
 - **formatGroup** - format group
   - Groups similar formats for filtering
+  - Chosen by the author in the form, unlike `type`
 
 #### Sound Characteristics
 - **chipType** - sound chip type:
@@ -60,6 +63,9 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 
 #### Authorship
 - **author** - track authors (array of IDs)
+  - Authorship drives the tune's placement and author pages, so it is never left
+    empty: the Angular form requires at least one author, and the backend falls
+    back to the "unknown author" element when none is submitted.
 
 #### Party (Competitions)
 - **party** - party ID (demoparty, competition)
@@ -68,8 +74,10 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
   - Link through `partyMusic`
 
 #### Related Works
-- **game** - related game (zxProd ID)
+- **game** - related production or release (`gameLink`)
   - For music from games
+  - Holds a zxProd in almost every case, but a release is allowed too, so the
+    form offers both
 - **inspired** - inspiration source (text)
   - Original composition or melody
 
@@ -101,6 +109,10 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 - **userId** - ID of user who added the element
 - **zxTunesId** - ID in ZXTunes database
 
+### Top Music Route
+- `/music/top` is the dedicated top-music page.
+- The page encapsulates the music browser with descending vote sorting and does not expose the generic sorting control.
+
 ### Integration with External Services
 - **MP3 Storage**: `https://music.zxart.ee/music/` - MP3 files storage
 - **ZXTunes**: integration through zxTunesId
@@ -116,3 +128,4 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 8. game links music to game (for soundtracks)
 9. inspired points to original composition (for covers and remixes)
 10. Turbosound (6 channels) requires special chip or emulation of two AY chips
+11. OpenGraph metadata includes `og:audio` only when an MP3 file is available

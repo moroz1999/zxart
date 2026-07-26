@@ -14,7 +14,6 @@ readonly class ProdLanguageInfoDto
         public string $code,
         public string $title,
         public string $emoji,
-        public string $catalogueUrl,
     ) {
     }
 }

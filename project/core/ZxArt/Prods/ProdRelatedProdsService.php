@@ -59,7 +59,7 @@ readonly class ProdRelatedProdsService
 
         return new ProdSummariesDto(
             prods: $this->buildSummaries($prods),
-            seriesUrl: $this->resolveSeriesUrl($prod),
+            seriesId: $this->resolveSeriesId($prod),
         );
     }
 
@@ -80,7 +80,6 @@ readonly class ProdRelatedProdsService
             $summaries[] = new ProdSummaryDto(
                 id: $prod->getId(),
                 title: $this->decodeText($prod->title),
-                url: (string)$prod->getUrl(),
                 year: $prod->year,
                 legalStatus: $legalStatus,
                 legalStatusLabel: $this->translate('legalstatus.' . $legalStatus),
@@ -103,14 +102,14 @@ readonly class ProdRelatedProdsService
         return $rawImageUrl;
     }
 
-    private function resolveSeriesUrl(zxProdElement $prod): ?string
+    private function resolveSeriesId(zxProdElement $prod): ?int
     {
         foreach ($prod->series as $seriesElement) {
             if (!$seriesElement instanceof zxProdElement) {
                 continue;
             }
 
-            return (string)$seriesElement->getUrl();
+            return $seriesElement->getId();
         }
 
         return null;

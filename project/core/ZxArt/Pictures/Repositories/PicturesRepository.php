@@ -244,6 +244,25 @@ readonly final class PicturesRepository
     }
 
     /**
+     * A sorted page of the whole picture collection.
+     *
+     * @return int[]
+     */
+    public function findPagedIds(SortingParams $sorting, int $start, int $limit): array
+    {
+        return $this->getSelectSql()
+            ->orderBy($sorting->column, $sorting->direction->value)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck('id');
+    }
+
+    public function countAll(): int
+    {
+        return (int)$this->getSelectSql()->count();
+    }
+
+    /**
      * Returns picture IDs that share the most tags with the given tag set,
      * ordered by the number of matched tags (desc), then votes.
      *

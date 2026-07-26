@@ -1,0 +1,10 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zx-location-gap);
+}
+
+.zx-location__icon {
+  width: var(--zx-location-icon-size);
+  height: var(--zx-location-icon-size);
+}

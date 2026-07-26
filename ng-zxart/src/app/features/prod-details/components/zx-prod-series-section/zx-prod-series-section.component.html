@@ -4,10 +4,10 @@
       <zx-inline spacing="sm" align="baseline" [wrap]="true">
         <h2 appHeading="headline">{{ 'prod-details.series' | translate }}</h2>
         <zx-button
-          *ngIf="seriesUrl$ | async as seriesUrl"
+          *ngIf="seriesId$ | async as seriesId"
           size="xs"
           color="outlined"
-          [href]="seriesUrl"
+          [routerLink]="'/prod/' + seriesId"
         >{{ 'prod-details.openSeries' | translate }}</zx-button>
       </zx-inline>
       <zx-prods-list-view

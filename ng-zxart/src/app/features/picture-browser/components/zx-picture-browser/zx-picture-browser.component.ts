@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {Params} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
@@ -16,6 +17,7 @@ import {
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureBrowserService} from '../../services/picture-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
+import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
 @Component({
   selector: 'zx-picture-browser',
@@ -30,6 +32,7 @@ import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
     ZxPaginationComponent,
     ZxSortSelectComponent,
     PictureGalleryHostComponent,
+    ZxLoadingStateDirective,
   ],
   templateUrl: './zx-picture-browser.component.html',
   styleUrls: ['./zx-picture-browser.component.scss'],
@@ -39,8 +42,11 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
   protected override readonly itemsPerPage = 48;
 
   pictures: ZxPictureDto[] = [];
-  galleryId = '';
+  readonly galleryId = 'picture-browser';
   readonly skeletonItems = [0, 1, 2, 3, 4, 5];
+
+  /** Tag narrowing the collection; 0 browses all pictures. Comes from the `tag` query param. */
+  private tagId = 0;
 
   constructor(
     private pictureBrowserService: PictureBrowserService,
@@ -51,12 +57,14 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
     super(translateService, cdr);
   }
 
-  protected override onBeforeInit(): void {
-    this.galleryId = `picture-browser-${this.elementId}`;
+  protected override onQueryParams(params: Params): void {
+    const queryTagId = params['tag'] ? +params['tag'] : 0;
+    this.tagId = this.elementId > 0 ? this.elementId : queryTagId;
+    this.filterParams = this.elementId === 0 && queryTagId > 0 ? {tag: queryTagId} : {};
   }
 
   protected override fetchPage(start: number, limit: number): void {
-    this.pictureBrowserService.getPaged(this.elementId, start, limit, this.sorting).subscribe({
+    this.pictureBrowserService.getPaged(this.tagId, start, limit, this.sorting).subscribe({
       next: response => {
         this.loading = false;
         this.pictures = response.items;

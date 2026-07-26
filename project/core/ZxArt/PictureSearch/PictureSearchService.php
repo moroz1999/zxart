@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace ZxArt\PictureSearch;
 
-use ApiQueriesManager;
 use authorElement;
 use controller;
 use LanguagesManager;
 use structureManager;
 use ZxArt\AuthorList\AuthorListTransformer;
+use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\Dto\PictureSearchResult;
+use ZxArt\PictureSearch\Repositories\PictureSearchRepository;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\Pictures\Services\PicturesManager;
 use zxPictureElement;
 
 readonly class PictureSearchService
@@ -24,7 +26,9 @@ readonly class PictureSearchService
     private const string AUTHORS_EXPORT_TYPE = 'author';
 
     public function __construct(
-        private ApiQueriesManager $apiQueriesManager,
+        private PictureSearchRepository $pictureSearchRepository,
+        private PicturesManager $picturesManager,
+        private AuthorsService $authorsService,
         private PicturesTransformer $picturesTransformer,
         private AuthorListTransformer $authorListTransformer,
         private LanguagesManager $languagesManager,
@@ -35,26 +39,32 @@ readonly class PictureSearchService
 
     public function search(PictureSearchQuery $query): PictureSearchResult
     {
-        $filtrationParameters = $this->buildFiltrationParameters($query);
-        $exportType = $this->resolveExportType($query->resultsType);
         $order = [$query->sortParameter->value => $query->sortOrder->value];
 
-        $apiQuery = $this->apiQueriesManager->getQuery();
-        $apiQuery->setFiltrationParameters($filtrationParameters);
-        $apiQuery->setExportType($exportType);
-        $apiQuery->setOrder($order);
-        $apiQuery->setStart($query->start);
-        $apiQuery->setLimit($query->limit);
-        $queryResult = (array)$apiQuery->getQueryResult();
+        if ($query->resultsType === PictureSearchResultsType::Authors) {
+            $authorsQuery = $this->pictureSearchRepository->buildAuthorsQuery($query);
+            $totalAmount = (clone $authorsQuery)->count();
+            /** @var \structureElement[] $authorElements */
+            $authorElements = $this->authorsService->getElementsByQuery($authorsQuery, $order, $query->start, $query->limit);
+            $pictures = [];
+            $authors = $this->transformAuthors($authorElements);
+        } else {
+            $picturesQuery = $this->pictureSearchRepository->buildPicturesQuery($query);
+            $totalAmount = (clone $picturesQuery)->count();
+            /** @var \structureElement[] $pictureElements */
+            $pictureElements = $this->picturesManager->getElementsByQuery($picturesQuery, $order, $query->start, $query->limit);
+            $pictures = $this->transformPictures($pictureElements);
+            $authors = [];
+        }
 
-        $elements = (array)($queryResult[$exportType] ?? []);
-        $totalAmount = (int)($queryResult['totalAmount'] ?? 0);
+        $filtrationParameters = $this->buildFiltrationParameters($query);
+        $exportType = $this->resolveExportType($query->resultsType);
 
         return new PictureSearchResult(
             totalAmount: $totalAmount,
             resultsType: $query->resultsType,
-            pictures: $this->transformPictures($elements),
-            authors: $this->transformAuthors($elements),
+            pictures: $pictures,
+            authors: $authors,
             apiUrl: $this->buildApiUrl($filtrationParameters, $exportType, $query),
             zipUrl: $this->buildZipUrl($filtrationParameters, $exportType),
         );

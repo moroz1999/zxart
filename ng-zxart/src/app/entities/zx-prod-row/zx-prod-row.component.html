@@ -1,23 +1,23 @@
-<td class="zx-prod-title">
-    <a [href]="model.url">
+<td class="zx-prod-title" appText="body">
+    <a [routerLink]="['/', model.structureType === 'zxRelease' ? 'release' : 'prod', model.id]">
         {{ model.title }}
     </a>
 </td>
-<td class="zx-prod-categories">
+<td class="zx-prod-categories" appText="body">
     <ng-container *ngFor="let category of model.categoriesInfo; last as last">
     <span class="zx-prod-category-link"
           (click)="categoryClicked($event, category.id)"
     >{{ category.title }}</span><span *ngIf="!last">, </span></ng-container>
 </td>
-<td class="zx-prod-groups">
+<td class="zx-prod-groups" appText="body">
     <ng-container *ngFor="let group of model.groupsInfo; last as last"><a
-            [href]="group.url">{{ group.title }}</a><span *ngIf="!last">, </span></ng-container>
+            [routerLink]="['/group', group.id]">{{ group.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
-<td class="zx-prod-publishers">
+<td class="zx-prod-publishers" appText="body">
     <ng-container *ngFor="let publisher of model.publishersInfo; last as last"><a
-            [href]="publisher.url">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
+            [routerLink]="[publisher.structureType === 'author' || publisher.structureType === 'authorAlias' ? '/author' : '/group', publisher.id]">{{ publisher.title }}</a><span *ngIf="!last">, </span></ng-container>
 </td>
-<td class="zx-prod-year"><span class="zx-prod-year-link"
+<td class="zx-prod-year" appText="body"><span class="zx-prod-year-link"
                                (click)="yearClicked($event, model.year)">{{ model.year }}</span>
 </td>
-<td class="zx-prod-date">{{ model.dateCreated | date: 'mediumDate' }}</td>
+<td class="zx-prod-date" appText="body">{{ model.dateCreated | date: 'mediumDate' }}</td>

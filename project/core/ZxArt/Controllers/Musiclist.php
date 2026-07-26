@@ -8,10 +8,13 @@ use CmsHttpResponse;
 use controller;
 use LanguagesManager;
 use Monolog\Logger;
+use Override;
+use persistableCollection;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use structureManager;
 use Throwable;
 use ZxArt\MusicList\MusicListService;
+use ZxArt\LinkTypes;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Rest\TuneRestDto;
@@ -31,6 +34,7 @@ class Musiclist extends LoggedControllerApplication
         parent::__construct($controller, $logger);
     }
 
+    #[Override]
     public function initialize(): void
     {
         $this->startSession('public');
@@ -39,6 +43,7 @@ class Musiclist extends LoggedControllerApplication
         $this->structureManager->setRequestedPath([$this->languagesManager->getCurrentLanguageCode()]);
     }
 
+    #[Override]
     public function execute($controller): void
     {
         $action = $this->getParameter('action') ?: '';
@@ -48,6 +53,7 @@ class Musiclist extends LoggedControllerApplication
         $limit = $this->getParameter('limit') !== false ? (int)$this->getParameter('limit') : null;
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
+        $linkType = (string)($this->getParameter('linkType') ?: LinkTypes::STRUCTURE->value);
 
         try {
             if ($action === 'related') {
@@ -68,25 +74,37 @@ class Musiclist extends LoggedControllerApplication
                         ),
                     ]);
                 }
-            } elseif ($elementId <= 0) {
-                $this->assignError('elementId is required', 400);
-            } elseif ($limit !== null) {
-                $sorting = SortingParams::fromRequest($sortingRaw, MusicListService::ALLOWED_SORT_COLUMNS);
-                $result = $this->musicListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
-                $this->assignSuccess([
-                    'total' => $result['total'],
-                    'items' => array_map(
-                        fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
-                        $result['items']
-                    ),
-                ]);
             } else {
-                $dtos = $this->musicListService->getTunes($elementId, $compoType);
-                $restDtos = array_map(
-                    fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
-                    $dtos
-                );
-                $this->assignSuccess($restDtos);
+                // No wrapper element id from the SPA: resolve the catalogue root by type.
+                $elementId = $elementId > 0 ? $elementId : $this->resolveRootId('musicCatalogue');
+                if ($elementId <= 0) {
+                    $this->assignError('musicCatalogue root not found');
+                } elseif (!in_array($linkType, [LinkTypes::STRUCTURE->value, LinkTypes::TAG->value], true)) {
+                    $this->assignError('Unsupported linkType', 400);
+                } elseif ($limit !== null) {
+                    $sorting = SortingParams::fromRequest($sortingRaw, MusicListService::ALLOWED_SORT_COLUMNS);
+                    $result = $this->musicListService->getPagedByLinkedElement(
+                        $elementId,
+                        $linkType,
+                        $sorting,
+                        $start,
+                        $limit
+                    );
+                    $this->assignSuccess([
+                        'total' => $result['total'],
+                        'items' => array_map(
+                            fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
+                            $result['items']
+                        ),
+                    ]);
+                } else {
+                    $dtos = $this->musicListService->getTunes($elementId, $compoType);
+                    $restDtos = array_map(
+                        fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
+                        $dtos
+                    );
+                    $this->assignSuccess($restDtos);
+                }
             }
         } catch (Throwable $e) {
             $this->logThrowable('Musiclist::execute', $e);
@@ -101,12 +119,33 @@ class Musiclist extends LoggedControllerApplication
         $this->renderer->assign('body', $data);
     }
 
+    /**
+     * Resolves the unique collection root element id by structure type. The
+     * catalogue roots live outside the public language tree, so the id is read
+     * straight from the elements table instead of walking the navigable tree.
+     */
+    private function resolveRootId(string $structureType): int
+    {
+        /** @var persistableCollection $collection */
+        $collection = persistableCollection::getInstance('structure_elements');
+        /** @var list<array{id: scalar}> $rows */
+        $rows = $collection->conditionalLoad(
+            ['id'],
+            [['column' => 'structureType', 'action' => '=', 'argument' => $structureType]]
+        );
+        foreach ($rows as $row) {
+            return (int)$row['id'];
+        }
+        return 0;
+    }
+
     private function assignError(string $message, int $statusCode = 500): void
     {
         CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
+    #[Override]
     public function getUrlName(): string
     {
         return '';

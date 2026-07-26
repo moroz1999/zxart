@@ -25,7 +25,7 @@ class receiveAiFormZxProd extends structureElementAction
             $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_TODO);
         }
 
-        $controller->redirect($structureElement->getUrl());
+        $this->respondFormSaved($controller, $structureElement);
     }
 
     public function setExpectedFields(&$expectedFields): void

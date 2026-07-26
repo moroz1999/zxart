@@ -17,6 +17,7 @@ export interface PictureSearchFilters {
   realtime: boolean;
   inspiration: boolean;
   stages: boolean;
+  fromGame: boolean;
   tagsInclude: string[];
   tagsExclude: string[];
   authorCountryIds: number[];
@@ -37,6 +38,7 @@ export function createDefaultPictureSearchFilters(): PictureSearchFilters {
     realtime: false,
     inspiration: false,
     stages: false,
+    fromGame: false,
     tagsInclude: [],
     tagsExclude: [],
     authorCountryIds: [],
@@ -74,6 +76,9 @@ export function countActivePictureSearchFilters(filters: PictureSearchFilters): 
     count++;
   }
   if (filters.stages) {
+    count++;
+  }
+  if (filters.fromGame) {
     count++;
   }
   count += filters.tagsInclude.length;

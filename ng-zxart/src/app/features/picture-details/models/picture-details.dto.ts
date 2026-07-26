@@ -1,9 +1,10 @@
 import {AuthorDto} from '../../../shared/models/author-dto';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
+import {PageMetadataDto} from '../../../shared/models/page-metadata.dto';
 
 export interface PictureTagDto {
+  readonly id: number;
   readonly title: string;
-  readonly url: string;
 }
 
 export interface PicturePartyContextDto {
@@ -61,6 +62,7 @@ export interface PictureSubmitterDto {
 }
 
 export interface PictureDetailsDto extends ZxPictureDto {
+  readonly metadata: PageMetadataDto;
   readonly description: string | null;
   readonly originalAuthors: AuthorDto[];
   readonly tags: PictureTagDto[];

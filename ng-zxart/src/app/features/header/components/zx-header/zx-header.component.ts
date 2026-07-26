@@ -1,7 +1,5 @@
 import {ChangeDetectionStrategy, Component, HostBinding, OnInit} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {map} from 'rxjs/operators';
-import {BackendLinksService} from '../../services/backend-links.service';
+import {RouterLink} from '@angular/router';
 import {MobileNavComponent} from '../mobile-nav/mobile-nav.component';
 import {MenuBlockComponent} from '../../../menu/components/menu-block/menu-block.component';
 import {SearchTriggerComponent} from '../search-trigger/search-trigger.component';
@@ -15,7 +13,7 @@ import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
-  selector: 'zx-header',
+  selector: 'zx-header, zx-header-view',
   standalone: true,
   imports: [
     MobileNavComponent,
@@ -26,6 +24,7 @@ import {environment} from '../../../../../environments/environment';
     PictureSettingsTriggerComponent,
     LoginTriggerComponent,
     SvgIconComponent,
+    RouterLink,
   ],
   templateUrl: './zx-header.component.html',
   styleUrls: ['./zx-header.component.scss'],
@@ -34,13 +33,7 @@ import {environment} from '../../../../../environments/environment';
 export class ZxHeaderComponent implements OnInit {
   @HostBinding('attr.role') readonly role = 'banner';
 
-  readonly homeUrl = toSignal(
-    this.backendLinksService.links$.pipe(map(l => l.homeUrl)),
-    {initialValue: null},
-  );
-
   constructor(
-    private backendLinksService: BackendLinksService,
     private iconReg: SvgIconRegistryService,
   ) {}
 

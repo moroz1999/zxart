@@ -1,15 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
-import {ZxInlineComponent} from '../zx-inline/zx-inline.component';
-import {TextDirective} from '../typography/directives/text.directive';
-import {ProdAuthorInfoDto, ProdGroupRefDto, ProdPartyInfoDto} from '../../../features/prod-details/models/prod-core.dto';
-import {ZxPartyPlaceComponent} from '../../lib/zx-party-place/zx-party-place.component';
-
-interface ProdAuthorRoleGroup {
-  role: string | null;
-  authors: ProdAuthorInfoDto[];
-}
+import {ZxCreditGroup, ZxCreditsRowComponent} from '../zx-credits-row/zx-credits-row.component';
+import {ProdAuthorInfoDto, ProdGroupRefDto} from '../../../features/prod-details/models/prod-core.dto';
 
 const PRIORITY_AUTHOR_ROLES = [
   'role_music',
@@ -20,10 +11,15 @@ const PRIORITY_AUTHOR_ROLES = [
   'role_intro_code',
 ];
 
+/**
+ * Credits of a prod or release: authors grouped by role, then publishers and
+ * groups. Maps the prod DTOs onto `zx-credits-row` groups; the party appearance
+ * belongs to the hero provenance callout, not here.
+ */
 @Component({
   selector: 'zx-prod-people-row',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxInlineComponent, TextDirective, ZxPartyPlaceComponent],
+  imports: [ZxCreditsRowComponent],
   templateUrl: './zx-prod-people-row.component.html',
   styleUrl: './zx-prod-people-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,9 +28,27 @@ export class ZxProdPeopleRowComponent {
   @Input({required: true}) authors: ProdAuthorInfoDto[] = [];
   @Input({required: true}) publishers: ProdGroupRefDto[] = [];
   @Input() groups: ProdGroupRefDto[] = [];
-  @Input() party: ProdPartyInfoDto | null = null;
 
-  get authorRoleGroups(): ProdAuthorRoleGroup[] {
+  get creditGroups(): ZxCreditGroup[] {
+    const groups: ZxCreditGroup[] = this.authorRoleGroups.map(group => ({
+      labelKey: this.roleLabelKey(group.role),
+      people: group.authors.map(author => ({title: author.title, url: author.url})),
+    }));
+
+    groups.push({
+      labelKey: 'prod-details.publishers',
+      people: this.publishers.map(publisher => ({title: publisher.title, url: publisher.url})),
+    });
+
+    groups.push({
+      labelKey: 'prod-details.groups',
+      people: this.groups.map(group => ({title: group.title, url: group.url})),
+    });
+
+    return groups;
+  }
+
+  private get authorRoleGroups(): {role: string | null; authors: ProdAuthorInfoDto[]}[] {
     const groupedAuthors = new Map<string, ProdAuthorInfoDto[]>();
     const authorsWithoutRoles: ProdAuthorInfoDto[] = [];
 
@@ -52,7 +66,7 @@ export class ZxProdPeopleRowComponent {
     const sortedRoles = Array.from(groupedAuthors.keys()).sort(
       (a, b) => this.getRoleOrder(a) - this.getRoleOrder(b),
     );
-    const groups: ProdAuthorRoleGroup[] = sortedRoles.map(role => ({
+    const groups: {role: string | null; authors: ProdAuthorInfoDto[]}[] = sortedRoles.map(role => ({
       role,
       authors: groupedAuthors.get(role) ?? [],
     }));
@@ -64,23 +78,7 @@ export class ZxProdPeopleRowComponent {
     return groups;
   }
 
-  get hasAuthorRoleGroups(): boolean {
-    return this.authorRoleGroups.length > 0;
-  }
-
-  get hasAnyPeople(): boolean {
-    return this.hasAuthorRoleGroups || this.publishers.length > 0 || this.groups.length > 0 || this.party !== null;
-  }
-
-  trackRoleGroup(_index: number, group: ProdAuthorRoleGroup): string {
-    return group.role ?? 'authors';
-  }
-
-  trackAuthor(_index: number, author: ProdAuthorInfoDto): number {
-    return author.id;
-  }
-
-  roleLabelKey(role: string | null): string {
+  private roleLabelKey(role: string | null): string {
     if (role === null || role === 'unknown') {
       return 'prod-details.authors';
     }
@@ -88,7 +86,7 @@ export class ZxProdPeopleRowComponent {
   }
 
   private getRoleOrder(role: string): number {
-    const idx = PRIORITY_AUTHOR_ROLES.indexOf(role);
-    return idx === -1 ? PRIORITY_AUTHOR_ROLES.length : idx;
+    const priorityIndex = PRIORITY_AUTHOR_ROLES.indexOf(role);
+    return priorityIndex === -1 ? PRIORITY_AUTHOR_ROLES.length : priorityIndex;
   }
 }

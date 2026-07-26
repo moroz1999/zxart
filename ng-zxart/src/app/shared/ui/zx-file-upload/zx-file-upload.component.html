@@ -1,0 +1,9 @@
+<div class="zx-drop">
+  <input #fileInput type="file" [accept]="accept" hidden (change)="onFileSelected($event)" />
+  <span class="zx-drop__body">
+    <span class="zx-drop__title">{{ displayName || ('form.drop-file' | translate) }}</span>
+    <span class="zx-drop__hint">{{ 'form.drop-hint' | translate }}</span>
+  </span>
+  <zx-button size="sm" color="outlined" (click)="fileInput.click()">{{ 'common.choose-file' | translate }}</zx-button>
+  <zx-button *ngIf="displayName" size="sm" color="danger" (click)="onRemove()">{{ 'common.remove' | translate }}</zx-button>
+</div>

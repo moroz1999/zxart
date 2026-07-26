@@ -3,7 +3,7 @@
 
   <div zxDialogFooter>
     <zx-button-controls align="end">
-      <zx-button color="outlined" (click)="cancel()">{{ data.cancelLabel }}</zx-button>
+      <zx-button *ngIf="data.cancelLabel" color="outlined" (click)="cancel()">{{ data.cancelLabel }}</zx-button>
       <zx-button [color]="data.danger ? 'danger' : 'primary'" (click)="confirm()">
         {{ data.confirmLabel }}
       </zx-button>

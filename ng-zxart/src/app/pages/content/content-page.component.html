@@ -1,0 +1,8 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">{{ vm.titleKey | translate }}</h1>
+  @if (vm.html === null) {
+    <p class="content-page__status">{{ 'content.error' | translate }}</p>
+  } @else {
+    <div class="content-page__body" [innerHTML]="vm.html"></div>
+  }
+</zx-page-layout>

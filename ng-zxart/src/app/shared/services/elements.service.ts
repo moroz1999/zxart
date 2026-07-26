@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {map, take} from 'rxjs/operators';
+import {EMPTY, Observable} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {JsonResponse} from '../models/json-response';
 import {StructureElement} from '../models/structure-element';
 import {ElementResponseData} from '../models/element-response-data';
@@ -10,8 +10,6 @@ import {environment} from '../../../environments/environment';
 export interface PostParameters {
     [key: string]: string | number | boolean;
 }
-
-declare var elementsData: { [key: number]: any };
 
 @Injectable({
     providedIn: 'root',
@@ -22,21 +20,15 @@ export class ElementsService {
     constructor(private http: HttpClient) {
     }
 
-    getPrefetchedModel<T, U extends StructureElement>(elementId: number, className: {
-        new(dto: T): U
-    }): Observable<U> {
-        const model = new className(elementsData[elementId] as T);
-        setTimeout(() => delete elementsData[elementId], 1000);
-        return new BehaviorSubject<U>(model).pipe(take(1));
-    }
-
     getModel<T, U extends StructureElement>(elementId: number, className: {
         new(dto: T): U
-    }, postParameters: PostParameters, preset: string): Observable<U> {
-        const allParameters = {
+    }, postParameters: PostParameters, preset: string, structureType = ''): Observable<U> {
+        // When there is no element id the backend resolves the collection root by
+        // structure type (SPA collection pages carry no hardcoded wrapper id).
+        const allParameters: PostParameters = {
             ...postParameters,
-            elementId,
             preset,
+            ...(elementId > 0 ? {elementId} : structureType ? {structureType} : {elementId}),
         };
         const options: Object = {
             'params': allParameters,
@@ -47,6 +39,7 @@ export class ElementsService {
                 map(response => {
                     return new className(response.responseData.elementData);
                 }),
+                catchError(() => EMPTY),
             );
     }
 }

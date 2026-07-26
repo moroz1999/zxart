@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-page-layout-header-content-gap);
+}
+
+.zx-page-layout__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--zx-page-layout-header-items-gap);
+}
+
+.zx-page-layout__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-page-layout-content-block-gap);
+}
+
+.zx-page-layout__content > * {
+  margin: 0;
+}

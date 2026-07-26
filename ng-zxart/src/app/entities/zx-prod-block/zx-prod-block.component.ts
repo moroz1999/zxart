@@ -29,7 +29,8 @@ import {TextDirective} from '../../shared/ui/typography/directives/text.directiv
 import {ZxPartyPlaceComponent} from '../../shared/lib/zx-party-place/zx-party-place.component';
 import {ZxCardScreenshotGalleryComponent} from '../../shared/ui/zx-card-screenshot-preview/zx-card-screenshot-gallery.component';
 
-@Component({
+
+import {RouterLink} from '@angular/router';@Component({
   selector: 'zx-prod-block',
   templateUrl: './zx-prod-block.component.html',
   styleUrls: ['./zx-prod-block.component.scss'],
@@ -37,7 +38,7 @@ import {ZxCardScreenshotGalleryComponent} from '../../shared/ui/zx-card-screensh
     trigger('fadeInOut', FadeInOut),
     trigger('slideInOut', SlideInOut),
   ],
-  imports: [
+  imports: [RouterLink, 
     TranslatePipe,
     SvgIconComponent,
     NgIf,

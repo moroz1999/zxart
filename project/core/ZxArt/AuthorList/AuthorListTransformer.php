@@ -8,9 +8,15 @@ use authorAliasElement;
 use authorElement;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Urls\EntityUrlResolver;
 
 readonly class AuthorListTransformer
 {
+    public function __construct(
+        private EntityUrlResolver $entityUrlResolver,
+    ) {
+    }
+
     public function authorToDto(authorElement $element): AuthorListItemDto
     {
         $countryElement = $element->getCountryElement();
@@ -18,18 +24,19 @@ readonly class AuthorListTransformer
 
         return new AuthorListItemDto(
             id: (int)$element->id,
-            url: $element->getUrl(),
+            url: $this->entityUrlResolver->urlFor($element),
             entityType: EntityType::Author,
             title: html_entity_decode($element->title, ENT_QUOTES),
             realName: html_entity_decode($element->realName, ENT_QUOTES),
+            realNameId: null,
             realNameUrl: null,
             groups: $this->buildGroupsInfo($element->getGroupsList()),
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
-            countryUrl: $countryElement?->getUrl(EntityType::Author->value),
+            countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,
             cityId: $cityElement !== null ? (int)$cityElement->id : null,
             cityTitle: $cityElement !== null ? html_entity_decode($cityElement->title, ENT_QUOTES) : null,
-            cityUrl: $cityElement?->getUrl(EntityType::Author->value),
+            cityUrl: $cityElement !== null ? $this->entityUrlResolver->urlFor($cityElement) : null,
             musicRating: (float)$element->musicRating,
             graphicsRating: (float)$element->graphicsRating,
         );
@@ -45,18 +52,19 @@ readonly class AuthorListTransformer
 
         return new AuthorListItemDto(
             id: (int)$alias->id,
-            url: $alias->getUrl(),
+            url: $this->entityUrlResolver->urlFor($alias),
             entityType: EntityType::AuthorAlias,
             title: html_entity_decode($alias->title, ENT_QUOTES),
             realName: $parentAuthor !== null ? html_entity_decode($parentAuthor->title, ENT_QUOTES) : '',
-            realNameUrl: $parentAuthor?->getUrl(),
+            realNameId: $parentAuthor?->getId(),
+            realNameUrl: $parentAuthor !== null ? $this->entityUrlResolver->urlFor($parentAuthor) : null,
             groups: $groups,
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
-            countryUrl: $countryElement?->getUrl(EntityType::Author->value),
+            countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,
             cityId: $cityElement !== null ? (int)$cityElement->id : null,
             cityTitle: $cityElement !== null ? html_entity_decode($cityElement->title, ENT_QUOTES) : null,
-            cityUrl: $cityElement?->getUrl(EntityType::Author->value),
+            cityUrl: $cityElement !== null ? $this->entityUrlResolver->urlFor($cityElement) : null,
             musicRating: $parentAuthor !== null ? (float)$parentAuthor->musicRating : 0.0,
             graphicsRating: $parentAuthor !== null ? (float)$parentAuthor->graphicsRating : 0.0,
         );
@@ -73,7 +81,7 @@ readonly class AuthorListTransformer
             $groups[] = [
                 'id' => (int)$group->id,
                 'title' => html_entity_decode($group->title, ENT_QUOTES),
-                'url' => $group->getUrl(),
+                'url' => $this->entityUrlResolver->urlFor($group),
             ];
         }
         return $groups;

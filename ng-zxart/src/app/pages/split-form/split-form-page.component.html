@@ -1,0 +1,32 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'split-form.submit' | translate }}</h1>
+  <div *ngIf="loading" class="split-form__loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <form *ngIf="!loading" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
+    <p>{{ 'split-form.intro' | translate }}</p>
+
+    <section *ngFor="let group of groups" class="split-form__group">
+      <h3>{{ group.group }}</h3>
+      <label *ngFor="let item of group.items" class="split-form__item">
+        <input
+          type="checkbox"
+          [checked]="isChecked(group.group, item.key)"
+          (change)="onToggle(group.group, item.key, $any($event.target).checked)"
+        />
+        <span>{{ item.label }}</span>
+      </label>
+    </section>
+
+    <p *ngIf="!groups.length" class="split-form__empty">{{ 'split-form.nothing' | translate }}</p>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+    <zx-form-actions align="start">
+      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'split-form.submit' | translate }}</zx-button>
+    </zx-form-actions>
+    </zx-stack>
+  </form>
+</zx-page-layout>

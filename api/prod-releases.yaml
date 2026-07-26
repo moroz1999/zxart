@@ -88,6 +88,7 @@ components:
             type: string
         description:
           type: string
+          description: HTML-entity-decoded sanitized HTML description content without API-added presentation wrapper markup.
         isRealtime:
           type: boolean
         party:
@@ -152,13 +153,10 @@ components:
         - format
         - label
         - emoji
-        - catalogueUrl
       properties:
         format:
           type: string
         label:
           type: string
         emoji:
-          type: string
-        catalogueUrl:
           type: string

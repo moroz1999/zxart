@@ -1,0 +1,18 @@
+:root {
+  /* Width of a short tag placeholder. */
+  --zx-tags-cloud-skeleton-small-width: 56px;
+  /* Height of a small tag placeholder. */
+  --zx-tags-cloud-skeleton-small-height: var(--space-16);
+  /* Width of a medium tag placeholder. */
+  --zx-tags-cloud-skeleton-medium-width: 88px;
+  /* Height of a medium tag placeholder. */
+  --zx-tags-cloud-skeleton-medium-height: var(--space-24);
+  /* Width of a long tag placeholder. */
+  --zx-tags-cloud-skeleton-large-width: 120px;
+  /* Height of a large tag placeholder. */
+  --zx-tags-cloud-skeleton-large-height: var(--space-32);
+  /* Width of the largest tag placeholder. */
+  --zx-tags-cloud-skeleton-extra-large-width: 152px;
+  /* Height of the largest tag placeholder. */
+  --zx-tags-cloud-skeleton-extra-large-height: var(--space-48);
+}

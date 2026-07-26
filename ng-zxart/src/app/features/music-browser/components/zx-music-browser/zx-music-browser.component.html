@@ -1,4 +1,4 @@
-<div class="selectors">
+<div *ngIf="showSorting" class="selectors">
   <div class="selectors-top">
     <zx-sort-select
       labelKey="music-browser.sorting"
@@ -9,14 +9,14 @@
   </div>
 </div>
 
-<zx-table *ngIf="loading" size="sm">
+<zx-table *ngIf="loading && tunes.length === 0" size="sm">
   <zx-tune-table-skeleton [count]="10"></zx-tune-table-skeleton>
 </zx-table>
 
 <div *ngIf="error" appText="caption" tone="danger">{{ 'music-browser.error' | translate }}</div>
 <div *ngIf="!loading && !error && tunes.length === 0" appText="bodySm" tone="muted">{{ 'music-browser.empty' | translate }}</div>
 
-<zx-table *ngIf="!loading && !error && tunes.length > 0" size="sm">
+<zx-table *ngIf="!error && tunes.length > 0" size="sm" [zxLoadingState]="loading">
   <ng-container *ngIf="{ id: playingTuneId$ | async } as playing">
     <table class="tunes-table">
       <tbody>
@@ -37,7 +37,7 @@
   *ngIf="pagesAmount > 1"
   [currentPage]="currentPage"
   [pagesAmount]="pagesAmount"
-  [urlBase]="urlBase"
+  [queryParams]="paginationQueryParams"
   [loading]="loading"
   (pageChange)="onPageChange($event)"
 ></zx-pagination>

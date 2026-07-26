@@ -11,10 +11,9 @@ use ZxArt\Parties\Rest\PartyCoreRestDto;
 readonly class PartyCoreDto
 {
     /**
-     * @param PartyLinkDto[]       $links
-     * @param PartyCompoDto[]      $compos
-     * @param PartyEditionDto[]    $editions
-     * @param PartyBreadcrumbDto[] $breadcrumbs
+     * @param PartyLinkDto[]    $links
+     * @param PartyCompoDto[]   $compos
+     * @param PartyEditionDto[] $editions
      */
     public function __construct(
         public int $id,
@@ -31,7 +30,6 @@ readonly class PartyCoreDto
         public string $zipUrl,
         public PartyCountersDto $counters,
         public PartyTabsDto $tabs,
-        public array $breadcrumbs,
     ) {
     }
 }

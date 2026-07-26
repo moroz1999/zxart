@@ -3,6 +3,7 @@
 use ZxArt\Authors\Constants;
 use ZxArt\Authors\Entities\Author;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\LinkTypes;
 use ZxArt\Press\Helpers\PressMentions;
@@ -45,6 +46,7 @@ class authorAliasElement extends structureElement implements
     /**
      * @return void
      */
+    #[\Override]
     protected function setModuleStructure(&$moduleStructure)
     {
         $moduleStructure['title'] = 'text';
@@ -69,6 +71,37 @@ class authorAliasElement extends structureElement implements
                 'role' => 'parent',
             ],
         ];
+    }
+
+    #[\Override]
+    public function getFormData(): array
+    {
+        $formData = parent::getFormData();
+        $normalizer = $this->getService(AuthorAliasYearNormalizer::class);
+        $formData['startDate'] = $normalizer->toFormYear((string)($formData['startDate'] ?? ''));
+        $formData['endDate'] = $normalizer->toFormYear((string)($formData['endDate'] ?? ''));
+
+        return $formData;
+    }
+
+    #[\Override]
+    public function importExternalData(
+        mixed $externalData,
+        mixed $expectedFields = [],
+        mixed $validators = [],
+        mixed $filteredLanguageId = false,
+    ): bool {
+        if (is_array($externalData)) {
+            $normalizer = $this->getService(AuthorAliasYearNormalizer::class);
+            if (array_key_exists('startDate', $externalData)) {
+                $externalData['startDate'] = $normalizer->toStorageDate((string)$externalData['startDate']);
+            }
+            if (array_key_exists('endDate', $externalData)) {
+                $externalData['endDate'] = $normalizer->toStorageDate((string)$externalData['endDate']);
+            }
+        }
+
+        return parent::importExternalData($externalData, $expectedFields, $validators, $filteredLanguageId);
     }
 
     public function gatherAuthorNames(): array

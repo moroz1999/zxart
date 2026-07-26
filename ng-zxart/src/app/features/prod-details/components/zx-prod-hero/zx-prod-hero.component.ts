@@ -1,35 +1,24 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
-import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {environment} from '../../../../../environments/environment';
-import {ProdAuthorInfoDto, ProdCategoryRefDto, ProdCoreDto} from '../../models/prod-core.dto';
-import {ZxProdVoteRowComponent} from '../zx-prod-vote-row/zx-prod-vote-row.component';
-import {ZxProdExternalLinksComponent} from '../zx-prod-external-links/zx-prod-external-links.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
-import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {ProdCategoryRefDto, ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
-import {ZxRatingStripComponent} from '../../../../shared/components/zx-rating-strip/zx-rating-strip.component';
-
-interface ProdAuthorRoleGroup {
-  role: string | null;
-  authors: ProdAuthorInfoDto[];
-}
-
-const PRIORITY_AUTHOR_ROLES = [
-  'role_music',
-  'role_intro_music',
-  'role_graphics',
-  'role_intro_graphics',
-  'role_code',
-  'role_intro_code',
-];
+import {ZxItemControlsComponent} from '../../../../shared/ui/zx-item-controls/zx-item-controls.component';
+import {ZxProdPeopleRowComponent} from '../../../../shared/ui/zx-prod-people-row/zx-prod-people-row.component';
+import {ZxYoutubeEmbedComponent} from '../../../../shared/ui/zx-youtube-embed/zx-youtube-embed.component';
+import {ZxHeroComponent} from '../../../../shared/ui/zx-hero/zx-hero.component';
+import {ZxHeroTitleComponent} from '../../../../shared/ui/zx-hero-title/zx-hero-title.component';
+import {ZxHeroBarComponent} from '../../../../shared/ui/zx-hero-bar/zx-hero-bar.component';
+import {ZxFactsComponent} from '../../../../shared/ui/zx-facts/zx-facts.component';
+import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component';
+import {ZxMetaRowComponent} from '../../../../shared/ui/zx-meta-row/zx-meta-row.component';
+import {ZxExtLinkDto, ZxExtLinksComponent} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
+import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
+import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
 
 @Component({
   selector: 'zx-prod-hero',
@@ -37,19 +26,23 @@ const PRIORITY_AUTHOR_ROLES = [
   imports: [
     CommonModule,
     TranslateModule,
-    ZxProdVoteRowComponent,
-    ZxProdExternalLinksComponent,
-    HeadingDirective,
-    TextDirective,
-    ZxStackComponent,
-    ZxInlineComponent,
     ZxProdEditingControlsComponent,
     ZxChipComponent,
-    ZxButtonComponent,
-    SvgIconComponent,
-    ZxPartyPlaceComponent,
+    ZxInlineComponent,
+    ZxCalloutComponent,
     ZxAddedByComponent,
-    ZxRatingStripComponent,
+    ZxItemControlsComponent,
+    ZxProdPeopleRowComponent,
+    ZxYoutubeEmbedComponent,
+    ZxHeroComponent,
+    ZxHeroTitleComponent,
+    ZxHeroBarComponent,
+    ZxFactsComponent,
+    ZxFactComponent,
+    ZxMetaRowComponent,
+    ZxExtLinksComponent,
+    ZxCountersComponent,
+    ZxPartyProvenanceComponent,
   ],
   templateUrl: './zx-prod-hero.component.html',
   styleUrls: ['./zx-prod-hero.component.scss'],
@@ -58,24 +51,16 @@ const PRIORITY_AUTHOR_ROLES = [
 export class ZxProdHeroComponent {
   @Input({required: true}) core!: ProdCoreDto;
 
-  constructor(private readonly iconReg: SvgIconRegistryService) {
-    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
-    this.iconReg.loadSvg(`${environment.svgUrl}dollar.svg`, 'dollar')?.subscribe();
-  }
+  constructor(private readonly translate: TranslateService) {}
 
   get externalLinkLabelKey(): string {
-    if (this.core.legalStatus === 'insales' || this.core.legalStatus === 'donationware') {
-      return 'prod-details.homepage';
+    if (this.core.legalStatus === 'insales') {
+      return 'prod-details.purchase';
+    }
+    if (this.core.legalStatus === 'donationware') {
+      return 'prod-details.donate';
     }
     return 'prod-details.open_externallink';
-  }
-
-  get showDonateButton(): boolean {
-    return this.core.legalStatus === 'donationware' && this.core.externalLink !== '';
-  }
-
-  get showBuyButton(): boolean {
-    return this.core.legalStatus === 'insales' && this.core.externalLink !== '';
   }
 
   get leafCategories(): ProdCategoryRefDto[] {
@@ -88,56 +73,26 @@ export class ZxProdHeroComponent {
     return this.core.legalStatus !== 'unknown';
   }
 
-  get authorRoleGroups(): ProdAuthorRoleGroup[] {
-    const groupedAuthors = new Map<string, ProdAuthorInfoDto[]>();
-    const authorsWithoutRoles: ProdAuthorInfoDto[] = [];
-
-    for (const author of this.core.authors) {
-      const roles = author.roles.length ? author.roles : [null];
-      for (const role of roles) {
-        if (role === null || role === 'unknown') {
-          authorsWithoutRoles.push(author);
-          continue;
-        }
-        groupedAuthors.set(role, [...(groupedAuthors.get(role) ?? []), author]);
-      }
+  /** The prod's own site plus its catalogued outbound links, in one meta row. */
+  get externalLinks(): ZxExtLinkDto[] {
+    const links: ZxExtLinkDto[] = [];
+    if (this.core.externalLink) {
+      links.push({url: this.core.externalLink, label: this.translate.instant(this.externalLinkLabelKey)});
     }
-
-    const sortedRoles = Array.from(groupedAuthors.keys()).sort((a, b) => this.getRoleOrder(a) - this.getRoleOrder(b));
-    const groups: ProdAuthorRoleGroup[] = sortedRoles.map(role => ({role, authors: groupedAuthors.get(role) ?? []}));
-
-    if (authorsWithoutRoles.length > 0) {
-      groups.push({role: null, authors: authorsWithoutRoles});
+    for (const link of this.core.links) {
+      links.push({url: link.url, label: link.name});
     }
-
-    return groups;
+    return links;
   }
 
-  get hasAuthorRoleGroups(): boolean {
-    return this.authorRoleGroups.length > 0;
-  }
-
-  get hasPeopleInfo(): boolean {
-    return this.hasAuthorRoleGroups || this.core.publishers.length > 0 || this.core.groups.length > 0 || this.core.party !== null;
-  }
-
-  trackAuthorRoleGroup(_index: number, group: ProdAuthorRoleGroup): string {
-    return group.role ?? 'authors';
-  }
-
-  trackAuthor(_index: number, author: ProdAuthorInfoDto): number {
-    return author.id;
-  }
-
-  roleLabelKey(role: string | null): string {
-    if (role === null || role === 'unknown') {
-      return 'prod-details.authors';
+  get counters(): ZxCounterItem[] {
+    const items: ZxCounterItem[] = [];
+    if (this.core.voting.votes > 0) {
+      items.push({value: this.core.voting.votes.toFixed(2), labelKey: 'hero.rating'});
     }
-    return `author.role.${role.replace(/^role_/, '')}`;
-  }
-
-  private getRoleOrder(role: string): number {
-    const priorityIndex = PRIORITY_AUTHOR_ROLES.indexOf(role);
-    return priorityIndex === -1 ? PRIORITY_AUTHOR_ROLES.length : priorityIndex;
+    items.push({value: this.core.voting.votesAmount, labelKey: 'hero.votes'});
+    items.push({value: this.core.downloadsCount, labelKey: 'hero.downloads'});
+    items.push({value: this.core.playsCount, labelKey: 'hero.plays'});
+    return items;
   }
 }

@@ -12,6 +12,8 @@ readonly class PartyRestDto
         public string $url,
         public ?string $year,
         public string $imageUrl,
+        public ?PartyLocationItemRestDto $country = null,
+        public ?PartyLocationItemRestDto $city = null,
     ) {
     }
 }
