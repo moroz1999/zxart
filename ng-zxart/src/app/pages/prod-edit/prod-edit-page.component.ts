@@ -126,6 +126,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   categoriesTree: CategoryTreeNode[] = [];
   enums: Record<string, EnumOption[]> = {};
   fileSelectors: Record<string, FileSelectorItem[]> = {};
+  readonly emptyFiles: FileSelectorItem[] = [];
+  batchUpload = false;
 
   /** Multi-file selectors shown on the prod form: property → label key. */
   readonly fileSelectorDefs = [
@@ -133,6 +135,11 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     {prop: 'inlayFilesSelector', labelKey: 'prod-form.inlays'},
     {prop: 'mapFilesSelector', labelKey: 'prod-form.maps'},
     {prop: 'rzx', labelKey: 'prod-form.rzx'},
+  ];
+  readonly batchFileSelectorDefs = [
+    {prop: 'file', labelKey: 'prod-form.files'},
+    {prop: 'connectedFile', labelKey: 'prod-form.screenshots'},
+    {prop: 'mapFilesSelector', labelKey: 'prod-form.maps'},
   ];
 
   private elementId = 0;
@@ -153,13 +160,22 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.batchUpload = this.route.snapshot.data['batchUpload'] === true;
+    if (this.batchUpload) {
+      this.form.controls['title'].clearValidators();
+      this.form.controls['title'].updateValueAndValidity();
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    }
+    const formData$ = this.batchUpload
+      ? this.formData.loadCreate('prodBatch', ['party'])
+      : this.formData.load(this.elementId, ['party']);
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['party']).subscribe({
+      formData$.subscribe({
         next: data => {
           this.form.patchValue({
-            title: String(data.fields['title'] ?? ''),
-            altTitle: String(data.fields['altTitle'] ?? ''),
+            title: String(data.fields[this.batchUpload ? 'prodTitle' : 'title'] ?? ''),
+            altTitle: String(data.fields[this.batchUpload ? 'prodAltTitle' : 'altTitle'] ?? ''),
             externalLink: String(data.fields['externalLink'] ?? ''),
             legalStatus: String(data.fields['legalStatus'] ?? 'unknown') || 'unknown',
             party: data.refs['party'] ?? null,
@@ -209,6 +225,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   }
 
   onRemoveMember(authorId: number): void {
+    if (this.batchUpload) {
+      return;
+    }
     this.subscriptions.add(this.formSave.deleteMember(this.elementId, authorId).subscribe());
   }
 
@@ -244,7 +263,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/prod/${this.elementId}`);
+    this.router.navigateByUrl(this.batchUpload ? '/prods' : `/prod/${this.elementId}`);
   }
 
   onSubmit(): void {
@@ -252,39 +271,56 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.batchUpload && (this.selectorFiles['file']?.length ?? 0) === 0) {
+      this.errorMessage = 'prod-form.error-files-required';
+      return;
+    }
 
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const commonFields = {
+      externalLink: value.externalLink,
+      legalStatus: value.legalStatus,
+      party: value.party ? String(value.party.id) : '',
+      partyplace: value.partyplace,
+      compo: value.compo,
+      language: value.language,
+      year: value.year,
+      youtubeId: value.youtubeId,
+      groups: value.groups.map((ref: EntityRef) => String(ref.id)),
+      publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
+      categories: value.categories.map((id: number) => String(id)),
+      description: value.description,
+      instructions: value.instructions,
+      tagsText: value.tagsText,
+      denyVoting: value.denyVoting ? '1' : '',
+      denyComments: value.denyComments ? '1' : '',
+      addAuthorRole: this.memberFields.addAuthorRole,
+    };
+    const save$ = this.batchUpload
+      ? this.formSave.create('prodBatch', {
+        fileSelectors: this.selectorFiles,
+        fields: {
+          ...commonFields,
+          prodTitle: value.title,
+          prodAltTitle: value.altTitle,
+        },
+      })
+      : this.formSave.save(this.elementId, {
         fileSelectors: this.selectorFiles,
         fields: {
           ...this.passthrough,
+          ...commonFields,
           title: value.title,
           altTitle: value.altTitle,
-          externalLink: value.externalLink,
-          legalStatus: value.legalStatus,
-          party: value.party ? String(value.party.id) : '',
-          partyplace: value.partyplace,
-          compo: value.compo,
-          language: value.language,
-          year: value.year,
-          youtubeId: value.youtubeId,
-          groups: value.groups.map((ref: EntityRef) => String(ref.id)),
-          publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
           compilationItems: value.compilationItems.map((ref: EntityRef) => String(ref.id)),
           seriesProds: value.seriesProds.map((ref: EntityRef) => String(ref.id)),
-          categories: value.categories.map((id: number) => String(id)),
           htmlDescription: value.htmlDescription ? '1' : '',
-          description: value.description,
-          instructions: value.instructions,
-          tagsText: value.tagsText,
-          denyVoting: value.denyVoting ? '1' : '',
-          denyComments: value.denyComments ? '1' : '',
-          addAuthorRole: this.memberFields.addAuthorRole,
         },
-      }).subscribe({
+      });
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/prod/${result.id}`);
         },

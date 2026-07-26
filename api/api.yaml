@@ -3,6 +3,8 @@ info:
   title: ZxArt API
   version: 1.0.0
 paths:
+  /formdata/:
+    $ref: 'form-data.yaml#/paths/~1formdata~1'
   /parties-data/:
     $ref: 'parties.yaml#/paths/~1parties-data~1'
   /password-reminder-data/:
@@ -21,6 +23,10 @@ paths:
     $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=catalogueBaseUrls'
   /userpreferences/:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
+  /playlists-data/:
+    $ref: 'playlists.yaml#/paths/~1playlists-data~1'
+  /profile-data/:
+    $ref: 'profile.yaml#/paths/~1profile-data~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /tags/:

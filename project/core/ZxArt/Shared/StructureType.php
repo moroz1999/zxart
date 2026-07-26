@@ -33,7 +33,9 @@ enum StructureType: string
     case AuthorsCatalogue = 'authorsCatalogue';
     case GroupsCatalogue = 'groupsCatalogue';
     case PartiesCatalogue = 'partiesCatalogue';
+    case Year = 'year';
     case ZxProdCategoriesCatalogue = 'zxProdCategoriesCatalogue';
+    case ZxProdsUploadForm = 'zxProdsUploadForm';
     case PicturesCatalogue = 'picturesCatalogue';
     case MusicCatalogue = 'musicCatalogue';
     case CountriesList = 'countriesList';
@@ -42,6 +44,7 @@ enum StructureType: string
     case Feedback = 'feedback';
     case Registration = 'registration';
     case UserPlaylists = 'userPlaylists';
+    case Playlist = 'playlist';
     case Root = 'root';
     case Language = 'language';
 }

@@ -226,7 +226,7 @@ readonly class AuthorDetailsService
         }
         $wikiSlug = (string)$author->wikiLink;
         if ($wikiSlug !== '') {
-            $links[] = new AuthorLinkDto(url: 'https://speccy.info/' . $wikiSlug, label: 'Speccy.info');
+            $links[] = new AuthorLinkDto(url: 'https://speccy.info/' . $wikiSlug, label: 'SpeccyWiki');
         }
         $zxTunesId = (int)$author->zxTunesId;
         if ($zxTunesId > 0) {

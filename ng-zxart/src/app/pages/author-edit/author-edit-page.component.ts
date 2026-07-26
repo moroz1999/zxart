@@ -86,8 +86,10 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
   imageUrl: string | null = null;
   languages: FormLanguage[] = [];
+  creating = false;
 
   private elementId = 0;
+  private returnUrl = '/authors';
   private imageFile: File | null = null;
   private removeImage = false;
   private passthrough: Record<string, string> = {};
@@ -103,9 +105,19 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      const letter = this.route.snapshot.paramMap.get('letter');
+      this.returnUrl = letter ? `/authors/${encodeURIComponent(letter)}` : '/authors';
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/author/${this.elementId}`;
+    }
+    const formData$ = this.creating
+      ? this.formData.loadCreate('author', ['country', 'city'])
+      : this.formData.load(this.elementId, ['country', 'city']);
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['country', 'city']).subscribe({
+      formData$.subscribe({
         next: data => {
           this.languages = data.languages;
           this.form.patchValue({
@@ -143,7 +155,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/author/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onImageChanged(change: ImageUploadChange): void {
@@ -160,8 +172,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const payload = {
         fields: {
           ...this.passthrough,
           title: value.title,
@@ -178,7 +189,12 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
         },
         multilang: {realName: value.realName},
         image: {field: 'image', file: this.imageFile, remove: this.removeImage},
-      }).subscribe({
+      };
+    const save$ = this.creating
+      ? this.formSave.create('author', payload)
+      : this.formSave.save(this.elementId, payload);
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/author/${result.id}`);
         },

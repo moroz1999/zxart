@@ -19,6 +19,9 @@ import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {
   ZxPartiesListSkeletonComponent,
 } from '../../entities/zx-parties-list-skeleton/zx-parties-list-skeleton.component';
+import {ZxEditButtonComponent} from '../../shared/ui/zx-edit-button/zx-edit-button.component';
+import {CurrentUserService} from '../../shared/services/current-user.service';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 
 interface PartiesPageVm {
   parties: PartyDto[] | null;
@@ -34,6 +37,8 @@ interface PartiesPageVm {
     TranslateModule,
     ZxPartiesListComponent,
     ZxPartiesListSkeletonComponent,
+    ZxEditButtonComponent,
+    ZxInlineComponent,
     ZxNavChipsComponent,
     ZxToggleComponent,
     HeadingDirective,
@@ -45,6 +50,7 @@ interface PartiesPageVm {
 })
 export class PartiesPageComponent {
   readonly years = PARTY_YEARS;
+  readonly isAuthenticated$ = this.currentUserService.isAuthenticated$;
   readonly viewToggleOptions$: Observable<ZxToggleOption[]>;
   viewMode: PartyListViewMode = 'cards';
 
@@ -64,6 +70,7 @@ export class PartiesPageComponent {
   constructor(
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
+    private readonly currentUserService: CurrentUserService,
     translateService: TranslateService,
   ) {
     this.viewToggleOptions$ = translateService.stream([
@@ -89,5 +96,10 @@ export class PartiesPageComponent {
     if (value === 'cards' || value === 'table') {
       this.viewMode = value;
     }
+  }
+
+  partyAddUrl(selectedYear: string): string {
+    const year = selectedYear || String(this.years[this.years.length - 1]);
+    return `/parties/${year}/add`;
   }
 }

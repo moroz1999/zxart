@@ -10,10 +10,9 @@ use Symfony\Component\ObjectMapper\Transform\MapCollection;
 readonly class PartyCoreRestDto
 {
     /**
-     * @param PartyLinkRestDto[]       $links
-     * @param PartyCompoRestDto[]      $compos
-     * @param PartyEditionRestDto[]    $editions
-     * @param PartyBreadcrumbRestDto[] $breadcrumbs
+     * @param PartyLinkRestDto[]    $links
+     * @param PartyCompoRestDto[]   $compos
+     * @param PartyEditionRestDto[] $editions
      */
     public function __construct(
         public int $id,
@@ -34,8 +33,6 @@ readonly class PartyCoreRestDto
         public string $zipUrl,
         public PartyCountersRestDto $counters,
         public PartyTabsRestDto $tabs,
-        #[Map(transform: MapCollection::class)]
-        public array $breadcrumbs,
     ) {
     }
 }

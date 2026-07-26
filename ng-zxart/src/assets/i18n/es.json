@@ -44,7 +44,8 @@
     "display": "Visualización",
     "origin": "Origen",
     "conversion": "Conversión de obras",
-    "subgroups": "Subgrupos"
+    "subgroups": "Subgrupos",
+    "ok": "OK"
   },
   "party-form": {
     "title": "Nombre",
@@ -77,7 +78,7 @@
     "country": "País",
     "city": "Ciudad",
     "artcity-id": "Artcity ID",
-    "wiki": "Enlace de Wikipedia",
+    "wiki": "Enlace de SpeccyWiki",
     "zxtunes-id": "ZXTunes ID",
     "image": "Foto",
     "display-in-music": "Mostrar en música",
@@ -101,7 +102,7 @@
     "city": "Ciudad",
     "start-date": "Fundado (año)",
     "end-date": "Disuelto (año)",
-    "wiki": "Enlace de Wikipedia",
+    "wiki": "Enlace de SpeccyWiki",
     "website": "Sitio web",
     "image": "Logo",
     "members": "Miembros",
@@ -138,6 +139,7 @@
     "file": "Archivo"
   },
   "prod-form": {
+    "files": "Archivos de software",
     "title": "Título",
     "alt-title": "Título alternativo",
     "external-link": "Enlace externo",
@@ -164,6 +166,7 @@
     "error-title-required": "El título es obligatorio",
     "error-load": "No se pudo cargar el formulario",
     "error-save": "No se pudo guardar",
+    "error-files-required": "Seleccione al menos un archivo de software",
     "legal": {
       "unknown": "Desconocido",
       "allowed": "Permitido",
@@ -458,6 +461,7 @@
   },
   "prods-list": {
     "unknown-year": "Año de lanzamiento desconocido",
+    "batch-upload": "Carga masiva",
     "include-subcategories-prods": "Mostrar programas de subcategorías",
     "presets": {
       "year": "Este año",
@@ -1159,6 +1163,7 @@
     }
   },
   "author-browser": {
+    "add-author": "Añadir autor",
     "title": {
       "all": "Autores",
       "graphics": "Artistas",
@@ -1185,6 +1190,7 @@
     }
   },
   "group-browser": {
+    "add-group": "Añadir grupo",
     "error": "Error al cargar grupos",
     "empty": "No se encontraron grupos",
     "recent": "Grupos añadidos recientemente",
@@ -1414,8 +1420,7 @@
     "instructions-view": "Ver",
     "instructions-download": "Descargar",
     "instructions-loading": "Cargando...",
-    "instructions-error": "Error al cargar el archivo",
-    "links": "Enlaces"
+    "instructions-error": "Error al cargar el archivo"
   },
   "release-details": {
     "actions": "Acciones del lanzamiento",
@@ -1994,33 +1999,38 @@
   },
   "profile": {
     "title": "Perfil",
-    "edit": "Editar perfil",
-    "save": "Guardar",
-    "first-name": "Nombre",
-    "last-name": "Apellido",
-    "company": "Empresa",
+    "user-name": "Cuenta",
     "email": "Email",
-    "phone": "Teléfono",
-    "website": "Sitio web",
-    "address": "Dirección",
-    "city": "Ciudad",
-    "post-index": "Código postal",
-    "country": "País",
-    "subscribe": "Suscribirse al boletín",
-    "show-email": "Mostrar email públicamente",
+    "change-password": "Cambiar contraseña",
+    "current-password": "Contraseña actual",
+    "new-password": "Nueva contraseña",
+    "repeat-password": "Repite la nueva contraseña",
+    "save": "Cambiar contraseña",
+    "password-changed": "Contraseña cambiada.",
     "please-log-in": "Inicia sesión para ver tu perfil.",
-    "error-save": "No se pudo guardar"
+    "error-save": "No se pudo guardar",
+    "error-password-wrong": "La contraseña actual es incorrecta.",
+    "error-password-match": "Las nuevas contraseñas no coinciden o están vacías."
   },
   "playlists": {
     "title": "Mis listas",
-    "playlist-title": "Lista de reproducción",
+    "playlist-title": "Lista",
+    "new-title": "Nueva lista",
+    "new-label": "Nombre",
     "new-placeholder": "Nombre de la nueva lista",
     "create": "Crear",
     "rename": "Renombrar",
     "delete": "Eliminar",
     "save": "Guardar",
-    "cancel": "Cancelar",
-    "empty": "Aún no tienes listas."
+    "empty": "Todavía no tienes listas.",
+    "no-items": "Vacía",
+    "delete-confirm-title": "Eliminar lista",
+    "delete-confirm-message": "¿Eliminar la lista «{{title}}»? Las obras no se eliminan.",
+    "counter": {
+      "pictures": "imágenes",
+      "tunes": "melodías",
+      "prods": "programas"
+    }
   },
   "register": {
     "title": "Registro",
@@ -2046,17 +2056,20 @@
     "error-generic": "Error en el registro"
   },
   "join-form": {
-    "join-as-alias": "Convertir en alias de",
-    "join-and-delete": "Fusionar con (y eliminar esto)",
+    "author-as-alias": "Busca un autor y adjúntalo como alias",
+    "author-merge": "Busca un autor y adjúntalo mediante fusión",
+    "group-as-alias": "Busca un grupo y adjúntalo como alias",
+    "group-merge": "Busca un grupo y adjúntalo mediante fusión",
+    "prod-merge": "Busca una producción y adjúntala mediante fusión",
     "releases-only": "Mover solo los lanzamientos",
     "search": "Empieza a escribir para buscar…",
     "submit": "Fusionar",
     "error-no-target": "Elige un destino primero",
     "error-save": "Error al fusionar"
   },
-  "convert-form": {
+  "convert": {
     "confirm": "Convertir",
-    "error": "Error en la conversión",
+    "failed": "Error en la conversión",
     "author-to-group": "¿Convertir este autor en un grupo?",
     "group-to-author": "¿Convertir este grupo en un autor?",
     "alias-to-author": "¿Convertir este alias en un autor independiente?",
@@ -2071,13 +2084,13 @@
     "error-save": "Error al dividir"
   },
   "claim": {
-    "intro": "Solicita ser reconocido como este autor. Los moderadores revisarán tu solicitud.",
+    "message": "Solicita ser reconocido como este autor. Los moderadores revisarán tu solicitud.",
     "confirm": "Enviar solicitud",
     "sent": "Tu solicitud ha sido enviada.",
-    "failed": "No se pudo enviar la solicitud (quizá ya estás vinculado a un autor).",
-    "error": "Error en la solicitud"
+    "failed": "No se pudo enviar la solicitud (quizá ya estás vinculado a un autor)."
   },
   "parties-page": {
+    "add-party": "Añadir fiesta",
     "recent": "Parties recientes",
     "view-cards": "Tarjetas",
     "view-table": "Tabla",

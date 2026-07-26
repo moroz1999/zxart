@@ -9,6 +9,7 @@ Author of works for ZX Spectrum - artist, musician, programmer. Can have real na
 - **realName** - author's real name
 - **nickname** - pseudonym/nickname
 - **artCityId** - external author identifier on the Artcity website
+- **wikiLink** - SpeccyWiki page path on `speccy.info`
 - Supports localization (different names for different languages)
 
 #### Relations with Works
@@ -56,6 +57,7 @@ Group of authors - team, company, demoscene group. Unites authors for collaborat
 
 #### Main Fields
 - **title** - group title
+- **wikiLink** - SpeccyWiki page path on `speccy.info`
 - Supports localization
 
 #### Relations with Works
@@ -160,11 +162,34 @@ When work is created by group:
 - The author details content is organized as tabs: best works, each available work type, collaborators, and discussion.
 - Discussion displays votes and comments on the author's works, followed by comments attached directly to the author.
 
+#### Merging Authors and Groups
+- The merge form absorbs the picked entity **into the one whose page it was opened from**: the picked entity's works, aliases, links and authorship move over and it is deleted.
+- `joinAsAlias` attaches the picked entity as an alias of the current one; `joinAndDelete` merges it in without keeping an alias.
+- Because the picked entity no longer exists afterwards, the form returns to the current entity page, which reloads its details.
+- Accounts whose `authorId` pointed at the absorbed author are re-pointed to the surviving one, so no user is left claiming a deleted author.
+
+#### Claimed Author Ownership
+- An account's claim is the `authorId` field on the user element, not a structure link, so nothing follows it on its own when the author disappears.
+- `ClaimedAuthorService::reassign()` moves or drops the claim and, through `userElement::changeConnectedAuthor()`, the account's "edit my own works" privileges with it.
+- Deleting an author (public delete, admin delete, cascade, conversion into a group) drops the claim — `authorElement::deleteElementData()` calls the service, so every deletion path is covered.
+- Merging re-points the claim at the surviving author instead, which the merge does explicitly before deleting the absorbed one.
+
+#### Author and Group Editing Actions
+- Claiming authorship and the conversions (author → group, group → author, alias → standalone author/group) run straight from the details page: a confirmation dialog, then the legacy action through `/ajax/`.
+- A successful conversion navigates to the created entity; a claim reports the moderation-request result in a dialog.
+- These actions have no routed page of their own — see [zx-editing-controls](../design-system/zx-editing-controls.md) for the `confirm`/`run` action descriptors.
+
 #### Author Alias Details Page
 - Author aliases use the same Angular details component as authors.
 - An alias page keeps the alias identity and its directly attributed works and comments, while profile metadata such as location, account, links, and technical defaults comes from its referenced author.
 
 ### Authors Listing
+
+The `/authors` root and its letter routes expose the Angular author creation form
+from the page heading for authenticated users.
+Author creation and editing share the same Angular form component. Creation
+loads a transient form through `GET /formdata/` and submits it through
+`POST /formdata/`.
 
 The `/artists` and `/musicians` roots are catalogue dashboards. Each dashboard
 shows active authors for a selectable period of one to five years (two years by
@@ -196,6 +221,13 @@ A–Z selector offers letters only (no "all" option). The shared group browser
 (`/groups`, `/groups/:letter`) renders a page-level `menu.groups` display
 heading, the same letters-only A–Z selector, and the same recent-default rule
 under a `group-browser.recent` heading, reading its letter from the route.
+
+The `/groups` root and its letter routes expose the Angular group creation form
+from the page heading for authenticated users. Group creation and editing share
+the same Angular form component; creation loads a transient form through
+`GET /formdata/` and submits it through `POST /formdata/` with
+`entityType=group`. Members and subgroups are picked in the same form and are
+persisted together with the new group.
 
 Author-list responses contain identifiers and display data. Angular builds
 author, group, country-filter, and city-filter links from those identifiers.

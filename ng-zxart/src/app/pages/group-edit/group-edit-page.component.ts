@@ -32,7 +32,7 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 const GROUP_TYPES = ['company', 'studio', 'scene', 'store', 'education'];
 const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
 
-/** Routed page for `group/:id/edit`. */
+/** Routed page for `group/:id/edit` and for group creation (`groups/add`). */
 @Component({
   selector: 'zx-group-edit-page',
   standalone: true,
@@ -91,8 +91,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   imageUrl: string | null = null;
   members: MemberRoleItem[] = [];
   roles: string[] = [];
+  creating = false;
 
   private elementId = 0;
+  private returnUrl = '/groups';
   private imageFile: File | null = null;
   private removeImage = false;
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
@@ -109,9 +111,19 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      const letter = this.route.snapshot.paramMap.get('letter');
+      this.returnUrl = letter ? `/groups/${encodeURIComponent(letter)}` : '/groups';
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/group/${this.elementId}`;
+    }
+    const formData$ = this.creating
+      ? this.formData.loadCreate('group', ['country', 'city'])
+      : this.formData.load(this.elementId, ['country', 'city']);
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['country', 'city']).subscribe({
+      formData$.subscribe({
         next: data => {
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
@@ -146,7 +158,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/group/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onImageChanged(change: ImageUploadChange): void {
@@ -171,26 +183,30 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
+    const payload = {
+      fields: {
+        title: value.title,
+        type: value.type,
+        country: value.country ? String(value.country.id) : '',
+        city: value.city ? String(value.city.id) : '',
+        wikiLink: value.wikiLink,
+        website: value.website,
+        abbreviation: value.abbreviation,
+        startDate: value.startDate,
+        endDate: value.endDate,
+        slogan: value.slogan,
+        addAuthorRole: this.memberFields.addAuthorRole,
+        addAuthorStartDate: this.memberFields.addAuthorStartDate,
+        addAuthorEndDate: this.memberFields.addAuthorEndDate,
+        subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
+      },
+      image: {field: 'image', file: this.imageFile, remove: this.removeImage},
+    };
+    const save$ = this.creating
+      ? this.formSave.create('group', payload)
+      : this.formSave.save(this.elementId, payload);
     this.subscriptions.add(
-      this.formSave.save(this.elementId, {
-        fields: {
-          title: value.title,
-          type: value.type,
-          country: value.country ? String(value.country.id) : '',
-          city: value.city ? String(value.city.id) : '',
-          wikiLink: value.wikiLink,
-          website: value.website,
-          abbreviation: value.abbreviation,
-          startDate: value.startDate,
-          endDate: value.endDate,
-          slogan: value.slogan,
-          addAuthorRole: this.memberFields.addAuthorRole,
-          addAuthorStartDate: this.memberFields.addAuthorStartDate,
-          addAuthorEndDate: this.memberFields.addAuthorEndDate,
-          subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
-        },
-        image: {field: 'image', file: this.imageFile, remove: this.removeImage},
-      }).subscribe({
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/group/${result.id}`);
         },

@@ -9,6 +9,9 @@ import {PicturesHomeComponent} from '../../features/catalogue-home/components/pi
 import {MusicHomeComponent} from '../../features/catalogue-home/components/music-home/music-home.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxEditButtonComponent} from '../../shared/ui/zx-edit-button/zx-edit-button.component';
+import {CurrentUserService} from '../../shared/services/current-user.service';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
 
@@ -34,12 +37,15 @@ interface CollectionVm {
     PicturesHomeComponent,
     MusicHomeComponent,
     HeadingDirective,
+    ZxEditButtonComponent,
+    ZxInlineComponent,
     ZxPageLayoutComponent,
   ],
   templateUrl: './collection-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionPageComponent {
+  readonly isAuthenticated$ = this.currentUserService.isAuthenticated$;
   readonly vm$: Observable<CollectionVm> = this.route.paramMap.pipe(
     map(params => ({
       kind: this.kind,
@@ -56,5 +62,12 @@ export class CollectionPageComponent {
     return (this.route.snapshot.data['titleKey'] ?? '') as string;
   }
 
-  constructor(private readonly route: ActivatedRoute) {}
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly currentUserService: CurrentUserService,
+  ) {}
+
+  groupAddUrl(vm: CollectionVm): string {
+    return vm.letter ? `/groups/${encodeURIComponent(vm.letter)}/add` : '/groups/add';
+  }
 }

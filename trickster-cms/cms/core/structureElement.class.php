@@ -409,6 +409,11 @@ abstract class structureElement implements DependencyInjectionContextInterface
         return (int)$this->id;
     }
 
+    public function getIdentifier(): string
+    {
+        return (string)$this->id;
+    }
+
     /**
      * Generates form data, field names and errors for current structure element
      */

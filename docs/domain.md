@@ -100,6 +100,10 @@ Detailed logic and structure: [domain/language-auth.md](domain/language-auth.md)
 Server and Angular ownership of crawler metadata, redirects, HTTP 404 responses, and analytics page views.
 Detailed logic and structure: [domain/page-metadata.md](domain/page-metadata.md)
 
+### playlists
+Personal collections of works owned by one user, managed from `/playlists`.
+Detailed logic and structure: [domain/playlists.md](domain/playlists.md)
+
 ### entity descriptions
 Storage, API, and frontend rendering rules for picture, tune, prod, and release descriptions.
 Detailed logic and structure: [domain/descriptions.md](domain/descriptions.md)

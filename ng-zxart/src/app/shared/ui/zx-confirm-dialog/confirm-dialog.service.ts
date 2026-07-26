@@ -9,6 +9,15 @@ export class ConfirmDialogService {
   constructor(private dialog: Dialog) {}
 
   confirm(data: ConfirmDialogData): Observable<boolean> {
+    return this.open(data);
+  }
+
+  /** Single-button result dialog; emits when the user closes it. */
+  notify(data: Omit<ConfirmDialogData, 'cancelLabel'>): Observable<boolean> {
+    return this.open(data);
+  }
+
+  private open(data: ConfirmDialogData): Observable<boolean> {
     const dialogRef = this.dialog.open<boolean, ConfirmDialogData, ZxConfirmDialogComponent>(
       ZxConfirmDialogComponent,
       {

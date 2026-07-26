@@ -33,6 +33,10 @@ filter state includes `cat`, `years`, `hw`, `languages`, `statuses`, `formats`,
 `types`, `letter`, `sorting`, `tags`, `countries`, `releases`,
 `includeSubcategoriesProds`, and `page`. Links from production and release
 details use the same query parameters.
+Authenticated users can open the Angular batch upload form from the catalogue
+page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
+The batch page reuses the Angular prod form with batch-specific file fields; it
+loads and submits its transient form through `/formdata/`.
 Catalogue responses expose entity identifiers and structure types. Angular
 templates build internal routes from those identifiers and do not receive routed
 URLs from the API.

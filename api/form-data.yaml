@@ -1,0 +1,89 @@
+openapi: 3.0.0
+paths:
+  /formdata/:
+    get:
+      summary: Load an Angular form
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          description: Existing entity identifier.
+        - in: query
+          name: entityType
+          schema:
+            type: string
+            enum:
+              - author
+              - group
+              - party
+              - prodBatch
+          description: Creation form type; used instead of id.
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Required for a party creation form.
+        - in: query
+          name: refs
+          schema:
+            type: string
+          description: Comma-separated relation fields to resolve.
+      responses:
+        '200':
+          description: Form values and supporting options
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '403':
+          description: Opening the form is forbidden
+        '404':
+          description: Existing entity not found
+        '500':
+          description: Internal server error
+    post:
+      summary: Create an entity from an Angular form
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - entityType
+                - fields
+              properties:
+                entityType:
+                  type: string
+                  enum:
+                    - author
+                    - group
+                    - party
+                    - prodBatch
+                year:
+                  type: integer
+                  description: Required for a party; identifies its parent year.
+                fields:
+                  type: object
+                  additionalProperties: true
+                  description: Form values and uploaded files keyed by entity field name.
+      responses:
+        '200':
+          description: Created entity identifier
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: integer
+        '400':
+          description: Unsupported entity type
+        '403':
+          description: Creation is forbidden or failed
+        '500':
+          description: Internal server error

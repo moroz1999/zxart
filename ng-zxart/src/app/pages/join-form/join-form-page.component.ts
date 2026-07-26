@@ -33,8 +33,12 @@ interface JoinCheckbox {
 
 /**
  * Generic merge/join form (`<entity>/:id/join`). Renders an entity picker per
- * merge target (`joinAsAlias` / `joinAndDelete`) plus optional checkboxes, posts
- * the legacy `join` action, then navigates to the picked target entity.
+ * merge mode (`joinAsAlias` / `joinAndDelete`) plus optional checkboxes, and
+ * posts the legacy `join` action.
+ *
+ * The picked entity is absorbed into the current one and ceases to exist, so
+ * the form returns to the current entity page — which reloads its details with
+ * the merged content.
  */
 @Component({
   selector: 'zx-join-form-page',
@@ -68,7 +72,7 @@ export class JoinFormPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
 
   private elementId = 0;
-  private entityPath = '';
+  private entityUrl = '';
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -81,7 +85,8 @@ export class JoinFormPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
-    this.entityPath = this.route.snapshot.data['entityPath'] ?? '';
+    // the page this form was opened from — this route without its `join` segment
+    this.entityUrl = this.router.url.split('?')[0].replace(/\/join\/?$/, '');
     this.pickers = (this.route.snapshot.data['pickers'] ?? []) as JoinPicker[];
     this.checkboxes = (this.route.snapshot.data['checkboxes'] ?? []) as JoinCheckbox[];
 
@@ -99,16 +104,14 @@ export class JoinFormPageComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const value = this.form.getRawValue();
-    let target: number | null = null;
+    let picked = false;
     const fields: Record<string, string> = {};
     for (const picker of this.pickers) {
       const ref = value[picker.field] as EntityRef | null;
       fields[picker.field] = ref ? String(ref.id) : '';
-      if (ref && target === null) {
-        target = ref.id;
-      }
+      picked = picked || ref !== null;
     }
-    if (target === null) {
+    if (!picked) {
       this.errorMessage = 'join-form.error-no-target';
       return;
     }
@@ -120,7 +123,7 @@ export class JoinFormPageComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.subscriptions.add(
       this.formSave.save(this.elementId, {fields}, 'join').subscribe({
-        next: () => this.router.navigateByUrl(`/${this.entityPath}/${target}`),
+        next: () => this.router.navigateByUrl(this.entityUrl),
         error: (err: HttpErrorResponse) => {
           this.submitting = false;
           this.errorMessage = err.error?.errorMessage ?? 'join-form.error-save';

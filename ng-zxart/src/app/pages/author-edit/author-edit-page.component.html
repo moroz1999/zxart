@@ -1,5 +1,7 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'author-details.action.showPublicForm' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">
+  {{ (creating ? 'author-browser.add-author' : 'author-details.action.showPublicForm') | translate }}
+</h1>
 <div *ngIf="loading" class="author-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

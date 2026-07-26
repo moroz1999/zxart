@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
 import {PartyCoreDto} from '../../models/party-core.dto';
@@ -72,6 +72,7 @@ export class ZxPartyDetailsComponent implements OnChanges {
   constructor(
     private readonly api: PartyCoreApiService,
     private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,7 +87,17 @@ export class ZxPartyDetailsComponent implements OnChanges {
       tap(core => {
         if (core) {
           this.pageTitleChange.emit(core.title);
-          this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
+          const items = [{
+            title: this.translate.instant('menu.parties'),
+            url: '/parties',
+          }];
+          if (core.year) {
+            items.push({
+              title: core.year,
+              url: `/parties/${core.year}`,
+            });
+          }
+          this.breadcrumbService.setEntityTrail({items, currentTitle: core.title});
         }
       }),
       shareReplay(1),

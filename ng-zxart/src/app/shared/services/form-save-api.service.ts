@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {from, Observable} from 'rxjs';
 import {concatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {FormCreateEntityType} from '../models/form-create-entity-type';
 
 /**
  * A form field value posted as `formData[{id}][field]...`. Supports the legacy
@@ -31,10 +32,9 @@ export interface FormSavePayload {
 }
 
 /**
- * Generic entity form save. Runs the legacy `publicReceive` action through the
- * `/ajax/` runner using the legacy `formData[{id}][...]` field names, so the full
- * proven CMS pipeline (validation, file storage, persistence, privilege check) is
- * reused. Returns the saved (or newly created) element id.
+ * Generic entity form save. Existing entities use `/ajax/`; new entities use
+ * `/formdata/`. Both endpoints feed the submitted values into the standard
+ * CMS form pipeline and return the saved element id.
  */
 @Injectable({providedIn: 'root'})
 export class FormSaveApiService {
@@ -49,31 +49,13 @@ export class FormSaveApiService {
     const body = new FormData();
     body.append('id', String(id));
     body.append('action', action);
-
-    for (const [field, value] of Object.entries(payload.fields)) {
-      this.appendField(body, `${base}[${field}]`, value);
-    }
-    for (const [field, byLang] of Object.entries(payload.multilang ?? {})) {
-      for (const [langId, value] of Object.entries(byLang)) {
-        body.append(`${base}[${langId}][${field}]`, value);
-      }
-    }
-
-    const uploads = [...(payload.image ? [payload.image] : []), ...(payload.files ?? [])];
-    for (const upload of uploads) {
-      if (upload.file) {
-        body.append(`${base}[${upload.field}]`, upload.file, upload.file.name);
-      }
-    }
-    for (const [prop, selectorFiles] of Object.entries(payload.fileSelectors ?? {})) {
-      for (const file of selectorFiles) {
-        body.append(`${base}[${prop}][]`, file, file.name);
-      }
-    }
+    this.appendPayload(body, base, payload);
 
     const save$ = this.http.post<{id: number}>('/ajax/', body);
     // a field marked for removal with no replacement file is deleted after save
-    const removals = uploads.filter(upload => upload.remove && !upload.file).map(upload => upload.field);
+    const removals = this.uploads(payload)
+      .filter(upload => upload.remove && !upload.file)
+      .map(upload => upload.field);
     if (removals.length > 0) {
       return save$.pipe(
         switchMap(saved =>
@@ -86,6 +68,46 @@ export class FormSaveApiService {
       );
     }
     return save$;
+  }
+
+  create(
+    entityType: FormCreateEntityType,
+    payload: FormSavePayload,
+    year?: number,
+  ): Observable<{id: number}> {
+    const body = new FormData();
+    body.append('entityType', entityType);
+    if (year !== undefined) {
+      body.append('year', String(year));
+    }
+    this.appendPayload(body, 'fields', payload);
+    return this.http.post<{id: number}>('/formdata/', body);
+  }
+
+  private appendPayload(body: FormData, base: string, payload: FormSavePayload): void {
+    for (const [field, value] of Object.entries(payload.fields)) {
+      this.appendField(body, `${base}[${field}]`, value);
+    }
+    for (const [field, byLang] of Object.entries(payload.multilang ?? {})) {
+      for (const [langId, value] of Object.entries(byLang)) {
+        body.append(`${base}[${langId}][${field}]`, value);
+      }
+    }
+
+    for (const upload of this.uploads(payload)) {
+      if (upload.file) {
+        body.append(`${base}[${upload.field}]`, upload.file, upload.file.name);
+      }
+    }
+    for (const [prop, selectorFiles] of Object.entries(payload.fileSelectors ?? {})) {
+      for (const file of selectorFiles) {
+        body.append(`${base}[${prop}][]`, file, file.name);
+      }
+    }
+  }
+
+  private uploads(payload: FormSavePayload): FileUploadField[] {
+    return [...(payload.image ? [payload.image] : []), ...(payload.files ?? [])];
   }
 
   private appendField(body: FormData, key: string, value: FormFieldValue): void {

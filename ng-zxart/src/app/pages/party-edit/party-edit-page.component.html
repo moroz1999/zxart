@@ -1,5 +1,7 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'party-details.action.showPublicForm' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">
+  {{ (creating ? 'parties-page.add-party' : 'party-details.action.showPublicForm') | translate }}
+</h1>
 <div *ngIf="loading" class="party-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

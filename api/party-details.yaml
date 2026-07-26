@@ -295,15 +295,6 @@ components:
         hasActivity:
           type: boolean
 
-    PartyBreadcrumb:
-      type: object
-      required: [title, url]
-      properties:
-        title:
-          type: string
-        url:
-          type: string
-
     PartyCorePayload:
       type: object
       required:
@@ -322,7 +313,6 @@ components:
         - zipUrl
         - counters
         - tabs
-        - breadcrumbs
       properties:
         id:
           type: integer
@@ -363,10 +353,6 @@ components:
           $ref: '#/components/schemas/PartyCounters'
         tabs:
           $ref: '#/components/schemas/PartyTabs'
-        breadcrumbs:
-          type: array
-          items:
-            $ref: '#/components/schemas/PartyBreadcrumb'
 
     PartyOverview:
       type: object

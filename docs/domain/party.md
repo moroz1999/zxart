@@ -100,6 +100,8 @@ Party provides methods for exporting results in various formats:
 - Party collections use the shared responsive party-card list with five desktop, three tablet, and one mobile column.
 - The recent-parties homepage module and the routed `/parties` collection use the same list presentation while loading their data independently.
 - The routed party collection displays a page heading and an always-visible year link selector whose options match the party-year routes in the main menu.
+- Authenticated users can open the Angular party creation form from the collection heading. A year route creates under that year; the collection root uses the newest catalogue year.
+- Party creation and editing share the same Angular form component. Creation renders an empty form locally and submits it through `POST /formdata/`; editing loads persisted values through `GET /formdata/?id=`.
 - `GET /parties-data/` returns only the 20 most recent parties; `GET /parties-data/?year=YYYY` returns only the parties from that year.
 - The base `/parties` route shows the recent response; a year route requests and shows the selected year's response.
 - The year selector is ordered from oldest to newest. Parties within a selected year are ordered alphabetically; the recent collection retains newest-first order.
@@ -109,7 +111,7 @@ Party provides methods for exporting results in various formats:
 
 ### Party Page REST API
 The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.
-- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters, tabs, breadcrumbs.
+- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters and tabs. The Angular party page builds its breadcrumb links from the clean `/parties` and `/parties/:year` routes.
 - `GET /party-overview/?id=` - "best works" dashboard: the winning entry (lowest positive `partyplace`) of each compo, grouped by medium (`prods`/`pictures`/`tunes`) in full card shapes.
 - `GET /party-prods/?id=&compoType=` - one compo's prods (standard prods-list shape).
 - `GET /party-pictures/?id=&compoType=` - one compo's pictures (`PictureRestDto` shape).

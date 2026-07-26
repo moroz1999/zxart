@@ -1,6 +1,16 @@
 <ng-container *ngIf="vm$ | async as vm">
   <zx-page-layout>
-    <h1 zxPageHeader appHeading="display">{{ vm.titleKey | translate }}</h1>
+    <zx-inline zxPageHeader spacing="sm" align="center">
+      <h1 zxPageHeader appHeading="display">{{ vm.titleKey | translate }}</h1>
+      <zx-edit-button
+        *ngIf="vm.basePath === '/authors' && (isAuthenticated$ | async)"
+        icon="plus"
+        size="md"
+        [routerLink]="authorAddUrl(vm)"
+        [title]="'author-browser.add-author' | translate"
+        [ariaLabel]="'author-browser.add-author' | translate"
+      ></zx-edit-button>
+    </zx-inline>
     @if (vm.dashboard && (vm.items === 'graphics' || vm.items === 'music')) {
       <zx-authors-dashboard [items]="vm.items" [basePath]="vm.basePath"></zx-authors-dashboard>
     } @else {

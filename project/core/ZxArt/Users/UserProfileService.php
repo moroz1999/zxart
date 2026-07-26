@@ -10,20 +10,14 @@ use userElement;
 use ZxArt\Users\Rest\UserProfileRestDto;
 
 /**
- * Self-service profile read/save for the authenticated user. Operates directly
- * on the current user's element and only touches the safe contact/info fields
- * (no userGroups, privileges, verification/ban flags, or password — those stay
- * admin-only / dedicated flows).
+ * Self-service account handling for the authenticated user.
+ *
+ * An account may change exactly one thing about itself: its password. Name and
+ * email identify the account and are read-only here; everything else
+ * (userGroups, privileges, verification/ban flags) stays admin-only.
  */
 readonly class UserProfileService
 {
-    /** Fields a user may edit about themselves. */
-    private const EDITABLE_FIELDS = [
-        'company', 'firstName', 'lastName', 'address', 'city',
-        'postIndex', 'country', 'email', 'phone', 'website',
-    ];
-    private const BOOL_FIELDS = ['subscribe', 'showemail'];
-
     public function __construct(
         private CurrentUserService $currentUserService,
         private structureManager $structureManager,
@@ -38,46 +32,36 @@ readonly class UserProfileService
         }
 
         return new UserProfileRestDto(
-            userName: (string)$element->userName,
-            company: (string)$element->company,
-            firstName: (string)$element->firstName,
-            lastName: (string)$element->lastName,
-            address: (string)$element->address,
-            city: (string)$element->city,
-            postIndex: (string)$element->postIndex,
-            country: (string)$element->country,
-            email: (string)$element->email,
-            phone: (string)$element->phone,
-            website: (string)$element->website,
-            subscribe: (bool)$element->subscribe,
-            showemail: (bool)$element->showemail,
+            userName: $element->userName,
+            email: $element->email,
         );
     }
 
     /**
-     * @param array<string, mixed> $input
+     * Replaces the account password. The current password is required so an
+     * unattended session cannot be turned into a permanent takeover.
+     *
+     * Persisting bumps the element's `dateModified`, which invalidates any
+     * outstanding password-reset link.
      */
-    public function saveProfile(array $input): ?UserProfileRestDto
+    public function changePassword(string $currentPassword, string $newPassword, string $newPasswordRepeat): PasswordChangeResult
     {
         $element = $this->getCurrentUserElement();
         if ($element === null) {
-            return null;
+            return PasswordChangeResult::Unauthorized;
+        }
+        if ($newPassword === '' || $newPassword !== $newPasswordRepeat) {
+            return PasswordChangeResult::NewPasswordMismatch;
+        }
+        if (!password_verify($currentPassword, $element->password)) {
+            return PasswordChangeResult::WrongCurrentPassword;
         }
 
-        foreach (self::EDITABLE_FIELDS as $field) {
-            if (array_key_exists($field, $input)) {
-                $element->$field = (string)$input[$field];
-            }
-        }
-        foreach (self::BOOL_FIELDS as $field) {
-            if (array_key_exists($field, $input)) {
-                $element->$field = !empty($input[$field]) ? 1 : 0;
-            }
-        }
-
+        // the `password` data chunk hashes the assigned value itself
+        $element->password = $newPassword;
         $element->persistElementData();
 
-        return $this->getProfile();
+        return PasswordChangeResult::Changed;
     }
 
     private function getCurrentUserElement(): ?userElement
@@ -86,7 +70,9 @@ readonly class UserProfileService
         if (empty($user->id)) {
             return null;
         }
-        $element = $this->structureManager->getElementById((int)$user->id);
+        // user elements sit under the `users` catalogue, which regular users cannot
+        // walk to from the root — they have to be loaded directly
+        $element = $this->structureManager->getElementById((int)$user->id, null, true);
         return $element instanceof userElement ? $element : null;
     }
 }

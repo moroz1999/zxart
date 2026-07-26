@@ -67,8 +67,11 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
   submitting = false;
   errorMessage = '';
   imageUrl: string | null = null;
+  creating = false;
 
   private elementId = 0;
+  private year = 0;
+  private returnUrl = '/parties';
   private imageFile: File | null = null;
   private removeImage = false;
   private readonly subscriptions = new Subscription();
@@ -83,7 +86,16 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      this.year = Number(this.route.snapshot.paramMap.get('year')) || 0;
+      this.returnUrl = `/parties/${this.year}`;
+      this.loading = false;
+      return;
+    }
+
     this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.returnUrl = `/party/${this.elementId}`;
     this.subscriptions.add(
       this.formData.load(this.elementId, ['country', 'city']).subscribe({
         next: data => {
@@ -111,7 +123,7 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/party/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onImageChanged(change: ImageUploadChange): void {
@@ -128,8 +140,7 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const payload = {
         fields: {
           title: value.title,
           abbreviation: value.abbreviation,
@@ -137,7 +148,12 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
           city: value.city ? String(value.city.id) : '',
         },
         image: {field: 'image', file: this.imageFile, remove: this.removeImage},
-      }).subscribe({
+      };
+    const save$ = this.creating
+      ? this.formSave.create('party', payload, this.year)
+      : this.formSave.save(this.elementId, payload);
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/party/${result.id}`);
         },

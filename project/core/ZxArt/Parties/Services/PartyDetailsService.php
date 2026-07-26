@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Parties\Services;
 
-use breadcrumbsManager;
 use partyElement;
 use structureManager;
-use ZxArt\Parties\Dto\PartyBreadcrumbDto;
 use ZxArt\Parties\Dto\PartyCompoDto;
 use ZxArt\Parties\Dto\PartyCoreDto;
 use ZxArt\Parties\Dto\PartyCountersDto;
@@ -34,7 +32,6 @@ readonly class PartyDetailsService
     public function __construct(
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
-        private breadcrumbsManager $breadcrumbsManager,
         private PartyCompoNameResolver $compoNameResolver,
         private PartiesRepository $partiesRepository,
     ) {
@@ -66,7 +63,6 @@ readonly class PartyDetailsService
             zipUrl: $party->getSaveUrl(),
             counters: $counters,
             tabs: $this->buildTabs($counters),
-            breadcrumbs: $this->buildBreadcrumbs($party),
         );
     }
 
@@ -201,30 +197,6 @@ readonly class PartyDetailsService
         usort($editions, static fn(PartyEditionDto $a, PartyEditionDto $b): int => $a->year <=> $b->year);
 
         return $editions;
-    }
-
-    /**
-     * @return PartyBreadcrumbDto[]
-     */
-    private function buildBreadcrumbs(partyElement $party): array
-    {
-        $partyUrl = (string)$party->getUrl();
-        $path = trim((string)parse_url($partyUrl, PHP_URL_PATH), '/');
-        if ($path === '') {
-            return [];
-        }
-        $segments = array_values(array_filter(explode('/', $path)));
-        /** @var array<array{title: string, URL: string}> $ancestors */
-        $ancestors = array_slice($this->breadcrumbsManager->getBreadcrumbsForPath($segments), 1, -1);
-
-        $breadcrumbs = [];
-        foreach ($ancestors as $item) {
-            $breadcrumbs[] = new PartyBreadcrumbDto(
-                title: $this->decode($item['title']),
-                url: $item['URL'],
-            );
-        }
-        return $breadcrumbs;
     }
 
     private function extractDomain(string $url): string

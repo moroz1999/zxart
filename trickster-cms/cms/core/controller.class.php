@@ -38,7 +38,8 @@ class controller
      */
     public $configManager;
 
-    private $formData = [];
+    /** @var array<int|string, array<array-key, mixed>> */
+    private array $formData = [];
     private $forceDebug = false;
     private $debugMode = null;
     private static self $instance;
@@ -489,7 +490,10 @@ class controller
         $this->formData = $formData;
     }
 
-    public function getElementFormData($elementId)
+    /**
+     * @return array<array-key, mixed>|false
+     */
+    public function getElementFormData(int|string $elementId): array|false
     {
         if (!is_numeric($elementId)) {
             foreach ($this->formData as $key => &$data) {
@@ -501,6 +505,14 @@ class controller
             return $this->formData[$elementId];
         }
         return false;
+    }
+
+    /**
+     * @param array<array-key, mixed> $data
+     */
+    public function setElementFormData(int|string $elementId, array $data): void
+    {
+        $this->formData[$elementId] = $data;
     }
 
     public function setApplicationName($applicationName)
@@ -646,7 +658,7 @@ class controller
         return $this->protocol;
     }
 
-    public function reRegisterElement($oldId, $newId)
+    public function reRegisterElement(int|string $oldId, int|string $newId): void
     {
         if (!is_numeric($oldId)) {
             foreach ($this->formData as $key => &$data) {

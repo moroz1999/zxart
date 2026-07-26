@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Playlists API
+  version: 1.0.0
+  description: Self-service management of the current user's own playlists.
+
+paths:
+  /playlists-data/:
+    get:
+      summary: List the current user's playlists
+      responses:
+        '200':
+          description: The user's playlists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Create, rename or delete one playlist
+      description: >
+        Runs one mutation selected by the `action` query parameter and returns
+        the full updated list. Unknown actions change nothing and return the
+        current list. A playlist can only be changed by its owner.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [create, rename, delete]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Playlist id — required for `rename` and `delete`
+                title:
+                  type: string
+                  description: New name — required for `create` and `rename`
+      responses:
+        '200':
+          description: The user's playlists after the mutation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistsResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    UserPlaylistDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        pictures:
+          type: integer
+          description: Number of pictures in the playlist
+        tunes:
+          type: integer
+          description: Number of tunes in the playlist
+        prods:
+          type: integer
+          description: Number of productions in the playlist
+      required:
+        - id
+        - title
+        - pictures
+        - tunes
+        - prods
+
+    PlaylistsResponse:
+      type: object
+      properties:
+        playlists:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserPlaylistDto'
+      required:
+        - playlists
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string

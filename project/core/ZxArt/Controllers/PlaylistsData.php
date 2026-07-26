@@ -14,6 +14,8 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 use Throwable;
+use ZxArt\Playlists\Repositories\PlaylistContentsRepository;
+use ZxArt\Shared\StructureType;
 
 /**
  * Self-service playlists endpoint for the current user (`/playlists-data/`).
@@ -31,6 +33,7 @@ class PlaylistsData extends LoggedControllerApplication
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
         private readonly CurrentUserService $currentUserService,
+        private readonly PlaylistContentsRepository $contentsRepository,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -55,14 +58,15 @@ class PlaylistsData extends LoggedControllerApplication
             $body = is_array($body) ? $body : [];
             $userId = (int)$user->id;
 
+            $removedId = 0;
             match ((string)$this->getParameter('action')) {
                 'create' => $this->createPlaylist((string)($body['title'] ?? ''), $userId),
                 'rename' => $this->renamePlaylist((int)($body['id'] ?? 0), (string)($body['title'] ?? ''), $userId),
-                'delete' => $this->deletePlaylist((int)($body['id'] ?? 0), $userId),
+                'delete' => $removedId = $this->deletePlaylist((int)($body['id'] ?? 0), $userId),
                 default => null,
             };
 
-            $this->renderer->assign('body', ['playlists' => $this->listPlaylists()]);
+            $this->renderer->assign('body', ['playlists' => $this->listPlaylists($removedId)]);
         } catch (Throwable $e) {
             $this->logThrowable('PlaylistsData::execute', $e);
             $this->assignError('Internal server error');
@@ -71,21 +75,35 @@ class PlaylistsData extends LoggedControllerApplication
         $this->renderer->display();
     }
 
-    /** @return list<array{id: int, title: string}> */
-    private function listPlaylists(): array
+    /**
+     * @param int $removedId playlist deleted in this request — the owner's loaded
+     *                       list still holds it, so it is skipped here
+     * @return list<array{id: int, title: string, pictures: int, tunes: int, prods: int}>
+     */
+    private function listPlaylists(int $removedId = 0): array
     {
-        $container = $this->getUserPlaylistsElement();
-        if ($container === null || !method_exists($container, 'getPlaylists')) {
-            return [];
-        }
-        $playlists = [];
-        foreach ($container->getPlaylists() as $playlist) {
-            if ($playlist instanceof structureElement) {
-                $playlists[] = [
-                    'id' => (int)$playlist->getId(),
-                    'title' => html_entity_decode((string)$playlist->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-                ];
+        $elements = [];
+        foreach ($this->getOwnedPlaylists() as $playlist) {
+            if ($playlist->getId() !== $removedId) {
+                $elements[] = $playlist;
             }
+        }
+
+        $counts = $this->contentsRepository->getContentCounts(
+            array_map(static fn(structureElement $playlist): int => $playlist->getId(), $elements),
+        );
+
+        $playlists = [];
+        foreach ($elements as $playlist) {
+            $id = $playlist->getId();
+            $playlistCounts = $counts[$id] ?? [];
+            $playlists[] = [
+                'id' => $id,
+                'title' => html_entity_decode((string)$playlist->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'pictures' => $playlistCounts[StructureType::ZxPicture->value] ?? 0,
+                'tunes' => $playlistCounts[StructureType::ZxMusic->value] ?? 0,
+                'prods' => $playlistCounts[StructureType::ZxProd->value] ?? 0,
+            ];
         }
         return $playlists;
     }
@@ -130,10 +148,16 @@ class PlaylistsData extends LoggedControllerApplication
         $playlist->persistElementData();
     }
 
-    private function deletePlaylist(int $id, int $userId): void
+    /** @return int id of the deleted playlist, 0 when nothing was deleted */
+    private function deletePlaylist(int $id, int $userId): int
     {
         $playlist = $this->getOwnedPlaylist($id, $userId);
-        $playlist?->deleteElementData();
+        if ($playlist === null) {
+            return 0;
+        }
+        $playlist->deleteElementData();
+
+        return $id;
     }
 
     private function getOwnedPlaylist(int $id, int $userId): ?structureElement
@@ -141,11 +165,35 @@ class PlaylistsData extends LoggedControllerApplication
         if ($id <= 0) {
             return null;
         }
-        $playlist = $this->structureManager->getElementById($id);
-        if (!$playlist instanceof structureElement || (string)$playlist->structureType !== 'playlist') {
-            return null;
+        foreach ($this->getOwnedPlaylists() as $playlist) {
+            if ($playlist->getId() === $id && (int)$playlist->userId === $userId) {
+                return $playlist;
+            }
         }
-        return (int)$playlist->userId === $userId ? $playlist : null;
+        return null;
+    }
+
+    /**
+     * A playlist hangs off its owner's user element, which is not reachable by a
+     * path walk from the site root, so `getElementById()` cannot resolve one.
+     * The owner's catalogue loads them directly under itself instead.
+     *
+     * @return list<structureElement>
+     */
+    private function getOwnedPlaylists(): array
+    {
+        $container = $this->getUserPlaylistsElement();
+        if ($container === null || !method_exists($container, 'getPlaylists')) {
+            return [];
+        }
+
+        $playlists = [];
+        foreach ($container->getPlaylists() as $playlist) {
+            if ($playlist instanceof structureElement) {
+                $playlists[] = $playlist;
+            }
+        }
+        return $playlists;
     }
 
     private function getUserPlaylistsElement(): ?structureElement

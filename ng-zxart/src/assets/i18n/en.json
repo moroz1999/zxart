@@ -44,7 +44,8 @@
     "display": "Display",
     "origin": "Origin",
     "conversion": "Works conversion",
-    "subgroups": "Subgroups"
+    "subgroups": "Subgroups",
+    "ok": "OK"
   },
   "party-form": {
     "title": "Name",
@@ -77,7 +78,7 @@
     "country": "Country",
     "city": "City",
     "artcity-id": "Artcity ID",
-    "wiki": "Wikipedia link",
+    "wiki": "SpeccyWiki link",
     "zxtunes-id": "ZXTunes ID",
     "image": "Photo",
     "display-in-music": "Show in music",
@@ -101,7 +102,7 @@
     "city": "City",
     "start-date": "Founded (year)",
     "end-date": "Disbanded (year)",
-    "wiki": "Wikipedia link",
+    "wiki": "SpeccyWiki link",
     "website": "Website",
     "image": "Logo",
     "members": "Members",
@@ -138,6 +139,7 @@
     "file": "File"
   },
   "prod-form": {
+    "files": "Software files",
     "title": "Title",
     "alt-title": "Alternative title",
     "external-link": "External link",
@@ -164,6 +166,7 @@
     "error-title-required": "Title is required",
     "error-load": "Failed to load the form",
     "error-save": "Failed to save",
+    "error-files-required": "Select at least one software file",
     "legal": {
       "unknown": "Unknown",
       "allowed": "Allowed",
@@ -458,6 +461,7 @@
   },
   "prods-list": {
     "unknown-year": "Unknown year of release",
+    "batch-upload": "Batch upload",
     "include-subcategories-prods": "Display subcategories prods",
     "presets": {
       "year": "This year",
@@ -1160,6 +1164,7 @@
     }
   },
   "author-browser": {
+    "add-author": "Add author",
     "title": {
       "all": "Authors",
       "graphics": "Artists",
@@ -1186,6 +1191,7 @@
     }
   },
   "group-browser": {
+    "add-group": "Add group",
     "error": "Failed to load groups",
     "empty": "No groups found",
     "recent": "Recently added groups",
@@ -1417,8 +1423,7 @@
     "instructions-view": "View",
     "instructions-download": "Download",
     "instructions-loading": "Loading...",
-    "instructions-error": "Failed to load file",
-    "links": "Links"
+    "instructions-error": "Failed to load file"
   },
   "release-details": {
     "actions": "Release actions",
@@ -1997,33 +2002,38 @@
   },
   "profile": {
     "title": "Profile",
-    "edit": "Edit profile",
-    "save": "Save",
-    "first-name": "First name",
-    "last-name": "Last name",
-    "company": "Company",
+    "user-name": "Account",
     "email": "Email",
-    "phone": "Phone",
-    "website": "Website",
-    "address": "Address",
-    "city": "City",
-    "post-index": "Post code",
-    "country": "Country",
-    "subscribe": "Subscribe to newsletter",
-    "show-email": "Show email publicly",
+    "change-password": "Change password",
+    "current-password": "Current password",
+    "new-password": "New password",
+    "repeat-password": "Repeat new password",
+    "save": "Change password",
+    "password-changed": "Password changed.",
     "please-log-in": "Please log in to view your profile.",
-    "error-save": "Failed to save"
+    "error-save": "Failed to save",
+    "error-password-wrong": "Current password is wrong.",
+    "error-password-match": "New passwords do not match, or the new password is empty."
   },
   "playlists": {
     "title": "My playlists",
     "playlist-title": "Playlist",
+    "new-title": "New playlist",
+    "new-label": "Name",
     "new-placeholder": "New playlist name",
     "create": "Create",
     "rename": "Rename",
     "delete": "Delete",
     "save": "Save",
-    "cancel": "Cancel",
-    "empty": "You have no playlists yet."
+    "empty": "You have no playlists yet.",
+    "no-items": "Empty",
+    "delete-confirm-title": "Delete playlist",
+    "delete-confirm-message": "Delete the playlist \"{{title}}\"? The works in it are not deleted.",
+    "counter": {
+      "pictures": "pictures",
+      "tunes": "tunes",
+      "prods": "software"
+    }
   },
   "register": {
     "title": "Register",
@@ -2049,17 +2059,20 @@
     "error-generic": "Registration failed"
   },
   "join-form": {
-    "join-as-alias": "Join as an alias of",
-    "join-and-delete": "Merge into (and delete this)",
+    "author-as-alias": "Find an author and attach them as an alias",
+    "author-merge": "Find an author and attach them by merging",
+    "group-as-alias": "Find a group and attach it as an alias",
+    "group-merge": "Find a group and attach it by merging",
+    "prod-merge": "Find a production and attach it by merging",
     "releases-only": "Move releases only",
     "search": "Start typing to search…",
     "submit": "Merge",
     "error-no-target": "Pick a target first",
     "error-save": "Merge failed"
   },
-  "convert-form": {
+  "convert": {
     "confirm": "Convert",
-    "error": "Conversion failed",
+    "failed": "Conversion failed",
     "author-to-group": "Convert this author into a group?",
     "group-to-author": "Convert this group into an author?",
     "alias-to-author": "Convert this alias into a standalone author?",
@@ -2074,13 +2087,13 @@
     "error-save": "Split failed"
   },
   "claim": {
-    "intro": "Request to be recognised as this author. Moderators will review your request.",
+    "message": "Request to be recognised as this author. Moderators will review your request.",
     "confirm": "Send claim request",
     "sent": "Your claim request has been sent.",
-    "failed": "Could not send the request (you may already be linked to an author).",
-    "error": "Request failed"
+    "failed": "Could not send the request (you may already be linked to an author)."
   },
   "parties-page": {
+    "add-party": "Add party",
     "recent": "Recent parties",
     "view-cards": "Cards",
     "view-table": "Table",

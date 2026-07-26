@@ -8,13 +8,14 @@ use CmsHttpResponse;
 use controller;
 use Monolog\Logger;
 use Throwable;
+use ZxArt\Users\PasswordChangeResult;
 use ZxArt\Users\UserProfileService;
 
 /**
- * Self-service profile endpoint for the current user (`/profile-data/`).
- * GET returns the editable profile; POST `?action=save` persists it. Anonymous
- * users get 401. Mirrors {@see Currentuser}. Named *ProfileData* so the `/profile`
- * URL stays free for the SPA page.
+ * Self-service account endpoint for the current user (`/profile-data/`).
+ * GET returns the account identity; POST `?action=change-password` replaces the
+ * password. Anonymous users get 401. Mirrors {@see Currentuser}. Named
+ * *ProfileData* so the `/profile` URL stays free for the SPA page.
  */
 class ProfileData extends LoggedControllerApplication
 {
@@ -37,17 +38,10 @@ class ProfileData extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            if ($this->getParameter('action') === 'save') {
-                $body = json_decode((string)file_get_contents('php://input'), true);
-                $profile = $this->userProfileService->saveProfile(is_array($body) ? $body : []);
+            if ($this->getParameter('action') === 'change-password') {
+                $this->changePassword();
             } else {
-                $profile = $this->userProfileService->getProfile();
-            }
-
-            if ($profile === null) {
-                $this->assignError('Unauthorized', 401);
-            } else {
-                $this->renderer->assign('body', $profile);
+                $this->respondWithProfile();
             }
         } catch (Throwable $e) {
             $this->logThrowable('Profile::execute', $e);
@@ -55,6 +49,35 @@ class ProfileData extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    private function changePassword(): void
+    {
+        $body = json_decode((string)file_get_contents('php://input'), true);
+        $body = is_array($body) ? $body : [];
+
+        $result = $this->userProfileService->changePassword(
+            (string)($body['currentPassword'] ?? ''),
+            (string)($body['password'] ?? ''),
+            (string)($body['passwordRepeat'] ?? ''),
+        );
+
+        match ($result) {
+            PasswordChangeResult::Changed => $this->respondWithProfile(),
+            PasswordChangeResult::Unauthorized => $this->assignError('Unauthorized', 401),
+            PasswordChangeResult::WrongCurrentPassword => $this->assignError('profile.error-password-wrong', 403),
+            PasswordChangeResult::NewPasswordMismatch => $this->assignError('profile.error-password-match', 400),
+        };
+    }
+
+    private function respondWithProfile(): void
+    {
+        $profile = $this->userProfileService->getProfile();
+        if ($profile === null) {
+            $this->assignError('Unauthorized', 401);
+            return;
+        }
+        $this->renderer->assign('body', $profile);
     }
 
     private function assignError(string $message, int $statusCode = 500): void

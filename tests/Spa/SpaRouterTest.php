@@ -40,9 +40,15 @@ final class SpaRouterTest extends TestCase
         yield ['/prod/123/edit?from=legacy'];
         yield ['/author/42/join'];
         yield ['/author-alias/42/edit'];
-        yield ['/group-alias/42/convert-to-group'];
+        yield ['/authors/add'];
+        yield ['/authors/a/add'];
+        yield ['/groups/add'];
+        yield ['/groups/a/add'];
+        yield ['/group-alias/42/join'];
+        yield ['/parties/2026/add'];
         yield ['/pictures/top'];
         yield ['/prods/tags'];
+        yield ['/prods/batch-upload'];
         yield ['/stats/activity'];
     }
 

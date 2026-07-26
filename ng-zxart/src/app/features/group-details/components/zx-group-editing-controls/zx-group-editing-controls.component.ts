@@ -8,13 +8,27 @@ import {
 const GROUP_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
   {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
-  {action: 'convertToAuthor', privilege: 'convertToAuthor', labelKey: 'group-details.action.convertToAuthor', color: 'secondary'},
+  {
+    action: 'convertToAuthor',
+    privilege: 'convertToAuthor',
+    labelKey: 'group-details.action.convertToAuthor',
+    color: 'secondary',
+    confirm: {messageKey: 'convert.group-to-author', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToAuthor', targetPath: 'author', failureKey: 'convert.failed'},
+  },
 ];
 
 const GROUP_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
   {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
-  {action: 'convertToGroup', privilege: 'convertToGroup', labelKey: 'group-details.action.convertToGroup', color: 'secondary'},
+  {
+    action: 'convertToGroup',
+    privilege: 'convertToGroup',
+    labelKey: 'group-details.action.convertToGroup',
+    color: 'secondary',
+    confirm: {messageKey: 'convert.alias-to-group', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToGroup', targetPath: 'group', failureKey: 'convert.failed'},
+  },
 ];
 
 const ADD_ACTIONS: readonly ZxEditingControlAction[] = [
@@ -48,16 +62,10 @@ export class ZxGroupEditingControlsComponent implements OnChanges {
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
     const base = this.entityType === 'groupAlias' ? 'group-alias' : 'group';
-    switch (action) {
-      case 'showJoinForm':
-        return `/${base}/${elementId}/join`;
-      case 'convertToAuthor':
-        return `/group/${elementId}/convert-to-author`;
-      case 'convertToGroup':
-        return `/group-alias/${elementId}/convert-to-group`;
-      default:
-        return `/${base}/${elementId}/edit`;
+    if (action === 'showJoinForm') {
+      return `/${base}/${elementId}/join`;
     }
+    return `/${base}/${elementId}/edit`;
   };
 
   readonly buildAddActionUrl = (action: string): string => {

@@ -57,7 +57,7 @@
 		</tr>
 		<tr {if $formErrors.wikiLink} class="form_error"{/if}>
 			<td class="form_label">
-				Wiki link:
+				SpeccyWiki link:
 			</td>
 			<td>
 				<input class='input_component' type="text" value="{$formData.wikiLink}" name="{$formNames.wikiLink}" />

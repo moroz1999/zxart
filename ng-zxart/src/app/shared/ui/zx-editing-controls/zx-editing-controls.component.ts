@@ -7,6 +7,7 @@ import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rx
 import {map, startWith, switchMap} from 'rxjs/operators';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
+import {FormSaveApiService} from '../../services/form-save-api.service';
 import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../zx-button-controls/zx-button-controls.component';
@@ -16,10 +17,32 @@ import {ZxStackComponent} from '../zx-stack/zx-stack.component';
 import {PopoverAnimation} from '../../animations/popover-animations';
 
 export interface ZxEditingControlConfirm {
-  readonly titleKey: string;
+  /** Dialog body text. */
   readonly messageKey: string;
-  readonly confirmLabelKey: string;
-  readonly cancelLabelKey: string;
+  /** Dialog title; the action label is used when omitted. */
+  readonly titleKey?: string;
+  /** Confirm button label; the action label is used when omitted. */
+  readonly confirmLabelKey?: string;
+  /** Cancel button label; `form.cancel` is used when omitted. */
+  readonly cancelLabelKey?: string;
+  /** Renders the confirm button in the danger color. */
+  readonly danger?: boolean;
+}
+
+/**
+ * Runs a legacy element action through `/ajax/` instead of navigating to a
+ * confirmation page. Combine with `confirm` so the dialog is the only step
+ * between the button and the action.
+ */
+export interface ZxEditingControlRun {
+  /** Legacy action name posted to `/ajax/`. */
+  readonly action: string;
+  /** Route prefix of the resulting entity — navigates to `/{targetPath}/{id}`. */
+  readonly targetPath?: string;
+  /** Result message shown when the action does not navigate. */
+  readonly successKey?: string;
+  /** Result message shown when the action fails. */
+  readonly failureKey: string;
 }
 
 export interface ZxEditingControlAction {
@@ -28,6 +51,7 @@ export interface ZxEditingControlAction {
   readonly labelKey: string;
   readonly color?: 'primary' | 'secondary' | 'danger' | 'transparent' | 'outlined';
   readonly confirm?: ZxEditingControlConfirm;
+  readonly run?: ZxEditingControlRun;
 }
 
 interface EditingControlsConfig {
@@ -122,6 +146,7 @@ export class ZxEditingControlsComponent implements OnChanges {
   constructor(
     private readonly currentUserService: CurrentUserService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
+    private readonly formSave: FormSaveApiService,
     private readonly confirmDialog: ConfirmDialogService,
     private readonly translate: TranslateService,
     private readonly router: Router,
@@ -151,10 +176,15 @@ export class ZxEditingControlsComponent implements OnChanges {
 
   async runAction(item: VisibleEditingAction): Promise<void> {
     if (item.action.confirm) {
-      const confirmed = await this.confirm(item.action.confirm);
+      const confirmed = await this.confirm(item.action, item.action.confirm);
       if (!confirmed) {
         return;
       }
+    }
+
+    if (item.action.run) {
+      await this.execute(item.action, item.action.run);
+      return;
     }
 
     if (this.navigation === 'document') {
@@ -172,20 +202,47 @@ export class ZxEditingControlsComponent implements OnChanges {
     }
   }
 
-  private async confirm(confirm: ZxEditingControlConfirm): Promise<boolean> {
+  private async confirm(action: ZxEditingControlAction, confirm: ZxEditingControlConfirm): Promise<boolean> {
+    const titleKey = confirm.titleKey ?? action.labelKey;
+    const confirmLabelKey = confirm.confirmLabelKey ?? action.labelKey;
+    const cancelLabelKey = confirm.cancelLabelKey ?? 'form.cancel';
     const data = await firstValueFrom(this.translate.get([
-      confirm.titleKey,
+      titleKey,
       confirm.messageKey,
-      confirm.confirmLabelKey,
-      confirm.cancelLabelKey,
+      confirmLabelKey,
+      cancelLabelKey,
     ]));
 
     return firstValueFrom(this.confirmDialog.confirm({
-      title: data[confirm.titleKey],
+      title: data[titleKey],
       message: data[confirm.messageKey],
-      confirmLabel: data[confirm.confirmLabelKey],
-      cancelLabel: data[confirm.cancelLabelKey],
-      danger: true,
+      confirmLabel: data[confirmLabelKey],
+      cancelLabel: data[cancelLabelKey],
+      danger: confirm.danger === true,
+    }));
+  }
+
+  private async execute(action: ZxEditingControlAction, run: ZxEditingControlRun): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.formSave.save(this.elementId, {fields: {}}, run.action));
+      if (run.targetPath) {
+        void this.router.navigateByUrl(`/${run.targetPath}/${result.id}`);
+        return;
+      }
+      const succeeded = (result as {success?: boolean}).success !== false;
+      await this.notify(action, succeeded && run.successKey ? run.successKey : run.failureKey);
+    } catch {
+      await this.notify(action, run.failureKey);
+    }
+  }
+
+  private async notify(action: ZxEditingControlAction, messageKey: string): Promise<void> {
+    const data = await firstValueFrom(this.translate.get([action.labelKey, messageKey, 'form.ok']));
+
+    await firstValueFrom(this.confirmDialog.notify({
+      title: data[action.labelKey],
+      message: data[messageKey],
+      confirmLabel: data['form.ok'],
     }));
   }
 }

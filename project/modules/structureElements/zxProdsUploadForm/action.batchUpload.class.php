@@ -15,6 +15,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
     /**
      * @param zxProdsUploadFormElement $structureElement
      */
+    #[Override]
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         $firstProd = null;
@@ -140,7 +141,10 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             }
             $user->refreshPrivileges();
         }
-        $controller->redirect($firstProd->URL);
+        if (!$firstProd instanceof zxProdElement) {
+            throw new RuntimeException('At least one software file is required');
+        }
+        $this->respondFormSaved($controller, $firstProd);
     }
 
     public function setExpectedFields(&$expectedFields): void

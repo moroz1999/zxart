@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
@@ -8,7 +9,8 @@ export interface ConfirmDialogData {
   title: string;
   message: string;
   confirmLabel: string;
-  cancelLabel: string;
+  /** Omitted for a single-button notification dialog. */
+  cancelLabel?: string;
   danger?: boolean;
 }
 
@@ -16,6 +18,7 @@ export interface ConfirmDialogData {
   selector: 'zx-confirm-dialog',
   standalone: true,
   imports: [
+    NgIf,
     ZxDialogComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,

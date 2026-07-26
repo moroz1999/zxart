@@ -7,15 +7,36 @@ import {
 
 const AUTHOR_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
-  {action: 'claim', privilege: 'claim', labelKey: 'author-details.action.claim', color: 'secondary'},
+  {
+    action: 'claim',
+    privilege: 'claim',
+    labelKey: 'author-details.action.claim',
+    color: 'secondary',
+    confirm: {messageKey: 'claim.message', confirmLabelKey: 'claim.confirm'},
+    run: {action: 'claim', successKey: 'claim.sent', failureKey: 'claim.failed'},
+  },
   {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
-  {action: 'convertToGroup', privilege: 'convertToGroup', labelKey: 'author-details.action.convertToGroup', color: 'secondary'},
+  {
+    action: 'convertToGroup',
+    privilege: 'convertToGroup',
+    labelKey: 'author-details.action.convertToGroup',
+    color: 'secondary',
+    confirm: {messageKey: 'convert.author-to-group', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToGroup', targetPath: 'group', failureKey: 'convert.failed'},
+  },
 ];
 
 const AUTHOR_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
   {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
-  {action: 'convertToAuthor', privilege: 'convertToAuthor', labelKey: 'author-details.action.convertToAuthor', color: 'secondary'},
+  {
+    action: 'convertToAuthor',
+    privilege: 'convertToAuthor',
+    labelKey: 'author-details.action.convertToAuthor',
+    color: 'secondary',
+    confirm: {messageKey: 'convert.alias-to-author', confirmLabelKey: 'convert.confirm'},
+    run: {action: 'convertToAuthor', targetPath: 'author', failureKey: 'convert.failed'},
+  },
 ];
 
 const ADD_ALIAS_ACTION: ZxEditingControlAction = {
@@ -69,18 +90,10 @@ export class ZxAuthorEditingControlsComponent implements OnChanges {
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
     const base = this.entityType === 'authorAlias' ? 'author-alias' : 'author';
-    switch (action) {
-      case 'showJoinForm':
-        return `/${base}/${elementId}/join`;
-      case 'claim':
-        return `/author/${elementId}/claim`;
-      case 'convertToGroup':
-        return `/author/${elementId}/convert-to-group`;
-      case 'convertToAuthor':
-        return `/author-alias/${elementId}/convert-to-author`;
-      default:
-        return `/${base}/${elementId}/edit`;
+    if (action === 'showJoinForm') {
+      return `/${base}/${elementId}/join`;
     }
+    return `/${base}/${elementId}/edit`;
   };
 
   readonly buildAddActionUrl = (action: string): string => {

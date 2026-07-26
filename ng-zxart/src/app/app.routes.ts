@@ -16,6 +16,36 @@ import {authGuard} from './shared/guards/auth.guard';
  * bundle. Do not statically import page components here.
  */
 const ROUTED_CHILDREN: Routes = [
+  {
+    path: 'authors/add',
+    loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
+    data: {create: true},
+  },
+  {
+    path: 'authors/:letter/add',
+    loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
+    data: {create: true},
+  },
+  {
+    path: 'groups/add',
+    loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
+    data: {create: true},
+  },
+  {
+    path: 'groups/:letter/add',
+    loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
+    data: {create: true},
+  },
+  {
+    path: 'parties/:year/add',
+    loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
+    data: {create: true},
+  },
+  {
+    path: 'prods/batch-upload',
+    loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
+    data: {batchUpload: true},
+  },
   {path: 'author/:id', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'author/:id/edit',
@@ -31,30 +61,12 @@ const ROUTED_CHILDREN: Routes = [
       privilege: 'showJoinForm',
       entityPath: 'author',
       pickers: [
-        {field: 'joinAsAlias', labelKey: 'join-form.join-as-alias', types: 'author,authorAlias'},
-        {field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'author,authorAlias'},
+        {field: 'joinAsAlias', labelKey: 'join-form.author-as-alias', types: 'author,authorAlias'},
+        {field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'},
       ],
     },
   },
-  {
-    path: 'author/:id/claim',
-    loadComponent: () => import('./pages/claim/claim-page.component').then(m => m.ClaimPageComponent),
-    canActivate: [editPrivilegeGuard],
-    data: {privilege: 'claim'},
-  },
-  {
-    path: 'author/:id/convert-to-group',
-    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
-    canActivate: [editPrivilegeGuard],
-    data: {privilege: 'convertToGroup', action: 'convertToGroup', targetPath: 'group', messageKey: 'convert-form.author-to-group'},
-  },
   {path: 'author/:id/:tab', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity'}},
-  {
-    path: 'author-alias/:id/convert-to-author',
-    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
-    canActivate: [editPrivilegeGuard],
-    data: {privilege: 'convertToAuthor', action: 'convertToAuthor', targetPath: 'author', messageKey: 'convert-form.alias-to-author'},
-  },
   {
     path: 'author-alias/:id/edit',
     loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
@@ -68,7 +80,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'author',
-      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'author,authorAlias'}],
+      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'}],
     },
   },
   {path: 'group/:id', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
@@ -86,16 +98,10 @@ const ROUTED_CHILDREN: Routes = [
       privilege: 'showJoinForm',
       entityPath: 'group',
       pickers: [
-        {field: 'joinAsAlias', labelKey: 'join-form.join-as-alias', types: 'group,groupAlias'},
-        {field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'group,groupAlias'},
+        {field: 'joinAsAlias', labelKey: 'join-form.group-as-alias', types: 'group,groupAlias'},
+        {field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'},
       ],
     },
-  },
-  {
-    path: 'group/:id/convert-to-author',
-    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
-    canActivate: [editPrivilegeGuard],
-    data: {privilege: 'convertToAuthor', action: 'convertToAuthor', targetPath: 'author', messageKey: 'convert-form.group-to-author'},
   },
   {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
   {
@@ -105,19 +111,13 @@ const ROUTED_CHILDREN: Routes = [
     data: {privilege: 'publicReceive', entityPath: 'group'},
   },
   {
-    path: 'group-alias/:id/convert-to-group',
-    loadComponent: () => import('./pages/convert-form/convert-form-page.component').then(m => m.ConvertFormPageComponent),
-    canActivate: [editPrivilegeGuard],
-    data: {privilege: 'convertToGroup', action: 'convertToGroup', targetPath: 'group', messageKey: 'convert-form.alias-to-group'},
-  },
-  {
     path: 'group-alias/:id/join',
     loadComponent: () => import('./pages/join-form/join-form-page.component').then(m => m.JoinFormPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
       privilege: 'showJoinForm',
       entityPath: 'group',
-      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'group,groupAlias'}],
+      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'}],
     },
   },
   {path: 'party/:id', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
@@ -156,7 +156,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'prod',
-      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.join-and-delete', types: 'zxProd'}],
+      pickers: [{field: 'joinAndDelete', labelKey: 'join-form.prod-merge', types: 'zxProd'}],
       checkboxes: [{field: 'releasesOnly', labelKey: 'join-form.releases-only'}],
     },
   },
@@ -211,7 +211,7 @@ const ROUTED_CHILDREN: Routes = [
     },
   },
   {path: 'profile', loadComponent: () => import('./pages/profile/profile-page.component').then(m => m.ProfilePageComponent)},
-  {path: 'profile/edit', loadComponent: () => import('./pages/profile-edit/profile-edit-page.component').then(m => m.ProfileEditPageComponent)},
+  {path: 'profile/edit', redirectTo: 'profile', pathMatch: 'full'},
   {path: 'playlists', loadComponent: () => import('./pages/playlists/playlists-page.component').then(m => m.PlaylistsPageComponent)},
   {path: 'playlist/:id', loadComponent: () => import('./pages/playlist/playlist-page.component').then(m => m.PlaylistPageComponent)},
   {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent)},

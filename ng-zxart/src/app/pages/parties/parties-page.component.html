@@ -1,5 +1,15 @@
 <zx-page-layout *ngIf="vm$ | async as vm">
-  <h1 zxPageHeader appHeading="display">{{ 'menu.parties' | translate }}</h1>
+  <zx-inline zxPageHeader spacing="sm" align="center">
+    <h1 zxPageHeader appHeading="display">{{ 'menu.parties' | translate }}</h1>
+    <zx-edit-button
+      *ngIf="isAuthenticated$ | async"
+      icon="plus"
+      size="md"
+      [routerLink]="partyAddUrl(vm.selectedYear)"
+      [title]="'parties-page.add-party' | translate"
+      [ariaLabel]="'parties-page.add-party' | translate"
+    ></zx-edit-button>
+  </zx-inline>
   <zx-toggle
     *ngIf="viewToggleOptions$ | async as viewToggleOptions"
     zxPageHeader

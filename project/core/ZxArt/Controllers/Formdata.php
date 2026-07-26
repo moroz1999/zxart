@@ -10,18 +10,21 @@ use DbLoggableApplication;
 use imageDataChunk;
 use LanguagesManager;
 use Monolog\Logger;
+use RuntimeException;
 use structureElement;
 use structureManager;
 use Throwable;
 use ZxArt\ElementPrivileges\ElementPrivilegesService;
+use ZxArt\Forms\FormCreateService;
+use ZxArt\Forms\FormCreateType;
 use ZxArt\Shared\EntityType;
 
 /**
- * Generic read endpoint for entity edit forms (`/formdata/?id=&refs=`).
+ * Generic read endpoint for entity edit and create forms (`/formdata/`).
  *
- * Returns the element's current form values for any entity, so each form does
- * not need its own load endpoint. Saving is done by the legacy `publicReceive`
- * action via `/ajax/`. Gated by the element's `showPublicForm` privilege.
+ * Existing entities are loaded by `id`; transient creation drafts are selected
+ * by `entityType` and optional `year`. The corresponding element action checks
+ * whether the current user may open the form.
  *
  * Response: `{ fields: {name: value}, refs: {name: {id, title}}, images: {name: url} }`
  * - `fields` — raw form values (`getFormData()`), for text/checkbox/date inputs.
@@ -41,6 +44,7 @@ class Formdata extends LoggedControllerApplication
         private readonly structureManager $structureManager,
         private readonly ElementPrivilegesService $elementPrivilegesService,
         private readonly LanguagesManager $languagesManager,
+        private readonly FormCreateService $formCreateService,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -55,20 +59,87 @@ class Formdata extends LoggedControllerApplication
     {
         $this->startDbLogging();
 
-        $id = (int)$this->getParameter('id');
-        if (!$id || !$this->hasPrivilege($id, 'showPublicForm')) {
-            $this->assignError('Forbidden', 403);
-        } else {
+        $entityTypeValue = (string)$this->getParameter('entityType');
+        if ($entityTypeValue !== '') {
             try {
-                $this->assignSuccess($this->buildFormData($id, $this->getRefFields()));
+                $formType = FormCreateType::tryFrom($entityTypeValue);
+                if ($formType === null) {
+                    $this->assignError('Unsupported form entity type', 400);
+                } else {
+                    $year = $this->getParameter('year') !== false ? (int)$this->getParameter('year') : null;
+                    if ($this->isCreateSubmission()) {
+                        $this->formCreateService->submit(
+                            $formType,
+                            $year,
+                            $this->controller,
+                            $this->getCreateFields(),
+                        );
+                    } else {
+                        $draft = $this->formCreateService->createDraft($formType, $year);
+                        $this->assignSuccess($this->buildFormData($draft, $this->getRefFields()));
+                    }
+                }
+            } catch (RuntimeException $e) {
+                $this->logThrowable('Formdata::execute create', $e);
+                $this->assignError('Forbidden', 403);
             } catch (Throwable $e) {
-                $this->logThrowable('Formdata::execute', $e);
-                $this->assignError('Element not found', 404);
+                $this->logThrowable('Formdata::execute create', $e);
+                $this->assignError('Internal server error', 500);
+            }
+        } else {
+            $id = (int)$this->getParameter('id');
+            if (!$id || !$this->hasPrivilege($id, 'showPublicForm')) {
+                $this->assignError('Forbidden', 403);
+            } else {
+                try {
+                    $element = $this->structureManager->getElementById($id);
+                    if (!$element instanceof structureElement) {
+                        throw new RuntimeException('Element not found');
+                    }
+                    $this->assignSuccess($this->buildFormData($element, $this->getRefFields()));
+                } catch (Throwable $e) {
+                    $this->logThrowable('Formdata::execute', $e);
+                    $this->assignError('Element not found', 404);
+                }
             }
         }
 
         $this->renderer->display();
         $this->saveDbLog();
+    }
+
+    private function isCreateSubmission(): bool
+    {
+        return ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
+    }
+
+    /**
+     * @return array<string, int|string|array<array-key, int|string|array<array-key, int|string>>>
+     */
+    private function getCreateFields(): array
+    {
+        /** @var array<string, array<array-key, int|string|array<array-key, int|string>>> $uploadedFields */
+        $uploadedFields = $_FILES['fields'] ?? [];
+        $fields = [];
+        foreach ($uploadedFields as $fileProperty => $fieldValues) {
+            foreach ($fieldValues as $fieldName => $fieldValue) {
+                $fieldKey = (string)$fieldName;
+                $fields[$fieldKey][$fileProperty] = $fieldValue;
+            }
+        }
+
+        /** @var array<array-key, int|string|array<array-key, int|string|array<array-key, int|string>>> $postedFields */
+        $postedFields = $_POST['fields'] ?? [];
+        foreach ($postedFields as $fieldName => $fieldValue) {
+            $fieldKey = (string)$fieldName;
+            if (isset($fields[$fieldKey]) && is_array($fields[$fieldKey]) && is_array($fieldValue)) {
+                $fields[$fieldKey] = array_merge($fields[$fieldKey], $fieldValue);
+            } else {
+                $fields[$fieldKey] = $fieldValue;
+            }
+        }
+
+        return $fields;
     }
 
     /** @return string[] */
@@ -85,13 +156,8 @@ class Formdata extends LoggedControllerApplication
      * @param string[] $refFields
      * @return array{fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>, splitGroups: list<array{group: string, items: list<array{key: string, label: string}>}>}
      */
-    private function buildFormData(int $id, array $refFields): array
+    private function buildFormData(structureElement $element, array $refFields): array
     {
-        $element = $this->structureManager->getElementById($id);
-        if (!$element instanceof structureElement) {
-            throw new \RuntimeException('Element not found');
-        }
-
         $fields = [];
         $multilang = [];
         $refs = [];
@@ -339,6 +405,10 @@ class Formdata extends LoggedControllerApplication
                 'intFrequency' => ['method' => 'getIntFrequencies', 'prefix' => 'zxmusic.intfrequency_', 'stripDots' => true, 'emptyLabelKey' => 'zxmusic.frequency_default'],
             ],
             'zxProd' => [
+                'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
+                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+            ],
+            'zxProdsUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
                 'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
             ],
