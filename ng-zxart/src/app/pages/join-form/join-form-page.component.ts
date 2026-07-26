@@ -64,6 +64,7 @@ interface JoinCheckbox {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JoinFormPageComponent implements OnInit, OnDestroy {
+  /** Built from pickers and checkboxes from the route, so its shape is not static and stays untyped. */
   form: FormGroup = this.fb.group({});
   pickers: JoinPicker[] = [];
   checkboxes: JoinCheckbox[] = [];

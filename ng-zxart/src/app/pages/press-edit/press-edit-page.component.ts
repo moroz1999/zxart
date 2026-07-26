@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
@@ -72,7 +72,7 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   readonly relationFields = Object.keys(RELATION_TYPES);
   readonly relationTypes = RELATION_TYPES;
 
-  readonly form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     title: this.fb.nonNullable.control<Record<string, string>>({}),
     externalLink: this.fb.nonNullable.control(''),
     authors: this.fb.nonNullable.control<EntityRef[]>([]),

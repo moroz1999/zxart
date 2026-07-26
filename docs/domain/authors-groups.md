@@ -50,6 +50,8 @@ The add-alias control on an author page opens
 `GET /author-alias-form/` and creates the alias through
 `POST /author-alias-form/`. The endpoint delegates creation to
 `AuthorAliasFormService` and returns typed REST DTOs.
+Alias activity bounds are entered and returned as four-digit years. They remain
+stored as timestamps through the CMS date fields.
 
 ### group (Group)
 

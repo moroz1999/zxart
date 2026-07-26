@@ -8,7 +8,7 @@ import {
   numberAttribute,
   OnDestroy,
 } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -50,7 +50,11 @@ import {FeedbackApiService} from '../../services/feedback-api.service';
 export class ZxFeedbackFormComponent implements OnDestroy {
   @Input({transform: numberAttribute}) elementId = 0;
 
-  readonly form: FormGroup;
+  readonly form = this.fb.group({
+    name: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(255)]),
+    email: this.fb.nonNullable.control('', [Validators.required, Validators.email, Validators.maxLength(255)]),
+    message: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2), Validators.maxLength(10000)]),
+  });
   submitting = false;
   submitted = false;
   errorMessage = '';
@@ -67,11 +71,6 @@ export class ZxFeedbackFormComponent implements OnDestroy {
     private readonly translate: TranslateService,
     private readonly feedbackApiService: FeedbackApiService,
   ) {
-    this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(255)]],
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
-      message: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10000)]],
-    });
   }
 
   ngOnDestroy(): void {

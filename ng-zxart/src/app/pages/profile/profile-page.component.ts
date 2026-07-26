@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -82,7 +82,7 @@ const INITIAL_VM: ProfileVm = {
 export class ProfilePageComponent implements OnInit, OnDestroy {
   readonly passwordFields = PASSWORD_FIELDS;
 
-  readonly form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     currentPassword: this.fb.nonNullable.control(''),
     password: this.fb.nonNullable.control(''),
     passwordRepeat: this.fb.nonNullable.control(''),

@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
@@ -97,7 +97,7 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuneEditPageComponent implements OnInit, OnDestroy {
-  readonly form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
     authors: this.fb.nonNullable.control<EntityRef[]>([], nonEmptyArray),
     /** Batch mode only: the uploaded files, validated like any other required field. */

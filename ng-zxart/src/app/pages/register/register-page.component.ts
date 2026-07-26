@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -58,7 +58,7 @@ const OPTIONAL_FIELDS = [
 export class RegisterPageComponent implements OnDestroy {
   readonly optionalFields = OPTIONAL_FIELDS;
 
-  readonly form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     userName: this.fb.nonNullable.control('', Validators.required),
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
     password: this.fb.nonNullable.control('', Validators.required),

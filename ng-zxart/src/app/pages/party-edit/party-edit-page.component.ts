@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
@@ -55,7 +55,7 @@ import {PageMetadataService} from '../../shared/services/page-metadata.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PartyEditPageComponent implements OnInit, OnDestroy {
-  readonly form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
     abbreviation: this.fb.nonNullable.control(''),
     country: this.fb.control<EntityRef | null>(null),

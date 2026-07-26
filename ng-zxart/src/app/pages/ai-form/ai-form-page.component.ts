@@ -53,6 +53,7 @@ interface AiField {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AiFormPageComponent implements OnInit, OnDestroy {
+  /** Built from the entity's re-queue fields, so its shape is not static and stays untyped. */
   form: FormGroup = this.fb.group({});
   fields: AiField[] = [];
   statuses: Record<string, string> = {};

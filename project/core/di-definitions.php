@@ -19,6 +19,7 @@ use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorAliasFormService;
+use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Pouet;
@@ -61,6 +62,7 @@ return [
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     AuthorAliasFormService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    AuthorAliasYearNormalizer::class => autowire(),
     RatingsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 

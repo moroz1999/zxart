@@ -1,7 +1,7 @@
 ﻿import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {animate, style, transition, trigger} from '@angular/animations';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {debounceTime, Subscription, take} from 'rxjs';
@@ -85,7 +85,17 @@ type PartyValue = 'any' | 'yes' | 'no';
 })
 export class PlayerSheetComponent implements OnInit, OnDestroy {
   state$ = this.playerService.state$;
-  form: FormGroup;
+  readonly form = this.fb.group({
+    minRating: this.fb.nonNullable.control(''),
+    category: this.fb.nonNullable.control(''),
+    minPartyPlace: this.fb.nonNullable.control(0),
+    yearRange: this.fb.nonNullable.control<{min: number; max: number}>({min: 0, max: 0}),
+    countries: this.fb.nonNullable.control<string[]>([]),
+    formatGroups: this.fb.nonNullable.control<string[]>([]),
+    formats: this.fb.nonNullable.control<string[]>([]),
+    party: this.fb.nonNullable.control('any'),
+    unvotedOnly: this.fb.nonNullable.control(false),
+  });
   expanded = false;
   activePreset: RadioPreset | null = null;
   options: RadioFilterOptionsDto | null = null;
@@ -123,18 +133,6 @@ export class PlayerSheetComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private iconReg: SvgIconRegistryService,
   ) {
-    this.form = this.fb.group({
-      minRating: [''],
-      category: [''],
-      minPartyPlace: [0],
-      yearRange: this.fb.control({min: 0, max: 0}),
-      countries: [[]],
-      formatGroups: [[]],
-      formats: [[]],
-      party: ['any'],
-      unvotedOnly: [false],
-    });
-
     this.setFormFromCriteria(this.playerService.getCriteria());
 
     this.subscriptions.add(
