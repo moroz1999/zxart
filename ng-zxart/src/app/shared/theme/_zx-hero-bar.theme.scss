@@ -1,4 +1,6 @@
 :root {
   /* Gap between the vote block, the counters and the actions. */
   --zx-hero-bar-column-gap: var(--space-16);
+  /* Icon size of the call-to-action buttons in the actions slot. */
+  --zx-hero-bar-cta-icon-size: 16px;
 }

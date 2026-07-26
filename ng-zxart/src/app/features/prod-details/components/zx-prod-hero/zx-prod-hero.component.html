@@ -52,5 +52,25 @@
     </zx-item-controls>
 
     <zx-counters zxHeroBarCounters [items]="counters"></zx-counters>
+
+    <zx-button-controls zxHeroBarActions align="end" [wrap]="true" gap="sm">
+      <zx-button
+        *ngIf="showDonateButton"
+        color="secondary"
+        [href]="core.externalLink"
+        target="_blank"
+        rel="noopener">
+        <svg-icon class="hero-cta-icon" name="dollar"></svg-icon>{{ 'prod-details.donate' | translate }}
+      </zx-button>
+
+      <zx-button
+        *ngIf="showBuyButton"
+        color="secondary"
+        [href]="core.externalLink"
+        target="_blank"
+        rel="noopener">
+        <svg-icon class="hero-cta-icon" name="cart"></svg-icon>{{ 'prod-details.purchase' | translate }}
+      </zx-button>
+    </zx-button-controls>
   </zx-hero-bar>
 </zx-hero>

@@ -1,8 +1,12 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {environment} from '../../../../../environments/environment';
 import {ProdCategoryRefDto, ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-prod-editing-controls.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
@@ -26,7 +30,10 @@ import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-proven
   imports: [
     CommonModule,
     TranslateModule,
+    SvgIconComponent,
     ZxProdEditingControlsComponent,
+    ZxButtonComponent,
+    ZxButtonControlsComponent,
     ZxChipComponent,
     ZxInlineComponent,
     ZxCalloutComponent,
@@ -48,17 +55,31 @@ import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-proven
   styleUrls: ['./zx-prod-hero.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdHeroComponent {
+export class ZxProdHeroComponent implements OnInit {
   @Input({required: true}) core!: ProdCoreDto;
 
-  constructor(private readonly translate: TranslateService) {}
+  constructor(
+    private readonly translate: TranslateService,
+    private readonly iconReg: SvgIconRegistryService,
+  ) {}
 
+  ngOnInit(): void {
+    this.iconReg.loadSvg(`${environment.svgUrl}cart.svg`, 'cart')?.subscribe();
+    this.iconReg.loadSvg(`${environment.svgUrl}dollar.svg`, 'dollar')?.subscribe();
+  }
+
+  get showDonateButton(): boolean {
+    return this.core.legalStatus === 'donationware' && this.core.externalLink !== '';
+  }
+
+  get showBuyButton(): boolean {
+    return this.core.legalStatus === 'insales' && this.core.externalLink !== '';
+  }
+
+  /** With a donate/buy button in the hero bar, the plain link is the homepage. */
   get externalLinkLabelKey(): string {
-    if (this.core.legalStatus === 'insales') {
-      return 'prod-details.purchase';
-    }
-    if (this.core.legalStatus === 'donationware') {
-      return 'prod-details.donate';
+    if (this.showDonateButton || this.showBuyButton) {
+      return 'prod-details.homepage';
     }
     return 'prod-details.open_externallink';
   }
