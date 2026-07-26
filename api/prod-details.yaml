@@ -42,7 +42,6 @@ components:
         - generatedDescription
         - dateCreated
         - canAddRelease
-        - addReleaseUrl
         - downloadsCount
         - playsCount
         - categoriesPaths
@@ -87,8 +86,6 @@ components:
           type: string
         canAddRelease:
           type: boolean
-        addReleaseUrl:
-          type: string
         downloadsCount:
           type: integer
           description: Total downloads summed over the prod's releases.

@@ -10,6 +10,7 @@ Author of works for ZX Spectrum - artist, musician, programmer. Can have real na
 - **nickname** - pseudonym/nickname
 - **artCityId** - external author identifier on the Artcity website
 - **wikiLink** - SpeccyWiki page path on `speccy.info`
+- **deny3a** - hides external links to `zxaaa.net` for the author and their productions
 - Supports localization (different names for different languages)
 
 #### Relations with Works
@@ -43,6 +44,12 @@ Variation of author's nickname. One author can have multiple aliases.
 - Historical nickname changes
 - Alternative pseudonyms
 - Helps in searching and merging works of one author
+
+The add-alias control on an author page opens
+`/author/:id/aliases/add`. The creation form loads its main-author context from
+`GET /author-alias-form/` and creates the alias through
+`POST /author-alias-form/`. The endpoint delegates creation to
+`AuthorAliasFormService` and returns typed REST DTOs.
 
 ### group (Group)
 

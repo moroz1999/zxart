@@ -13,6 +13,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
+        $firstPicture = null;
         if ($imagesInfo = $structureElement->image) {
             $privilegesManager = $this->getService(privilegesManager::class);
             $linksManager = $this->getService(linksManager::class);
@@ -128,10 +129,14 @@ class batchUploadPicturesUploadForm extends structureElementAction
                         'allow'
                     );
                     $user->refreshPrivileges();
+                    $firstPicture ??= $pictureElement;
                 }
             }
         }
-        $controller->redirect($structureElement->URL);
+        if (!$firstPicture instanceof zxPictureElement) {
+            throw new RuntimeException('At least one image is required');
+        }
+        $this->respondFormSaved($controller, $firstPicture);
     }
 
     public function setExpectedFields(&$expectedFields): void

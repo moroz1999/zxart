@@ -13,6 +13,7 @@ class batchUploadMusicUploadForm extends structureElementAction
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
+        $firstTune = null;
         if ($musicsInfo = $structureElement->music) {
             $privilegesManager = $this->getService(privilegesManager::class);
             $linksManager = $this->getService(linksManager::class);
@@ -103,11 +104,15 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $privilegesManager->setPrivilege($user->id, $zxMusicElement->getId(), 'zxMusic', 'deleteFile', 'allow');
                     $privilegesManager->setPrivilege($user->id, $zxMusicElement->getId(), 'zxMusic', 'submitTags', 'allow');
                     $user->refreshPrivileges();
+                    $firstTune ??= $zxMusicElement;
                 }
             }
         }
 
-        $controller->redirect($structureElement->URL);
+        if (!$firstTune instanceof zxMusicElement) {
+            throw new RuntimeException('At least one music file is required');
+        }
+        $this->respondFormSaved($controller, $firstTune);
     }
 
     public function setExpectedFields(&$expectedFields): void

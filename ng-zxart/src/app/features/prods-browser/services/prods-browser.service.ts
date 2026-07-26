@@ -44,9 +44,19 @@ export class ProdsBrowserService {
   constructor(private http: HttpClient) {}
 
   getPaged(elementId: number, start: number, limit: number, sorting: string): Observable<PaginatedProdsResponse> {
-    return this.http.get<ProdRestResponse>('/prodlist/', {
-      params: {elementId: String(elementId), start: String(start), limit: String(limit), sorting},
-    }).pipe(
+    return this.request({elementId: String(elementId), start: String(start), limit: String(limit), sorting});
+  }
+
+  /**
+   * Every prod linked to an element by `linkType`, without pagination — for
+   * lists shown in full, such as the software of a user playlist.
+   */
+  getAllByLink(elementId: number, linkType: string): Observable<ZxProdDto[]> {
+    return this.request({elementId: String(elementId), linkType}).pipe(map(response => response.items));
+  }
+
+  private request(params: Record<string, string>): Observable<PaginatedProdsResponse> {
+    return this.http.get<ProdRestResponse>('/prodlist/', {params}).pipe(
       map(response => ({
         total: response.total,
         items: response.items.map(item => this.mapToDto(item)),

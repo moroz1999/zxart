@@ -19,39 +19,143 @@ const ROUTED_CHILDREN: Routes = [
   {
     path: 'authors/add',
     loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
-    data: {create: true},
+    data: {create: true, titleKey: 'author-browser.add-author'},
   },
   {
     path: 'authors/:letter/add',
     loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
-    data: {create: true},
+    data: {create: true, titleKey: 'author-browser.add-author'},
+  },
+  {
+    path: 'author/:id/aliases/add',
+    loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      create: true,
+      privilege: 'authorAlias.showPublicForm',
+      entityPath: 'author',
+      titleKey: 'author-details.action.add-alias',
+    },
+  },
+  {
+    path: 'author/:id/pictures/add',
+    loadComponent: () => import('./pages/picture-edit/picture-edit-page.component').then(m => m.PictureEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'picturesUploadForm.batchUploadForm',
+      entityPath: 'author',
+      titleKey: 'author-details.action.upload-pictures',
+    },
+  },
+  {
+    path: 'author/:id/music/add',
+    loadComponent: () => import('./pages/tune-edit/tune-edit-page.component').then(m => m.TuneEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'musicUploadForm.batchUploadForm',
+      entityPath: 'author',
+      titleKey: 'author-details.action.upload-music',
+    },
+  },
+  {
+    path: 'author/:id/prods/add',
+    loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'zxProdsUploadForm.batchUploadForm',
+      entityPath: 'author',
+      titleKey: 'author-details.action.upload-prods',
+    },
+  },
+  {
+    path: 'group/:id/prods/add',
+    loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'zxProdsUploadForm.batchUploadForm',
+      entityPath: 'group',
+      titleKey: 'group-details.action.upload-prods',
+    },
+  },
+  {
+    path: 'party/:id/pictures/add',
+    loadComponent: () => import('./pages/picture-edit/picture-edit-page.component').then(m => m.PictureEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'picturesUploadForm.batchUploadForm',
+      entityPath: 'party',
+      titleKey: 'party-details.action.upload-pictures',
+    },
+  },
+  {
+    path: 'party/:id/music/add',
+    loadComponent: () => import('./pages/tune-edit/tune-edit-page.component').then(m => m.TuneEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'musicUploadForm.batchUploadForm',
+      entityPath: 'party',
+      titleKey: 'party-details.action.upload-music',
+    },
+  },
+  {
+    path: 'party/:id/prods/add',
+    loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      batchUpload: true,
+      privilege: 'zxProdsUploadForm.batchUploadForm',
+      entityPath: 'party',
+      titleKey: 'party-details.action.upload-prods',
+    },
+  },
+  {
+    path: 'prod/:id/releases/add',
+    loadComponent: () => import('./pages/release-edit/release-edit-page.component').then(m => m.ReleaseEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      create: true,
+      privilege: 'zxRelease.publicAdd',
+      entityPath: 'prod',
+      titleKey: 'prod-details.addrelease',
+    },
   },
   {
     path: 'groups/add',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
-    data: {create: true},
+    data: {create: true, titleKey: 'group-browser.add-group'},
   },
   {
     path: 'groups/:letter/add',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
-    data: {create: true},
+    data: {create: true, titleKey: 'group-browser.add-group'},
   },
   {
     path: 'parties/:year/add',
     loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
-    data: {create: true},
+    data: {create: true, titleKey: 'parties-page.add-party'},
   },
   {
     path: 'prods/batch-upload',
     loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
-    data: {batchUpload: true},
+    data: {batchUpload: true, titleKey: 'prods-list.batch-upload'},
   },
   {path: 'author/:id', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'author/:id/edit',
     loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'author'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'author',
+      titleKey: 'author-details.action.showPublicForm',
+      formTitleKey: 'form-page-title.edit-author',
+    },
   },
   {
     path: 'author/:id/join',
@@ -60,6 +164,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'author',
+      titleKey: 'join-form.submit',
       pickers: [
         {field: 'joinAsAlias', labelKey: 'join-form.author-as-alias', types: 'author,authorAlias'},
         {field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'},
@@ -71,7 +176,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'author-alias/:id/edit',
     loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'author'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'author',
+      titleKey: 'author-details.action.showPublicForm',
+      formTitleKey: 'form-page-title.edit-author-alias',
+    },
   },
   {
     path: 'author-alias/:id/join',
@@ -80,6 +190,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'author',
+      titleKey: 'join-form.submit',
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'}],
     },
   },
@@ -88,7 +199,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'group/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'group'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'group',
+      titleKey: 'group-details.action.showPublicForm',
+      formTitleKey: 'form-page-title.edit-group',
+    },
   },
   {
     path: 'group/:id/join',
@@ -97,6 +213,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'group',
+      titleKey: 'join-form.submit',
       pickers: [
         {field: 'joinAsAlias', labelKey: 'join-form.group-as-alias', types: 'group,groupAlias'},
         {field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'},
@@ -108,7 +225,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'group-alias/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'group'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'group',
+      titleKey: 'group-details.action.showPublicForm',
+      formTitleKey: 'form-page-title.edit-group-alias',
+    },
   },
   {
     path: 'group-alias/:id/join',
@@ -117,6 +239,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'group',
+      titleKey: 'join-form.submit',
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'}],
     },
   },
@@ -125,7 +248,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'party/:id/edit',
     loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'party'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'party',
+      titleKey: 'party-details.action.showPublicForm',
+      formTitleKey: 'form-page-title.edit-party',
+    },
   },
   {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
   {path: 'prod/:id', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
@@ -133,7 +261,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'prod/:id/edit',
     loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'prod'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'prod',
+      titleKey: 'prod-details.edit',
+      formTitleKey: 'form-page-title.edit-prod',
+    },
   },
   {
     path: 'prod/:id/ai',
@@ -142,6 +275,8 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showAiForm',
       entityPath: 'prod',
+      titleKey: 'ai-form.title',
+      formTitleKey: 'form-page-title.ai-prod',
       fields: [
         {field: 'aiRestartSeo', labelKey: 'ai-form.prod-seo'},
         {field: 'aiRestartIntro', labelKey: 'ai-form.prod-intro'},
@@ -156,6 +291,7 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showJoinForm',
       entityPath: 'prod',
+      titleKey: 'join-form.submit',
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.prod-merge', types: 'zxProd'}],
       checkboxes: [{field: 'releasesOnly', labelKey: 'join-form.releases-only'}],
     },
@@ -164,7 +300,12 @@ const ROUTED_CHILDREN: Routes = [
     path: 'prod/:id/split',
     loadComponent: () => import('./pages/split-form/split-form-page.component').then(m => m.SplitFormPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'showSplitForm', entityPath: 'prod'},
+    data: {
+      privilege: 'showSplitForm',
+      entityPath: 'prod',
+      titleKey: 'split-form.submit',
+      formTitleKey: 'form-page-title.split-prod',
+    },
   },
   {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
   {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent)},
@@ -172,28 +313,48 @@ const ROUTED_CHILDREN: Routes = [
     path: 'release/:id/edit',
     loadComponent: () => import('./pages/release-edit/release-edit-page.component').then(m => m.ReleaseEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'release'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'release',
+      titleKey: 'release-details.edit',
+      formTitleKey: 'form-page-title.edit-release',
+    },
   },
   {path: 'picture/:id', loadComponent: () => import('./pages/picture/picture-page.component').then(m => m.PicturePageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'picture/:id/edit',
     loadComponent: () => import('./pages/picture-edit/picture-edit-page.component').then(m => m.PictureEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'picture'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'picture',
+      titleKey: 'picture-details.edit',
+      formTitleKey: 'form-page-title.edit-picture',
+    },
   },
   {path: 'tune/:id', loadComponent: () => import('./pages/tune/tune-page.component').then(m => m.TunePageComponent)},
   {
     path: 'tune/:id/edit',
     loadComponent: () => import('./pages/tune-edit/tune-edit-page.component').then(m => m.TuneEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'tune'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'tune',
+      titleKey: 'tune-details.edit',
+      formTitleKey: 'form-page-title.edit-tune',
+    },
   },
   {path: 'press/:id', loadComponent: () => import('./pages/press/press-page.component').then(m => m.PressPageComponent)},
   {
     path: 'press/:id/edit',
     loadComponent: () => import('./pages/press-edit/press-edit-page.component').then(m => m.PressEditPageComponent),
     canActivate: [editPrivilegeGuard],
-    data: {privilege: 'publicReceive', entityPath: 'press'},
+    data: {
+      privilege: 'publicReceive',
+      entityPath: 'press',
+      titleKey: 'press-details.edit',
+      formTitleKey: 'form-page-title.edit-press',
+    },
   },
   {
     path: 'press/:id/ai',
@@ -202,6 +363,8 @@ const ROUTED_CHILDREN: Routes = [
     data: {
       privilege: 'showAiForm',
       entityPath: 'press',
+      titleKey: 'ai-form.title',
+      formTitleKey: 'form-page-title.ai-press',
       fields: [
         {field: 'aiRestartFix', labelKey: 'ai-form.press-fix'},
         {field: 'aiRestartTranslate', labelKey: 'ai-form.press-translate'},
@@ -210,12 +373,12 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'profile', loadComponent: () => import('./pages/profile/profile-page.component').then(m => m.ProfilePageComponent)},
+  {path: 'profile', loadComponent: () => import('./pages/profile/profile-page.component').then(m => m.ProfilePageComponent), data: {titleKey: 'profile.title'}},
   {path: 'profile/edit', redirectTo: 'profile', pathMatch: 'full'},
   {path: 'playlists', loadComponent: () => import('./pages/playlists/playlists-page.component').then(m => m.PlaylistsPageComponent)},
   {path: 'playlist/:id', loadComponent: () => import('./pages/playlist/playlist-page.component').then(m => m.PlaylistPageComponent)},
-  {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent)},
-  {path: 'password-reminder', loadComponent: () => import('./pages/password-reminder/password-reminder-page.component').then(m => m.PasswordReminderPageComponent)},
+  {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent), data: {titleKey: 'register.title'}},
+  {path: 'password-reminder', loadComponent: () => import('./pages/password-reminder/password-reminder-page.component').then(m => m.PasswordReminderPageComponent), data: {titleKey: 'password-reminder.title'}},
   {path: 'search', loadComponent: () => import('./pages/search/search-page.component').then(m => m.SearchPageComponent), data: {titleKey: 'menu.gfx.search'}},
   {path: 'prods/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'software', searchBasePath: '/prods', titleKey: 'menu.soft.tags', tagQueryParam: 'tags', tagQueryValue: 'id'}},
   {path: 'prods', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'prods', titleKey: 'menu.software'}},

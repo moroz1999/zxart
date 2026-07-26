@@ -42,16 +42,22 @@ class Prodlist extends LoggedControllerApplication
     public function execute($controller): void
     {
         $elementId = (int)($this->getParameter('elementId') ?? 0);
-        $limit = (int)($this->getParameter('limit') ?? 50);
+        $limitRaw = $this->getParameter('limit');
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
+        $linkType = (string)($this->getParameter('linkType') ?: 'tagLink');
 
         try {
             if ($elementId <= 0) {
                 $this->assignError('elementId is required', 400);
+            } elseif (!in_array($linkType, ProdListService::ALLOWED_LINK_TYPES, true)) {
+                $this->assignError('Unsupported link type', 400);
             } else {
                 $sorting = SortingParams::fromRequest($sortingRaw, ProdListService::ALLOWED_SORT_COLUMNS);
-                $result = $this->prodListService->getPagedByLinkedElement($elementId, 'tagLink', $sorting, $start, $limit);
+                // no limit means the caller shows the list in full (user playlists)
+                $result = $limitRaw === false
+                    ? $this->prodListService->getAllByLinkedElement($elementId, $linkType, $sorting)
+                    : $this->prodListService->getPagedByLinkedElement($elementId, $linkType, $sorting, $start, (int)$limitRaw);
                 $this->assignSuccess([
                     'total' => $result['total'],
                     'items' => array_map(

@@ -20,9 +20,10 @@
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'tune-form.authors' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'tune-form.authors' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-multi-entity-autocomplete formControlName="authors" types="author,authorAlias" [placeholder]="'tune-form.add-author' | translate"></zx-multi-entity-autocomplete>
+        <zx-control-errors [control]="form.controls['authors']" [messages]="authorsMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
   </zx-form-section>
@@ -83,14 +84,21 @@
   </zx-form-section>
 
   <zx-form-section [title]="'form.files' | translate" icon="download">
-    <zx-form-field>
+    <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
+      <zx-form-label>{{ 'tune-form.batch-files' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngIf="!batchUpload">
       <zx-form-label>{{ 'tune-form.file' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-upload [fileName]="fileNames['file'] || null" (changed)="onFileChanged('file', $event)"></zx-file-upload>
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field>
+    <zx-form-field *ngIf="!batchUpload">
       <zx-form-label>{{ 'tune-form.tracker-file' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-upload [fileName]="fileNames['trackerFile'] || null" (changed)="onFileChanged('trackerFile', $event)"></zx-file-upload>

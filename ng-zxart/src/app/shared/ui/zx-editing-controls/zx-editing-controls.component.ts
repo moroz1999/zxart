@@ -1,10 +1,11 @@
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, DOCUMENT, NgForOf, NgIf} from '@angular/common';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
-import {ChangeDetectionStrategy, Component, HostListener, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, inject, Input, OnChanges} from '@angular/core';
 import {Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rxjs';
 import {map, startWith, switchMap} from 'rxjs/operators';
+import {isSpaUrl} from '../../utils/spa-url';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
 import {FormSaveApiService} from '../../services/form-save-api.service';
@@ -99,7 +100,6 @@ export class ZxEditingControlsComponent implements OnChanges {
   @Input() popoverAriaLabel = '';
   @Input() size: 'xs' | 'sm' | 'md' | null = null;
   @Input() triggerIcon = 'edit';
-  @Input() navigation: 'router' | 'document' = 'router';
 
   private readonly configStore = new BehaviorSubject<EditingControlsConfig | null>(null);
   readonly skeletonItems = [0, 1, 2];
@@ -142,6 +142,8 @@ export class ZxEditingControlsComponent implements OnChanges {
       );
     }),
   );
+
+  private readonly document = inject(DOCUMENT);
 
   constructor(
     private readonly currentUserService: CurrentUserService,
@@ -187,8 +189,10 @@ export class ZxEditingControlsComponent implements OnChanges {
       return;
     }
 
-    if (this.navigation === 'document') {
-      window.location.href = item.url;
+    // Legacy CMS add-forms are still served as documents; SPA routes navigate
+    // client-side.
+    if (!isSpaUrl(item.url)) {
+      this.document.location.href = item.url;
       return;
     }
 

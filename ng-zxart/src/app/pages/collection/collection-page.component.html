@@ -22,10 +22,10 @@
     <zx-prods-category
       *ngSwitchCase="'prods'"
       rootType="zxProdCategoriesCatalogue"
-      [manageUrl]="false"
       [showHeading]="false"
+      (categoryPathChange)="onCategoryPath($event)"
     ></zx-prods-category>
-    <zx-group-browser *ngSwitchCase="'groups'" [letter]="vm.letter" [manageUrl]="false"></zx-group-browser>
+    <zx-group-browser *ngSwitchCase="'groups'" [letter]="vm.letter"></zx-group-browser>
     <zx-pictures-home *ngSwitchCase="'pictures'"></zx-pictures-home>
     <zx-music-home *ngSwitchCase="'music'"></zx-music-home>
   </ng-container>

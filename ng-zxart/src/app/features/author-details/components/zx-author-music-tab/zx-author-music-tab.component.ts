@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
@@ -49,7 +50,6 @@ interface YearGroup {
 })
 export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  @Input() urlBase = '';
 
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
   private readonly formatGroupStore = new BehaviorSubject<string>('');
@@ -71,6 +71,9 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
   get currentPage(): number { return this.pageStore.getValue(); }
   get pagesAmount(): number { return Math.ceil(this.total / PAGE_SIZE); }
 
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   constructor(
     private readonly authorTunesService: AuthorTunesService,
     private readonly playerService: PlayerService,
@@ -80,7 +83,13 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.playlistId = `author-music-${this.elementId}`;
-    this.pageStore = new BehaviorSubject<number>(this.parsePageFromUrl());
+    this.pageStore = new BehaviorSubject<number>(this.pageFromParams(this.route.snapshot.queryParamMap));
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      const page = this.pageFromParams(params);
+      if (page !== this.pageStore.getValue()) {
+        this.pageStore.next(page);
+      }
+    }));
     this.subscriptions.add(
       this.playerService.state$.subscribe(state => {
         const id = state.isPlaying && state.playlistId === this.playlistId
@@ -127,30 +136,30 @@ export class ZxAuthorMusicTabComponent implements OnInit, OnDestroy {
 
   setSort(sort: string): void {
     this.sortStore.next(sort);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   setFormatGroup(formatGroup: string): void {
     this.formatGroupStore.next(formatGroup);
-    this.pageStore.next(1);
+    this.setPage(1);
   }
 
   onPageChange(page: number): void {
-    this.pageStore.next(page);
-    this.pushPageToUrl(page);
+    this.setPage(page);
     scrollToElementIfHidden(this.element.nativeElement.closest('zx-tabs'));
   }
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    const page = match ? parseInt(match[1], 10) : 1;
-    return page > 0 ? page : 1;
+  private pageFromParams(params: ParamMap): number {
+    return Math.max(1, Number(params.get('page')) || 1);
   }
 
-  private pushPageToUrl(page: number): void {
-    if (!this.urlBase) return;
-    const newUrl = page > 1 ? this.urlBase + 'page:' + page + '/' : this.urlBase;
-    window.history.pushState(null, '', newUrl);
+  /** The page lives in the `page` query param; the subscription reloads the list. */
+  private setPage(page: number): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {page: page > 1 ? page : null},
+      queryParamsHandling: 'merge',
+    });
   }
 
   onPlayRequested(tune: ZxTuneDto): void {

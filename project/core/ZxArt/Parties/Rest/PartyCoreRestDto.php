@@ -20,7 +20,6 @@ readonly class PartyCoreRestDto
         public string $abbreviation,
         public string $originalName,
         public string $url,
-        public string $addActionBaseUrl,
         public string $imageUrl,
         public ?string $year,
         public PartyLocationRestDto $location,

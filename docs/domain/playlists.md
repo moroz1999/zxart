@@ -29,6 +29,11 @@ Every response returns the complete list, so the frontend re-renders from a
 single source of truth instead of patching local state. Each entry carries its
 content counts (`pictures`, `tunes`, `prods`), read from the `playlist` links.
 
+A single playlist's contents are loaded per work type: pictures from
+`/picturelist/?elementId=`, tunes from `/musiclist/?elementId=`, and software
+from `/prodlist/?elementId=&linkType=playlist`. The prod list is returned in
+full (no `limit`), like the other two.
+
 ## Frontend
 
 `/playlists` lists the playlists as panels: name, content counts, and rename /

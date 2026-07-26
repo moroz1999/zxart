@@ -16,12 +16,6 @@ const SORT_TRANSLATION_PREFIX = 'prods-list.sorting.';
 @Directive()
 export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  /**
-   * Legacy web-component mounts manage pagination through `window.location` +
-   * `history.pushState` (`page:N/`). SPA routes keep pagination in router query
-   * params and may either expose sorting there or provide a fixed page sort.
-   */
-  @Input() manageUrl = true;
   @Input() fixedSorting: string | null = null;
   @Input() showSorting = true;
 
@@ -36,26 +30,20 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   protected readonly subscriptions = new Subscription();
   protected readonly sortKeys: string[] = BROWSER_SORT_KEYS;
   protected readonly itemsPerPage: number = 50;
-  protected urlBase = '';
 
   /**
-   * Filter query params owned by the concrete browser (SPA route mode). Filled
-   * in `onQueryParams` and kept in the URL when the page or the sorting changes.
+   * Filter query params owned by the concrete browser. Filled in
+   * `onQueryParams` and kept in the URL when the page or the sorting changes.
    */
   protected filterParams: Params = {};
 
-  protected readonly router = inject(Router, {optional: true});
-  protected readonly route = inject(ActivatedRoute, {optional: true});
+  protected readonly router = inject(Router);
+  protected readonly route = inject(ActivatedRoute);
 
   protected constructor(
     protected readonly translateService: TranslateService,
     protected readonly cdr: ChangeDetectorRef,
   ) {}
-
-  /** SPA route mode: page + sorting come from / go to the router query params. */
-  protected get useRouter(): boolean {
-    return !this.manageUrl && this.router != null && this.route != null;
-  }
 
   ngOnInit(): void {
     this.onBeforeInit();
@@ -69,18 +57,12 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
       })
     );
 
-    if (this.useRouter) {
-      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
-        this.currentPage = params['page'] ? +params['page'] : 1;
-        this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
-        this.onQueryParams(params);
-        this.loadPage();
-      }));
-    } else {
-      this.urlBase = this.parseUrlBase();
-      this.currentPage = this.parsePageFromUrl();
+    this.subscriptions.add(this.route.queryParams.subscribe(params => {
+      this.currentPage = params['page'] ? +params['page'] : 1;
+      this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
+      this.onQueryParams(params);
       this.loadPage();
-    }
+    }));
   }
 
   ngOnDestroy(): void {
@@ -90,33 +72,23 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   onSortingChange(value: string): void {
     this.sorting = value;
     this.currentPage = 1;
-    if (this.useRouter) {
-      this.navigateWithParams();
-    } else {
-      this.updateUrl(1);
-      this.loadPage();
-    }
+    this.navigateWithParams();
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    if (this.useRouter) {
-      this.navigateWithParams();
-    } else {
-      this.updateUrl(page);
-      this.loadPage();
-    }
+    this.navigateWithParams();
   }
 
-  /** Filter state for the pagination links; `null` keeps the legacy `urlBase` paths. */
-  get paginationQueryParams(): Params | null {
-    return this.useRouter ? this.filterParams : null;
+  /** Filter state carried by the pagination links. */
+  get paginationQueryParams(): Params {
+    return this.filterParams;
   }
 
-  /** SPA route mode: read the browser's own filter params before the page loads. */
+  /** Read the browser's own filter params before the page loads. */
   protected onQueryParams(_params: Params): void {}
 
-  /** SPA route mode: write page + sorting to the URL; the queryParams subscription reloads. */
+  /** Write page + sorting to the URL; the queryParams subscription reloads. */
   private navigateWithParams(): void {
     const queryParams: Params = {...this.filterParams};
     if (this.currentPage > 1) {
@@ -125,32 +97,13 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
     if (this.fixedSorting === null && this.sorting && this.sorting !== 'title,asc') {
       queryParams['sorting'] = this.sorting;
     }
-    this.router!.navigate([], {relativeTo: this.route!, queryParams});
+    this.router.navigate([], {relativeTo: this.route, queryParams});
   }
 
   protected onBeforeInit(): void {}
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    if (match) {
-      const page = parseInt(match[1], 10);
-      return page > 0 ? page : 1;
-    }
-    return 1;
-  }
-
-  private parseUrlBase(): string {
-    const cleanPath = window.location.pathname.replace(/\/page:\d+\/?/, '');
-    return cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
-  }
-
-  private updateUrl(page: number): void {
-    const newPath = page > 1 ? this.urlBase + 'page:' + page + '/' : this.urlBase;
-    window.history.pushState(null, '', newPath);
-  }
-
   protected loadPage(): void {
-    // elementId 0 = SPA collection mount: the backend resolves the catalogue root by type.
+    // elementId 0 = collection mount: the backend resolves the catalogue root by type.
     this.loading = true;
     this.error = false;
     const start = (this.currentPage - 1) * this.itemsPerPage;

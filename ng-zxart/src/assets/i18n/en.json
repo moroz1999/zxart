@@ -47,6 +47,21 @@
     "subgroups": "Subgroups",
     "ok": "OK"
   },
+  "form-page-title": {
+    "edit-author": "Editing author \"{{title}}\"",
+    "edit-author-alias": "Editing author alias \"{{title}}\"",
+    "edit-group": "Editing group \"{{title}}\"",
+    "edit-group-alias": "Editing group alias \"{{title}}\"",
+    "edit-party": "Editing party \"{{title}}\"",
+    "edit-prod": "Editing program \"{{title}}\"",
+    "edit-release": "Editing release \"{{title}}\"",
+    "edit-picture": "Editing picture \"{{title}}\"",
+    "edit-tune": "Editing tune \"{{title}}\"",
+    "edit-press": "Editing article \"{{title}}\"",
+    "ai-prod": "AI processing for program \"{{title}}\"",
+    "ai-press": "AI processing for article \"{{title}}\"",
+    "split-prod": "Splitting program \"{{title}}\""
+  },
   "party-form": {
     "title": "Name",
     "abbreviation": "Abbreviation",
@@ -69,6 +84,7 @@
     "search-placeholder": "Start typing to search…",
     "save": "Save",
     "error-title-required": "Alias is required",
+    "error-author-required": "Author is required",
     "error-load": "Failed to load the form",
     "error-save": "Failed to save"
   },
@@ -85,7 +101,7 @@
     "display-in-graphics": "Show in graphics",
     "deny-voting": "Disable voting",
     "deny-comments": "Disable comments",
-    "deny-3a": "Disable AI",
+    "deny-3a": "Hide links to zxaaa.net",
     "search-placeholder": "Start typing to search…",
     "save": "Save",
     "error-title-required": "Name is required",
@@ -136,7 +152,8 @@
     "hardware-required": "Hardware required",
     "publishers": "Publishers",
     "add-publisher": "Add publisher…",
-    "file": "File"
+    "file": "File",
+    "error-prod-required": "Production is required"
   },
   "prod-form": {
     "files": "Software files",
@@ -185,7 +202,8 @@
     "inlays": "Inlays",
     "maps": "Maps",
     "rzx": "RZX",
-    "language": "Language"
+    "language": "Language",
+    "error-categories-required": "Select at least one category"
   },
   "tune-form": {
     "title": "Title",
@@ -211,7 +229,10 @@
     "frequency": "Frequency",
     "int-frequency": "Interrupt frequency",
     "file": "Playable file",
-    "tracker-file": "Source/tracker file"
+    "tracker-file": "Source/tracker file",
+    "batch-files": "Music files",
+    "error-files-required": "Select at least one music file",
+    "error-authors-required": "Select at least one author"
   },
   "picture-form": {
     "title": "Title",
@@ -239,7 +260,10 @@
     "inspired": "Inspiration source",
     "inspired2": "Inspiration source 2",
     "sequence": "Animation sequence",
-    "exe-file": "Executable file"
+    "exe-file": "Executable file",
+    "batch-images": "Images",
+    "error-files-required": "Select at least one image",
+    "error-authors-required": "Select at least one author"
   },
   "press-form": {
     "title": "Title",

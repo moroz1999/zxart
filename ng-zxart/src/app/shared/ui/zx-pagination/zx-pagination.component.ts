@@ -20,8 +20,7 @@ export class ZxPaginationComponent implements OnChanges {
     @Input() currentPage = 0;
     @Input() pagesAmount = 0;
     @Input() visibleAmount = 1;
-    @Input() urlBase = '';
-    @Input() queryParams: Params | null = null;
+    @Input() queryParams: Params = {};
     @Input() loading = false;
     @Output() pageChange = new EventEmitter<number>();
 
@@ -97,18 +96,12 @@ export class ZxPaginationComponent implements OnChanges {
     }
 
     makeHref(number: number): string {
-        if (this.queryParams !== null) {
-            return this.router.serializeUrl(this.router.createUrlTree([], {
-                relativeTo: this.route,
-                queryParams: {
-                    ...this.queryParams,
-                    page: number > 1 ? number : null,
-                },
-            }));
-        }
-        if (this.urlBase.slice(-1) === '/') {
-            return this.urlBase + 'page:' + number + '/';
-        }
-        return this.urlBase + '/page:' + number + '/';
+        return this.router.serializeUrl(this.router.createUrlTree([], {
+            relativeTo: this.route,
+            queryParams: {
+                ...this.queryParams,
+                page: number > 1 ? number : null,
+            },
+        }));
     }
 }

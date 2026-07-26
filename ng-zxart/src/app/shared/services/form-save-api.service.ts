@@ -74,11 +74,15 @@ export class FormSaveApiService {
     entityType: FormCreateEntityType,
     payload: FormSavePayload,
     year?: number,
+    parentId?: number,
   ): Observable<{id: number}> {
     const body = new FormData();
     body.append('entityType', entityType);
     if (year !== undefined) {
       body.append('year', String(year));
+    }
+    if (parentId !== undefined) {
+      body.append('parentId', String(parentId));
     }
     this.appendPayload(body, 'fields', payload);
     return this.http.post<{id: number}>('/formdata/', body);

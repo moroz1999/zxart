@@ -25,6 +25,7 @@ import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entit
 import {FileUploadChange, ZxFileUploadComponent} from '../../shared/ui/zx-file-upload/zx-file-upload.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
 import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
 import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
@@ -77,7 +78,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
 export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
-    prod: this.fb.control<EntityRef | null>(null),
+    prod: this.fb.control<EntityRef | null>(null, Validators.required),
     version: this.fb.nonNullable.control(''),
     year: this.fb.nonNullable.control(''),
     releaseType: this.fb.nonNullable.control<string>(''),
@@ -91,6 +92,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   });
 
   readonly titleMessages = {required: 'release-form.error-title-required'};
+  readonly prodMessages = {required: 'release-form.error-prod-required'};
 
   loading = true;
   submitting = false;
@@ -109,7 +111,13 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     {prop: 'adFilesSelector', labelKey: 'release-form.ad-files'},
   ];
 
+  /** Creation mode: a new release of the production the form was opened from. */
+  creating = false;
+
   private elementId = 0;
+  /** The production the new release belongs to. */
+  private prodId = 0;
+  private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private selectorFiles: Record<string, File[]> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
@@ -122,13 +130,25 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      this.prodId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/prod/${this.prodId}`;
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/release/${this.elementId}`;
+    }
+    const formData$ = this.creating
+      ? this.formData.loadCreate('release', [], undefined, this.prodId)
+      : this.formData.load(this.elementId);
     this.subscriptions.add(
-      this.formData.load(this.elementId).subscribe({
+      formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
             prod: data.multiRefs['zxProd']?.[0] ?? null,
@@ -165,7 +185,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/release/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onMemberFields(fields: MemberFields): void {
@@ -202,26 +222,30 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
       file: change.file,
       remove: change.removed,
     }));
+    const payload = {
+      fileSelectors: this.selectorFiles,
+      files,
+      fields: {
+        title: value.title,
+        zxProd: value.prod ? String(value.prod.id) : String(this.prodId || ''),
+        version: value.version,
+        year: value.year,
+        releaseType: value.releaseType,
+        releaseFormat: value.releaseFormat,
+        language: value.language,
+        hardwareRequired: value.hardwareRequired,
+        publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
+        description: value.description,
+        denyVoting: value.denyVoting ? '1' : '',
+        denyComments: value.denyComments ? '1' : '',
+        addAuthorRole: this.memberFields.addAuthorRole,
+      },
+    };
+    const save$ = this.creating
+      ? this.formSave.create('release', payload, undefined, this.prodId)
+      : this.formSave.save(this.elementId, payload);
     this.subscriptions.add(
-      this.formSave.save(this.elementId, {
-        fileSelectors: this.selectorFiles,
-        files,
-        fields: {
-          title: value.title,
-          zxProd: value.prod ? String(value.prod.id) : '',
-          version: value.version,
-          year: value.year,
-          releaseType: value.releaseType,
-          releaseFormat: value.releaseFormat,
-          language: value.language,
-          hardwareRequired: value.hardwareRequired,
-          publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
-          description: value.description,
-          denyVoting: value.denyVoting ? '1' : '',
-          denyComments: value.denyComments ? '1' : '',
-          addAuthorRole: this.memberFields.addAuthorRole,
-        },
-      }).subscribe({
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/release/${result.id}`);
         },

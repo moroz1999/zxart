@@ -2,5 +2,5 @@
   <h1 zxPageHeader appHeading="display">
     {{ (vm.page > 1 ? 'search.heading.with_page' : 'search.heading.first_page') | translate: {phrase: vm.phrase, page: vm.page} }}
   </h1>
-  <zx-search-results [manageUrl]="false"></zx-search-results>
+  <zx-search-results></zx-search-results>
 </zx-page-layout>

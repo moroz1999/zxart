@@ -112,7 +112,6 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
 export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   @Input() elementId = '';
   @Input() baseUrl = '';
-  @Input() manageUrl = true;
 
   readonly skeletonGroups = INITIAL_SKELETON_GROUPS;
   readonly pictureSkeletonItems = [0, 1, 2, 3, 4, 5];
@@ -125,8 +124,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   phrase = '';
   currentPage = 1;
   pagesAmount = 0;
-  urlBase = '';
-  paginationQueryParams: Params | null = null;
+  paginationQueryParams: Params = {};
 
   typeFilters: TypeFilterOption[] = [];
 
@@ -168,19 +166,13 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
       }),
     );
 
-    if (this.manageUrl) {
-      this.applyUrlState(this.parseUrl(), this.parseTypesParam());
-      this.urlBase = this.computeUrlBase();
-      this.trigger.next({kind: 'initial'});
-    } else {
-      this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
-        const page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
-        const types = (params.get('types') ?? '').split(',').map(value => value.trim()).filter(Boolean);
-        this.applyUrlState({phrase: params.get('phrase')?.trim() ?? '', page}, types);
-        this.updatePaginationQueryParams();
-        this.trigger.next({kind: this.data === null ? 'initial' : 'page'});
-      }));
-    }
+    this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
+      const page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
+      const types = (params.get('types') ?? '').split(',').map(value => value.trim()).filter(Boolean);
+      this.applyUrlState({phrase: params.get('phrase')?.trim() ?? '', page}, types);
+      this.updatePaginationQueryParams();
+      this.trigger.next({kind: this.data === null ? 'initial' : 'page'});
+    }));
   }
 
   ngOnDestroy(): void {
@@ -200,9 +192,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     }
     this.currentPage = page;
     this.updateUrl();
-    if (this.manageUrl) {
-      this.trigger.next({kind: 'page'});
-    }
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
@@ -210,9 +199,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     option.selected = checked;
     this.currentPage = 1;
     this.updateUrl();
-    if (this.manageUrl) {
-      this.trigger.next({kind: 'filter'});
-    }
   }
 
   onSelectAllTypes(): void {
@@ -223,9 +209,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     this.typeFilters = this.typeFilters.map(opt => ({...opt, selected: true}));
     this.currentPage = 1;
     this.updateUrl();
-    if (this.manageUrl) {
-      this.trigger.next({kind: 'filter'});
-    }
   }
 
   isAuthorSet(set: SearchResultSetDto): boolean {
@@ -407,76 +390,24 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     return selected;
   }
 
-  private parseUrl(): {phrase: string; page: number} {
-    const path = window.location.pathname;
-    const phraseMatch = path.match(/\/phrase:([^/]*)/);
-    const pageMatch = path.match(/\/page:(\d+)/);
-    return {
-      phrase: phraseMatch ? this.decodeUrlPhrase(decodeURIComponent(phraseMatch[1])) : '',
-      page: pageMatch ? Math.max(1, parseInt(pageMatch[1], 10)) : 1,
-    };
-  }
-
-  private decodeUrlPhrase(value: string): string {
-    return value.replace(/%s%/g, '/');
-  }
-
-  private encodeUrlPhrase(value: string): string {
-    return encodeURIComponent(value.replace(/\//g, '%s%'));
-  }
-
-  private parseTypesParam(): string[] {
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get('types');
-    if (!raw) {
-      return [];
-    }
-    return raw.split(',').map(p => p.trim()).filter(p => p.length > 0);
-  }
-
   private applyUrlState(state: {phrase: string; page: number}, types: string[]): void {
     this.phrase = state.phrase;
     this.currentPage = state.page;
     this.typeFilters = types.map(value => ({value, label: value, selected: true}));
   }
 
-  private computeUrlBase(): string {
-    if (this.baseUrl && this.elementId && this.phrase !== '') {
-      const base = this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/';
-      return base + 'action:perform/id:' + this.elementId + '/phrase:' + this.encodeUrlPhrase(this.phrase) + '/';
-    }
-    const cleanPath = window.location.pathname.replace(/\/page:\d+\/?/, '');
-    return cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
-  }
 
+  /** Writes phrase, types and page to the router query params; the subscription reloads. */
   private updateUrl(): void {
-    if (!this.manageUrl) {
-      const selectedTypes = this.selectedTypes();
-      void this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: {
-          phrase: this.phrase || null,
-          types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
-          page: this.currentPage > 1 ? this.currentPage : null,
-        },
-      });
-      return;
-    }
-    const pagePath = this.currentPage > 1
-      ? this.urlBase + 'page:' + this.currentPage + '/'
-      : this.urlBase;
-
-    const params = new URLSearchParams(window.location.search);
-    const selected = this.typeFilters.filter(opt => opt.selected).map(opt => opt.value);
-    const allSelected = this.typeFilters.length > 0 && selected.length === this.typeFilters.length;
-    if (allSelected || selected.length === 0) {
-      params.delete('types');
-    } else {
-      params.set('types', selected.join(','));
-    }
-    const queryString = params.toString();
-    const newUrl = queryString ? pagePath + '?' + queryString : pagePath;
-    window.history.pushState(null, '', newUrl);
+    const selectedTypes = this.selectedTypes();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        phrase: this.phrase || null,
+        types: selectedTypes.length > 0 ? selectedTypes.join(',') : null,
+        page: this.currentPage > 1 ? this.currentPage : null,
+      },
+    });
   }
 
   private updatePaginationQueryParams(): void {

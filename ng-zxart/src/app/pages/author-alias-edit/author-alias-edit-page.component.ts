@@ -23,8 +23,10 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
+import {AuthorAliasFormApiService} from '../../features/author-details/services/author-alias-form-api.service';
 
-/** Routed page for `author-alias/:id/edit`. */
+/** Routed page for editing an alias or creating one for a selected author. */
 @Component({
   selector: 'zx-author-alias-edit-page',
   standalone: true,
@@ -54,7 +56,7 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
-    author: this.fb.control<EntityRef | null>(null),
+    author: this.fb.control<EntityRef | null>(null, Validators.required),
     startDate: this.fb.nonNullable.control(''),
     endDate: this.fb.nonNullable.control(''),
     displayInMusic: this.fb.nonNullable.control(false),
@@ -62,7 +64,9 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   });
 
   readonly titleMessages = {required: 'author-alias-form.error-title-required'};
+  readonly authorMessages = {required: 'author-alias-form.error-author-required'};
 
+  creating = false;
   loading = true;
   submitting = false;
   errorMessage = '';
@@ -77,13 +81,36 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
+    private readonly authorAliasFormApi: AuthorAliasFormApiService,
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    const routeId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      this.subscriptions.add(
+        this.authorAliasFormApi.getForm(routeId).subscribe({
+          next: data => {
+            this.form.patchValue({author: data.author});
+            this.loading = false;
+            this.cdr.markForCheck();
+          },
+          error: (err: HttpErrorResponse) => {
+            this.loading = false;
+            this.errorMessage = err.error?.errorMessage ?? 'author-alias-form.error-load';
+            this.cdr.markForCheck();
+          },
+        }),
+      );
+      return;
+    }
+
+    this.elementId = routeId;
     this.subscriptions.add(
       this.formData.load(this.elementId, ['authorId']).subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
             author: data.refs['authorId'] ?? null,
@@ -117,17 +144,28 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const fields = {
+      authorId: value.author ? Number(value.author.id) : 0,
+      title: value.title,
+      startDate: value.startDate,
+      endDate: value.endDate,
+      displayInMusic: value.displayInMusic,
+      displayInGraphics: value.displayInGraphics,
+    };
+    const save$ = this.creating
+      ? this.authorAliasFormApi.create(fields)
+      : this.formSave.save(this.elementId, {
         fields: {
-          title: value.title,
-          authorId: value.author ? String(value.author.id) : '',
-          startDate: value.startDate,
-          endDate: value.endDate,
-          displayInMusic: value.displayInMusic ? '1' : '',
-          displayInGraphics: value.displayInGraphics ? '1' : '',
+          title: fields.title,
+          authorId: String(fields.authorId),
+          startDate: fields.startDate,
+          endDate: fields.endDate,
+          displayInMusic: fields.displayInMusic ? '1' : '',
+          displayInGraphics: fields.displayInGraphics ? '1' : '',
         },
-      }).subscribe({
+      });
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/author/${result.id}`);
         },

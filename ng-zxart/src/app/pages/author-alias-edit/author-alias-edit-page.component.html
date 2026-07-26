@@ -1,5 +1,7 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'author-details.action.showPublicForm' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">
+  {{ (creating ? 'author-details.action.add-alias' : 'author-details.action.showPublicForm') | translate }}
+</h1>
 <div *ngIf="loading" class="author-alias-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>
@@ -15,13 +17,14 @@
     </zx-form-field>
 
     <zx-form-field>
-      <zx-form-label>{{ 'author-alias-form.author' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'author-alias-form.author' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-entity-autocomplete
           formControlName="author"
           types="author"
           [placeholder]="'author-alias-form.search-placeholder' | translate"
         ></zx-entity-autocomplete>
+        <zx-control-errors [control]="form.controls['author']" [messages]="authorMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 

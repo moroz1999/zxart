@@ -25,6 +25,7 @@ import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filt
 import {FileMove, ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.component';
 import {CategoryTreeNode, EnumOption, FileSelectorItem} from '../../shared/models/form-data-response';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ScreenshotMoveApiService} from '../../features/prod-details/services/screenshot-move-api.service';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
@@ -35,6 +36,7 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
 import {FormFieldValue} from '../../shared/services/form-save-api.service';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
@@ -103,7 +105,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     publishers: this.fb.nonNullable.control<EntityRef[]>([]),
     compilationItems: this.fb.nonNullable.control<EntityRef[]>([]),
     seriesProds: this.fb.nonNullable.control<EntityRef[]>([]),
-    categories: this.fb.nonNullable.control<number[]>([]),
+    categories: this.fb.nonNullable.control<number[]>([], nonEmptyArray),
     htmlDescription: this.fb.nonNullable.control(false),
     description: this.fb.nonNullable.control(''),
     instructions: this.fb.nonNullable.control(''),
@@ -113,6 +115,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   });
 
   readonly titleMessages = {required: 'prod-form.error-title-required'};
+  readonly categoriesMessages = {required: 'prod-form.error-categories-required'};
   readonly legalStatusOptions: ZxSelectOption[] = LEGAL_STATUSES.map(value => ({
     value,
     label: this.translate.instant(`prod-form.legal.${value}`),
@@ -157,6 +160,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
     private readonly screenshotMove: ScreenshotMoveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
@@ -173,6 +177,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields[this.batchUpload ? 'prodTitle' : 'title'] ?? ''),
             altTitle: String(data.fields[this.batchUpload ? 'prodAltTitle' : 'altTitle'] ?? ''),

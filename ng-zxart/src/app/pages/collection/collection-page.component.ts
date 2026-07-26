@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
 import {ZxProdsCategoryComponent} from '../../entities/zx-prods-category/zx-prods-category.component';
 import {ZxGroupBrowserComponent} from '../../features/group-browser/components/zx-group-browser/zx-group-browser.component';
@@ -12,6 +12,8 @@ import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layo
 import {ZxEditButtonComponent} from '../../shared/ui/zx-edit-button/zx-edit-button.component';
 import {CurrentUserService} from '../../shared/services/current-user.service';
 import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
+import {BreadcrumbService} from '../../shared/services/breadcrumb.service';
+import {CategorySelectorDto} from '../../entities/zx-prods-category/models/categories-selector-dto';
 
 type CollectionKind = 'prods' | 'groups' | 'pictures' | 'music';
 
@@ -65,9 +67,28 @@ export class CollectionPageComponent {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly currentUserService: CurrentUserService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly translate: TranslateService,
   ) {}
 
   groupAddUrl(vm: CollectionVm): string {
     return vm.letter ? `/groups/${encodeURIComponent(vm.letter)}/add` : '/groups/add';
+  }
+
+  /**
+   * Renders the selected category chain as breadcrumbs. The catalogue root emits
+   * an empty chain and keeps the route-driven trail built from the menu.
+   */
+  onCategoryPath(path: CategorySelectorDto[]): void {
+    if (!path.length) {
+      return;
+    }
+    this.breadcrumbService.setEntityTrail({
+      items: [
+        {title: this.translate.instant('menu.software'), url: '/prods'},
+        ...path.slice(0, -1).map(category => ({title: category.name, url: '/prods', queryParams: {cat: category.id}})),
+      ],
+      currentTitle: path[path.length - 1].name,
+    });
   }
 }

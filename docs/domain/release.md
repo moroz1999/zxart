@@ -17,6 +17,9 @@ Concrete release (version) of software production. Contains files specific to th
 - **zxProd** - parent product (link `structure`, role child)
   - Each release must belong to one prod
   - Link through structural hierarchy
+  - Required in both the Angular form and the element action (`notEmpty`). Unlike
+    the other works there is no sensible fallback, so a release with no
+    production is rejected: creation answers 422 and nothing is stored.
 
 #### Authorship
 - **authors** - authors with roles (code, graphics, music, etc.)

@@ -11,6 +11,7 @@ use structureElement;
 use structureManager;
 use ZxArt\Forms\FormCreateService;
 use ZxArt\Forms\FormCreateType;
+use ZxArt\Forms\FormValidationException;
 use ZxArt\Shared\StructureType;
 
 final class FormCreateServiceTest extends TestCase
@@ -29,7 +30,7 @@ final class FormCreateServiceTest extends TestCase
             ->willReturn(7);
         $structureManager->expects($this->once())
             ->method('getElementsByType')
-            ->with(StructureType::AuthorsCatalogue->value, 7, [], 1)
+            ->with(StructureType::AuthorsCatalogue->value, 7)
             ->willReturn([$catalogue]);
         $structureManager->expects($this->once())
             ->method('createElement')
@@ -53,7 +54,7 @@ final class FormCreateServiceTest extends TestCase
             ->willReturn(7);
         $structureManager->expects($this->once())
             ->method('getElementsByType')
-            ->with(StructureType::GroupsCatalogue->value, 7, [], 1)
+            ->with(StructureType::GroupsCatalogue->value, 7)
             ->willReturn([$catalogue]);
         $structureManager->expects($this->once())
             ->method('createElement')
@@ -61,6 +62,50 @@ final class FormCreateServiceTest extends TestCase
             ->willReturn($draft);
 
         self::assertSame($draft, $service->createDraft(FormCreateType::Group, null));
+    }
+
+    public function testAuthorAliasDraftUsesMainAuthorAsParent(): void
+    {
+        $structureManager = $this->createMock(structureManager::class);
+        $languagesManager = $this->createMock(LanguagesManager::class);
+        $draft = $this->createStub(structureElement::class);
+        $service = new FormCreateService($structureManager, $languagesManager);
+
+        $languagesManager->expects($this->never())->method('getCurrentLanguageId');
+        $structureManager->expects($this->once())
+            ->method('createElement')
+            ->with(StructureType::AuthorAlias->value, 'showPublicForm', 42)
+            ->willReturn($draft);
+
+        self::assertSame($draft, $service->createAuthorAliasDraft(42));
+    }
+
+    public function testAuthorAliasSubmitAssignsFieldsAndRunsPublicAdd(): void
+    {
+        $structureManager = $this->createMock(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $draft = $this->createMock(structureElement::class);
+        $controller = $this->createMock(controller::class);
+        $service = new FormCreateService($structureManager, $languagesManager);
+        $fields = ['title' => 'Alias', 'authorId' => '42'];
+
+        $structureManager->expects($this->once())
+            ->method('createElement')
+            ->with(StructureType::AuthorAlias->value, 'showPublicForm', 42)
+            ->willReturn($draft);
+        $draft->expects($this->once())
+            ->method('getIdentifier')
+            ->willReturn('author/type:authorAlias/action:showPublicForm');
+        $draft->expects($this->once())
+            ->method('executeAction')
+            ->with('publicAdd')
+            ->willReturn(true);
+        $draft->method('hasActualStructureInfo')->willReturn(true);
+        $controller->expects($this->once())
+            ->method('setElementFormData')
+            ->with('author/type:authorAlias/action:showPublicForm', $fields);
+
+        self::assertSame($draft, $service->submitAuthorAlias(42, $controller, $fields));
     }
 
     public function testSubmitAssignsFieldsToTemporaryIdAndRunsCreateAction(): void
@@ -81,12 +126,13 @@ final class FormCreateServiceTest extends TestCase
             ->method('executeAction')
             ->with('publicAdd')
             ->willReturn(true);
+        $draft->method('hasActualStructureInfo')->willReturn(true);
         $languagesManager->expects($this->once())
             ->method('getCurrentLanguageId')
             ->willReturn(7);
         $structureManager->expects($this->once())
             ->method('getElementsByType')
-            ->with(StructureType::AuthorsCatalogue->value, 7, [], 1)
+            ->with(StructureType::AuthorsCatalogue->value, 7)
             ->willReturn([$catalogue]);
         $structureManager->expects($this->once())
             ->method('createElement')
@@ -97,6 +143,28 @@ final class FormCreateServiceTest extends TestCase
             ->with('authors/type:author/action:showPublicForm', $fields);
 
         self::assertSame($draft, $service->submit(FormCreateType::Author, null, $controller, $fields));
+    }
+
+    public function testSubmitRejectsValuesTheActionDidNotAccept(): void
+    {
+        $structureManager = $this->createStub(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $catalogue = $this->createStub(structureElement::class);
+        $draft = $this->createStub(structureElement::class);
+        $controller = $this->createStub(controller::class);
+        $service = new FormCreateService($structureManager, $languagesManager);
+
+        $catalogue->method('getId')->willReturn(100);
+        $draft->method('getIdentifier')->willReturn('authors/type:author/action:showPublicForm');
+        $draft->method('executeAction')->willReturn(true);
+        // a failed validator leaves the element unsaved
+        $draft->method('hasActualStructureInfo')->willReturn(false);
+        $languagesManager->method('getCurrentLanguageId')->willReturn(7);
+        $structureManager->method('getElementsByType')->willReturn([$catalogue]);
+        $structureManager->method('createElement')->willReturn($draft);
+
+        $this->expectException(FormValidationException::class);
+        $service->submit(FormCreateType::Author, null, $controller, ['title' => '']);
     }
 
     public function testPartyDraftUsesRequestedYearAsParent(): void

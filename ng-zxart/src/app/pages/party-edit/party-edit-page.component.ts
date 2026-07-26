@@ -24,6 +24,7 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 
 /** Routed page for `party/:id/edit`. */
 @Component({
@@ -83,6 +84,7 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +101,7 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.formData.load(this.elementId, ['country', 'city']).subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
             abbreviation: String(data.fields['abbreviation'] ?? ''),

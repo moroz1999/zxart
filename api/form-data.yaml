@@ -18,12 +18,22 @@ paths:
               - group
               - party
               - prodBatch
+              - pictureBatch
+              - musicBatch
+              - release
           description: Creation form type; used instead of id.
         - in: query
           name: year
           schema:
             type: integer
           description: Required for a party creation form.
+        - in: query
+          name: parentId
+          schema:
+            type: integer
+          description: >
+            Element the form was started from. Batch uploads attach their works to
+            it (author, group or party); a release requires the production id.
         - in: query
           name: refs
           schema:
@@ -36,6 +46,12 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - entityTitle
+                properties:
+                  entityTitle:
+                    type: string
+                    description: Localized display title of the existing entity; empty for a creation draft.
                 additionalProperties: true
         '403':
           description: Opening the form is forbidden
@@ -62,9 +78,17 @@ paths:
                     - group
                     - party
                     - prodBatch
+                    - pictureBatch
+                    - musicBatch
+                    - release
                 year:
                   type: integer
                   description: Required for a party; identifies its parent year.
+                parentId:
+                  type: integer
+                  description: >
+                    Element the works are created under (author, group or party for
+                    a batch upload, the production for a release).
                 fields:
                   type: object
                   additionalProperties: true
@@ -85,5 +109,9 @@ paths:
           description: Unsupported entity type
         '403':
           description: Creation is forbidden or failed
+        '422':
+          description: >
+            The submitted values were rejected by the element's validators and
+            nothing was created (a release without its production).
         '500':
           description: Internal server error

@@ -52,7 +52,6 @@ readonly class GroupDetailsService
             title: $this->decode((string)$group->getTitle()),
             abbreviation: $profileGroup instanceof groupElement ? $this->decode((string)$profileGroup->abbreviation) : '',
             url: $this->entityUrlResolver->urlFor($group),
-            addActionBaseUrl: (string)$group->getUrl(),
             type: $profileGroup instanceof groupElement ? (string)$profileGroup->type : '',
             slogan: $profileGroup instanceof groupElement ? $this->decode((string)$profileGroup->slogan) : '',
             imageUrl: $profileGroup instanceof groupElement ? $profileGroup->getImageUrl() : '',

@@ -73,7 +73,6 @@ readonly class AuthorDetailsService
             realName: $profileAuthor instanceof authorElement ? (string)$profileAuthor->realName : '',
             url: $this->entityUrlResolver->resolve($author) ?? (string)$author->getUrl(),
             imageUrl: $this->buildImageUrl($profileAuthor),
-            addActionBaseUrl: (string)$author->getUrl(),
             parentUrl: $parentUrl,
             parentTitle: $parentTitle,
             primaryAuthor: $this->buildPrimaryAuthor($author, $profileAuthor),

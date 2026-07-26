@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit,} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {combineLatest, Subject, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
 import {AuthorFilterOption} from '../../models/author-filter-options';
@@ -51,8 +51,6 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
 })
 export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  /** Legacy mounts sync state to `window.location`/`pushState`; the SPA route disables that. */
-  @Input() manageUrl = true;
   /** 'full' shows filters, pagination and URL state; 'simple' shows table only */
   @Input() mode: 'full' | 'simple' = 'full';
   /** Override default sorting (e.g. 'graphicsRating,desc' for best-authors list) */
@@ -83,12 +81,12 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   countryOptions: ZxFilterPickerItem[] = [];
   cityOptions: ZxFilterPickerItem[] = [];
 
-  protected urlBase = '';
   loadStarted = false;
 
   private readonly subscriptions = new Subscription();
   private readonly searchSubject = new Subject<string>();
-  private readonly route = inject(ActivatedRoute, {optional: true});
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   constructor(
     private readonly authorBrowserService: AuthorBrowserService,
@@ -96,81 +94,32 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     private readonly translateService: TranslateService,
   ) {}
 
-  /** SPA route mode: letter and filters come from the router; `items` is a fixed input. */
-  private get useRouter(): boolean {
-    return !this.manageUrl && this.route != null;
-  }
-
   ngOnInit(): void {
+    // Full mode owns the page URL: letter, filters and page live in the route.
     if (this.mode === 'full') {
-      if (this.manageUrl) {
-        this.urlBase = this.parseUrlBase();
-        this.currentPage = this.parsePageFromUrl();
-        this.parseFiltersFromUrl();
-      }
-
       this.subscriptions.add(
         this.searchSubject.pipe(
           debounceTime(300),
           distinctUntilChanged(),
-          tap(() => {
-            this.currentPage = 1;
-            this.updateUrl();
-            this.loading = true;
-            this.error = false;
-            this.cdr.markForCheck();
-          }),
-          switchMap(() => {
-            const pageLimit = Number(this.limit) || 50;
-            return this.authorBrowserService.getPaged(
-              this.elementId,
-              0,
-              pageLimit,
-              this.effectiveSorting,
-              this.search,
-              this.activeCountryId,
-              this.activeCityId,
-              this.letter,
-              this.types,
-              this.items,
-            );
-          }),
-        ).subscribe({
-          next: response => {
-            this.loading = false;
-            const pageLimit = Number(this.limit) || 50;
-            this.authors = response.items;
-            this.total = response.total;
-            this.pagesAmount = Math.ceil(this.total / pageLimit);
-            this.cdr.markForCheck();
-          },
-          error: () => {
-            this.loading = false;
-            this.error = true;
-            this.cdr.markForCheck();
-          },
-        }),
+        ).subscribe(() => this.navigateWithFilters()),
       );
 
-      if (this.useRouter) {
-        this.subscriptions.add(combineLatest([
-          this.route!.paramMap,
-          this.route!.queryParamMap,
-        ]).subscribe(([pathParams, queryParams]) => {
-          this.letter = pathParams.get('letter') ?? '';
-          this.search = queryParams.get('q') ?? '';
-          this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
-          this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
-          this.currentPage = Math.max(1, Number(queryParams.get('page')) || 1);
-          this.loadFilterOptions();
-          this.loadPage();
-        }));
-        return;
-      }
-
-      this.loadFilterOptions();
+      this.subscriptions.add(combineLatest([
+        this.route.paramMap,
+        this.route.queryParamMap,
+      ]).subscribe(([pathParams, queryParams]) => {
+        this.letter = pathParams.get('letter') ?? '';
+        this.search = queryParams.get('q') ?? '';
+        this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
+        this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
+        this.currentPage = Math.max(1, Number(queryParams.get('page')) || 1);
+        this.loadFilterOptions();
+        this.loadPage();
+      }));
+      return;
     }
 
+    // Simple mode is an embedded widget with a fixed query and no URL state.
     if (!this.loadOnViewport) {
       this.loadStarted = true;
       this.loadPage();
@@ -191,21 +140,18 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   onCountryChange(ids: string[]): void {
     this.selectedCountryIds = ids;
     this.currentPage = 1;
-    this.updateUrl();
-    this.loadPage();
+    this.navigateWithFilters();
   }
 
   onCityChange(ids: string[]): void {
     this.selectedCityIds = ids;
     this.currentPage = 1;
-    this.updateUrl();
-    this.loadPage();
+    this.navigateWithFilters();
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updateUrl();
-    this.loadPage();
+    this.navigateWithFilters();
   }
 
   onInViewport(): void {
@@ -303,50 +249,31 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     );
   }
 
-  private parsePageFromUrl(): number {
-    const match = window.location.pathname.match(/\/page:(\d+)/);
-    if (match) {
-      const page = parseInt(match[1], 10);
-      return page > 0 ? page : 1;
-    }
-    return 1;
+  /** Writes the filter state to the URL; the query-param subscription reloads. */
+  private navigateWithFilters(): void {
+    this.router.navigate([], {relativeTo: this.route, queryParams: this.filterQueryParams});
   }
 
-  private parseUrlBase(): string {
-    const cleanPath = window.location.pathname.replace(/\/page:\d+\/?/, '');
-    return cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
+  /** Filter state carried by the pagination links. */
+  get paginationQueryParams(): Params {
+    const {page, ...withoutPage} = this.filterQueryParams;
+    return withoutPage;
   }
 
-  private parseFiltersFromUrl(): void {
-    const params = new URLSearchParams(window.location.search);
-    this.search = params.get('q') ?? '';
-    const countryId = params.get('country');
-    const cityId = params.get('city');
-    this.selectedCountryIds = countryId ? [countryId] : [];
-    this.selectedCityIds = cityId ? [cityId] : [];
-  }
-
-  private updateUrl(): void {
-    if (this.mode !== 'full' || !this.manageUrl) {
-      return;
-    }
-    const pagePath = this.currentPage > 1
-      ? this.urlBase + 'page:' + this.currentPage + '/'
-      : this.urlBase;
-
-    const params = new URLSearchParams();
+  private get filterQueryParams(): Params {
+    const params: Params = {};
     if (this.search) {
-      params.set('q', this.search);
+      params['q'] = this.search;
     }
     if (this.activeCountryId !== null) {
-      params.set('country', String(this.activeCountryId));
+      params['country'] = this.activeCountryId;
     }
     if (this.activeCityId !== null) {
-      params.set('city', String(this.activeCityId));
+      params['city'] = this.activeCityId;
     }
-
-    const queryString = params.toString();
-    const newUrl = queryString ? pagePath + '?' + queryString : pagePath;
-    window.history.pushState(null, '', newUrl);
+    if (this.currentPage > 1) {
+      params['page'] = this.currentPage;
+    }
+    return params;
   }
 }

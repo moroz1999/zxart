@@ -46,7 +46,7 @@ export class MenuBlockComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     router: Router,
   ) {
-    // Active highlighting reads window.location; re-check it after each SPA
+    // Active highlighting is derived from the router URL; re-check it after each
     // navigation so the highlight follows client-side route changes.
     this.routerSub = router.events
       .pipe(filter(event => event instanceof NavigationEnd))

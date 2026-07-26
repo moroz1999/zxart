@@ -24,5 +24,4 @@ import {ZxGroupProdsTabComponent} from '../zx-group-prods-tab/zx-group-prods-tab
 })
 export class ZxGroupWorksComponent {
   @Input() core!: GroupCoreDto;
-  @Input() urlBase = '';
 }

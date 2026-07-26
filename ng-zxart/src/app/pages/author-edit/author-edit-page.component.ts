@@ -28,6 +28,7 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 
 /** Tech fields shown nowhere in the UI but preserved on save (passthrough). */
 const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequency', 'palette'];
@@ -102,6 +103,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
@@ -119,6 +121,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.languages = data.languages;
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),

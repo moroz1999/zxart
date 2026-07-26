@@ -51,7 +51,6 @@ const ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxGroupEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'group' | 'groupAlias';
-  @Input({required: true}) addActionBaseUrl!: string;
 
   editActions: readonly ZxEditingControlAction[] = GROUP_EDIT_ACTIONS;
   readonly addActions = ADD_ACTIONS;
@@ -68,11 +67,6 @@ export class ZxGroupEditingControlsComponent implements OnChanges {
     return `/${base}/${elementId}/edit`;
   };
 
-  readonly buildAddActionUrl = (action: string): string => {
-    const separatorIndex = action.indexOf('.');
-    const type = action.substring(0, separatorIndex);
-    const legacyAction = action.substring(separatorIndex + 1);
-
-    return `${this.addActionBaseUrl}type:${type}/action:${legacyAction}/`;
-  };
+  readonly buildAddActionUrl = (_action: string, elementId: number): string =>
+    `/group/${elementId}/prods/add`;
 }

@@ -3,12 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
+  Output,
   ViewChild
 } from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
@@ -17,6 +17,7 @@ import {ElementsService, PostParameters} from '../../shared/services/elements.se
 import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
+import {CategorySelectorDto} from './models/categories-selector-dto';
 import {environment} from '../../../environments/environment';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ZxPaginationComponent} from '../../shared/ui/zx-pagination/zx-pagination.component';
@@ -95,8 +96,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
 
     public layout: ZxProdsListLayout = 'loading';
     public loading = false;
-    public urlBase = '';
-    public paginationQueryParams: Params | null = null;
+    public paginationQueryParams: Params = {};
 
     public layoutOptions: ZxToggleOption[] = [
         {value: 'loading', icon: 'image'},
@@ -113,12 +113,6 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
 
     @Input() elementId: number = 0;
     /**
-     * Legacy pages prefetch the model into `window` and drive the URL via
-     * `history.pushState`. When mounted by the SPA route this is off: the model
-     * is fetched over HTTP and the URL is left to the Angular router.
-     */
-    @Input() manageUrl = true;
-    /**
      * SPA collection mount point without a hardcoded id: the backend resolves the
      * catalogue root by this structure type. The `cat` query param then overrides
      * it per category.
@@ -126,6 +120,12 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     @Input() rootType = '';
     /** The routed collection page owns its page-level heading. */
     @Input() showHeading = true;
+    /**
+     * The selected category chain, root-first and inclusive of the current
+     * category (empty at the catalogue root). Emitted after every load so the
+     * routed page can render it as breadcrumbs.
+     */
+    @Output() categoryPathChange = new EventEmitter<CategorySelectorDto[]>();
 
     /** Catalogue root id; resolved from the loaded root model, or from the `cat` query param. */
     private rootElementId = 0;
@@ -136,8 +136,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         private elementsService: ElementsService,
         private cdr: ChangeDetectorRef,
         private iconReg: SvgIconRegistryService,
-        @Optional() private router: Router | null,
-        @Optional() private route: ActivatedRoute | null,
+        private router: Router,
+        private route: ActivatedRoute,
         private translate: TranslateService,
     ) {}
 
@@ -158,49 +158,13 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         return chips;
     }
 
-    /** SPA route mode: drive category + filters through the Angular router (no slugs, no pushState). */
-    private get useRouter(): boolean {
-        return !this.manageUrl && this.router != null && this.route != null;
-    }
-
-    @HostListener('window:popstate', ['$event'])
-    historyUpdateHandler(event: PopStateEvent): void {
-        if (typeof event.state != 'undefined') {
-            if (event.state.elementId === this.elementId) {
-                this.loading = true;
-
-                this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, event.state.parameters, 'zxProdsList').subscribe(
-                    model => {
-                        this.model = model;
-                        this.pagesAmount = Math.ceil(this.model.prodsAmount / this.elementsOnPage);
-                    },
-                    () => {
-                    },
-                    () => {
-                        this.loading = false;
-                        this.cdr.markForCheck();
-                        this.contentElement?.nativeElement.scrollIntoView({
-                            block: 'start',
-                            inline: 'start',
-                            behavior: 'smooth',
-                        });
-                    },
-                );
-            }
-        }
-    }
-
     ngOnInit(): void {
         for (const name of ['image', 'videogame-asset', 'photo-camera', 'list']) {
             this.iconReg.loadSvg(`${environment.svgUrl}${name}.svg`, name)?.subscribe();
         }
-        if (this.useRouter) {
-            // SPA route: category (`cat`) + filters + page live in the URL query params
-            this.rootElementId = this.elementId;
-            this.routerSub = this.route!.queryParams.subscribe(params => this.applyQueryParams(params));
-        } else {
-            this.fetchModel();
-        }
+        // Category (`cat`), filters and page all live in the URL query params.
+        this.rootElementId = this.elementId;
+        this.routerSub = this.route.queryParams.subscribe(params => this.applyQueryParams(params));
         // Re-render the translated "all" letter chip when the language changes.
         this.langSub = this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
     }
@@ -233,10 +197,29 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         return value ? value.split(',') : [];
     }
 
-    /** Pushes the current filter state to the URL as query params (no slugs). */
+    /** Pushes the current filter state to the URL as query params. */
     private navigateWithParams(): void {
         const queryParams = this.buildRouteQueryParams(true);
-        this.router!.navigate([], {relativeTo: this.route!, queryParams});
+        this.router.navigate([], {relativeTo: this.route, queryParams});
+    }
+
+    /**
+     * The categories selector marks the whole ancestor chain of the current
+     * category as selected, so descending through the selected nodes yields the
+     * root→current path without asking the backend for it.
+     */
+    private selectedCategoryPath(): CategorySelectorDto[] {
+        const path: CategorySelectorDto[] = [];
+        let level: CategorySelectorDto[] | undefined = this.model.categoriesSelector;
+        while (level?.length) {
+            const selected: CategorySelectorDto | undefined = level.find(category => category.selected);
+            if (!selected) {
+                break;
+            }
+            path.push(selected);
+            level = selected.children;
+        }
+        return path;
     }
 
     private buildRouteQueryParams(includePage: boolean): Params {
@@ -303,13 +286,9 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         return parameters;
     }
 
+    /** Writes the state to the URL; the queryParams subscription reloads. */
     private fetchModel(): void {
-        // SPA route: write the state to the URL; the queryParams subscription reloads.
-        if (this.useRouter) {
-            this.navigateWithParams();
-            return;
-        }
-        this.loadData();
+        this.navigateWithParams();
     }
 
     private loadData(): void {
@@ -320,7 +299,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
                 this.model = model;
                 // Type-resolved root: adopt its real id so category navigation and the
                 // `cat != root` URL check work without a hardcoded wrapper id.
-                if (this.useRouter && model.id) {
+                if (model.id) {
                     if (!this.rootElementId) {
                         this.rootElementId = model.id;
                     }
@@ -343,26 +322,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
                 this.includeSubcategoriesProds = this.model.selectorValues.includeSubcategoriesProds;
                 this.sorting = this.model.sortingSelector[0]?.values.find(item => item.selected)?.value;
 
-                let reqUrl = '/prods';
-                let urlBase = '/prods';
-
-                for (const [key, value] of Object.entries(parameters)) {
-                    reqUrl += `${key}:${value}/`;
-
-                    if (key !== 'page') {
-                        urlBase += `${key}:${value}/`;
-                    }
-                }
-
-                this.urlBase = urlBase;
-                this.paginationQueryParams = this.useRouter
-                    ? this.buildRouteQueryParams(false)
-                    : null;
-                if (this.manageUrl && environment.production) {
-                    if (window.location.href !== reqUrl) {
-                        window.history.pushState({parameters, elementId: this.elementId}, '', reqUrl);
-                    }
-                }
+                this.paginationQueryParams = this.buildRouteQueryParams(false);
+                this.categoryPathChange.emit(this.selectedCategoryPath());
             },
             () => {
 

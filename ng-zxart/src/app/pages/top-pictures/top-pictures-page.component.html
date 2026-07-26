@@ -2,7 +2,6 @@
   <h1 zxPageHeader appHeading="display">{{ 'top-pictures.title' | translate }}</h1>
   <zx-nav-chips *ngIf="chips$ | async as chips" [chips]="chips" size="md"></zx-nav-chips>
   <zx-picture-browser
-    [manageUrl]="false"
     fixedSorting="votes,desc"
     [showSorting]="false"
   ></zx-picture-browser>

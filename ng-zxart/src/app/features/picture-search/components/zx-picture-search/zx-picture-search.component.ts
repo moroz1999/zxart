@@ -23,7 +23,6 @@ import {
   PictureSearchResultsType,
   PictureSearchSortOrder,
 } from '../../models/picture-search-filters';
-import {buildPictureSearchPath, parsePictureSearchUrl} from '../../models/picture-search-url';
 import {paramsToPictureSearchFilters, pictureSearchFiltersToParams} from '../../models/picture-search-query-params';
 import {PictureSearchLocation} from '../../models/picture-search-response';
 import {ZX_PICTURE_TYPES} from '../../models/zx-picture-types';
@@ -142,15 +141,11 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   readonly galleryId = 'picture-search';
   readonly skeletonItems = [0, 1, 2, 3, 4, 5];
 
-  /** Legacy embeds sync filter state to the slug path; the SPA route uses router query params. */
-  @Input() manageUrl = true;
-
-  protected urlBase = '/';
   private appliedFilters: PictureSearchFilters = createDefaultPictureSearchFilters();
   private resultsPage = 1;
 
-  private readonly router = inject(Router, {optional: true});
-  private readonly route = inject(ActivatedRoute, {optional: true});
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly subscriptions = new Subscription();
   private readonly tagsIncludeQuery = new Subject<string>();
@@ -190,25 +185,14 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
       this.cityLoading = false;
     }, () => this.cityLoading = true);
 
-    if (this.useRouter) {
-      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
-        const parsed = paramsToPictureSearchFilters(params);
-        this.applyState(parsed.filters, parsed.page);
-      }));
-    } else {
-      const parsed = parsePictureSearchUrl(window.location.pathname);
-      this.urlBase = parsed.urlBase;
+    this.subscriptions.add(this.route.queryParams.subscribe(params => {
+      const parsed = paramsToPictureSearchFilters(params);
       this.applyState(parsed.filters, parsed.page);
-    }
+    }));
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /** SPA route mode: filter state lives in / comes from the router query params. */
-  private get useRouter(): boolean {
-    return !this.manageUrl && this.router != null && this.route != null;
   }
 
   /** Applies a parsed filter state (from the URL) to the form and reloads results. */
@@ -228,10 +212,6 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     return countActivePictureSearchFilters(this.filters);
   }
 
-  get paginationUrlBase(): string {
-    return this.useRouter ? '' : buildPictureSearchPath(this.urlBase, this.appliedFilters, 1);
-  }
-
   get rangeStart(): number {
     if (this.totalAmount === 0) {
       return 0;
@@ -246,12 +226,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.appliedFilters = {...this.filters};
     this.currentPage = 1;
-    if (this.useRouter) {
-      this.navigateWithParams();
-    } else {
-      this.updateUrl();
-      this.load();
-    }
+    this.navigateWithParams();
   }
 
   onReset(): void {
@@ -264,12 +239,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    if (this.useRouter) {
-      this.navigateWithParams();
-    } else {
-      this.updateUrl();
-      this.load();
-    }
+    this.navigateWithParams();
   }
 
   toggleFilters(): void {
@@ -377,15 +347,11 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     );
   }
 
-  private updateUrl(): void {
-    const newPath = buildPictureSearchPath(this.urlBase, this.appliedFilters, this.currentPage);
-    window.history.pushState(null, '', newPath);
-  }
 
-  /** SPA route mode: write the applied filters + page to the router query params. */
+  /** Writes the applied filters + page to the router query params. */
   private navigateWithParams(): void {
     const queryParams: Params = pictureSearchFiltersToParams(this.appliedFilters, this.currentPage);
-    this.router!.navigate([], {relativeTo: this.route!, queryParams});
+    this.router.navigate([], {relativeTo: this.route, queryParams});
   }
 
   private restoreLocations(): void {

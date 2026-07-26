@@ -3,6 +3,6 @@
     <h1 zxPageHeader appHeading="display">{{ 'playlists.playlist-title' | translate }}</h1>
     <zx-pictures-list-inline [elementId]="elementId"></zx-pictures-list-inline>
     <zx-music-list-inline [elementId]="elementId"></zx-music-list-inline>
-    <zx-prods-list [elementId]="elementId" property="prods"></zx-prods-list>
+    <zx-prods-list [items$]="prods$"></zx-prods-list>
   </zx-page-layout>
 </ng-container>

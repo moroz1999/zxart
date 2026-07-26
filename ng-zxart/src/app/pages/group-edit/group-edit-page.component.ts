@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
 import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx-form-actions.component';
@@ -108,6 +109,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
@@ -125,6 +127,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
             type: String(data.fields['type'] ?? ''),

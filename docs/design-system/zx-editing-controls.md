@@ -8,7 +8,7 @@ The component requests privileges through `ElementPrivilegesApiService` only aft
 
 Feature components pass action configuration and an action URL builder. Keep entity-specific action names, labels, and confirmation text in the feature/domain layer.
 
-Use the default `navigation="router"` for Angular routes. Set `navigation="document"` for legacy action URLs that must load a PHP form outside the SPA router.
+The URL built by the feature component decides how the click navigates: routed SPA URLs go through the router, anything else is loaded as a document.
 
 While authenticated privilege data is loading, the component renders three skeleton ribs that match button controls.
 

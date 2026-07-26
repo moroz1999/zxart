@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -30,8 +31,10 @@ import {HeadingDirective} from '../../shared/ui/typography/directives/heading.di
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
 import {EnumOption} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/services/form-save-api.service';
+import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -63,7 +66,7 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
   {value: '270', label: '270'},
 ];
 
-/** Routed page for `picture/:id/edit`. */
+/** Routed page for `picture/:id/edit` and for batch upload from an author or party. */
 @Component({
   selector: 'zx-picture-edit-page',
   standalone: true,
@@ -89,6 +92,7 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
     ZxMultiEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxFileUploadComponent,
+    ZxFileSelectorComponent,
     ZxFormSectionComponent,
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
@@ -102,7 +106,7 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
 export class PictureEditPageComponent implements OnInit, OnDestroy {
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
-    authors: this.fb.nonNullable.control<EntityRef[]>([]),
+    authors: this.fb.nonNullable.control<EntityRef[]>([], nonEmptyArray),
     originalAuthors: this.fb.nonNullable.control<EntityRef[]>([]),
     party: this.fb.control<EntityRef | null>(null),
     partyplace: this.fb.nonNullable.control(''),
@@ -120,20 +124,29 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   });
 
   readonly titleMessages = {required: 'picture-form.error-title-required'};
+  readonly authorsMessages = {required: 'picture-form.error-authors-required'};
   readonly borderOptions = BORDER_OPTIONS;
   readonly rotationOptions = ROTATION_OPTIONS;
 
   /** Image fields shown with zx-image-upload (all imageDataChunk on zxPicture). */
-  readonly imageFields = ['image', 'inspired', 'inspired2', 'sequence'] as const;
+  readonly imageFields: readonly string[] = ['image', 'inspired', 'inspired2', 'sequence'];
 
   loading = true;
   submitting = false;
   errorMessage = '';
+  /** Batch mode uploads several pictures at once and has no element of its own. */
+  batchUpload = false;
   enums: Record<string, EnumOption[]> = {};
   imageUrls: Record<string, string> = {};
   fileNames: Record<string, string> = {};
+  readonly emptyFiles = [];
+  readonly emptyImageFields: readonly string[] = [];
 
   private elementId = 0;
+  /** Element the batch upload was started from (author or party). */
+  private parentId = 0;
+  private returnUrl = '/pictures';
+  private batchFiles: File[] = [];
   private passthrough: Record<string, FormFieldValue> = {};
   /** Pending file change per image field (replace and/or remove). */
   private fileChanges: Record<string, ImageUploadChange> = {};
@@ -146,15 +159,30 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.batchUpload = this.route.snapshot.data['batchUpload'] === true;
+    if (this.batchUpload) {
+      // the batch title is optional: each picture falls back to its file name
+      this.form.controls['title'].clearValidators();
+      this.form.controls['title'].updateValueAndValidity();
+      this.parentId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/${this.route.snapshot.data['entityPath']}/${this.parentId}`;
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/picture/${this.elementId}`;
+    }
+    const formData$ = this.batchUpload
+      ? this.formData.loadCreate('pictureBatch', ['party', 'game'], undefined, this.parentId)
+      : this.formData.load(this.elementId, ['party', 'game']);
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['party', 'game']).subscribe({
+      formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
-            title: String(data.fields['title'] ?? ''),
+            title: String(data.fields[this.batchUpload ? 'pictureTitle' : 'title'] ?? ''),
             authors: data.authorRefs,
             originalAuthors: data.originalAuthorRefs,
             party: data.refs['party'] ?? null,
@@ -194,16 +222,25 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/picture/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onImageChanged(field: string, change: ImageUploadChange): void {
     this.fileChanges[field] = change;
   }
 
+  onBatchFiles(files: File[]): void {
+    this.batchFiles = files;
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.batchUpload && this.batchFiles.length === 0) {
+      this.errorMessage = 'picture-form.error-files-required';
       return;
     }
 
@@ -215,29 +252,36 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
       file: change.file,
       remove: change.removed,
     }));
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const commonFields = {
+      author: value.authors.map((ref: EntityRef) => String(ref.id)),
+      originalAuthor: value.originalAuthors.map((ref: EntityRef) => String(ref.id)),
+      party: value.party ? String(value.party.id) : '',
+      partyplace: value.partyplace,
+      compo: value.compo,
+      type: value.type,
+      border: value.border,
+      rotation: value.rotation,
+      palette: value.palette,
+      year: value.year,
+      game: value.game ? String(value.game.id) : '',
+      tagsText: value.tagsText,
+      description: value.description,
+      denyVoting: value.denyVoting ? '1' : '',
+      denyComments: value.denyComments ? '1' : '',
+    };
+    const save$ = this.batchUpload
+      ? this.formSave.create(
+        'pictureBatch',
+        {fileSelectors: {image: this.batchFiles}, fields: {...commonFields, pictureTitle: value.title}},
+        undefined,
+        this.parentId,
+      )
+      : this.formSave.save(this.elementId, {
         files,
-        fields: {
-          ...this.passthrough,
-          title: value.title,
-          author: value.authors.map((ref: EntityRef) => String(ref.id)),
-          originalAuthor: value.originalAuthors.map((ref: EntityRef) => String(ref.id)),
-          party: value.party ? String(value.party.id) : '',
-          partyplace: value.partyplace,
-          compo: value.compo,
-          type: value.type,
-          border: value.border,
-          rotation: value.rotation,
-          palette: value.palette,
-          year: value.year,
-          game: value.game ? String(value.game.id) : '',
-          tagsText: value.tagsText,
-          description: value.description,
-          denyVoting: value.denyVoting ? '1' : '',
-          denyComments: value.denyComments ? '1' : '',
-        },
-      }).subscribe({
+        fields: {...this.passthrough, ...commonFields, title: value.title},
+      });
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/picture/${result.id}`);
         },

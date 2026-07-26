@@ -34,9 +34,6 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
 })
 export class CommentsPageComponent implements OnInit, OnDestroy {
   @Input() title = '';
-  @Input() urlBase = '';
-  /** Legacy embeds sync the page to `window.location`; the SPA route uses a router query param. */
-  @Input() manageUrl = true;
 
   data = signal<CommentsListDto | null>(null);
   initialLoading = signal(true);
@@ -44,31 +41,22 @@ export class CommentsPageComponent implements OnInit, OnDestroy {
   currentPage = signal(1);
 
   private readonly subscriptions = new Subscription();
-  private readonly router = inject(Router, {optional: true});
-  private readonly route = inject(ActivatedRoute, {optional: true});
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   constructor(private commentsService: CommentsService) {}
 
   ngOnInit(): void {
-    if (this.useRouter) {
-      let first = true;
-      this.subscriptions.add(this.route!.queryParams.subscribe(params => {
-        const page = params['page'] ? +params['page'] : 1;
-        this.loadComments(page, first);
-        first = false;
-      }));
-    } else {
-      this.loadComments(this.parsePageFromUrl(), true);
-    }
+    let first = true;
+    this.subscriptions.add(this.route.queryParams.subscribe(params => {
+      const page = params['page'] ? +params['page'] : 1;
+      this.loadComments(page, first);
+      first = false;
+    }));
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  /** SPA route mode: the page number lives in / comes from the router query params. */
-  private get useRouter(): boolean {
-    return !this.manageUrl && this.router != null && this.route != null;
   }
 
   loadComments(page: number, isInitial = false): void {
@@ -93,15 +81,10 @@ export class CommentsPageComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(page: number): void {
-    if (this.useRouter) {
-      this.router!.navigate([], {
-        relativeTo: this.route!,
-        queryParams: {page: page > 1 ? page : null},
-      });
-    } else {
-      this.loadComments(page, false);
-      this.updateUrl(page);
-    }
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {page: page > 1 ? page : null},
+    });
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
@@ -111,21 +94,4 @@ export class CommentsPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private parsePageFromUrl(): number {
-    const path = window.location.pathname;
-    const match = path.match(/\/page:(\d+)/);
-    if (match) {
-      const page = parseInt(match[1], 10);
-      return page > 0 ? page : 1;
-    }
-    return 1;
-  }
-
-  private updateUrl(page: number): void {
-    const currentPath = window.location.pathname;
-    const cleanPath = currentPath.replace(/\/page:\d+\/?/, '');
-    const basePath = cleanPath.endsWith('/') ? cleanPath : cleanPath + '/';
-    const newPath = page > 1 ? basePath + 'page:' + page + '/' : basePath;
-    window.history.pushState(null, '', newPath);
-  }
 }

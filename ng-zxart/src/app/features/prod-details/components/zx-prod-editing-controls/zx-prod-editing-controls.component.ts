@@ -31,7 +31,6 @@ const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxProdEditingControlsComponent {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) addReleaseUrl!: string;
 
   readonly editActions = PROD_EDIT_ACTIONS;
   readonly addActions = PROD_ADD_ACTIONS;
@@ -49,5 +48,6 @@ export class ZxProdEditingControlsComponent {
     }
   };
 
-  readonly buildAddActionUrl = (): string => this.addReleaseUrl;
+  readonly buildAddActionUrl = (_action: string, elementId: number): string =>
+    `/prod/${elementId}/releases/add`;
 }

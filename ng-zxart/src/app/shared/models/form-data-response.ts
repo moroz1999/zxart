@@ -28,6 +28,8 @@ export interface CategoryTreeNode {
  * - `subgroups` — current subgroups (group entities).
  */
 export interface FormDataResponse {
+  /** Localized display title of the entity being edited. */
+  entityTitle: string;
   fields: Record<string, FormFieldValue | null>;
   multilang: Record<string, Record<string, string>>;
   refs: Record<string, EntityRef>;

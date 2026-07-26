@@ -4,7 +4,7 @@ import {Meta, Title} from '@angular/platform-browser';
 import {ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {EMPTY, merge, Observable, of, Subject} from 'rxjs';
-import {distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, ignoreElements, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {PageMetadataDto} from '../models/page-metadata.dto';
 
 const EMPTY_METADATA: PageMetadataDto = {
@@ -17,9 +17,16 @@ const EMPTY_METADATA: PageMetadataDto = {
   structuredData: null,
 };
 
+interface TranslatedTitleRequest {
+  url: string;
+  titleKey: string;
+  params: Record<string, string>;
+}
+
 @Injectable({providedIn: 'root'})
 export class PageMetadataService {
   private readonly entityMetadata = new Subject<PageMetadataDto>();
+  private readonly translatedTitle = new Subject<TranslatedTitleRequest>();
 
   private readonly routeMetadata$: Observable<PageMetadataDto> = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -30,7 +37,19 @@ export class PageMetadataService {
       : this.loadLocalMetadata(route)),
   );
 
-  readonly metadata$: Observable<PageMetadataDto> = merge(this.routeMetadata$, this.entityMetadata).pipe(
+  private readonly translatedTitleEffect$: Observable<never> = this.translatedTitle.pipe(
+    switchMap(request => this.translate.stream(request.titleKey, request.params).pipe(
+      filter(() => this.router.url === request.url),
+      tap(title => this.title.setTitle(`${String(title)} - ZX-Art`)),
+    )),
+    ignoreElements(),
+  );
+
+  readonly metadata$: Observable<PageMetadataDto> = merge(
+    this.routeMetadata$,
+    this.entityMetadata,
+    this.translatedTitleEffect$,
+  ).pipe(
     tap(metadata => this.apply(metadata)),
     shareReplay({bufferSize: 1, refCount: false}),
   );
@@ -45,6 +64,17 @@ export class PageMetadataService {
 
   applyEntityMetadata(metadata: PageMetadataDto): void {
     this.entityMetadata.next(metadata);
+  }
+
+  applyTranslatedTitle(titleKey: string, params: Record<string, string>): void {
+    this.translatedTitle.next({url: this.router.url, titleKey, params});
+  }
+
+  applyFormTitle(route: ActivatedRouteSnapshot, entityTitle: string): void {
+    const titleKey = route.data['formTitleKey'] as string | undefined;
+    if (titleKey) {
+      this.applyTranslatedTitle(titleKey, {title: entityTitle});
+    }
   }
 
   private loadLocalMetadata(route: ActivatedRouteSnapshot): Observable<PageMetadataDto> {

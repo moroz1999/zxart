@@ -57,7 +57,7 @@
     *ngIf="mode === 'full' && pagesAmount > 1"
     [currentPage]="currentPage"
     [pagesAmount]="pagesAmount"
-    [urlBase]="urlBase"
+    [queryParams]="paginationQueryParams"
     [queryParams]="{q: search || null, country: activeCountryId, city: activeCityId}"
     [loading]="loading"
     (pageChange)="onPageChange($event)"

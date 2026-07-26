@@ -1,12 +1,12 @@
 <div class="zx-tabs__bar">
-  <!-- Native triggers are owned here to preserve tab link and local-action semantics. -->
+  <!-- Routed tabs navigate through RouterLink; the active tab follows the route.
+       Tabs without an href stay local and only switch the rendered template. -->
   <ng-container *ngFor="let tab of tabs; let i = index">
     <a
       *ngIf="tab.href; else buttonTab"
       class="zx-tabs__button"
       [class.zx-tabs__button--active]="activeIndex === i"
-      [href]="tab.href"
-      (click)="activateLinkedTab(i, $event)"
+      [routerLink]="tab.href"
     >
       {{ tab.label }}
       <span *ngIf="tab.count != null" class="zx-tabs__count">{{ tab.count }}</span>

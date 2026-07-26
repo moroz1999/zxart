@@ -47,6 +47,21 @@
     "subgroups": "Subgrupos",
     "ok": "OK"
   },
+  "form-page-title": {
+    "edit-author": "Edición del autor «{{title}}»",
+    "edit-author-alias": "Edición del alias de autor «{{title}}»",
+    "edit-group": "Edición del grupo «{{title}}»",
+    "edit-group-alias": "Edición del alias de grupo «{{title}}»",
+    "edit-party": "Edición de la party «{{title}}»",
+    "edit-prod": "Edición del programa «{{title}}»",
+    "edit-release": "Edición de la versión «{{title}}»",
+    "edit-picture": "Edición de la imagen «{{title}}»",
+    "edit-tune": "Edición de la melodía «{{title}}»",
+    "edit-press": "Edición del artículo «{{title}}»",
+    "ai-prod": "Procesamiento con IA del programa «{{title}}»",
+    "ai-press": "Procesamiento con IA del artículo «{{title}}»",
+    "split-prod": "División del programa «{{title}}»"
+  },
   "party-form": {
     "title": "Nombre",
     "abbreviation": "Abreviatura",
@@ -69,6 +84,7 @@
     "search-placeholder": "Empieza a escribir para buscar…",
     "save": "Guardar",
     "error-title-required": "El alias es obligatorio",
+    "error-author-required": "El autor es obligatorio",
     "error-load": "No se pudo cargar el formulario",
     "error-save": "No se pudo guardar"
   },
@@ -85,7 +101,7 @@
     "display-in-graphics": "Mostrar en gráficos",
     "deny-voting": "Desactivar votación",
     "deny-comments": "Desactivar comentarios",
-    "deny-3a": "Desactivar IA",
+    "deny-3a": "Ocultar enlaces a zxaaa.net",
     "search-placeholder": "Empieza a escribir para buscar…",
     "save": "Guardar",
     "error-title-required": "El nombre es obligatorio",
@@ -136,7 +152,8 @@
     "hardware-required": "Hardware requerido",
     "publishers": "Editores",
     "add-publisher": "Añadir editor…",
-    "file": "Archivo"
+    "file": "Archivo",
+    "error-prod-required": "Se requiere la producción"
   },
   "prod-form": {
     "files": "Archivos de software",
@@ -185,7 +202,8 @@
     "inlays": "Inlays",
     "maps": "Mapas",
     "rzx": "RZX",
-    "language": "Idioma"
+    "language": "Idioma",
+    "error-categories-required": "Selecciona al menos una categoría"
   },
   "tune-form": {
     "title": "Título",
@@ -211,7 +229,10 @@
     "frequency": "Frecuencia",
     "int-frequency": "Frecuencia de interrupción",
     "file": "Archivo reproducible",
-    "tracker-file": "Archivo fuente/tracker"
+    "tracker-file": "Archivo fuente/tracker",
+    "batch-files": "Archivos de música",
+    "error-files-required": "Selecciona al menos un archivo de música",
+    "error-authors-required": "Selecciona al menos un autor"
   },
   "picture-form": {
     "title": "Título",
@@ -239,7 +260,10 @@
     "inspired": "Fuente de inspiración",
     "inspired2": "Fuente de inspiración 2",
     "sequence": "Secuencia de animación",
-    "exe-file": "Archivo ejecutable"
+    "exe-file": "Archivo ejecutable",
+    "batch-images": "Imágenes",
+    "error-files-required": "Selecciona al menos una imagen",
+    "error-authors-required": "Selecciona al menos un autor"
   },
   "press-form": {
     "title": "Título",

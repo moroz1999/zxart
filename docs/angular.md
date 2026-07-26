@@ -7,7 +7,10 @@ routes are logged by the backend and return the Angular shell with HTTP 404.
 The Smarty shell body contains only the `<app-root>` host. Its head contains the
 Angular assets and server-rendered crawler metadata. After client-side navigation,
 Angular applies entity-page metadata from each entity's core response and builds
-fixed-route metadata from route translation keys. Canonical links are not emitted.
+fixed-route metadata from route translation keys. Form routes provide a static
+translated title immediately; existing-entity forms replace it after loading with
+a translated action title containing the localized `entityTitle` from the
+form-data response. Canonical links are not emitted.
 
 The shell must **not** contain a `<base>` element: the browser resolves bare
 `#anchor` links against the document base URL, so a `<base href="/">` would send
@@ -16,6 +19,12 @@ every in-page anchor to the home page. The router gets its base href from the
 
 All Angular components MUST be standalone. The application is bootstrapped with
 `bootstrapApplication`, and public navigation is owned by the Angular router.
+
+The SPA is the only public frontend: `bootstrapApplication` mounts `<app-root>`
+and nothing else. No component is registered as a custom element, no component
+reads prefetched data from `window`, and every component that owns URL state
+goes through the router. Components embedded in a page (dashboards, widgets)
+take their query as inputs and neither read nor write the URL.
 
 Every component referenced by a route is stored in `pages/` and composed with
 `zx-page-layout`. Each routed page provides one page-level
@@ -32,7 +41,8 @@ Components with pagination **must** reflect the current page in the URL and rest
 - Pass the remaining filter state to `<zx-pagination [queryParams]="params">` so
   page links have correct shareable `href` attributes.
 - Page 1 omits the `page` query parameter.
-- Embedded CMS components may use `urlBase` for their path-based pagination.
+- `zx-pagination` builds its links from the router only; there is no path-based
+  (`page:N/`) pagination and no `window.history` manipulation anywhere.
 - A `BrowserBaseComponent` subclass reads its own filter query params in
   `onQueryParams` and stores them in `filterParams`; the base keeps them in the URL
   on page/sorting changes and exposes them as `paginationQueryParams` for
@@ -40,6 +50,18 @@ Components with pagination **must** reflect the current page in the URL and rest
   router emits the new params before input bindings are updated.
 
 **Reference implementation:** `CommentsPageComponent` (`features/comments/components/comments-page/`) and `BrowserBaseComponent` (`shared/browser-base.component.ts`).
+
+Entity detail tabs paginate the same way: the tab component reads `page` from
+`ActivatedRoute.queryParamMap` and writes it back with
+`queryParamsHandling: 'merge'`.
+
+#### Tabs
+
+`zx-tabs` renders a tab with an `href` as a `routerLink` anchor. Switching such
+a tab is an ordinary navigation: the route changes, the parent recomputes the
+active index from the route and feeds it back through `initialActiveIndex`. Tab
+hrefs must therefore be real routed URLs (`/author/:id/:tab`). Tabs without an
+`href` stay local and only swap the rendered template.
 
 #### Build and Verification
 After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:

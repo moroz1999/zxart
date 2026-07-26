@@ -24,13 +24,25 @@ export class FormDataApiService {
     return this.http.get<FormDataResponse>('/formdata/', {params});
   }
 
-  loadCreate(entityType: FormCreateEntityType, refs: string[] = [], year?: number): Observable<FormDataResponse> {
+  /**
+   * @param parentId element the form was started from (author, group, party or
+   *                 production); the created works are attached to it.
+   */
+  loadCreate(
+    entityType: FormCreateEntityType,
+    refs: string[] = [],
+    year?: number,
+    parentId?: number,
+  ): Observable<FormDataResponse> {
     const params: Record<string, string> = {entityType};
     if (refs.length > 0) {
       params['refs'] = refs.join(',');
     }
     if (year !== undefined) {
       params['year'] = String(year);
+    }
+    if (parentId !== undefined) {
+      params['parentId'] = String(parentId);
     }
     return this.http.get<FormDataResponse>('/formdata/', {params});
   }

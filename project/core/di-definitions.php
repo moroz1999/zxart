@@ -18,6 +18,7 @@ use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Services\AuthorAliasFormService;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Pouet;
@@ -57,6 +58,8 @@ return [
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     AuthorshipRepository::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    AuthorAliasFormService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     RatingsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

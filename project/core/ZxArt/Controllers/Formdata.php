@@ -16,6 +16,7 @@ use structureManager;
 use Throwable;
 use ZxArt\ElementPrivileges\ElementPrivilegesService;
 use ZxArt\Forms\FormCreateService;
+use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Shared\EntityType;
 
@@ -26,11 +27,8 @@ use ZxArt\Shared\EntityType;
  * by `entityType` and optional `year`. The corresponding element action checks
  * whether the current user may open the form.
  *
- * Response: `{ fields: {name: value}, refs: {name: {id, title}}, images: {name: url} }`
- * - `fields` — raw form values (`getFormData()`), for text/checkbox/date inputs.
- * - `refs`   — relation fields named in `?refs=a,b` resolved to id + title, for
- *              the entity-autocomplete pickers.
- * - `images` — display URLs for image fields (auto-detected).
+ * Response includes the localized entity title, raw form values, resolved
+ * relations, display image URLs, and supporting options used by Angular forms.
  */
 class Formdata extends LoggedControllerApplication
 {
@@ -67,18 +65,27 @@ class Formdata extends LoggedControllerApplication
                     $this->assignError('Unsupported form entity type', 400);
                 } else {
                     $year = $this->getParameter('year') !== false ? (int)$this->getParameter('year') : null;
+                    // the element the form was started from (an author, group, party
+                    // or production); the form and its works are created under it
+                    $parentId = $this->getParameter('parentId') !== false
+                        ? (int)$this->getParameter('parentId')
+                        : null;
                     if ($this->isCreateSubmission()) {
                         $this->formCreateService->submit(
                             $formType,
                             $year,
                             $this->controller,
                             $this->getCreateFields(),
+                            $parentId,
                         );
                     } else {
-                        $draft = $this->formCreateService->createDraft($formType, $year);
+                        $draft = $this->formCreateService->createDraft($formType, $year, $parentId);
                         $this->assignSuccess($this->buildFormData($draft, $this->getRefFields()));
                     }
                 }
+            } catch (FormValidationException $e) {
+                $this->logThrowable('Formdata::execute create', $e);
+                $this->assignError($e->getMessage(), 422);
             } catch (RuntimeException $e) {
                 $this->logThrowable('Formdata::execute create', $e);
                 $this->assignError('Forbidden', 403);
@@ -154,7 +161,7 @@ class Formdata extends LoggedControllerApplication
 
     /**
      * @param string[] $refFields
-     * @return array{fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>, splitGroups: list<array{group: string, items: list<array{key: string, label: string}>}>}
+     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>, splitGroups: list<array{group: string, items: list<array{key: string, label: string}>}>}
      */
     private function buildFormData(structureElement $element, array $refFields): array
     {
@@ -227,6 +234,7 @@ class Formdata extends LoggedControllerApplication
         }
 
         return [
+            'entityTitle' => $this->decode((string)$element->getTitle()),
             'fields' => $fields,
             'multilang' => $multilang,
             'refs' => $refs,

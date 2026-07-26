@@ -15,9 +15,10 @@
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'release-form.prod' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'release-form.prod' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-entity-autocomplete formControlName="prod" types="zxProd" [placeholder]="'release-form.prod' | translate"></zx-entity-autocomplete>
+        <zx-control-errors [control]="form.controls['prod']" [messages]="prodMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 

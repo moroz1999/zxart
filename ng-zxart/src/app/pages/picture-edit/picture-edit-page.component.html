@@ -22,9 +22,10 @@
 
   <zx-form-section [title]="'form.authors' | translate" icon="person">
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'picture-form.authors' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'picture-form.authors' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-multi-entity-autocomplete formControlName="authors" types="author,authorAlias" [placeholder]="'picture-form.add-author' | translate"></zx-multi-entity-autocomplete>
+        <zx-control-errors [control]="form.controls['authors']" [messages]="authorsMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 
@@ -87,14 +88,21 @@
   </zx-form-section>
 
   <zx-form-section [title]="'form.images' | translate" icon="image">
-    <zx-form-field *ngFor="let field of imageFields">
+    <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
+      <zx-form-label>{{ 'picture-form.batch-images' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngFor="let field of (batchUpload ? emptyImageFields : imageFields)">
       <zx-form-label>{{ 'picture-form.' + field | translate }}</zx-form-label>
       <zx-form-control>
         <zx-image-upload [imageUrl]="imageUrls[field] || null" (changed)="onImageChanged(field, $event)"></zx-image-upload>
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field [fullWidth]="true">
+    <zx-form-field *ngIf="!batchUpload" [fullWidth]="true">
       <zx-form-label>{{ 'picture-form.exe-file' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-upload [fileName]="fileNames['exeFile'] || null" (changed)="onImageChanged('exeFile', $event)"></zx-file-upload>

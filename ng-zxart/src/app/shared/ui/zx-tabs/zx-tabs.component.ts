@@ -11,12 +11,13 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ZxTabComponent } from './zx-tab.component';
 
 @Component({
   selector: 'zx-tabs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './zx-tabs.component.html',
   styleUrl: './zx-tabs.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,7 @@ export class ZxTabsComponent implements AfterContentInit {
 
   activeIndex = 0;
   private pendingActiveIndex: number | null = null;
+  private activated = false;
 
   @Input() set initialActiveIndex(val: number) {
     if (this.tabs) {
@@ -43,25 +45,19 @@ export class ZxTabsComponent implements AfterContentInit {
     this.pendingActiveIndex = null;
   }
 
+  /**
+   * Routed tabs reach this through the route (RouterLink navigates, the parent
+   * feeds the new index back in), local tabs straight from the click. The change
+   * event fires only on a real switch, never on the initial activation.
+   */
   activateTab(index: number): void {
+    const changed = this.activated && index !== this.activeIndex;
     this.activeIndex = index;
+    this.activated = true;
     this.cdr.markForCheck();
-  }
-
-  activateLinkedTab(index: number, event: MouseEvent): void {
-    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
-      return;
+    if (changed) {
+      this.tabChange.emit(index);
     }
-
-    event.preventDefault();
-
-    const href = this.tabs.get(index)?.href;
-    if (href) {
-      window.history.pushState(null, '', href);
-    }
-
-    this.activateTab(index);
-    this.tabChange.emit(index);
   }
 
   get activeTemplateRef(): TemplateRef<unknown> | null {

@@ -31,6 +31,9 @@ Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.)
 
 #### Authorship
 - **author** - picture authors (array of IDs)
+  - Authorship drives the picture's placement and author pages, so it is never
+    left empty: the Angular form requires at least one author, and the backend
+    falls back to the "unknown author" element when none is submitted.
 - **originalAuthor** - original authors (array of IDs)
   - Used for ported/remade works
 

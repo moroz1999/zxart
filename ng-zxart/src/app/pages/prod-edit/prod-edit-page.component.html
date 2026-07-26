@@ -39,9 +39,10 @@
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'prod-form.categories' | translate }}</zx-form-label>
+      <zx-form-label [required]="true">{{ 'prod-form.categories' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-category-tree-select formControlName="categories" [nodes]="categoriesTree" [searchPlaceholder]="'form.filter' | translate"></zx-category-tree-select>
+        <zx-control-errors [control]="form.controls['categories']" [messages]="categoriesMessages"></zx-control-errors>
       </zx-form-control>
     </zx-form-field>
 

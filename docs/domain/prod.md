@@ -37,9 +37,22 @@ Authenticated users can open the Angular batch upload form from the catalogue
 page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
 The batch page reuses the Angular prod form with batch-specific file fields; it
 loads and submits its transient form through `/formdata/`.
+
+The same form is reachable from an author, group or party page
+(`/author/:id/prods/add`, `/group/:id/prods/add`, `/party/:id/prods/add`). The
+entity id is passed to `/formdata/` as `parentId`, the upload form is created
+under that element, and the uploaded productions are attached to it. Pictures and
+music have the same routes (`…/pictures/add`, `…/music/add`) backed by the
+`picturesUploadForm` and `musicUploadForm` pipelines, and a production's releases
+are added at `/prod/:id/releases/add`.
 Catalogue responses expose entity identifiers and structure types. Angular
 templates build internal routes from those identifiers and do not receive routed
 URLs from the API.
+The catalogue breadcrumbs show the selected category chain. The categories
+selector marks the whole ancestor chain of the current category as selected, so
+the chain is derived from the loaded selector and its links are built from the
+category identifiers as `/prods?cat={id}`. At the catalogue root the trail falls
+back to the route-driven one built from the menu.
 Prod and release detail responses expose category IDs and raw language, hardware,
 year, and format values. Angular templates build catalogue filter links from
 those values.
@@ -57,6 +70,9 @@ those values.
 - **categories** - production categories (array of IDs)
   - Define software type: games, demos, utilities, etc.
   - Special categories for compilations
+  - The categories are the production's structural parents, so it can never be
+    left without one: the Angular form requires at least one, and the backend
+    falls back to `misc` when the submitted set is empty.
 
 #### Production Hierarchy
 - **compilationItems** - compilation items (link `compilation`, role parent)

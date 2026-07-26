@@ -36,6 +36,8 @@ enum StructureType: string
     case Year = 'year';
     case ZxProdCategoriesCatalogue = 'zxProdCategoriesCatalogue';
     case ZxProdsUploadForm = 'zxProdsUploadForm';
+    case PicturesUploadForm = 'picturesUploadForm';
+    case MusicUploadForm = 'musicUploadForm';
     case PicturesCatalogue = 'picturesCatalogue';
     case MusicCatalogue = 'musicCatalogue';
     case CountriesList = 'countriesList';

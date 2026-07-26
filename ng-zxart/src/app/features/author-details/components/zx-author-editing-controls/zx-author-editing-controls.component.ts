@@ -46,6 +46,14 @@ const ADD_ALIAS_ACTION: ZxEditingControlAction = {
   color: 'secondary',
 };
 
+/** Routed segment of each add action, appended to the entity URL. */
+const ADD_ACTION_SEGMENTS: Record<string, string> = {
+  'authorAlias.showPublicForm': 'aliases/add',
+  'picturesUploadForm.batchUploadForm': 'pictures/add',
+  'musicUploadForm.batchUploadForm': 'music/add',
+  'zxProdsUploadForm.batchUploadForm': 'prods/add',
+};
+
 const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   {
     action: 'picturesUploadForm.batchUploadForm',
@@ -78,7 +86,6 @@ const CONTENT_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxAuthorEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'author' | 'authorAlias';
-  @Input({required: true}) addActionBaseUrl!: string;
 
   editActions: readonly ZxEditingControlAction[] = AUTHOR_EDIT_ACTIONS;
   addActions: readonly ZxEditingControlAction[] = [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
@@ -96,11 +103,6 @@ export class ZxAuthorEditingControlsComponent implements OnChanges {
     return `/${base}/${elementId}/edit`;
   };
 
-  readonly buildAddActionUrl = (action: string): string => {
-    const separatorIndex = action.indexOf('.');
-    const type = action.substring(0, separatorIndex);
-    const legacyAction = action.substring(separatorIndex + 1);
-
-    return `${this.addActionBaseUrl}type:${type}/action:${legacyAction}/`;
-  };
+  readonly buildAddActionUrl = (action: string, elementId: number): string =>
+    `/author/${elementId}/${ADD_ACTION_SEGMENTS[action] ?? ''}`;
 }

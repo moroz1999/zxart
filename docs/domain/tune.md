@@ -60,6 +60,9 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 
 #### Authorship
 - **author** - track authors (array of IDs)
+  - Authorship drives the tune's placement and author pages, so it is never left
+    empty: the Angular form requires at least one author, and the backend falls
+    back to the "unknown author" element when none is submitted.
 
 #### Party (Competitions)
 - **party** - party ID (demoparty, competition)

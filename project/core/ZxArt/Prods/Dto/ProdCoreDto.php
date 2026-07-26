@@ -33,7 +33,6 @@ readonly class ProdCoreDto
         public string $generatedDescription,
         public string $dateCreated,
         public bool $canAddRelease,
-        public string $addReleaseUrl,
         public int $downloadsCount,
         public int $playsCount,
         public array $categoriesPaths,

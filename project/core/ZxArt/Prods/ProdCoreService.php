@@ -68,7 +68,6 @@ readonly class ProdCoreService
                 'publicAdd',
                 StructureType::ZxRelease->value,
             ) === true,
-            addReleaseUrl: (string)$element->getUrl() . 'type:' . StructureType::ZxRelease->value . '/action:publicAdd/',
             downloadsCount: $this->sumReleaseDownloads($element),
             playsCount: $this->sumReleasePlays($element),
             categoriesPaths: $this->buildCategoriesPaths($element),

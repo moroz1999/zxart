@@ -9,6 +9,13 @@ const PARTY_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'party-details.action.showPublicForm'},
 ];
 
+/** Routed segment of each add action, appended to the party URL. */
+const ADD_ACTION_SEGMENTS: Record<string, string> = {
+  'picturesUploadForm.batchUploadForm': 'pictures/add',
+  'musicUploadForm.batchUploadForm': 'music/add',
+  'zxProdsUploadForm.batchUploadForm': 'prods/add',
+};
+
 const PARTY_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   {
     action: 'picturesUploadForm.batchUploadForm',
@@ -40,18 +47,12 @@ const PARTY_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
 })
 export class ZxPartyEditingControlsComponent {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) addActionBaseUrl!: string;
 
   readonly editActions = PARTY_EDIT_ACTIONS;
   readonly addActions = PARTY_ADD_ACTIONS;
 
   readonly buildActionUrl = (_action: string, elementId: number): string => `/party/${elementId}/edit`;
 
-  readonly buildAddActionUrl = (action: string): string => {
-    const separatorIndex = action.indexOf('.');
-    const type = action.substring(0, separatorIndex);
-    const legacyAction = action.substring(separatorIndex + 1);
-
-    return `${this.addActionBaseUrl}type:${type}/action:${legacyAction}/`;
-  };
+  readonly buildAddActionUrl = (action: string, elementId: number): string =>
+    `/party/${elementId}/${ADD_ACTION_SEGMENTS[action] ?? ''}`;
 }

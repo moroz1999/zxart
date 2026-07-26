@@ -1,1 +1,0 @@
-{include file=$theme->template("search.set.zxProd.tpl")}

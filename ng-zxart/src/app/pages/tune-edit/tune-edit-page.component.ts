@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
+import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -29,8 +30,10 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
 import {EnumOption} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/services/form-save-api.service';
+import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -82,6 +85,7 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
     ZxEntityAutocompleteComponent,
     ZxMultiEntityAutocompleteComponent,
     ZxFileUploadComponent,
+    ZxFileSelectorComponent,
     ZxFormSectionComponent,
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
@@ -95,7 +99,7 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
 export class TuneEditPageComponent implements OnInit, OnDestroy {
   readonly form: FormGroup = this.fb.group({
     title: this.fb.nonNullable.control('', Validators.required),
-    authors: this.fb.nonNullable.control<EntityRef[]>([]),
+    authors: this.fb.nonNullable.control<EntityRef[]>([], nonEmptyArray),
     formatGroup: this.fb.nonNullable.control<string>('ay'),
     party: this.fb.control<EntityRef | null>(null),
     partyplace: this.fb.nonNullable.control(''),
@@ -114,15 +118,23 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
   });
 
   readonly titleMessages = {required: 'tune-form.error-title-required'};
+  readonly authorsMessages = {required: 'tune-form.error-authors-required'};
   readonly formatGroupOptions: ZxSelectOption[] = FORMAT_GROUPS.map(g => ({value: g.value, label: g.label}));
 
   loading = true;
   submitting = false;
   errorMessage = '';
+  /** Batch mode uploads several tunes at once and has no element of its own. */
+  batchUpload = false;
   enums: Record<string, EnumOption[]> = {};
   fileNames: Record<string, string> = {};
+  readonly emptyFiles = [];
 
   private elementId = 0;
+  /** Element the batch upload was started from (author or party). */
+  private parentId = 0;
+  private returnUrl = '/music';
+  private batchFiles: File[] = [];
   private passthrough: Record<string, FormFieldValue> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
   private readonly subscriptions = new Subscription();
@@ -134,15 +146,30 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.batchUpload = this.route.snapshot.data['batchUpload'] === true;
+    if (this.batchUpload) {
+      // the batch title is optional: each tune falls back to its file name
+      this.form.controls['title'].clearValidators();
+      this.form.controls['title'].updateValueAndValidity();
+      this.parentId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/${this.route.snapshot.data['entityPath']}/${this.parentId}`;
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/tune/${this.elementId}`;
+    }
+    const formData$ = this.batchUpload
+      ? this.formData.loadCreate('musicBatch', ['party', 'game'], undefined, this.parentId)
+      : this.formData.load(this.elementId, ['party', 'game']);
     this.subscriptions.add(
-      this.formData.load(this.elementId, ['party', 'game']).subscribe({
+      formData$.subscribe({
         next: data => {
+          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
           this.form.patchValue({
-            title: String(data.fields['title'] ?? ''),
+            title: String(data.fields[this.batchUpload ? 'musicTitle' : 'title'] ?? ''),
             authors: data.authorRefs,
             formatGroup: String(data.fields['formatGroup'] ?? '') || 'ay',
             party: data.refs['party'] ?? null,
@@ -182,16 +209,25 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/tune/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onFileChanged(field: string, change: FileUploadChange): void {
     this.fileChanges[field] = change;
   }
 
+  onBatchFiles(files: File[]): void {
+    this.batchFiles = files;
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.batchUpload && this.batchFiles.length === 0) {
+      this.errorMessage = 'tune-form.error-files-required';
       return;
     }
 
@@ -203,30 +239,41 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
       file: change.file,
       remove: change.removed,
     }));
-    this.subscriptions.add(
-      this.formSave.save(this.elementId, {
+    const commonFields = {
+      author: value.authors.map((ref: EntityRef) => String(ref.id)),
+      formatGroup: value.formatGroup,
+      party: value.party ? String(value.party.id) : '',
+      partyplace: value.partyplace,
+      compo: value.compo,
+      chipType: value.chipType,
+      channelsType: value.channelsType,
+      frequency: value.frequency,
+      intFrequency: value.intFrequency,
+      year: value.year,
+      game: value.game ? String(value.game.id) : '',
+      tagsText: value.tagsText,
+      description: value.description,
+      denyVoting: value.denyVoting ? '1' : '',
+      denyComments: value.denyComments ? '1' : '',
+    };
+    const save$ = this.batchUpload
+      ? this.formSave.create(
+        'musicBatch',
+        {fileSelectors: {music: this.batchFiles}, fields: {...commonFields, musicTitle: value.title}},
+        undefined,
+        this.parentId,
+      )
+      : this.formSave.save(this.elementId, {
         files,
         fields: {
           ...this.passthrough,
+          ...commonFields,
           title: value.title,
-          author: value.authors.map((ref: EntityRef) => String(ref.id)),
-          formatGroup: value.formatGroup,
-          party: value.party ? String(value.party.id) : '',
-          partyplace: value.partyplace,
-          compo: value.compo,
-          chipType: value.chipType,
-          channelsType: value.channelsType,
-          frequency: value.frequency,
-          intFrequency: value.intFrequency,
-          year: value.year,
-          game: value.game ? String(value.game.id) : '',
-          tagsText: value.tagsText,
-          description: value.description,
           denyPlaying: value.denyPlaying ? '1' : '',
-          denyVoting: value.denyVoting ? '1' : '',
-          denyComments: value.denyComments ? '1' : '',
         },
-      }).subscribe({
+      });
+    this.subscriptions.add(
+      save$.subscribe({
         next: result => {
           this.router.navigateByUrl(`/tune/${result.id}`);
         },

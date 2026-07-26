@@ -47,8 +47,6 @@ class authorsCatalogueElement extends structureElement
 
                     foreach ($this->replacementElements as $letter) {
                         $letter->columns = $this->columns;
-                        $letter->setViewName('authors');
-                        $letter->template = 'letter.authors.tpl';
                     }
                 }
             }
