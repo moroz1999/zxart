@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use ZxArt\Comments\CommentsTransformer;
+use ZxArt\Urls\EntityUrlResolver;
 
 #[AllowMockObjectsWithoutExpectations]
 class CommentsTransformerTest extends TestCase
@@ -32,6 +33,7 @@ class CommentsTransformerTest extends TestCase
         $currentUserService->method('getCurrentUser')->willReturn($currentUser);
 
         $this->transformer = new CommentsTransformer(
+            $this->createMock(EntityUrlResolver::class),
             $this->privilegesManager,
             $currentUserService,
         );

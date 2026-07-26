@@ -47,6 +47,21 @@
     "subgroups": "Подгруппы",
     "ok": "OK"
   },
+  "form-page-title": {
+    "edit-author": "Редактирование автора «{{title}}»",
+    "edit-author-alias": "Редактирование псевдонима «{{title}}»",
+    "edit-group": "Редактирование группы «{{title}}»",
+    "edit-group-alias": "Редактирование псевдонима группы «{{title}}»",
+    "edit-party": "Редактирование пати «{{title}}»",
+    "edit-prod": "Редактирование программы «{{title}}»",
+    "edit-release": "Редактирование релиза «{{title}}»",
+    "edit-picture": "Редактирование картинки «{{title}}»",
+    "edit-tune": "Редактирование мелодии «{{title}}»",
+    "edit-press": "Редактирование статьи «{{title}}»",
+    "ai-prod": "Обработка программы «{{title}}» с помощью ИИ",
+    "ai-press": "Обработка статьи «{{title}}» с помощью ИИ",
+    "split-prod": "Разделение программы «{{title}}»"
+  },
   "party-form": {
     "title": "Название",
     "abbreviation": "Аббревиатура",
@@ -69,6 +84,7 @@
     "search-placeholder": "Начните вводить для поиска…",
     "save": "Сохранить",
     "error-title-required": "Укажите псевдоним",
+    "error-author-required": "Укажите автора",
     "error-load": "Не удалось загрузить форму",
     "error-save": "Не удалось сохранить"
   },
@@ -85,7 +101,7 @@
     "display-in-graphics": "Показывать в графике",
     "deny-voting": "Отключить голосование",
     "deny-comments": "Отключить комментарии",
-    "deny-3a": "Отключить ИИ",
+    "deny-3a": "Не показывать ссылки на zxaaa.net",
     "search-placeholder": "Начните вводить для поиска…",
     "save": "Сохранить",
     "error-title-required": "Укажите имя",
@@ -136,7 +152,8 @@
     "hardware-required": "Требуемое железо",
     "publishers": "Издатели",
     "add-publisher": "Добавить издателя…",
-    "file": "Файл"
+    "file": "Файл",
+    "error-prod-required": "Укажите программу"
   },
   "prod-form": {
     "files": "Файлы программ",
@@ -185,7 +202,8 @@
     "inlays": "Инлеи",
     "maps": "Карты",
     "rzx": "RZX",
-    "language": "Язык"
+    "language": "Язык",
+    "error-categories-required": "Выберите хотя бы одну категорию"
   },
   "tune-form": {
     "title": "Название",
@@ -211,7 +229,10 @@
     "frequency": "Частота",
     "int-frequency": "Частота прерываний",
     "file": "Воспроизводимый файл",
-    "tracker-file": "Исходник/трекер"
+    "tracker-file": "Исходник/трекер",
+    "batch-files": "Файлы музыки",
+    "error-files-required": "Выберите хотя бы один музыкальный файл",
+    "error-authors-required": "Выберите хотя бы одного автора"
   },
   "picture-form": {
     "title": "Название",
@@ -239,7 +260,10 @@
     "inspired": "Источник вдохновения",
     "inspired2": "Источник вдохновения 2",
     "sequence": "Анимация",
-    "exe-file": "Исполняемый файл"
+    "exe-file": "Исполняемый файл",
+    "batch-images": "Картинки",
+    "error-files-required": "Выберите хотя бы одну картинку",
+    "error-authors-required": "Выберите хотя бы одного автора"
   },
   "press-form": {
     "title": "Заголовок",

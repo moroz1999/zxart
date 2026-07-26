@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\PictureSearch;
 
-use ApiQueriesManager;
-use ApiQuery;
 use authorElement;
 use controller;
+use Illuminate\Database\Query\Builder;
 use LanguagesManager;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -15,49 +14,45 @@ use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
+use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchService;
 use ZxArt\PictureSearch\PictureSearchSort;
+use ZxArt\PictureSearch\Repositories\PictureSearchRepository;
 use ZxArt\Pictures\PicturesTransformer;
+use ZxArt\Pictures\Services\PicturesManager;
 use ZxArt\Shared\EntityType;
 
 #[AllowMockObjectsWithoutExpectations]
 class PictureSearchServiceTest extends TestCase
 {
-    private ApiQuery&MockObject $apiQuery;
     private AuthorListTransformer&MockObject $authorListTransformer;
+    private AuthorsService&MockObject $authorsService;
     private PictureSearchService $service;
 
-    /** @var array<string, mixed>|null */
-    private ?array $capturedParameters = null;
-    private ?string $capturedExportType = null;
-    /** @var array<string, string>|null */
-    private ?array $capturedOrder = null;
-
-    /** @var array<string, mixed> */
-    private array $queryResult = ['zxPicture' => [], 'totalAmount' => 0];
+    /** Author elements the authors branch resolves. */
+    private array $authorElements = [];
 
     protected function setUp(): void
     {
-        $this->apiQuery = $this->createMock(ApiQuery::class);
-        $this->apiQuery->method('setFiltrationParameters')->willReturnCallback(function (array $parameters) {
-            $this->capturedParameters = $parameters;
-            return $this->apiQuery;
-        });
-        $this->apiQuery->method('setExportType')->willReturnCallback(function (string $exportType) {
-            $this->capturedExportType = $exportType;
-            return $this->apiQuery;
-        });
-        $this->apiQuery->method('setOrder')->willReturnCallback(function (array $order) {
-            $this->capturedOrder = $order;
-            return $this->apiQuery;
-        });
-        $this->apiQuery->method('getQueryResult')->willReturnCallback(fn() => $this->queryResult);
+        // The filtration parameters are no longer handed to a query object: they
+        // only reach the outside world through the api/zip URLs, so the tests read
+        // them back from there.
+        $countQuery = $this->createMock(Builder::class);
+        $countQuery->method('count')->willReturn(1);
 
-        $apiQueriesManager = $this->createMock(ApiQueriesManager::class);
-        $apiQueriesManager->method('getQuery')->willReturn($this->apiQuery);
+        $repository = $this->createMock(PictureSearchRepository::class);
+        $repository->method('buildPicturesQuery')->willReturn($countQuery);
+        $repository->method('buildAuthorsQuery')->willReturn($countQuery);
+
+        $picturesManager = $this->createMock(PicturesManager::class);
+        $picturesManager->method('getElementsByQuery')->willReturn([]);
+
+        $this->authorsService = $this->createMock(AuthorsService::class);
+        $this->authorsService->method('getElementsByQuery')
+            ->willReturnCallback(fn(): array => $this->authorElements);
 
         $languagesManager = $this->createMock(LanguagesManager::class);
         $languagesManager->method('getCurrentLanguageCode')->willReturn('eng');
@@ -68,7 +63,9 @@ class PictureSearchServiceTest extends TestCase
         $this->authorListTransformer = $this->createMock(AuthorListTransformer::class);
 
         $this->service = new PictureSearchService(
-            $apiQueriesManager,
+            $repository,
+            $picturesManager,
+            $this->authorsService,
             $this->createMock(PicturesTransformer::class),
             $this->authorListTransformer,
             $languagesManager,
@@ -77,9 +74,16 @@ class PictureSearchServiceTest extends TestCase
         );
     }
 
+    /** The `filter:` segment of the api URL, as `name=value` pairs. */
+    private function filterSegment(string $apiUrl): string
+    {
+        $position = strpos($apiUrl, 'filter:');
+        return $position === false ? '' : substr($apiUrl, $position + strlen('filter:'));
+    }
+
     public function testSearchMapsFiltersToLegacyFiltrationParameters(): void
     {
-        $this->service->search($this->makeQuery(
+        $result = $this->service->search($this->makeQuery(
             titleWord: 'flame',
             startYear: 1996,
             endYear: 1995,
@@ -95,42 +99,31 @@ class PictureSearchServiceTest extends TestCase
             authorCityIds: [20, 21],
         ));
 
-        $this->assertSame([
-            'zxPictureTitleSearch' => 'flame',
-            'zxPictureYear' => [1995, 1996],
-            'zxPictureMinPartyPlace' => 3,
-            'zxPictureMinRating' => 4.0,
-            'zxPictureType' => 'standard',
-            'zxPictureCompo' => ['realtime', 'realtimep'],
-            'zxPictureInspiration' => true,
-            'zxPictureStages' => true,
-            'zxPictureTagsInclude' => ['girl', 'portrait'],
-            'zxPictureTagsExclude' => ['3d'],
-            'authorCountry' => [10],
-            'authorCity' => [20, 21],
-        ], $this->capturedParameters);
-        $this->assertSame('zxPicture', $this->capturedExportType);
-        $this->assertSame(['date' => 'desc'], $this->capturedOrder);
+        $this->assertSame(
+            'zxPictureTitleSearch=flame;zxPictureYear=1995,1996;zxPictureMinPartyPlace=3;zxPictureMinRating=4;'
+            . 'zxPictureType=standard;zxPictureCompo=realtime,realtimep;zxPictureInspiration=1;zxPictureStages=1;'
+            . 'zxPictureTagsInclude=girl,portrait;zxPictureTagsExclude=3d;authorCountry=10;authorCity=20,21;',
+            $this->filterSegment($result->apiUrl),
+        );
+        $this->assertStringContainsString('types:zxPicture/export:zxPicture/', $result->apiUrl);
+        $this->assertStringContainsString('order:date,desc/', $result->apiUrl);
     }
 
     public function testSearchWithoutPictureFiltersFallsBackToAllPictures(): void
     {
-        $this->service->search($this->makeQuery(authorCountryIds: [10]));
+        $result = $this->service->search($this->makeQuery(authorCountryIds: [10]));
 
-        $this->assertSame([
-            'zxPictureAll' => true,
-            'authorCountry' => [10],
-        ], $this->capturedParameters);
+        $this->assertSame('zxPictureAll=1;authorCountry=10;', $this->filterSegment($result->apiUrl));
     }
 
     public function testStartYearOnlyExpandsRangeToCurrentYear(): void
     {
         $currentYear = (int)date('Y');
-        $this->service->search($this->makeQuery(startYear: $currentYear - 2));
+        $result = $this->service->search($this->makeQuery(startYear: $currentYear - 2));
 
         $this->assertSame(
-            range($currentYear - 2, $currentYear),
-            $this->capturedParameters['zxPictureYear'] ?? null,
+            'zxPictureYear=' . implode(',', range($currentYear - 2, $currentYear)) . ';',
+            $this->filterSegment($result->apiUrl),
         );
     }
 
@@ -142,6 +135,7 @@ class PictureSearchServiceTest extends TestCase
             entityType: EntityType::Author,
             title: 'Acme',
             realName: '',
+            realNameId: null,
             realNameUrl: null,
             groups: [],
             countryId: null,
@@ -155,12 +149,12 @@ class PictureSearchServiceTest extends TestCase
         );
         $authorElement = $this->createMock(authorElement::class);
         $this->authorListTransformer->method('authorToDto')->with($authorElement)->willReturn($authorDto);
-        $this->queryResult = ['author' => [$authorElement], 'totalAmount' => 1];
+        $this->authorElements = [$authorElement];
 
         $result = $this->service->search($this->makeQuery(resultsType: PictureSearchResultsType::Authors));
 
-        $this->assertSame('author', $this->capturedExportType);
-        $this->assertSame('authorPicture', $this->capturedParameters['authorOfItemType'] ?? null);
+        $this->assertStringContainsString('types:author/export:author/', $result->apiUrl);
+        $this->assertStringContainsString('authorOfItemType=authorPicture;', $result->apiUrl);
         $this->assertSame(1, $result->totalAmount);
         $this->assertSame([], $result->pictures);
         $this->assertSame([$authorDto], $result->authors);
@@ -201,6 +195,7 @@ class PictureSearchServiceTest extends TestCase
         bool $realtimeOnly = false,
         bool $inspirationOnly = false,
         bool $stagesOnly = false,
+        bool $fromGameOnly = false,
         array $tagsInclude = [],
         array $tagsExclude = [],
         array $authorCountryIds = [],
@@ -217,6 +212,7 @@ class PictureSearchServiceTest extends TestCase
             realtimeOnly: $realtimeOnly,
             inspirationOnly: $inspirationOnly,
             stagesOnly: $stagesOnly,
+            fromGameOnly: $fromGameOnly,
             tagsInclude: $tagsInclude,
             tagsExclude: $tagsExclude,
             authorCountryIds: $authorCountryIds,
