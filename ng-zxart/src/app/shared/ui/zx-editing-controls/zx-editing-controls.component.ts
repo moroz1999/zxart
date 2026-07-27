@@ -230,7 +230,11 @@ export class ZxEditingControlsComponent implements OnChanges {
     try {
       const result = await firstValueFrom(this.formSave.save(this.elementId, {fields: {}}, run.action));
       if (run.targetPath) {
-        void this.router.navigateByUrl(`/${run.targetPath}/${result.id}`);
+        if (result.id > 0) {
+          void this.router.navigateByUrl(`/${run.targetPath}/${result.id}`);
+          return;
+        }
+        await this.notify(action, run.failureKey);
         return;
       }
       const succeeded = (result as {success?: boolean}).success !== false;

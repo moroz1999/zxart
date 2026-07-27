@@ -1478,6 +1478,8 @@
     "add-actions": "Add to release",
     "edit": "Edit release",
     "clone": "Clone release",
+    "clone-confirm-message": "Create a copy of this release?",
+    "clone-failed": "Release cloning failed.",
     "delete": "Delete release",
     "delete-confirm-title": "Delete release",
     "delete-confirm-message": "Are you sure you want to delete this release?",

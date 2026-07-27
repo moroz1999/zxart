@@ -38,7 +38,7 @@ class cloneZxRelease extends structureElementAction
         $prodsService = $this->getService(ProdsService::class);
         $prodsService->copyAuthorship($structureElement, $clonedElement);
 
-        $controller->redirect($clonedElement->getUrl());
+        $this->respondFormSaved($controller, $clonedElement);
     }
 }
 

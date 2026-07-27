@@ -1475,6 +1475,8 @@
     "add-actions": "Añadir al lanzamiento",
     "edit": "Editar lanzamiento",
     "clone": "Clonar lanzamiento",
+    "clone-confirm-message": "¿Crear una copia de este lanzamiento?",
+    "clone-failed": "No se pudo clonar el lanzamiento.",
     "delete": "Eliminar lanzamiento",
     "delete-confirm-title": "Eliminar lanzamiento",
     "delete-confirm-message": "¿Estás seguro de que quieres eliminar este lanzamiento?",

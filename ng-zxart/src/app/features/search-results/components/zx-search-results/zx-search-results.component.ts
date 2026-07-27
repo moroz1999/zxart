@@ -7,7 +7,7 @@ import {
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {TranslateModule} from '@ngx-translate/core';
 import {BehaviorSubject, merge, Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {SearchResultsService} from '../../services/search-results.service';
@@ -55,10 +55,18 @@ const MUSIC_SET_TYPE = 'zxMusic';
 const PRESS_ARTICLE_SET_TYPE = 'pressArticle';
 const PARTY_SET_TYPE = 'party';
 const PROD_SET_TYPES = new Set(['zxProd', 'zxRelease']);
+const SEARCH_RESULT_TYPES = [
+  AUTHOR_SET_TYPE,
+  PARTY_SET_TYPE,
+  GROUP_SET_TYPE,
+  'zxProd',
+  PICTURE_SET_TYPE,
+  MUSIC_SET_TYPE,
+  PRESS_ARTICLE_SET_TYPE,
+];
 
 interface TypeFilterOption {
   readonly value: string;
-  readonly label: string;
   selected: boolean;
 }
 
@@ -126,7 +134,7 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   pagesAmount = 0;
   paginationQueryParams: Params = {};
 
-  typeFilters: TypeFilterOption[] = [];
+  typeFilters: TypeFilterOption[] = SEARCH_RESULT_TYPES.map(value => ({value, selected: true}));
 
   readonly playingTuneId$ = this.playerService.state$.pipe(
     map(state => state.isPlaying && state.playlistId === this.musicPlaylistId()
@@ -142,7 +150,6 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly searchService: SearchResultsService,
-    private readonly translateService: TranslateService,
     private readonly playerService: PlayerService,
     private readonly pictureGalleryService: PictureGalleryService,
     private readonly cdr: ChangeDetectorRef,
@@ -358,25 +365,8 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
     }
     this.typeFilters = merged.map(value => {
       const selected = hadPriorSelections ? (previousSelections.get(value) ?? true) : true;
-      return {value, label: value, selected};
+      return {value, selected};
     });
-    this.translateLabels();
-  }
-
-  private translateLabels(): void {
-    if (this.typeFilters.length === 0) {
-      return;
-    }
-    const keys = this.typeFilters.map(opt => this.setLabelKey(opt.value));
-    this.subscriptions.add(
-      this.translateService.stream(keys).subscribe(translations => {
-        this.typeFilters = this.typeFilters.map(opt => ({
-          ...opt,
-          label: translations[this.setLabelKey(opt.value)] ?? opt.value,
-        }));
-        this.cdr.markForCheck();
-      }),
-    );
   }
 
   private selectedTypes(): string[] {
@@ -393,7 +383,12 @@ export class ZxSearchResultsComponent implements OnInit, OnDestroy {
   private applyUrlState(state: {phrase: string; page: number}, types: string[]): void {
     this.phrase = state.phrase;
     this.currentPage = state.page;
-    this.typeFilters = types.map(value => ({value, label: value, selected: true}));
+    const selectedTypes = new Set(types);
+    const allTypesSelected = selectedTypes.size === 0;
+    this.typeFilters = this.typeFilters.map(option => ({
+      ...option,
+      selected: allTypesSelected || selectedTypes.has(option.value),
+    }));
   }
 
 

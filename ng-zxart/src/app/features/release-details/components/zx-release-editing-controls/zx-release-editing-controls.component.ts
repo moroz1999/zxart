@@ -7,6 +7,14 @@ import {
 
 const RELEASE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   {action: 'showPublicForm', privilege: 'showPublicForm', labelKey: 'release-details.edit'},
+  {
+    action: 'clone',
+    privilege: 'clone',
+    labelKey: 'release-details.clone',
+    color: 'secondary',
+    confirm: {messageKey: 'release-details.clone-confirm-message'},
+    run: {action: 'clone', targetPath: 'release', failureKey: 'release-details.clone-failed'},
+  },
 ];
 
 @Component({

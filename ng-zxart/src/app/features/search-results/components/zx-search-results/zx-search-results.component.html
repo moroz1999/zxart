@@ -37,7 +37,7 @@
         <div class="zx-search-results__filter-options">
           <zx-checkbox-field
             *ngFor="let opt of typeFilters; trackBy: trackByOptionValue"
-            [label]="opt.label"
+            [label]="setLabelKey(opt.value) | translate"
             [ngModel]="opt.selected"
             (ngModelChange)="onTypeToggle(opt, $event)"
           ></zx-checkbox-field>
