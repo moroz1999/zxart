@@ -4,11 +4,12 @@ import {ProdLanguageInfoDto} from '../../models/prod-core.dto';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {RouterLink} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'zx-prod-language-links',
   standalone: true,
-  imports: [CommonModule, RouterLink, ZxInlineComponent, TextDirective],
+  imports: [CommonModule, RouterLink, TranslatePipe, ZxInlineComponent, TextDirective],
   templateUrl: './zx-prod-language-links.component.html',
   styleUrls: ['./zx-prod-language-links.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

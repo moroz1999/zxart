@@ -7,8 +7,9 @@ import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular
 import {BehaviorSubject, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {PlaylistService} from '../../services/playlist.service';
+import {PlaylistsApiService} from '../../services/playlists-api.service';
 import {CurrentUserService} from '../../services/current-user.service';
-import {PlaylistDto} from '../../models/playlist.model';
+import {UserPlaylist} from '../../models/user-playlist';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {TextDirective} from '../typography/directives/text.directive';
@@ -45,6 +46,9 @@ export class ZxPlaylistButtonComponent implements OnInit {
 
   readonly isAuthenticated$: Observable<boolean> = this.currentUserService.isAuthenticated$;
 
+  /** The user's playlists, loaded the first time the popover is opened. */
+  readonly playlists$: Observable<UserPlaylist[] | null> = this.playlistsApi.playlists$;
+
   readonly positions: ConnectedPosition[] = [
     {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 4},
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -4},
@@ -54,6 +58,7 @@ export class ZxPlaylistButtonComponent implements OnInit {
 
   constructor(
     private playlistService: PlaylistService,
+    private playlistsApi: PlaylistsApiService,
     private currentUserService: CurrentUserService,
     private iconReg: SvgIconRegistryService,
   ) {}
@@ -61,10 +66,6 @@ export class ZxPlaylistButtonComponent implements OnInit {
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}favorite-border.svg`, 'favorite-border')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}check.svg`, 'check')?.subscribe();
-  }
-
-  get playlists(): PlaylistDto[] {
-    return this.playlistService.getPlaylists();
   }
 
   togglePopover(event: Event): void {
@@ -104,7 +105,7 @@ export class ZxPlaylistButtonComponent implements OnInit {
     if (!title) {
       return;
     }
-    this.playlistService.createPlaylist(title).subscribe(() => {
+    this.playlistsApi.create(title).subscribe(() => {
       this.newPlaylistTitle = '';
     });
   }
@@ -122,7 +123,7 @@ export class ZxPlaylistButtonComponent implements OnInit {
     });
   }
 
-  trackById(_: number, item: PlaylistDto): number {
+  trackById(_: number, item: UserPlaylist): number {
     return item.id;
   }
 }

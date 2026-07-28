@@ -1,0 +1,16 @@
+<zx-grid [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="lg" align="start">
+  <zx-panel *ngFor="let rail of rails">
+    <zx-stack spacing="sm">
+      <zx-skeleton-bone class="prs__title" [animated]="animated"></zx-skeleton-bone>
+      <div *ngFor="let item of items" class="prs__row">
+        <zx-inline align="center" spacing="sm" [wrap]="false">
+          <zx-skeleton-bone class="prs__thumb" [animated]="animated"></zx-skeleton-bone>
+          <zx-stack class="prs__body" spacing="xs">
+            <zx-skeleton-bone class="prs__line" [animated]="animated"></zx-skeleton-bone>
+            <zx-skeleton-bone class="prs__caption" [animated]="animated"></zx-skeleton-bone>
+          </zx-stack>
+        </zx-inline>
+      </div>
+    </zx-stack>
+  </zx-panel>
+</zx-grid>

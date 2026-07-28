@@ -955,15 +955,12 @@ class zxProdElement extends ZxArtItem implements
                     ->orWhere('elementId', $this->getId())
                     ->distinct()
                     ->pluck('value');
-                /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
-
+                // the language name is an SPA translation (`language.<code>`), so
+                // the code travels as the title and the SPA labels it
                 foreach ($languageCodes as $languageCode) {
                     $this->languagesInfo[] = [
                         'id' => $languageCode,
-                        'title' => $translationsManager->getTranslationByName('language.item_' . $languageCode),
+                        'title' => $languageCode,
                     ];
                 }
                 $this->setCacheKey('li' . $this->currentLanguage, $this->languagesInfo, 24 * 60 * 60);

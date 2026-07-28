@@ -13,6 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use structureManager;
+use ZxArt\Comments\CommentContentPurifier;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
@@ -47,6 +48,7 @@ class CommentsServiceTest extends TestCase
             cache: $this->createMock(Cache::class),
             transformer: $this->createMock(CommentsTransformer::class),
             commentsRepository: $this->commentsRepository,
+            contentPurifier: new CommentContentPurifier(),
         );
     }
 
@@ -74,6 +76,15 @@ class CommentsServiceTest extends TestCase
         $this->expectException(CommentOperationException::class);
         $this->expectExceptionMessage('empty');
         $this->service->addComment(1, '   ');
+    }
+
+    public function testAddCommentRejectsContentThatIsOnlyMarkup(): void
+    {
+        $this->user->method('isAuthorized')->willReturn(true);
+
+        $this->expectException(CommentOperationException::class);
+        $this->expectExceptionMessage('empty');
+        $this->service->addComment(1, '<script>alert(1)</script>');
     }
 
     public function testAuthorCommentsUseRequestedPageSize(): void

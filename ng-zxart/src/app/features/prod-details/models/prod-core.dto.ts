@@ -9,9 +9,9 @@ export interface ProdCategoryPathDto {
   categories: ProdCategoryRefDto[];
 }
 
+/** The name is an SPA translation: `'language.' + code`. */
 export interface ProdLanguageInfoDto {
   code: string;
-  title: string;
   emoji: string;
 }
 

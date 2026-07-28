@@ -18,6 +18,7 @@ import {ZxProdCategory} from './models/zx-prod-category';
 import {Tag} from '../../shared/models/tag';
 import {ZxProdCategoryDto} from './models/zx-prod-category-dto';
 import {CategorySelectorDto} from './models/categories-selector-dto';
+import {SelectorDto} from './models/selector-dto';
 import {environment} from '../../../environments/environment';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ZxPaginationComponent} from '../../shared/ui/zx-pagination/zx-pagination.component';
@@ -77,6 +78,8 @@ export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 })
 export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     public model!: ZxProdCategory;
+    /** Language filter, labelled from the SPA's own translations and sorted by them. */
+    public languagesSelector: SelectorDto = [];
     public pagesAmount = 0;
     public currentPage = 1;
     public elementsOnPage = 100;
@@ -291,12 +294,26 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         this.navigateWithParams();
     }
 
+    /**
+     * The backend sends bare language codes; the names live in the SPA's i18n,
+     * so both the labels and their alphabetical order are decided here.
+     */
+    private buildLanguagesSelector(selector: SelectorDto): SelectorDto {
+        return selector.map(group => ({
+            ...group,
+            values: group.values
+                .map(item => ({...item, title: this.translate.instant(`language.${item.value}`)}))
+                .sort((a, b) => a.title.localeCompare(b.title, this.translate.currentLang ?? undefined)),
+        }));
+    }
+
     private loadData(): void {
         this.loading = true;
         const parameters = this.gatherParameters();
         this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList', this.rootType).subscribe(
             model => {
                 this.model = model;
+                this.languagesSelector = this.buildLanguagesSelector(model.languagesSelector);
                 // Type-resolved root: adopt its real id so category navigation and the
                 // `cat != root` URL check work without a hardcoded wrapper id.
                 if (model.id) {

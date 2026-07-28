@@ -131,6 +131,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   roles: string[] = [];
   categoriesTree: CategoryTreeNode[] = [];
   enums: Record<string, EnumOption[]> = {};
+  /** Language codes come from the backend; their names are ours (`language.<code>`). */
+  languageOptions: EnumOption[] = [];
   fileSelectors: Record<string, FileSelectorItem[]> = {};
   readonly emptyFiles: FileSelectorItem[] = [];
   batchUpload = false;
@@ -227,6 +229,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           this.categoriesTree = data.categoriesTree;
           this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
+          this.languageOptions = this.buildLanguageOptions(data.enums['language']);
           this.fileSelectors = data.fileSelectors;
           for (const field of PASSTHROUGH_FIELDS) {
             this.passthrough[field] = data.fields[field] ?? '';
@@ -241,6 +244,14 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  /** Labels the backend's bare language codes from the SPA's own translations. */
+  private buildLanguageOptions(options: EnumOption[] | undefined): EnumOption[] {
+    return (options ?? []).map(option => ({
+      value: option.value,
+      label: this.translate.instant(`language.${option.value}`),
+    }));
   }
 
   ngOnDestroy(): void {

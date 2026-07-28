@@ -82,6 +82,24 @@ final class PreferenceValidatorTest extends TestCase
         $this->sut->validateValue(PreferenceCode::PICTURE_MODE, 'rainbow');
     }
 
+    // --- pictureScale ---
+
+    public function testPictureScaleZoomAccepted(): void
+    {
+        $this->assertSame('2', $this->sut->validateValue(PreferenceCode::PICTURE_SCALE, '2'));
+    }
+
+    public function testPictureScaleWideAccepted(): void
+    {
+        $this->assertSame('wide', $this->sut->validateValue(PreferenceCode::PICTURE_SCALE, 'wide'));
+    }
+
+    public function testPictureScaleInvalidThrows(): void
+    {
+        $this->expectException(InvalidPreferenceValueException::class);
+        $this->sut->validateValue(PreferenceCode::PICTURE_SCALE, '4');
+    }
+
     // --- binary flag ---
 
     public function testBinaryFlagZeroAccepted(): void

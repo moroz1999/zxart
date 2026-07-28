@@ -42,5 +42,13 @@ full (no `limit`), like the other two.
 delete controls. Deletion asks for confirmation through `ConfirmDialogService`.
 Removing a playlist does not remove the works it points at.
 
-`PlaylistsApiService` owns the list state — the page subscribes and never
-triggers loading itself.
+`PlaylistsApiService` (`shared/services/`) owns the list state — the page
+subscribes and never triggers loading itself. It lives in `shared/` because the
+favourites popover (`zx-playlist-button`, reachable from entity components)
+shows the same list and creates playlists through it, so both views share one
+source of truth.
+
+Membership of a single work is separate: `PlaylistService`
+(`shared/services/playlist.service.ts`) adds, removes and reads the playlist ids
+of one element through the legacy `/ajax/` actions, and each call answers with
+the ids the element now belongs to.

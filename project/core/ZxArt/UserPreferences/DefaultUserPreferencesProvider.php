@@ -39,6 +39,8 @@ final class DefaultUserPreferencesProvider
             PreferenceCode::PICTURE_MODE->value => 'mix',
             PreferenceCode::PICTURE_BORDER->value => '1',
             PreferenceCode::PICTURE_HIDDEN->value => '0',
+            // Widest zoom that fits a desktop column; narrower devices reduce it themselves.
+            PreferenceCode::PICTURE_SCALE->value => '3',
             PreferenceCode::RADIO_CRITERIA->value => '{}',
         ];
     }

@@ -1,0 +1,23 @@
+:root {
+  /* Thumbnail box of a related-picture row; shared with the section skeleton. */
+  --zx-picture-related-thumb-width: 64px;
+  --zx-picture-related-thumb-height: 48px;
+
+  /* Padding of a related-picture row. */
+  --zx-picture-related-row-padding: var(--space-4);
+
+  /* Rail title placeholder: one line of title typography. */
+  --zx-picture-related-skeleton-title-height: calc(var(--app-typography-title-size) * var(--app-typography-title-line-height));
+
+  /* Rail title placeholder width. */
+  --zx-picture-related-skeleton-title-width: 55%;
+
+  /* Picture title placeholder: one line of small body typography. */
+  --zx-picture-related-skeleton-line-height: calc(var(--app-typography-body-sm-size) * var(--app-typography-body-sm-line-height));
+
+  /* Author placeholder: one line of caption typography. */
+  --zx-picture-related-skeleton-caption-height: calc(var(--app-typography-caption-size) * var(--app-typography-caption-line-height));
+
+  /* Author placeholder width. */
+  --zx-picture-related-skeleton-caption-width: 60%;
+}

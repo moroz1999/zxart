@@ -58,5 +58,6 @@ Use `app-text` only when creating a standalone typography wrapper:
 - Use `bodySm` instead of `caption` when the content is still normal prose but should be visually smaller than primary body text.
 - `caption` is reserved for text that explains another object, such as figure captions and field hints.
 - Allowed inputs are `variant`, `tone`, and `truncate`.
+- `truncate` sets `white-space: nowrap`, so every flex/grid item between the text and the element that defines the width must carry `min-width: 0`. Otherwise the automatic minimum size of those items is the min-content width of the unwrapped text: the track grows, nothing ellipsizes, and the layout overflows the viewport.
 - Direct typography properties in component SCSS are forbidden: `color`, `text-decoration`, `font-weight`, `font-size`, `line-height`, `letter-spacing`, `text-transform`, `text-align`, `text-indent`.
 - Legacy `zx*` typography directives are compatibility-only and must not be used in new templates.

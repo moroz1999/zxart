@@ -21,7 +21,7 @@ import {PictureSettingsService} from '../../../picture-settings/services/picture
 import {PictureUrlBuilderService} from '../../../../shared/services/picture-url-builder.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
-import {PictureMode, PictureSettings} from '../../../picture-settings/models/picture-settings';
+import {PictureMode, PictureScale, PictureSettings} from '../../../picture-settings/models/picture-settings';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
@@ -29,7 +29,6 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 
-type ScaleOption = 'wide' | '1' | '2' | '3';
 type TriState = 'g' | 'on' | 'off';
 type GigaState = 'g' | PictureMode;
 type Device = 'phone' | 'tablet' | 'desktop';
@@ -40,7 +39,7 @@ const STANDARD_TYPE = 'standard';
 const SCA_TYPE = 'sca';
 
 // Available scale options per device (matches shared/breakpoints: md=768, lg=992).
-const SCALES_BY_DEVICE: Record<Device, ReadonlyArray<ScaleOption>> = {
+const SCALES_BY_DEVICE: Record<Device, ReadonlyArray<PictureScale>> = {
   phone: ['1', 'wide'],
   tablet: ['1', '2', 'wide'],
   desktop: ['1', '2', '3', 'wide'],
@@ -77,7 +76,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   readonly galleryId = 'zx-picture-details-viewer';
-  readonly scaleOptions: ReadonlyArray<{value: ScaleOption; labelKey: string}> = [
+  readonly scaleOptions: ReadonlyArray<{value: PictureScale; labelKey: string}> = [
     {value: '1', labelKey: 'picture-details.scale-1x'},
     {value: '2', labelKey: 'picture-details.scale-2x'},
     {value: '3', labelKey: 'picture-details.scale-3x'},
@@ -98,7 +97,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   readonly hiddenOptions = this.borderOptions;
   readonly magnification = 3;
 
-  scale: ScaleOption = '3';
+  scale: PictureScale = '3';
   device: Device = 'desktop';
   borderOverride: TriState = 'g';
   gigaOverride: GigaState = 'g';
@@ -117,6 +116,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
 
   private globalSettings: PictureSettings | null = null;
   private subscription?: Subscription;
+  private scaleSubscription?: Subscription;
   private resizeObserver?: ResizeObserver;
   private phoneQuery?: MediaQueryList;
   private tabletQuery?: MediaQueryList;
@@ -153,6 +153,16 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
       this.rebuildUrl();
       this.cdr.markForCheck();
     });
+    // Picks up the stored zoom once the logged-in user's preferences arrive.
+    this.scaleSubscription = this.pictureSettingsService.scale.subscribe(scale => {
+      const next = this.scaleForDevice(scale);
+      if (next === this.scale) {
+        return;
+      }
+      this.scale = next;
+      this.updateDisplaySize();
+      this.cdr.markForCheck();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -175,6 +185,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.scaleSubscription?.unsubscribe();
     this.resizeObserver?.disconnect();
     this.phoneQuery?.removeEventListener('change', this.onDeviceChange);
     this.tabletQuery?.removeEventListener('change', this.onDeviceChange);
@@ -205,7 +216,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   /** Scale buttons available on the current device. */
-  get availableScaleOptions(): ReadonlyArray<{value: ScaleOption; labelKey: string}> {
+  get availableScaleOptions(): ReadonlyArray<{value: PictureScale; labelKey: string}> {
     const allowed = SCALES_BY_DEVICE[this.device];
     return this.scaleOptions.filter(option => allowed.includes(option.value));
   }
@@ -221,14 +232,20 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
       return;
     }
     this.device = device;
-    const allowed = SCALES_BY_DEVICE[device];
     if (initial) {
-      // Default: 3× on desktop, "wide" on tablet/phone.
-      this.scale = device === 'desktop' ? '3' : 'wide';
-    } else if (!allowed.includes(this.scale)) {
+      this.scale = this.scaleForDevice(this.pictureSettingsService.currentScale);
+    } else if (!SCALES_BY_DEVICE[device].includes(this.scale)) {
       this.scale = 'wide';
     }
     this.updateDisplaySize();
+  }
+
+  /**
+   * The remembered zoom is shared across devices, so one too large for the
+   * current screen (3× on a phone) falls back to the full-width view.
+   */
+  private scaleForDevice(scale: PictureScale): PictureScale {
+    return SCALES_BY_DEVICE[this.device].includes(scale) ? scale : 'wide';
   }
 
   /** One zoom instance, recreated when its size changes (empty until ready). */
@@ -240,9 +257,10 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     return key;
   }
 
-  setScale(value: ScaleOption): void {
+  setScale(value: PictureScale): void {
     this.scale = value;
     this.updateDisplaySize();
+    this.pictureSettingsService.setScale(value);
   }
 
   setBorder(value: TriState): void {

@@ -30,6 +30,23 @@ Because the language is a normal preference, a logged-in user's stored language
 arrives through the usual `/userpreferences/` fetch — it is **not** carried on the
 current-user response.
 
+## Preference storage
+
+`UserPreferencesService.initialize()` runs once per app start and is the single
+entry point every preference owner waits on:
+
+- A logged-in user always has the preferences refetched from `/userpreferences/`,
+  and the response overwrites localStorage — another device may have changed them
+  since. If the request fails, the stored values stand in.
+- Anonymous visitors have nothing to fetch and read localStorage alone; writes
+  never reach the backend for them.
+- Preferences stored for a different user are dropped before anything is read,
+  which is what clears them after a logout.
+
+Owners (`ThemeService`, `LanguageService`, `PictureSettingsService`) apply the
+stored value synchronously first and re-apply once `initialize()` resolves, so a
+preference set elsewhere wins without delaying the first render.
+
 ## Language on API requests
 
 `languageInterceptor` (`features/settings/interceptors/language.interceptor.ts`)

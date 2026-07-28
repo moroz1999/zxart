@@ -4,7 +4,7 @@
 
 .pix-mini {
   display: block;
-  padding: var(--space-4);
+  padding: var(--zx-picture-related-row-padding);
   border-radius: var(--radius-md);
   text-decoration: none;
   color: inherit;
@@ -16,8 +16,8 @@
 }
 
 .pix-mini__thumb {
-  width: 64px;
-  height: 48px;
+  width: var(--zx-picture-related-thumb-width);
+  height: var(--zx-picture-related-thumb-height);
   flex-shrink: 0;
   object-fit: contain;
   background: var(--background-deep);

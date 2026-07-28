@@ -1,25 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {catchError, map, Observable, of, tap} from 'rxjs';
-import {PlaylistDto} from '../models/playlist.model';
+import {catchError, map, Observable, of} from 'rxjs';
 import {JsonResponse} from '../models/json-response';
 import {PlaylistItemData, PlaylistResponseData} from '../models/playlist-response-data';
 
+/**
+ * Membership of a single element in the current user's playlists. Every call
+ * answers with the playlist ids the element now belongs to. The playlists
+ * themselves are owned by {@link PlaylistsApiService}.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class PlaylistService {
   private readonly apiUrl = `//${location.hostname}/ajax/`;
-  private playlists: PlaylistDto[] = [];
-  private playlistsElementUrl = '';
 
-  constructor(private http: HttpClient) {
-    this.importFromWindow();
-  }
-
-  getPlaylists(): PlaylistDto[] {
-    return this.playlists;
-  }
+  constructor(private http: HttpClient) {}
 
   fetchPlaylistIds(elementId: number): Observable<number[]> {
     const params = {id: elementId, action: 'getPlaylistIds'};
@@ -59,63 +55,7 @@ export class PlaylistService {
     );
   }
 
-  createPlaylist(title: string): Observable<PlaylistDto[]> {
-    if (!this.playlistsElementUrl) {
-      return of(this.playlists);
-    }
-    const actionUrl = this.playlistsElementUrl.replace(
-      this.getRootUrl(),
-      this.getRootUrl() + 'ajax/',
-    );
-    const relativePath = this.playlistsElementUrl.replace(this.getRootUrl(), '/');
-    const titleFieldName = `formData[${relativePath}type:playlist/action:receive/][title]`;
-
-    let body = new HttpParams()
-      .set('id', 'type:playlist/')
-      .set('type', 'playlist')
-      .set('action', 'receive')
-      .set(titleFieldName, title);
-
-    return this.http.post<JsonResponse<PlaylistResponseData>>(
-      actionUrl,
-      body.toString(),
-      {headers: {'Content-Type': 'application/x-www-form-urlencoded'}},
-    ).pipe(
-      tap(response => {
-        if (response.responseData?.playlist) {
-          this.importPlaylists(response.responseData.playlist);
-        }
-      }),
-      map(() => this.playlists),
-      catchError(() => of(this.playlists)),
-    );
-  }
-
-  private importFromWindow(): void {
-    const win = window as any;
-    if (win.playlistsElementUrl) {
-      this.playlistsElementUrl = win.playlistsElementUrl;
-    }
-    if (win.playlists) {
-      this.importPlaylists(win.playlists);
-    }
-  }
-
-  private importPlaylists(data: PlaylistDto[]): void {
-    const existingIds = new Set(this.playlists.map(p => p.id));
-    for (const item of data) {
-      const id = Number(item.id);
-      if (!existingIds.has(id)) {
-        this.playlists.push({id, title: item.title, url: item.url});
-        existingIds.add(id);
-      }
-    }
-  }
-
   private extractPlaylistIds(data: PlaylistResponseData, elementId: number): number[] {
-    if (data?.playlist) {
-      this.importPlaylists(data.playlist);
-    }
     const types: (keyof PlaylistResponseData)[] = ['zxMusic', 'zxPicture', 'zxProd', 'zxRelease'];
     for (const type of types) {
       const items = data?.[type] as PlaylistItemData[] | undefined;
@@ -128,9 +68,5 @@ export class PlaylistService {
       }
     }
     return [];
-  }
-
-  private getRootUrl(): string {
-    return `//${location.hostname}/`;
   }
 }

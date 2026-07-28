@@ -18,7 +18,7 @@
 
   <zx-inline *ngIf="leafCategories.length || core.languages.length || showLegalStatus" spacing="sm" align="center" [wrap]="true">
     <zx-chip *ngFor="let cat of leafCategories" variant="filled" color="primary" [href]="'/prods?cat=' + cat.id">{{ cat.title }}</zx-chip>
-    <zx-chip *ngFor="let lang of core.languages" variant="filled" color="neutral">{{ lang.emoji }} {{ lang.title }}</zx-chip>
+    <zx-chip *ngFor="let lang of core.languages" variant="filled" color="neutral" [href]="'/prods?languages=' + lang.code">{{ lang.emoji }} {{ 'language.' + lang.code | translate }}</zx-chip>
     <zx-chip *ngIf="showLegalStatus" variant="filled" color="neutral">{{ core.legalStatusLabel }}</zx-chip>
   </zx-inline>
 

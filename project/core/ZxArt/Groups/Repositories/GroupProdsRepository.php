@@ -33,6 +33,9 @@ readonly final class GroupProdsRepository extends AbstractRepository
         array $categoryIds,
     ): array {
         $groupIds = $this->getGroupAndAliasIds($groupId);
+        if ($scope === GroupProdsScope::All) {
+            return $this->findAllPaged($groupIds, $start, $limit, $sort, $sortDir, $categoryIds);
+        }
         if ($scope === GroupProdsScope::Published) {
             return $this->findPublishedPaged($groupIds, $start, $limit, $sort, $sortDir, $categoryIds);
         }
@@ -99,6 +102,10 @@ readonly final class GroupProdsRepository extends AbstractRepository
             GroupProdsScope::Own => $this->findOwnCategoryIds($groupIds),
             GroupProdsScope::Published => $this->findPublishedCategoryIds($groupIds),
             GroupProdsScope::Releases => [],
+            GroupProdsScope::All => $this->uniqueIntIds([
+                ...$this->findOwnCategoryIds($groupIds),
+                ...$this->findPublishedCategoryIds($groupIds),
+            ]),
         };
 
         sort($categoryIds);
@@ -151,6 +158,138 @@ readonly final class GroupProdsRepository extends AbstractRepository
         /** @var int */
         return $this->buildItemsQuery($groupIds, $scope, $type, $categoryIds)
             ->count($this->tableColumn($this->itemTable($scope), 'id'));
+    }
+
+    /**
+     * Every work the group is credited on, in either role. The same prod can be
+     * linked as both developer and publisher, so rows are deduplicated.
+     *
+     * @param int[] $groupIds
+     * @param int[] $categoryIds
+     * @return array{items: list<array{id: int, type: 'prod'|'release'}>, total: int}
+     */
+    private function findAllPaged(
+        array $groupIds,
+        int $start,
+        int $limit,
+        string $sort,
+        string $sortDir,
+        array $categoryIds,
+    ): array {
+        $rows = $this->deduplicateRows([
+            ...$this->getOwnProdRows($groupIds, $categoryIds),
+            ...$this->getPublishedRows($groupIds, $categoryIds),
+            ...$this->getHackerReleaseRows($groupIds, $categoryIds),
+        ]);
+        $this->sortRows($rows, $sort, $sortDir);
+
+        $items = array_map(
+            static fn(array $row): array => ['id' => $row['id'], 'type' => $row['type']],
+            array_slice($rows, $start, $limit),
+        );
+
+        return ['items' => $items, 'total' => count($rows)];
+    }
+
+    /**
+     * @param list<array{id: int, type: 'prod'|'release', votes: float, year: int, dateCreated: int}> $rows
+     * @return list<array{id: int, type: 'prod'|'release', votes: float, year: int, dateCreated: int}>
+     */
+    private function deduplicateRows(array $rows): array
+    {
+        $unique = [];
+        foreach ($rows as $row) {
+            $unique[$row['type'] . ':' . $row['id']] = $row;
+        }
+
+        return array_values($unique);
+    }
+
+    /**
+     * @param int[] $groupIds
+     * @param int[] $categoryIds
+     * @return list<array{id: int, type: 'prod', votes: float, year: int, dateCreated: int}>
+     */
+    private function getOwnProdRows(array $groupIds, array $categoryIds): array
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $structureElementsTable = $this->tableName(DatabaseTable::StructureElements);
+
+        $query = $this->db->table($prodTable)
+            ->join($linksTable, "$linksTable.childStructureId", '=', "$prodTable.id")
+            ->join($structureElementsTable, "$structureElementsTable.id", '=', "$prodTable.id")
+            ->where("$linksTable.type", '=', LinkTypes::ZX_PROD_GROUPS->value)
+            ->whereIn("$linksTable.parentStructureId", $groupIds)
+            ->select([
+                "$prodTable.id",
+                "$prodTable.votes",
+                "$prodTable.year",
+                "$structureElementsTable.dateCreated",
+            ])
+            ->distinct();
+        if ($categoryIds !== []) {
+            $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
+        }
+
+        /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
+        $rows = $query->get();
+
+        return array_map(
+            static fn(array $row): array => [
+                'id' => (int)$row['id'],
+                'type' => 'prod',
+                'votes' => (float)$row['votes'],
+                'year' => (int)$row['year'],
+                'dateCreated' => (int)$row['dateCreated'],
+            ],
+            $rows,
+        );
+    }
+
+    /**
+     * Hacker releases — the rows the "releases" scope shows on its own.
+     *
+     * @param int[] $groupIds
+     * @param int[] $categoryIds
+     * @return list<array{id: int, type: 'release', votes: float, year: int, dateCreated: int}>
+     */
+    private function getHackerReleaseRows(array $groupIds, array $categoryIds): array
+    {
+        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $structureElementsTable = $this->tableName(DatabaseTable::StructureElements);
+
+        $query = $this->db->table($releaseTable)
+            ->join($linksTable, "$linksTable.childStructureId", '=', "$releaseTable.id")
+            ->join($structureElementsTable, "$structureElementsTable.id", '=', "$releaseTable.id")
+            ->where("$linksTable.type", '=', GroupProdsScope::Releases->linkType()->value)
+            ->whereIn("$linksTable.parentStructureId", $groupIds)
+            ->select([
+                "$releaseTable.id",
+                "$releaseTable.votes",
+                "$releaseTable.year",
+                "$structureElementsTable.dateCreated",
+            ])
+            ->distinct();
+        $this->applyReleaseFilters($query, $releaseTable, $linksTable, $groupIds);
+        if ($categoryIds !== []) {
+            $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", $categoryIds);
+        }
+
+        /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
+        $rows = $query->get();
+
+        return array_map(
+            static fn(array $row): array => [
+                'id' => (int)$row['id'],
+                'type' => 'release',
+                'votes' => (float)$row['votes'],
+                'year' => (int)$row['year'],
+                'dateCreated' => (int)$row['dateCreated'],
+            ],
+            $rows,
+        );
     }
 
     /**

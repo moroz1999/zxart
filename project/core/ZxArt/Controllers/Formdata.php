@@ -22,6 +22,7 @@ use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Shared\EntityType;
+use zxPictureElement;
 
 /**
  * Generic read endpoint for entity edit and create forms (`/formdata/`).
@@ -230,8 +231,7 @@ class Formdata extends LoggedControllerApplication
             $chunk = $element->getDataChunk($field);
             if ($chunk instanceof imageDataChunk) {
                 if ($value !== '' && $value !== null) {
-                    $images[$field] = $baseUrl . 'image/type:adminImage/id:' . $value
-                        . '/filename:' . rawurlencode((string)$element->originalName);
+                    $images[$field] = $this->buildImageUrl($element, $field, (string)$value, $baseUrl);
                 }
                 continue;
             }
@@ -275,6 +275,22 @@ class Formdata extends LoggedControllerApplication
             'aiStatuses' => $this->buildAiStatuses($element),
             'splitGroups' => $this->buildSplitGroups($element),
         ];
+    }
+
+    /**
+     * Thumbnail of a stored image field. The main file of a picture is a native
+     * ZX Spectrum screen that no browser can render, so it is shown through the
+     * picture's own converted image URL. Every other field holds a regular image
+     * and is served by the `adminImage` preset.
+     */
+    private function buildImageUrl(structureElement $element, string $field, string $value, string $baseUrl): string
+    {
+        if ($field === 'image' && $element instanceof zxPictureElement) {
+            return $element->getImageUrl();
+        }
+
+        return $baseUrl . 'image/type:adminImage/id:' . $value
+            . '/filename:' . rawurlencode((string)$element->originalName);
     }
 
     /**
@@ -368,6 +384,8 @@ class Formdata extends LoggedControllerApplication
      * Backend-driven select options ({value,label}) for enum fields, with labels
      * already translated to the current language (so the SPA needs no extra i18n
      * keys). Fixed enums (border colour, rotation) stay hardcoded in Angular.
+     * A `clientLabels` spec sends the bare values instead, for lists the SPA
+     * translates itself (language codes).
      *
      * @return array<string, list<array{value: string, label: string}>>
      */
@@ -405,6 +423,12 @@ class Formdata extends LoggedControllerApplication
                 $mode = 'list';
             }
             foreach ($rawItems as $key => $item) {
+                if (!empty($spec['clientLabels'])) {
+                    // the SPA owns these labels; the backend only names the values
+                    $value = (string)($mode === 'map' ? $key : $item);
+                    $options[] = ['value' => $value, 'label' => $value];
+                    continue;
+                }
                 if ($mode === 'map') {
                     // method returns [value => translationKey]
                     $value = (string)$key;
@@ -424,7 +448,7 @@ class Formdata extends LoggedControllerApplication
     /**
      * Per-entity enum field definitions (option source method + label strategy).
      *
-     * @return array<string, array{method: string, mode?: string, prefix?: string, stripDots?: bool, emptyBlank?: bool, emptyLabelKey?: string}>
+     * @return array<string, array{method: string, mode?: string, prefix?: string, stripDots?: bool, emptyBlank?: bool, emptyLabelKey?: string, clientLabels?: bool}>
      */
     private function enumSpecs(string $structureType): array
     {
@@ -445,11 +469,11 @@ class Formdata extends LoggedControllerApplication
             ],
             'zxProd' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
-                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+                'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
             ],
             'zxProdsUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
-                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+                'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
             ],
             'zxPicture' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'zxPicture.compo_', 'emptyBlank' => true],
@@ -464,7 +488,7 @@ class Formdata extends LoggedControllerApplication
             'zxRelease' => [
                 'releaseType' => ['method' => 'getReleaseTypes', 'prefix' => 'zxRelease.type_'],
                 'releaseFormat' => ['method' => 'getReleaseFormats', 'prefix' => 'zxRelease.filetype_'],
-                'language' => ['method' => 'getLanguageCodes', 'prefix' => 'language.item_'],
+                'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
                 'hardwareRequired' => ['method' => 'getHardwareList', 'mode' => 'grouped', 'prefix' => 'hardware.item_'],
             ],
             default => [],

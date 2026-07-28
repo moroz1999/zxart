@@ -15,7 +15,9 @@
     - If a user is anonymous, the deprecated `author` field might still contain a name.
     - API responses may contain `author = null` when both linked user and legacy author name are missing; clients must handle this case and skip author rendering.
 - **Content**:
-    - URLs in comment content are automatically converted into clickable HTML links.
+    - Comment content is plain text. `CommentContentPurifier` runs HTMLPurifier with an empty allowed-element set over everything `CommentsService::addComment()` and `updateComment()` receive: tags are removed and their text kept, `script` and `style` go with their text, bare angle brackets become entities. A comment that is only markup is rejected as empty.
+        - This has to happen in the service: assigning `$commentElement->content` goes through `structureElement::__set()` → `textareaDataChunk::setExternalValue()`, which writes straight to storage. Only the form path (`importExternalData()` → `convertFormToStorage()`) escapes on its own.
+    - URLs in comment content are automatically converted into clickable HTML links on output, so submitted `<a>` tags would collide with that and are removed too.
     - To get the original content without HTML decorations (e.g., for editing), use `$comment->getValue('content')` on the `commentElement`. This method retrieves the raw storage value from the underlying `dataChunk`.
 - **Translations**:
     - The legacy multilingual model duplicates rows per language, but comments use the new column-based model.

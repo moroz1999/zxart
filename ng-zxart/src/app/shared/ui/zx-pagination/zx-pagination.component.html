@@ -12,7 +12,7 @@
             >&lt;</zx-button>
         </a>
 
-        <ng-container *ngFor="let page of pageItems">
+        <ng-container *ngFor="let page of pageItems; trackBy: trackByPage">
             <a
                 *ngIf="page.type === 'page'"
                 [href]="makeHref(page.number)"

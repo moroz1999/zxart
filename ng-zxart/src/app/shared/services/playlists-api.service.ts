@@ -7,7 +7,9 @@ import {PlaylistsResponse, UserPlaylist} from '../models/user-playlist';
 /**
  * Self-service management of the current user's playlists via `/playlists-data/`.
  * Every call returns the full, updated list, which is kept here as the single
- * source of truth — `null` means "not loaded yet".
+ * source of truth — `null` means "not loaded yet". The playlists page and the
+ * favourites popover share it, so a playlist created in one shows up in the
+ * other. Membership of an element lives in {@link PlaylistService}.
  */
 @Injectable({providedIn: 'root'})
 export class PlaylistsApiService {

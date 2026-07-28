@@ -42,6 +42,12 @@ class RatingsServiceTest extends TestCase
         $this->entityUrlResolver = $this->createMock(EntityUrlResolver::class);
         $this->entityUrlResolver->method('urlFor')
             ->willReturnCallback(static fn(structureElement $element): string => (string)$element->getUrl());
+        // a user is linked to the page of the author they are connected to
+        $this->entityUrlResolver->method('urlForUser')
+            ->willReturnCallback(static function (userElement $user): ?string {
+                $author = $user->getAuthorElement();
+                return $author instanceof structureElement ? (string)$author->getUrl() : null;
+            });
         $this->structureManager = $this->createMock(structureManager::class);
         $this->languagesManager = $this->createMock(LanguagesManager::class);
         $this->languagesManager->method('getCurrentLanguageId')->willReturn(self::LANGUAGE_ID);
@@ -102,7 +108,7 @@ class RatingsServiceTest extends TestCase
         ]));
 
         $targetElement = $this->createTargetElementMock(false, 'Cool Prod', '/prod/20/');
-        $userMock = $this->createUserElementMock('Alice', '/user/10/', ['supporter']);
+        $userMock = $this->createUserElementMock('Alice', '/author/10/', ['supporter']);
 
         $this->structureManager->method('getElementById')
             ->willReturnCallback(function (int $id) use ($targetElement, $userMock) {
@@ -123,11 +129,47 @@ class RatingsServiceTest extends TestCase
 
         $this->assertCount(1, $result->items);
         $this->assertSame('Alice', $result->items[0]->user->name);
-        $this->assertSame('/user/10/', $result->items[0]->user->url);
+        $this->assertSame('/author/10/', $result->items[0]->user->url);
         $this->assertSame(['supporter'], $result->items[0]->user->badges);
         $this->assertSame('5', $result->items[0]->rating);
         $this->assertSame('Cool Prod', $result->items[0]->targetTitle);
         $this->assertSame('/prod/20/', $result->items[0]->targetUrl);
+    }
+
+    public function testUserWithoutAuthorHasNoUrl(): void
+    {
+        $this->cache->method('get')->willReturn(null);
+
+        $queryBuilder = $this->createMock(Builder::class);
+        $this->db->method('table')->willReturn($queryBuilder);
+        $queryBuilder->method('select')->willReturnSelf();
+        $queryBuilder->method('orderBy')->willReturnSelf();
+        $queryBuilder->method('limit')->willReturnSelf();
+        $queryBuilder->method('offset')->willReturnSelf();
+
+        $queryBuilder->method('get')->willReturn(collect([
+            (object)['id' => 1, 'userId' => 10, 'elementId' => 20, 'value' => 5, 'date' => 1700000000],
+        ]));
+
+        $targetElement = $this->createTargetElementMock(false, 'Cool Prod', '/prod/20/');
+        $userMock = $this->createAuthorlessUserElementMock('Nobody');
+
+        $this->structureManager->method('getElementById')
+            ->willReturnCallback(function (int $id) use ($targetElement, $userMock) {
+                if ($id === 20) {
+                    return $targetElement;
+                }
+                if ($id === 10) {
+                    return $userMock;
+                }
+                return null;
+            });
+
+        $result = $this->service->getRecentRatings();
+
+        $this->assertCount(1, $result->items);
+        $this->assertSame('Nobody', $result->items[0]->user->name);
+        $this->assertNull($result->items[0]->user->url);
     }
 
     public function testSkipsElementsWithVotingDenied(): void
@@ -148,7 +190,7 @@ class RatingsServiceTest extends TestCase
 
         $deniedTarget = $this->createTargetElementMock(true, 'Denied', '/denied/');
         $allowedTarget = $this->createTargetElementMock(false, 'Allowed', '/allowed/');
-        $userMock = $this->createUserElementMock('Bob', '/user/10/', []);
+        $userMock = $this->createUserElementMock('Bob', '/author/10/', []);
 
         $this->structureManager->method('getElementById')
             ->willReturnCallback(function (int $id) use ($deniedTarget, $allowedTarget, $userMock) {
@@ -186,7 +228,7 @@ class RatingsServiceTest extends TestCase
         ]));
 
         $targetElement = $this->createTargetElementMock(false, 'Prod', '/prod/20/');
-        $userMock = $this->createUserElementMock('Charlie', '/user/10/', []);
+        $userMock = $this->createUserElementMock('Charlie', '/author/10/', []);
 
         $this->structureManager->method('getElementById')
             ->willReturnCallback(function (int $id) use ($targetElement, $userMock) {
@@ -298,8 +340,8 @@ class RatingsServiceTest extends TestCase
             (object)['id' => 2, 'userId' => 11, 'elementId' => 50, 'value' => 3, 'date' => 1699999000],
         ]));
 
-        $user1 = $this->createUserElementMock('Alice', '/user/10/', ['supporter']);
-        $user2 = $this->createUserElementMock('Bob', '/user/11/', []);
+        $user1 = $this->createUserElementMock('Alice', '/author/10/', ['supporter']);
+        $user2 = $this->createUserElementMock('Bob', '/author/11/', []);
 
         $this->structureManager->method('getElementById')
             ->willReturnCallback(function (int $id) use ($user1, $user2) {
@@ -371,16 +413,27 @@ class RatingsServiceTest extends TestCase
      * The recent-ratings list uses the user's own URL; per-element ratings link to
      * the user's connected author page instead, so both are stubbed.
      */
-    private function createUserElementMock(string $userName, string $url, array $badges): userElement&MockObject
+    /** A user linked to an author: the author's page is the user's public page. */
+    private function createUserElementMock(string $userName, string $authorUrl, array $badges): userElement&MockObject
     {
-        $user = $this->createMock(userElement::class);
         $author = $this->createMock(structureElement::class);
-        $author->method('getUrl')->willReturn($url);
+        $author->method('getUrl')->willReturn($authorUrl);
 
+        $user = $this->createMock(userElement::class);
         $user->method('getTitle')->willReturn($userName);
-        $user->method('getUrl')->willReturn($url);
         $user->method('getAuthorElement')->willReturn($author);
         $user->method('getBadgetTypes')->willReturn($badges);
+
+        return $user;
+    }
+
+    /** A user with no author has no page to link to. */
+    private function createAuthorlessUserElementMock(string $userName): userElement&MockObject
+    {
+        $user = $this->createMock(userElement::class);
+        $user->method('getTitle')->willReturn($userName);
+        $user->method('getAuthorElement')->willReturn(null);
+        $user->method('getBadgetTypes')->willReturn([]);
 
         return $user;
     }

@@ -286,16 +286,25 @@ abstract class ZxArtItem extends structureElement implements
     }
 
 
+    /**
+     * Fills in a missing year from the item's context: the party it was released
+     * at, or failing that the release it belongs to. A source without a year of
+     * its own is skipped rather than applied, so it cannot undo the other one.
+     */
     public function updateYear(): void
     {
-        if (!is_numeric($this->year) || $this->year < 1983) {
-            if ($party = $this->getPartyElement()) {
-                $this->year = $party->getYear();
-            }
-            $releaseElement = $this->getReleaseElement();
-            if ($releaseElement !== null) {
-                $this->year = $releaseElement->year;
-            }
+        if (is_numeric($this->year) && $this->year >= 1983) {
+            return;
+        }
+
+        if (($party = $this->getPartyElement()) && $party->getYear()) {
+            $this->year = $party->getYear();
+            return;
+        }
+
+        $releaseElement = $this->getReleaseElement();
+        if ($releaseElement !== null && $releaseElement->year) {
+            $this->year = $releaseElement->year;
         }
     }
 

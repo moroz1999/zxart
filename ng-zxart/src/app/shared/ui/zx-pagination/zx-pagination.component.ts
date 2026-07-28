@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {PageItemInterface} from './page-item.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
@@ -31,7 +31,18 @@ export class ZxPaginationComponent implements OnChanges {
         private readonly route: ActivatedRoute,
     ) {}
 
-    ngOnChanges(): void {
+    /**
+     * Hosts commonly build `queryParams` in a getter, so its identity changes on
+     * every check and this hook runs on every check too. Rebuilding the items
+     * then would replace the pressed link mid-click — the button's ripple runs a
+     * check between pointerdown and click — and the click would never land, so
+     * only the inputs the layout is made of trigger a rebuild.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!changes['currentPage'] && !changes['pagesAmount'] && !changes['visibleAmount']) {
+            return;
+        }
+
         if (this.currentPage > this.pagesAmount) {
             this.currentPage = this.pagesAmount;
         } else if (this.currentPage < 1) {
@@ -77,6 +88,11 @@ export class ZxPaginationComponent implements OnChanges {
         if (end < this.pagesAmount) {
             this.pageItems.push({number: this.pagesAmount, type: pageType, text: this.pagesAmount.toString()});
         }
+    }
+
+    /** Keeps the rendered links alive across a rebuild, so a press is never lost. */
+    trackByPage(index: number, item: PageItemInterface): string {
+        return `${item.type}:${item.number}:${index}`;
     }
 
     pageClicked(event: MouseEvent, newPageNumber: number): void {

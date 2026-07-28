@@ -59,8 +59,10 @@ interface YearGroup {
 })
 export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
   @Input() elementId = 0;
-  @Input() scope: GroupProdsScope = 'own';
+  /** Roles the group can be filtered by; a single entry hides the filter. */
+  @Input() scopes: readonly GroupProdsScope[] = ['own'];
 
+  private readonly scopeStore = new BehaviorSubject<GroupProdsScope>('own');
   private readonly typeStore = new BehaviorSubject<string>('');
   private readonly categoryStore = new BehaviorSubject<number>(0);
   private readonly sortStore = new BehaviorSubject<string>('year-desc');
@@ -75,13 +77,14 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
 
+  get activeScope(): GroupProdsScope { return this.scopeStore.getValue(); }
   get activeType(): string { return this.typeStore.getValue(); }
   get activeCategory(): number { return this.categoryStore.getValue(); }
   get currentSort(): string { return this.sortStore.getValue(); }
   get currentPage(): number { return this.pageStore.getValue(); }
-  get pageSize(): number { return this.scope === 'own' ? OWN_PAGE_SIZE : DEFAULT_PAGE_SIZE; }
+  get pageSize(): number { return this.activeScope === 'own' ? OWN_PAGE_SIZE : DEFAULT_PAGE_SIZE; }
   get pagesAmount(): number { return Math.ceil(this.total / this.pageSize); }
-  get isReleases(): boolean { return this.scope === 'releases'; }
+  get isReleases(): boolean { return this.activeScope === 'releases'; }
   get showCategoryFilter(): boolean { return !this.isReleases && this.availableCategories.length > 0; }
 
   private readonly router = inject(Router);
@@ -94,6 +97,7 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.scopeStore.next(this.scopes[0] ?? 'own');
     this.pageStore = new BehaviorSubject<number>(this.pageFromParams(this.route.snapshot.queryParamMap));
     this.subscriptions.add(this.route.queryParamMap.subscribe(params => {
       const page = this.pageFromParams(params);
@@ -102,13 +106,13 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
       }
     }));
     this.subscriptions.add(
-      combineLatest([this.typeStore, this.categoryStore, this.sortStore, this.pageStore]).pipe(
-        switchMap(([type, categoryId, sort, page]) => {
+      combineLatest([this.scopeStore, this.typeStore, this.categoryStore, this.sortStore, this.pageStore]).pipe(
+        switchMap(([scope, type, categoryId, sort, page]) => {
           this.loading = true;
           this.cdr.markForCheck();
           const {sortKey, sortDir} = this.parseSortKey(sort);
           const start = (page - 1) * this.pageSize;
-          return this.prodsApiService.getProds(this.elementId, this.scope, start, this.pageSize, sortKey, sortDir, type, categoryId);
+          return this.prodsApiService.getProds(this.elementId, scope, start, this.pageSize, sortKey, sortDir, type, categoryId);
         }),
       ).subscribe({
         next: result => {
@@ -130,6 +134,27 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  /** Release types and categories are scope-specific, so switching role clears them. */
+  setScope(scope: GroupProdsScope): void {
+    if (scope === this.activeScope) {
+      return;
+    }
+    this.availableTypes = [];
+    this.availableCategories = [];
+    this.typeStore.next('');
+    this.categoryStore.next(0);
+    this.scopeStore.next(scope);
+    this.setPage(1);
+  }
+
+  getScopeLabelKey(scope: GroupProdsScope): string {
+    return `group-details.works.${scope}`;
+  }
+
+  trackByScope(_index: number, scope: GroupProdsScope): string {
+    return scope;
   }
 
   setType(type: string): void {

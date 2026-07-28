@@ -85,8 +85,9 @@ Group of authors - team, company, demoscene group. Unites authors for collaborat
   - Group published specific release
   - Group release lists exclude releases whose parent prod is already linked to the same group as developer or publisher
   - Group release lists show only hacker-release/crack-like release types: adaptation, localization, bugfix, mod, and crack
-  - Non-hacker release publisher links are shown in the group's Published tab
+  - Non-hacker release publisher links are shown under the group's publisher role
 - Group own works and Published lists expose filters by linked production categories. Selecting a category includes productions from its full subcategory tree. Published release rows use their parent production categories for this filter.
+- The group works page is one list with a role filter, not a tab per role. `GroupProdsScope` values are `all`, `own` (developer), `published` (publisher) and `releases` (hacker releases); a role the group has nothing in is left out of the filter, and `all` is offered only when more than one role remains. `all` merges the rows of every role in PHP and deduplicates them, since the same production can be linked as both developer and publisher.
 
 #### Difference Between Group and Publisher
 - **groups** (zxProdGroups) - creators, developers

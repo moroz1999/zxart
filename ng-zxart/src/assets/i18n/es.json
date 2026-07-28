@@ -412,8 +412,9 @@
       "view-all": "Todas las obras"
     },
     "works": {
-      "own": "Software propio",
-      "published": "Publicado",
+      "all": "Todo",
+      "own": "Como desarrollador",
+      "published": "Como editor",
       "releases": "Lanzamientos y cracks",
       "found": "{{count}} obras",
       "empty": "No se encontraron obras"
@@ -421,7 +422,8 @@
     "filters": {
       "sort": "Ordenar",
       "type": "Tipo de lanzamiento",
-      "category": "Categoría"
+      "category": "Categoría",
+      "role": "Rol"
     },
     "category": {
       "all": "Todas las categorías"
@@ -1186,6 +1188,10 @@
     "latest": {
       "graphics": "Artistas añadidos recientemente",
       "music": "Músicos añadidos recientemente"
+    },
+    "all": {
+      "graphics": "Todos los artistas",
+      "music": "Todos los músicos"
     }
   },
   "author-browser": {
@@ -1213,27 +1219,6 @@
       "city": "Ciudad",
       "musicRating": "Clasificación musical",
       "graphicsRating": "Clasificación de gráficos"
-    }
-  },
-  "authors-page": {
-    "active": {
-      "graphics": "Artistas activos",
-      "music": "Músicos activos",
-      "period": "Período de actividad",
-      "yearsShort": "{{count}} a.",
-      "empty": "No hay autores activos"
-    },
-    "top": {
-      "graphics": "Mejores artistas",
-      "music": "Mejores músicos"
-    },
-    "latest": {
-      "graphics": "Artistas añadidos recientemente",
-      "music": "Músicos añadidos recientemente"
-    },
-    "all": {
-      "graphics": "Todos los artistas",
-      "music": "Todos los músicos"
     }
   },
   "group-browser": {
@@ -2228,5 +2213,45 @@
     "votes": "valoraciones",
     "downloads": "descargas",
     "plays": "reproducciones"
+  },
+  "language": {
+    "be": "Flamenco",
+    "bs": "Bosnio",
+    "by": "Bielorruso",
+    "ca": "Catalán",
+    "cs": "Checo",
+    "da": "Danés",
+    "de": "Alemán",
+    "el": "Griego",
+    "en": "Inglés",
+    "eo": "Esperanto",
+    "es": "Español",
+    "eu": "Vasco",
+    "fi": "Finlandés",
+    "fr": "Francés",
+    "gl": "Gallego",
+    "hr": "Croata",
+    "hu": "Húngaro",
+    "is": "Islandés",
+    "it": "Italiano",
+    "ja": "Japonés",
+    "la": "Latín",
+    "lt": "Lituano",
+    "lv": "Letón",
+    "m-": "Mónaco",
+    "nl": "Holandés",
+    "no": "Noruego",
+    "pl": "Polaco",
+    "pt": "Portugués",
+    "ro": "Rumano",
+    "ru": "Ruso",
+    "sh": "Serbocroata",
+    "sk": "Eslovaco",
+    "sl": "Esloveno",
+    "sr": "Serbio",
+    "sv": "Sueco",
+    "tr": "Turco",
+    "ua": "Ucraniano",
+    "he": "Hebreo"
   }
 }

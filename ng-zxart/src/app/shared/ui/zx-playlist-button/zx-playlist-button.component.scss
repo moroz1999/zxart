@@ -70,10 +70,24 @@
   text-overflow: ellipsis;
 }
 
+.playlist-item-status {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--zx-playlist-create-gap);
+  height: var(--zx-playlist-button-icon-size);
+}
+
 .playlist-item-check {
   color: var(--zx-playlist-check-color);
   width: var(--zx-playlist-button-icon-size);
   height: var(--zx-playlist-button-icon-size);
+  visibility: hidden;
+}
+
+.playlist-item--active .playlist-item-check {
+  visibility: visible;
 }
 
 .playlist-item-hint {
@@ -83,6 +97,11 @@
 
 .playlist-item:hover .playlist-item-hint {
   opacity: 1;
+}
+
+/* an item already in the playlist has nothing to add */
+.playlist-item--active:hover .playlist-item-hint {
+  opacity: 0;
 }
 
 .playlist-create {

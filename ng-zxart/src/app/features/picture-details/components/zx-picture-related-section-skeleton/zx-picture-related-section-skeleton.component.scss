@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+
+.prs__title {
+  width: var(--zx-picture-related-skeleton-title-width);
+  height: var(--zx-picture-related-skeleton-title-height);
+}
+
+// Mirrors `.pix-mini` of the real rail row.
+.prs__row {
+  padding: var(--zx-picture-related-row-padding);
+}
+
+.prs__thumb {
+  width: var(--zx-picture-related-thumb-width);
+  height: var(--zx-picture-related-thumb-height);
+  flex-shrink: 0;
+}
+
+.prs__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.prs__line {
+  width: 100%;
+  height: var(--zx-picture-related-skeleton-line-height);
+}
+
+.prs__caption {
+  width: var(--zx-picture-related-skeleton-caption-width);
+  height: var(--zx-picture-related-skeleton-caption-height);
+}

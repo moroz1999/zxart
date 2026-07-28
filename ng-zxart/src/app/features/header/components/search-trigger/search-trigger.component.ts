@@ -3,7 +3,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Dialog} from '@angular/cdk/dialog';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {SearchDialogComponent} from '../search-dialog/search-dialog.component';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -28,7 +27,8 @@ export class SearchTriggerComponent implements OnInit {
     this.iconReg.loadSvg(`${environment.svgUrl}search.svg`, 'search')?.subscribe();
   }
 
-  openSearch(): void {
+  async openSearch(): Promise<void> {
+    const {SearchDialogComponent} = await import('../search-dialog/search-dialog.component');
     this.dialog.open(SearchDialogComponent, {
       panelClass: 'zx-dialog',
       backdropClass: 'zx-dialog-backdrop',

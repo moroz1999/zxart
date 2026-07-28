@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Urls;
 
 use structureElement;
+use userElement;
 use ZxArt\Shared\StructureType;
 
 /**
@@ -78,5 +79,18 @@ class EntityUrlResolver
     public function urlFor(structureElement $element): string
     {
         return $this->resolve($element) ?? (string)$element->getUrl();
+    }
+
+    /**
+     * A user's public page is the author page they are connected to, so a user
+     * without an author has no page and gets null. `userElement::getUrl()` is
+     * not an alternative here: it returns the author's legacy URL, which does
+     * not resolve as an SPA route.
+     */
+    public function urlForUser(userElement $user): ?string
+    {
+        $author = $user->getAuthorElement();
+
+        return $author instanceof structureElement ? $this->urlFor($author) : null;
     }
 }

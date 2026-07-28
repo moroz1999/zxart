@@ -6,7 +6,6 @@ namespace ZxArt\Ratings;
 use Cache;
 use Illuminate\Database\Connection;
 use LanguagesManager;
-use structureElement;
 use structureManager;
 use userElement;
 use ZxArt\Comments\CommentAuthorDto;
@@ -77,7 +76,7 @@ readonly class RatingsService
             $items[] = new RecentRatingDto(
                 user: new CommentAuthorDto(
                     name: html_entity_decode((string)$userElement->getTitle(), ENT_QUOTES),
-                    url: (string)$userElement->getUrl(),
+                    url: $this->entityUrlResolver->urlForUser($userElement),
                     badges: $userElement->getBadgetTypes(),
                 ),
                 rating: $rating,
@@ -146,7 +145,7 @@ readonly class RatingsService
             $items[] = new RecentRatingDto(
                 user: new CommentAuthorDto(
                     name: html_entity_decode((string)$userElement->getTitle(), ENT_QUOTES),
-                    url: (string)$userElement->getUrl(),
+                    url: $this->entityUrlResolver->urlForUser($userElement),
                     badges: $userElement->getBadgetTypes(),
                 ),
                 rating: (string)$value,
@@ -156,19 +155,6 @@ readonly class RatingsService
         }
 
         return new AuthorRatingsListDto($items, $page, $pagesAmount, $total);
-    }
-
-    /**
-     * Clean SPA URL for the user's connected author, or empty string when the
-     * user has no author. userElement::getUrl() returns the legacy author URL,
-     * which does not resolve as an SPA route.
-     */
-    private function buildUserUrl(userElement $user): string
-    {
-        $author = $user->getAuthorElement();
-        return $author instanceof structureElement
-            ? $this->entityUrlResolver->urlFor($author)
-            : '';
     }
 
     public function invalidateRecentRatingsCache(): void
@@ -236,7 +222,7 @@ readonly class RatingsService
             $items[] = new ElementRatingDto(
                 user: new CommentAuthorDto(
                     name: html_entity_decode((string)$userElement->getTitle(), ENT_QUOTES),
-                    url: (string)$userElement->getUrl(),
+                    url: $this->entityUrlResolver->urlForUser($userElement),
                     badges: $userElement->getBadgetTypes(),
                 ),
                 rating: (string)$value,

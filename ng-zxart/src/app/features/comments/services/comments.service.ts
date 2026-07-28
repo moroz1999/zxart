@@ -22,9 +22,13 @@ export class CommentsService {
     );
   }
 
+  /**
+   * Stays subscribed to the language so a language switch refetches the thread
+   * in the newly selected language. Consumers must therefore unsubscribe — the
+   * entity comments block does so through the `async` pipe.
+   */
   getComments(elementId: number): Observable<CommentDto[]> {
     return this.languageService.languageCode$.pipe(
-      take(1),
       switchMap(languageCode => this.http.get<CommentDto[]>(`/comments-data/id:${elementId}/?lang=${languageCode}`)),
       map(comments => this.normalizeComments(comments)),
       catchError(err => throwError(() => err))

@@ -99,7 +99,7 @@
     <zx-form-field *ngFor="let field of (batchUpload ? emptyImageFields : imageFields)">
       <zx-form-label>{{ 'picture-form.' + field | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-image-upload [imageUrl]="imageUrls[field] || null" (changed)="onImageChanged(field, $event)"></zx-image-upload>
+        <zx-image-upload [imageUrl]="imageUrls[field] || null" [accept]="imageAccept[field]" (changed)="onImageChanged(field, $event)"></zx-image-upload>
       </zx-form-control>
     </zx-form-field>
 

@@ -1,0 +1,22 @@
+:root {
+  /* Card corner radius, mirrored from zx-prod-block's panel. */
+  --zx-prods-list-skeleton-card-radius: var(--zx-panel-radius-xl);
+
+  /* Card body padding, mirrored from zx-prod-block's zx-inset. */
+  --zx-prods-list-skeleton-body-padding: var(--zx-inset-padding-lg);
+
+  /* Gap between body lines, mirrored from zx-prod-block's zx-stack. */
+  --zx-prods-list-skeleton-body-gap: var(--zx-stack-gap-md);
+
+  /* Title placeholder height: one line of title typography. */
+  --zx-prods-list-skeleton-title-height: calc(var(--app-typography-title-size) * var(--app-typography-title-line-height));
+
+  /* Title placeholder width. */
+  --zx-prods-list-skeleton-title-width: 60%;
+
+  /* Metadata placeholder height: one line of label typography. */
+  --zx-prods-list-skeleton-text-height: calc(var(--app-typography-label-size) * var(--app-typography-label-line-height));
+
+  /* Width of the shortened metadata placeholder. */
+  --zx-prods-list-skeleton-text-short-width: 45%;
+}

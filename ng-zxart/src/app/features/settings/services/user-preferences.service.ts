@@ -26,6 +26,12 @@ export class UserPreferencesService {
     private localStorage: LocalStorageService,
   ) {}
 
+  /**
+   * Loads the preferences once per app start. A logged-in user always has them
+   * refetched, so the backend overwrites whatever localStorage held — another
+   * device may have changed them since. Anonymous visitors have nothing to fetch
+   * and keep using localStorage alone.
+   */
   initialize(): Observable<PreferenceDto[]> {
     if (this.initialized$) {
       return this.initialized$;
@@ -42,10 +48,6 @@ export class UserPreferencesService {
 
         if (user.userName === 'anonymous') {
           return of(this.loadFromStorage());
-        }
-
-        if (stored && stored.userId === currentUserId && stored.preferences.length > 0) {
-          return of(stored.preferences);
         }
 
         return this.fetchFromServer(currentUserId);
@@ -137,9 +139,14 @@ export class UserPreferencesService {
     return this.initialize();
   }
 
+  /**
+   * Since every start of a session now goes through here, a failed request must
+   * not leave callers without preferences: the last stored ones stand in.
+   */
   private fetchFromServer(userId: number | null): Observable<PreferenceDto[]> {
     return this.http.get<PreferenceDto[]>('/userpreferences/').pipe(
-      tap(prefs => this.saveToStorage(userId, prefs))
+      tap(prefs => this.saveToStorage(userId, prefs)),
+      catchError(() => of(this.loadFromStorage())),
     );
   }
 

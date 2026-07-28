@@ -1,4 +1,5 @@
 <div [appInViewport]="!loaded && !loading" (inViewport)="onInViewport()">
+  <zx-picture-related-section-skeleton *ngIf="loading"></zx-picture-related-section-skeleton>
   <zx-grid *ngIf="rails.length" [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="lg" align="start">
     <zx-panel *ngFor="let rail of rails">
       <zx-stack spacing="sm">

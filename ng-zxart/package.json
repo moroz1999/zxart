@@ -6,7 +6,9 @@
     "dev": "ng serve",
     "start": "ng serve",
     "build": "ng build -c production && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
-    "build:docker": "ng build -c production && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/"
+    "build:docker": "ng build -c production && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
+    "build:stats": "ng build -c production --stats-json && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
+    "analyze": "npm run build:stats && webpack-bundle-analyzer ../htdocs/js/ng-zxart/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +47,7 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "webpack-bundle-analyzer": "^5.3.1"
   }
 }

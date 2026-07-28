@@ -5,7 +5,7 @@ import {catchError} from 'rxjs/operators';
 import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
 import {ProdReleaseDto} from '../../prod-details/models/prod-release.dto';
 
-export type GroupProdsScope = 'own' | 'published' | 'releases';
+export type GroupProdsScope = 'all' | 'own' | 'published' | 'releases';
 
 export interface GroupProdCategory {
   id: number;

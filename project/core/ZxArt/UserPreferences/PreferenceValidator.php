@@ -46,6 +46,7 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_BEST_GAMES_MIN_RATING => $this->validateMinRating($code, $value),
             PreferenceCode::HOMEPAGE_NEW_PRODS_START_YEAR => $this->validateStartYearOffset($code, $value),
             PreferenceCode::PICTURE_MODE => $this->validatePictureMode($value),
+            PreferenceCode::PICTURE_SCALE => $this->validatePictureScale($value),
             PreferenceCode::PICTURE_BORDER,
             PreferenceCode::PICTURE_HIDDEN => $this->validateBinaryFlag($code, $value),
             PreferenceCode::RADIO_CRITERIA => $value,
@@ -111,6 +112,16 @@ final class PreferenceValidator
         $allowed = ['mix', 'flicker', 'interlace1', 'interlace2'];
         if (!in_array($value, $allowed, true)) {
             throw InvalidPreferenceValueException::forPreference(PreferenceCode::PICTURE_MODE->value, $value);
+        }
+        return $value;
+    }
+
+    /** Zoom of the picture details viewer; narrow devices fall back on their own. */
+    private function validatePictureScale(string $value): string
+    {
+        $allowed = ['wide', '1', '2', '3'];
+        if (!in_array($value, $allowed, true)) {
+            throw InvalidPreferenceValueException::forPreference(PreferenceCode::PICTURE_SCALE->value, $value);
         }
         return $value;
     }

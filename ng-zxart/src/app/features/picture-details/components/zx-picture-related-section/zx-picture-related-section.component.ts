@@ -13,6 +13,7 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxPartyPlaceComponent} from '../../../../shared/lib/zx-party-place/zx-party-place.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {ZxPictureRelatedSectionSkeletonComponent} from '../zx-picture-related-section-skeleton/zx-picture-related-section-skeleton.component';
 import {RouterLink} from '@angular/router';
 interface RelatedRail {
   readonly kind: PictureRelatedRailKind;
@@ -33,6 +34,7 @@ interface RelatedRail {
     ZxPartyPlaceComponent,
     TextDirective,
     HeadingDirective,
+    ZxPictureRelatedSectionSkeletonComponent,
   ],
   templateUrl: './zx-picture-related-section.component.html',
   styleUrls: ['./zx-picture-related-section.component.scss'],

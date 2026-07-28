@@ -23,30 +23,38 @@
 
 .skeleton-comment-body {
   flex: 1;
+  // Without this the body's minimum width is the min-content of the header row —
+  // the sum of its fixed-width bones — and the whole card outgrows the column.
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
 }
 
+// The real header is a wrapping `zx-inline`.
 .skeleton-comment-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-8);
 }
 
 .skeleton-avatar {
-  width: 24px;
+  flex: 0 0 24px;
   height: 24px;
   border-radius: 50%;
 }
 
+// Bone widths are a starting size, not a floor: they give way before the row does.
 .skeleton-name {
-  width: 100px;
+  flex: 0 1 100px;
+  min-width: 0;
   height: 16px;
 }
 
 .skeleton-date {
-  width: 80px;
+  flex: 0 1 80px;
+  min-width: 0;
   height: 14px;
 }
 

@@ -548,10 +548,6 @@ trait ZxProdsList
             if ($query = $this->getSelectorQuery('languages')) {
                 $values = $this->getSelectorValue('languages');
                 $db = $this->getService('db');
-                /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
 
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
@@ -568,16 +564,15 @@ trait ZxProdsList
                     'title' => "",
                     'values' => [],
                 ];
-                $order = [];
+                // the language name is an SPA translation (`language.<code>`), so
+                // the code travels as the title and the SPA labels and sorts it
                 foreach ($languages as $language) {
                     $group['values'][] = [
                         'value' => $language,
-                        'title' => $translationsManager->getTranslationByName("language.item_{$language}"),
+                        'title' => $language,
                         'selected' => $values && in_array($language, $values),
                     ];
-                    $order[] = $translationsManager->getTranslationByName("language.item_{$language}");
                 }
-                array_multisort($order, SORT_ASC, $group['values']);
                 $this->languagesSelector[] = $group;
             }
         }

@@ -145,7 +145,7 @@
               appText="label"
               tone="muted-link"
               (click)="languageClicked($event, language.id)"
-            >{{ language.title }}</span><span *ngIf="!last">, </span>
+            >{{ 'language.' + language.id | translate }}</span><span *ngIf="!last">, </span>
             </ng-container>
           </span>
           </zx-inline>

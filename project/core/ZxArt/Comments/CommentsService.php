@@ -32,6 +32,7 @@ readonly class CommentsService
         private Cache                $cache,
         private CommentsTransformer  $transformer,
         private CommentsRepository   $commentsRepository,
+        private CommentContentPurifier $contentPurifier,
     )
     {
     }
@@ -216,6 +217,7 @@ readonly class CommentsService
             throw new CommentAccessDeniedException("User must be authorized to add comments");
         }
 
+        $content = $this->contentPurifier->purify($content);
         if (trim($content) === '') {
             throw new CommentOperationException("Comment content cannot be empty");
         }
@@ -284,6 +286,11 @@ readonly class CommentsService
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'publicForm', 'comment');
 
         if ($hasPrivilege === true || ($isAuthor === true && $commentElement->isEditable() === true)) {
+            $content = $this->contentPurifier->purify($content);
+            if (trim($content) === '') {
+                throw new CommentOperationException("Comment content cannot be empty");
+            }
+
             $commentElement->content = $content;
             $this->resetTranslationFields($commentElement);
             $commentElement->persistElementData();

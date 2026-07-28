@@ -43,6 +43,7 @@ enum PreferenceCode: string
     case PICTURE_MODE = 'picture_mode';
     case PICTURE_BORDER = 'picture_border';
     case PICTURE_HIDDEN = 'picture_hidden';
+    case PICTURE_SCALE = 'picture_scale';
 
     // Interface language
     case LANGUAGE = 'language';

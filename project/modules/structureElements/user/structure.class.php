@@ -20,7 +20,7 @@ class userElement extends structureElement
     public $dataResourceName = 'module_user';
     public $defaultActionName = 'show';
     public $role = 'content';
-    protected $authorElement;
+    protected ?structureElement $authorElement = null;
     public array $userGroupsList = [];
 
     /**
@@ -227,10 +227,10 @@ class userElement extends structureElement
         }
     }
 
-    public function getAuthorElement()
+    public function getAuthorElement(): ?structureElement
     {
         if ($this->authorElement === null && $this->authorId) {
-            $structureManager = $this->getService('structureManager');
+            $structureManager = $this->getService(structureManager::class);
 
             $this->authorElement = $structureManager->getElementById($this->authorId);
         }
@@ -373,6 +373,4 @@ class userElement extends structureElement
         return implode(' ', $this->getBadgetTypes());
     }
 }
-
-
 

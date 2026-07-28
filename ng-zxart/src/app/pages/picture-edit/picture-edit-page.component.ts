@@ -133,6 +133,17 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   /** Image fields shown with zx-image-upload (all imageDataChunk on zxPicture). */
   readonly imageFields: readonly string[] = ['image', 'inspired', 'inspired2', 'sequence'];
+  /**
+   * The main file is a native ZX Spectrum screen whose extension follows the
+   * format it was saved in, so the picker takes any file. The fields beside it
+   * hold ordinary reference images.
+   */
+  readonly imageAccept: Record<string, string> = {
+    image: '',
+    inspired: 'image/*',
+    inspired2: 'image/*',
+    sequence: 'image/*',
+  };
 
   loading = true;
   submitting = false;

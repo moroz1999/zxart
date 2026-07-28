@@ -12,7 +12,6 @@ readonly class ProdLanguageInfoDto
 {
     public function __construct(
         public string $code,
-        public string $title,
         public string $emoji,
     ) {
     }

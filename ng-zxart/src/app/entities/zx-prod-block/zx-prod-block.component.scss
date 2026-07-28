@@ -6,6 +6,11 @@ $fixedWidth: 256px;
 $fixedHeight: 192px;
 :host {
   display: block;
+  // The card truncates its title, so as a grid/flex item it must be allowed to
+  // shrink to its track. Without this the automatic minimum size resolves to the
+  // min-content width of the non-wrapping title, which stretches the track — the
+  // title never gets to ellipsize and long titles push the grid past the viewport.
+  min-width: 0;
 }
 
 .zx-prod-internal {

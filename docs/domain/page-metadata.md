@@ -11,8 +11,8 @@ JavaScript. Canonical links are not emitted.
 Angular applies entity metadata from the entity's existing core request. Fixed
 routes use Angular translation keys without an additional request. RSS discovery,
 favicon, HTML language, and theme color are
-part of the initial shell. Yandex Metrika is initialized by Angular and records a
-page view after metadata has been applied for each navigation.
+part of the initial shell. Yandex Metrika is initialized by Angular and records
+one page view for every completed Angular navigation.
 
 Historical public URLs are resolved on the backend and redirected to clean SPA
 URLs with HTTP 301. Unknown public URLs are logged by the backend and return HTTP

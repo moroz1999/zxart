@@ -1,0 +1,58 @@
+:host {
+  display: block;
+}
+
+.lt-content {
+  padding: 0 var(--space-16) var(--space-12);
+}
+
+.lt-user-name {
+  margin-bottom: var(--space-8);
+}
+
+.lt-menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.lt-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.lt-input {
+  height: var(--zx-login-trigger-input-height);
+  padding: var(--zx-login-trigger-input-padding);
+  background-color: var(--zx-login-trigger-input-bg);
+  color: var(--zx-login-trigger-input-text);
+  border: var(--zx-login-trigger-input-border);
+  border-radius: var(--zx-login-trigger-input-radius);
+  font-size: var(--zx-login-trigger-input-font-size);
+  outline: none;
+
+  &:focus {
+    border-color: var(--zx-login-trigger-input-border-focus);
+  }
+}
+
+.lt-remember {
+  display: flex;
+  align-items: center;
+}
+
+.lt-remember-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  cursor: pointer;
+}
+
+.lt-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}

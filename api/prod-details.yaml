@@ -205,14 +205,12 @@ components:
 
     ProdLanguageInfo:
       type: object
+      description: The language name is not sent; the SPA translates the code (`language.<code>`).
       required:
         - code
-        - title
         - emoji
       properties:
         code:
-          type: string
-        title:
           type: string
         emoji:
           type: string

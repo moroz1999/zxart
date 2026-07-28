@@ -22,81 +22,9 @@
     (overlayKeydown)="onOverlayKeydown($event)"
   >
     <zx-header-popover class="lt-popover" (click)="$event.stopPropagation()">
-      <div class="lt-content">
-          <ng-container *ngIf="user.userName !== 'anonymous'; else loginForm">
-            <div class="lt-user-name" appText="label" tone="muted">{{ user.userName }}</div>
-            <div class="lt-menu-items">
-              <zx-popover-menu-item href="/profile">
-                {{ 'login.account' | translate }}
-              </zx-popover-menu-item>
-              <zx-popover-menu-item href="/playlists">
-                {{ 'login.favourites' | translate }}
-              </zx-popover-menu-item>
-              <zx-popover-menu-item *ngIf="user.authorPageUrl" [href]="user.authorPageUrl!">
-                {{ 'login.my-page' | translate }}
-              </zx-popover-menu-item>
-            </div>
-            <zx-button size="sm" color="outlined" (click)="submitLogout()">
-              {{ 'login.logout' | translate }}
-            </zx-button>
-          </ng-container>
-
-          <ng-template #loginForm>
-            <form zxForm (ngSubmit)="submitLogin()">
-              <div class="lt-error" *ngIf="loginError" role="alert" appText="caption" tone="danger">
-                {{ loginError | translate }}
-              </div>
-
-              <div class="lt-field">
-                <label class="lt-label" for="lt-username" appText="label" tone="muted">{{ 'login.username' | translate }}</label>
-                <input
-                  id="lt-username"
-                  class="lt-input"
-                  type="text"
-                  autocomplete="username"
-                  [(ngModel)]="userName"
-                  name="userName"
-                />
-              </div>
-
-              <div class="lt-field">
-                <label class="lt-label" for="lt-password" appText="label" tone="muted">{{ 'login.password' | translate }}</label>
-                <input
-                  id="lt-password"
-                  class="lt-input"
-                  type="password"
-                  autocomplete="current-password"
-                  [(ngModel)]="password"
-                  name="password"
-                />
-              </div>
-
-              <div class="lt-remember">
-                <label class="lt-remember-label">
-                  <input type="checkbox" [(ngModel)]="remember" name="remember" />
-                  <span appText="label" tone="muted">{{ 'login.remember' | translate }}</span>
-                </label>
-              </div>
-
-              <zx-button type="submit" [disabled]="loading">
-                {{ 'login.submit' | translate }}
-              </zx-button>
-
-              <div class="lt-links">
-                <a
-                  href="/register"
-                  class="lt-link"
-                  appText="body" tone="link"
-                >{{ 'login.register' | translate }}</a>
-                <a
-                  href="/password-reminder"
-                  class="lt-link"
-                  appText="body" tone="link"
-                >{{ 'login.forgot-password' | translate }}</a>
-              </div>
-            </form>
-          </ng-template>
-      </div>
+      @defer (when popoverOpen) {
+        <zx-login-popover-content></zx-login-popover-content>
+      }
     </zx-header-popover>
   </ng-template>
 </ng-container>

@@ -10,6 +10,8 @@ use commentElement;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
+use structureElement;
+use userElement;
 use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Urls\EntityUrlResolver;
 
@@ -32,8 +34,10 @@ class CommentsTransformerTest extends TestCase
         $currentUserService = $this->createMock(CurrentUserService::class);
         $currentUserService->method('getCurrentUser')->willReturn($currentUser);
 
+        $entityUrlResolver = $this->createMock(EntityUrlResolver::class);
+        $entityUrlResolver->method('urlFor')->willReturn('/author/42');
         $this->transformer = new CommentsTransformer(
-            $this->createMock(EntityUrlResolver::class),
+            $entityUrlResolver,
             $this->privilegesManager,
             $currentUserService,
         );
@@ -62,5 +66,29 @@ class CommentsTransformerTest extends TestCase
         $this->assertNull($dto->target);
         $this->assertNull($dto->parentId);
         $this->assertSame([], $dto->children);
+    }
+
+    public function testTransformToDtoUsesSpaUrlForConnectedAuthor(): void
+    {
+        $author = $this->createMock(structureElement::class);
+        $user = $this->createMock(userElement::class);
+        $user->method('getAuthorElement')->willReturn($author);
+        $user->method('getBadgetTypes')->willReturn(['vip']);
+        $user->method('getTitle')->willReturn('Test user');
+
+        $comment = $this->createMock(commentElement::class);
+        $comment->method('getUserElement')->willReturn($user);
+        $comment->method('getDecoratedContent')->willReturn('<p>content</p>');
+        $comment->method('getValue')->with('content')->willReturn('<p>content</p>');
+        $comment->method('isEditable')->willReturn(false);
+        $comment->method('getInitialTarget')->willReturn(null);
+        $comment->method('getParentElement')->willReturn(null);
+
+        $dto = $this->transformer->transformToDto($comment);
+
+        $this->assertNotNull($dto->author);
+        $this->assertSame('Test user', $dto->author->name);
+        $this->assertSame('/author/42', $dto->author->url);
+        $this->assertSame(['vip'], $dto->author->badges);
     }
 }

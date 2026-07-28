@@ -1,6 +1,20 @@
 <zx-stack spacing="md">
   <zx-panel variant="elevated" padding="sm">
     <zx-filter-bar gap="lg">
+      <zx-stack *ngIf="scopes.length > 1" spacing="xs">
+        <span appText="caption" tone="muted">{{ 'group-details.filters.role' | translate }}</span>
+        <zx-button-controls [wrap]="true" gap="sm">
+          <zx-button
+            *ngFor="let option of scopes; trackBy: trackByScope"
+            size="sm"
+            [color]="activeScope === option ? 'secondary' : 'outlined'"
+            [disabled]="loading"
+            (click)="setScope(option)">
+            {{ getScopeLabelKey(option) | translate }}
+          </zx-button>
+        </zx-button-controls>
+      </zx-stack>
+
       <zx-stack spacing="xs">
         <span appText="caption" tone="muted">{{ 'group-details.filters.sort' | translate }}</span>
         <zx-button-controls [wrap]="true" gap="sm">

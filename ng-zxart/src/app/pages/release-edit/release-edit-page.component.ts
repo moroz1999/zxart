@@ -3,7 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
@@ -100,6 +100,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   members: MemberRoleItem[] = [];
   roles: string[] = [];
   enums: Record<string, EnumOption[]> = {};
+  /** Language codes come from the backend; their names are ours (`language.<code>`). */
+  languageOptions: EnumOption[] = [];
   fileNames: Record<string, string> = {};
   fileSelectors: Record<string, FileSelectorItem[]> = {};
 
@@ -131,6 +133,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -172,6 +175,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
           this.members = data.members;
           this.roles = data.roles;
           this.enums = data.enums;
+          this.languageOptions = this.buildLanguageOptions(data.enums['language']);
           this.fileNames = data.files;
           this.fileSelectors = data.fileSelectors;
           this.loading = false;
@@ -184,6 +188,14 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  /** Labels the backend's bare language codes from the SPA's own translations. */
+  private buildLanguageOptions(options: EnumOption[] | undefined): EnumOption[] {
+    return (options ?? []).map(option => ({
+      value: option.value,
+      label: this.translate.instant(`language.${option.value}`),
+    }));
   }
 
   ngOnDestroy(): void {

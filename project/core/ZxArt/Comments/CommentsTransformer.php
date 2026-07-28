@@ -8,6 +8,7 @@ use commentElement;
 use privilegesManager;
 use structureElement;
 use userElement;
+use ZxArt\Urls\EntityUrlResolver;
 
 /**
  * Service for transforming comment entities into DTOs.
@@ -15,7 +16,7 @@ use userElement;
 readonly class CommentsTransformer
 {
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+        private EntityUrlResolver $entityUrlResolver,
         private privilegesManager $privilegesManager,
         private CurrentUserService $currentUserService,
     ) {
@@ -37,7 +38,10 @@ readonly class CommentsTransformer
 
         if ($authorUser instanceof userElement) {
             $badges = $authorUser->getBadgetTypes();
-            $url = (string)$authorUser->getUrl();
+            $authorElement = $authorUser->getAuthorElement();
+            $url = $authorElement instanceof structureElement
+                ? $this->entityUrlResolver->urlFor($authorElement)
+                : null;
             $authorName = html_entity_decode((string)$authorUser->getTitle(), ENT_QUOTES);
         }
 

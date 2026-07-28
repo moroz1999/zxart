@@ -45,6 +45,26 @@ Every element type whose form has such a field needs its own entry in
 empty otherwise. Only lists that are fixed by the hardware (border colour,
 rotation angles) are constants in the component.
 
+A spec marked `clientLabels` sends the bare values instead, for lists the SPA
+translates itself. Software languages work that way: the backend names the codes
+a production or release can carry, and every name comes from the SPA's own
+`language.<code>` translations — on the forms, on the detail pages and in the
+prods filter, which also sorts by them. Nothing reads a language name from the
+backend.
+
+A single `zx-select` without a placeholder submits what it displays: when the
+bound value matches no option — as on a creation form, where the element has no
+value yet — the browser shows the first option, and the control takes that
+value. Lists where "nothing" is a valid choice carry an empty option
+(`emptyBlank`, `emptyLabelKey`) or a placeholder and keep the empty value.
+
+The component keeps the control's value apart from the displayed one and
+re-checks the invariant from every entry point (options, `writeValue`,
+`registerOnChange`, `setDisabledState`), so it holds whatever order Angular
+wires the accessor in. A CVA that only acts in one of those hooks is broken:
+during setup `writeValue` runs *before* `registerOnChange`, so anything it
+reports goes into a callback that is still a no-op.
+
 #### Pagination and URL
 
 Components with pagination **must** reflect the current page in the URL and restore it on load.
@@ -62,6 +82,12 @@ Components with pagination **must** reflect the current page in the URL and rest
   on page/sorting changes and exposes them as `paginationQueryParams` for
   `<zx-pagination [queryParams]>`. Filters must not be passed in as `@Input()` — the
   router emits the new params before input bindings are updated.
+- `zx-pagination` rebuilds its page links only when `currentPage`, `pagesAmount`
+  or `visibleAmount` change, and tracks them by identity. Hosts are free to build
+  `queryParams` in a getter: the fresh object identity makes `ngOnChanges` run on
+  every check, and rebuilding there would replace the pressed link while the
+  button's ripple runs a check between pointerdown and click, so the click would
+  be swallowed and nothing would happen.
 
 **Reference implementation:** `CommentsPageComponent` (`features/comments/components/comments-page/`) and `BrowserBaseComponent` (`shared/browser-base.component.ts`).
 
@@ -76,6 +102,18 @@ a tab is an ordinary navigation: the route changes, the parent recomputes the
 active index from the route and feeds it back through `initialActiveIndex`. Tab
 hrefs must therefore be real routed URLs (`/author/:id/:tab`). Tabs without an
 `href` stay local and only swap the rendered template.
+
+A route whose last segment is such a tab must declare `data: {inPageTab: true}`.
+`SpaRootComponent` strips that segment when it derives the view key it uses to
+decide whether a navigation scrolls back to the top, so switching a tab keeps
+the reader where they are.
+
+#### Scroll on navigation
+
+`SpaRootComponent` scrolls to the top on `NavigationEnd`, but only when the view
+key — the URL path without query, fragment and in-page tab segment — actually
+changed, and only for `imperative` navigations. Back and forward are left to the
+browser, which restores its own recorded position.
 
 #### Build and Verification
 After making any changes to the Angular part of the project (`ng-zxart`), including styles (SCSS) and theme files, you must:
@@ -96,7 +134,8 @@ The PHP app uses `NG_DEV_SERVER_URL` to load Angular dev-server modules instead 
 ### Analytics
 
 `AnalyticsService` initializes Yandex Metrika in Angular. A page view is sent
-after route metadata has been applied on every completed navigation. Google
+on every `NavigationEnd`; metadata processing remains active independently.
+The previous Angular URL is sent as the referrer for client-side navigations. Google
 Analytics and Google Ads scripts are not loaded by the public frontend.
 
 ### Architecture and Code Structure

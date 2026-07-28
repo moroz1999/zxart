@@ -22,7 +22,7 @@
   <div class="playlist-popover" @popover (click)="$event.stopPropagation()">
     <div class="playlist-popover-content">
       <ng-container *ngIf="activePlaylistIds$ | async as activeIds">
-        <div class="playlist-list" role="listbox">
+        <div class="playlist-list" role="listbox" *ngIf="playlists$ | async as playlists">
           <div
             *ngFor="let item of playlists; trackBy: trackById"
             class="playlist-item"
@@ -32,8 +32,11 @@
             [attr.aria-selected]="isInPlaylist(activeIds, item.id)"
           >
             <span class="playlist-item-title" appText="label" tone="primary">{{ item.title }}</span>
-            <svg-icon *ngIf="isInPlaylist(activeIds, item.id)" name="check" class="playlist-item-check"></svg-icon>
-            <span *ngIf="!isInPlaylist(activeIds, item.id)" class="playlist-item-hint" appText="caption" tone="muted">{{ 'playlist.add_hint' | translate }}</span>
+            <!-- both states are always laid out, so ticking a playlist cannot resize its row -->
+            <span class="playlist-item-status">
+              <span class="playlist-item-hint" appText="caption" tone="muted">{{ 'playlist.add_hint' | translate }}</span>
+              <svg-icon name="check" class="playlist-item-check"></svg-icon>
+            </span>
           </div>
         </div>
       </ng-container>

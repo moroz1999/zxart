@@ -171,7 +171,7 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'author/:id/:tab', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity'}},
+  {path: 'author/:id/:tab', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
   {
     path: 'author-alias/:id/edit',
     loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
@@ -220,7 +220,7 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
+  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {inPageTab: true}},
   {
     path: 'group-alias/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
@@ -255,7 +255,7 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.edit-party',
     },
   },
-  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
+  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {inPageTab: true}},
   {path: 'prod/:id', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'prod/:id/edit',
@@ -307,7 +307,7 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.split-prod',
     },
   },
-  {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
+  {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
   {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent)},
   {
     path: 'release/:id/edit',

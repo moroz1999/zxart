@@ -412,8 +412,9 @@
       "view-all": "All works"
     },
     "works": {
-      "own": "Own software",
-      "published": "Published",
+      "all": "All",
+      "own": "As developer",
+      "published": "As publisher",
       "releases": "Releases & cracks",
       "found": "{{count}} works",
       "empty": "No works found"
@@ -421,7 +422,8 @@
     "filters": {
       "sort": "Sort",
       "type": "Release type",
-      "category": "Category"
+      "category": "Category",
+      "role": "Role"
     },
     "category": {
       "all": "All categories"
@@ -1187,6 +1189,10 @@
     "latest": {
       "graphics": "Recently added artists",
       "music": "Recently added musicians"
+    },
+    "all": {
+      "graphics": "All artists",
+      "music": "All musicians"
     }
   },
   "author-browser": {
@@ -1214,27 +1220,6 @@
       "city": "City",
       "musicRating": "Music rating",
       "graphicsRating": "Graphics rating"
-    }
-  },
-  "authors-page": {
-    "active": {
-      "graphics": "Active artists",
-      "music": "Active musicians",
-      "period": "Activity period",
-      "yearsShort": "{{count}} yr",
-      "empty": "No active authors"
-    },
-    "top": {
-      "graphics": "Top artists",
-      "music": "Top musicians"
-    },
-    "latest": {
-      "graphics": "Recently added artists",
-      "music": "Recently added musicians"
-    },
-    "all": {
-      "graphics": "All artists",
-      "music": "All musicians"
     }
   },
   "group-browser": {
@@ -2231,5 +2216,45 @@
     "votes": "ratings",
     "downloads": "downloads",
     "plays": "plays"
+  },
+  "language": {
+    "be": "Flemish",
+    "bs": "Bosnian",
+    "by": "Belarussian",
+    "ca": "Catalan",
+    "cs": "Czech",
+    "da": "Danish",
+    "de": "Deutsch",
+    "el": "Greek",
+    "en": "English",
+    "eo": "Esperanto",
+    "es": "Spanish",
+    "eu": "Basque",
+    "fi": "Finnish",
+    "fr": "French",
+    "gl": "Galician",
+    "hr": "Croatian",
+    "hu": "Hungarian",
+    "is": "Icelandic",
+    "it": "Italian",
+    "ja": "Japanese",
+    "la": "Latin",
+    "lt": "Lithuanian",
+    "lv": "Latvian",
+    "m-": "Monaco",
+    "nl": "Dutch",
+    "no": "Norwegian",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sh": "Serbo-Croatian",
+    "sk": "Slovak",
+    "sl": "Slovenian",
+    "sr": "Serbian",
+    "sv": "Swedish",
+    "tr": "Turkish",
+    "ua": "Ukrainian",
+    "he": "Hebrew"
   }
 }

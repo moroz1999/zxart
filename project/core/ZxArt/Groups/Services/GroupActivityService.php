@@ -59,7 +59,7 @@ readonly final class GroupActivityService
             $items[] = new RecentRatingDto(
                 user: new CommentAuthorDto(
                     name: $this->decode((string)$user->getTitle()),
-                    url: (string)$user->getUrl(),
+                    url: $this->entityUrlResolver->urlForUser($user),
                     badges: $user->getBadgetTypes(),
                 ),
                 rating: (string)$vote['value'],

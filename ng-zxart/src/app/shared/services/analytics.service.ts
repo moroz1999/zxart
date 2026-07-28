@@ -13,6 +13,7 @@ type YmFunction = {
 export class AnalyticsService {
   private readonly metrikaId = 94686067;
   private initialized = false;
+  private previousPageUrl: string | null = null;
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -59,10 +60,12 @@ export class AnalyticsService {
   }
 
   trackPageView(url: string): void {
+    const absoluteUrl = new URL(url, this.document.location.origin).href;
     this.getYm()?.(this.metrikaId, 'hit', url, {
       title: this.document.title,
-      referer: this.document.referrer,
+      referer: this.previousPageUrl ?? this.document.referrer,
     });
+    this.previousPageUrl = absoluteUrl;
   }
 
   private getYm(): YmFunction | undefined {

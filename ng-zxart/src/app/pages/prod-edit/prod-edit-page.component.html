@@ -49,7 +49,7 @@
     <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'prod-form.language' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-multi-select-filter formControlName="language" [options]="enums['language'] || []" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
+        <zx-multi-select-filter formControlName="language" [options]="languageOptions" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
       </zx-form-control>
     </zx-form-field>
   </zx-form-section>

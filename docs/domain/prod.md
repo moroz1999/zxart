@@ -26,6 +26,10 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **tagsText** - tags (text)
 - **compo** - competition name (compo)
 - **language** - interface languages (array)
+  - The codes a prod or release can carry are the `engine_zxitem_language.value`
+    enum and `LanguageCodesProviderTrait::getLanguageCodes()`; adding one means
+    extending both. Their names are SPA translations (`language.<code>`) and are
+    never sent from the backend.
 
 ### Catalogue Route
 
