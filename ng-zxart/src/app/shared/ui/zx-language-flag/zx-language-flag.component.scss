@@ -1,0 +1,14 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.zx-language-flag__svg {
+  width: var(--zx-language-flag-width);
+  height: var(--zx-language-flag-height);
+  border-radius: var(--zx-language-flag-radius);
+  overflow: hidden;
+  /* a white flag needs an edge of its own against a light background */
+  box-shadow: inset 0 0 0 1px var(--zx-language-flag-border);
+}

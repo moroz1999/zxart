@@ -9,10 +9,9 @@ export interface ProdCategoryPathDto {
   categories: ProdCategoryRefDto[];
 }
 
-/** The name is an SPA translation: `'language.' + code`. */
+/** Name and flag are both SPA-side, keyed by the code (`language.<code>`, `flags/<code>.svg`). */
 export interface ProdLanguageInfoDto {
   code: string;
-  emoji: string;
 }
 
 export interface ProdHardwareInfoDto {

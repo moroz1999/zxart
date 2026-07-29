@@ -6,6 +6,7 @@ namespace ZxArt\Parties\Rest;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 readonly class PartyCoreRestDto
 {
@@ -32,6 +33,7 @@ readonly class PartyCoreRestDto
         public string $zipUrl,
         public PartyCountersRestDto $counters,
         public PartyTabsRestDto $tabs,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

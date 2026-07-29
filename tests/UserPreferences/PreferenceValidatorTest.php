@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\Exception\InvalidPreferenceCodeException;
 use ZxArt\UserPreferences\Domain\Exception\InvalidPreferenceValueException;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
+use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\PreferenceValidator;
 
 final class PreferenceValidatorTest extends TestCase
@@ -43,6 +44,27 @@ final class PreferenceValidatorTest extends TestCase
     {
         $this->expectException(InvalidPreferenceValueException::class);
         $this->sut->validateValue(PreferenceCode::THEME, 'rainbow');
+    }
+
+    // --- homepage ---
+
+    public function testDefaultHomepageOrderAccepted(): void
+    {
+        $defaultOrder = (new DefaultUserPreferencesProvider())->getDefault(PreferenceCode::HOMEPAGE_ORDER);
+
+        $this->assertNotNull($defaultOrder);
+        $this->assertSame(
+            $defaultOrder,
+            $this->sut->validateValue(PreferenceCode::HOMEPAGE_ORDER, $defaultOrder),
+        );
+    }
+
+    public function testBestTunesOfMonthLimitAccepted(): void
+    {
+        $this->assertSame(
+            '10',
+            $this->sut->validateValue(PreferenceCode::HOMEPAGE_BEST_TUNES_MONTH_LIMIT, '10'),
+        );
     }
 
     // --- startYearOffset ---

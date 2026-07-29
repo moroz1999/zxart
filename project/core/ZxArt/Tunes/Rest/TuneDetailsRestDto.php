@@ -9,6 +9,7 @@ use Symfony\Component\ObjectMapper\Transform\MapCollection;
 use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
 use ZxArt\Shared\Dto\ReleaseInfoDto;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 readonly class TuneDetailsRestDto
 {
@@ -62,6 +63,7 @@ readonly class TuneDetailsRestDto
         public ?TuneSubmitterRestDto $submitter,
         #[Map(transform: MapCollection::class)]
         public array $downloads,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

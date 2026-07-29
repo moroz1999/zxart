@@ -5,6 +5,7 @@
 .zx-chip {
   display: inline-flex;
   align-items: center;
+  gap: var(--zx-chip-gap);
   border-radius: var(--zx-chip-radius);
   border: var(--zx-chip-border-width) solid transparent;
   font-weight: var(--zx-chip-font-weight);

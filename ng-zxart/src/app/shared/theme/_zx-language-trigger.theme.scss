@@ -1,6 +1,6 @@
 :root {
-  /* Flag emoji font size */
-  --zx-language-trigger-flag-size: 20px;
+  /* Gap between the flag and the language name in a popover row. */
+  --zx-language-trigger-option-gap: var(--space-8);
   /* Popover panel — inherits from shared header popover theme */
   --zx-language-trigger-popover-bg: var(--zx-header-popover-bg);
   --zx-language-trigger-popover-border: var(--zx-header-popover-border);

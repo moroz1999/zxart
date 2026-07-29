@@ -8,6 +8,7 @@ import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.compo
 import {ZxHeaderPopoverComponent} from '../../../../shared/ui/zx-header-popover/zx-header-popover.component';
 import {LanguageService} from '../../../settings/services/language.service';
 import {LanguageOption} from '../../../settings/models/language-option';
+import {ZxLanguageFlagComponent} from '../../../../shared/ui/zx-language-flag/zx-language-flag.component';
 
 @Component({
   selector: 'zx-language-trigger',
@@ -19,6 +20,7 @@ import {LanguageOption} from '../../../settings/models/language-option';
     CdkOverlayOrigin,
     ZxButtonComponent,
     ZxHeaderPopoverComponent,
+    ZxLanguageFlagComponent,
   ],
   templateUrl: './language-trigger.component.html',
   styleUrls: ['./language-trigger.component.scss'],

@@ -37,6 +37,7 @@ import {ZxTuneDetailsSkeletonComponent} from '../zx-tune-details-skeleton/zx-tun
 
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 
 
 @Component({
@@ -88,6 +89,7 @@ export class ZxTuneDetailsComponent implements OnChanges {
     private readonly api: TuneDetailsApiService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translate: TranslateService,
+    private readonly pageMetadataService: PageMetadataService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -102,6 +104,7 @@ export class ZxTuneDetailsComponent implements OnChanges {
       tap(details => {
         if (details) {
           this.pageTitleChange.emit(details.title);
+          this.pageMetadataService.applyEntityMetadata(details.metadata);
           this.breadcrumbService.setEntityTrail({
             items: [
               {title: this.translate.instant('menu.music'), url: '/music'},

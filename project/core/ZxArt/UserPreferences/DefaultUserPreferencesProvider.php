@@ -16,7 +16,7 @@ final class DefaultUserPreferencesProvider
     {
         return [
             PreferenceCode::THEME->value => ThemeValue::DARK->value,
-            PreferenceCode::HOMEPAGE_ORDER->value => 'newProds,newPictures,newTunes,bestNewDemos,bestNewGames,recentParties,bestPicturesOfMonth,latestAddedProds,latestAddedReleases,supportProds,unvotedPictures,randomGoodPictures,unvotedTunes,randomGoodTunes',
+            PreferenceCode::HOMEPAGE_ORDER->value => 'newProds,newPictures,newTunes,bestNewDemos,bestNewGames,recentParties,bestPicturesOfMonth,bestTunesOfMonth,latestAddedProds,latestAddedReleases,supportProds,unvotedPictures,randomGoodPictures,unvotedTunes,randomGoodTunes',
             PreferenceCode::HOMEPAGE_DISABLED->value => '',
             PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_NEW_PICTURES_LIMIT->value => '12',
@@ -25,6 +25,7 @@ final class DefaultUserPreferencesProvider
             PreferenceCode::HOMEPAGE_BEST_GAMES_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_RECENT_PARTIES_LIMIT->value => '5',
             PreferenceCode::HOMEPAGE_BEST_PICTURES_MONTH_LIMIT->value => '12',
+            PreferenceCode::HOMEPAGE_BEST_TUNES_MONTH_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_LATEST_PRODS_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_LATEST_RELEASES_LIMIT->value => '10',
             PreferenceCode::HOMEPAGE_SUPPORT_PRODS_LIMIT->value => '10',

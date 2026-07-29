@@ -9,6 +9,4 @@ export interface LanguageOption {
   long: string;
   /** native language name shown in the switcher. */
   title: string;
-  /** flag emoji shown in the switcher. */
-  flag: string;
 }

@@ -205,14 +205,11 @@ components:
 
     ProdLanguageInfo:
       type: object
-      description: The language name is not sent; the SPA translates the code (`language.<code>`).
+      description: Only the code travels; the SPA owns the name (`language.<code>`) and the flag icon.
       required:
         - code
-        - emoji
       properties:
         code:
-          type: string
-        emoji:
           type: string
 
     ProdHardwareInfo:

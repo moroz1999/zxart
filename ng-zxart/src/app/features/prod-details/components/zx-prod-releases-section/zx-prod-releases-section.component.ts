@@ -123,7 +123,7 @@ export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
     for (const r of this.releases) {
       for (const l of r.languages) {
         if (!seen.has(l.code)) {
-          seen.set(l.code, `${l.emoji} ${l.code.toUpperCase()}`);
+          seen.set(l.code, l.code.toUpperCase());
         }
       }
     }

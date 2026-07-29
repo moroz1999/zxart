@@ -112,7 +112,7 @@ Party provides methods for exporting results in various formats:
 
 ### Party Page REST API
 The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.
-- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters and tabs. The Angular party page builds its breadcrumb links from the clean `/parties` and `/parties/:year` routes.
+- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters and tabs. The Angular party page builds its breadcrumb links from the clean `/parties` and `/parties/:year` routes. It also carries the page metadata (`metadata`), resolved by `PageMetadataService::getForPath('/party/<id>')` and applied by the page through `PageMetadataService.applyEntityMetadata()`; `partyElement` implements no metadata provider, so the title is the party title plus the site name and there is no description or OpenGraph data.
 - `GET /party-overview/?id=` - "best works" dashboard: the winning entry (lowest positive `partyplace`) of each compo, grouped by medium (`prods`/`pictures`/`tunes`) in full card shapes.
 - `GET /party-prods/?id=&compoType=` - one compo's prods (standard prods-list shape).
 - `GET /party-pictures/?id=&compoType=` - one compo's pictures (`PictureRestDto` shape).

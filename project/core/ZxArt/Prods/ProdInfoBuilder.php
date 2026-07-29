@@ -72,12 +72,10 @@ readonly class ProdInfoBuilder
     public function buildLanguages(zxProdElement|zxReleaseElement $element): array
     {
         $languages = [];
-        // the name of a language is an SPA translation (`language.<code>`), so
-        // only the code and its flag travel from here
+        // the name and the flag of a language both live in the SPA, keyed by code
         foreach ($element->getSupportedLanguageCodes() as $code) {
             $languages[] = new ProdLanguageInfoDto(
                 code: (string)$code,
-                emoji: $element->getLanguageEmoji((string)$code),
             );
         }
         return $languages;

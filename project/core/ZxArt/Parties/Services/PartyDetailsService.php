@@ -18,6 +18,7 @@ use ZxArt\Parties\Repositories\PartiesRepository;
 use ZxArt\Parties\Repositories\PartyAuthorsRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArtItem;
+use ZxArt\PageMetadata\PageMetadataService;
 
 readonly class PartyDetailsService
 {
@@ -36,6 +37,7 @@ readonly class PartyDetailsService
         private PartyCompoNameResolver $compoNameResolver,
         private PartiesRepository $partiesRepository,
         private PartyAuthorsRepository $partyAuthorsRepository,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -64,6 +66,7 @@ readonly class PartyDetailsService
             zipUrl: $party->getSaveUrl(),
             counters: $counters,
             tabs: $this->buildTabs($counters),
+            metadata: $this->pageMetadataService->getForPath('/party/' . $partyId),
         );
     }
 

@@ -6,9 +6,8 @@
 }
 
 .lt-flag {
-  font-size: var(--zx-language-trigger-flag-size);
+  display: inline-flex;
   flex-shrink: 0;
-  line-height: 1;
 }
 
 .lt-label {
@@ -18,7 +17,9 @@
 }
 
 .lt-option {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--zx-language-trigger-option-gap);
   width: 100%;
   text-align: left;
   padding: var(--zx-popover-menu-item-padding);
@@ -36,6 +37,6 @@
 }
 
 .lt-option--active {
-  font-weight: 600;
+  font-weight: 500;
   background-color: var(--zx-popover-menu-item-active-bg);
 }

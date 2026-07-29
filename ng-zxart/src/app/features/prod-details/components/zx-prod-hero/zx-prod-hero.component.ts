@@ -23,11 +23,12 @@ import {ZxMetaRowComponent} from '../../../../shared/ui/zx-meta-row/zx-meta-row.
 import {ZxExtLinkDto, ZxExtLinksComponent} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
 import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
 import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
+import {ZxLanguageFlagComponent} from '../../../../shared/ui/zx-language-flag/zx-language-flag.component';
 
 @Component({
   selector: 'zx-prod-hero',
   standalone: true,
-  imports: [
+  imports: [ZxLanguageFlagComponent, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

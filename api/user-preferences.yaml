@@ -15,35 +15,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponsePreferences'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreferenceDto'
 
     put:
-      summary: Update a preference
-      description: Updates a single preference for the current user. For anonymous users, the change is not persisted server-side.
+      summary: Update user preferences
+      description: Updates one preference or a batch for the current user. For anonymous users, changes are not persisted server-side.
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                code:
-                  type: string
-                  description: Preference code (e.g., "theme")
-                  enum: [theme]
-                value:
-                  type: string
-                  description: Preference value (depends on code)
-              required:
-                - code
-                - value
+              oneOf:
+                - type: object
+                  properties:
+                    code:
+                      type: string
+                      description: Preference code
+                    value:
+                      type: string
+                      description: Preference value
+                  required:
+                    - code
+                    - value
+                - type: object
+                  properties:
+                    batch:
+                      type: string
+                      description: JSON array of objects containing string code and value fields
+                      example: '[{"code":"homepage_order","value":"newProds,bestTunesOfMonth"},{"code":"homepage_best_tunes_month_limit","value":"10"}]'
+                  required:
+                    - batch
       responses:
         '200':
           description: Updated list of preferences
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponsePreferences'
+                type: array
+                items:
+                  $ref: '#/components/schemas/PreferenceDto'
+        '400':
+          description: Invalid preference code, value, or batch format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -62,16 +80,11 @@ components:
         - code
         - value
 
-    ApiResponsePreferences:
+    ErrorResponse:
       type: object
       properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        responseData:
-          type: array
-          items:
-            $ref: '#/components/schemas/PreferenceDto'
         errorMessage:
           type: string
-          description: Error message (only present when responseStatus is "error")
+          description: Error message
+      required:
+        - errorMessage

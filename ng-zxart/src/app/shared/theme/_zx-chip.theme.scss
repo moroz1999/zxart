@@ -5,6 +5,8 @@
   --zx-chip-border-width: var(--border-width-thin);
   /* Font weight (bold labels). */
   --zx-chip-font-weight: 500;
+  /* Gap between a chip's icon and its label. */
+  --zx-chip-gap: var(--space-4);
 
   /* Medium size: font and padding. */
   --zx-chip-md-font-size: var(--zx-font-size-xs);

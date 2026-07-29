@@ -26,6 +26,7 @@ import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-conten
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 import {RouterLink} from '@angular/router';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 /** Static tab ids; competition tabs use their raw `compoType` as the id. */
 type PartyTabId = 'overview' | 'activity' | string;
 
@@ -73,6 +74,7 @@ export class ZxPartyDetailsComponent implements OnChanges {
     private readonly api: PartyCoreApiService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translate: TranslateService,
+    private readonly pageMetadataService: PageMetadataService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -87,6 +89,7 @@ export class ZxPartyDetailsComponent implements OnChanges {
       tap(core => {
         if (core) {
           this.pageTitleChange.emit(core.title);
+          this.pageMetadataService.applyEntityMetadata(core.metadata);
           const items = [{
             title: this.translate.instant('menu.parties'),
             url: '/parties',

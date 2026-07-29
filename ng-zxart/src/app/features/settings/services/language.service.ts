@@ -11,9 +11,9 @@ const DEFAULT_SHORT = 'en';
 
 /** The supported languages, matching the shipped i18n bundles. */
 export const SUPPORTED_LANGUAGES: readonly LanguageOption[] = [
-  {short: 'en', long: 'eng', title: 'English', flag: '🇬🇧'},
-  {short: 'ru', long: 'rus', title: 'Русский', flag: '🇷🇺'},
-  {short: 'es', long: 'spa', title: 'Español', flag: '🇪🇸'},
+  {short: 'en', long: 'eng', title: 'English'},
+  {short: 'ru', long: 'rus', title: 'Русский'},
+  {short: 'es', long: 'spa', title: 'Español'},
 ];
 
 /**

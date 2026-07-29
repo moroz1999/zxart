@@ -129,3 +129,10 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 9. inspired points to original composition (for covers and remixes)
 10. Turbosound (6 channels) requires special chip or emulation of two AY chips
 11. OpenGraph metadata includes `og:audio` only when an MP3 file is available
+
+### Page Metadata
+`/tune-details/` carries the page metadata (`metadata`) like every other
+entity core response, resolved by `PageMetadataService::getForPath('/tune/<id>')`.
+The Angular page applies it through `PageMetadataService.applyEntityMetadata()`;
+it makes no metadata request of its own.
+

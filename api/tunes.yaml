@@ -432,3 +432,5 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TuneDownloadDto'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'

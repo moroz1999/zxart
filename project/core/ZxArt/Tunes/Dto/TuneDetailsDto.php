@@ -9,6 +9,7 @@ use ZxArt\Shared\Dto\AuthorDto;
 use ZxArt\Shared\Dto\PartyInfoDto;
 use ZxArt\Shared\Dto\ReleaseInfoDto;
 use ZxArt\Tunes\Rest\TuneDetailsRestDto;
+use ZxArt\PageMetadata\PageMetadataDto;
 
 /**
  * Rich DTO consumed by the Angular <zx-tune-details> page. Mirrors the
@@ -62,6 +63,7 @@ readonly class TuneDetailsDto
         public ?string $dateCreated,
         public ?TuneSubmitterDto $submitter,
         public array $downloads,
+        public PageMetadataDto $metadata,
     ) {
     }
 }

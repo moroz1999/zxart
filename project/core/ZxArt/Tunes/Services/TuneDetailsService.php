@@ -17,6 +17,7 @@ use ZxArt\Tunes\Dto\TuneTagDto;
 use ZxArt\Tunes\Exception\TuneDetailsException;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
+use ZxArt\PageMetadata\PageMetadataService;
 
 /**
  * Builds the rich {@see TuneDetailsDto} consumed by the Angular
@@ -33,6 +34,7 @@ readonly class TuneDetailsService
         private TunesTransformer $tunesTransformer,
         private ProdInfoBuilder $infoBuilder,
         private DescriptionFormatter $descriptionFormatter,
+        private PageMetadataService $pageMetadataService,
     ) {
     }
 
@@ -98,6 +100,7 @@ readonly class TuneDetailsService
             dateCreated: $element->dateCreated ? (string)$element->dateCreated : null,
             submitter: $this->buildSubmitter($element),
             downloads: $this->buildDownloads($element, $tune->originalFileUrl, $tune->trackerFileUrl, $tune->mp3Url),
+            metadata: $this->pageMetadataService->getForPath('/tune/' . $tuneId),
         );
     }
 

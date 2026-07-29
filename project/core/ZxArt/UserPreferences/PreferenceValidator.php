@@ -34,6 +34,7 @@ final class PreferenceValidator
             PreferenceCode::HOMEPAGE_BEST_GAMES_LIMIT,
             PreferenceCode::HOMEPAGE_RECENT_PARTIES_LIMIT,
             PreferenceCode::HOMEPAGE_BEST_PICTURES_MONTH_LIMIT,
+            PreferenceCode::HOMEPAGE_BEST_TUNES_MONTH_LIMIT,
             PreferenceCode::HOMEPAGE_LATEST_PRODS_LIMIT,
             PreferenceCode::HOMEPAGE_LATEST_RELEASES_LIMIT,
             PreferenceCode::HOMEPAGE_SUPPORT_PRODS_LIMIT,

@@ -1,4 +1,5 @@
 import {ZxTuneDto} from '../../../shared/models/zx-tune-dto';
+import {PageMetadataDto} from '../../../shared/models/page-metadata.dto';
 
 export interface TuneTagDto {
   readonly id: number;
@@ -46,6 +47,7 @@ export interface TuneDetailsDto extends ZxTuneDto {
   readonly dateCreated: string | null;
   readonly submitter: TuneSubmitterDto | null;
   readonly downloads: TuneDownloadDto[];
+  readonly metadata: PageMetadataDto;
 }
 
 export type TuneRelatedRailKind = 'author' | 'tags' | 'tracker';

@@ -27,7 +27,7 @@
       <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware.' + hw.id | translate }}
     </zx-chip>
     <zx-chip *ngFor="let fmt of details.formats" variant="mono-outline"><span *ngIf="fmt.emoji">{{ fmt.emoji }}</span>{{ fmt.label }}</zx-chip>
-    <zx-chip *ngFor="let lang of details.languages" variant="filled" color="neutral" [href]="'/prods?languages=' + lang.code">{{ lang.emoji }} {{ 'language.' + lang.code | translate }}</zx-chip>
+    <zx-chip *ngFor="let lang of details.languages" variant="filled" color="neutral" [href]="'/prods?languages=' + lang.code"><zx-language-flag [code]="lang.code"></zx-language-flag>{{ 'language.' + lang.code | translate }}</zx-chip>
   </zx-inline>
 
   <zx-prod-people-row

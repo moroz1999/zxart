@@ -26,11 +26,12 @@ import {ZxFactsComponent} from '../../../../shared/ui/zx-facts/zx-facts.componen
 import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component';
 import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
 import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
+import {ZxLanguageFlagComponent} from '../../../../shared/ui/zx-language-flag/zx-language-flag.component';
 
 @Component({
   selector: 'zx-release-hero',
   standalone: true,
-  imports: [
+  imports: [ZxLanguageFlagComponent, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

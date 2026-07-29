@@ -349,6 +349,8 @@ components:
           $ref: '#/components/schemas/PartyCounters'
         tabs:
           $ref: '#/components/schemas/PartyTabs'
+        metadata:
+          $ref: 'page-metadata-schema.yaml#/components/schemas/PageMetadata'
 
     PartyOverview:
       type: object

@@ -20,6 +20,7 @@ enum PreferenceCode: string
     case HOMEPAGE_BEST_GAMES_LIMIT = 'homepage_best_games_limit';
     case HOMEPAGE_RECENT_PARTIES_LIMIT = 'homepage_recent_parties_limit';
     case HOMEPAGE_BEST_PICTURES_MONTH_LIMIT = 'homepage_best_pictures_month_limit';
+    case HOMEPAGE_BEST_TUNES_MONTH_LIMIT = 'homepage_best_tunes_month_limit';
     case HOMEPAGE_LATEST_PRODS_LIMIT = 'homepage_latest_prods_limit';
     case HOMEPAGE_LATEST_RELEASES_LIMIT = 'homepage_latest_releases_limit';
     case HOMEPAGE_SUPPORT_PRODS_LIMIT = 'homepage_support_prods_limit';

@@ -13,6 +13,7 @@ enum HomepageModuleId: string
     case BEST_NEW_GAMES = 'bestNewGames';
     case RECENT_PARTIES = 'recentParties';
     case BEST_PICTURES_OF_MONTH = 'bestPicturesOfMonth';
+    case BEST_TUNES_OF_MONTH = 'bestTunesOfMonth';
     case LATEST_ADDED_PRODS = 'latestAddedProds';
     case LATEST_ADDED_RELEASES = 'latestAddedReleases';
     case SUPPORT_PRODS = 'supportProds';
