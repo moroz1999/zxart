@@ -1,0 +1,9 @@
+<zx-edit-button
+  *ngIf="canDelete$ | async"
+  icon="delete"
+  color="danger"
+  size="md"
+  [label]="deleteLabelKey | translate"
+  [ariaLabel]="deleteLabelKey | translate"
+  (editClick)="onDelete()"
+></zx-edit-button>

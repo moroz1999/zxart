@@ -45,7 +45,19 @@
     "origin": "Origen",
     "conversion": "Conversión de obras",
     "subgroups": "Subgrupos",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Eliminar",
+    "delete-author-alias": "Eliminar alias de autor",
+    "delete-author": "Eliminar autor",
+    "delete-group": "Eliminar grupo",
+    "delete-party": "Eliminar party",
+    "delete-picture": "Eliminar imagen",
+    "delete-press-article": "Eliminar artículo",
+    "delete-prod": "Eliminar la producción",
+    "delete-release": "Eliminar lanzamiento",
+    "delete-tune": "Eliminar melodía",
+    "delete-confirm-message": "¿Eliminar esta entrada de forma permanente? No se puede deshacer.",
+    "delete-failed": "No se pudo eliminar la entrada."
   },
   "form-page-title": {
     "edit-author": "Edición del autor «{{title}}»",
@@ -210,7 +222,7 @@
     "title": "Título",
     "authors": "Autores",
     "add-author": "Añadir autor…",
-    "format-group": "Formato",
+    "format-group": "Grupo de sonido",
     "party": "Fiesta",
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
@@ -725,7 +737,8 @@
       "title": "Configuración de la página principal",
       "reset": "Restablecer",
       "cancel": "Cancelar",
-      "save": "Guardar"
+      "save": "Guardar",
+      "saveError": "No se pudo guardar la configuración. Inténtalo de nuevo."
     }
   },
   "tune": {
@@ -855,6 +868,7 @@
     "info": "Información",
     "year": "Año",
     "format": "Formato de archivo",
+    "format-group": "Grupo de sonido",
     "chip": "Chip AY",
     "channels-type": "Distribución de canales",
     "channels": "Canales",

@@ -2,6 +2,12 @@
 <h1 zxPageHeader appHeading="display">
   {{ (creating ? 'group-browser.add-group' : 'group-details.action.showPublicForm') | translate }}
 </h1>
+<zx-delete-entity-button
+  zxPageHeader
+  [elementId]="elementId"
+  [redirectUrl]="deleteReturnUrl"
+  deleteLabelKey="form.delete-group"
+></zx-delete-entity-button>
 <div *ngIf="loading" class="group-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

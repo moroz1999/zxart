@@ -8,6 +8,7 @@ import {PressDetailsDto, PressMentionDto} from '../../models/press-details.dto';
 import {PressDetailsApiService} from '../../services/press-details-api.service';
 import {ZxPressEditingControlsComponent} from '../zx-press-editing-controls/zx-press-editing-controls.component';
 import {ZxSpinnerComponent} from '../../../../shared/ui/zx-spinner/zx-spinner.component';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 interface MentionGroup {
   labelKey: string;
   items: PressMentionDto[];
@@ -28,7 +29,10 @@ export class ZxPressDetailsComponent implements OnChanges {
 
   details$: Observable<PressDetailsDto | null> = of(null);
 
-  constructor(private readonly api: PressDetailsApiService) {}
+  constructor(
+    private readonly api: PressDetailsApiService,
+    private readonly pageMetadata: PageMetadataService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['elementId']) {
@@ -39,7 +43,12 @@ export class ZxPressDetailsComponent implements OnChanges {
       return;
     }
     this.details$ = this.api.getDetails(+this.elementId).pipe(
-      tap(details => details && this.pageTitleChange.emit(details.title)),
+      tap(details => {
+        if (details) {
+          this.pageTitleChange.emit(details.title);
+          this.pageMetadata.applyPlainTitle(details.title);
+        }
+      }),
       shareReplay(1),
     );
   }

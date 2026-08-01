@@ -9,6 +9,11 @@
            [queryParams]="{format: tune.format}"
            appText="body" tone="link">{{ tune.format }}</a>
       </zx-item-data-item>
+      <zx-item-data-item *ngIf="tune.formatGroup" [label]="'tune-details.format-group' | translate">
+        <a routerLink="/music/search"
+           [queryParams]="{formatGroup: tune.formatGroup}"
+           appText="body" tone="link">{{ 'player.formatGroup.' + tune.formatGroup | translate }}</a>
+      </zx-item-data-item>
       <zx-item-data-item *ngIf="tune.chip" [label]="'tune-details.chip' | translate">
         {{ tune.chip }}
       </zx-item-data-item>

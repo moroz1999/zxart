@@ -28,18 +28,27 @@ single owner and mirrors `ThemeService`:
 
 Because the language is a normal preference, a logged-in user's stored language
 arrives through the usual `/userpreferences/` fetch — it is **not** carried on the
-current-user response.
+current-user response. Both frontend and backend preference defaults use `eng`.
 
 ## Preference storage
 
 `UserPreferencesService.initialize()` runs once per app start and is the single
 entry point every preference owner waits on:
 
+- The in-memory store and localStorage mirror use one object keyed by preference
+  code. Backend DTO arrays are converted only at the HTTP boundary.
 - A logged-in user always has the preferences refetched from `/userpreferences/`,
   and the response overwrites localStorage — another device may have changed them
   since. If the request fails, the stored values stand in.
-- Anonymous visitors have nothing to fetch and read localStorage alone; writes
-  never reach the backend for them.
+- Anonymous visitors have nothing to fetch. Frontend defaults are merged with
+  their localStorage overrides and written back as one complete local snapshot;
+  reads, writes, and resets never reach the preferences backend.
+- Logged-in writes update the backend first. Only a successful response updates
+  the in-memory preference store and its localStorage mirror, so failed requests
+  cannot leave the browser ahead of the backend.
+- Every successful mutation emits the complete preference snapshot through
+  `preferences$`; consumers derive their current state from that stream instead
+  of maintaining separate reload signals.
 - Preferences stored for a different user are dropped before anything is read,
   which is what clears them after a logout.
 

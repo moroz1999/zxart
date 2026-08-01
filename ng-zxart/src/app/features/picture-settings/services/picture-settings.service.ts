@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {PreferenceValues} from '../../settings/models/preference.dto';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {
   PICTURE_SCALE_DEFAULT,
@@ -22,10 +24,8 @@ export class PictureSettingsService {
   private readonly scale$ = new BehaviorSubject<PictureScale>(PICTURE_SCALE_DEFAULT);
 
   constructor(private userPreferencesService: UserPreferencesService) {
-    this.userPreferencesService.initialize().subscribe(() => {
-      this.settings$.next(this.loadFromPreferences());
-      this.scale$.next(this.loadScaleFromPreferences());
-    });
+    this.applyPreferences(this.userPreferencesService.getPreferences());
+    this.userPreferencesService.preferences$.subscribe(preferences => this.applyPreferences(preferences));
   }
 
   get settings(): Observable<PictureSettings> {
@@ -52,35 +52,53 @@ export class PictureSettingsService {
     if (scale === this.scale$.value) {
       return;
     }
-    this.scale$.next(scale);
-    this.userPreferencesService.setPreference(PREF_CODE_PICTURE_SCALE, scale).subscribe();
+    this.savePreference(PREF_CODE_PICTURE_SCALE, scale);
   }
 
   setMode(mode: PictureMode): void {
-    this.settings$.next({...this.settings$.value, mode});
-    this.userPreferencesService.setPreference(PREF_CODE_PICTURE_MODE, mode).subscribe();
+    this.savePreference(PREF_CODE_PICTURE_MODE, mode);
   }
 
   setBorder(border: boolean): void {
-    this.settings$.next({...this.settings$.value, border});
-    this.userPreferencesService.setPreference(PREF_CODE_PICTURE_BORDER, border ? '1' : '0').subscribe();
+    this.savePreference(PREF_CODE_PICTURE_BORDER, border ? '1' : '0');
   }
 
   setHidden(hidden: boolean): void {
-    this.settings$.next({...this.settings$.value, hidden});
-    this.userPreferencesService.setPreference(PREF_CODE_PICTURE_HIDDEN, hidden ? '1' : '0').subscribe();
+    this.savePreference(PREF_CODE_PICTURE_HIDDEN, hidden ? '1' : '0');
   }
 
-  private loadFromPreferences(): PictureSettings {
-    const modeRaw = this.userPreferencesService.getPreference(PREF_CODE_PICTURE_MODE);
+  private savePreference(code: string, value: string): void {
+    this.userPreferencesService.setPreference(code, value).pipe(
+      catchError(() => EMPTY),
+    ).subscribe();
+  }
+
+  private applyPreferences(preferences: PreferenceValues): void {
+    const settings = this.loadFromPreferences(preferences);
+    if (
+      settings.mode !== this.settings$.value.mode
+      || settings.border !== this.settings$.value.border
+      || settings.hidden !== this.settings$.value.hidden
+    ) {
+      this.settings$.next(settings);
+    }
+
+    const scale = this.loadScaleFromPreferences(preferences);
+    if (scale !== this.scale$.value) {
+      this.scale$.next(scale);
+    }
+  }
+
+  private loadFromPreferences(preferences: PreferenceValues): PictureSettings {
+    const modeRaw = preferences[PREF_CODE_PICTURE_MODE];
     const mode = this.isValidMode(modeRaw) ? modeRaw : PICTURE_SETTINGS_DEFAULTS.mode;
-    const border = (this.userPreferencesService.getPreference(PREF_CODE_PICTURE_BORDER) ?? '1') === '1';
-    const hidden = (this.userPreferencesService.getPreference(PREF_CODE_PICTURE_HIDDEN) ?? '0') === '1';
+    const border = (preferences[PREF_CODE_PICTURE_BORDER] ?? '1') === '1';
+    const hidden = (preferences[PREF_CODE_PICTURE_HIDDEN] ?? '0') === '1';
     return {mode, border, hidden};
   }
 
-  private loadScaleFromPreferences(): PictureScale {
-    const raw = this.userPreferencesService.getPreference(PREF_CODE_PICTURE_SCALE);
+  private loadScaleFromPreferences(preferences: PreferenceValues): PictureScale {
+    const raw = preferences[PREF_CODE_PICTURE_SCALE];
     return this.isValidScale(raw) ? raw : PICTURE_SCALE_DEFAULT;
   }
 

@@ -6,11 +6,12 @@ routes are logged by the backend and return the Angular shell with HTTP 404.
 
 The Smarty shell body contains only the `<app-root>` host. Its head contains the
 Angular assets and server-rendered crawler metadata. After client-side navigation,
-Angular applies entity-page metadata from each entity's core response and builds
-fixed-route metadata from route translation keys. Form routes provide a static
-translated title immediately; existing-entity forms replace it after loading with
-a translated action title containing the localized `entityTitle` from the
-form-data response. Canonical links are not emitted.
+Angular applies entity-page metadata from the entity response, or at least its
+loaded title when that response has no metadata object, and builds fixed-route
+metadata from route translation keys. Form routes provide a static translated
+title immediately; existing-entity forms replace it after loading with a translated
+action title containing the localized `entityTitle` from the form-data response.
+Canonical links are not emitted.
 
 The shell must **not** contain a `<base>` element: the browser resolves bare
 `#anchor` links against the document base URL, so a `<base href="/">` would send
@@ -52,18 +53,17 @@ a production or release can carry, and every name comes from the SPA's own
 prods filter, which also sorts by them. Nothing reads a language name from the
 backend.
 
-A single `zx-select` without a placeholder submits what it displays: when the
-bound value matches no option — as on a creation form, where the element has no
-value yet — the browser shows the first option, and the control takes that
-value. Lists where "nothing" is a valid choice carry an empty option
-(`emptyBlank`, `emptyLabelKey`) or a placeholder and keep the empty value.
+A `zx-select` displays what its form control holds and reports only what the
+user picks: loading options, writing a value and changing the disabled state
+never invoke `onChange`. A single select whose value matches no option shows a
+blank option of its own, so it never displays an option the control does not
+hold — the value on screen is always the value the form submits.
 
-The component keeps the control's value apart from the displayed one and
-re-checks the invariant from every entry point (options, `writeValue`,
-`registerOnChange`, `setDisabledState`), so it holds whatever order Angular
-wires the accessor in. A CVA that only acts in one of those hooks is broken:
-during setup `writeValue` runs *before* `registerOnChange`, so anything it
-reports goes into a callback that is still a no-op.
+The default value therefore belongs to the form that creates the control, not to
+the select. For backend-driven enums `enumDefaultValue()`
+(`shared/utils/enum-default.ts`) provides it: an entity with nothing stored yet
+starts on the first option. Lists where "nothing" is a valid choice carry an
+empty first option (`emptyBlank`, `emptyLabelKey`) and keep the empty value.
 
 #### Pagination and URL
 
@@ -177,6 +177,20 @@ internal routes in the template from entity identifiers, for example
 `<a [routerLink]="['/prod', prod.id]">`. API DTOs do not contain internal routed
 URLs. Keep plain `[href]` for external and download URLs. Do not add global click
 interception.
+
+### Destructive Actions
+
+A destructive action never gets a route or a page of its own. It runs from the
+component that owns the entity, behind a `ConfirmDialogService` dialog with
+`danger: true`, calls the backend directly, and then navigates to a URL the
+caller supplies. The button is rendered only after the element's privilege has
+been confirmed through `ElementPrivilegesApiService`, so an unprivileged user
+never sees it.
+
+Page-level actions of this kind are projected into the page header: a second
+element carrying `zxPageHeader` beside the `<h1>` lands on the heading line, at
+the opposite end of the row. Entity deletion works this way — see
+[domain/entity-deletion.md](domain/entity-deletion.md).
 
 ### Route Guards
 

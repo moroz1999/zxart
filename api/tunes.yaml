@@ -336,6 +336,11 @@ components:
             $ref: '#/components/schemas/AuthorDto'
         format:
           type: string
+          description: File format detected by the converter (PT3, TS, ...).
+        formatGroup:
+          type: string
+          nullable: true
+          description: Sound group chosen by the uploader; the SPA labels the bare code.
         year:
           type: string
           nullable: true

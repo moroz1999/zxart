@@ -31,6 +31,34 @@ trait MusicSettingsProvider
     }
 
     /**
+     * Sound groups a tune can be assigned to — the chip and playback setup it
+     * was written for. Chosen by the uploader, shown on the tune page and used
+     * by the music search, the author music tab and the radio. The SPA labels
+     * the bare codes itself.
+     *
+     * @return string[]
+     *
+     * @psalm-return list{'ay', 'beeper', 'digitalbeeper', 'beeperdigitalbeeper', 'digitalay', 'ts', 'fm', 'tsfm', 'aybeeper', 'aydigitalay', 'aycovox', 'saa'}
+     */
+    public function getFormatGroups(): array
+    {
+        return [
+            'ay',
+            'beeper',
+            'digitalbeeper',
+            'beeperdigitalbeeper',
+            'digitalay',
+            'ts',
+            'fm',
+            'tsfm',
+            'aybeeper',
+            'aydigitalay',
+            'aycovox',
+            'saa',
+        ];
+    }
+
+    /**
      * @return string[]
      *
      * @psalm-return list{'ay', 'ym'}

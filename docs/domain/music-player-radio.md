@@ -54,5 +54,6 @@ Notes:
 - Legacy `/randomTune/type:{type}` should be removed after the new player replaces the old one.
 
 ### Criteria Persistence
-- Authenticated users: persist the last selected radio criteria in User Preferences (`radio_criteria`).
-- Anonymous users: persist criteria in `localStorage`.
+- Radio criteria use the shared User Preferences entry `radio_criteria`.
+- Authenticated users persist criteria on the backend and mirror them in the frontend preference storage.
+- Anonymous users persist criteria only in the frontend preference storage.

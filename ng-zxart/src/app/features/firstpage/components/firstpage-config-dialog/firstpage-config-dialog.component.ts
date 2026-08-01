@@ -5,9 +5,8 @@ import {DialogRef} from '@angular/cdk/dialog';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, map, of, Subscription, switchMap} from 'rxjs';
 import {FirstpageConfigService} from '../../services/firstpage-config.service';
-import {UserPreferencesService} from '../../../settings/services/user-preferences.service';
 import {
   MODULE_MIN_RATING_PREF_CODES,
   MODULE_START_YEAR_PREF_CODES,
@@ -22,6 +21,13 @@ import {ZxCheckboxFieldComponent} from '../../../../shared/ui/zx-checkbox-field/
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
 import {LabelDirective} from '../../../../shared/ui/typography/directives/label.directive';
 import {environment} from '../../../../../environments/environment';
+import {ZxFormMessageComponent} from '../../../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
+import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+
+interface DialogState {
+  saving: boolean;
+  saveFailed: boolean;
+}
 
 @Component({
   selector: 'zx-firstpage-config-dialog',
@@ -39,19 +45,24 @@ import {environment} from '../../../../../environments/environment';
     ZxSelectComponent,
     ZxCheckboxFieldComponent,
     LabelDirective,
+    ZxFormMessageComponent,
+    ZxStackComponent,
   ],
   templateUrl: './firstpage-config-dialog.component.html',
   styleUrls: ['./firstpage-config-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
-  modules: ModuleConfig[] = [];
+  private readonly modulesStore = new BehaviorSubject<ModuleConfig[]>([]);
+  private readonly stateStore = new BehaviorSubject<DialogState>({saving: false, saveFailed: false});
+  private readonly subscriptions = new Subscription();
+
+  readonly modules$ = this.modulesStore.asObservable();
+  readonly state$ = this.stateStore.asObservable();
   readonly startYearOptions: ZxSelectOption[];
-  private configSub?: Subscription;
 
   constructor(
     private configService: FirstpageConfigService,
-    private preferencesService: UserPreferencesService,
     private dialogRef: DialogRef<boolean, FirstpageConfigDialogComponent>,
     private iconReg: SvgIconRegistryService,
   ) {
@@ -63,14 +74,20 @@ export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.iconReg.loadSvg(`${environment.svgUrl}drag-indicator.svg`, 'drag-indicator')?.subscribe();
-    this.configSub = this.configService.getCurrentConfig().subscribe(config => {
-      this.modules = config.modules.map(m => ({...m, settings: {...m.settings}}));
-    });
+    const iconLoad = this.iconReg.loadSvg(`${environment.svgUrl}drag-indicator.svg`, 'drag-indicator');
+    if (iconLoad) {
+      this.subscriptions.add(iconLoad.subscribe());
+    }
+
+    this.subscriptions.add(
+      this.configService.getCurrentConfig().subscribe(config => {
+        this.modulesStore.next(this.cloneModules(config.modules));
+      }),
+    );
   }
 
   ngOnDestroy(): void {
-    this.configSub?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   hasMinRating(type: ModuleType): boolean {
@@ -90,22 +107,58 @@ export class FirstpageConfigDialogComponent implements OnInit, OnDestroy {
   }
 
   onDrop(event: CdkDragDrop<ModuleConfig[]>): void {
-    moveItemInArray(this.modules, event.previousIndex, event.currentIndex);
+    const modules = [...this.modulesStore.getValue()];
+    moveItemInArray(modules, event.previousIndex, event.currentIndex);
+    this.modulesStore.next(modules);
   }
 
   save(): void {
-    this.configService.saveConfig(this.modules);
-    this.dialogRef.close(true);
+    if (this.stateStore.getValue().saving) {
+      return;
+    }
+
+    this.stateStore.next({saving: true, saveFailed: false});
+    this.subscriptions.add(
+      this.configService.saveConfig(this.modulesStore.getValue()).subscribe(saved => {
+        if (saved) {
+          this.dialogRef.close(true);
+          return;
+        }
+        this.stateStore.next({saving: false, saveFailed: true});
+      }),
+    );
   }
 
   reset(): void {
-    this.preferencesService.getDefaults().subscribe(defaults => {
-      this.modules = this.configService.buildDefaultModules(defaults);
-      this.configService.resetToDefaults().subscribe();
-    });
+    if (this.stateStore.getValue().saving) {
+      return;
+    }
+
+    this.stateStore.next({saving: true, saveFailed: false});
+    this.subscriptions.add(
+      this.configService.resetToDefaults().pipe(
+        switchMap(saved => saved
+          ? this.configService.getCurrentConfig().pipe(map(config => config.modules))
+          : of(null)),
+      ).subscribe(modules => {
+        if (modules === null) {
+          this.stateStore.next({saving: false, saveFailed: true});
+          return;
+        }
+
+        this.modulesStore.next(this.cloneModules(modules));
+        this.stateStore.next({saving: false, saveFailed: false});
+      }),
+    );
   }
 
   close(): void {
-    this.dialogRef.close(false);
+    if (!this.stateStore.getValue().saving) {
+      this.dialogRef.close(false);
+    }
+  }
+
+  private cloneModules(modules: ModuleConfig[]): ModuleConfig[] {
+    return modules.map(module => ({...module, settings: {...module.settings}}));
   }
 }

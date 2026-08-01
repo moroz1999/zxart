@@ -6,6 +6,7 @@
   (blur)="onBlur()"
 >
   <option *ngIf="placeholder && !multiple" value="">{{ placeholder }}</option>
+  <option *ngIf="blankOption" value="" hidden selected></option>
   <option *ngFor="let option of options" [value]="option.value" [selected]="isSelected(option.value)">
     {{ option.label }}
   </option>

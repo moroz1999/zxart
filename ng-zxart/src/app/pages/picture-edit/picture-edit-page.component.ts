@@ -29,9 +29,11 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
+import {enumDefaultValue} from '../../shared/utils/enum-default';
 import {EnumOption, FormParentRef} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/models/form-save';
 import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
@@ -99,6 +101,7 @@ const ROTATION_OPTIONS: ZxSelectOption[] = [
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './picture-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -156,7 +159,10 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   readonly emptyFiles = [];
   readonly emptyImageFields: readonly string[] = [];
 
-  private elementId = 0;
+  /** Where the user lands once the picture is deleted. */
+  readonly deleteReturnUrl = '/pictures';
+
+  elementId = 0;
   /** Element the batch upload was started from (author or party). */
   private parentId = 0;
   private returnUrl = '/pictures';
@@ -210,7 +216,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
             party: data.refs['party'] ?? null,
             partyplace: String(data.fields['partyplace'] ?? ''),
             compo: String(data.fields['compo'] ?? ''),
-            type: String(data.fields['type'] ?? ''),
+            type: enumDefaultValue(data.enums['type'], String(data.fields['type'] ?? '')),
             border: String(data.fields['border'] ?? '0') || '0',
             rotation: String(data.fields['rotation'] ?? '0') || '0',
             palette: String(data.fields['palette'] ?? ''),

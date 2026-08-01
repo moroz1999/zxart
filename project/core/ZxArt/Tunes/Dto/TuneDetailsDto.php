@@ -30,6 +30,8 @@ readonly class TuneDetailsDto
         public string $url,
         public array $authors,
         public string $format,
+        /** Sound group code chosen by the uploader; labelled by the SPA. */
+        public ?string $formatGroup,
         public ?string $year,
         public float $votes,
         public int $votesAmount,

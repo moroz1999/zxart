@@ -22,6 +22,7 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {FormLanguage} from '../../shared/models/form-data-response';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
@@ -64,6 +65,7 @@ const RELATION_TYPES: Record<string, string> = {
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './press-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,7 +95,10 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
   languages: FormLanguage[] = [];
 
-  private elementId = 0;
+  /** Where the user lands once the article is deleted. */
+  readonly deleteReturnUrl = '/';
+
+  elementId = 0;
   private readonly subscriptions = new Subscription();
 
   constructor(

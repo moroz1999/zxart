@@ -1,5 +1,6 @@
 <zx-dialog titleKey="firstpage.configDialog.title" (closeClick)="close()">
   <div
+    *ngIf="modules$ | async as modules"
     cdkDropList
     (cdkDropListDropped)="onDrop($event)"
     class="modules-list"
@@ -50,16 +51,21 @@
   </div>
 
   <div zxDialogFooter>
-    <zx-button-controls align="end">
-      <zx-button color="outlined" (click)="reset()">
-        {{ 'firstpage.configDialog.reset' | translate }}
-      </zx-button>
-      <zx-button color="outlined" (click)="close()">
-        {{ 'firstpage.configDialog.cancel' | translate }}
-      </zx-button>
-      <zx-button color="primary" (click)="save()">
-        {{ 'firstpage.configDialog.save' | translate }}
-      </zx-button>
-    </zx-button-controls>
+    <zx-stack gap="sm" *ngIf="state$ | async as state">
+      <zx-form-message *ngIf="state.saveFailed">
+        {{ 'firstpage.configDialog.saveError' | translate }}
+      </zx-form-message>
+      <zx-button-controls align="end">
+        <zx-button color="outlined" [disabled]="state.saving" (click)="reset()">
+          {{ 'firstpage.configDialog.reset' | translate }}
+        </zx-button>
+        <zx-button color="outlined" [disabled]="state.saving" (click)="close()">
+          {{ 'firstpage.configDialog.cancel' | translate }}
+        </zx-button>
+        <zx-button color="primary" [disabled]="state.saving" (click)="save()">
+          {{ 'firstpage.configDialog.save' | translate }}
+        </zx-button>
+      </zx-button-controls>
+    </zx-stack>
   </div>
 </zx-dialog>

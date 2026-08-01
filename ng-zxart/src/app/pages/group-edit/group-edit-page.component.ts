@@ -27,6 +27,7 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -60,6 +61,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './group-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,7 +96,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   roles: string[] = [];
   creating = false;
 
-  private elementId = 0;
+  /** Where the user lands once the group is deleted. */
+  readonly deleteReturnUrl = '/groups';
+
+  elementId = 0;
   private returnUrl = '/groups';
   private imageFile: File | null = null;
   private removeImage = false;

@@ -258,8 +258,6 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   setScale(value: PictureScale): void {
-    this.scale = value;
-    this.updateDisplaySize();
     this.pictureSettingsService.setScale(value);
   }
 

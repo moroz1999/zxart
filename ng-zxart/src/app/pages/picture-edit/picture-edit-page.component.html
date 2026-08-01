@@ -1,5 +1,11 @@
 <zx-page-layout>
 <h1 zxPageHeader appHeading="display">{{ (batchUpload ? 'picture-form.batch-title' : 'picture-details.edit') | translate }}</h1>
+<zx-delete-entity-button
+  zxPageHeader
+  [elementId]="elementId"
+  [redirectUrl]="deleteReturnUrl"
+  deleteLabelKey="form.delete-picture"
+></zx-delete-entity-button>
 <div *ngIf="loading" class="picture-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

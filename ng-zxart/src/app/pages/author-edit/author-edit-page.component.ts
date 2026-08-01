@@ -26,6 +26,7 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
@@ -60,6 +61,7 @@ const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequen
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './author-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,7 +91,10 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   languages: FormLanguage[] = [];
   creating = false;
 
-  private elementId = 0;
+  /** Where the user lands once the author is deleted. */
+  readonly deleteReturnUrl = '/authors';
+
+  elementId = 0;
   private returnUrl = '/authors';
   private imageFile: File | null = null;
   private removeImage = false;

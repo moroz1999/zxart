@@ -29,6 +29,8 @@ export interface TuneDownloadDto {
 }
 
 export interface TuneDetailsDto extends ZxTuneDto {
+  /** Sound-group code chosen by the uploader; labelled from `player.formatGroup.*`. */
+  readonly formatGroup: string | null;
   readonly description: string | null;
   readonly tags: TuneTagDto[];
   readonly partyContext: TunePartyContextDto | null;

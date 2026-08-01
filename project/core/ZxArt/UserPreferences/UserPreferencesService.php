@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\UserPreferences;
 
 use App\Users\CurrentUserService;
+use ZxArt\UserPreferences\Domain\Exception\PreferenceNotConfiguredException;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
 use ZxArt\UserPreferences\Repositories\PreferencesRepository;
@@ -113,7 +114,7 @@ final readonly class UserPreferencesService
 
         $preference = $this->preferencesRepository->findByCode($preferenceCode);
         if ($preference === null) {
-            return $this->getAllPreferences();
+            throw PreferenceNotConfiguredException::forCode($preferenceCode);
         }
 
         $userId = (int)$user->id;
@@ -128,9 +129,10 @@ final readonly class UserPreferencesService
      */
     public function setPreferences(array $values): array
     {
+        $validatedValues = [];
         foreach ($values as $code => $value) {
             $preferenceCode = $this->validator->validateCode($code);
-            $this->validator->validateValue($preferenceCode, $value);
+            $validatedValues[$preferenceCode->value] = $this->validator->validateValue($preferenceCode, $value);
         }
 
         $user = $this->currentUserService->getCurrentUser();
@@ -140,15 +142,18 @@ final readonly class UserPreferencesService
         }
 
         $userId = (int)$user->id;
+        $valuesByPreferenceId = [];
 
-        foreach ($values as $code => $value) {
-            $preferenceCode = $this->validator->validateCode($code);
-            $validatedValue = $this->validator->validateValue($preferenceCode, $value);
+        foreach ($validatedValues as $code => $validatedValue) {
+            $preferenceCode = PreferenceCode::from($code);
             $preference = $this->preferencesRepository->findByCode($preferenceCode);
-            if ($preference !== null) {
-                $this->valuesRepository->upsert($userId, $preference->id, $validatedValue);
+            if ($preference === null) {
+                throw PreferenceNotConfiguredException::forCode($preferenceCode);
             }
+            $valuesByPreferenceId[$preference->id] = $validatedValue;
         }
+
+        $this->valuesRepository->upsertMany($userId, $valuesByPreferenceId);
 
         return $this->getAllPreferences();
     }

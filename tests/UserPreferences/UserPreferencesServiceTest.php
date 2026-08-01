@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\Domain\Exception\InvalidPreferenceCodeException;
 use ZxArt\UserPreferences\Domain\Exception\InvalidPreferenceValueException;
+use ZxArt\UserPreferences\Domain\Exception\PreferenceNotConfiguredException;
 use ZxArt\UserPreferences\Domain\Preference;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Domain\UserPreferenceValue;
@@ -79,6 +80,10 @@ class UserPreferencesServiceTest extends TestCase
         $this->assertInstanceOf(PreferenceDto::class, $preferences[0]);
         $this->assertSame('theme', $preferences[0]->code);
         $this->assertSame($this->getDefaultPreferenceValue('theme'), $preferences[0]->value);
+        $this->assertSame(
+            'eng',
+            $this->findPreferenceByCode($preferences, PreferenceCode::LANGUAGE->value)?->value,
+        );
     }
 
     public function testGetAllPreferencesReturnsMergedPreferencesForLoggedInUser(): void
@@ -234,6 +239,93 @@ class UserPreferencesServiceTest extends TestCase
         $themePreference = $this->findPreferenceByCode($preferences, 'theme');
         $this->assertNotNull($themePreference);
         $this->assertSame($this->getDefaultPreferenceValue('theme'), $themePreference->value);
+    }
+
+    public function testSetPreferenceThrowsWhenPreferenceIsNotConfigured(): void
+    {
+        $user = $this->createUserMock(true, 5);
+        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo->method('findByCode')->with(PreferenceCode::THEME)->willReturn(null);
+
+        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo->expects($this->never())->method('upsert');
+
+        $service = new UserPreferencesService(
+            $this->createCurrentUserServiceMock($user),
+            $preferencesRepo,
+            $valuesRepo,
+            new DefaultUserPreferencesProvider(),
+            new PreferenceValidator(),
+        );
+
+        $this->expectException(PreferenceNotConfiguredException::class);
+        $service->setPreference('theme', 'dark');
+    }
+
+    public function testSetPreferencesSavesValidatedBatchAtomically(): void
+    {
+        $user = $this->createUserMock(true, 5);
+        $themePreference = new Preference(1, PreferenceCode::THEME, 'string');
+        $borderPreference = new Preference(2, PreferenceCode::PICTURE_BORDER, 'boolean');
+
+        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo->method('findByCode')->willReturnMap([
+            [PreferenceCode::THEME, $themePreference],
+            [PreferenceCode::PICTURE_BORDER, $borderPreference],
+        ]);
+        $preferencesRepo->method('findAll')->willReturn([$themePreference, $borderPreference]);
+
+        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo->expects($this->once())
+            ->method('upsertMany')
+            ->with(5, [1 => 'dark', 2 => '0']);
+        $valuesRepo->method('findByUserId')->with(5)->willReturn([
+            new UserPreferenceValue(5, 1, 'dark'),
+            new UserPreferenceValue(5, 2, '0'),
+        ]);
+
+        $service = new UserPreferencesService(
+            $this->createCurrentUserServiceMock($user),
+            $preferencesRepo,
+            $valuesRepo,
+            new DefaultUserPreferencesProvider(),
+            new PreferenceValidator(),
+        );
+
+        $preferences = $service->setPreferences([
+            'theme' => 'dark',
+            'picture_border' => '0',
+        ]);
+
+        $this->assertSame('dark', $this->findPreferenceByCode($preferences, 'theme')?->value);
+        $this->assertSame('0', $this->findPreferenceByCode($preferences, 'picture_border')?->value);
+    }
+
+    public function testSetPreferencesDoesNotWritePartialBatchWhenPreferenceIsNotConfigured(): void
+    {
+        $user = $this->createUserMock(true, 5);
+        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo->method('findByCode')->willReturnMap([
+            [PreferenceCode::THEME, new Preference(1, PreferenceCode::THEME, 'string')],
+            [PreferenceCode::PICTURE_BORDER, null],
+        ]);
+
+        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo->expects($this->never())->method('upsertMany');
+
+        $service = new UserPreferencesService(
+            $this->createCurrentUserServiceMock($user),
+            $preferencesRepo,
+            $valuesRepo,
+            new DefaultUserPreferencesProvider(),
+            new PreferenceValidator(),
+        );
+
+        $this->expectException(PreferenceNotConfiguredException::class);
+        $service->setPreferences([
+            'theme' => 'dark',
+            'picture_border' => '0',
+        ]);
     }
 
     public function testValidateHomepageOrderAcceptsValidModuleIds(): void

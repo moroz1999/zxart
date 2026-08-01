@@ -104,6 +104,10 @@ Detailed logic and structure: [domain/page-metadata.md](domain/page-metadata.md)
 Personal collections of works owned by one user, managed from `/playlists`.
 Detailed logic and structure: [domain/playlists.md](domain/playlists.md)
 
+### entity deletion
+Delete button on every entity edit form: `publicDelete` privilege, confirmation dialog, no delete route.
+Detailed logic and structure: [domain/entity-deletion.md](domain/entity-deletion.md)
+
 ### entity descriptions
 Storage, API, and frontend rendering rules for picture, tune, prod, and release descriptions.
 Detailed logic and structure: [domain/descriptions.md](domain/descriptions.md)

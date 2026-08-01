@@ -194,7 +194,7 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'}],
     },
   },
-  {path: 'group/:id', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent)},
+  {path: 'group/:id', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'group/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
@@ -220,7 +220,7 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {inPageTab: true}},
+  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
   {
     path: 'group-alias/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
@@ -243,7 +243,7 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'}],
     },
   },
-  {path: 'party/:id', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent)},
+  {path: 'party/:id', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'party/:id/edit',
     loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
@@ -255,7 +255,7 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.edit-party',
     },
   },
-  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {inPageTab: true}},
+  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
   {path: 'prod/:id', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'prod/:id/edit',
@@ -308,7 +308,7 @@ const ROUTED_CHILDREN: Routes = [
     },
   },
   {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
-  {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent)},
+  {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'release/:id/edit',
     loadComponent: () => import('./pages/release-edit/release-edit-page.component').then(m => m.ReleaseEditPageComponent),
@@ -332,7 +332,7 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.edit-picture',
     },
   },
-  {path: 'tune/:id', loadComponent: () => import('./pages/tune/tune-page.component').then(m => m.TunePageComponent)},
+  {path: 'tune/:id', loadComponent: () => import('./pages/tune/tune-page.component').then(m => m.TunePageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'tune/:id/edit',
     loadComponent: () => import('./pages/tune-edit/tune-edit-page.component').then(m => m.TuneEditPageComponent),
@@ -344,7 +344,7 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.edit-tune',
     },
   },
-  {path: 'press/:id', loadComponent: () => import('./pages/press/press-page.component').then(m => m.PressPageComponent)},
+  {path: 'press/:id', loadComponent: () => import('./pages/press/press-page.component').then(m => m.PressPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'press/:id/edit',
     loadComponent: () => import('./pages/press-edit/press-edit-page.component').then(m => m.PressEditPageComponent),

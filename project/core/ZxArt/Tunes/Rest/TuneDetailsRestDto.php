@@ -24,6 +24,7 @@ readonly class TuneDetailsRestDto
         public string $url,
         public array $authors,
         public string $format,
+        public ?string $formatGroup,
         public ?string $year,
         public float $votes,
         public int $votesAmount,

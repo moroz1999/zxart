@@ -17,6 +17,7 @@ import {ZxButtonComponent} from '../zx-button/zx-button.component';
 export class ZxEditButtonComponent implements OnInit {
   @Input() ariaLabel = '';
   @Input() title = '';
+  @Input() label = '';
   @Input() routerLink: string | null = null;
   /** Internal URL with query parameters; `zx-button` navigates it client-side. */
   @Input() href: string | null = null;

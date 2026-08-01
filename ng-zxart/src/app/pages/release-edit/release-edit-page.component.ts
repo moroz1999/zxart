@@ -33,9 +33,11 @@ import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filt
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {FileUploadField} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {enumDefaultValue} from '../../shared/utils/enum-default';
 
 const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
 
@@ -71,6 +73,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './release-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,7 +119,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   /** Creation mode: a new release of the production the form was opened from. */
   creating = false;
 
-  private elementId = 0;
+  /** Where the user lands once the release is deleted; the parent production. */
+  deleteReturnUrl = '/prods';
+
+  elementId = 0;
   /** The production the new release belongs to. */
   private prodId = 0;
   private returnUrl = '/prods';
@@ -158,12 +164,16 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
             return;
           }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
+          const parentProd = data.multiRefs['zxProd']?.[0] ?? null;
+          if (parentProd) {
+            this.deleteReturnUrl = `/prod/${parentProd.id}`;
+          }
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
-            prod: data.multiRefs['zxProd']?.[0] ?? null,
+            prod: parentProd,
             version: String(data.fields['version'] ?? ''),
             year: String(data.fields['year'] ?? ''),
-            releaseType: String(data.fields['releaseType'] ?? ''),
+            releaseType: enumDefaultValue(data.enums['releaseType'], String(data.fields['releaseType'] ?? '')),
             releaseFormat: Array.isArray(data.fields['releaseFormat']) ? (data.fields['releaseFormat'] as string[]) : [],
             language: Array.isArray(data.fields['language']) ? (data.fields['language'] as string[]) : [],
             hardwareRequired: Array.isArray(data.fields['hardwareRequired']) ? (data.fields['hardwareRequired'] as string[]) : [],

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: ZxArt User Preferences API
-  version: 1.0.0
+  version: 1.1.0
   description: API for managing user preferences (theme, etc.)
 
 paths:
@@ -21,7 +21,7 @@ paths:
 
     put:
       summary: Update user preferences
-      description: Updates one preference or a batch for the current user. For anonymous users, changes are not persisted server-side.
+      description: Updates one preference or an atomic batch for the current user. The response contains the complete effective preference snapshot.
       requestBody:
         required: true
         content:
@@ -44,7 +44,7 @@ paths:
                     batch:
                       type: string
                       description: JSON array of objects containing string code and value fields
-                      example: '[{"code":"homepage_order","value":"newProds,bestTunesOfMonth"},{"code":"homepage_best_tunes_month_limit","value":"10"}]'
+                      example: '[{"code":"homepage_order","value":"newProds,bestTunesOfMonth"},{"code":"homepage_new_prods_start_year","value":"1"}]'
                   required:
                     - batch
       responses:

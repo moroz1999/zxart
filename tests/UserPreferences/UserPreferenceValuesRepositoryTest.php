@@ -83,4 +83,39 @@ class UserPreferenceValuesRepositoryTest extends TestCase
             $updateOrInsertArgs
         );
     }
+
+    public function testUpsertManyWritesEveryValueInsideTransaction(): void
+    {
+        $savedValues = [];
+
+        $db = $this->createMock(Connection::class);
+        $db->expects($this->once())
+            ->method('transaction')
+            ->willReturnCallback(static function (callable $callback): mixed {
+                return $callback();
+            });
+        $db->method('table')->willReturnCallback(
+            static function () use (&$savedValues) {
+                return new class($savedValues) {
+                    public function __construct(private array &$savedValues)
+                    {
+                    }
+
+                    public function updateOrInsert(array $attributes, array $values): bool
+                    {
+                        $this->savedValues[] = [$attributes, $values];
+                        return true;
+                    }
+                };
+            },
+        );
+
+        $repository = new UserPreferenceValuesRepository($db);
+        $repository->upsertMany(5, [1 => 'dark', 2 => '0']);
+
+        $this->assertSame([
+            [['user_id' => 5, 'preference_id' => 1], ['value' => 'dark']],
+            [['user_id' => 5, 'preference_id' => 2], ['value' => '0']],
+        ], $savedValues);
+    }
 }

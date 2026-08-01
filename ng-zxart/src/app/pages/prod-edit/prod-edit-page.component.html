@@ -2,6 +2,12 @@
 <h1 zxPageHeader appHeading="display">
   {{ (batchUpload ? 'prods-list.batch-upload' : 'prod-details.edit') | translate }}
 </h1>
+<zx-delete-entity-button
+  zxPageHeader
+  [elementId]="elementId"
+  [redirectUrl]="deleteReturnUrl"
+  deleteLabelKey="form.delete-prod"
+></zx-delete-entity-button>
 <div *ngIf="loading" class="prod-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

@@ -3,7 +3,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -29,29 +29,15 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
+import {enumDefaultValue} from '../../shared/utils/enum-default';
 import {EnumOption, FormParentRef} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/models/form-save';
 import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
-
-/** Fixed formatGroup enum (matches the legacy zxMusic.form.tpl dropdown). */
-const FORMAT_GROUPS: ReadonlyArray<{value: string; label: string}> = [
-  {value: 'ay', label: 'AY/YM'},
-  {value: 'beeper', label: 'Beeper'},
-  {value: 'digitalbeeper', label: 'Digital Beeper'},
-  {value: 'beeperdigitalbeeper', label: 'Beeper + Digital Beeper'},
-  {value: 'digitalay', label: 'Digital AY, Covox, SD'},
-  {value: 'ts', label: 'Turbo Sound'},
-  {value: 'fm', label: 'FM'},
-  {value: 'tsfm', label: 'Turbo Sound FM'},
-  {value: 'aybeeper', label: 'AY/YM + Beeper'},
-  {value: 'aydigitalay', label: 'AY/YM + Digital AY'},
-  {value: 'aycovox', label: 'AY/YM + Covox'},
-  {value: 'saa', label: 'SAA'},
-];
 
 /**
  * expectedFields preserved unchanged on save until they get dedicated UI.
@@ -92,6 +78,7 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './tune-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,7 +89,8 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
     authors: this.fb.nonNullable.control<EntityRef[]>([], nonEmptyArray),
     /** Batch mode only: the uploaded files, validated like any other required field. */
     batchFiles: this.fb.nonNullable.control<File[]>([]),
-    formatGroup: this.fb.nonNullable.control<string>('ay'),
+    /** Filled from the sound-group enum on load: a tune without one starts on the first group. */
+    formatGroup: this.fb.nonNullable.control<string>(''),
     party: this.fb.control<EntityRef | null>(null),
     partyplace: this.fb.nonNullable.control(''),
     compo: this.fb.nonNullable.control<string>(''),
@@ -122,7 +110,6 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
   readonly titleMessages = {required: 'tune-form.error-title-required'};
   readonly authorsMessages = {required: 'tune-form.error-authors-required'};
   readonly batchFilesMessages = {required: 'tune-form.error-files-required'};
-  readonly formatGroupOptions: ZxSelectOption[] = FORMAT_GROUPS.map(g => ({value: g.value, label: g.label}));
 
   loading = true;
   submitting = false;
@@ -130,10 +117,14 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
   /** Batch mode uploads several tunes at once and has no element of its own. */
   batchUpload = false;
   enums: Record<string, EnumOption[]> = {};
+  formatGroupOptions: ZxSelectOption[] = [];
   fileNames: Record<string, string> = {};
   readonly emptyFiles = [];
 
-  private elementId = 0;
+  /** Where the user lands once the tune is deleted. */
+  readonly deleteReturnUrl = '/music';
+
+  elementId = 0;
   /** Element the batch upload was started from (author or party). */
   private parentId = 0;
   private returnUrl = '/music';
@@ -150,6 +141,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -182,7 +174,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
           this.form.patchValue({
             title: String(data.fields[this.batchUpload ? 'musicTitle' : 'title'] ?? ''),
             authors: data.authorRefs,
-            formatGroup: String(data.fields['formatGroup'] ?? '') || 'ay',
+            formatGroup: enumDefaultValue(data.enums['formatGroup'], String(data.fields['formatGroup'] ?? '')),
             party: data.refs['party'] ?? null,
             partyplace: String(data.fields['partyplace'] ?? ''),
             compo: String(data.fields['compo'] ?? ''),
@@ -200,6 +192,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
           });
           this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
+          this.formatGroupOptions = this.buildFormatGroupOptions(data.enums['formatGroup']);
           this.fileNames = data.files;
           for (const field of PASSTHROUGH_FIELDS) {
             this.passthrough[field] = data.fields[field] ?? '';
@@ -214,6 +207,14 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  /** Labels the backend's bare sound-group codes from the SPA's own translations. */
+  private buildFormatGroupOptions(options: EnumOption[] | undefined): ZxSelectOption[] {
+    return (options ?? []).map(option => ({
+      value: option.value,
+      label: this.translate.instant(`player.formatGroup.${option.value}`),
+    }));
   }
 
   ngOnDestroy(): void {

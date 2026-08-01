@@ -54,6 +54,7 @@ readonly class TuneDetailsService
             url: $tune->url,
             authors: $tune->authors,
             format: $tune->format,
+            formatGroup: $this->nullableString($element->formatGroup),
             year: $tune->year,
             votes: $tune->votes,
             votesAmount: $tune->votesAmount,

@@ -3,6 +3,8 @@ info:
   title: ZxArt API
   version: 1.0.0
 paths:
+  /firstpage/?action=newProds:
+    $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=newProds'
   /formdata/:
     $ref: 'form-data.yaml#/paths/~1formdata~1'
   /parties-data/:

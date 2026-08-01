@@ -18,9 +18,17 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
   - Chip formats (AY, YM, etc.)
   - Filled in automatically from the uploaded file by the conversion service, so
     no form offers it. Exposed to the frontend as `format`.
-- **formatGroup** - format group
+- **formatGroup** - sound group (chip and playback setup the tune was written for)
   - Groups similar formats for filtering
   - Chosen by the author in the form, unlike `type`
+  - Options come from `getFormatGroups()` on the element through the `enums` map
+    of `/formdata/`; the labels are the SPA's own `player.formatGroup.*`
+    translations (a `clientLabels` enum), so the upload form, the tune page, the
+    music search, the author music tab and the radio all name a group alike
+  - Exposed by `/tune-details/` as `formatGroup` and shown on the tune page as a
+    link to the music search filtered by that group. The conversion service
+    overrides it for the formats it can recognise on its own (TS, SAA, digital
+    AY and FM families)
 
 #### Sound Characteristics
 - **chipType** - sound chip type:

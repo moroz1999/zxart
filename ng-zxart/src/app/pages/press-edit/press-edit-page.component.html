@@ -1,5 +1,11 @@
 <zx-page-layout>
 <h1 zxPageHeader appHeading="display">{{ 'press-details.edit' | translate }}</h1>
+<zx-delete-entity-button
+  zxPageHeader
+  [elementId]="elementId"
+  [redirectUrl]="deleteReturnUrl"
+  deleteLabelKey="form.delete-press-article"
+></zx-delete-entity-button>
 <div *ngIf="loading" class="press-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

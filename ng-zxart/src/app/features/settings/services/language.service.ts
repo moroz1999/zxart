@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {BehaviorSubject, EMPTY, Observable, of} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError, distinctUntilChanged, map, tap} from 'rxjs/operators';
 import {UserPreferencesService} from './user-preferences.service';
 import {LanguageOption} from '../models/language-option';
@@ -67,13 +67,12 @@ export class LanguageService {
 
     this.apply(this.storedShort());
 
-    this.userPreferencesService.initialize().pipe(
-      tap(() => {
-        const serverShort = this.storedShort();
-        if (serverShort !== this.store.getValue()) {
-          this.apply(serverShort);
-        }
-      }),
+    this.userPreferencesService.preferences$.pipe(
+      map(preferences => this.toShort(
+        preferences[PREFERENCE_CODE],
+      ) ?? DEFAULT_SHORT),
+      distinctUntilChanged(),
+      tap(serverShort => this.apply(serverShort)),
       catchError(() => EMPTY),
     ).subscribe();
   }
@@ -83,9 +82,8 @@ export class LanguageService {
     if (!this.isSupportedShort(short) || short === this.store.getValue()) {
       return;
     }
-    this.apply(short);
     this.userPreferencesService.setPreference(PREFERENCE_CODE, this.toLong(short)).pipe(
-      catchError(() => of([])),
+      catchError(() => EMPTY),
     ).subscribe();
   }
 

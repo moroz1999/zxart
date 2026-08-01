@@ -2,6 +2,12 @@
 <h1 zxPageHeader appHeading="display">
   {{ (creating ? 'author-browser.add-author' : 'author-details.action.showPublicForm') | translate }}
 </h1>
+<zx-delete-entity-button
+  zxPageHeader
+  [elementId]="elementId"
+  [redirectUrl]="deleteReturnUrl"
+  deleteLabelKey="form.delete-author"
+></zx-delete-entity-button>
 <div *ngIf="loading" class="author-edit__loading">
   <zx-spinner size="lg"></zx-spinner>
 </div>

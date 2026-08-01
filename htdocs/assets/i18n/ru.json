@@ -45,7 +45,19 @@
     "origin": "Происхождение",
     "conversion": "Конверсия работ",
     "subgroups": "Подгруппы",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Удалить",
+    "delete-author-alias": "Удалить псевдоним",
+    "delete-author": "Удалить автора",
+    "delete-group": "Удалить группу",
+    "delete-party": "Удалить пати",
+    "delete-picture": "Удалить картинку",
+    "delete-press-article": "Удалить статью",
+    "delete-prod": "Удалить программу",
+    "delete-release": "Удалить релиз",
+    "delete-tune": "Удалить мелодию",
+    "delete-confirm-message": "Удалить эту запись безвозвратно? Отменить это будет нельзя.",
+    "delete-failed": "Не удалось удалить запись."
   },
   "form-page-title": {
     "edit-author": "Редактирование автора «{{title}}»",
@@ -210,7 +222,7 @@
     "title": "Название",
     "authors": "Авторы",
     "add-author": "Добавить автора…",
-    "format-group": "Формат",
+    "format-group": "Группа звучания",
     "party": "Пати",
     "partyplace": "Место на пати",
     "year": "Год",
@@ -725,7 +737,8 @@
       "title": "Настройка главной страницы",
       "reset": "Сбросить",
       "cancel": "Отмена",
-      "save": "Сохранить"
+      "save": "Сохранить",
+      "saveError": "Не удалось сохранить настройки. Попробуйте ещё раз."
     }
   },
   "tune": {
@@ -856,6 +869,7 @@
     "info": "Сведения",
     "year": "Год",
     "format": "Формат файла",
+    "format-group": "Группа звучания",
     "chip": "Чип AY",
     "channels-type": "Раскладка каналов",
     "channels": "Каналов",

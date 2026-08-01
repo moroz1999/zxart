@@ -21,6 +21,7 @@ import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
@@ -49,6 +50,7 @@ import {AuthorAliasFormApiService} from '../../features/author-details/services/
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './author-alias-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,7 +73,10 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   submitting = false;
   errorMessage = '';
 
-  private elementId = 0;
+  /** Where the user lands once the alias is deleted; the author it belonged to. */
+  deleteReturnUrl = '/authors';
+
+  elementId = 0;
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -123,9 +128,13 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
             return;
           }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
+          const author = data.refs['authorId'] ?? null;
+          if (author) {
+            this.deleteReturnUrl = `/author/${author.id}`;
+          }
           this.form.patchValue({
             title: String(data.fields['title'] ?? ''),
-            author: data.refs['authorId'] ?? null,
+            author,
             startDate: String(data.fields['startDate'] ?? ''),
             endDate: String(data.fields['endDate'] ?? ''),
             displayInMusic: !!Number(data.fields['displayInMusic']),

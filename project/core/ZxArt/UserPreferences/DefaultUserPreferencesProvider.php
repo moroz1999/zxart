@@ -43,6 +43,7 @@ final class DefaultUserPreferencesProvider
             // Widest zoom that fits a desktop column; narrower devices reduce it themselves.
             PreferenceCode::PICTURE_SCALE->value => '3',
             PreferenceCode::RADIO_CRITERIA->value => '{}',
+            PreferenceCode::LANGUAGE->value => 'eng',
         ];
     }
 

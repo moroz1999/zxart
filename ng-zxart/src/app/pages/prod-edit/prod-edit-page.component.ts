@@ -35,6 +35,7 @@ import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
 import {FormFieldValue} from '../../shared/models/form-save';
@@ -85,6 +86,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './prod-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -150,7 +152,10 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     {prop: 'mapFilesSelector', labelKey: 'prod-form.maps'},
   ];
 
-  private elementId = 0;
+  /** Where the user lands once the production is deleted. */
+  readonly deleteReturnUrl = '/prods';
+
+  elementId = 0;
   /** Element the batch upload was started from (author, group, party or category). */
   private parentId = 0;
   private returnUrl = '/prods';

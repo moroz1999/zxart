@@ -54,4 +54,16 @@ final readonly class UserPreferenceValuesRepository
             ['value' => $value]
         );
     }
+
+    /**
+     * @param array<int, string> $valuesByPreferenceId
+     */
+    public function upsertMany(int $userId, array $valuesByPreferenceId): void
+    {
+        $this->db->transaction(function () use ($userId, $valuesByPreferenceId): void {
+            foreach ($valuesByPreferenceId as $preferenceId => $value) {
+                $this->upsert($userId, $preferenceId, $value);
+            }
+        });
+    }
 }

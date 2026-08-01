@@ -22,6 +22,7 @@ import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-b
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
@@ -50,6 +51,7 @@ import {PageMetadataService} from '../../shared/services/page-metadata.service';
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
+    ZxDeleteEntityButtonComponent,
   ],
   templateUrl: './party-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +72,10 @@ export class PartyEditPageComponent implements OnInit, OnDestroy {
   imageUrl: string | null = null;
   creating = false;
 
-  private elementId = 0;
+  /** Where the user lands once the party is deleted. */
+  readonly deleteReturnUrl = '/parties';
+
+  elementId = 0;
   private year = 0;
   private returnUrl = '/parties';
   private imageFile: File | null = null;

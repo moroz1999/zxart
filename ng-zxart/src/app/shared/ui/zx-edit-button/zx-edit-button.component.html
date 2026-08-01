@@ -6,8 +6,11 @@
   [href]="href"
   [color]="color"
   [size]="size"
-  [square]="true"
+  [square]="!label"
   (click)="editClick.emit($event)"
 >
-  <svg-icon class="zx-edit-button__icon" [name]="icon"></svg-icon>
+  <svg-icon class="zx-edit-button__icon" [name]="icon" aria-hidden="true"></svg-icon>
+  @if (label) {
+    {{ label }}
+  }
 </zx-button>

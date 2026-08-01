@@ -18,6 +18,7 @@ import {CommentsListComponent} from '../../../comments/components/comments-list/
 import {RatingsListComponent} from '../../../ratings/components/ratings-list/ratings-list.component';
 import {ZxReleaseFileStructureComponent} from '../zx-release-file-structure/zx-release-file-structure.component';
 import {ZxProdPicturesSectionComponent} from '../../../prod-details/components/zx-prod-pictures-section/zx-prod-pictures-section.component';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 
 @Component({
   selector: 'zx-release-details-view',
@@ -52,6 +53,7 @@ export class ZxReleaseDetailsComponent implements OnChanges {
     private readonly api: ReleaseDetailsApiService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translate: TranslateService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,6 +68,7 @@ export class ZxReleaseDetailsComponent implements OnChanges {
       tap(details => {
         if (details) {
           this.pageTitleChange.emit(details.title);
+          this.pageMetadata.applyPlainTitle(details.title);
           const categories = details.prod.categoriesPaths.length ? details.prod.categoriesPaths[0].categories : [];
           this.breadcrumbService.setEntityTrail({
             items: [

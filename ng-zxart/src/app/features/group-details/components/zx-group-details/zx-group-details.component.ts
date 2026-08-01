@@ -25,6 +25,7 @@ import {ZxTabComponent} from '../../../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxTabContentDirective} from '../../../../shared/ui/zx-tabs/zx-tab-content.directive';
 import {CommentsListComponent} from '../../../comments/components/comments-list/comments-list.component';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
+import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
 type GroupTabId = 'overview' | 'works' | 'group' | 'connections' | 'media' | 'discussion';
 
 @Component({
@@ -68,6 +69,7 @@ export class ZxGroupDetailsComponent implements OnChanges {
   constructor(
     private readonly api: GroupCoreApiService,
     private readonly breadcrumbService: BreadcrumbService,
+    private readonly pageMetadata: PageMetadataService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,6 +84,7 @@ export class ZxGroupDetailsComponent implements OnChanges {
       tap(core => {
         if (core) {
           this.pageTitleChange.emit(core.title);
+          this.pageMetadata.applyPlainTitle(core.title);
           this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
         }
       }),

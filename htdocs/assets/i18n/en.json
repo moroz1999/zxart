@@ -45,7 +45,19 @@
     "origin": "Origin",
     "conversion": "Works conversion",
     "subgroups": "Subgroups",
-    "ok": "OK"
+    "ok": "OK",
+    "delete": "Delete",
+    "delete-author-alias": "Delete author alias",
+    "delete-author": "Delete author",
+    "delete-group": "Delete group",
+    "delete-party": "Delete party",
+    "delete-picture": "Delete picture",
+    "delete-press-article": "Delete article",
+    "delete-prod": "Delete production",
+    "delete-release": "Delete release",
+    "delete-tune": "Delete tune",
+    "delete-confirm-message": "Delete this entry permanently? This cannot be undone.",
+    "delete-failed": "The entry could not be deleted."
   },
   "form-page-title": {
     "edit-author": "Editing author \"{{title}}\"",
@@ -210,7 +222,7 @@
     "title": "Title",
     "authors": "Authors",
     "add-author": "Add author…",
-    "format-group": "Format",
+    "format-group": "Sound group",
     "party": "Party",
     "partyplace": "Party place",
     "year": "Year",
@@ -725,7 +737,8 @@
       "title": "Homepage Configuration",
       "reset": "Reset",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "saveError": "Could not save the settings. Please try again."
     }
   },
   "tune": {
@@ -856,6 +869,7 @@
     "info": "Information",
     "year": "Year",
     "format": "File format",
+    "format-group": "Sound group",
     "chip": "AY chip",
     "channels-type": "Channel layout",
     "channels": "Channels",

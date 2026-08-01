@@ -455,6 +455,7 @@ class Formdata extends LoggedControllerApplication
         return match ($structureType) {
             'zxMusic' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'musiccompo.compo_', 'emptyBlank' => true],
+                'formatGroup' => ['method' => 'getFormatGroups', 'clientLabels' => true],
                 'chipType' => ['method' => 'getChipTypes', 'prefix' => 'zxmusic.chiptype_', 'emptyLabelKey' => 'zxmusic.chiptype_default'],
                 'channelsType' => ['method' => 'getChannelsTypes', 'prefix' => 'zxmusic.channelstype_', 'emptyLabelKey' => 'zxmusic.channelstype_default'],
                 'frequency' => ['method' => 'getFrequencies', 'prefix' => 'zxmusic.frequency_', 'emptyLabelKey' => 'zxmusic.frequency_default'],
@@ -462,6 +463,7 @@ class Formdata extends LoggedControllerApplication
             ],
             'musicUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'musiccompo.compo_', 'emptyBlank' => true],
+                'formatGroup' => ['method' => 'getFormatGroups', 'clientLabels' => true],
                 'chipType' => ['method' => 'getChipTypes', 'prefix' => 'zxmusic.chiptype_', 'emptyLabelKey' => 'zxmusic.chiptype_default'],
                 'channelsType' => ['method' => 'getChannelsTypes', 'prefix' => 'zxmusic.channelstype_', 'emptyLabelKey' => 'zxmusic.channelstype_default'],
                 'frequency' => ['method' => 'getFrequencies', 'prefix' => 'zxmusic.frequency_', 'emptyLabelKey' => 'zxmusic.frequency_default'],

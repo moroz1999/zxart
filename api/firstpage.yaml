@@ -1,10 +1,53 @@
 openapi: 3.0.0
 info:
   title: ZxArt Firstpage API
-  version: 2.0.0
+  version: 2.1.0
   description: API for homepage modules and metadata. All endpoints return the data directly as the response body (HTTP 200), not wrapped in a responseData envelope.
 
 paths:
+  /firstpage/?action=newProds:
+    get:
+      summary: Get new programs for the homepage
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [newProds]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: minRating
+          in: query
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+        - name: startYearOffset
+          in: query
+          description: Maximum program age in years relative to the current year.
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10
+            example: 1
+      responses:
+        '200':
+          description: New homepage programs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '500':
+          $ref: '#/components/responses/InternalError'
+
   /firstpage/?action=catalogueBaseUrls:
     get:
       summary: Get catalogue base URLs for homepage modules

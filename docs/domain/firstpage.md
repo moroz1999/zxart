@@ -2,7 +2,7 @@
 
 ## Overview
 
-The main page displays a configurable set of content modules. Each user can customize the set, order, and display limits of modules through personal preferences. Configuration is stored server-side as user preferences.
+The main page displays a configurable set of content modules. Each visitor can customize the set, order, and display limits of modules through personal preferences. Logged-in users persist configuration on the backend and mirror it in localStorage; anonymous visitors use localStorage only.
 
 ## Module System
 
@@ -28,7 +28,7 @@ The main page displays a configurable set of content modules. Each user can cust
 
 ### Module Data Filtering
 
-- **newProds**: Filters by `dateAdded >= now - 30 days` AND `votes >= minRating`. Optional `startYear` — if set (offset > 0), additionally filters by `year >= currentYear - offset`.
+- **newProds**: Filters by `dateAdded >= now - 30 days`, `votes >= minRating`, and `year >= currentYear - startYearOffset`.
 - **bestNewDemos / bestNewGames**: Filters by category, `votes >= minRating`, and `year >= currentYear - 1`. Results are randomized.
 - **supportProds**: Filters by `legalStatus IN ('insales', 'donationware')`. Results are randomized.
 - **unvotedPictures / unvotedTunes**: Show items the current user has not voted on; only meaningful for authorized users.
@@ -44,7 +44,7 @@ Some modules support additional settings:
 | `minRating` | newProds, bestNewDemos, bestNewGames | `homepage_{type}_min_rating` |
 | `startYearOffset` | newProds | `homepage_new_prods_start_year` |
 
-**`startYearOffset`**: Stored as an integer offset (0–10). `0` means no year filter. `N` means filter `year >= currentYear - N`. In the UI, shown as a year select (e.g. 2026, 2025, ..., 2016).
+**`startYearOffset`**: Stored as an integer offset from the current year (0–10). The UI displays the corresponding year. For example, in 2026 selecting `2025` stores `1`; in 2027 the same preference automatically means `2026`.
 
 ### Module Order and Visibility
 
@@ -71,5 +71,7 @@ Some modules support additional settings:
 
 - Available via a settings button on the main page.
 - Allows reordering (CDK drag-and-drop), enabling/disabling, and configuring per-module settings.
-- Changes are saved to user preferences server-side; the config service reloads on save.
-- Reset button restores all `homepage_*` preferences to their server-side defaults.
+- The dialog closes only after a successful save. Failed saves keep the draft open and show an error.
+- Logged-in saves are validated as one batch and committed in a database transaction. The successful backend response replaces the frontend preference store and its localStorage mirror.
+- Anonymous saves update the frontend preference store and localStorage without a backend request.
+- Reset restores all `homepage_*` preferences through the same save flow. Logged-in users use backend-provided defaults; anonymous users use the matching frontend defaults without an HTTP request.
