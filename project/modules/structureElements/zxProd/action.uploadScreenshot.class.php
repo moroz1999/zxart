@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Screenshots\ScreenshotFormat;
+
 class uploadScreenshotZxProd extends structureElementAction
 {
     protected $loggable = true;
@@ -9,57 +11,28 @@ class uploadScreenshotZxProd extends structureElementAction
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
-        $format = $controller->getParameter('format');
+        $format = ScreenshotFormat::tryFrom((string)$controller->getParameter('format'));
         $data = file_get_contents('php://input');
-        $propertyName = 'connectedFile';
-        if (!$data || !$format) {
+        if ($format === null || $data === false || strlen($data) !== $format->getSize()) {
             return;
         }
 
-        $formats = [
-            'standard' => 6912,
-            'gigascreen' => 6912 * 2,
-            's80' => 768,
-            's81' => 768,
-        ];
-
-        if (isset($formats[$format]) && strlen($data) === $formats[$format]) {
-            if ($fileElement = $structureManager->createElement(
-                'file',
-                'showForm',
-                $structureElement->getFilesParentElementId(),
-                false,
-                $structureElement->getConnectedFileType($propertyName)
-            )
-            ) {
-                if ($structureElement instanceof StructureElementUploadedFilesPathInterface) {
-                    $folder = $structureElement->getUploadedFilesPath();
-                }
-
-                $fileElement->title = $structureElement->title;
-                $fileElement->file = $fileElement->getPersistedId();
-
-                switch ($format) {
-                    case 'standard':
-                        $fileElement->fileName = $fileElement->getPersistedId() . '.scr';
-                        break;
-                    case 'gigascreen':
-                        $fileElement->fileName = $fileElement->getPersistedId() . '.img';
-                        break;
-                    case 's80':
-                        $fileElement->fileName = $fileElement->getPersistedId() . '.s80';
-                        break;
-                    case 's81':
-                        $fileElement->fileName = $fileElement->getPersistedId() . '.s81';
-                        break;
-                    default:
-                        $fileElement->fileName = $fileElement->getPersistedId();
-                        break;
-                }
-
-                $fileElement->persistElementData();
-                file_put_contents($folder . $fileElement->file, $data);
-            }
+        $fileElement = $structureManager->createElement(
+            'file',
+            'showForm',
+            $structureElement->getFilesParentElementId(),
+            false,
+            $structureElement->getConnectedFileType('connectedFile')
+        );
+        if (!$fileElement instanceof fileElement) {
+            return;
         }
+
+        $fileElement->title = $structureElement->title;
+        $fileElement->file = $fileElement->getPersistedId();
+        $fileElement->fileName = $fileElement->getPersistedId() . '.' . $format->getFileExtension();
+        $fileElement->persistElementData();
+
+        file_put_contents($structureElement->getUploadedFilesPath() . $fileElement->file, $data);
     }
 }

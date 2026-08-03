@@ -11,7 +11,7 @@ use ZxArt\ZxScreen\ZxPictureUrlHelper;
  * @property string $fileName
  * @property string $image
  * @property string $imageFileName
- * @property string $author
+ * @property string $author @deprecated use {@see self::getAuthor()} — the datachunk is empty on a freshly created element, so the magic property returns null
  */
 class fileElement extends structureElement implements StructureElementUploadedFilesPathInterface, ImageUrlProviderInterface
 {
@@ -32,6 +32,11 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         $moduleStructure['image'] = 'image';
         $moduleStructure['imageFileName'] = 'fileName';
         $moduleStructure['author'] = 'text';
+    }
+
+    public function getAuthor(): string
+    {
+        return (string)$this->author;
     }
 
     public function getUploadedFilesPath()

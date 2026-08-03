@@ -64,7 +64,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
 export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
   @Input({required: true}) release!: ProdReleaseDto;
   @Input({required: true}) canUploadScreenshot!: boolean;
-  @Input({required: true}) screenshotUploadUrl!: string;
+  @Input() screenshotUploadElementId: number | null = null;
 
   screenshotUrls: string[] = [];
   displayAdditions = false;
@@ -159,7 +159,7 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
     this.emulator.open({
       emulatorType: type,
       fileUrl: this.release.playUrl,
-      uploadUrl: this.screenshotUploadUrl,
+      uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });
   }

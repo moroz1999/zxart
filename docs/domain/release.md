@@ -121,7 +121,7 @@ Determined by combination of:
 - Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.
 - USP uses a 960x720 canvas by default, exactly double the 480x360 emulator viewport.
 - Emulator screenshots launched from prod details release rows are saved to the parent prod, not to the release.
-- Emulator screenshots launched from the release details page are saved directly to the release. The `screenshotUploadUrl` and `canUploadScreenshot` fields are included in the release details API response.
+- Emulator screenshots launched from the release details page are saved directly to the release. The release details API response carries `canUploadScreenshot`; the upload itself goes to `/screenshot-upload/` with the release id.
 
 ### Constraints and Rules
 1. Release must always have parent zxProd

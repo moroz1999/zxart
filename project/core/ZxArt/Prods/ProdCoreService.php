@@ -24,13 +24,14 @@ use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Repositories\ProdTabsRepository;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
+use ZxArt\Urls\EntityUrlResolver;
 use zxProdCategoryElement;
 use zxProdElement;
 
 readonly class ProdCoreService
 {
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+        private EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
         private ProdTabsRepository $prodTabsRepository,

@@ -47,6 +47,8 @@ paths:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshot-move~1'
   /prod-screenshots/:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshots~1'
+  /screenshot-upload/:
+    $ref: 'prod-files.yaml#/paths/~1screenshot-upload~1'
   /prod-inlays/:
     $ref: 'prod-files.yaml#/paths/~1prod-inlays~1'
   /prod-instructions/:

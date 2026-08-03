@@ -81,7 +81,6 @@ readonly class ReleaseDetailsRestDto
         #[Map(transform: MapCollection::class)]
         public array $fileStructure,
         public bool $canUploadScreenshot,
-        public string $screenshotUploadUrl,
         public bool $canReorderScreenshots,
         public string $dateCreated,
         public ?ProdSubmitterRestDto $submitter,

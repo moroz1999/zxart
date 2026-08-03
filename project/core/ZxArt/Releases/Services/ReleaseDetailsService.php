@@ -121,7 +121,6 @@ readonly class ReleaseDetailsService
             ),
             fileStructure: $fileStructure,
             canUploadScreenshot: $canUploadScreenshot,
-            screenshotUploadUrl: $releaseUrl . 'id:' . $release->getId() . '/action:uploadScreenshot/',
             canReorderScreenshots: $canReorderScreenshots,
             dateCreated: $release->dateCreated,
             submitter: $this->buildSubmitter($release),

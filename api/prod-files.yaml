@@ -154,6 +154,47 @@ paths:
         '500':
           description: Internal server error
 
+  /screenshot-upload/:
+    post:
+      summary: Store a raw screen dump captured in the emulator as a screenshot of a prod or release (requires uploadScreenshot privilege)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Prod or release element ID
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [standard, gigascreen, s80, s81]
+          description: Screen dump format; defines the expected body size and the stored file extension
+      requestBody:
+        required: true
+        description: Raw screen dump bytes (6912 for standard, 13824 for gigascreen, 768 for s80/s81)
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Updated files payload after the upload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdFilesPayload'
+        '400':
+          description: Bad request (missing or invalid params)
+        '403':
+          description: Access denied
+        '404':
+          description: Element not found
+        '500':
+          description: Internal server error
+
   /release-screenshots/:
     get:
       summary: Per-release screenshots gallery (screenshotsSelector on zxRelease)

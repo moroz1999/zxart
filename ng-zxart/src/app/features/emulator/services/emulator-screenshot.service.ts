@@ -5,6 +5,9 @@ import {ScreenshotFormat} from '../engines/emulator-engine';
 
 export type UspScreenSelection = '48' | '128' | 'giga';
 
+/** Screen dump formats accepted by the `/screenshot-upload/` endpoint. */
+export type UploadScreenshotFormat = ScreenshotFormat | 's80' | 's81';
+
 interface EmscriptenFs {
   readdir(path: string): string[];
   chdir(path: string): void;
@@ -22,21 +25,23 @@ const SECONDARY_SCREEN_OFFSET_DEFAULT = SAVESTATE_HEADER + 16384 * 3 + 4 + 16384
 export class EmulatorScreenshotService {
   constructor(private http: HttpClient) {}
 
-  uploadBlob(blob: Blob, uploadUrl: string, format: string): Observable<unknown> {
-    return this.http.post(`${uploadUrl}format:${format}`, blob);
+  uploadBlob(blob: Blob, elementId: number, format: UploadScreenshotFormat): Observable<unknown> {
+    return this.http.post('/screenshot-upload/', blob, {
+      params: {id: elementId, format},
+    });
   }
 
   captureAndUpload(
     selection: UspScreenSelection,
     fileUrl: string,
-    uploadUrl: string,
+    elementId: number,
   ): Observable<unknown> {
     const blob = this.captureFromFs(selection, fileUrl);
     if (!blob) {
       return throwError(() => new Error('USP screenshot capture failed: emulator FS unavailable'));
     }
     const format: ScreenshotFormat = selection === 'giga' ? 'gigascreen' : 'standard';
-    return this.http.post(`${uploadUrl}format:${format}`, blob);
+    return this.uploadBlob(blob, elementId, format);
   }
 
   private captureFromFs(selection: UspScreenSelection, fileUrl: string): Blob | null {

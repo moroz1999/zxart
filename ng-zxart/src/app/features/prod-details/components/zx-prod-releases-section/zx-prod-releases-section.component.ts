@@ -62,7 +62,6 @@ type MediaFilter = 'all' | 'disk' | 'tape' | 'other';
 })
 export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
   @Input({required: true}) elementId!: number;
-  @Input({required: true}) prodUrl!: string;
 
   readonly viewToggleOptions$: Observable<ZxToggleOption[]>;
 
@@ -287,10 +286,6 @@ export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
 
   trackByCode(_index: number, option: LabeledOption): string {
     return option.code;
-  }
-
-  get screenshotUploadUrl(): string {
-    return `${this.prodUrl}id:${this.elementId}/action:uploadScreenshot/`;
   }
 
   private get releasesForTypeOptions(): ProdReleaseDto[] {

@@ -72,7 +72,6 @@ readonly class ReleaseDetailsDto
         public ReleaseTabsDto $tabs,
         public array $fileStructure,
         public bool $canUploadScreenshot,
-        public string $screenshotUploadUrl,
         public bool $canReorderScreenshots,
         public string $dateCreated,
         public ?ProdSubmitterDto $submitter,

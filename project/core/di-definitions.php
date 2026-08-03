@@ -38,6 +38,7 @@ use ZxArt\Prods\ProdMediaService;
 use ZxArt\Prods\ProdRelatedProdsService;
 use ZxArt\Prods\ProdReleasesService;
 use ZxArt\Prods\ScreenshotMoveService;
+use ZxArt\Screenshots\ScreenshotUploadService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
@@ -78,6 +79,8 @@ return [
     ProdArticlesService::class => autowire(),
     ProdRelatedProdsService::class => autowire(),
     ScreenshotMoveService::class => autowire()
+        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
+    ScreenshotUploadService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
     // Controllers with custom StructureManager bindings

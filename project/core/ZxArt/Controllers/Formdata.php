@@ -40,6 +40,9 @@ class Formdata extends LoggedControllerApplication
 
     public $rendererName = 'json';
 
+    /** Image preset for multi-file selector thumbnails; reads from the `releases` folder. */
+    private const string SELECTOR_THUMBNAIL_PRESET = 'prodImage';
+
     public function __construct(
         controller $controller,
         Logger $logger,
@@ -351,6 +354,13 @@ class Formdata extends LoggedControllerApplication
      * the file-selector manager. Uploads go back through `publicReceive` →
      * `receiveFiles`; deletes hit the shared `delete` action per file element.
      *
+     * Thumbnails use the `prodImage` preset: selector files belong to prods and
+     * releases and are therefore stored in the `releases` folder, which is where
+     * that preset reads from. A native ZX screen ignores the preset and renders
+     * through its own converter; a PC screenshot (png, jpg, bmp) is resized by
+     * the preset, so a preset pointing at the default uploads folder would leave
+     * every PC screenshot without a thumbnail.
+     *
      * @return array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>
      */
     private function buildFileSelectors(structureElement $element): array
@@ -371,7 +381,7 @@ class Formdata extends LoggedControllerApplication
                     'title' => $this->decode((string)$file->title),
                     'isImage' => $isImage,
                     'imageUrl' => $isImage && method_exists($file, 'getImageUrl')
-                        ? (string)$file->getImageUrl('adminImage')
+                        ? (string)$file->getImageUrl(self::SELECTOR_THUMBNAIL_PRESET)
                         : null,
                 ];
             }

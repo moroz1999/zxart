@@ -56,7 +56,7 @@ import {RouterLink} from '@angular/router';@Component({
 export class ZxProdReleaseRowComponent implements OnInit {
   @Input({required: true}) release!: ProdReleaseDto;
   @Input({required: true}) canUploadScreenshot!: boolean;
-  @Input({required: true}) screenshotUploadUrl!: string;
+  @Input() screenshotUploadElementId: number | null = null;
 
   galleryId = '';
   previewOpen = false;

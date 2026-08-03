@@ -116,7 +116,7 @@
                 zxProdReleaseRow
                 [release]="release"
                 [canUploadScreenshot]="canUploadScreenshot"
-                [screenshotUploadUrl]="screenshotUploadUrl"
+                [screenshotUploadElementId]="elementId"
               ></tr>
             </tbody>
           </table>
@@ -127,7 +127,7 @@
             *ngFor="let release of filteredReleases; trackBy: trackById"
             [release]="release"
             [canUploadScreenshot]="canUploadScreenshot"
-            [screenshotUploadUrl]="screenshotUploadUrl">
+            [screenshotUploadElementId]="elementId">
           </zx-prod-release-card>
         </div>
 

@@ -28,7 +28,7 @@ export class ZxEmulatorPlayButtonComponent {
   @Input({required: true}) playUrl!: string | null;
   @Input({required: true}) emulatorType!: string | null;
   @Input() canUploadScreenshot = false;
-  @Input() screenshotUploadUrl = '';
+  @Input() screenshotUploadElementId: number | null = null;
   @Input() size: 'xs' | 'sm' | 'md' = 'md';
   @Input() square = false;
   @Input() ariaLabel = '';
@@ -58,7 +58,7 @@ export class ZxEmulatorPlayButtonComponent {
     this.emulator.open({
       emulatorType: type,
       fileUrl: this.playUrl,
-      uploadUrl: this.screenshotUploadUrl || undefined,
+      uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });
   }

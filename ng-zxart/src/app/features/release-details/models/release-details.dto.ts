@@ -80,7 +80,6 @@ export interface ReleaseDetailsDto {
   tabs: ReleaseTabsDto;
   fileStructure: ReleaseFileStructureItemDto[];
   canUploadScreenshot: boolean;
-  screenshotUploadUrl: string;
   canReorderScreenshots: boolean;
   dateCreated: string;
   submitter: {id: number; userName: string; url: string} | null;

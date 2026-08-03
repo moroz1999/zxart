@@ -89,7 +89,6 @@ components:
         - tabs
         - fileStructure
         - canUploadScreenshot
-        - screenshotUploadUrl
         - canReorderScreenshots
         - dateCreated
         - submitter
@@ -189,8 +188,6 @@ components:
             $ref: '#/components/schemas/ReleaseFileStructureItem'
         canUploadScreenshot:
           type: boolean
-        screenshotUploadUrl:
-          type: string
         canReorderScreenshots:
           type: boolean
         dateCreated:

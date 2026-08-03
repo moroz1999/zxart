@@ -275,11 +275,12 @@ readonly class ProdMediaService
             $isImage = $file->isImage();
             $imageUrl = ($isImage && $preset !== null) ? $file->getImageUrl($preset) : null;
             $fullImageUrl = ($isImage && $fullPreset !== null) ? $file->getImageUrl($fullPreset) : null;
+            $author = $file->getAuthor();
 
             $result[] = new ProdFileDto(
                 id: $file->getId(),
                 title: $this->decodeText($file->title),
-                author: $file->author !== '' ? $this->decodeText($file->author) : null,
+                author: $author !== '' ? $this->decodeText($author) : null,
                 fileName: $file->fileName,
                 imageUrl: $imageUrl,
                 fullImageUrl: $fullImageUrl,

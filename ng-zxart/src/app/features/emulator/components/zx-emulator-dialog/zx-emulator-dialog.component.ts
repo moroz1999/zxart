@@ -29,7 +29,8 @@ import {AnalyticsService} from '../../../../shared/services/analytics.service';
 export interface EmulatorDialogData {
   emulatorType: EmulatorType;
   fileUrl: string;
-  uploadUrl?: string;
+  /** Prod or release element the captured screenshot is attached to. */
+  uploadElementId?: number;
   canScreenshot?: boolean;
 }
 
@@ -107,17 +108,17 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown.F2', ['$event'])
   onF2(event: KeyboardEvent): void {
-    if (!this.data.uploadUrl || !this.data.canScreenshot) {
+    if (!this.data.uploadElementId || !this.data.canScreenshot) {
       return;
     }
     event.preventDefault();
-    const uploadUrl = this.data.uploadUrl;
+    const elementId = this.data.uploadElementId;
 
     if (this.showScreenshotControls) {
       const fileUrl = this.data.fileUrl;
       const selection = this.screenshotSelection;
       setTimeout(() => {
-        this.screenshotService.captureAndUpload(selection, fileUrl, uploadUrl).subscribe({
+        this.screenshotService.captureAndUpload(selection, fileUrl, elementId).subscribe({
           error: err => console.error('Emulator screenshot upload failed:', err),
         });
       }, F2_SCREENSHOT_DELAY_MS);
@@ -130,7 +131,7 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
           if (!blob) {
             return;
           }
-          this.screenshotService.uploadBlob(blob, uploadUrl, 's81').subscribe({
+          this.screenshotService.uploadBlob(blob, elementId, 's81').subscribe({
             error: err => console.error('Emulator screenshot upload failed:', err),
           });
         });
