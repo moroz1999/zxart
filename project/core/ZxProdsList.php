@@ -415,11 +415,6 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('hw');
                 $db = $this->getService('db');
                 /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
-
-                /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService(QueryFiltersManager::class);
@@ -429,16 +424,17 @@ trait ZxProdsList
                     ->distinct()
                     ->pluck('value');
                 foreach ($this->getHardwareList() as $groupName => $groupValues) {
-                    if ($intersected = array_intersect($groupValues, $hwItems)) {
+                    $intersected = array_intersect($groupValues, $hwItems);
+                    if ($intersected !== []) {
                         $group = [
-                            'title' => $translationsManager->getTranslationByName("hardware.group_{$groupName}"),
+                            'title' => $groupName,
                             'values' => [],
                         ];
                         foreach ($intersected as $hwItem) {
                             $group['values'][] = [
                                 'value' => $hwItem,
-                                'title' => $translationsManager->getTranslationByName('hardware.item_' . $hwItem),
-                                'selected' => $values && in_array($hwItem, $values),
+                                'title' => $hwItem,
+                                'selected' => is_array($values) && in_array($hwItem, $values, true),
                             ];
                         }
                         $this->hardwareSelector[] = $group;

@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Current User API
+  version: 1.0.0
+  description: >
+    Session identity for the SPA: who the current visitor is, and the login and
+    logout operations that change it. Every response is the same user object, so
+    a caller can store the result of any of the three calls as the new state.
+
+paths:
+  /currentuser/:
+    get:
+      summary: Current session user
+      description: >
+        Returns the anonymous user (`userName: "anonymous"`, `id: null`) when no
+        one is logged in; this is not an error.
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /currentuser/?action=login:
+    post:
+      summary: Log in
+      description: >
+        Starts a session for the given credentials. With `remember` the session
+        is restored on later visits; without it any previous remember token is
+        dropped.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userName, password]
+              properties:
+                userName:
+                  type: string
+                password:
+                  type: string
+                remember:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Logged in; the newly authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+        '400':
+          description: Missing user name or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /currentuser/?action=logout:
+    post:
+      summary: Log out
+      responses:
+        '200':
+          description: Logged out; the anonymous user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUser'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CurrentUser:
+      type: object
+      required:
+        - id
+        - userName
+        - hasAds
+        - authorId
+      properties:
+        id:
+          type: integer
+          nullable: true
+          description: User element id; null for the anonymous user.
+        userName:
+          type: string
+          description: Account name, or `anonymous` when nobody is logged in.
+          example: anonymous
+        hasAds:
+          type: boolean
+          description: >
+            Whether advertising is shown to this user. False for VIP, volunteer
+            and supporter accounts.
+        authorId:
+          type: integer
+          nullable: true
+          description: >
+            Author element the account claims, when it has one. The SPA links to
+            the account's own page as `/author/{authorId}`; no routed URL is sent.
+
+    ErrorResponse:
+      type: object
+      required:
+        - errorMessage
+      properties:
+        errorMessage:
+          type: string

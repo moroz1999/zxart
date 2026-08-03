@@ -16,6 +16,13 @@ export interface ProdReleaseInlayDto {
   releaseBy: ProdGroupRefDto[];
 }
 
-export interface ProdReleaseInlaysPayload {
-  inlays: ProdReleaseInlayDto[];
+export type ProdCoverKind = 'inlay' | 'ad';
+
+export interface ProdCoverGroupDto {
+  kind: ProdCoverKind;
+  items: ProdReleaseInlayDto[];
+}
+
+export interface ProdCoversPayload {
+  groups: ProdCoverGroupDto[];
 }

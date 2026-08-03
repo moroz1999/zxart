@@ -59,6 +59,8 @@ Concrete release (version) of software production. Contains files specific to th
   - Stored in table `module_zxrelease_hw_required`
   - Examples: ZX Spectrum 48K, 128K, Pentagon, ZX81, ZX80, TSConf, MB
   - Determines emulator launch capability
+  - Form and public API contracts expose codes only; the SPA owns full and short
+    labels through `hardware.<code>` and `hardware-short.<code>` translations.
 
 #### Languages
 - **language** - interface languages (array)
@@ -69,6 +71,7 @@ Concrete release (version) of software production. Contains files specific to th
 - **inlayFilesSelector** - inlay files (covers)
 - **infoFilesSelector** - information files
 - **adFilesSelector** - advertising materials
+- Release details expose `inlayFilesSelector` and `adFilesSelector` together as `covers`, grouped by kind exactly like a prod's covers (`{kind, items}` per `ProdCoverKind`, empty kinds omitted); the page renders one headed section per group and `tabs.hasCovers` follows both selectors.
 - Release details permits users with `publicReceive` privilege to reorder screenshots stored in `screenshotsSelector` through the shared screenshot move API.
 - Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
 - The parsed file structure is only built and returned when `isDownloadable()` is true (`fileStructure` is empty otherwise, which also hides the Structure tab). This mirrors the legacy gate `{if $element->parsed && $element->isDownloadable()}` and prevents per-file download links from leaking for non-downloadable releases (e.g. `insales` prods, or old forbidden prods to anonymous users).
@@ -79,7 +82,7 @@ Concrete release (version) of software production. Contains files specific to th
 - `insales` ("in sales") is always excluded, including from the old-prod allowance: such prods/releases must never expose a download link. The legacy release row shows a "purchase" external-link button instead.
 - API responses gate `downloadUrl` (and the parsed `fileStructure`) by `isDownloadable()`, evaluated per request against the current session, so authorized-only download URLs are never emitted to anonymous users.
 - The release hero bar offers the prod's external link as a call to action when the prod carries one: a "buy" button for `insales` and a "donate" button for `donationware` (`prodLegalStatus` and `prodExternalLink` on the release details response).
-- Known residual risk (pre-existing in legacy, UI-only protection): the `release` and `zxfile` download applications themselves do not enforce `isDownloadable()`; protection relies on hiding the link rather than blocking the endpoint.
+- Known residual risk (pre-existing in legacy, UI-only protection): the `releasefile` and `zxfile` download applications themselves do not enforce `isDownloadable()`; protection relies on hiding the link rather than blocking the endpoint.
 - Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
 - Parsed release structure can play TAP and supported TZX entries as generated browser audio from the Angular release details UI.
 - Release table thumbnails show an animated larger first-screenshot preview on pointer hover.

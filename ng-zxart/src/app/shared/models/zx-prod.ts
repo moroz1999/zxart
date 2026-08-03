@@ -5,6 +5,7 @@ import {
   ZxProdConnectedElements,
   ZxProdConnectedItems,
   ZxProdDto,
+  ZxProdHardwareItems,
 } from './zx-prod-dto';
 
 export class ZxProd {
@@ -16,7 +17,7 @@ export class ZxProd {
     public dateCreated: number;
     public imagesUrls: Array<string> = [];
     public inlaysUrls: Array<string> = [];
-    public hardwareInfo: ZxProdConnectedItems = [];
+    public hardwareInfo: ZxProdHardwareItems = [];
     public groupsInfo: ZxProdConnectedElements = [];
     public publishersInfo: ZxProdConnectedElements = [];
     public authorsInfoShort: ZxProdAuthorship[] = [];

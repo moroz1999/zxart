@@ -36,7 +36,7 @@
         (click)="hardwareClicked($event, item.id)"
         variant="secondary"
         [clickable]="true"
-      >{{ item.title }}</zx-badge>
+      >{{ 'hardware-short.' + item.id | translate }}</zx-badge>
     </span>
       <span class="zx-prod-status"
             *ngIf="(model.legalStatus === 'mia' || model.legalStatus === 'unreleased') && !model.loadingImageUrl"

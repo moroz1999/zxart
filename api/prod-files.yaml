@@ -25,7 +25,7 @@ paths:
 
   /prod-inlays/:
     get:
-      summary: Inlay images from all releases of a zxProd, each with release metadata
+      summary: Cover images of a zxProd — own inlays plus inlays and advertising materials of its releases, grouped by kind
       parameters:
         - in: query
           name: id
@@ -34,11 +34,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: Release inlays payload
+          description: Prod covers payload
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProdReleaseInlaysPayload'
+                $ref: '#/components/schemas/ProdCoversPayload'
         '400':
           description: Bad request
         '404':
@@ -329,15 +329,30 @@ components:
           items:
             $ref: '#/components/schemas/ProdGroupRef'
 
-    ProdReleaseInlaysPayload:
+    ProdCoverGroup:
       type: object
       required:
-        - inlays
+        - kind
+        - items
       properties:
-        inlays:
+        kind:
+          type: string
+          enum: [inlay, ad]
+        items:
           type: array
           items:
             $ref: '#/components/schemas/ProdReleaseInlay'
+
+    ProdCoversPayload:
+      type: object
+      required:
+        - groups
+      properties:
+        groups:
+          description: One group per cover kind that has files; empty kinds are omitted.
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdCoverGroup'
 
     ProdReleaseInstructionFile:
       type: object

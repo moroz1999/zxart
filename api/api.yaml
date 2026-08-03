@@ -23,6 +23,12 @@ paths:
     $ref: 'tunes.yaml#/paths/~1tunes~1'
   /firstpage/?action=catalogueBaseUrls:
     $ref: 'firstpage.yaml#/paths/~1firstpage~1?action=catalogueBaseUrls'
+  /currentuser/:
+    $ref: 'current-user.yaml#/paths/~1currentuser~1'
+  /currentuser/?action=login:
+    $ref: 'current-user.yaml#/paths/~1currentuser~1?action=login'
+  /currentuser/?action=logout:
+    $ref: 'current-user.yaml#/paths/~1currentuser~1?action=logout'
   /userpreferences/:
     $ref: 'user-preferences.yaml#/paths/~1userpreferences~1'
   /playlists-data/:

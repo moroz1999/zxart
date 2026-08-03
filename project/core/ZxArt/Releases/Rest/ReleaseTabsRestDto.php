@@ -8,7 +8,7 @@ readonly class ReleaseTabsRestDto
 {
     public function __construct(
         public bool $hasScreenshots,
-        public bool $hasInlays,
+        public bool $hasCovers,
         public bool $hasInstructions,
         public bool $hasStructure,
         public bool $hasPictures,

@@ -33,13 +33,13 @@ describe('UserPreferencesService', () => {
     id: 7,
     userName: 'tester',
     hasAds: false,
-    authorPageUrl: null,
+    authorId: null,
   };
   const anonymousUser: CurrentUser = {
     id: null,
     userName: 'anonymous',
     hasAds: true,
-    authorPageUrl: null,
+    authorId: null,
   };
 
   it('overwrites the logged-in local snapshot with the backend snapshot on initialization', async () => {

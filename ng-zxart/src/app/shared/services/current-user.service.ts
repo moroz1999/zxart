@@ -8,7 +8,7 @@ const ANONYMOUS_USER: CurrentUser = {
   id: null,
   userName: 'anonymous',
   hasAds: true,
-  authorPageUrl: null,
+  authorId: null,
 };
 
 @Injectable({

@@ -83,6 +83,7 @@ final class UAGuard
             'Applebot',
             'LinkupBot',
             'PetalBot',
+            'ExaSearchBot',
         ];
     }
 }

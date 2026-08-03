@@ -38,8 +38,8 @@ Options of entity select fields (compos, chip and channel types, frequencies,
 palettes, languages, release types, hardware) are not enumerated in Angular. The
 element exposes them through a provider method (`getCompoTypes()`,
 `getPaletteTypes()`, …), `Formdata::enumSpecs()` maps each field to that method
-and a translation prefix, and the labels arrive already translated in the
-`enums` map of the `/formdata/` response. A form renders `enums['<field>']`.
+and a label strategy. Backend-owned labels arrive translated in the `enums` map
+of the `/formdata/` response. A form renders `enums['<field>']` for those fields.
 
 Every element type whose form has such a field needs its own entry in
 `enumSpecs()` — including the transient upload-form elements, whose selects stay
@@ -47,11 +47,12 @@ empty otherwise. Only lists that are fixed by the hardware (border colour,
 rotation angles) are constants in the component.
 
 A spec marked `clientLabels` sends the bare values instead, for lists the SPA
-translates itself. Software languages work that way: the backend names the codes
-a production or release can carry, and every name comes from the SPA's own
-`language.<code>` translations — on the forms, on the detail pages and in the
-prods filter, which also sorts by them. Nothing reads a language name from the
-backend.
+translates itself. Software languages and hardware work that way: the backend
+names the codes a production or release can carry, and every name comes from the
+SPA's `language.<code>`, `hardware.<code>` or `hardware-short.<code>`
+translations. Hardware selector groups use `hardware-group.<code>`. Forms,
+catalogue filters, cards and detail pages never read language or hardware names
+from the backend.
 
 A `zx-select` displays what its form control holds and reports only what the
 user picks: loading options, writing a value and changing the disabled state

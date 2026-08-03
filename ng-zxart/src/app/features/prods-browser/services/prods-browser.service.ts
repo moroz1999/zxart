@@ -16,7 +16,7 @@ interface ProdRestItem {
   readonly votesAmount: number;
   readonly userVote: number | null;
   readonly denyVoting: boolean;
-  readonly hardwareInfo: Array<{id: string; title: string}>;
+  readonly hardwareInfo: Array<{id: string}>;
   readonly authorsInfoShort: Array<{id: number; structureType: 'author' | 'authorAlias'; title: string; roles: string[]}>;
   readonly categoriesInfo: Array<{id: number; structureType: 'zxProdCategory'; title: string}>;
   readonly partyInfo: {id: number; structureType: 'party'; title: string} | null;

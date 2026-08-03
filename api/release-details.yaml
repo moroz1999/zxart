@@ -83,7 +83,7 @@ components:
         - externalLinks
         - screenshots
         - prod
-        - inlays
+        - covers
         - instructions
         - votes
         - tabs
@@ -170,10 +170,11 @@ components:
             $ref: 'prod-files.yaml#/components/schemas/ProdFile'
         prod:
           $ref: '#/components/schemas/ReleaseProdRef'
-        inlays:
+        covers:
+          description: Inlays and advertising materials of the release, grouped by kind.
           type: array
           items:
-            $ref: 'prod-releases.yaml#/components/schemas/ProdReleaseInlay'
+            $ref: 'prod-files.yaml#/components/schemas/ProdCoverGroup'
         instructions:
           type: array
           items:
@@ -233,13 +234,13 @@ components:
       type: object
       required:
         - hasScreenshots
-        - hasInlays
+        - hasCovers
         - hasInstructions
         - hasStructure
       properties:
         hasScreenshots:
           type: boolean
-        hasInlays:
+        hasCovers:
           type: boolean
         hasInstructions:
           type: boolean

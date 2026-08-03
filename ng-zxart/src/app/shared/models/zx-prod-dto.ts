@@ -5,6 +5,13 @@ export interface ZxProdConnectedItem {
 
 export type ZxProdConnectedItems = Array<ZxProdConnectedItem>;
 
+/** Hardware labels live in the SPA and are resolved from this backend code. */
+export interface ZxProdHardwareItem {
+    readonly id: string;
+}
+
+export type ZxProdHardwareItems = Array<ZxProdHardwareItem>;
+
 export interface ZxProdConnectedElementDto {
     readonly id: number;
     readonly title: string;
@@ -41,7 +48,7 @@ export interface ZxProdDto {
     readonly youtubeId?: string;
     readonly listImagesUrls?: Array<string>;
     readonly inlaysUrls?: Array<string>;
-    readonly hardwareInfo?: ZxProdConnectedItems;
+    readonly hardwareInfo?: ZxProdHardwareItems;
     readonly groupsInfo?: ZxProdConnectedElements;
     readonly publishersInfo?: ZxProdConnectedElements;
     readonly authorsInfoShort?: ZxProdAuthorship[];

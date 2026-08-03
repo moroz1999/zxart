@@ -80,6 +80,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     public model!: ZxProdCategory;
     /** Language filter, labelled from the SPA's own translations and sorted by them. */
     public languagesSelector: SelectorDto = [];
+    /** Hardware filter, labelled from the SPA's own translations. */
+    public hardwareSelector: SelectorDto = [];
     public pagesAmount = 0;
     public currentPage = 1;
     public elementsOnPage = 100;
@@ -168,8 +170,12 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         // Category (`cat`), filters and page all live in the URL query params.
         this.rootElementId = this.elementId;
         this.routerSub = this.route.queryParams.subscribe(params => this.applyQueryParams(params));
-        // Re-render the translated "all" letter chip when the language changes.
-        this.langSub = this.translate.onLangChange.subscribe(() => this.cdr.markForCheck());
+        this.langSub = this.translate.onLangChange.subscribe(() => {
+            if (this.model) {
+                this.buildClientLabelSelectors();
+            }
+            this.cdr.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {
@@ -307,13 +313,30 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         }));
     }
 
+    /** Hardware group and item names are owned by the SPA; the backend sends codes only. */
+    private buildHardwareSelector(selector: SelectorDto): SelectorDto {
+        return selector.map(group => ({
+            ...group,
+            title: this.translate.instant(`hardware-group.${group.title}`),
+            values: group.values.map(item => ({
+                ...item,
+                title: this.translate.instant(`hardware.${item.value}`),
+            })),
+        }));
+    }
+
+    private buildClientLabelSelectors(): void {
+        this.languagesSelector = this.buildLanguagesSelector(this.model.languagesSelector);
+        this.hardwareSelector = this.buildHardwareSelector(this.model.hardwareSelector);
+    }
+
     private loadData(): void {
         this.loading = true;
         const parameters = this.gatherParameters();
         this.elementsService.getModel<ZxProdCategoryDto, ZxProdCategory>(this.elementId, ZxProdCategory, parameters, 'zxProdsList', this.rootType).subscribe(
             model => {
                 this.model = model;
-                this.languagesSelector = this.buildLanguagesSelector(model.languagesSelector);
+                this.buildClientLabelSelectors();
                 // Type-resolved root: adopt its real id so category navigation and the
                 // `cat != root` URL check work without a hardcoded wrapper id.
                 if (model.id) {

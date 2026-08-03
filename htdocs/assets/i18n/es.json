@@ -1434,7 +1434,6 @@
     "openSeries": "Abrir serie",
     "music": "Música del programa",
     "pictures": "Imágenes",
-    "inlays": "Incrustaciones",
     "maps": "Mapas",
     "rzx": "Tutorial (RZX)",
     "speccymaps": "Abrir en Speccy.maps",
@@ -1447,7 +1446,7 @@
       "media": {
         "title": "Medios",
         "articles": "Artículos y mapas",
-        "inlays": "Carátulas",
+        "covers": "Carátulas",
         "maps": "Mapas",
         "rzx": "RZX",
         "graphics": "Gráficos",
@@ -1468,6 +1467,10 @@
     "instructions-download": "Descargar",
     "instructions-loading": "Cargando...",
     "instructions-error": "Error al cargar el archivo"
+  },
+  "covers": {
+    "inlay": "Carátulas",
+    "ad": "Publicidad"
   },
   "release-details": {
     "actions": "Acciones del lanzamiento",
@@ -1494,7 +1497,6 @@
     "buy": "Compra",
     "description": "Descripción",
     "screenshots": "Capturas del lanzamiento",
-    "inlays": "Carátulas",
     "instructions": "Instrucciones",
     "back-to-prod": "volver al programa",
     "version": "Versión"
@@ -1530,6 +1532,14 @@
     "fullscreen": "Abrir en pantalla completa",
     "screenshot-format-label": "Formato de captura",
     "samcoupe": "Tras cargar el emulador, pulse \"Enter\", escriba \"boot\" y pulse \"Enter\" de nuevo."
+  },
+  "hardware-group": {
+    "computers": "Ordenadores",
+    "storage": "Almacenamiento",
+    "dos": "Sistemas operativos",
+    "sound": "Sonido",
+    "controls": "Controles",
+    "expansion": "Expansiones"
   },
   "hardware-short": {
     "3dosdisk": "Sistema de disco +3DOS",
@@ -1587,7 +1597,7 @@
     "zxnext": "Next",
     "zxpand": "Interfaz ZXpand para ZX81",
     "zxuno": "ZX-Uno",
-    "elementzxmb": "ZX/MB",
+    "elementzxmb": "eZX/MB",
     "aymouse": "AM",
     "kempston8b": "KJ8",
     "divmmc": "divMMC",
@@ -1615,7 +1625,7 @@
     "sdneogs": "SD (NeoGS)",
     "sdz": "SD (Z-Controller)",
     "sid": "SID",
-    "sidelzx": "SID (Element ZX)",
+    "sidelzx": "SID (eZX/MB)",
     "gunstick": "Gun Stick",
     "magnumlight": "Magnum Light Phaser",
     "novina": "Pistola ligera \"Novina\"",
@@ -1651,6 +1661,7 @@
     "tos": "TOS (FDD3000)",
     "trdos4x": "TR-DOS 4.x",
     "trinity": "Trinity Ethernet Interface",
+    "timex_cartridge": "Timex Cartridge",
     "amxmouse": "AMX"
   },
   "hardware": {
@@ -1737,7 +1748,7 @@
     "sdz": "SD (Z-Controller)",
     "sdneogs": "SD (NeoGS)",
     "sid": "SID",
-    "sidelzx": "SID (Element ZX)",
+    "sidelzx": "SID (eZX/MB)",
     "magnumlight": "Magnum Light Phaser",
     "novina": "Pistola ligera \"Novina\"",
     "gunstick": "Gun Stick",

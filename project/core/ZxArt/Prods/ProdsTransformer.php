@@ -45,7 +45,7 @@ readonly class ProdsTransformer
             votesAmount: (int)$element->votesAmount,
             userVote: $userVote !== null && $userVote !== false ? (int)$userVote : null,
             denyVoting: $element->isVotingDenied(),
-            hardwareInfo: $element->getHardwareInfo(),
+            hardwareInfo: $this->buildHardwareInfo($element),
             authorsInfoShort: $element->getShortAuthorship(EntityType::Prod->value),
             categoriesInfo: $element->getCategoriesInfo(),
             partyInfo: $partyInfo,
@@ -55,6 +55,17 @@ readonly class ProdsTransformer
             groupsInfo: $element->getGroupsInfo(),
             publishersInfo: $element->getPublishersInfo(),
             youtubeId: $element->youtubeId ? (string)$element->youtubeId : null,
+        );
+    }
+
+    /**
+     * @return array<array{id: string}>
+     */
+    private function buildHardwareInfo(zxProdElement $element): array
+    {
+        return array_map(
+            static fn(string $hardwareCode): array => ['id' => $hardwareCode],
+            $element->getHardwareCodes(),
         );
     }
 }

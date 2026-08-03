@@ -71,7 +71,7 @@ readonly class ReleaseDetailsService
         ) === true;
 
         $screenshots = $this->prodMediaService->buildReleaseScreenshots($release);
-        $inlays = $this->prodMediaService->buildReleaseInlays($release);
+        $covers = $this->prodMediaService->buildReleaseCovers($release);
         $instructions = $this->prodMediaService->buildReleaseInstructions($release);
 
         $fileStructure = $isDownloadable ? $this->buildFileStructure($release) : [];
@@ -109,12 +109,12 @@ readonly class ReleaseDetailsService
             externalLinks: $this->infoBuilder->buildLinks($release, $theme),
             screenshots: $screenshots->files,
             prod: $this->buildProdRef($release),
-            inlays: $inlays->inlays,
+            covers: $covers->groups,
             instructions: $instructions->files,
             votes: $this->buildVoting($release),
             tabs: new ReleaseTabsDto(
                 hasScreenshots: count($screenshots->files) > 0,
-                hasInlays: count($inlays->inlays) > 0,
+                hasCovers: count($covers->groups) > 0,
                 hasInstructions: count($instructions->files) > 0,
                 hasStructure: count($fileStructure) > 0,
                 hasPictures: $hasPictures,

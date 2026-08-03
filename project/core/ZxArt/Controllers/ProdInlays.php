@@ -12,7 +12,7 @@ use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\ProdMediaService;
-use ZxArt\Prods\Rest\ProdReleaseInlaysRestDto;
+use ZxArt\Prods\Rest\ProdCoversRestDto;
 
 class ProdInlays extends LoggedControllerApplication
 {
@@ -39,8 +39,8 @@ class ProdInlays extends LoggedControllerApplication
     {
         try {
             $elementId = $this->getElementId();
-            $dto = $this->prodMediaService->getProdInlays($elementId);
-            $this->renderer->assign('body', $this->objectMapper->map($dto, ProdReleaseInlaysRestDto::class));
+            $dto = $this->prodMediaService->getProdCovers($elementId);
+            $this->renderer->assign('body', $this->objectMapper->map($dto, ProdCoversRestDto::class));
         } catch (ProdDetailsException $e) {
             $this->logThrowable('ProdInlays::execute', $e);
             $this->assignError($e->getMessage(), $e->getStatusCode());

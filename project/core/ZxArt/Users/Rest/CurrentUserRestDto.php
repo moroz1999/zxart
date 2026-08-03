@@ -10,7 +10,7 @@ readonly class CurrentUserRestDto
         public ?int $id,
         public string $userName,
         public bool $hasAds,
-        public ?string $authorPageUrl = null,
+        public ?int $authorId = null,
     ) {
     }
 }

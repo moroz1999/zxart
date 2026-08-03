@@ -52,7 +52,12 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
 
                 return $urls;
             },
-            'hardwareInfo' => 'getHardwareInfo',
+            'hardwareInfo' => static function (zxReleaseElement $element): array {
+                return array_map(
+                    static fn(string $hardwareCode): array => ['id' => $hardwareCode],
+                    $element->getHardwareCodes(),
+                );
+            },
             'inlaysUrls' => 'getInlaysUrls',
             'inlays' => function (zxReleaseElement $element) {
                 return $element->getFilesUrlList('inlayFilesSelector', 'release');

@@ -61,7 +61,12 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $urls;
             },
             'hardware' => 'getHardware',
-            'hardwareInfo' => 'getHardwareInfo',
+            'hardwareInfo' => static function (zxProdElement $element): array {
+                return array_map(
+                    static fn(string $hardwareCode): array => ['id' => $hardwareCode],
+                    $element->getHardwareCodes(),
+                );
+            },
             'maps' => static function ($element) {
                 return $element->getFilesUrlList('mapFilesSelector', 'release');
             },

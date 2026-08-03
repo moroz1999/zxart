@@ -65,13 +65,13 @@ export interface FormDataResponse {
   authorRefs: EntityRef[];
   /** Connected original-author list for pictures (`originalAuthor` link list). */
   originalAuthorRefs: EntityRef[];
-  /** Backend-driven select options per enum field, labels already translated. */
+  /** Enum options; client-owned enums carry their code in both fields. */
   enums: Record<string, EnumOption[]>;
   /** Only on creation forms started from an element; `null` otherwise. */
   parent?: FormParentRef | null;
 }
 
-/** One option of a backend-driven enum select ({@link FormDataResponse.enums}). */
+/** One enum option; its label may be a backend label or a client-owned code. */
 export interface EnumOption {
   value: string;
   label: string;

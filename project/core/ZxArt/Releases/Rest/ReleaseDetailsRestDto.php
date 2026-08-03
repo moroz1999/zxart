@@ -7,6 +7,7 @@ namespace ZxArt\Releases\Rest;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
 use ZxArt\Prods\Rest\ProdAuthorInfoRestDto;
+use ZxArt\Prods\Rest\ProdCoverGroupRestDto;
 use ZxArt\Prods\Rest\ProdFileRestDto;
 use ZxArt\Prods\Rest\ProdGroupRefRestDto;
 use ZxArt\Prods\Rest\ProdHardwareInfoRestDto;
@@ -14,7 +15,6 @@ use ZxArt\Prods\Rest\ProdLanguageInfoRestDto;
 use ZxArt\Prods\Rest\ProdLinkInfoRestDto;
 use ZxArt\Prods\Rest\ProdPartyInfoRestDto;
 use ZxArt\Prods\Rest\ProdReleaseFormatRestDto;
-use ZxArt\Prods\Rest\ProdReleaseInlayRestDto;
 use ZxArt\Prods\Rest\ProdReleaseInstructionFileRestDto;
 use ZxArt\Prods\Rest\ProdSubmitterRestDto;
 use ZxArt\Prods\Rest\ProdVotingRestDto;
@@ -31,7 +31,7 @@ readonly class ReleaseDetailsRestDto
      * @param ProdReleaseFormatRestDto[]             $formats
      * @param ProdLinkInfoRestDto[]                  $externalLinks
      * @param ProdFileRestDto[]                      $screenshots
-     * @param ProdReleaseInlayRestDto[]              $inlays
+     * @param ProdCoverGroupRestDto[]                $covers
      * @param ProdReleaseInstructionFileRestDto[]    $instructions
      * @param ReleaseFileStructureItemRestDto[]      $fileStructure
      */
@@ -73,7 +73,7 @@ readonly class ReleaseDetailsRestDto
         public array $screenshots,
         public ReleaseProdRefRestDto $prod,
         #[Map(transform: MapCollection::class)]
-        public array $inlays,
+        public array $covers,
         #[Map(transform: MapCollection::class)]
         public array $instructions,
         public ProdVotingRestDto $votes,

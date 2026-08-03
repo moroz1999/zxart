@@ -47,8 +47,11 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
 type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
-type ProdMediaTabId = 'description' | 'inlays' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
+type ProdMediaTabId = 'description' | 'covers' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
 type ProdLinksTabId = 'articles' | 'series' | 'compilations';
+
+// The covers tab used to live at /prod/:id/inlays; links to it are still around.
+const LEGACY_COVERS_TAB_ID = 'inlays';
 
 @Component({
   selector: 'zx-prod-details-view',
@@ -124,7 +127,7 @@ export class ZxProdDetailsComponent implements OnChanges {
               {title: this.translate.instant('menu.software'), url: '/prods'},
               ...categories.map(category => ({title: category.title, url: '/prods', queryParams: {cat: category.id}})),
             ],
-            currentTitle: core.h1,
+            currentTitle: core.title,
           });
         }
       }),
@@ -200,7 +203,7 @@ export class ZxProdDetailsComponent implements OnChanges {
     const tabs: ProdMediaTabId[] = [];
 
     if (core.tabs.hasDescription) tabs.push('description');
-    if (core.tabs.hasInlays) tabs.push('inlays');
+    if (core.tabs.hasCovers) tabs.push('covers');
     if (core.tabs.hasMaps) tabs.push('maps');
     if (core.tabs.hasRzx) tabs.push('rzx');
     if (core.tabs.hasPictures) tabs.push('graphics');
@@ -237,6 +240,6 @@ export class ZxProdDetailsComponent implements OnChanges {
   }
 
   private getRequestedTabId(): string | null {
-    return this.activeTab;
+    return this.activeTab === LEGACY_COVERS_TAB_ID ? 'covers' : this.activeTab;
   }
 }

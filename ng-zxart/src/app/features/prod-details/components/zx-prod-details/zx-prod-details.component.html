@@ -37,7 +37,7 @@
       </zx-tab>
 
       <zx-tab
-        *ngIf="core.tabs.hasDescription || core.tabs.hasInlays || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasInstructions || core.tabs.hasTextInstructions"
+        *ngIf="core.tabs.hasDescription || core.tabs.hasCovers || core.tabs.hasMaps || core.tabs.hasRzx || core.tabs.hasPictures || core.tabs.hasTunes || core.tabs.hasInstructions || core.tabs.hasTextInstructions"
         [label]="'prod-details.tab.media.title' | translate"
         [href]="getMainTabHref('media')">
         <ng-template zxTabContent>
@@ -53,9 +53,9 @@
               </ng-template>
             </zx-tab>
             <zx-tab
-              *ngIf="core.tabs.hasInlays"
-              [label]="'prod-details.tab.media.inlays' | translate"
-              [href]="getMediaTabHref('inlays')">
+              *ngIf="core.tabs.hasCovers"
+              [label]="'prod-details.tab.media.covers' | translate"
+              [href]="getMediaTabHref('covers')">
               <ng-template zxTabContent>
                 <zx-prod-inlays-section [elementId]="core.elementId"></zx-prod-inlays-section>
               </ng-template>

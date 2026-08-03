@@ -146,7 +146,7 @@ components:
       required:
         - hasReleases
         - hasScreenshots
-        - hasInlays
+        - hasCovers
         - hasMaps
         - hasRzx
         - hasPictures
@@ -159,7 +159,7 @@ components:
           type: boolean
         hasScreenshots:
           type: boolean
-        hasInlays:
+        hasCovers:
           type: boolean
         hasMaps:
           type: boolean

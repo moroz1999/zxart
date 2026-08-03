@@ -866,7 +866,10 @@ class zxProdElement extends ZxArtItem implements
         return $data;
     }
 
-    public function getHardware()
+    /**
+     * @return array<mixed>
+     */
+    public function getHardware(): array
     {
         $db = $this->getService('db');
         /**
@@ -880,7 +883,18 @@ class zxProdElement extends ZxArtItem implements
             ->whereIn('elementId', $query)
             ->distinct()
             ->pluck('value');
-        return $hwItems;
+        return (array)$hwItems;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHardwareCodes(): array
+    {
+        return array_map(
+            static fn(mixed $hardwareCode): string => (string)$hardwareCode,
+            $this->getHardware(),
+        );
     }
 
 

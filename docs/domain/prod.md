@@ -74,6 +74,10 @@ back to the route-driven one built from the menu.
 Prod and release detail responses expose category IDs and raw language, hardware,
 year, and format values. Angular templates build catalogue filter links from
 those values.
+Catalogue hardware selectors and product summaries also expose hardware codes
+only. Angular resolves group names, full filter labels and compact card labels
+through `hardware-group.<code>`, `hardware.<code>` and
+`hardware-short.<code>` translations.
 
 ### Relations with Other Entities
 
@@ -168,6 +172,11 @@ those values.
 - Product description loading state renders one paragraph skeleton with three thin ribs.
 - Emulator screenshots launched from prod details release rows are uploaded to the parent prod through `/screenshot-upload/`. The `uploadScreenshot` privilege must be requested once for the prod element and reused by all release play buttons.
 - Screenshots come in two kinds: native ZX screens (`scr`, `img`, `mlt`, `ifl`, `ssx`, `s80`, `s81`, …) and PC images (`png`, `gif`, `jpg`, `bmp`). A native screen is rendered by the ZX converter (`zximages`), which reads from both the uploads and the releases folder; a PC image goes through an image preset, and animated `gif` is served whole by `screenshot/`. Because prod and release files live in the releases folder, every preset used for them must declare `'path' => 'releases'` — a preset without it (e.g. `adminImage`) resolves nothing and leaves PC screenshots without a thumbnail. The edit form's file selectors therefore use the same `prodImage` preset as the public gallery.
+- The covers of a prod are its own inlays plus the inlays **and** advertising materials (`adFilesSelector`) of its releases. `/prod-inlays/` returns them grouped by kind — `{groups: [{kind: 'inlay'|'ad', items: []}]}`, one group per `ProdCoverKind` that has files, empty kinds omitted — and the page renders a heading per group. The `hasCovers` tab flag counts both link types, so a prod whose releases carry only ads still gets the tab. Cover-kind labels live in the shared `covers.<kind>` translations, because the release page groups its own covers the same way.
+- The covers tab is `/prod/:id/covers`. Its previous id, `inlays`, is still accepted and resolves to the same tab: an unknown tab segment silently falls back to the first tab, so dropping the old id would send existing links to the wrong place.
+- Cover thumbnails use the `prodCover` preset instead of the screenshot preset: a single `reduce` to 300×300, so a portrait inlay and a landscape poster both keep their proportions and neither is cropped. Both inlay grids render the thumbnail in a square box with `object-fit: contain`, so the tile geometry stays uniform without cutting the image.
+- The full-screen gallery image of a cover uses `prodCoverOriginal`: a preset with no filters at all, so the stored dimensions survive and only the encoding changes. A preset name containing `full` cannot be used for this — `fileElement::getImageUrl()` reads that marker as "skip presets" and links the untouched file through `screenshot/` instead. The download link keeps pointing at `screenshot/`, which serves the stored file byte for byte.
+- Both cover presets pin their output to `webp`. A preset that names another format is only converted to webp for browsers the image application recognizes as webp-capable, and it excludes Safari from that list; pinning the format keeps every client on one cached rendition.
 - Screenshot upload for prods and releases uses the shared `/screenshot-upload/` endpoint: the raw screen dump is the request body, the target element is `id` and the dump format is `format` (`standard`, `gigascreen`, `s80`, `s81`). The endpoint resolves the element and runs its own `uploadScreenshot` action, which enforces the privilege, validates the body length against the format and stores the file; the response is the updated screenshots payload.
 - Screenshot ordering for prods and releases uses the shared `/prod-screenshot-move/` operation; the historical prod URL is retained for client compatibility, while the operation checks `publicReceive` on the target element and reorders its appropriate file link collection.
 
@@ -179,6 +188,7 @@ those values.
 ### Angular Prod Lists
 - Outside specialized views, product cards must be rendered through `zx-prods-list`.
 - `zx-prod-block` is product-only: it must not read or render release-specific fields. Release lists must use `zx-prod-release-card` with `ProdReleaseDto`.
+- The last breadcrumb of an entity page is the entity's own name, not its SEO text: the prod page trails `core.title`, while the SEO `core.h1` stays reserved for the page heading.
 - The release card's expanded section is a list of label/value rows (languages, format, downloads, plays); downloads and plays carry an icon next to their label. The action row below it holds only the play and open buttons, so translated button labels do not have to share the line with counters.
 - `zx-prods-list` accepts `Observable<ZxProd[] | null>` through `items$`; `null` means "not loaded yet" and renders the list skeleton.
 - Product card grids use `zxProdsGrid`; desktop cards are fixed at `256px` and do not stretch.

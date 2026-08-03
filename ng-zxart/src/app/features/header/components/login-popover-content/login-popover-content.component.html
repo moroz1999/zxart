@@ -9,7 +9,7 @@
         <zx-popover-menu-item href="/playlists">
           {{ 'login.favourites' | translate }}
         </zx-popover-menu-item>
-        <zx-popover-menu-item *ngIf="user.authorPageUrl" [href]="user.authorPageUrl">
+        <zx-popover-menu-item *ngIf="user.authorId" [href]="'/author/' + user.authorId">
           {{ 'login.my-page' | translate }}
         </zx-popover-menu-item>
       </div>

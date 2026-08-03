@@ -70,6 +70,24 @@ paths:
                         type: string
                       structureType:
                         type: string
+                  enums:
+                    type: object
+                    description: >
+                      Select options keyed by field. Options owned by the SPA,
+                      including language and hardware, carry their code in both
+                      value and label; the frontend resolves the visible label.
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - value
+                          - label
+                        properties:
+                          value:
+                            type: string
+                          label:
+                            type: string
                 additionalProperties: true
         '400':
           description: Missing id or required creation context

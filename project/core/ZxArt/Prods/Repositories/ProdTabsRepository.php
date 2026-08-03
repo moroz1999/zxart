@@ -25,7 +25,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
         return new ProdTabsDto(
             hasReleases: $this->hasStructureLink($prodId, LinkTypes::STRUCTURE),
             hasScreenshots: $this->hasStructureLink($prodId, LinkTypes::CONNECTED_FILE),
-            hasInlays: $this->hasInlayLinks($prodId),
+            hasCovers: $this->hasCoverLinks($prodId),
             hasMaps: $this->hasMapFiles($prodId) || $this->hasSpeccyMapsUrl($prodId),
             hasRzx: $this->hasStructureLink($prodId, LinkTypes::RZX),
             hasPictures: $this->hasGameLinkOfType($prodId, DatabaseTable::ZxPicture),
@@ -48,7 +48,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
             ->exists();
     }
 
-    private function hasInlayLinks(int $prodId): bool
+    private function hasCoverLinks(int $prodId): bool
     {
         $releaseIdsQuery = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
             ->where('parentStructureId', '=', $prodId)
@@ -56,14 +56,14 @@ readonly final class ProdTabsRepository extends AbstractRepository
             ->select('childStructureId');
 
         $table = $this->tableName(DatabaseTable::StructureLinks);
-        $inlayType = LinkTypes::INLAY_FILES_SELECTOR->value;
+        $coverTypes = [LinkTypes::INLAY_FILES_SELECTOR->value, LinkTypes::AD_FILES_SELECTOR->value];
 
         return $this->db->table($table)
-            ->where(function (Builder $query) use ($prodId, $releaseIdsQuery, $inlayType): void {
+            ->where(function (Builder $query) use ($prodId, $releaseIdsQuery): void {
                 $query->where('parentStructureId', '=', $prodId)
                     ->orWhereIn('parentStructureId', $releaseIdsQuery);
             })
-            ->where('type', '=', $inlayType)
+            ->whereIn('type', $coverTypes)
             ->exists();
     }
 

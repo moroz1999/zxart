@@ -154,7 +154,7 @@
     "error-load": "Не удалось загрузить форму",
     "error-save": "Не удалось сохранить",
     "screenshots": "Скриншоты",
-    "inlays": "Инлеи",
+    "inlays": "Вкладыши",
     "info-files": "Инфо-файлы",
     "ad-files": "Рекламные файлы",
     "prod": "Продукция",
@@ -211,7 +211,7 @@
     "categories": "Категории",
     "compo": "Конкурс",
     "screenshots": "Скриншоты",
-    "inlays": "Инлеи",
+    "inlays": "Вкладыши",
     "maps": "Карты",
     "rzx": "RZX",
     "language": "Язык",
@@ -1435,7 +1435,6 @@
     "openSeries": "Открыть серию",
     "music": "Музыка программы",
     "pictures": "Картинки",
-    "inlays": "Обложки",
     "maps": "Карты",
     "rzx": "Прохождение (RZX)",
     "speccymaps": "Открыть на speccy.maps",
@@ -1448,7 +1447,7 @@
       "media": {
         "title": "Медиа",
         "articles": "Статьи и карты",
-        "inlays": "Обложки",
+        "covers": "Обложки",
         "maps": "Карты",
         "rzx": "RZX",
         "graphics": "Графика",
@@ -1469,6 +1468,10 @@
     "instructions-download": "Скачать",
     "instructions-loading": "Загрузка...",
     "instructions-error": "Не удалось загрузить файл"
+  },
+  "covers": {
+    "inlay": "Вкладыши",
+    "ad": "Реклама"
   },
   "release-details": {
     "actions": "Действия с релизом",
@@ -1495,7 +1498,6 @@
     "buy": "Купить",
     "description": "Описание",
     "screenshots": "Скрины релиза",
-    "inlays": "Обложки",
     "instructions": "Инструкция",
     "back-to-prod": "к программе",
     "version": "Версия"
@@ -1531,6 +1533,14 @@
     "fullscreen": "Развернуть на полный экран",
     "screenshot-format-label": "Формат скриншота",
     "samcoupe": "После загрузки эмулятора нажмите «Enter», введите «boot» и снова нажмите «Enter»."
+  },
+  "hardware-group": {
+    "computers": "Компьютеры",
+    "storage": "Накопители",
+    "dos": "Операционные системы",
+    "sound": "Звук",
+    "controls": "Управление",
+    "expansion": "Расширения"
   },
   "hardware-short": {
     "3dosdisk": "Дисковод +3DOS",
@@ -1588,7 +1598,7 @@
     "zxnext": "Next",
     "zxpand": "Интерфейс ZXpand для ZX81",
     "zxuno": "ZX-Uno",
-    "elementzxmb": "ZX/MB",
+    "elementzxmb": "eZX/MB",
     "aymouse": "AM",
     "kempston8b": "КДЖ8",
     "divmmc": "divMMC",
@@ -1616,7 +1626,7 @@
     "sdneogs": "SD (NeoGS)",
     "sdz": "SD (Z-Controller)",
     "sid": "SID",
-    "sidelzx": "SID (Element ZX)",
+    "sidelzx": "SID (eZX/MB)",
     "gunstick": "Gun Stick",
     "magnumlight": "Magnum Light Phaser",
     "novina": "Световой пистолет \"Новина\"",
@@ -1652,6 +1662,7 @@
     "tos": "TOS (FDD3000)",
     "trdos4x": "TR-DOS 4.x",
     "trinity": "Trinity Ethernet Interface",
+    "timex_cartridge": "Timex Cartridge",
     "amxmouse": "AMX"
   },
   "hardware": {
@@ -1738,7 +1749,7 @@
     "sdz": "SD (Z-Controller)",
     "sdneogs": "SD (NeoGS)",
     "sid": "SID",
-    "sidelzx": "SID (Element ZX)",
+    "sidelzx": "SID (eZX/MB)",
     "magnumlight": "Magnum Light Phaser",
     "novina": "Световой пистолет \"Новина\"",
     "gunstick": "Gun Stick",

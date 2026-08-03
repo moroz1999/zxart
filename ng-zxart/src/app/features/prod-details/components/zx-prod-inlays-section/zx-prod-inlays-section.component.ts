@@ -13,7 +13,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
-import {ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
+import {ProdCoverGroupDto, ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay-tile.component';
 
@@ -39,12 +39,15 @@ export class ZxProdInlaysSectionComponent {
 
   loading = false;
   loaded = false;
-  inlays: ProdReleaseInlayDto[] = [];
+  groups: ProdCoverGroupDto[] = [];
   galleryId = '';
+
+  // One lightbox spans every group, so a cover's position is its index in the flattened list.
+  private galleryPositions = new Map<number, number>();
 
   @HostBinding('style.display')
   get display(): string {
-    return this.loaded && this.inlays.length === 0 ? 'none' : '';
+    return this.loaded && this.groups.length === 0 ? 'none' : '';
   }
 
   constructor(
@@ -60,32 +63,39 @@ export class ZxProdInlaysSectionComponent {
     }
     this.galleryId = `zx-prod-inlays-${this.elementId}`;
     this.loading = true;
-    this.api.getInlays(this.elementId).subscribe(inlays => {
-      this.inlays = inlays;
+    this.api.getCoverGroups(this.elementId).subscribe(groups => {
+      this.groups = groups;
       this.loaded = true;
       this.loading = false;
-      if (inlays.length) {
-        this.gallery.loadItems(this.galleryId, inlays.map(this.toGalleryItem));
+
+      const covers = groups.flatMap(group => group.items);
+      this.galleryPositions = new Map(covers.map((cover, index) => [cover.id, index]));
+      if (covers.length) {
+        this.gallery.loadItems(this.galleryId, covers.map(this.toGalleryItem));
       }
       this.cdr.markForCheck();
     });
   }
 
-  openAt(index: number): void {
-    this.lightbox.open(index, this.galleryId);
+  openCover(cover: ProdReleaseInlayDto): void {
+    this.lightbox.open(this.galleryPositions.get(cover.id) ?? 0, this.galleryId);
   }
 
-  trackById(_: number, inlay: ProdReleaseInlayDto): number {
-    return inlay.id;
+  trackByKind(_: number, group: ProdCoverGroupDto): string {
+    return group.kind;
   }
 
-  private toGalleryItem(inlay: ProdReleaseInlayDto): PictureGalleryItem {
+  trackById(_: number, cover: ProdReleaseInlayDto): number {
+    return cover.id;
+  }
+
+  private toGalleryItem(cover: ProdReleaseInlayDto): PictureGalleryItem {
     return {
-      id: inlay.id,
-      title: inlay.title,
-      thumbUrl: inlay.imageUrl ?? inlay.fullImageUrl ?? '',
-      largeUrl: inlay.fullImageUrl ?? inlay.imageUrl ?? '',
-      detailsUrl: inlay.downloadUrl,
+      id: cover.id,
+      title: cover.title,
+      thumbUrl: cover.imageUrl ?? cover.fullImageUrl ?? '',
+      largeUrl: cover.fullImageUrl ?? cover.imageUrl ?? '',
+      detailsUrl: cover.downloadUrl,
     };
   }
 }

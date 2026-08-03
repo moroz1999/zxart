@@ -7,14 +7,14 @@ namespace ZxArt\Prods\Rest;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\ObjectMapper\Transform\MapCollection;
 
-readonly class ProdReleaseInlaysRestDto
+readonly class ProdCoversRestDto
 {
     /**
-     * @param ProdReleaseInlayRestDto[] $inlays
+     * @param ProdCoverGroupRestDto[] $groups
      */
     public function __construct(
         #[Map(transform: MapCollection::class)]
-        public array $inlays,
+        public array $groups,
     ) {
     }
 }

@@ -6,6 +6,7 @@ namespace ZxArt\Releases\Dto;
 
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
+use ZxArt\Prods\Dto\ProdCoverGroupDto;
 use ZxArt\Prods\Dto\ProdFileDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdHardwareInfoDto;
@@ -13,7 +14,6 @@ use ZxArt\Prods\Dto\ProdLanguageInfoDto;
 use ZxArt\Prods\Dto\ProdLinkInfoDto;
 use ZxArt\Prods\Dto\ProdPartyInfoDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
-use ZxArt\Prods\Dto\ProdReleaseInlayDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
@@ -32,7 +32,7 @@ readonly class ReleaseDetailsDto
      * @param ProdReleaseFormatDto[]         $formats
      * @param ProdLinkInfoDto[]              $externalLinks
      * @param ProdFileDto[]                  $screenshots
-     * @param ProdReleaseInlayDto[]          $inlays
+     * @param ProdCoverGroupDto[]            $covers
      * @param ProdReleaseInstructionFileDto[] $instructions
      * @param ReleaseFileStructureItemDto[]  $fileStructure
      */
@@ -66,7 +66,7 @@ readonly class ReleaseDetailsDto
         public array $externalLinks,
         public array $screenshots,
         public ReleaseProdRefDto $prod,
-        public array $inlays,
+        public array $covers,
         public array $instructions,
         public ProdVotingDto $votes,
         public ReleaseTabsDto $tabs,

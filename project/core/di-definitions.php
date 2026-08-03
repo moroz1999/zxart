@@ -44,7 +44,6 @@ use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Stats\Services\StatsService;
 use ZxArt\Telegram\PostService;
-use ZxArt\Users\AuthorPageUrlProvider;
 use function DI\autowire;
 use function DI\factory;
 
@@ -67,8 +66,6 @@ return [
     RatingsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
 
-    AuthorPageUrlProvider::class => autowire()
-        ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdElementService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     ProdCoreService::class => autowire(),

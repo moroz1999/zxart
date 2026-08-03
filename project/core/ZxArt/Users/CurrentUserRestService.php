@@ -11,7 +11,6 @@ class CurrentUserRestService
 {
     public function __construct(
         private readonly CurrentUserService $currentUserService,
-        private readonly AuthorPageUrlProvider $authorPageUrlProvider,
     ) {}
 
     public function buildDto(): CurrentUserRestDto
@@ -19,12 +18,12 @@ class CurrentUserRestService
         $user = $this->currentUserService->getCurrentUser();
         $userName = $user->userName ?: 'anonymous';
         $id = null;
-        $authorPageUrl = null;
+        $authorId = null;
 
         if ($userName !== 'anonymous' && $user->id) {
             $id = (int)$user->id;
             if ($user->authorId !== null && $user->authorId !== '') {
-                $authorPageUrl = $this->authorPageUrlProvider->getAuthorPageUrl((int)$user->authorId);
+                $authorId = (int)$user->authorId;
             }
         }
 
@@ -32,7 +31,7 @@ class CurrentUserRestService
             id: $id,
             userName: $userName,
             hasAds: $user->hasAds(),
-            authorPageUrl: $authorPageUrl,
+            authorId: $authorId,
         );
     }
 

@@ -820,6 +820,14 @@ class zxReleaseElement extends ZxArtItem implements
         return $publishersInfo;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getHardwareCodes(): array
+    {
+        return $this->hardwareRequired;
+    }
+
     public function getHardwareInfo(bool $short = true)
     {
         if (!isset($this->hardwareInfo[$short])) {

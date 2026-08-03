@@ -105,6 +105,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   enums: Record<string, EnumOption[]> = {};
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
+  /** Hardware codes come from the backend; their names are ours (`hardware.<code>`). */
+  hardwareOptions: EnumOption[] = [];
   fileNames: Record<string, string> = {};
   fileSelectors: Record<string, FileSelectorItem[]> = {};
 
@@ -129,6 +131,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private selectorFiles: Record<string, File[]> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
+  private languageCodes: EnumOption[] = [];
+  private hardwareCodes: EnumOption[] = [];
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -143,6 +147,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.subscriptions.add(this.translate.onLangChange.subscribe(() => {
+      this.buildClientLabelOptions();
+      this.cdr.markForCheck();
+    }));
     this.creating = this.route.snapshot.data['create'] === true;
     if (this.creating) {
       this.prodId = Number(this.route.snapshot.paramMap.get('id')) || 0;
@@ -185,7 +193,9 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
           this.members = data.members;
           this.roles = data.roles;
           this.enums = data.enums;
-          this.languageOptions = this.buildLanguageOptions(data.enums['language']);
+          this.languageCodes = data.enums['language'] ?? [];
+          this.hardwareCodes = data.enums['hardwareRequired'] ?? [];
+          this.buildClientLabelOptions();
           this.fileNames = data.files;
           this.fileSelectors = data.fileSelectors;
           this.loading = false;
@@ -200,11 +210,15 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Labels the backend's bare language codes from the SPA's own translations. */
-  private buildLanguageOptions(options: EnumOption[] | undefined): EnumOption[] {
-    return (options ?? []).map(option => ({
+  /** Labels the backend's bare language and hardware codes from the SPA's translations. */
+  private buildClientLabelOptions(): void {
+    this.languageOptions = this.languageCodes.map(option => ({
       value: option.value,
       label: this.translate.instant(`language.${option.value}`),
+    }));
+    this.hardwareOptions = this.hardwareCodes.map(option => ({
+      value: option.value,
+      label: this.translate.instant(`hardware.${option.value}`),
     }));
   }
 

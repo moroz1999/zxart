@@ -9,7 +9,7 @@ readonly class ProdTabsRestDto
     public function __construct(
         public bool $hasReleases,
         public bool $hasScreenshots,
-        public bool $hasInlays,
+        public bool $hasCovers,
         public bool $hasMaps,
         public bool $hasRzx,
         public bool $hasPictures,

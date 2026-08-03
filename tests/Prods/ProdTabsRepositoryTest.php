@@ -16,7 +16,7 @@ use ZxArt\Prods\Repositories\ProdTabsRepository;
  * The exists() calls follow a fixed order determined by buildTabs():
  *  1.  hasReleases      — structure link STRUCTURE
  *  2.  hasScreenshots   — structure link CONNECTED_FILE
- *  3.  hasInlays        — subquery: release ids → inlayFilesSelector links
+ *  3.  hasCovers       — subquery: release ids → inlayFilesSelector/adFilesSelector links
  *  4.  hasMapFiles      — structure link MAP_FILES_SELECTOR
  *  5.  hasSpeccyMapsUrl — import_origin table (only when #4 is false)
  *  6.  hasRzx           — structure link RZX
@@ -60,7 +60,7 @@ class ProdTabsRepositoryTest extends TestCase
 
         $this->assertFalse($dto->hasReleases);
         $this->assertFalse($dto->hasScreenshots);
-        $this->assertFalse($dto->hasInlays);
+        $this->assertFalse($dto->hasCovers);
         $this->assertFalse($dto->hasMaps);
         $this->assertFalse($dto->hasRzx);
         $this->assertFalse($dto->hasPictures);
@@ -83,7 +83,7 @@ class ProdTabsRepositoryTest extends TestCase
 
         $this->assertTrue($dto->hasReleases);
         $this->assertTrue($dto->hasScreenshots);
-        $this->assertTrue($dto->hasInlays);
+        $this->assertTrue($dto->hasCovers);
         $this->assertTrue($dto->hasMaps);
         $this->assertTrue($dto->hasRzx);
         $this->assertTrue($dto->hasPictures);
@@ -112,14 +112,14 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testHasInlaysDetectedViaReleaseSubquery(): void
     {
-        // Position 3: hasInlays = true.
-        // hasInlayLinks runs two table() calls: first to get release IDs, then to check inlay links.
+        // Position 3: hasCovers = true.
+        // hasCoverLinks runs two table() calls: first to get release IDs, then to check cover links.
         $this->setExistsResults([false, false, true, ...array_fill(0, 10, false)]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
         $this->assertFalse($dto->hasReleases);
-        $this->assertTrue($dto->hasInlays);
+        $this->assertTrue($dto->hasCovers);
         $this->assertFalse($dto->hasMaps);
         $this->assertFalse($dto->hasInstructions);
     }

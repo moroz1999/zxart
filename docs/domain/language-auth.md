@@ -85,6 +85,10 @@ The account's own author is referenced by the `authorId` field on the user, not
 by a structure link. Code that removes or absorbs an author must re-point that
 field (see [authors-groups.md](authors-groups.md#merging-authors-and-groups)).
 
+`/currentuser/` passes that id through as `authorId`, and the user popover builds
+its "my page" link as `/author/{authorId}`. Like every other response, it carries
+identifiers rather than routed URLs.
+
 ## Account self-service
 
 `/profile` shows the account name and email read-only and offers exactly one

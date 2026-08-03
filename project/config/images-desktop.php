@@ -73,6 +73,30 @@
         ],
         'path' => 'releases',
     ],
+    'prodCover' => [
+        'filters' => [
+            [
+                'reduce',
+                ['width' => 300, 'height' => 300],
+            ],
+        ],
+        'format' => [
+            null,
+            'webp',
+            '',
+            90,
+        ],
+        'path' => 'releases',
+    ],
+    'prodCoverOriginal' => [
+        'format' => [
+            null,
+            'webp',
+            '',
+            95,
+        ],
+        'path' => 'releases',
+    ],
     'prodListInlay' => [
         'filters' => [
             [

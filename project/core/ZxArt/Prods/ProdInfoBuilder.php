@@ -87,13 +87,9 @@ readonly class ProdInfoBuilder
     public function buildHardware(zxProdElement|zxReleaseElement $element): array
     {
         $hardware = [];
-        /**
-         * @var list<array{id: string, title: string}> $rows
-         */
-        $rows = $element->getHardwareInfo();
-        foreach ($rows as $row) {
+        foreach ($element->getHardwareCodes() as $hardwareCode) {
             $hardware[] = new ProdHardwareInfoDto(
-                id: $row['id'],
+                id: $hardwareCode,
             );
         }
         return $hardware;
