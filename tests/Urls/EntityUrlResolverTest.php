@@ -32,6 +32,7 @@ class EntityUrlResolverTest extends TestCase
         yield 'author' => ['author', 42, '/author/42'];
         yield 'authorAlias' => ['authorAlias', 42, '/author/42'];
         yield 'group' => ['group', 7, '/group/7'];
+        yield 'prod category' => [StructureType::ZxProdCategory->value, 92177, '/prods?cat=92177'];
         yield 'country' => ['country', 47608, '/geo/country/47608'];
         yield 'city' => ['city', 1234, '/geo/city/1234'];
     }

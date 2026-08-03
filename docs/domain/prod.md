@@ -179,6 +179,7 @@ those values.
 ### Angular Prod Lists
 - Outside specialized views, product cards must be rendered through `zx-prods-list`.
 - `zx-prod-block` is product-only: it must not read or render release-specific fields. Release lists must use `zx-prod-release-card` with `ProdReleaseDto`.
+- The release card's expanded section is a list of label/value rows (languages, format, downloads, plays); downloads and plays carry an icon next to their label. The action row below it holds only the play and open buttons, so translated button labels do not have to share the line with counters.
 - `zx-prods-list` accepts `Observable<ZxProd[] | null>` through `items$`; `null` means "not loaded yet" and renders the list skeleton.
 - Product card grids use `zxProdsGrid`; desktop cards are fixed at `256px` and do not stretch.
 - Author software views may render `zx-prod-block` directly because they add author-role metadata around each card, but they must use `zxProdsGrid` for card layout.

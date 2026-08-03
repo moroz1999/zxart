@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Urls;
 
+use folderElement;
 use structureElement;
 use userElement;
 use ZxArt\Shared\StructureType;
@@ -59,6 +60,10 @@ class EntityUrlResolver
             return $sectionUrl;
         }
 
+        if ($structureType === StructureType::ZxProdCategory->value && $id > 0) {
+            return '/prods?cat=' . $id;
+        }
+
         $prefix = self::TYPE_PREFIX[$structureType] ?? null;
         if ($prefix === null || $id <= 0) {
             return null;
@@ -69,7 +74,19 @@ class EntityUrlResolver
 
     public function resolve(structureElement $element): ?string
     {
-        return $this->resolveByType($element->structureType, (int)$element->id);
+        $url = $this->resolveByType($element->structureType, (int)$element->id);
+        if ($url !== null || !$element instanceof folderElement) {
+            return $url;
+        }
+
+        foreach ($element->getContentElements() as $contentElement) {
+            $url = $this->resolveByType($contentElement->structureType, (int)$contentElement->id);
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        return null;
     }
 
     /**

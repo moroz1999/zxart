@@ -46,6 +46,11 @@ Special categories exist for compilations:
 
 ### Usage in Interface
 
+#### Public URLs
+- The software catalogue route is `/prods`.
+- A selected category uses the `cat` query parameter: `/prods?cat={categoryId}`.
+- Legacy catalogue and category paths redirect permanently to the corresponding `/prods` URL.
+
 #### Filtering
 Categories are used for production filtering:
 - Catalogue by categories

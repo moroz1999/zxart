@@ -27,6 +27,7 @@ interface TranslatedTitleRequest {
 export class PageMetadataService {
   private readonly entityMetadata = new Subject<PageMetadataDto>();
   private readonly translatedTitle = new Subject<TranslatedTitleRequest>();
+  private readonly serverHomePageTitle: string | null;
 
   private readonly routeMetadata$: Observable<PageMetadataDto> = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -60,7 +61,11 @@ export class PageMetadataService {
     private readonly meta: Meta,
     private readonly translate: TranslateService,
     @Inject(DOCUMENT) private readonly document: Document,
-  ) {}
+  ) {
+    this.serverHomePageTitle = this.document.location.pathname === '/'
+      ? this.title.getTitle()
+      : null;
+  }
 
   applyEntityMetadata(metadata: PageMetadataDto): void {
     this.entityMetadata.next(metadata);
@@ -83,6 +88,10 @@ export class PageMetadataService {
   }
 
   private loadLocalMetadata(route: ActivatedRouteSnapshot): Observable<PageMetadataDto> {
+    if (route.data['serverHomePageTitle'] === true && this.serverHomePageTitle !== null) {
+      return of({...EMPTY_METADATA, title: this.serverHomePageTitle});
+    }
+
     const titleKey = route.data['titleKey'] as string | undefined;
     if (!titleKey) {
       return of({...EMPTY_METADATA, title: 'ZX-Art', noIndex: route.data['noIndex'] === true});

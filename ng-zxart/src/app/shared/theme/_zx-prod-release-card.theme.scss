@@ -1,22 +1,12 @@
 :root {
   /* Cover placeholder background. */
   --zx-prod-release-card-cover-bg: var(--background-deep);
-  /* Body content gap (between title, meta, chips, bottom). */
-  --zx-prod-release-card-body-gap: var(--space-8);
   /* Title text color. */
   --zx-prod-release-card-title-color: var(--text-color);
-  /* Title font size. */
-  --zx-prod-release-card-title-size: var(--zx-font-size-md);
-  /* Meta line (releasedBy · year) color. */
-  --zx-prod-release-card-meta-color: var(--text-light-color);
-  /* Meta line font size. */
-  --zx-prod-release-card-meta-size: var(--zx-font-size-xs);
-  /* Bottom stat text color. */
-  --zx-prod-release-card-stat-color: var(--text-light-color);
-  /* Bottom stat font size. */
-  --zx-prod-release-card-stat-size: var(--zx-font-size-xs);
-  /* Bottom stat icon size. */
-  --zx-prod-release-card-stat-icon-size: 12px;
+  /* Downloads/plays row icon color. */
+  --zx-prod-release-card-stat-icon-color: var(--text-light-color);
+  /* Downloads/plays row icon size. */
+  --zx-prod-release-card-stat-icon-size: 14px;
   /* Border between detail rows in the expandable section. */
   --zx-prod-release-card-row-border: var(--border-width-thin) solid var(--border-color-dark);
 }

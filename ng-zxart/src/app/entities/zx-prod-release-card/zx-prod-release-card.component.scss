@@ -79,16 +79,8 @@
   text-align: end;
 }
 
-.release-card__stats {
-  margin-left: auto;
-}
-
-.release-card__stat {
-  font-size: var(--zx-prod-release-card-stat-size);
-  color: var(--zx-prod-release-card-stat-color);
-}
-
-.release-card__stat-icon {
+.release-card__row-icon {
   width: var(--zx-prod-release-card-stat-icon-size);
   height: var(--zx-prod-release-card-stat-icon-size);
+  color: var(--zx-prod-release-card-stat-icon-color);
 }

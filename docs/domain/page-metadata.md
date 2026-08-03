@@ -14,6 +14,9 @@ favicon, HTML language, and theme color are
 part of the initial shell. Yandex Metrika is initialized by Angular and records
 one page view for every completed Angular navigation.
 
+On the initial home-page navigation, Angular keeps the exact title rendered by
+the backend and reuses it when returning to the home page during that session.
+
 Historical public URLs are resolved on the backend and redirected to clean SPA
 URLs with HTTP 301. Unknown public URLs are logged by the backend and return HTTP
 404 while rendering the Angular not-found shell.

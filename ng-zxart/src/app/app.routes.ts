@@ -420,7 +420,7 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'about/support', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'support', titleKey: 'menu.about-sub.support'}},
   {path: 'about/api', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'api', titleKey: 'menu.about-sub.api'}},
   {path: 'file-search', loadComponent: () => import('./pages/file-search/file-search-page.component').then(m => m.FileSearchPageComponent), data: {titleKey: 'menu.about-sub.filesearch'}},
-  {path: '', loadComponent: () => import('./pages/firstpage/firstpage.component').then(m => m.FirstpageComponent), data: {titleKey: 'menu.home'}},
+  {path: '', loadComponent: () => import('./pages/firstpage/firstpage.component').then(m => m.FirstpageComponent), data: {titleKey: 'menu.home', serverHomePageTitle: true}},
   {path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent), data: {titleKey: 'common.not-found', noIndex: true}},
 ];
 

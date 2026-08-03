@@ -63,7 +63,7 @@
   </td>
 
   <td class="release-row__hardware">
-    <zx-inline gap="xs" [wrap]="true">
+    <zx-inline gap="sm" [wrap]="true">
       <a *ngFor="let hw of release.hardware" appText="body" class="release-row__hardware-item"
          routerLink="/prods" [queryParams]="{hw: hw.id}">
         <zx-hardware-icon [id]="hw.id"></zx-hardware-icon>{{ 'hardware-short.' + hw.id | translate }}

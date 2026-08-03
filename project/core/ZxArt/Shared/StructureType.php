@@ -34,6 +34,7 @@ enum StructureType: string
     case GroupsCatalogue = 'groupsCatalogue';
     case PartiesCatalogue = 'partiesCatalogue';
     case Year = 'year';
+    case ZxProdCategory = 'zxProdCategory';
     case ZxProdCategoriesCatalogue = 'zxProdCategoriesCatalogue';
     case ZxProdsUploadForm = 'zxProdsUploadForm';
     case PicturesUploadForm = 'picturesUploadForm';

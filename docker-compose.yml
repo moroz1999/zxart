@@ -5,6 +5,10 @@ services:
     container_name: zxart-app
     ports:
       - "80:80"
+    # Lets requests made from inside the container reach the site under its real
+    # domain (the CLI check in docs/local-http.md), independent of host DNS.
+    extra_hosts:
+      - "zxart.loc:127.0.0.1"
     volumes:
       # Mount the whole project for local development
       - ./:/var/www/html

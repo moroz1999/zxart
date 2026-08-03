@@ -30,6 +30,7 @@ Read ONLY the documents relevant to your task.
 
 ### Core Documentation
 - **[docs/domain.md](docs/domain.md)** - Project domain and entities
+- **[docs/local-http.md](docs/local-http.md)** - How to reach the local site over HTTP to verify a change
 
 ### Backend (PHP)
 - **[docs/cms.md](docs/cms.md)** - CMS structure, modules, actions, privileges, view system
@@ -55,6 +56,9 @@ composer psalm
 
 # Angular build (required after any changes to ng-zxart/ — see docs/angular.md)
 composer build
+
+# Check the running site (always from inside the container — see docs/local-http.md)
+docker compose exec -T app curl -s http://zxart.loc/prod/589898
 ```
 
 ## PROJECT STRUCTURE

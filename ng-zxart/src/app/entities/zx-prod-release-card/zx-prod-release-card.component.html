@@ -82,20 +82,32 @@
               </span>
             </zx-inline>
           </zx-inset>
+          <ng-container *ngIf="release.isDownloadable">
+            <zx-inset class="release-card__row" side="block" padding="sm">
+              <zx-inline gap="lg" align="center" justify="between">
+                <zx-inline gap="xs" align="center">
+                  <svg-icon class="release-card__row-icon" name="download"></svg-icon>
+                  <span appText="label" tone="muted">{{ 'release-row.col-downloads' | translate }}</span>
+                </zx-inline>
+                <span class="release-card__row-value" appText="label" tone="primary">{{ release.downloadsCount }}</span>
+              </zx-inline>
+            </zx-inset>
+            <zx-inset class="release-card__row" side="block" padding="sm">
+              <zx-inline gap="lg" align="center" justify="between">
+                <zx-inline gap="xs" align="center">
+                  <svg-icon class="release-card__row-icon" name="play"></svg-icon>
+                  <span appText="label" tone="muted">{{ 'release-row.col-plays' | translate }}</span>
+                </zx-inline>
+                <span class="release-card__row-value" appText="label" tone="primary">{{ release.playsCount }}</span>
+              </zx-inline>
+            </zx-inset>
+          </ng-container>
         </zx-stack>
 
         <zx-inline justify="between" align="center">
           <zx-button *ngIf="canPlay" color="secondary" (click)="onPlay()">
             {{ 'release-row.play' | translate }}
           </zx-button>
-          <zx-inline *ngIf="release.isDownloadable" gap="xs" align="center" class="release-card__stats">
-            <zx-inline gap="xs" align="center" class="release-card__stat">
-              <svg-icon class="release-card__stat-icon" name="download"></svg-icon>{{ release.downloadsCount }}
-            </zx-inline>
-            <zx-inline gap="xs" align="center" class="release-card__stat">
-              <svg-icon class="release-card__stat-icon" name="play"></svg-icon>{{ release.playsCount }}
-            </zx-inline>
-          </zx-inline>
           <zx-button [routerLink]="release.url">{{ 'zx-prod.open' | translate }}</zx-button>
         </zx-inline>
       </zx-stack>

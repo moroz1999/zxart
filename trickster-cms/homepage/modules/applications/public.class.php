@@ -103,7 +103,8 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
         }
 
         if ($query !== null) {
-            $spaUrl .= '?' . $query;
+            $querySeparator = str_contains($spaUrl, '?') ? '&' : '?';
+            $spaUrl .= $querySeparator . $query;
         }
         $controller->redirect($controller->baseURL . ltrim($spaUrl, '/'), '301');
     }
