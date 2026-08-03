@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {LightboxModule} from 'ng-gallery/lightbox';
+import {Lightbox} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
   ZxPictureGridSkeletonComponent
@@ -13,10 +13,11 @@ import {
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ProdMapsApiService} from '../../services/prod-maps-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
+import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay-tile.component';
 
 @Component({
   selector: 'zx-prod-maps-section',
@@ -24,14 +25,14 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
   imports: [
     CommonModule,
     TranslateModule,
-    LightboxModule,
     InViewportDirective,
     ZxPictureGridSkeletonComponent,
     ZxButtonComponent,
     PictureGalleryHostComponent,
-    TextDirective,
     HeadingDirective,
     ZxStackComponent,
+    ZxInlineComponent,
+    ZxInlayTileComponent,
   ],
   templateUrl: './zx-prod-maps-section.component.html',
   styleUrls: ['./zx-prod-maps-section.component.scss'],
@@ -49,6 +50,7 @@ export class ZxProdMapsSectionComponent {
   constructor(
     private readonly api: ProdMapsApiService,
     private readonly gallery: PictureGalleryService,
+    private readonly lightbox: Lightbox,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -77,6 +79,14 @@ export class ZxProdMapsSectionComponent {
       }
       this.cdr.markForCheck();
     });
+  }
+
+  openMap(index: number): void {
+    this.lightbox.open(index, this.galleryId);
+  }
+
+  trackById(_: number, file: ProdFileDto): number {
+    return file.id;
   }
 
   private toGalleryItem(file: ProdFileDto): PictureGalleryItem {

@@ -1,26 +1,11 @@
-@use 'shared/breakpoints' as bp;
-
 :host {
   display: block;
 }
 
-.release-inlays-section__grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, var(--zx-release-inlays-thumb-width)));
-  justify-content: start;
-  gap: var(--zx-release-inlays-grid-gap);
-
-  @include bp.media-breakpoint-down(lg) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @include bp.media-breakpoint-down(sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .release-inlays-section__item {
   display: block;
+  width: min-content;
+  max-width: 100%;
   margin: 0;
 }
 
@@ -33,9 +18,8 @@
 
 .release-inlays-section__thumb {
   display: block;
-  width: 100%;
-  object-fit: contain;
-  aspect-ratio: 1/1;
+  width: auto;
+  height: var(--zx-release-inlays-thumb-height);
   cursor: pointer;
 }
 

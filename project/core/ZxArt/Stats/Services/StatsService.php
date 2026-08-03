@@ -21,6 +21,7 @@ use ZxArt\Stats\Dto\StatsDistributionDto;
 use ZxArt\Stats\Dto\StatsDistributionsDto;
 use ZxArt\Stats\Dto\StatsOverviewDto;
 use ZxArt\Stats\Dto\StatsTopUserDto;
+use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\Stats\Dto\StatsTopUsersDto;
 use ZxArt\Stats\Dto\StatsUsersSectionDto;
 use ZxArt\Stats\Dto\StatsYearSeriesDto;
@@ -39,6 +40,7 @@ readonly class StatsService
         private ConfigManager $configManager,
         private LanguagesManager $languagesManager,
         private HardwareCatalog $hardwareCatalog,
+        private EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -588,9 +590,7 @@ readonly class StatsService
 
     private function getUserUrl(userElement $element): ?string
     {
-        $url = $element->getUrl();
-
-        return is_string($url) && $url !== '' ? $url : null;
+        return $this->entityUrlResolver->urlForUser($element);
     }
 
     /**

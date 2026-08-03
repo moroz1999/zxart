@@ -31,6 +31,7 @@ use ZxArt\ZxScreen\ZxPictureUrlHelper;
  */
 class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
 {
+    use CanonicalUrlTrait;
     use PaletteTypesProvider;
     use GraphicsCompoProvider;
     use ZxPictureTypesProvider;
@@ -418,7 +419,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
             "@type" => ["VisualArtwork", "MediaObject"],
             "encodingFormat" => 'image/png',
             "name" => $this->title,
-            "url" => $this->URL,
+            "url" => $this->getCanonicalUrl(),
         ];
 
         $data["description"] = $this->getTextContent();
@@ -484,7 +485,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => $this->getMetaTitle(),
-            'url' => $this->getUrl(),
+            'url' => $this->getCanonicalUrl(),
             'type' => 'article',
             'image' => $this->getImageUrl(2),
             'description' => $this->getMetaDescription(),

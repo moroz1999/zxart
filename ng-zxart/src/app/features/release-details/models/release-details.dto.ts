@@ -29,7 +29,6 @@ export interface ReleaseFileStructureItemDto {
   type: string;
   typeLabel: string;
   viewable: boolean;
-  viewUrl: string | null;
   downloadUrl: string | null;
   items: ReleaseFileStructureItemDto[];
 }
@@ -82,5 +81,5 @@ export interface ReleaseDetailsDto {
   canUploadScreenshot: boolean;
   canReorderScreenshots: boolean;
   dateCreated: string;
-  submitter: {id: number; userName: string; url: string} | null;
+  submitter: {id: number; userName: string; url: string | null} | null;
 }

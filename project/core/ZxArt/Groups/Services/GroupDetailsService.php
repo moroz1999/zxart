@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Groups\Services;
 
-use breadcrumbsManager;
 use groupAliasElement;
 use groupElement;
+use structureElement;
 use structureManager;
 use ZxArt\Groups\Dto\GroupBreadcrumbDto;
 use ZxArt\Groups\Dto\GroupCoreDto;
@@ -25,10 +25,14 @@ use ZxArt\Shared\EntityType;
 
 readonly class GroupDetailsService
 {
+    /** SPA route of the groups section; its legacy element only supplies the title. */
+    private const string SECTION_URL = '/groups';
+    /** Structure type of the alphabet folders the sections are split into. */
+    private const string LETTER_TYPE = 'letter';
+
     public function __construct(
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
-        private breadcrumbsManager $breadcrumbsManager,
         private PressArticlePreviewFactory $pressArticlePreviewFactory,
         private GroupRosterService $groupRosterService,
         private GroupProdsRepository $groupProdsRepository,
@@ -274,26 +278,34 @@ readonly class GroupDetailsService
     }
 
     /**
+     * The trail is the section the group sits in and its alphabet folder. Both
+     * come from the legacy structure only for their titles: their pages are SPA
+     * routes (`/groups`, `/groups/b`), which the legacy elements know nothing
+     * about. The group itself is `zx-breadcrumbs`' `currentTitle`, and the home
+     * link is the component's own.
+     *
      * @return GroupBreadcrumbDto[]
      */
     private function buildBreadcrumbs(groupElement|groupAliasElement $group): array
     {
-        $groupUrl = (string)$group->getUrl();
-        $path = trim((string)parse_url($groupUrl, PHP_URL_PATH), '/');
-        if ($path === '') {
+        $letter = $group->getFirstParentElement();
+        if (!$letter instanceof structureElement || $letter->structureType !== self::LETTER_TYPE) {
             return [];
         }
-        $segments = array_values(array_filter(explode('/', $path)));
-        /** @var array<array{title: string, URL: string}> $ancestors */
-        $ancestors = array_slice($this->breadcrumbsManager->getBreadcrumbsForPath($segments), 1, -1);
 
         $breadcrumbs = [];
-        foreach ($ancestors as $item) {
+        $section = $letter->getFirstParentElement();
+        if ($section instanceof structureElement) {
             $breadcrumbs[] = new GroupBreadcrumbDto(
-                title: $this->decode((string)$item['title']),
-                url: (string)$item['URL'],
+                title: $this->decode((string)$section->getTitle()),
+                url: self::SECTION_URL,
             );
         }
+        $breadcrumbs[] = new GroupBreadcrumbDto(
+            title: $this->decode((string)$letter->getTitle()),
+            url: self::SECTION_URL . '/' . strtolower((string)$letter->structureName),
+        );
+
         return $breadcrumbs;
     }
 }

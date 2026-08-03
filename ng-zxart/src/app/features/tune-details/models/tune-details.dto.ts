@@ -15,7 +15,7 @@ export interface TunePartyContextDto {
 
 export interface TuneSubmitterDto {
   readonly userName: string;
-  readonly url: string;
+  readonly url: string | null;
 }
 
 /** A single downloadable artifact (original module, tracker file, rendered audio). */

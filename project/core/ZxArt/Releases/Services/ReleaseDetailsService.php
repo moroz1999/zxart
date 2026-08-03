@@ -10,7 +10,6 @@ use controller;
 use privilegesManager;
 use structureManager;
 use userElement;
-use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\PictureList\PictureListService;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
 use ZxArt\Prods\Dto\ProdCategoryRefDto;
@@ -27,6 +26,7 @@ use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Shared\StructureType;
+use ZxArt\Urls\EntityUrlResolver;
 use zxProdCategoryElement;
 use zxProdElement;
 use zxReleaseElement;
@@ -34,14 +34,13 @@ use zxReleaseElement;
 readonly class ReleaseDetailsService
 {
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+        private EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
         private DescriptionFormatter $descriptionFormatter,
         private ProdMediaService $prodMediaService,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private controller $controller,
-        private ZxParsingManager $zxParsingManager,
         private privilegesManager $privilegesManager,
         private PictureListService $pictureListService,
     ) {
@@ -58,7 +57,7 @@ readonly class ReleaseDetailsService
         $isDownloadable = $release->isDownloadable();
         $isPlayable = $release->isPlayable();
         $emulatorType = $release->getEmulatorType();
-        $releaseUrl = (string)$release->getUrl();
+        $releaseUrl = $this->entityUrlResolver->urlFor($release);
         $canUploadScreenshot = $this->privilegesManager->checkPrivilegesForAction(
             $release->getId(),
             'uploadScreenshot',
@@ -137,7 +136,7 @@ readonly class ReleaseDetailsService
         return new ProdSubmitterDto(
             id: $user->getId(),
             userName: $this->infoBuilder->decodeText($user->userName),
-            url: (string)$user->getUrl(),
+            url: $this->entityUrlResolver->urlForUser($user),
         );
     }
 
@@ -267,7 +266,6 @@ readonly class ReleaseDetailsService
         $result = [];
         $baseUrl = (string)$this->controller->baseURL;
         $releaseId = $release->getId();
-        $releaseUrl = (string)$release->getUrl();
 
         foreach ($items as $item) {
             $isFolder = $item['type'] === 'folder';
@@ -275,10 +273,6 @@ readonly class ReleaseDetailsService
 
             $downloadUrl = !$isFolder
                 ? $baseUrl . 'zxfile/id:' . $releaseId . '/fileId:' . $item['id'] . '/' . rawurlencode($item['fileName'])
-                : null;
-
-            $viewUrl = (!$isFolder && $viewable)
-                ? $releaseUrl . 'action:viewFile/id:' . $releaseId . '/fileId:' . $item['id'] . '/'
                 : null;
 
             $children = isset($item['items']) ? $this->buildFileStructureItems($item['items'], $release) : [];
@@ -290,7 +284,6 @@ readonly class ReleaseDetailsService
                 type: (string)$item['type'],
                 typeLabel: $this->infoBuilder->translate('zxrelease.filetype_' . $item['type']),
                 viewable: $viewable,
-                viewUrl: $viewUrl,
                 downloadUrl: $downloadUrl,
                 items: $children,
             );

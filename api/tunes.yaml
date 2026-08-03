@@ -301,7 +301,9 @@ components:
         userName:
           type: string
         url:
+          description: Page of the author the account is connected to; null when it has none.
           type: string
+          nullable: true
 
     TuneDownloadDto:
       type: object

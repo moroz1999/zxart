@@ -179,7 +179,7 @@ readonly class PictureDetailsService
         }
         return new PictureSubmitterDto(
             userName: $this->infoBuilder->decodeText((string)$user->userName),
-            url: (string)$user->getUrl(),
+            url: $this->entityUrlResolver->urlForUser($user),
         );
     }
 
@@ -275,7 +275,7 @@ readonly class PictureDetailsService
         foreach ($element->getPressMentions() as $article) {
             $result[] = new PictureMentionDto(
                 title: $this->infoBuilder->decodeText((string)$article->getTitle()),
-                url: (string)$article->getUrl(),
+                url: $this->entityUrlResolver->urlFor($article),
             );
         }
         return $result;

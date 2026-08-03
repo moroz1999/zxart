@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Urls;
 
+use controller;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Shared\StructureType;
 use ZxArt\Urls\EntityUrlResolver;
 
+#[AllowMockObjectsWithoutExpectations]
 class EntityUrlResolverTest extends TestCase
 {
     #[DataProvider('sectionUrls')]
     public function testLegacySectionTypeResolvesToSpaUrl(StructureType $structureType, string $expectedUrl): void
     {
-        $resolver = new EntityUrlResolver();
+        $resolver = new EntityUrlResolver($this->createMock(controller::class));
 
         self::assertSame($expectedUrl, $resolver->resolveByType($structureType->value, 1));
     }
@@ -22,7 +25,7 @@ class EntityUrlResolverTest extends TestCase
     #[DataProvider('entityUrls')]
     public function testEntityTypeResolvesToSpaUrl(string $structureType, int $id, string $expectedUrl): void
     {
-        $resolver = new EntityUrlResolver();
+        $resolver = new EntityUrlResolver($this->createMock(controller::class));
 
         self::assertSame($expectedUrl, $resolver->resolveByType($structureType, $id));
     }

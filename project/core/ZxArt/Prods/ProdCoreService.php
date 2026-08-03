@@ -229,7 +229,7 @@ readonly class ProdCoreService
         return new ProdSubmitterDto(
             id: $user->getId(),
             userName: $this->infoBuilder->decodeText($user->userName),
-            url: (string)$user->getUrl(),
+            url: $this->entityUrlResolver->urlForUser($user),
         );
     }
 

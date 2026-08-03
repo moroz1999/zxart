@@ -9,6 +9,7 @@ import {PictureGalleryService} from '../../../picture-gallery/services/picture-g
 import {ZxReleaseSectionHeadComponent} from '../zx-release-section-head/zx-release-section-head.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -23,6 +24,7 @@ import {environment} from '../../../../../environments/environment';
     PictureGalleryHostComponent,
     ZxReleaseSectionHeadComponent,
     ZxStackComponent,
+    ZxInlineComponent,
   ],
   templateUrl: './zx-release-inlays-section.component.html',
   styleUrl: './zx-release-inlays-section.component.scss',

@@ -62,7 +62,7 @@ export interface ProdVotingDto {
 export interface ProdSubmitterDto {
   id: number;
   userName: string;
-  url: string;
+  url: string | null;
 }
 
 export interface ProdTabsDto {

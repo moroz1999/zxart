@@ -1,5 +1,6 @@
 {{ 'zx-added-by.label' | translate }}
 <ng-container *ngIf="submitter">
-  <a [routerLink]="submitter.url" class="added-by__link">{{ submitter.userName }}</a>,
+  <a *ngIf="submitter.url; else submitterName" [routerLink]="submitter.url" class="added-by__link">{{ submitter.userName }}</a>
+  <ng-template #submitterName>{{ submitter.userName }}</ng-template>,
 </ng-container>
 {{ dateAdded }}

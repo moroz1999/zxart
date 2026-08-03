@@ -6,10 +6,10 @@ namespace ZxArt\Authors\Services;
 
 use authorAliasElement;
 use authorElement;
-use breadcrumbsManager;
 use controller;
 use groupAliasElement;
 use groupElement;
+use structureElement;
 use structureManager;
 use userElement;
 use ZxArt\Authors\Dto\AuthorAliasRefDto;
@@ -33,9 +33,13 @@ use ZxArt\Urls\EntityUrlResolver;
 
 readonly class AuthorDetailsService
 {
+    /** SPA route of the authors section; its legacy element only supplies the title. */
+    private const string SECTION_URL = '/authors';
+    /** Structure type of the alphabet folders the sections are split into. */
+    private const string LETTER_TYPE = 'letter';
+
     public function __construct(
         private structureManager $structureManager,
-        private breadcrumbsManager $breadcrumbsManager,
         private controller $controller,
         private AuthorshipRepository $authorshipRepository,
         private AuthorProdsRepository $authorProdsRepository,
@@ -340,10 +344,13 @@ readonly class AuthorDetailsService
     private function resolveParent(authorElement|authorAliasElement $author): array
     {
         $parent = $author->getFirstParentElement();
-        if ($parent === null) {
+        if (!$parent instanceof structureElement || $parent->structureType !== self::LETTER_TYPE) {
             return [null, null];
         }
-        return [(string)$parent->getUrl(), html_entity_decode((string)$parent->getTitle(), ENT_QUOTES)];
+        return [
+            self::SECTION_URL . '/' . strtolower((string)$parent->structureName),
+            html_entity_decode((string)$parent->getTitle(), ENT_QUOTES),
+        ];
     }
 
     private function formatDate(int $timestamp): ?string
@@ -376,28 +383,35 @@ readonly class AuthorDetailsService
         return $host !== false && $host !== null ? (string)$host : $url;
     }
 
-    /** @return AuthorBreadcrumbDto[] */
+    /**
+     * The trail is the section the author sits in and its alphabet folder. Both
+     * come from the legacy structure only for their titles: their pages are SPA
+     * routes (`/authors`, `/authors/l`), which the legacy elements know nothing
+     * about. The author itself is `zx-breadcrumbs`' `currentTitle`, and the home
+     * link is the component's own.
+     *
+     * @return AuthorBreadcrumbDto[]
+     */
     private function buildBreadcrumbs(authorElement|authorAliasElement $author): array
     {
-        $authorUrl = (string)$author->getUrl();
-        $path = trim(parse_url($authorUrl, PHP_URL_PATH) ?? '', '/');
-        if ($path === '') {
+        $letter = $author->getFirstParentElement();
+        if (!$letter instanceof structureElement || $letter->structureType !== self::LETTER_TYPE) {
             return [];
         }
-        $segments = array_values(array_filter(explode('/', $path)));
-        $raw = $this->breadcrumbsManager->getBreadcrumbsForPath($segments);
-
-        // Drop first item (language element = home, handled by the home link in zx-breadcrumbs)
-        // and last item (the author itself, shown as currentTitle in zx-breadcrumbs)
-        $ancestors = array_slice($raw, 1, -1);
 
         $breadcrumbs = [];
-        foreach ($ancestors as $item) {
+        $section = $letter->getFirstParentElement();
+        if ($section instanceof structureElement) {
             $breadcrumbs[] = new AuthorBreadcrumbDto(
-                title: html_entity_decode((string)$item['title'], ENT_QUOTES),
-                url: (string)$item['URL'],
+                title: html_entity_decode((string)$section->getTitle(), ENT_QUOTES),
+                url: self::SECTION_URL,
             );
         }
+        $breadcrumbs[] = new AuthorBreadcrumbDto(
+            title: html_entity_decode((string)$letter->getTitle(), ENT_QUOTES),
+            url: self::SECTION_URL . '/' . strtolower((string)$letter->structureName),
+        );
+
         return $breadcrumbs;
     }
 }

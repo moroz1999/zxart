@@ -21,25 +21,14 @@
       <ng-container *ngIf="files.length > 0">
         <zx-picture-gallery-host></zx-picture-gallery-host>
 
-        <div class="prod-maps-section__grid">
-          <figure
-            *ngFor="let file of files; let i = index"
-            class="prod-maps-section__item"
-          >
-            <img
-              *ngIf="file.imageUrl"
-              class="prod-maps-section__thumb"
-              loading="lazy"
-              [src]="file.imageUrl"
-              [alt]="file.title"
-              [lightbox]="i"
-              [gallery]="galleryId"
-            />
-            <figcaption *ngIf="file.author" appText="caption" tone="muted">
-              {{ file.author }}
-            </figcaption>
-          </figure>
-        </div>
+        <zx-inline spacing="lg" align="start" [wrap]="true">
+          <zx-inlay-tile
+            *ngFor="let file of files; let i = index; trackBy: trackById"
+            [inlay]="file"
+            [caption]="file.author"
+            (imageClick)="openMap(i)"
+          ></zx-inlay-tile>
+        </zx-inline>
       </ng-container>
     </ng-container>
   </ng-container>

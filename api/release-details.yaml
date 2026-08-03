@@ -256,7 +256,6 @@ components:
         - type
         - typeLabel
         - viewable
-        - viewUrl
         - downloadUrl
         - items
       properties:
@@ -272,9 +271,6 @@ components:
           type: string
         viewable:
           type: boolean
-        viewUrl:
-          type: string
-          nullable: true
         downloadUrl:
           type: string
           nullable: true

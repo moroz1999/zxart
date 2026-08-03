@@ -9,7 +9,7 @@ readonly class ProdSubmitterRestDto
     public function __construct(
         public int $id,
         public string $userName,
-        public string $url,
+        public ?string $url,
     ) {
     }
 }

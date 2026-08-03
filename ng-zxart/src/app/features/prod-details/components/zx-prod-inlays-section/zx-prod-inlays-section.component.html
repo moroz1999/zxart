@@ -11,14 +11,14 @@
     <zx-stack spacing="md" *ngFor="let group of groups; trackBy: trackByKind">
       <h2 appHeading="headline">{{ 'covers.' + group.kind | translate }}</h2>
 
-      <div class="prod-inlays-section__grid">
+      <zx-inline spacing="lg" align="start" [wrap]="true">
         <zx-inlay-tile
           *ngFor="let cover of group.items; trackBy: trackById"
           [inlay]="cover"
-          [showReleaseInfo]="true"
+          [releaseInfo]="cover"
           (imageClick)="openCover(cover)"
         ></zx-inlay-tile>
-      </div>
+      </zx-inline>
     </zx-stack>
   </ng-container>
 </zx-stack>

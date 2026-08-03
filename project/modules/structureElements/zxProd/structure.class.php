@@ -60,6 +60,7 @@ class zxProdElement extends ZxArtItem implements
     ZxSoftInterface,
     MetadataProviderInterface
 {
+    use CanonicalUrlTrait;
     use QueueStatusProvider;
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
@@ -807,7 +808,7 @@ class zxProdElement extends ZxArtItem implements
             "@context" => "http://schema.org/",
             "@type" => ["SoftwareApplication"],
             "name" => $this->title,
-            "url" => $this->URL,
+            "url" => $this->getCanonicalUrl(),
         ];
         $releases = $this->getReleasesList();
         $release = $releases[0] ?? null;
@@ -1184,7 +1185,7 @@ class zxProdElement extends ZxArtItem implements
         $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => $this->getMetaTitle(),
-            'url' => $this->getUrl(),
+            'url' => $this->getCanonicalUrl(),
             'type' => 'article',
             'image' => $this->getImage() ? $this->getImage()->getZxImageUrl(true, 1) : '',
             'description' => $this->getMetaDescription(),

@@ -72,6 +72,7 @@ Concrete release (version) of software production. Contains files specific to th
 - **infoFilesSelector** - information files
 - **adFilesSelector** - advertising materials
 - Release details expose `inlayFilesSelector` and `adFilesSelector` together as `covers`, grouped by kind exactly like a prod's covers (`{kind, items}` per `ProdCoverKind`, empty kinds omitted); the page renders one headed section per group and `tabs.hasCovers` follows both selectors.
+- Release cover images share a 200px display height, while each tile derives its width from the thumbnail's aspect ratio.
 - Release details permits users with `publicReceive` privilege to reorder screenshots stored in `screenshotsSelector` through the shared screenshot move API.
 - Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
 - The parsed file structure is only built and returned when `isDownloadable()` is true (`fileStructure` is empty otherwise, which also hides the Structure tab). This mirrors the legacy gate `{if $element->parsed && $element->isDownloadable()}` and prevents per-file download links from leaking for non-downloadable releases (e.g. `insales` prods, or old forbidden prods to anonymous users).

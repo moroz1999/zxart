@@ -20,7 +20,6 @@ readonly class ReleaseFileStructureItemDto
         public string $type,
         public string $typeLabel,
         public bool $viewable,
-        public ?string $viewUrl,
         public ?string $downloadUrl,
         public array $items,
     ) {

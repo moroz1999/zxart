@@ -52,6 +52,7 @@ class zxReleaseElement extends ZxArtItem implements
     Recalculable,
     BreadcrumbsInfoProvider
 {
+    use CanonicalUrlTrait;
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
     use ImportedItemTrait;
@@ -673,7 +674,7 @@ class zxReleaseElement extends ZxArtItem implements
             "@context" => "http://schema.org/",
             "@type" => ["SoftwareApplication"],
             "name" => $this->title,
-            "url" => $this->URL,
+            "url" => $this->getCanonicalUrl(),
         ];
         $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::COMPUTERS->value]);
         $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::DOS->value]);

@@ -96,6 +96,10 @@ Detailed logic and structure: [domain/content.md](domain/content.md)
 Frontend-owned interface language and route-guard auto-login for the SPA.
 Detailed logic and structure: [domain/language-auth.md](domain/language-auth.md)
 
+### entity URLs in API responses
+Clean SPA routes as the only page URLs services emit, and the resolver that produces them.
+Detailed logic and structure: [domain/entity-urls.md](domain/entity-urls.md)
+
 ### public page metadata
 Server and Angular ownership of crawler metadata, redirects, HTTP 404 responses, and analytics page views.
 Detailed logic and structure: [domain/page-metadata.md](domain/page-metadata.md)

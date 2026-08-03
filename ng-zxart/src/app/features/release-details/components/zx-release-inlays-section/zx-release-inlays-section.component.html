@@ -7,7 +7,7 @@
       [count]="group.items.length">
     </zx-release-section-head>
 
-    <div class="release-inlays-section__grid">
+    <zx-inline spacing="sm" align="start" [wrap]="true">
       <figure
         *ngFor="let cover of group.items; trackBy: trackById"
         class="release-inlays-section__item"
@@ -32,6 +32,6 @@
           </div>
         </div>
       </figure>
-    </div>
+    </zx-inline>
   </section>
 </zx-stack>

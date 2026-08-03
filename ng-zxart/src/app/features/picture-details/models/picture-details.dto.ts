@@ -58,7 +58,7 @@ export interface PictureRelatedRailDto {
 
 export interface PictureSubmitterDto {
   readonly userName: string;
-  readonly url: string;
+  readonly url: string | null;
 }
 
 export interface PictureDetailsDto extends ZxPictureDto {

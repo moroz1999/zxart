@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Urls;
 
+use controller;
 use folderElement;
 use structureElement;
 use userElement;
@@ -19,6 +20,10 @@ use ZxArt\Shared\StructureType;
  */
 class EntityUrlResolver
 {
+    public function __construct(private readonly controller $controller)
+    {
+    }
+
     /** legacy section structureType => SPA URL */
     private const array SECTION_URL = [
         StructureType::AuthorsCatalogue->value => '/authors',
@@ -96,6 +101,20 @@ class EntityUrlResolver
     public function urlFor(structureElement $element): string
     {
         return $this->resolve($element) ?? (string)$element->getUrl();
+    }
+
+    /**
+     * Absolute form of {@see self::urlFor()}, for URLs that leave the site:
+     * canonical page addresses in `og:url` and ld+json. Legacy fallback URLs
+     * are already absolute and are passed through untouched.
+     */
+    public function absoluteUrlFor(structureElement $element): string
+    {
+        $url = $this->urlFor($element);
+
+        return str_starts_with($url, 'http')
+            ? $url
+            : $this->controller->baseURL . ltrim($url, '/');
     }
 
     /**

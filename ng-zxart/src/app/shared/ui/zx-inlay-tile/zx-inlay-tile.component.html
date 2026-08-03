@@ -8,12 +8,15 @@
 </div>
 <div class="inlay-tile__meta">
   <span class="inlay-tile__title" appText="caption" tone="primary">{{ inlay.title }}</span>
-  <a
-    *ngIf="showReleaseInfo && inlay.releaseTitle"
-    class="inlay-tile__release"
-    [routerLink]="inlay.releaseUrl"
-    appText="caption"
-    tone="muted-link"
-    (click)="$event.stopPropagation()"
-  >{{ inlay | prodReleaseLabel }}</a>
+  <span *ngIf="caption" class="inlay-tile__caption" appText="caption" tone="muted">{{ caption }}</span>
+  <ng-container *ngIf="releaseInfo as info">
+    <a
+      *ngIf="info.releaseTitle"
+      class="inlay-tile__release"
+      [routerLink]="info.releaseUrl"
+      appText="caption"
+      tone="muted-link"
+      (click)="$event.stopPropagation()"
+    >{{ info | prodReleaseLabel }}</a>
+  </ng-container>
 </div>

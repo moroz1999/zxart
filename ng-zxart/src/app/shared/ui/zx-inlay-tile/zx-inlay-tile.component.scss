@@ -1,5 +1,7 @@
 :host {
   display: block;
+  width: min-content;
+  max-width: 100%;
   background: var(--zx-inlay-tile-bg);
   border: 1px solid var(--zx-inlay-tile-border);
   border-radius: var(--zx-inlay-tile-radius);
@@ -13,14 +15,12 @@
 
 .inlay-tile__img {
   background: var(--zx-inlay-tile-img-bg);
-  aspect-ratio: 1/1;
   cursor: pointer;
 
   img {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: auto;
+    height: var(--zx-inlay-tile-img-height);
   }
 }
 
@@ -35,7 +35,8 @@
   display: block;
 }
 
+.inlay-tile__caption,
 .inlay-tile__release {
   display: block;
-  margin-top: var(--zx-inlay-tile-release-mt);
+  margin-top: var(--zx-inlay-tile-meta-line-gap);
 }

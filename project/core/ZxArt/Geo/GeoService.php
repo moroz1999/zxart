@@ -168,7 +168,7 @@ readonly class GeoService
         return new GeoPartyListItemDto(
             id: (int)$element->id,
             title: html_entity_decode($element->title, ENT_QUOTES),
-            url: $element->getUrl() ?? '',
+            url: $this->entityUrlResolver->urlFor($element),
             countryId: $countryElement !== null ? (int)$countryElement->id : null,
             countryTitle: $countryElement !== null ? html_entity_decode($countryElement->title, ENT_QUOTES) : null,
             countryUrl: $countryElement !== null ? $this->entityUrlResolver->urlFor($countryElement) : null,

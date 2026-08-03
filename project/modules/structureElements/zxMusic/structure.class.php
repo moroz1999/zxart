@@ -27,6 +27,7 @@ use ZxArt\Queue\QueueType;
 class zxMusicElement extends ZxArtItem implements
     OpenGraphDataProviderInterface
 {
+    use CanonicalUrlTrait;
     use MusicSettingsProvider;
 
     const string MP3_STORAGE_PATH = 'https://music.zxart.ee/music/';
@@ -481,7 +482,7 @@ class zxMusicElement extends ZxArtItem implements
             "@type" => "MusicRecording",
             "encodingFormat" => 'audio/mpeg',
             "name" => $this->title,
-            "url" => $this->URL,
+            "url" => $this->getCanonicalUrl(),
         ];
 
         $data["description"] = $this->getTextContent();
@@ -522,7 +523,7 @@ class zxMusicElement extends ZxArtItem implements
         $languagesManager = $this->getService(LanguagesManager::class);
         $data = [
             'title' => (string)$this->getMetaTitle(),
-            'url' => (string)$this->getUrl(),
+            'url' => $this->getCanonicalUrl(),
             'type' => 'music:song',
             'image' => '/images/logo_og.png',
             'description' => (string)$this->getMetaDescription(),

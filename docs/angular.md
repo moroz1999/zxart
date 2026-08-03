@@ -174,10 +174,12 @@ the backend session. Full behavior: [domain/language-auth.md](domain/language-au
 ### Internal Links
 
 Links to routed SPA pages use Angular `RouterLink` directly on the anchor. Build
-internal routes in the template from entity identifiers, for example
-`<a [routerLink]="['/prod', prod.id]">`. API DTOs do not contain internal routed
-URLs. Keep plain `[href]` for external and download URLs. Do not add global click
-interception.
+internal routes in the template from entity identifiers where the response
+carries them, for example `<a [routerLink]="['/prod', prod.id]">`. Where a
+response carries a URL field instead, it is always a clean SPA route from
+`EntityUrlResolver` and can be bound to `routerLink` as it is — see
+[domain/entity-urls.md](domain/entity-urls.md). Keep plain `[href]` for external
+and download URLs. Do not add global click interception.
 
 ### Destructive Actions
 

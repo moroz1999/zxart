@@ -19,7 +19,6 @@ readonly class ReleaseFileStructureItemRestDto
         public string $type,
         public string $typeLabel,
         public bool $viewable,
-        public ?string $viewUrl,
         public ?string $downloadUrl,
         #[Map(transform: MapCollection::class)]
         public array $items,

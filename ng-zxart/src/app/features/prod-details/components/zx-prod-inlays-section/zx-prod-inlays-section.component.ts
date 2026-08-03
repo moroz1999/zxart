@@ -16,6 +16,7 @@ import {ProdInlaysApiService} from '../../services/prod-inlays-api.service';
 import {ProdCoverGroupDto, ProdReleaseInlayDto} from '../../models/prod-release-inlay.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay-tile.component';
+import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 
 @Component({
   selector: 'zx-prod-inlays-section',
@@ -29,6 +30,7 @@ import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay
     HeadingDirective,
     ZxStackComponent,
     ZxInlayTileComponent,
+    ZxInlineComponent,
   ],
   templateUrl: './zx-prod-inlays-section.component.html',
   styleUrls: ['./zx-prod-inlays-section.component.scss'],

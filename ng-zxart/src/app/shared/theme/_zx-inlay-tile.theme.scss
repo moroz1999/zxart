@@ -9,6 +9,8 @@
   --zx-inlay-tile-radius: var(--radius-md);
   /* Image placeholder background. */
   --zx-inlay-tile-img-bg: var(--secondary-100);
+  /* Shared display height for cover thumbnails. */
+  --zx-inlay-tile-img-height: 200px;
   /* Meta strip background. */
   --zx-inlay-tile-meta-bg: var(--surface);
   /* Meta strip top border. */
@@ -19,6 +21,6 @@
   --zx-inlay-tile-meta-px: var(--space-8);
   /* Min-height to reserve room for two caption lines. */
   --zx-inlay-tile-meta-min-height: var(--space-40);
-  /* Gap between title and release label. */
-  --zx-inlay-tile-release-mt: var(--space-2);
+  /* Gap between lines of tile metadata. */
+  --zx-inlay-tile-meta-line-gap: var(--space-2);
 }

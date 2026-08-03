@@ -150,7 +150,7 @@ readonly class TuneDetailsService
         }
         return new TuneSubmitterDto(
             userName: $this->infoBuilder->decodeText((string)$user->userName),
-            url: (string)$user->getUrl(),
+            url: $this->entityUrlResolver->urlForUser($user),
         );
     }
 

@@ -4,7 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {RouterLink} from '@angular/router';
 export interface AddedBySubmitterDto {
   userName: string;
-  url: string;
+  url: string | null;
 }
 
 @Component({

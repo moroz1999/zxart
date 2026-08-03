@@ -8,7 +8,7 @@ readonly class TuneSubmitterRestDto
 {
     public function __construct(
         public string $userName,
-        public string $url,
+        public ?string $url,
     ) {
     }
 }

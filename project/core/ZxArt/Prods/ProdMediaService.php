@@ -17,6 +17,7 @@ use ZxArt\Prods\Dto\ProdReleaseInlayDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionFileDto;
 use ZxArt\Prods\Dto\ProdReleaseInstructionsDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
+use ZxArt\Urls\EntityUrlResolver;
 use zxProdElement;
 use zxReleaseElement;
 
@@ -36,6 +37,7 @@ readonly class ProdMediaService
         private structureManager $structureManager,
         private ProdInfoBuilder $prodInfoBuilder,
         private ProdElementService $prodElementService,
+        private EntityUrlResolver $entityUrlResolver,
     ) {
     }
 
@@ -97,7 +99,7 @@ readonly class ProdMediaService
         $files = [];
         foreach ($prod->getReleasesList() as $release) {
             $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
-            $releaseUrl = (string)$release->getUrl();
+            $releaseUrl = $this->entityUrlResolver->urlFor($release);
             $releaseYear = $release->getYear() ?? 0;
             $releaseTypeLabel = $release->releaseType !== ''
                 ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
@@ -189,7 +191,7 @@ readonly class ProdMediaService
     private function buildReleaseCoversOfKind(zxReleaseElement $release, LinkTypes $linkType): array
     {
         $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
-        $releaseUrl = (string)$release->getUrl();
+        $releaseUrl = $this->entityUrlResolver->urlFor($release);
         $releaseYear = $release->getYear() ?? 0;
         $releaseTypeLabel = $release->releaseType !== ''
             ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
@@ -243,7 +245,7 @@ readonly class ProdMediaService
     public function buildReleaseInstructions(zxReleaseElement $release): ProdReleaseInstructionsDto
     {
         $releaseTitle = $this->prodInfoBuilder->decodeText((string)$release->getTitle());
-        $releaseUrl = (string)$release->getUrl();
+        $releaseUrl = $this->entityUrlResolver->urlFor($release);
         $releaseYear = $release->getYear() ?? 0;
         $releaseTypeLabel = $release->releaseType !== ''
             ? $this->prodInfoBuilder->translate('zxRelease.type_' . $release->releaseType)
