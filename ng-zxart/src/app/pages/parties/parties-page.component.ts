@@ -1,9 +1,10 @@
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {catchError, map, Observable, of, shareReplay, startWith, switchMap} from 'rxjs';
+import {childRouteParam} from '../../shared/utils/child-route-param';
 import {PartyDto} from '../../shared/models/party-dto';
 import {
   PartyListViewMode,
@@ -54,9 +55,8 @@ export class PartiesPageComponent {
   readonly viewToggleOptions$: Observable<ZxToggleOption[]>;
   viewMode: PartyListViewMode = 'cards';
 
-  readonly vm$: Observable<PartiesPageVm> = this.route.paramMap.pipe(
-    switchMap(params => {
-      const year = params.get('year');
+  readonly vm$: Observable<PartiesPageVm> = childRouteParam(this.route, this.router, 'year').pipe(
+    switchMap(year => {
       const url = year ? `/parties-data/?year=${encodeURIComponent(year)}` : '/parties-data/';
       return this.http.get<{parties: PartyDto[]}>(url).pipe(
         map(response => ({parties: response?.parties ?? [], selectedYear: year ?? ''})),
@@ -70,6 +70,7 @@ export class PartiesPageComponent {
   constructor(
     private readonly http: HttpClient,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly currentUserService: CurrentUserService,
     translateService: TranslateService,
   ) {

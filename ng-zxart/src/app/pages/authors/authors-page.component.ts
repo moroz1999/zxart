@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {combineLatest, map, Observable} from 'rxjs';
+import {childRouteParam} from '../../shared/utils/child-route-param';
 import {ZxAuthorBrowserComponent} from '../../features/author-browser/components/zx-author-browser/zx-author-browser.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxAuthorsDashboardComponent} from '../../features/authors-page/components/zx-authors-dashboard/zx-authors-dashboard.component';
@@ -43,18 +44,23 @@ interface AuthorsVm {
 })
 export class AuthorsPageComponent {
   readonly isAuthenticated$ = this.currentUserService.isAuthenticated$;
-  readonly vm$: Observable<AuthorsVm> = combineLatest([this.route.data, this.route.paramMap]).pipe(
-    map(([data, params]) => ({
+  readonly vm$: Observable<AuthorsVm> = combineLatest([
+    this.route.data,
+    childRouteParam(this.route, this.router, 'letter'),
+  ]).pipe(
+    map(([data, letter]) => ({
       items: (data['items'] ?? '') as '' | 'graphics' | 'music',
       basePath: (data['basePath'] ?? '/authors') as string,
       titleKey: (data['titleKey'] ?? 'author-browser.title.all') as string,
-      letter: params.get('letter') ?? '',
-      dashboard: data['dashboard'] === true,
+      letter: letter ?? '',
+      // the dashboard is the section root; picking a letter switches to the browser
+      dashboard: data['dashboard'] === true && letter === null,
     })),
   );
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly currentUserService: CurrentUserService,
   ) {}
 

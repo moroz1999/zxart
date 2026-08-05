@@ -14,6 +14,18 @@ import {authGuard} from './shared/guards/auth.guard';
  * Every page is loaded lazily via `loadComponent`/`loadChildren` so each page
  * (and its heavy dependencies) ships in its own chunk instead of the initial
  * bundle. Do not statically import page components here.
+ *
+ * A page whose trailing segment is optional (an in-page tab, a browsed letter
+ * or year) declares that segment as a childless child route instead of a second
+ * top-level path. Two sibling paths are two route configs, and the router only
+ * keeps a component alive across a navigation when the config stays the same —
+ * a sibling path would tear the page down and reload all of its data on the
+ * first click. The page reads such a parameter with `childRouteParam`.
+ * Consequences of the nesting: the `:param` child swallows any single trailing
+ * segment, so action routes of the same entity (`edit`, `join`, …) must be
+ * declared before their entity route; and route data read from the deepest
+ * route (`metadataSource`, `inPageTab`, `titleKey`) has to be repeated on the
+ * child.
  */
 const ROUTED_CHILDREN: Routes = [
   {
@@ -156,7 +168,6 @@ const ROUTED_CHILDREN: Routes = [
     loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
     data: {batchUpload: true, titleKey: 'prods-list.batch-upload'},
   },
-  {path: 'author/:id', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'author/:id/edit',
     loadComponent: () => import('./pages/author-edit/author-edit-page.component').then(m => m.AuthorEditPageComponent),
@@ -182,7 +193,12 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'author/:id/:tab', loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
+  {
+    path: 'author/:id',
+    loadComponent: () => import('./pages/author/author-page.component').then(m => m.AuthorPageComponent),
+    data: {metadataSource: 'entity'},
+    children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
+  },
   {
     path: 'author-alias/:id/edit',
     loadComponent: () => import('./pages/author-alias-edit/author-alias-edit-page.component').then(m => m.AuthorAliasEditPageComponent),
@@ -205,7 +221,6 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.author-merge', types: 'author,authorAlias'}],
     },
   },
-  {path: 'group/:id', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'group/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
@@ -231,7 +246,12 @@ const ROUTED_CHILDREN: Routes = [
       ],
     },
   },
-  {path: 'group/:id/:tab', loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
+  {
+    path: 'group/:id',
+    loadComponent: () => import('./pages/group/group-page.component').then(m => m.GroupPageComponent),
+    data: {metadataSource: 'entity'},
+    children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
+  },
   {
     path: 'group-alias/:id/edit',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
@@ -254,7 +274,6 @@ const ROUTED_CHILDREN: Routes = [
       pickers: [{field: 'joinAndDelete', labelKey: 'join-form.group-merge', types: 'group,groupAlias'}],
     },
   },
-  {path: 'party/:id', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'party/:id/edit',
     loadComponent: () => import('./pages/party-edit/party-edit-page.component').then(m => m.PartyEditPageComponent),
@@ -266,8 +285,12 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.edit-party',
     },
   },
-  {path: 'party/:id/:tab', loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
-  {path: 'prod/:id', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity'}},
+  {
+    path: 'party/:id',
+    loadComponent: () => import('./pages/party/party-page.component').then(m => m.PartyPageComponent),
+    data: {metadataSource: 'entity'},
+    children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
+  },
   {
     path: 'prod/:id/edit',
     loadComponent: () => import('./pages/prod-edit/prod-edit-page.component').then(m => m.ProdEditPageComponent),
@@ -318,7 +341,12 @@ const ROUTED_CHILDREN: Routes = [
       formTitleKey: 'form-page-title.split-prod',
     },
   },
-  {path: 'prod/:id/:tab', loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent), data: {metadataSource: 'entity', inPageTab: true}},
+  {
+    path: 'prod/:id',
+    loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent),
+    data: {metadataSource: 'entity'},
+    children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
+  },
   {path: 'release/:id', loadComponent: () => import('./pages/release/release-page.component').then(m => m.ReleasePageComponent), data: {metadataSource: 'entity'}},
   {
     path: 'release/:id/edit',
@@ -394,8 +422,12 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'prods/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'software', tagBasePath: '/prods/tags', titleKey: 'menu.soft.tags'}},
   {path: 'prods/tags/:id', loadComponent: () => import('./pages/prod-tag/prod-tag-page.component').then(m => m.ProdTagPageComponent), data: {section: 'software', basePath: '/prods/tags', titleKey: 'menu.soft.tags'}},
   {path: 'prods', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'prods', titleKey: 'menu.software'}},
-  {path: 'groups', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups', titleKey: 'menu.groups'}},
-  {path: 'groups/:letter', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'groups', titleKey: 'menu.groups'}},
+  {
+    path: 'groups',
+    loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent),
+    data: {kind: 'groups', titleKey: 'menu.groups'},
+    children: [{path: ':letter', children: [], data: {titleKey: 'menu.groups'}}],
+  },
   {path: 'pictures/search', loadComponent: () => import('./pages/picture-search/picture-search-page.component').then(m => m.PictureSearchPageComponent), data: {titleKey: 'menu.gfx.search'}},
   {path: 'pictures/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'graphics', tagBasePath: '/pictures/tags', titleKey: 'menu.gfx.tags'}},
   {path: 'pictures/tags/:id', loadComponent: () => import('./pages/picture-tag/picture-tag-page.component').then(m => m.PictureTagPageComponent), data: {section: 'graphics', basePath: '/pictures/tags', titleKey: 'menu.gfx.tags'}},
@@ -406,14 +438,30 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'music/tags/:id', loadComponent: () => import('./pages/music-tag/music-tag-page.component').then(m => m.MusicTagPageComponent), data: {section: 'music', basePath: '/music/tags', titleKey: 'menu.music-sub.tags'}},
   {path: 'music/top', loadComponent: () => import('./pages/top-music/top-music-page.component').then(m => m.TopMusicPageComponent), data: {titleKey: 'menu.music-sub.top'}},
   {path: 'music', loadComponent: () => import('./pages/collection/collection-page.component').then(m => m.CollectionPageComponent), data: {kind: 'music', titleKey: 'menu.music'}},
-  {path: 'authors', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: '', basePath: '/authors', titleKey: 'author-browser.title.all'}},
-  {path: 'authors/:letter', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: '', basePath: '/authors', titleKey: 'author-browser.title.all'}},
-  {path: 'artists', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: 'graphics', basePath: '/artists', titleKey: 'author-browser.title.graphics', dashboard: true}},
-  {path: 'artists/:letter', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: 'graphics', basePath: '/artists', titleKey: 'author-browser.title.graphics'}},
-  {path: 'musicians', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: 'music', basePath: '/musicians', titleKey: 'author-browser.title.music', dashboard: true}},
-  {path: 'musicians/:letter', loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent), data: {items: 'music', basePath: '/musicians', titleKey: 'author-browser.title.music'}},
-  {path: 'parties', loadComponent: () => import('./pages/parties/parties-page.component').then(m => m.PartiesPageComponent), data: {titleKey: 'menu.parties'}},
-  {path: 'parties/:year', loadComponent: () => import('./pages/parties/parties-page.component').then(m => m.PartiesPageComponent), data: {titleKey: 'menu.parties'}},
+  {
+    path: 'authors',
+    loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent),
+    data: {items: '', basePath: '/authors', titleKey: 'author-browser.title.all'},
+    children: [{path: ':letter', children: [], data: {titleKey: 'author-browser.title.all'}}],
+  },
+  {
+    path: 'artists',
+    loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent),
+    data: {items: 'graphics', basePath: '/artists', titleKey: 'author-browser.title.graphics', dashboard: true},
+    children: [{path: ':letter', children: [], data: {titleKey: 'author-browser.title.graphics'}}],
+  },
+  {
+    path: 'musicians',
+    loadComponent: () => import('./pages/authors/authors-page.component').then(m => m.AuthorsPageComponent),
+    data: {items: 'music', basePath: '/musicians', titleKey: 'author-browser.title.music', dashboard: true},
+    children: [{path: ':letter', children: [], data: {titleKey: 'author-browser.title.music'}}],
+  },
+  {
+    path: 'parties',
+    loadComponent: () => import('./pages/parties/parties-page.component').then(m => m.PartiesPageComponent),
+    data: {titleKey: 'menu.parties'},
+    children: [{path: ':year', children: [], data: {titleKey: 'menu.parties'}}],
+  },
   {path: 'stats', loadChildren: () => import('./pages/stats/stats.routes').then(m => m.STATS_ROUTES), data: {titleKey: 'menu.about-sub.stats'}},
   {
     path: 'geo',

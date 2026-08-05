@@ -104,10 +104,11 @@ active index from the route and feeds it back through `initialActiveIndex`. Tab
 hrefs must therefore be real routed URLs (`/author/:id/:tab`). Tabs without an
 `href` stay local and only swap the rendered template.
 
-A route whose last segment is such a tab must declare `data: {inPageTab: true}`.
-`SpaRootComponent` strips that segment when it derives the view key it uses to
-decide whether a navigation scrolls back to the top, so switching a tab keeps
-the reader where they are.
+The tab segment is a child route of the page (see [Optional Trailing Route
+Segments](#optional-trailing-route-segments)) and declares
+`data: {inPageTab: true}`. `SpaRootComponent` strips that segment when it derives
+the view key it uses to decide whether a navigation scrolls back to the top, so
+switching a tab keeps the reader where they are.
 
 #### Scroll on navigation
 
@@ -208,6 +209,39 @@ Observable that emits when ready.
 Angular reuses a routed component when only a route parameter changes. A child
 detail component that receives the parameter through an input must reload its
 data when that input changes; initialization-only loading is not sufficient.
+
+#### Optional Trailing Route Segments
+
+A page whose trailing segment is optional — an in-page tab (`/prod/:id/:tab`), a
+browsed letter (`/groups/:letter`) or a year (`/parties/:year`) — declares that
+segment as a **childless child route**, never as a second top-level path:
+
+```typescript
+{
+  path: 'prod/:id',
+  loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent),
+  data: {metadataSource: 'entity'},
+  children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
+}
+```
+
+Two sibling paths are two route configs, and the router keeps a component alive
+only while the config stays the same. With siblings, the first click on a tab
+destroys the page and reloads everything it had already fetched, and only the
+clicks after that are cheap.
+
+The page component stays on the parent route, so the parameter is not in its own
+`paramMap`. It reads the value with `childRouteParam(route, router, name)`
+(`shared/utils/child-route-param.ts`), which re-reads `route.firstChild` after
+every navigation and yields `null` while no child route is active.
+
+Two consequences of the nesting:
+
+- The `:param` child swallows any single trailing segment, so action routes of
+  the same entity (`prod/:id/edit`, `prod/:id/join`, …) must be declared **before**
+  the entity route.
+- Route data taken from the deepest route — `metadataSource`, `inPageTab`,
+  `titleKey`, `noIndex` — must be repeated on the child.
 
 ### LocalStorage
 

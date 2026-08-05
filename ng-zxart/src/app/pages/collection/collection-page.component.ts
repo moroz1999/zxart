@@ -1,8 +1,9 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
+import {childRouteParam} from '../../shared/utils/child-route-param';
 import {ZxProdsCategoryComponent} from '../../entities/zx-prods-category/zx-prods-category.component';
 import {ZxGroupBrowserComponent} from '../../features/group-browser/components/zx-group-browser/zx-group-browser.component';
 import {PicturesHomeComponent} from '../../features/catalogue-home/components/pictures-home/pictures-home.component';
@@ -53,10 +54,10 @@ export class CollectionPageComponent {
   batchUploadUrl = '/prods/batch-upload';
   /** Browsed software category; empty at the catalogue root. */
   categoryTitle = '';
-  readonly vm$: Observable<CollectionVm> = this.route.paramMap.pipe(
-    map(params => ({
+  readonly vm$: Observable<CollectionVm> = childRouteParam(this.route, this.router, 'letter').pipe(
+    map(letter => ({
       kind: this.kind,
-      letter: params.get('letter') ?? '',
+      letter: letter ?? '',
       titleKey: this.titleKey,
     })),
   );
@@ -71,6 +72,7 @@ export class CollectionPageComponent {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly currentUserService: CurrentUserService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translate: TranslateService,
