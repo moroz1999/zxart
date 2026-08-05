@@ -1,42 +1,77 @@
-<ng-container *ngIf="details$ | async as details; else loading">
-  <article class="press-details">
-    <header class="press-details__header">
-      <zx-press-editing-controls [elementId]="details.id"></zx-press-editing-controls>
-    </header>
+<ng-container *ngIf="state$ | async as state">
+  <zx-press-details-skeleton *ngIf="state.loading"></zx-press-details-skeleton>
 
-    <div *ngIf="details.tags.length" class="press-details__tags">
-      <span class="press-details__tags-label">{{ 'press-details.tags' | translate }}:</span>
-      <ng-container *ngFor="let tag of details.tags; let last = last">
-        <a [href]="tag.url" class="press-details__tag">{{ tag.title }}</a><span *ngIf="!last">, </span>
-      </ng-container>
-    </div>
+  <div *ngIf="state.error" appText="body" tone="danger">{{ 'press-details.error-load' | translate }}</div>
 
-    <p *ngIf="details.externalLink" class="press-details__source">
-      <a [href]="details.externalLink" target="_blank" rel="noopener">{{ 'press-details.source' | translate }}</a>
-    </p>
+  <zx-sidebar-layout *ngIf="state.article as vm">
+    <zx-press-issue-nav
+      *ngIf="vm.details.publication"
+      zxSidebar
+      [publication]="vm.details.publication"
+      [currentArticleId]="vm.details.id"
+    ></zx-press-issue-nav>
 
-    <section *ngFor="let group of mentionGroups(details); trackBy: trackByGroup" class="press-details__mentions">
-      <h3 class="press-details__mentions-title">{{ group.labelKey | translate }}</h3>
-      <ul class="press-details__mentions-list">
-        <li *ngFor="let item of group.items; trackBy: trackByMention">
-          <a [routerLink]="item.url">{{ item.title }}</a>
-        </li>
-      </ul>
-    </section>
+    <zx-stack spacing="xl">
+      <zx-stack spacing="sm">
+        <zx-meta-row *ngIf="vm.externalLinks.length" [label]="'press-details.source' | translate">
+          <zx-ext-links [links]="vm.externalLinks"></zx-ext-links>
+        </zx-meta-row>
 
-    <div *ngIf="details.introduction" class="press-details__introduction" [innerHTML]="details.introduction"></div>
+        <zx-meta-row *ngIf="vm.details.tags.length" [label]="'press-details.tags' | translate">
+          <zx-chips [items]="vm.details.tags"></zx-chips>
+        </zx-meta-row>
+      </zx-stack>
 
-    <pre *ngIf="details.content" class="press-details__content">{{ details.content }}</pre>
+      <zx-panel
+        *ngIf="vm.mentionGroups.length"
+        variant="flat"
+        radius="lg"
+        [title]="'press-details.mentions' | translate"
+        titleLevel="h2"
+      >
+        <zx-stack spacing="lg">
+          <zx-meta-row
+            *ngFor="let group of vm.mentionGroups; trackBy: trackByGroup"
+            [label]="group.labelKey | translate"
+          >
+            <zx-chips [items]="group.items"></zx-chips>
+          </zx-meta-row>
+        </zx-stack>
+      </zx-panel>
 
-    <p *ngIf="details.publication" class="press-details__publication">
-      {{ 'press-details.morefromsame' | translate }}:
-      <a [routerLink]="details.publication.url">{{ details.publication.title }}</a>
-    </p>
-  </article>
+      <zx-panel *ngIf="vm.details.introduction" variant="flat" radius="lg">
+        <zx-meta-row [label]="'press-details.introduction' | translate">
+          <div appText="body" tone="primary" [innerHTML]="vm.details.introduction"></div>
+        </zx-meta-row>
+      </zx-panel>
+
+      <zx-preformatted
+        *ngIf="vm.details.content"
+        [content]="vm.details.content"
+        [html]="true"
+      ></zx-preformatted>
+
+      <zx-grid *ngIf="vm.previous || vm.next" desktopColumns="2" mobileColumns="1" gap="md">
+        <zx-callout
+          *ngIf="vm.previous"
+          accent="none"
+          surface="raised"
+          [bordered]="true"
+          [href]="vm.previous.url"
+          [label]="'press-details.previous-article' | translate"
+        ><span appText="body" tone="strong">{{ vm.previous.title }}</span></zx-callout>
+
+        <zx-callout
+          *ngIf="vm.next"
+          accent="none"
+          surface="raised"
+          [bordered]="true"
+          [href]="vm.next.url"
+          [label]="'press-details.next-article' | translate"
+        ><span appText="body" tone="strong">{{ vm.next.title }}</span></zx-callout>
+      </zx-grid>
+
+      <zx-comments-list-view [elementId]="vm.details.id"></zx-comments-list-view>
+    </zx-stack>
+  </zx-sidebar-layout>
 </ng-container>
-
-<ng-template #loading>
-  <div class="press-details__loading">
-    <zx-spinner size="lg"></zx-spinner>
-  </div>
-</ng-template>

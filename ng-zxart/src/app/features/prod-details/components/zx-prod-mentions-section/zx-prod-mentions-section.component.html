@@ -3,15 +3,16 @@
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
-  <ng-container *ngIf="loading || (loaded && mentions.length > 0)">
-    <h2 appHeading="headline">{{ 'prod-details.mentions' | translate }}</h2>
+  <zx-article-preview-skeleton
+    *ngIf="loading"
+    [count]="3"
+    [withImage]="true"
+    [withReadLink]="true"
+  ></zx-article-preview-skeleton>
 
-    <zx-comment-skeleton *ngIf="loading" [count]="2"></zx-comment-skeleton>
-
-    <zx-press-mentions-list
-      *ngIf="loaded && mentions.length > 0"
-      [articles]="mentions"
-      [readLinkLabel]="'prod-details.readArticle' | translate">
-    </zx-press-mentions-list>
-  </ng-container>
+  <zx-press-mentions-list
+    *ngIf="loaded && mentions.length > 0"
+    [articles]="mentions"
+    [readLinkLabel]="'prod-details.readArticle' | translate">
+  </zx-press-mentions-list>
 </zx-stack>

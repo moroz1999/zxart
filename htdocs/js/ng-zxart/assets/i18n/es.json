@@ -309,8 +309,16 @@
     "pictures": "Gráficos",
     "tunes": "Música",
     "parties": "Fiestas",
-    "morefromsame": "Más de la misma publicación",
-    "ai": "IA"
+    "ai": "IA",
+    "introduction": "En breve",
+    "mentions": "Menciones",
+    "issue-contents": "En este número",
+    "articles-count": "{{count}} artículos",
+    "previous-article": "Artículo anterior",
+    "next-article": "Artículo siguiente",
+    "error-load": "No se pudo cargar el artículo",
+    "all-articles": "Los {{count}} artículos",
+    "actions": "Acciones del artículo"
   },
   "feedback": {
     "name": "Nombre",
@@ -1424,8 +1432,6 @@
     "addpressarticle": "Add article",
     "screenshots": "Capturas de pantalla",
     "releases": "Lanzamientos",
-    "articles": "Artículos de publicación",
-    "mentions": "Menciones en artículos",
     "readArticle": "Leer artículo",
     "compilationItems": "Software de esta compilación",
     "seriesProds": "Software de esta serie",
@@ -1454,9 +1460,10 @@
         "description": "Descripción",
         "instructions": "Instrucciones"
       },
+      "articles": "Artículos",
       "links": {
         "title": "Relacionados",
-        "articles": "Artículos",
+        "mentions": "Menciones",
         "series": "Serie",
         "compilations": "Compilaciones"
       },

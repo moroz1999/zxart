@@ -309,8 +309,16 @@
     "pictures": "Graphics",
     "tunes": "Music",
     "parties": "Parties",
-    "morefromsame": "More from the same publication",
-    "ai": "AI"
+    "ai": "AI",
+    "introduction": "In brief",
+    "mentions": "Mentions",
+    "issue-contents": "In this issue",
+    "articles-count": "{{count}} articles",
+    "previous-article": "Previous article",
+    "next-article": "Next article",
+    "error-load": "Could not load the article",
+    "all-articles": "All {{count}} articles",
+    "actions": "Article actions"
   },
   "feedback": {
     "name": "Name",
@@ -1425,8 +1433,6 @@
     "addpressarticle": "Add article",
     "screenshots": "Screenshots",
     "releases": "Releases",
-    "articles": "Publication articles",
-    "mentions": "Mentions in articles",
     "readArticle": "Read article",
     "compilationItems": "Software from this compilation",
     "seriesProds": "Software from this series",
@@ -1455,9 +1461,10 @@
         "description": "Description",
         "instructions": "Instructions"
       },
+      "articles": "Articles",
       "links": {
         "title": "Related",
-        "articles": "Articles",
+        "mentions": "Mentions",
         "series": "Series",
         "compilations": "Compilations"
       },

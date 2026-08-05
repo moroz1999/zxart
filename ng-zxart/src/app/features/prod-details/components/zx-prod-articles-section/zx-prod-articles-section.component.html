@@ -3,19 +3,15 @@
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
-  <ng-container *ngIf="loading || (loaded && articles.length > 0)">
-    <h2 appHeading="headline">{{ 'prod-details.articles' | translate }}</h2>
+  <zx-article-preview-skeleton *ngIf="loading" [count]="3"></zx-article-preview-skeleton>
 
-    <zx-comment-skeleton *ngIf="loading" [count]="2"></zx-comment-skeleton>
-
-    <zx-stack *ngIf="loaded && articles.length > 0" spacing="lg">
-      <zx-article-preview
-        *ngFor="let article of articles; trackBy: trackById"
-        [title]="article.title"
-        [url]="article.url"
-        [snippetHtml]="article.introduction || null"
-        [authors]="article.authors"
-      ></zx-article-preview>
-    </zx-stack>
-  </ng-container>
+  <zx-stack *ngIf="loaded && articles.length > 0" spacing="lg">
+    <zx-article-preview
+      *ngFor="let article of articles; trackBy: trackById"
+      [title]="article.title"
+      [url]="article.url"
+      [snippetHtml]="article.introduction || null"
+      [authors]="article.authors"
+    ></zx-article-preview>
+  </zx-stack>
 </zx-stack>

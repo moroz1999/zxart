@@ -9,6 +9,7 @@ use LanguagesManager;
 use PHPUnit\Framework\TestCase;
 use structureElement;
 use structureManager;
+use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormCreateService;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Forms\FormValidationException;
@@ -165,6 +166,55 @@ final class FormCreateServiceTest extends TestCase
 
         $this->expectException(FormValidationException::class);
         $service->submit(FormCreateType::Author, null, $controller, ['title' => '']);
+    }
+
+    public function testPressArticleDraftUsesItsProductionAsParent(): void
+    {
+        $structureManager = $this->createMock(structureManager::class);
+        $languagesManager = $this->createMock(LanguagesManager::class);
+        $draft = $this->createStub(structureElement::class);
+        $service = new FormCreateService($structureManager, $languagesManager);
+
+        $languagesManager->expects($this->never())->method('getCurrentLanguageId');
+        $structureManager->expects($this->once())
+            ->method('createElement')
+            ->with(StructureType::PressArticle->value, 'showPublicForm', 555)
+            ->willReturn($draft);
+
+        self::assertSame($draft, $service->createDraft(FormCreateType::PressArticle, null, 555));
+    }
+
+    public function testPressArticleSubmitRunsTheActionThatAlsoSavesIt(): void
+    {
+        $structureManager = $this->createMock(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $draft = $this->createMock(structureElement::class);
+        $controller = $this->createStub(controller::class);
+        $service = new FormCreateService($structureManager, $languagesManager);
+
+        $structureManager->method('createElement')->willReturn($draft);
+        $draft->method('getIdentifier')->willReturn('prod/type:pressArticle/action:showPublicForm');
+        $draft->expects($this->once())
+            ->method('executeAction')
+            ->with('publicReceive')
+            ->willReturn(true);
+        $draft->method('hasActualStructureInfo')->willReturn(true);
+
+        self::assertSame(
+            $draft,
+            $service->submit(FormCreateType::PressArticle, null, $controller, ['title' => 'Review'], 555),
+        );
+    }
+
+    public function testPressArticleNeedsItsProduction(): void
+    {
+        $service = new FormCreateService(
+            $this->createStub(structureManager::class),
+            $this->createStub(LanguagesManager::class),
+        );
+
+        $this->expectException(FormCreateException::class);
+        $service->createDraft(FormCreateType::PressArticle, null);
     }
 
     public function testPartyDraftUsesRequestedYearAsParent(): void

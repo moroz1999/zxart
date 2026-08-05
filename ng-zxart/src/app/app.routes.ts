@@ -126,6 +126,17 @@ const ROUTED_CHILDREN: Routes = [
     },
   },
   {
+    path: 'prod/:id/articles/add',
+    loadComponent: () => import('./pages/press-edit/press-edit-page.component').then(m => m.PressEditPageComponent),
+    canActivate: [editPrivilegeGuard],
+    data: {
+      create: true,
+      privilege: 'pressArticle.publicReceive',
+      entityPath: 'prod',
+      titleKey: 'prod-details.addpressarticle',
+    },
+  },
+  {
     path: 'groups/add',
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     data: {create: true, titleKey: 'group-browser.add-group'},

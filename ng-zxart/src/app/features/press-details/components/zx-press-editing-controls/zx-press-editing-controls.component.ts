@@ -23,13 +23,7 @@ const PRESS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
   selector: 'zx-press-editing-controls',
   standalone: true,
   imports: [ZxEditingControlsComponent, TranslateModule],
-  template: `
-    <zx-editing-controls
-      [elementId]="elementId"
-      [actions]="editActions"
-      [buildActionUrl]="buildActionUrl"
-    ></zx-editing-controls>
-  `,
+  templateUrl: './zx-press-editing-controls.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPressEditingControlsComponent {

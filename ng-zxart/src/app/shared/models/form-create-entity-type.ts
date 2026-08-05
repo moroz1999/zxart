@@ -9,4 +9,5 @@ export type FormCreateEntityType =
   | 'prodBatch'
   | 'pictureBatch'
   | 'musicBatch'
-  | 'release';
+  | 'release'
+  | 'pressArticle';

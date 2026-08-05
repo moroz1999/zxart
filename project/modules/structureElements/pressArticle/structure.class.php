@@ -188,6 +188,14 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         return $searchContent;
     }
 
+    /** The article's own title, without the publication prefix carried by the page heading. */
+    public function getShortTitle(): string
+    {
+        $h1 = (string)$this->h1;
+
+        return $h1 !== '' ? $h1 : (string)$this->title;
+    }
+
     public function getH1(): string
     {
         $parentElement = $this->getParent();

@@ -1,0 +1,44 @@
+<zx-sidebar-layout>
+  <zx-stack zxSidebar spacing="md">
+    <zx-panel variant="flat" radius="lg" padding="sm">
+      <zx-stack spacing="sm">
+        <zx-skeleton-bone class="press-details-skeleton__cover"></zx-skeleton-bone>
+        <zx-skeleton-bone class="press-details-skeleton__issue-title"></zx-skeleton-bone>
+        <zx-skeleton-bone class="press-details-skeleton__meta-line"></zx-skeleton-bone>
+      </zx-stack>
+    </zx-panel>
+
+    <zx-panel variant="flat" radius="lg" padding="sm">
+      <zx-stack spacing="xs">
+        @for (line of tocLines; track line) {
+          <zx-skeleton-bone class="press-details-skeleton__toc-line"></zx-skeleton-bone>
+        }
+      </zx-stack>
+    </zx-panel>
+  </zx-stack>
+
+  <zx-stack spacing="xl">
+    <zx-stack spacing="sm">
+      <zx-skeleton-bone class="press-details-skeleton__meta-line"></zx-skeleton-bone>
+      <zx-skeleton-bone class="press-details-skeleton__tags-line"></zx-skeleton-bone>
+    </zx-stack>
+
+    <zx-panel variant="flat" radius="lg">
+      <zx-stack spacing="sm">
+        @for (row of mentionRows; track row) {
+          <zx-skeleton-bone class="press-details-skeleton__mention-row"></zx-skeleton-bone>
+        }
+      </zx-stack>
+    </zx-panel>
+
+    <zx-panel variant="flat" radius="lg">
+      <zx-skeleton-bone class="press-details-skeleton__intro"></zx-skeleton-bone>
+    </zx-panel>
+
+    <zx-stack spacing="sm">
+      @for (line of contentLines; track line) {
+        <zx-skeleton-bone class="press-details-skeleton__content-line"></zx-skeleton-bone>
+      }
+    </zx-stack>
+  </zx-stack>
+</zx-sidebar-layout>

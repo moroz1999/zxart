@@ -13,6 +13,7 @@ enum FormCreateType: string
     case PictureBatch = 'pictureBatch';
     case MusicBatch = 'musicBatch';
     case Release = 'release';
+    case PressArticle = 'pressArticle';
 
     /**
      * Batch upload forms create several works at once from the uploaded files;
@@ -24,6 +25,20 @@ enum FormCreateType: string
         return match ($this) {
             self::ProdBatch, self::PictureBatch, self::MusicBatch => true,
             default => false,
+        };
+    }
+
+    /**
+     * The element action that receives the submitted values. A press article is
+     * created and edited by the same action, so its privileges are held under
+     * that single name.
+     */
+    public function getSubmitAction(): string
+    {
+        return match ($this) {
+            self::ProdBatch, self::PictureBatch, self::MusicBatch => 'batchUpload',
+            self::PressArticle => 'publicReceive',
+            default => 'publicAdd',
         };
     }
 }

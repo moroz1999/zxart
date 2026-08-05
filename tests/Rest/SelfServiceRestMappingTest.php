@@ -13,9 +13,11 @@ use ZxArt\Playlists\Dto\PlaylistDto;
 use ZxArt\Playlists\Rest\PlaylistRestDto;
 use ZxArt\Press\Dto\PressDetailsDto;
 use ZxArt\Press\Dto\PressMentionDto;
+use ZxArt\Press\Dto\PressPublicationDto;
 use ZxArt\Press\Dto\PressTagDto;
 use ZxArt\Press\Rest\PressDetailsRestDto;
 use ZxArt\Press\Rest\PressMentionRestDto;
+use ZxArt\Press\Rest\PressPublicationRestDto;
 use ZxArt\Press\Rest\PressTagRestDto;
 use ZxArt\Registration\Dto\RegistrationResultDto;
 use ZxArt\Registration\Rest\RegistrationResultRestDto;
@@ -75,8 +77,10 @@ final class SelfServiceRestMappingTest extends TestCase
     public function testPressCollectionsMapToRestDtos(): void
     {
         $mention = new PressMentionDto(1, 'Author', '/author/1');
+        $publication = new PressPublicationDto(3, 'Magazine #1', '/prod/3', 1995, '/cover.png', [$mention]);
         $source = new PressDetailsDto(
             2,
+            'Magazine #1: Article',
             'Article',
             '/press/2',
             null,
@@ -90,7 +94,7 @@ final class SelfServiceRestMappingTest extends TestCase
             [],
             [],
             [],
-            $mention,
+            $publication,
         );
 
         $result = $this->mapper->map($source, PressDetailsRestDto::class);
@@ -98,6 +102,7 @@ final class SelfServiceRestMappingTest extends TestCase
         self::assertInstanceOf(PressDetailsRestDto::class, $result);
         self::assertInstanceOf(PressTagRestDto::class, $result->tags[0]);
         self::assertInstanceOf(PressMentionRestDto::class, $result->authors[0]);
-        self::assertInstanceOf(PressMentionRestDto::class, $result->publication);
+        self::assertInstanceOf(PressPublicationRestDto::class, $result->publication);
+        self::assertInstanceOf(PressMentionRestDto::class, $result->publication->articles[0]);
     }
 }

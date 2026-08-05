@@ -19,6 +19,12 @@ const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
     labelKey: 'prod-details.addrelease',
     color: 'secondary',
   },
+  {
+    action: 'pressArticle.publicReceive',
+    privilege: 'pressArticle.publicReceive',
+    labelKey: 'prod-details.addpressarticle',
+    color: 'secondary',
+  },
 ];
 
 @Component({
@@ -48,6 +54,8 @@ export class ZxProdEditingControlsComponent {
     }
   };
 
-  readonly buildAddActionUrl = (_action: string, elementId: number): string =>
-    `/prod/${elementId}/releases/add`;
+  readonly buildAddActionUrl = (action: string, elementId: number): string =>
+    action === 'pressArticle.publicReceive'
+      ? `/prod/${elementId}/articles/add`
+      : `/prod/${elementId}/releases/add`;
 }

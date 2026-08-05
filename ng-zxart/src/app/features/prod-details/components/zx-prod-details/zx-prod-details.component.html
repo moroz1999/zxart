@@ -114,20 +114,26 @@
       </zx-tab>
 
       <zx-tab
-        *ngIf="core.tabs.hasArticles || core.tabs.hasSeriesProds || core.tabs.isInSeries || core.tabs.hasCompilations"
+        *ngIf="core.tabs.hasArticles"
+        [label]="'prod-details.tab.articles' | translate"
+        [href]="getMainTabHref('articles')">
+        <ng-template zxTabContent>
+          <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
+        </ng-template>
+      </zx-tab>
+
+      <zx-tab
+        *ngIf="core.tabs.hasMentions || core.tabs.hasSeriesProds || core.tabs.isInSeries || core.tabs.hasCompilations"
         [label]="'prod-details.tab.links.title' | translate"
         [href]="getMainTabHref('links')">
         <ng-template zxTabContent>
           <zx-tabs [initialActiveIndex]="getLinksTabIndex(core)">
             <zx-tab
-              *ngIf="core.tabs.hasArticles"
-              [label]="'prod-details.tab.links.articles' | translate"
-              [href]="getLinksTabHref('articles')">
+              *ngIf="core.tabs.hasMentions"
+              [label]="'prod-details.tab.links.mentions' | translate"
+              [href]="getLinksTabHref('mentions')">
               <ng-template zxTabContent>
-                <zx-stack spacing="xl">
-                  <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
-                  <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
-                </zx-stack>
+                <zx-prod-mentions-section [elementId]="core.elementId"></zx-prod-mentions-section>
               </ng-template>
             </zx-tab>
             <zx-tab

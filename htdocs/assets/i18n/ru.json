@@ -309,8 +309,16 @@
     "pictures": "Графика",
     "tunes": "Музыка",
     "parties": "Пати",
-    "morefromsame": "Ещё из этого издания",
-    "ai": "ИИ"
+    "ai": "ИИ",
+    "introduction": "Кратко",
+    "mentions": "Упоминания",
+    "issue-contents": "Статьи номера",
+    "articles-count": "статей: {{count}}",
+    "previous-article": "Предыдущая статья",
+    "next-article": "Следующая статья",
+    "error-load": "Не удалось загрузить статью",
+    "all-articles": "Все статьи номера ({{count}})",
+    "actions": "Действия со статьёй"
   },
   "feedback": {
     "name": "Имя",
@@ -1425,8 +1433,6 @@
     "addpressarticle": "Добавить статью",
     "screenshots": "Скриншоты",
     "releases": "Релизы",
-    "articles": "Статьи издания",
-    "mentions": "Упоминания в статьях",
     "readArticle": "Читать статью",
     "compilationItems": "Программы из этого сборника",
     "seriesProds": "Программы из этой серии",
@@ -1455,9 +1461,10 @@
         "description": "Описание",
         "instructions": "Инструкции"
       },
+      "articles": "Статьи",
       "links": {
         "title": "Связи",
-        "articles": "Статьи",
+        "mentions": "Упоминания",
         "series": "Серия",
         "compilations": "Сборники"
       },

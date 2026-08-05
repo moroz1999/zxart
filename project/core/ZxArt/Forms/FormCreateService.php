@@ -46,7 +46,7 @@ final readonly class FormCreateService
         $element = $this->createElement($formType, $year, $parentId);
         return $this->submitElement(
             $element,
-            $this->getSubmitAction($formType),
+            $formType->getSubmitAction(),
             $controller,
             $fields,
             !$formType->isBatchUpload(),
@@ -106,11 +106,12 @@ final readonly class FormCreateService
             FormCreateType::PictureBatch => StructureType::PicturesUploadForm,
             FormCreateType::MusicBatch => StructureType::MusicUploadForm,
             FormCreateType::Release => StructureType::ZxRelease,
+            FormCreateType::PressArticle => StructureType::PressArticle,
         };
         // A batch upload started from an author, group, party or category attaches
         // its works to that element, so the form is created under it. Pictures and
-        // music are only ever uploaded from such a page, and a release belongs to
-        // its production, so those have no parentless fallback.
+        // music are only ever uploaded from such a page, and a release or a press
+        // article belongs to its production, so those have no parentless fallback.
         $parentId ??= match ($formType) {
             FormCreateType::Author => $this->getCatalogue(StructureType::AuthorsCatalogue)->getId(),
             FormCreateType::Group => $this->getCatalogue(StructureType::GroupsCatalogue)->getId(),
@@ -119,6 +120,7 @@ final readonly class FormCreateService
             FormCreateType::PictureBatch,
             FormCreateType::MusicBatch => throw new FormCreateException('A batch upload needs its element', 400),
             FormCreateType::Release => throw new FormCreateException('A release needs its production', 400),
+            FormCreateType::PressArticle => throw new FormCreateException('A press article needs its production', 400),
         };
 
         return $this->createTransientElement($structureType, $this->getFormAction($formType), $parentId);
@@ -141,11 +143,6 @@ final readonly class FormCreateService
     private function getFormAction(FormCreateType $formType): string
     {
         return $formType->isBatchUpload() ? 'batchUploadForm' : 'showPublicForm';
-    }
-
-    private function getSubmitAction(FormCreateType $formType): string
-    {
-        return $formType->isBatchUpload() ? 'batchUpload' : 'publicAdd';
     }
 
     /**

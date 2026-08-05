@@ -1,0 +1,157 @@
+openapi: 3.0.0
+paths:
+  /press-details/:
+    get:
+      summary: Full read view of a press article (Angular press page)
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Press article details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PressDetailsPayload'
+        '400':
+          description: Bad request
+        '404':
+          description: Press article not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    PressMention:
+      type: object
+      required:
+        - id
+        - title
+        - url
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+
+    PressTag:
+      type: object
+      required:
+        - title
+        - url
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    PressPublication:
+      type: object
+      description: The issue the article was published in, with its table of contents.
+      required:
+        - id
+        - title
+        - url
+        - year
+        - imageUrl
+        - articles
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        year:
+          type: integer
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        articles:
+          type: array
+          description: Every article of the issue, in publishing order.
+          items:
+            $ref: '#/components/schemas/PressMention'
+
+    PressDetailsPayload:
+      type: object
+      required:
+        - id
+        - title
+        - shortTitle
+        - url
+        - externalLink
+        - introduction
+        - content
+        - tags
+        - authors
+        - people
+        - groups
+        - software
+        - pictures
+        - tunes
+        - parties
+        - publication
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: Page heading title, prefixed with the publication name.
+        shortTitle:
+          type: string
+          description: The article's own title, without the publication prefix.
+        url:
+          type: string
+        externalLink:
+          type: string
+          nullable: true
+        introduction:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressTag'
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        software:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        pictures:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        tunes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/PressMention'
+        publication:
+          oneOf:
+            - $ref: '#/components/schemas/PressPublication'
+            - type: 'null'
+          nullable: true

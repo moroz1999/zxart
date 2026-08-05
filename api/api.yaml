@@ -73,6 +73,8 @@ paths:
     $ref: 'prod-articles.yaml#/paths/~1prod-articles~1'
   /prod-mentions/:
     $ref: 'prod-articles.yaml#/paths/~1prod-mentions~1'
+  /press-details/:
+    $ref: 'press-details.yaml#/paths/~1press-details~1'
   /prod-compilation-items/:
     $ref: 'prod-related-prods.yaml#/paths/~1prod-compilation-items~1'
   /prod-series-prods/:
@@ -129,6 +131,10 @@ components:
       $ref: 'prod-articles.yaml#/components/schemas/PressArticlePreview'
     PressArticlesPayload:
       $ref: 'prod-articles.yaml#/components/schemas/PressArticlesPayload'
+    PressPublication:
+      $ref: 'press-details.yaml#/components/schemas/PressPublication'
+    PressDetailsPayload:
+      $ref: 'press-details.yaml#/components/schemas/PressDetailsPayload'
     ProdSummary:
       $ref: 'prod-related-prods.yaml#/components/schemas/ProdSummary'
     ProdSummariesPayload:

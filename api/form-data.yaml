@@ -21,6 +21,7 @@ paths:
               - pictureBatch
               - musicBatch
               - release
+              - pressArticle
           description: Creation form type; used instead of id.
         - in: query
           name: year
@@ -33,8 +34,8 @@ paths:
             type: integer
           description: >
             Element the form was started from. Batch uploads attach their works to
-            it (author, group, party or production category); a release requires
-            the production id. Echoed back as `parent`.
+            it (author, group, party or production category); a release and a
+            press article require the production id. Echoed back as `parent`.
         - in: query
           name: refs
           schema:
@@ -119,6 +120,7 @@ paths:
                     - pictureBatch
                     - musicBatch
                     - release
+                    - pressArticle
                 year:
                   type: integer
                   description: Required for a party; identifies its parent year.
@@ -126,7 +128,7 @@ paths:
                   type: integer
                   description: >
                     Element the works are created under (author, group or party for
-                    a batch upload, the production for a release).
+                    a batch upload, the production for a release or a press article).
                 fields:
                   type: object
                   additionalProperties: true

@@ -11,10 +11,21 @@ export interface PressTagDto {
   url: string;
 }
 
+/** The issue an article was published in, with the rest of its table of contents. */
+export interface PressPublicationDto {
+  id: number;
+  title: string;
+  url: string;
+  year: number | null;
+  imageUrl: string | null;
+  articles: PressMentionDto[];
+}
+
 /** Rich press-article detail payload from `/press-details/`. */
 export interface PressDetailsDto {
   id: number;
   title: string;
+  shortTitle: string;
   url: string;
   externalLink: string | null;
   introduction: string | null;
@@ -27,5 +38,5 @@ export interface PressDetailsDto {
   pictures: PressMentionDto[];
   tunes: PressMentionDto[];
   parties: PressMentionDto[];
-  publication: PressMentionDto | null;
+  publication: PressPublicationDto | null;
 }

@@ -30,7 +30,8 @@ readonly final class ProdTabsRepository extends AbstractRepository
             hasRzx: $this->hasStructureLink($prodId, LinkTypes::RZX),
             hasPictures: $this->hasGameLinkOfType($prodId, DatabaseTable::ZxPicture),
             hasTunes: $this->hasGameLinkOfType($prodId, DatabaseTable::ZxMusic),
-            hasArticles: $this->hasArticleLinks($prodId),
+            hasArticles: $this->hasParentLink($prodId, LinkTypes::PROD_ARTICLE),
+            hasMentions: $this->hasParentLink($prodId, LinkTypes::PRESS_SOFTWARE),
             hasSeriesProds: $this->hasParentLink($prodId, LinkTypes::SERIES),
             isInSeries: $this->hasChildLink($prodId, LinkTypes::SERIES),
             hasCompilations: $this->hasSymmetricLink($prodId, LinkTypes::COMPILATION),
@@ -104,14 +105,6 @@ readonly final class ProdTabsRepository extends AbstractRepository
             )
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), '=', $prodId)
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', LinkTypes::GAME_LINK->value)
-            ->exists();
-    }
-
-    private function hasArticleLinks(int $prodId): bool
-    {
-        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
-            ->where('parentStructureId', '=', $prodId)
-            ->whereIn('type', [LinkTypes::PROD_ARTICLE->value, LinkTypes::PRESS_SOFTWARE->value])
             ->exists();
     }
 

@@ -40,7 +40,7 @@ const RELATION_TYPES: Record<string, string> = {
   pictures: 'zxPicture',
 };
 
-/** Routed page for `press/:id/edit`. */
+/** Routed page for `press/:id/edit` and `prod/:id/articles/add`. */
 @Component({
   selector: 'zx-press-edit-page',
   standalone: true,
@@ -95,10 +95,16 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
   languages: FormLanguage[] = [];
 
+  /** Creation mode: a new article of the production the form was opened from. */
+  creating = false;
+
   /** Where the user lands once the article is deleted. */
   readonly deleteReturnUrl = '/';
 
   elementId = 0;
+  /** The production the new article belongs to. */
+  private prodId = 0;
+  private returnUrl = '/';
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -112,9 +118,19 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.creating = this.route.snapshot.data['create'] === true;
+    if (this.creating) {
+      this.prodId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/prod/${this.prodId}`;
+    } else {
+      this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+      this.returnUrl = `/press/${this.elementId}`;
+    }
+    const formData$ = this.creating
+      ? this.formData.loadCreate('pressArticle', [], undefined, this.prodId)
+      : this.formData.load(this.elementId);
     this.subscriptions.add(
-      this.formData.load(this.elementId).subscribe({
+      formData$.subscribe({
         next: data => {
           if (data.errorMessage) {
             this.loading = false;
@@ -156,7 +172,7 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigateByUrl(`/press/${this.elementId}`);
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   onSubmit(): void {
@@ -164,26 +180,30 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     const value = this.form.getRawValue();
     const ids = (refs: EntityRef[]): string[] => refs.map(ref => String(ref.id));
+    const payload = {
+      multilang: {
+        title: value.title,
+        introduction: value.introduction,
+        content: value.content,
+      },
+      fields: {
+        externalLink: value.externalLink,
+        authors: ids(value.authors),
+        people: ids(value.people),
+        software: ids(value.software),
+        groups: ids(value.groups),
+        parties: ids(value.parties),
+        tunes: ids(value.tunes),
+        pictures: ids(value.pictures),
+        originalContent: value.originalContent,
+        allowComments: value.allowComments ? '1' : '',
+      },
+    };
+    const save$ = this.creating
+      ? this.formSave.create('pressArticle', payload, undefined, this.prodId)
+      : this.formSave.save(this.elementId, payload);
     this.subscriptions.add(
-      this.formSave.save(this.elementId, {
-        multilang: {
-          title: value.title,
-          introduction: value.introduction,
-          content: value.content,
-        },
-        fields: {
-          externalLink: value.externalLink,
-          authors: ids(value.authors),
-          people: ids(value.people),
-          software: ids(value.software),
-          groups: ids(value.groups),
-          parties: ids(value.parties),
-          tunes: ids(value.tunes),
-          pictures: ids(value.pictures),
-          originalContent: value.originalContent,
-          allowComments: value.allowComments ? '1' : '',
-        },
-      }).subscribe({
+      save$.subscribe({
         next: result => {
           if (result.id <= 0) {
             this.submitting = false;

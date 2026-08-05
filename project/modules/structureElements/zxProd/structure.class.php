@@ -380,6 +380,15 @@ class zxProdElement extends ZxArtItem implements
         return $urls;
     }
 
+    /** Cover image of the production, or null when the untyped legacy lookup finds none. */
+    public function getCoverImageUrl(string $preset = 'prodImage'): ?string
+    {
+        /** @var mixed $url */
+        $url = $this->getImageUrl(0, $preset);
+
+        return is_string($url) && $url !== '' ? $url : null;
+    }
+
     public function getImageUrl($number = 0, $preset = 'prodImage')
     {
         if ($image = $this->getImage($number)) {

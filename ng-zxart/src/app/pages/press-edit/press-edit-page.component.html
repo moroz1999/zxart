@@ -1,5 +1,5 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ 'press-details.edit' | translate }}</h1>
+<h1 zxPageHeader appHeading="display">{{ (creating ? 'prod-details.addpressarticle' : 'press-details.edit') | translate }}</h1>
 <zx-delete-entity-button
   zxPageHeader
   [elementId]="elementId"

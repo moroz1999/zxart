@@ -1,5 +1,8 @@
 <zx-page-layout>
-  <h1 zxPageHeader appHeading="display">{{ title }}</h1>
+  <zx-inline zxPageHeader spacing="sm" align="center">
+    <h1 zxPageHeader appHeading="display">{{ title }}</h1>
+    <zx-press-editing-controls [elementId]="(elementId$ | async) ?? 0"></zx-press-editing-controls>
+  </zx-inline>
   <zx-press-details-view
     [elementId]="(elementId$ | async) ?? 0"
     (pageTitleChange)="title = $event"

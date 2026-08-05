@@ -1,0 +1,10 @@
+:root {
+  /* Height the issue cover may not exceed in the companion column. */
+  --zx-press-issue-nav-cover-max-height: calc(var(--space-64) * 4);
+  /* Frame around the issue cover. */
+  --zx-press-issue-nav-cover-border: var(--border-light);
+  /* Corner radius of the issue cover. */
+  --zx-press-issue-nav-cover-radius: var(--radius-md);
+  /* Backdrop the cover is letterboxed against. */
+  --zx-press-issue-nav-cover-bg: var(--background-deep);
+}

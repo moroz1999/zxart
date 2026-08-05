@@ -152,6 +152,7 @@ components:
         - hasPictures
         - hasTunes
         - hasArticles
+        - hasMentions
         - hasSeries
         - hasCompilations
       properties:
@@ -171,6 +172,10 @@ components:
           type: boolean
         hasArticles:
           type: boolean
+          description: The production has press articles of its own (prodArticle links).
+        hasMentions:
+          type: boolean
+          description: The production is mentioned by press articles (pressSoftware links).
         hasSeries:
           type: boolean
         hasCompilations:

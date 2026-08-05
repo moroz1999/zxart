@@ -46,9 +46,9 @@ import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service'
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {TagsListComponent} from '../../../../shared/lib/tags-list/tags-list.component';
 import {ZxProdInstructionsSectionComponent} from '../zx-prod-instructions-section/zx-prod-instructions-section.component';
-type ProdMainTabId = 'releases' | 'media' | 'links' | 'discussion';
+type ProdMainTabId = 'releases' | 'media' | 'articles' | 'links' | 'discussion';
 type ProdMediaTabId = 'description' | 'covers' | 'maps' | 'rzx' | 'graphics' | 'music' | 'instructions';
-type ProdLinksTabId = 'articles' | 'series' | 'compilations';
+type ProdLinksTabId = 'mentions' | 'series' | 'compilations';
 
 // The covers tab used to live at /prod/:id/inlays; links to it are still around.
 const LEGACY_COVERS_TAB_ID = 'inlays';
@@ -190,6 +190,10 @@ export class ZxProdDetailsComponent implements OnChanges {
       tabs.push('media');
     }
 
+    if (core.tabs.hasArticles) {
+      tabs.push('articles');
+    }
+
     if (this.getLinksTabs(core).length) {
       tabs.push('links');
     }
@@ -216,7 +220,7 @@ export class ZxProdDetailsComponent implements OnChanges {
   private getLinksTabs(core: ProdCoreDto): ProdLinksTabId[] {
     const tabs: ProdLinksTabId[] = [];
 
-    if (core.tabs.hasArticles) tabs.push('articles');
+    if (core.tabs.hasMentions) tabs.push('mentions');
     if (core.tabs.hasSeriesProds || core.tabs.isInSeries) tabs.push('series');
     if (core.tabs.hasCompilations) tabs.push('compilations');
 

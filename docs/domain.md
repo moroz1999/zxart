@@ -26,6 +26,11 @@ Unique release (version) of prod. Contains actual files and technical requiremen
 Release type, hardware requirements, format. Always belongs to parent prod.
 Detailed logic and structure: [domain/release.md](domain/release.md)
 
+### press article
+One article of a disk magazine. Always belongs to the prod of its issue.
+Links the authors, people, groups, software, graphics, music and parties it mentions.
+Detailed logic and structure: [domain/press.md](domain/press.md)
+
 ### party
 Demoparty or competition event. Contains competitions (compos) for pictures, music, and prods.
 Location, year, website. Organizes works by compo and place.

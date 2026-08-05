@@ -19,6 +19,7 @@ readonly class ProdTabsDto
         public bool $hasPictures,
         public bool $hasTunes,
         public bool $hasArticles,
+        public bool $hasMentions,
         public bool $hasSeriesProds,
         public bool $isInSeries,
         public bool $hasCompilations,

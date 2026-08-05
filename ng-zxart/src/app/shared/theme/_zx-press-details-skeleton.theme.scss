@@ -1,0 +1,14 @@
+:root {
+  /* Placeholder height of the issue cover in the companion column. */
+  --zx-press-details-skeleton-cover-height: var(--zx-press-issue-nav-cover-max-height);
+  /* Placeholder height of a body text line. */
+  --zx-press-details-skeleton-line-height: var(--space-16);
+  /* Placeholder height of a table-of-contents row. */
+  --zx-press-details-skeleton-toc-height: var(--space-24);
+  /* Placeholder height of the introduction paragraph. */
+  --zx-press-details-skeleton-intro-height: var(--space-40);
+  /* Corner radius of text-line placeholders. */
+  --zx-press-details-skeleton-line-radius: var(--radius-sm);
+  /* Corner radius of block placeholders. */
+  --zx-press-details-skeleton-block-radius: var(--radius-md);
+}

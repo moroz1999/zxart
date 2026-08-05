@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.press-details-skeleton__cover {
+  width: 100%;
+  height: var(--zx-press-details-skeleton-cover-height);
+  border-radius: var(--zx-press-details-skeleton-block-radius);
+}
+
+.press-details-skeleton__issue-title {
+  width: 70%;
+  height: var(--zx-press-details-skeleton-line-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__toc-line {
+  width: 100%;
+  height: var(--zx-press-details-skeleton-toc-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__meta-line {
+  width: 40%;
+  height: var(--zx-press-details-skeleton-line-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__tags-line {
+  width: 25%;
+  height: var(--zx-press-details-skeleton-line-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__mention-row {
+  width: 90%;
+  height: var(--zx-press-details-skeleton-toc-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__intro {
+  width: 100%;
+  height: var(--zx-press-details-skeleton-intro-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__content-line {
+  width: 100%;
+  height: var(--zx-press-details-skeleton-line-height);
+  border-radius: var(--zx-press-details-skeleton-line-radius);
+}
+
+.press-details-skeleton__content-line:last-child {
+  width: 75%;
+}

@@ -1,0 +1,23 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: block;
+  // Long unbroken lines scroll inside the block instead of widening the page.
+  max-width: 100%;
+  overflow: auto;
+}
+
+.zx-preformatted__text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--zx-preformatted-font-family);
+  font-size: inherit;
+  line-height: var(--zx-preformatted-line-height);
+  margin: 0;
+}
+
+@include bp.media-breakpoint-down(md) {
+  .zx-preformatted__text {
+    font-size: var(--zx-preformatted-font-size-mobile);
+  }
+}

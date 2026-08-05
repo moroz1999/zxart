@@ -11,6 +11,7 @@ import {ZxReleaseScreenshotsSectionComponent} from '../zx-release-screenshots-se
 import {ZxReleaseInlaysSectionComponent} from '../zx-release-inlays-section/zx-release-inlays-section.component';
 import {ZxReleaseInstructionsSectionComponent} from '../zx-release-instructions-section/zx-release-instructions-section.component';
 import {BreadcrumbService} from '../../../../shared/services/breadcrumb.service';
+import {ZxPreformattedComponent} from '../../../../shared/ui/zx-preformatted/zx-preformatted.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -31,6 +32,7 @@ import {PageMetadataService} from '../../../../shared/services/page-metadata.ser
     ZxReleaseScreenshotsSectionComponent,
     ZxReleaseInlaysSectionComponent,
     ZxReleaseInstructionsSectionComponent,
+    ZxPreformattedComponent,
     ZxStackComponent,
     HeadingDirective,
     TextDirective,

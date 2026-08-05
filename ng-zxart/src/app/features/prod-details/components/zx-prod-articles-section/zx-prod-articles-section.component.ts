@@ -1,26 +1,23 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {
-  ZxCommentSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
 import {ZxArticlePreviewComponent} from '../../../../entities/zx-article-preview/zx-article-preview.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
+import {
+  ZxArticlePreviewSkeletonComponent
+} from '../../../../entities/zx-article-preview-skeleton/zx-article-preview-skeleton.component';
 import {ProdArticlesApiService} from '../../services/prod-articles-api.service';
 import {PressArticlePreviewDto} from '../../models/press-article.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
+/** The production's own press articles; the articles tab names the section. */
 @Component({
   selector: 'zx-prod-articles-section',
   standalone: true,
   imports: [
     CommonModule,
-    TranslateModule,
     InViewportDirective,
-    ZxCommentSkeletonComponent,
     ZxArticlePreviewComponent,
-    HeadingDirective,
+    ZxArticlePreviewSkeletonComponent,
     ZxStackComponent,
   ],
   templateUrl: './zx-prod-articles-section.component.html',

@@ -1,0 +1,10 @@
+:root {
+  /* Width of the companion sidebar column on desktop. */
+  --zx-sidebar-layout-width: 300px;
+  /* Gap between the sidebar and the main content column. */
+  --zx-sidebar-layout-gap: var(--space-48);
+  /* Reading measure the main content column is capped at. */
+  --zx-sidebar-layout-content-max-width: 900px;
+  /* Offset the sticky sidebar keeps below the fixed site header. */
+  --zx-sidebar-layout-sticky-top: calc(var(--zx-header-height) + var(--space-16));
+}

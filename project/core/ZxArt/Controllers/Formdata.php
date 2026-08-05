@@ -321,11 +321,14 @@ class Formdata extends LoggedControllerApplication
     /**
      * Current AI queue status per re-queue field, for the AI form (prod/press).
      *
+     * A creation draft is not persisted yet and its transient identifier is not
+     * an element id, so it can hold no queue records.
+     *
      * @return array<string, string>
      */
     private function buildAiStatuses(structureElement $element): array
     {
-        if (!method_exists($element, 'getQueueStatus')) {
+        if (!method_exists($element, 'getQueueStatus') || !$element->hasActualStructureInfo()) {
             return [];
         }
         $map = match ((string)$element->structureType) {

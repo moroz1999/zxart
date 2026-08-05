@@ -1,0 +1,28 @@
+:root {
+  /* Article preview skeleton layout gap, mirroring the card's image/content gap. */
+  --zx-article-preview-skeleton-layout-gap: var(--zx-article-preview-layout-gap);
+  /* Article preview skeleton gap between the card's stacked text rows. */
+  --zx-article-preview-skeleton-content-gap: var(--zx-article-preview-content-gap);
+  /* Article preview skeleton gap inside the title row. */
+  --zx-article-preview-skeleton-title-gap: var(--zx-article-preview-title-gap);
+  /* Article preview skeleton publication cover, mirroring the card's image box. */
+  --zx-article-preview-skeleton-image-width: var(--zx-article-preview-image-width);
+  --zx-article-preview-skeleton-image-height: var(--zx-article-preview-image-height);
+  --zx-article-preview-skeleton-image-radius: var(--zx-article-preview-image-radius);
+  /* Article preview skeleton title line, mirroring the card's body text line box. */
+  --zx-article-preview-skeleton-title-height: calc(
+    var(--app-typography-body-size) * var(--app-typography-body-line-height)
+  );
+  --zx-article-preview-skeleton-title-width: 60%;
+  /* Article preview skeleton meta and snippet lines, mirroring the card's label text line box. */
+  --zx-article-preview-skeleton-line-height: calc(
+    var(--app-typography-label-size) * var(--app-typography-label-line-height)
+  );
+  --zx-article-preview-skeleton-meta-width: 35%;
+  --zx-article-preview-skeleton-snippet-width: 100%;
+  --zx-article-preview-skeleton-snippet-last-width: 70%;
+  /* Article preview skeleton read link, mirroring the card's extra small button. */
+  --zx-article-preview-skeleton-read-width: 84px;
+  --zx-article-preview-skeleton-read-height: var(--zx-button-xs-height);
+  --zx-article-preview-skeleton-read-radius: var(--zx-button-border-radius);
+}

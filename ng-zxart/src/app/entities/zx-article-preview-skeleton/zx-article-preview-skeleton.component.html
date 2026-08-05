@@ -1,0 +1,19 @@
+<zx-stack spacing="lg">
+  <zx-panel *ngFor="let item of items" variant="flat" padding="sm">
+    <div class="article-preview-skeleton__layout">
+      <zx-skeleton-bone *ngIf="withImage" class="article-preview-skeleton__image"></zx-skeleton-bone>
+
+      <div class="article-preview-skeleton__content">
+        <div class="article-preview-skeleton__header">
+          <zx-skeleton-bone class="article-preview-skeleton__title"></zx-skeleton-bone>
+          <zx-skeleton-bone *ngIf="withReadLink" class="article-preview-skeleton__read"></zx-skeleton-bone>
+        </div>
+
+        <zx-skeleton-bone class="article-preview-skeleton__meta"></zx-skeleton-bone>
+
+        <zx-skeleton-bone class="article-preview-skeleton__snippet"></zx-skeleton-bone>
+        <zx-skeleton-bone class="article-preview-skeleton__snippet article-preview-skeleton__snippet--last"></zx-skeleton-bone>
+      </div>
+    </div>
+  </zx-panel>
+</zx-stack>

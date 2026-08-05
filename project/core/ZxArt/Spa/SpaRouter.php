@@ -11,7 +11,7 @@ final class SpaRouter
         '#^/author/\d+/(aliases|pictures|music|prods)/add/?$#',
         '#^/group/\d+/prods/add/?$#',
         '#^/party/\d+/(pictures|music|prods)/add/?$#',
-        '#^/prod/\d+/releases/add/?$#',
+        '#^/prod/\d+/(releases|articles)/add/?$#',
         '#^/author/\d+(/[a-z0-9-]+)?/?$#',
         '#^/author-alias/\d+/[a-z0-9-]+/?$#',
         '#^/group/\d+(/[a-z0-9-]+)?/?$#',

@@ -50,6 +50,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-page-layout](design-system/zx-page-layout.md) — routed-page header and content-block layout
 - [zx-grid](design-system/zx-grid.md) — CSS Grid-based layout container; use `zxGridItem` directive on children for asymmetric column spans
 - [zx-inset](design-system/zx-inset.md) — restricted padding layout container
+- [zx-sidebar-layout](design-system/zx-sidebar-layout.md) — sticky companion column beside the main page content
 - [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
 - [zx-tabs](design-system/zx-tabs.md) — tab navigation and active content outlet
 - [zx-button](design-system/zx-button.md) — button with colors and sizes
@@ -68,6 +69,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-rating](design-system/zx-rating.md) — interactive 5-star rating with hover preview
 - [zx-item-controls](design-system/zx-item-controls.md) — unified vote + playlist (favourites) controls row
 - [zx-item-data](design-system/zx-item-data.md) — grouped key-value information panel
+- `zx-preformatted` — text laid out on a fixed-width grid (`pre` element, monospace face, wrapped lines, own horizontal scroll); `[html]` switches the content from text to sanitized markup
 - [zx-editing-controls](design-system/zx-editing-controls.md) — privilege-gated legacy action buttons
 - [zx-release-type-badge](design-system/zx-release-type-badge.md) — compact colored release type badge
 - [zx-medal](design-system/zx-medal.md) — compact circular placement badge

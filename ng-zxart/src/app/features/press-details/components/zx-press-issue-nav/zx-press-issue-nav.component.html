@@ -1,0 +1,44 @@
+<zx-stack spacing="md">
+  <zx-panel variant="flat" radius="lg" padding="sm">
+    <zx-stack spacing="sm">
+      <a *ngIf="publication.imageUrl" [routerLink]="publication.url">
+        <img
+          class="zx-press-issue-nav__cover"
+          [src]="publication.imageUrl"
+          [alt]="publication.title"
+        >
+      </a>
+
+      <zx-stack spacing="xs">
+        <a [routerLink]="publication.url" appText="body" tone="link">{{ publication.title }}</a>
+        <zx-facts>
+          <zx-fact *ngIf="publication.year">{{ publication.year }}</zx-fact>
+          <zx-fact *ngIf="publication.articles.length">
+            {{ 'press-details.articles-count' | translate: {count: publication.articles.length} }}
+          </zx-fact>
+        </zx-facts>
+      </zx-stack>
+    </zx-stack>
+  </zx-panel>
+
+  <ng-container *ngIf="(isDesktop$ | async) && publication.articles.length > 1">
+    <zx-panel
+      variant="flat"
+      radius="lg"
+      padding="sm"
+      [contentBleed]="true"
+      [title]="'press-details.issue-contents' | translate"
+      titleLevel="h3"
+    >
+      <zx-popover-menu-item
+        *ngFor="let article of publication.articles; trackBy: trackById"
+        [href]="article.url"
+        [active]="article.id === currentArticleId"
+      >{{ article.title }}</zx-popover-menu-item>
+    </zx-panel>
+
+    <zx-button color="outlined" size="sm" [block]="true" [href]="publication.url">
+      {{ 'press-details.all-articles' | translate: {count: publication.articles.length} }}
+    </zx-button>
+  </ng-container>
+</zx-stack>

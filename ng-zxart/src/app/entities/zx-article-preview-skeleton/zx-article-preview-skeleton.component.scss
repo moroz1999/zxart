@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+// Mirrors `.zx-article-preview__layout`.
+.article-preview-skeleton__layout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--zx-article-preview-skeleton-layout-gap);
+}
+
+.article-preview-skeleton__image {
+  flex: 0 0 auto;
+  width: var(--zx-article-preview-skeleton-image-width);
+  height: var(--zx-article-preview-skeleton-image-height);
+  border-radius: var(--zx-article-preview-skeleton-image-radius);
+}
+
+.article-preview-skeleton__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-article-preview-skeleton-content-gap);
+  // The real content column shrinks past its min-content; without this the
+  // fixed-width bones would push the card out of its column.
+  min-width: 0;
+  flex: 1;
+}
+
+// Mirrors `.zx-article-preview__header`, whose title and read button share a baseline row.
+.article-preview-skeleton__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--zx-article-preview-skeleton-title-gap);
+}
+
+// Bone widths are a starting size, not a floor: they give way before the row does.
+.article-preview-skeleton__title {
+  flex: 0 1 var(--zx-article-preview-skeleton-title-width);
+  min-width: 0;
+  height: var(--zx-article-preview-skeleton-title-height);
+}
+
+.article-preview-skeleton__read {
+  flex: 0 0 var(--zx-article-preview-skeleton-read-width);
+  height: var(--zx-article-preview-skeleton-read-height);
+  border-radius: var(--zx-article-preview-skeleton-read-radius);
+}
+
+.article-preview-skeleton__meta {
+  width: var(--zx-article-preview-skeleton-meta-width);
+  height: var(--zx-article-preview-skeleton-line-height);
+}
+
+.article-preview-skeleton__snippet {
+  width: var(--zx-article-preview-skeleton-snippet-width);
+  height: var(--zx-article-preview-skeleton-line-height);
+}
+
+.article-preview-skeleton__snippet--last {
+  width: var(--zx-article-preview-skeleton-snippet-last-width);
+}

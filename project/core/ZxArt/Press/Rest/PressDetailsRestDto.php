@@ -25,6 +25,7 @@ readonly class PressDetailsRestDto
     public function __construct(
         public int $id,
         public string $title,
+        public string $shortTitle,
         public string $url,
         public ?string $externalLink,
         public ?string $introduction,
@@ -45,7 +46,7 @@ readonly class PressDetailsRestDto
         public array $tunes,
         #[Map(transform: MapCollection::class)]
         public array $parties,
-        public ?PressMentionRestDto $publication,
+        public ?PressPublicationRestDto $publication,
     ) {
     }
 }

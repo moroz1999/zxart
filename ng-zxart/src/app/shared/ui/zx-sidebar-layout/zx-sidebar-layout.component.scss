@@ -1,0 +1,36 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: grid;
+  grid-template-columns: var(--zx-sidebar-layout-width) minmax(0, 1fr);
+  gap: var(--zx-sidebar-layout-gap);
+  align-items: start;
+
+  @include bp.media-breakpoint-down(lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Nothing projected into the sidebar: the content takes the whole width. */
+:host:has(> .zx-sidebar-layout__sidebar:empty) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.zx-sidebar-layout__sidebar {
+  position: sticky;
+  top: var(--zx-sidebar-layout-sticky-top);
+  min-width: 0;
+
+  @include bp.media-breakpoint-down(lg) {
+    position: static;
+  }
+}
+
+.zx-sidebar-layout__sidebar:empty {
+  display: none;
+}
+
+.zx-sidebar-layout__content {
+  min-width: 0;
+  max-width: var(--zx-sidebar-layout-content-max-width);
+}

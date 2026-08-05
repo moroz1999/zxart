@@ -3,14 +3,25 @@ import {CommonModule} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
 import {map, Observable} from 'rxjs';
 import {ZxPressDetailsComponent} from '../../features/press-details/components/zx-press-details/zx-press-details.component';
+import {
+  ZxPressEditingControlsComponent,
+} from '../../features/press-details/components/zx-press-editing-controls/zx-press-editing-controls.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {ZxInlineComponent} from '../../shared/ui/zx-inline/zx-inline.component';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
 /** Routed page for `press/:id`. */
 @Component({
   selector: 'zx-press-page',
   standalone: true,
-  imports: [CommonModule, ZxPressDetailsComponent, HeadingDirective, ZxPageLayoutComponent],
+  imports: [
+    CommonModule,
+    ZxPressDetailsComponent,
+    ZxPressEditingControlsComponent,
+    HeadingDirective,
+    ZxInlineComponent,
+    ZxPageLayoutComponent,
+  ],
   templateUrl: './press-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

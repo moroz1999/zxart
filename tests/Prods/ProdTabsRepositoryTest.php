@@ -22,13 +22,14 @@ use ZxArt\Prods\Repositories\ProdTabsRepository;
  *  6.  hasRzx           — structure link RZX
  *  7.  hasPictures      — join to module_zxpicture via gameLink
  *  8.  hasTunes         — join to module_zxmusic via gameLink
- *  9.  hasArticles      — structure links with type in [prodArticle, pressSoftware]
- *  10. hasSeriesProds   — parent structure link SERIES
- *  11. isInSeries       — child structure link SERIES
- *  12. hasCompilations  — symmetric structure link COMPILATION
- *  13. hasInstructions  — subquery: release ids → infoFilesSelector links
+ *  9.  hasArticles      — parent structure link PROD_ARTICLE
+ *  10. hasMentions      — parent structure link PRESS_SOFTWARE
+ *  11. hasSeriesProds   — parent structure link SERIES
+ *  12. isInSeries       — child structure link SERIES
+ *  13. hasCompilations  — symmetric structure link COMPILATION
+ *  14. hasInstructions  — subquery: release ids → infoFilesSelector links
  *
- * When hasMapFiles (#4) is true, hasSpeccyMapsUrl is short-circuited, reducing total to 12 calls.
+ * When hasMapFiles (#4) is true, hasSpeccyMapsUrl is short-circuited, reducing total to 13 calls.
  */
 #[AllowMockObjectsWithoutExpectations]
 class ProdTabsRepositoryTest extends TestCase
@@ -54,7 +55,7 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testAllFlagsFalseWhenNoLinksExist(): void
     {
-        $this->setExistsResults(array_fill(0, 13, false));
+        $this->setExistsResults(array_fill(0, 14, false));
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -66,6 +67,7 @@ class ProdTabsRepositoryTest extends TestCase
         $this->assertFalse($dto->hasPictures);
         $this->assertFalse($dto->hasTunes);
         $this->assertFalse($dto->hasArticles);
+        $this->assertFalse($dto->hasMentions);
         $this->assertFalse($dto->hasSeriesProds);
         $this->assertFalse($dto->isInSeries);
         $this->assertFalse($dto->hasCompilations);
@@ -76,8 +78,8 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testAllFlagsTrueWhenAllLinksExist(): void
     {
-        // hasMapFiles (#4) returns true → hasSpeccyMapsUrl is short-circuited → 12 exists() calls
-        $this->setExistsResults(array_fill(0, 12, true));
+        // hasMapFiles (#4) returns true → hasSpeccyMapsUrl is short-circuited → 13 exists() calls
+        $this->setExistsResults(array_fill(0, 13, true));
 
         $dto = $this->repository->buildTabs(1, true, true);
 
@@ -89,6 +91,7 @@ class ProdTabsRepositoryTest extends TestCase
         $this->assertTrue($dto->hasPictures);
         $this->assertTrue($dto->hasTunes);
         $this->assertTrue($dto->hasArticles);
+        $this->assertTrue($dto->hasMentions);
         $this->assertTrue($dto->hasSeriesProds);
         $this->assertTrue($dto->isInSeries);
         $this->assertTrue($dto->hasCompilations);
@@ -100,7 +103,7 @@ class ProdTabsRepositoryTest extends TestCase
     public function testHasReleasesDetectedByStructureLink(): void
     {
         // Position 1: hasReleases = true
-        $this->setExistsResults([true, ...array_fill(0, 12, false)]);
+        $this->setExistsResults([true, ...array_fill(0, 13, false)]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -114,7 +117,7 @@ class ProdTabsRepositoryTest extends TestCase
     {
         // Position 3: hasCovers = true.
         // hasCoverLinks runs two table() calls: first to get release IDs, then to check cover links.
-        $this->setExistsResults([false, false, true, ...array_fill(0, 10, false)]);
+        $this->setExistsResults([false, false, true, ...array_fill(0, 11, false)]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -127,7 +130,7 @@ class ProdTabsRepositoryTest extends TestCase
     public function testHasMapsDetectedViaImportOriginWhenNoMapFiles(): void
     {
         // Position 4 (hasMapFiles) = false, position 5 (hasSpeccyMapsUrl) = true.
-        $this->setExistsResults([false, false, false, false, true, ...array_fill(0, 8, false)]);
+        $this->setExistsResults([false, false, false, false, true, ...array_fill(0, 9, false)]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -139,8 +142,8 @@ class ProdTabsRepositoryTest extends TestCase
     public function testHasMapsShortCircuitsWhenMapFilesLinkExists(): void
     {
         // Position 4 (hasMapFiles) = true → hasSpeccyMapsUrl is NOT queried.
-        // Total: 12 exists() calls (no position 5).
-        $this->setExistsResults([false, false, false, true, ...array_fill(0, 8, false)]);
+        // Total: 13 exists() calls (no position 5).
+        $this->setExistsResults([false, false, false, true, ...array_fill(0, 9, false)]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -151,9 +154,9 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testHasInstructionsDetectedViaReleaseSubquery(): void
     {
-        // Position 13: hasInstructions = true (all others false, with hasMapFiles=false so 13 calls).
+        // Position 14: hasInstructions = true (all others false, with hasMapFiles=false so 14 calls).
         // hasInstructionLinks runs two table() calls: release IDs subquery, then infoFilesSelector check.
-        $this->setExistsResults([...array_fill(0, 12, false), true]);
+        $this->setExistsResults([...array_fill(0, 13, false), true]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -165,8 +168,8 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testHasSeriesProdsAndIsInSeriesAreIndependent(): void
     {
-        // Position 10 (hasSeriesProds) = true, position 11 (isInSeries) = false
-        $this->setExistsResults([false, false, false, false, false, false, false, false, false, true, false, false, false]);
+        // Position 11 (hasSeriesProds) = true, position 12 (isInSeries) = false
+        $this->setExistsResults([false, false, false, false, false, false, false, false, false, false, true, false, false, false]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -176,8 +179,8 @@ class ProdTabsRepositoryTest extends TestCase
 
     public function testHasCompilationsDetectedSymmetrically(): void
     {
-        // Position 12 (hasCompilations) = true. The query checks both parentStructureId and childStructureId.
-        $this->setExistsResults([false, false, false, false, false, false, false, false, false, false, false, true, false]);
+        // Position 13 (hasCompilations) = true. The query checks both parentStructureId and childStructureId.
+        $this->setExistsResults([false, false, false, false, false, false, false, false, false, false, false, false, true, false]);
 
         $dto = $this->repository->buildTabs(1, false, false);
 
@@ -185,6 +188,18 @@ class ProdTabsRepositoryTest extends TestCase
         $this->assertFalse($dto->isInSeries);
         $this->assertTrue($dto->hasCompilations);
         $this->assertFalse($dto->hasInstructions);
+    }
+
+    public function testArticlesAndMentionsAreIndependentTabs(): void
+    {
+        // Position 9 (hasArticles) = false, position 10 (hasMentions) = true: a prod
+        // only mentioned by the press gets no articles tab.
+        $this->setExistsResults([false, false, false, false, false, false, false, false, false, true, false, false, false, false]);
+
+        $dto = $this->repository->buildTabs(1, false, false);
+
+        $this->assertFalse($dto->hasArticles);
+        $this->assertTrue($dto->hasMentions);
     }
 
     /**

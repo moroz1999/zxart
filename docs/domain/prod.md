@@ -51,6 +51,12 @@ music have the same routes (`…/pictures/add`, `…/music/add`) backed by the
 `picturesUploadForm` and `musicUploadForm` pipelines, and a production's releases
 are added at `/prod/:id/releases/add`.
 
+A production's press articles are added at `/prod/:id/articles/add`, which opens
+the article form in creation mode with the production as `parentId`. The article
+is created and saved by the same `publicReceive` action that edits it later, so
+the button and the route guard both check `pressArticle.publicReceive` on the
+production. The action links the new article to its production with `prodArticle`.
+
 The batch form shows every field its upload pipeline accepts; the values are
 shared by all works created from the selected files. `/formdata/` echoes the
 `parentId` back as `parent` (id, title, structure type) and the form prefills the
@@ -160,6 +166,11 @@ through `hardware-group.<code>`, `hardware.<code>` and
   - `isInSeries` — this prod is a member of one or more series; shows `zx-prod-series-section` which calls `/prod-series/` and returns all prods from each series container this prod belongs to.
   - Both flags can be true simultaneously; when either is true the "Series" tab is shown, and both sections appear independently under their own flag.
 - `/prod-series/` returns product summaries from the same series as the selected prod, not the series container entity.
+- Articles about the prod and press mentions of it are two different things and get two different tabs:
+  - `hasArticles` — the prod's own press articles (`prodArticle` links, written under the prod). They are a top-level tab, `/prod/:id/articles`, holding `zx-prod-articles-section` alone.
+  - `hasMentions` — press articles that merely mention the prod (`pressSoftware` links, written under a magazine issue). They stay a sub-tab of the related-links tab, `/prod/:id/mentions`.
+  - Each tab is rendered only when its flag is set, and its section loads from its own endpoint when the tab is opened, so a prod with no articles costs no request.
+- Both lists render `zx-article-preview` and load behind `zx-article-preview-skeleton`; the mentions list additionally carries the publication cover and read link, which the skeleton takes as flags.
 - Prod details core data does not include edit/delete privileges. Editing controls use shared `zx-editing-controls` and request privileges separately for authenticated users only.
 - Prod editing controls are action buttons, not links. They render through `zx-button` without `href` and navigate to legacy action URLs from click handlers.
 - Prod details core data includes the privilege-gated add-release URL. The button opens the legacy `zxRelease` public add form under the current prod.

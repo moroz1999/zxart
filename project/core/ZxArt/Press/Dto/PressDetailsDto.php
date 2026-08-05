@@ -24,6 +24,7 @@ readonly class PressDetailsDto
     public function __construct(
         public int $id,
         public string $title,
+        public string $shortTitle,
         public string $url,
         public ?string $externalLink,
         public ?string $introduction,
@@ -44,7 +45,7 @@ readonly class PressDetailsDto
         public array $tunes,
         #[Map(transform: new MapCollection())]
         public array $parties,
-        public ?PressMentionDto $publication,
+        public ?PressPublicationDto $publication,
     ) {
     }
 }

@@ -1,0 +1,9 @@
+:root {
+  /* Preformatted text face: the content is laid out on a fixed-width grid. */
+  --zx-preformatted-font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  /* Preformatted text size on mobile, where a fixed-width column needs the room. */
+  --zx-preformatted-font-size-mobile: var(--zx-font-size-sm);
+  /* Leading for long-form monospace copy: looser than body text, which is set
+     for a proportional face and leaves fixed-width lines crowded. */
+  --zx-preformatted-line-height: 1.6;
+}

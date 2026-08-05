@@ -3,14 +3,14 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
-  ZxCommentSkeletonComponent
-} from '../../../../shared/ui/zx-skeleton/components/zx-comment-skeleton/zx-comment-skeleton.component';
+  ZxArticlePreviewSkeletonComponent
+} from '../../../../entities/zx-article-preview-skeleton/zx-article-preview-skeleton.component';
 import {ZxPressMentionsListComponent} from '../../../../entities/zx-press-mentions-list/zx-press-mentions-list.component';
-import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ProdMentionsApiService} from '../../services/prod-mentions-api.service';
 import {PressArticlePreviewDto} from '../../models/press-article.dto';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 
+/** Press articles that mention the production; the mentions tab names the section. */
 @Component({
   selector: 'zx-prod-mentions-section',
   standalone: true,
@@ -18,9 +18,8 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
     CommonModule,
     TranslateModule,
     InViewportDirective,
-    ZxCommentSkeletonComponent,
+    ZxArticlePreviewSkeletonComponent,
     ZxPressMentionsListComponent,
-    HeadingDirective,
     ZxStackComponent,
   ],
   templateUrl: './zx-prod-mentions-section.component.html',

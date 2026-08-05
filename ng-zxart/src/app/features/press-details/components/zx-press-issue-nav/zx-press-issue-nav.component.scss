@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.zx-press-issue-nav__cover {
+  display: block;
+  width: 100%;
+  max-height: var(--zx-press-issue-nav-cover-max-height);
+  border: var(--zx-press-issue-nav-cover-border);
+  border-radius: var(--zx-press-issue-nav-cover-radius);
+  background: var(--zx-press-issue-nav-cover-bg);
+  object-fit: contain;
+}

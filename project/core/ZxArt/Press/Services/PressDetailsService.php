@@ -10,8 +10,10 @@ use structureManager;
 use ZxArt\Press\Exception\PressDetailsException;
 use ZxArt\Press\Dto\PressDetailsDto;
 use ZxArt\Press\Dto\PressMentionDto;
+use ZxArt\Press\Dto\PressPublicationDto;
 use ZxArt\Press\Dto\PressTagDto;
 use ZxArt\Urls\EntityUrlResolver;
+use zxProdElement;
 
 /**
  * Builds press article details independently of the transport representation.
@@ -36,6 +38,7 @@ readonly class PressDetailsService
         return new PressDetailsDto(
             id: (int)$element->getId(),
             title: $this->decode($element->getH1()),
+            shortTitle: $this->decode($element->getShortTitle()),
             url: $this->entityUrlResolver->urlFor($element),
             externalLink: ((string)$element->externalLink) !== '' ? (string)$element->externalLink : null,
             introduction: ((string)$element->introduction) !== '' ? (string)$element->introduction : null,
@@ -48,8 +51,41 @@ readonly class PressDetailsService
             pictures: $this->buildMentions($element->pictures),
             tunes: $this->buildMentions($element->tunes),
             parties: $this->buildMentions($element->parties),
-            publication: $parent instanceof structureElement ? $this->buildMention($parent) : null,
+            publication: $parent !== null ? $this->buildPublication($parent) : null,
         );
+    }
+
+    private function buildPublication(zxProdElement $publication): PressPublicationDto
+    {
+        $year = $publication->year;
+
+        return new PressPublicationDto(
+            id: $publication->getId(),
+            title: $this->decode((string)$publication->getTitle()),
+            url: $this->entityUrlResolver->urlFor($publication),
+            year: $year > 0 ? $year : null,
+            imageUrl: $publication->getCoverImageUrl(),
+            articles: $this->buildIssueArticles($publication),
+        );
+    }
+
+    /**
+     * The publication's table of contents, in publishing order.
+     *
+     * @return list<PressMentionDto>
+     */
+    private function buildIssueArticles(zxProdElement $publication): array
+    {
+        $articles = [];
+        foreach ($publication->articles as $article) {
+            $articles[] = new PressMentionDto(
+                id: $article->getId(),
+                title: $this->decode($article->title),
+                url: $this->entityUrlResolver->urlFor($article),
+            );
+        }
+
+        return $articles;
     }
 
     /**
