@@ -21,6 +21,7 @@ import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.
 import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
 import {ZxProdContextComponent} from '../../../../entities/zx-prod-context/components/zx-prod-context/zx-prod-context.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxPreformattedComponent} from '../../../../shared/ui/zx-preformatted/zx-preformatted.component';
 import {ZxHeroComponent} from '../../../../shared/ui/zx-hero/zx-hero.component';
 import {ZxHeroTitleComponent} from '../../../../shared/ui/zx-hero-title/zx-hero-title.component';
 import {ZxHeroBarComponent} from '../../../../shared/ui/zx-hero-bar/zx-hero-bar.component';
@@ -61,6 +62,7 @@ import {RouterLink} from '@angular/router';@Component({
     ZxPartyProvenanceComponent,
     ZxProdContextComponent,
     TextDirective,
+    ZxPreformattedComponent,
     ZxHeroComponent,
     ZxHeroTitleComponent,
     ZxHeroBarComponent,

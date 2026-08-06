@@ -1,4 +1,7 @@
 :root {
+  /* Height the sidebar is capped at: the viewport less the offset it keeps
+     below the site header, and the same breathing room at the bottom. */
+  --zx-press-issue-nav-max-height: calc(100vh - var(--zx-header-height) - var(--space-32));
   /* Height the issue cover may not exceed in the companion column. */
   --zx-press-issue-nav-cover-max-height: calc(var(--space-64) * 4);
   /* Frame around the issue cover. */

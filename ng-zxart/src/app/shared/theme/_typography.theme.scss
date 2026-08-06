@@ -28,6 +28,14 @@
   --zx-body-sm-weight: 400;
   --zx-body-sm-line-height: 1.4;
 
+  /* Long-form copy typed against a fixed-width grid: magazine articles and
+     scene-era descriptions. Its own size and leading — a fixed-width face reads
+     crowded at the size and rhythm set for a proportional one. */
+  --zx-mono-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  --zx-mono-size: 16px;
+  --zx-mono-weight: 400;
+  --zx-mono-line-height: 1.6;
+
   --zx-body-strong-size: var(--zx-font-size-md);
   --zx-body-strong-weight: 500;
   --zx-body-strong-line-height: 1.5;

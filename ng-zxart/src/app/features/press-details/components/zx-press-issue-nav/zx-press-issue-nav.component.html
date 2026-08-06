@@ -1,5 +1,5 @@
 <zx-stack spacing="md">
-  <zx-panel variant="flat" radius="lg" padding="sm">
+  <zx-panel class="zx-press-issue-nav__issue" variant="flat" radius="lg" padding="sm">
     <zx-stack spacing="sm">
       <a *ngIf="publication.imageUrl" [routerLink]="publication.url">
         <img
@@ -23,6 +23,7 @@
 
   <ng-container *ngIf="(isDesktop$ | async) && publication.articles.length > 1">
     <zx-panel
+      class="zx-press-issue-nav__contents"
       variant="flat"
       radius="lg"
       padding="sm"

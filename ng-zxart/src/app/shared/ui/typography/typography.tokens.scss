@@ -24,6 +24,12 @@
   --app-typography-body-sm-weight: 400;
   --app-typography-body-sm-line-height: 1.4;
 
+  /* Monospace typography used by text laid out on a fixed-width grid. */
+  --app-typography-mono-family: var(--zx-mono-family);
+  --app-typography-mono-size: var(--zx-mono-size);
+  --app-typography-mono-weight: var(--zx-mono-weight);
+  --app-typography-mono-line-height: var(--zx-mono-line-height);
+
   /* Caption typography used by supporting descriptions and metadata. */
   --app-typography-caption-size: var(--zx-caption-size);
   --app-typography-caption-weight: var(--zx-caption-weight);
@@ -96,6 +102,13 @@
   font-size: var(--app-typography-body-sm-size);
   font-weight: var(--app-typography-body-sm-weight);
   line-height: var(--app-typography-body-sm-line-height);
+}
+
+.app-typography-mono {
+  font-family: var(--app-typography-mono-family);
+  font-size: var(--app-typography-mono-size);
+  font-weight: var(--app-typography-mono-weight);
+  line-height: var(--app-typography-mono-line-height);
 }
 
 .app-typography-caption {

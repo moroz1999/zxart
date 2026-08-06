@@ -15,6 +15,7 @@ Files:
 | `title` | Subsection or panel heading, usually `h3` |
 | `body` | Main readable text, paragraphs, content |
 | `bodySm` | Smaller readable paragraphs and long-form secondary content |
+| `mono` | Text laid out on a fixed-width grid: magazine articles, scene-era descriptions. Carries the fixed-width face, and its own size and leading — a proportional rhythm leaves such copy crowded |
 | `caption` | Text that describes or labels something else: image captions, form field hints |
 | `label` | Compact labels, metadata, dates, counts, sidebar listings |
 
@@ -56,6 +57,7 @@ Use `app-text` only when creating a standalone typography wrapper:
 - Existing semantic elements must use directives.
 - `app-text` must not emulate semantic tags.
 - Use `bodySm` instead of `caption` when the content is still normal prose but should be visually smaller than primary body text.
+- `mono` is the only variant that sets a font family. Reach for it when the text's own line and column layout carries meaning, not to mark up code fragments inside prose.
 - `caption` is reserved for text that explains another object, such as figure captions and field hints.
 - Allowed inputs are `variant`, `tone`, and `truncate`.
 - `truncate` sets `white-space: nowrap`, so every flex/grid item between the text and the element that defines the width must carry `min-width: 0`. Otherwise the automatic minimum size of those items is the min-content width of the unwrapped text: the track grows, nothing ellipsizes, and the layout overflows the viewport.

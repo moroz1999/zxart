@@ -147,6 +147,22 @@ Analytics and Google Ads scripts are not loaded by the public frontend.
 - Header and other panel-style CDK popovers use `PopoverAnimation`.
 - Search-result CDK dropdowns use the shorter `DropdownPopoverAnimation`.
 
+#### Heavy Third-Party Libraries
+
+A large third-party library must never end up in a chunk that a page loads just
+to render a button. Wrap it in a standalone component that is referenced only
+inside a `@defer` block, so the compiler emits it as its own lazy chunk.
+
+- The wrapper component imports the library; nothing else imports the wrapper
+  outside a `@defer` block. A library `NgModule` listed in a component's
+  `imports` is never deferred, so the wrapper is what makes deferral possible.
+- The `@defer` trigger is the condition that actually needs the library
+  (`@defer (when isPdf)`), and `@placeholder` shows the loading state.
+
+`ZxPdfViewerComponent` (`shared/ui/zx-pdf-viewer/`) wraps `ngx-extended-pdf-viewer`
+and is deferred by `ZxFileViewerDialogComponent`: prod and release pages no
+longer download the PDF engine.
+
 #### Feature Sliced Design (FSD)
 All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
 

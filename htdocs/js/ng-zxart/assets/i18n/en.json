@@ -70,6 +70,7 @@
     "edit-picture": "Editing picture \"{{title}}\"",
     "edit-tune": "Editing tune \"{{title}}\"",
     "edit-press": "Editing article \"{{title}}\"",
+    "add-press": "New article for \"{{title}}\"",
     "ai-prod": "AI processing for program \"{{title}}\"",
     "ai-press": "AI processing for article \"{{title}}\"",
     "split-prod": "Splitting program \"{{title}}\""
@@ -290,6 +291,8 @@
     "tunes": "Music",
     "pictures": "Graphics",
     "add": "Add…",
+    "original-section": "Original text",
+    "ai-section": "AI-generated texts",
     "introduction": "Introduction",
     "content": "Content",
     "original-content": "Original content",

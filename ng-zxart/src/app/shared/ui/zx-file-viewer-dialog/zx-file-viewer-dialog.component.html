@@ -1,21 +1,10 @@
 <zx-dialog [title]="data.title" (closeClick)="close()">
   <div class="file-viewer-dialog__body">
-    <ng-container *ngIf="isPdf">
-      <ngx-extended-pdf-viewer
-        [src]="data.downloadUrl || ''"
-        [showToolbar]="true"
-        [showSidebarButton]="false"
-        [showFindButton]="true"
-        [showPagingButtons]="true"
-        [showZoomButtons]="true"
-        [showPresentationModeButton]="false"
-        [showOpenFileButton]="false"
-        [showPrintButton]="true"
-        [showDownloadButton]="true"
-        [showSecondaryToolbarButton]="false"
-        height="75vh">
-      </ngx-extended-pdf-viewer>
-    </ng-container>
+    @defer (when isPdf) {
+      <zx-pdf-viewer *ngIf="isPdf" [src]="data.downloadUrl || ''"></zx-pdf-viewer>
+    } @placeholder {
+      <div *ngIf="isPdf" class="file-viewer-dialog__loading">{{ 'prod-details.instructions-loading' | translate }}</div>
+    }
 
     <ng-container *ngIf="!isPdf && (content$ | async) as state">
       <div *ngIf="state.loading" class="file-viewer-dialog__loading">{{ 'prod-details.instructions-loading' | translate }}</div>

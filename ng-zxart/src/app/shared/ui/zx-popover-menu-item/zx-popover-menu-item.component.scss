@@ -19,6 +19,6 @@
 }
 
 :host.active .pmi-link {
-  font-weight: 600;
+  font-weight: var(--zx-popover-menu-item-active-font-weight);
   background-color: var(--zx-popover-menu-item-active-bg);
 }

@@ -12,10 +12,11 @@
 	{foreach $pageMetadata->twitter as $key=>$value}<meta property="twitter:{$key|escape:'html'}" content="{$value|escape:'html'}" />{/foreach}
 	{foreach $pageMetadata->languageLinks as $code=>$url}<link rel="alternate" hreflang="{$code|escape:'html'}" href="{$url|escape:'html'}" />{/foreach}
 	{if $structuredDataJson !== null}<script type="application/ld+json">{$structuredDataJson}</script>{/if}
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+	{* Roboto is variable: one subset file covers the 300/400/500 faces, so a single preload per subset covers all page text.
+	   Content mixes latin and cyrillic regardless of the interface language, so both subsets are always preloaded. *}
+	<link rel="preload" as="font" type="font/woff2" href="{$controller->baseURL}fonts/roboto/roboto-latin.woff2" crossorigin />
+	<link rel="preload" as="font" type="font/woff2" href="{$controller->baseURL}fonts/roboto/roboto-cyrillic.woff2" crossorigin />
+	<link rel="stylesheet" href="{$controller->baseURL}fonts/roboto/fonts.css" />
 	<link rel="shortcut icon" href="{$controller->baseURL}favicon.ico" />
 	<link rel="alternate" type="application/rss+xml" href="{$controller->baseURL}rss/{$currentLanguage->iso6393}/" title="RSS" />
 	{foreach $ngStyleUrls as $url}<link rel="stylesheet" href="{$url}" crossorigin="anonymous">{/foreach}

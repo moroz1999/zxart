@@ -18,7 +18,7 @@
       <zx-prod-context *ngIf="details.prodContext" [context]="details.prodContext"></zx-prod-context>
     </zx-callout>
 
-    <div *ngIf="details.description" class="picture-details__description" appText="body" tone="primary">{{ details.description }}</div>
+    <zx-preformatted *ngIf="details.description" [content]="details.description" appText="mono" tone="primary"></zx-preformatted>
 
     <zx-added-by
       *ngIf="details.dateCreated"

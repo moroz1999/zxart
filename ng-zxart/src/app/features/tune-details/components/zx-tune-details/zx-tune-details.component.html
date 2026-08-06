@@ -33,7 +33,7 @@
       </zx-inline>
     </zx-stack>
 
-    <div *ngIf="details.description" class="tune-details__description" appText="body" tone="primary">{{ details.description }}</div>
+    <zx-preformatted *ngIf="details.description" [content]="details.description" appText="mono" tone="primary"></zx-preformatted>
 
     <zx-added-by
       *ngIf="details.dateCreated"

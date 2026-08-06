@@ -1,5 +1,27 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: var(--zx-press-issue-nav-max-height);
+}
+
+/* The stack holds the column, so it spans the whole capped height. */
+:host zx-stack {
+  flex: 1;
+  min-height: 0;
+}
+
+/* The issue itself keeps its natural height whatever the viewport is. */
+:host .zx-press-issue-nav__issue,
+:host zx-button {
+  flex: none;
+}
+
+/* The table of contents takes what is left and scrolls inside itself. */
+:host .zx-press-issue-nav__contents {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .zx-press-issue-nav__cover {

@@ -2,12 +2,11 @@ import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core'
 import {CommonModule} from '@angular/common';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {HttpClient} from '@angular/common/http';
-import {NgxExtendedPdfViewerModule, pdfDefaultOptions} from 'ngx-extended-pdf-viewer';
 import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {catchError, map, startWith} from 'rxjs/operators';
 import {ZxDialogComponent} from '../zx-dialog/zx-dialog.component';
-import {environment} from '../../../../environments/environment';
+import {ZxPdfViewerComponent} from '../zx-pdf-viewer/zx-pdf-viewer.component';
 
 export interface FileViewerDialogData {
   fileName: string;
@@ -30,7 +29,7 @@ interface FileViewerContentState {
 @Component({
   selector: 'zx-file-viewer-dialog',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZxDialogComponent, NgxExtendedPdfViewerModule],
+  imports: [CommonModule, TranslateModule, ZxDialogComponent, ZxPdfViewerComponent],
   templateUrl: './zx-file-viewer-dialog.component.html',
   styleUrl: './zx-file-viewer-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,9 +41,7 @@ export class ZxFileViewerDialogComponent implements OnInit {
     @Inject(DIALOG_DATA) public data: FileViewerDialogData,
     private dialogRef: DialogRef<void, ZxFileViewerDialogComponent>,
     private http: HttpClient,
-  ) {
-    pdfDefaultOptions.assetsFolder = environment.pdfAssetsFolder;
-  }
+  ) {}
 
   get isPdf(): boolean {
     return this.data.downloadUrl !== undefined && this.data.fileName.toLowerCase().endsWith('.pdf');

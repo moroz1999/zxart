@@ -32,7 +32,7 @@
 
 	<IfModule mod_headers.c>
 
-		<filesMatch "\.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav|woff|ttf|otf|eot|svg)$">
+		<filesMatch "\.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav|woff|woff2|ttf|otf|eot|svg)$">
 			ExpiresDefault A29030400
 			Header append Cache-Control "public"
 		</filesMatch>

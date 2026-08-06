@@ -83,6 +83,7 @@ ALLOWED TYPOGRAPHY VARIANTS
 - title
 - body
 - bodySm
+- mono
 - caption
 - label
 
@@ -105,6 +106,22 @@ FORBIDDEN EXAMPLES
 - app-text with `as`, `tag`, or `element` input
 
 If a required variant or tone is missing, ASK the user.
+
+======================================================================
+
+WEBFONTS
+
+- Roboto and Roboto Mono are self-hosted in `htdocs/fonts/roboto/`.
+  `fonts.css` there holds the @font-face blocks; the SPA shell
+  (`project/templates/public/index.spa.tpl`) links it.
+- Loading fonts from external CDNs is FORBIDDEN.
+- Roboto is a variable font: one `.woff2` per unicode subset backs the
+  300/400/500 faces. To update, regenerate `fonts.css` from the Google Fonts
+  css2 API and rewrite the `url()` values to the local file names.
+- The shell preloads the latin and cyrillic subsets on every page: content mixes
+  both scripts regardless of the interface language, so preloads MUST NOT depend
+  on it. A preload MUST carry `crossorigin`, otherwise the browser fetches the
+  file twice.
 
 ======================================================================
 

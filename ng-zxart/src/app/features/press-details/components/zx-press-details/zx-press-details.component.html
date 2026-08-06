@@ -49,6 +49,8 @@
         *ngIf="vm.details.content"
         [content]="vm.details.content"
         [html]="true"
+        appText="mono"
+        tone="primary"
       ></zx-preformatted>
 
       <zx-grid *ngIf="vm.previous || vm.next" desktopColumns="2" mobileColumns="1" gap="md">

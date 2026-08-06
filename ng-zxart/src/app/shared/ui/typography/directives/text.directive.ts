@@ -1,7 +1,7 @@
 import {Directive, HostBinding, input} from '@angular/core';
 import {TypographyTone, TypographyVariant} from '../typography.types';
 
-type TextVariant = Extract<TypographyVariant, 'body' | 'bodySm' | 'caption' | 'label'>;
+type TextVariant = Extract<TypographyVariant, 'body' | 'bodySm' | 'mono' | 'caption' | 'label'>;
 
 @Directive({
   selector: '[appText]',
@@ -20,6 +20,11 @@ export class TextDirective {
   @HostBinding('class.app-typography-body-sm')
   get bodySmClass(): boolean {
     return this.appText() === 'bodySm';
+  }
+
+  @HostBinding('class.app-typography-mono')
+  get monoClass(): boolean {
+    return this.appText() === 'mono';
   }
 
   @HostBinding('class.app-typography-caption')
