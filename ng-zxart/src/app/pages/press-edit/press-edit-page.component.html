@@ -1,5 +1,7 @@
 <zx-page-layout>
-<h1 zxPageHeader appHeading="display">{{ (creating ? 'prod-details.addpressarticle' : 'press-details.edit') | translate }}</h1>
+<h1 zxPageHeader appHeading="display">
+  {{ (creating ? 'form-page-title.add-press' : 'form-page-title.edit-press') | translate:{title: pageSubject} }}
+</h1>
 <zx-delete-entity-button
   zxPageHeader
   [elementId]="elementId"
@@ -34,7 +36,14 @@
     </zx-form-field>
   </zx-form-section>
 
-  <zx-form-section [title]="'form.description' | translate" icon="file">
+  <zx-form-section [title]="'press-form.original-section' | translate" icon="file">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label for="press-original-content">{{ 'press-form.original-content' | translate }}</zx-form-label>
+      <zx-form-control><zx-textarea id="press-original-content" formControlName="originalContent" [rows]="12"></zx-textarea></zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
+  <zx-form-section [title]="'press-form.ai-section' | translate" icon="hw-chip">
     <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'press-form.introduction' | translate }}</zx-form-label>
       <zx-form-control>
@@ -47,11 +56,6 @@
       <zx-form-control>
         <zx-multilang-field formControlName="content" [languages]="languages" [multiline]="true" [rows]="8"></zx-multilang-field>
       </zx-form-control>
-    </zx-form-field>
-
-    <zx-form-field [fullWidth]="true">
-      <zx-form-label for="press-original-content">{{ 'press-form.original-content' | translate }}</zx-form-label>
-      <zx-form-control><zx-textarea id="press-original-content" formControlName="originalContent" [rows]="6"></zx-textarea></zx-form-control>
     </zx-form-field>
   </zx-form-section>
 

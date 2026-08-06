@@ -98,8 +98,11 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   /** Creation mode: a new article of the production the form was opened from. */
   creating = false;
 
-  /** Where the user lands once the article is deleted. */
-  readonly deleteReturnUrl = '/';
+  /** What the heading and the browser tab name: the article, or its production. */
+  pageSubject = '';
+
+  /** Where the user lands once the article is deleted; the production it belonged to. */
+  deleteReturnUrl = '/prods';
 
   elementId = 0;
   /** The production the new article belongs to. */
@@ -138,7 +141,16 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
             return;
           }
-          this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
+          const prod = data.parent ?? null;
+          if (prod) {
+            this.deleteReturnUrl = `/prod/${prod.id}`;
+          }
+          // a new article has no title yet, so the production it is written about
+          // names the page; an existing one falls back to it when left untitled
+          this.pageSubject = this.creating
+            ? prod?.title ?? ''
+            : data.entityTitle || (prod?.title ?? '');
+          this.pageMetadata.applyFormTitle(this.route.snapshot, this.pageSubject);
           this.languages = data.languages;
           this.form.patchValue({
             title: data.multilang['title'] ?? {},

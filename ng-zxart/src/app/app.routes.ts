@@ -146,6 +146,7 @@ const ROUTED_CHILDREN: Routes = [
       privilege: 'pressArticle.publicReceive',
       entityPath: 'prod',
       titleKey: 'prod-details.addpressarticle',
+      formTitleKey: 'form-page-title.add-press',
     },
   },
   {

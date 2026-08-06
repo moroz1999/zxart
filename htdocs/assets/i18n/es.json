@@ -70,6 +70,7 @@
     "edit-picture": "Edición de la imagen «{{title}}»",
     "edit-tune": "Edición de la melodía «{{title}}»",
     "edit-press": "Edición del artículo «{{title}}»",
+    "add-press": "Nuevo artículo sobre «{{title}}»",
     "ai-prod": "Procesamiento con IA del programa «{{title}}»",
     "ai-press": "Procesamiento con IA del artículo «{{title}}»",
     "split-prod": "División del programa «{{title}}»"
@@ -290,6 +291,8 @@
     "tunes": "Música",
     "pictures": "Gráficos",
     "add": "Añadir…",
+    "original-section": "Texto original",
+    "ai-section": "Textos generados por IA",
     "introduction": "Introducción",
     "content": "Contenido",
     "original-content": "Contenido original",

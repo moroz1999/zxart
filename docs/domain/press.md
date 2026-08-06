@@ -15,6 +15,17 @@ order.
 | `content` | The article text (HTML), typed against a fixed-width grid |
 | `externalLink` | Source the text was taken from |
 
+`originalContent` is the raw text the article was typed or pasted from, before
+the AI formats it, translates it into the site languages and writes the
+introduction. It has no column of its own: it lives one row per article in
+`module_pressarticle_archive` (`PressArticleRepository`) and is stored exactly
+as submitted — `publicReceive` archives the posted text itself, bypassing the
+`html` chunk that would purify it, and the form templates escape it on output.
+`pressArticleElement::getOriginalContent()` reads it back, and the element puts
+it into its own `getFormData()` so both the SPA and the legacy form show what is
+archived. It is empty until something is archived; the article's `content` is
+never offered in its place — that text is the AI's output, not a source.
+
 `getH1()` prefixes the publication title (`Spectrofon #14: Readers' letters`)
 and is what the document title and the page `<h1>` use. `getShortTitle()`
 returns the same title without that prefix.
@@ -27,6 +38,11 @@ Articles link the entities they mention through their own link types: `authors`,
 `PressDetailsService` builds the whole read view in one response
 (`api/press-details.yaml`):
 
+- `content` — the processed article text, or the archived original when the AI
+  has produced none in the current language (`isContentOriginal()`). Both are
+  markup: an original is normally the magazine text wrapped in `<span
+  class="RGB…">` runs that carry its colours, so the page renders either the
+  same way;
 - `title` — `getH1()` (`<publication>: <article>`), the document title and the
   page `<h1>`;
 - `shortTitle` — the article's own title, for the breadcrumb and the issue's
@@ -56,7 +72,7 @@ refetches the article when the interface language changes.
   sidebar, so they are not repeated here); the mentioned entities as
   `zx-meta-row` + `zx-chips` rows; the introduction as a labelled `zx-meta-row`;
   the article text in `zx-preformatted` (`[html]="true"` — the stored text
-  carries links); previous/next article callouts; and the shared
+  carries its own markup); previous/next article callouts; and the shared
   `zx-comments-list-view`.
 
 The page is a reading surface, not a catalogue entity page: it opens with the

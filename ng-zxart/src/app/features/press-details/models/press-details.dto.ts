@@ -29,6 +29,7 @@ export interface PressDetailsDto {
   url: string;
   externalLink: string | null;
   introduction: string | null;
+  /** The processed article text, or the archived original while the AI made none. */
   content: string | null;
   tags: PressTagDto[];
   authors: PressMentionDto[];

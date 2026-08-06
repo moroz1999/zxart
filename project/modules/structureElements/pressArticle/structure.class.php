@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\LinkTypes;
+use ZxArt\Press\Repositories\PressArticleRepository;
 use ZxArt\Queue\QueueStatusProvider;
 
 /**
@@ -123,6 +124,36 @@ class pressArticleElement extends structureElement implements SearchContentHolde
         $multiLanguageFields[] = 'h1';
         $multiLanguageFields[] = 'metaTitle';
         $multiLanguageFields[] = 'metaDescription';
+    }
+
+    /**
+     * The text the article was parsed from. It lives in the archive table rather
+     * than in this element's own row, so the form has to be told about it.
+     */
+    #[Override]
+    public function getFormData(): array
+    {
+        $formData = parent::getFormData();
+        $formData['originalContent'] = $this->getOriginalContent();
+
+        return $formData;
+    }
+
+    /** Empty while nothing was archived for the article. */
+    public function getOriginalContent(): string
+    {
+        $repository = $this->getService(PressArticleRepository::class);
+
+        return (string)$repository->getOriginalContent($this->getId());
+    }
+
+    /**
+     * An article the AI has not processed yet has no content in any language, so
+     * it is read in its original form until it does.
+     */
+    public function isContentOriginal(): bool
+    {
+        return (string)$this->content === '';
     }
 
     public function getCommentFormActionURL()

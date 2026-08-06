@@ -42,7 +42,7 @@ readonly class PressDetailsService
             url: $this->entityUrlResolver->urlFor($element),
             externalLink: ((string)$element->externalLink) !== '' ? (string)$element->externalLink : null,
             introduction: ((string)$element->introduction) !== '' ? (string)$element->introduction : null,
-            content: ((string)$element->content) !== '' ? (string)$element->content : null,
+            content: $this->buildContent($element),
             tags: $this->buildTags($element),
             authors: $this->buildMentions($element->authors),
             people: $this->buildMentions($element->people),
@@ -53,6 +53,20 @@ readonly class PressDetailsService
             parties: $this->buildMentions($element->parties),
             publication: $parent !== null ? $this->buildPublication($parent) : null,
         );
+    }
+
+    /**
+     * The article as it can be read: the processed text, or the archived original
+     * while the AI has not produced one. Both carry the markup the magazine text
+     * was typed with, so the page renders them the same way.
+     */
+    private function buildContent(pressArticleElement $element): ?string
+    {
+        $content = $element->isContentOriginal()
+            ? $element->getOriginalContent()
+            : (string)$element->content;
+
+        return $content !== '' ? $content : null;
     }
 
     private function buildPublication(zxProdElement $publication): PressPublicationDto

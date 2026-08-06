@@ -118,7 +118,10 @@ class Formdata extends LoggedControllerApplication
                     } elseif (!$this->hasPrivilege($id, 'showPublicForm')) {
                         $this->assignError('Forbidden', 403);
                     } else {
-                        $this->assignSuccess($this->buildFormData($element, $this->getRefFields()));
+                        $this->assignSuccess([
+                            ...$this->buildFormData($element, $this->getRefFields()),
+                            'parent' => $this->buildOwnerRef($element),
+                        ]);
                     }
                 }
             } catch (Throwable $e) {
@@ -168,10 +171,32 @@ class Formdata extends LoggedControllerApplication
             return null;
         }
 
+        return $this->buildRef($parent);
+    }
+
+    /**
+     * The element an edited one belongs to (the production of an article or a
+     * release), so the form can name it and can send the user there once the
+     * element itself is gone.
+     *
+     * @return array{id: int, title: string, structureType: string}|null
+     */
+    private function buildOwnerRef(structureElement $element): ?array
+    {
+        $parent = $this->structureManager->getElementsFirstParent($element->getId());
+
+        return $parent instanceof structureElement ? $this->buildRef($parent) : null;
+    }
+
+    /**
+     * @return array{id: int, title: string, structureType: string}
+     */
+    private function buildRef(structureElement $element): array
+    {
         return [
-            'id' => (int)$parent->getId(),
-            'title' => $this->decode((string)$parent->getTitle()),
-            'structureType' => (string)$parent->structureType,
+            'id' => (int)$element->getId(),
+            'title' => $this->decode((string)$element->getTitle()),
+            'structureType' => (string)$element->structureType,
         ];
     }
 
@@ -198,6 +223,7 @@ class Formdata extends LoggedControllerApplication
         $images = [];
         $files = [];
         $baseUrl = (string)$this->controller->baseURL;
+        $multiLanguageFields = $element->getMultiLanguageFields();
 
         foreach ($element->getFormData() as $field => $value) {
             if (is_array($value)) {
@@ -226,6 +252,14 @@ class Formdata extends LoggedControllerApplication
                 // multi-language fields ({languageId: value}); also exposed raw in
                 // `fields` so forms can pass through non-multilang arrays (lists,
                 // per-key maps) unchanged on save.
+                if (isset($multiLanguageFields[$field])) {
+                    // a text chunk holding nothing — every field of a creation
+                    // draft — reports null, and the form takes one string per
+                    // language: JS turns a null back into the string "null"
+                    foreach ($value as $languageId => $languageValue) {
+                        $value[$languageId] = (string)$languageValue;
+                    }
+                }
                 $multilang[$field] = $value;
                 $fields[$field] = $value;
                 continue;

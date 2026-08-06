@@ -16,6 +16,12 @@
 - Services and other stateless classes should be marked as `readonly class` if all their properties are immutable (e.g., dependencies injected via constructor). When a class is `readonly`, individual `readonly` modifiers on properties are redundant and should be omitted.
 - Do NOT write PHPDoc `/** @var ... */` for `getService` calls if the class name is explicitly provided as the first argument (e.g. `getService(MyService::class)`). Modern IDEs and Psalm can infer the type from the class string.
 
+## Type Fixing
+- Writing a method whose only job is to repair the type of a value is STRICTLY FORBIDDEN. No `emptyOutNulls()`, `normalizeX()`, `sanitizeX()`, `toStringArray()`, `ensureX()`. Such a method has no domain meaning: it exists only because a value arrived in a type the code did not expect, and it hides that fact from every future reader.
+- Do NOT change the types a legacy CMS class returns (`DataChunk`, `structureElement`, `persistableObject`, managers) to make a consumer simpler. Half the project reads those values; a contract change there breaks callers nobody is looking at.
+- Instead, establish exactly which types the legacy source emits, write them down next to that source (see [cms.md](cms.md) for `getFormData()`), and handle them where the value is consumed — with an explicit cast at the point of use, as the casting rules above require. The cast belongs in the branch that already knows what the value is for, not in a helper called from three places.
+- New code is the opposite case: its types must be right at the source. A repair at the consumer is only ever for values crossing in from legacy.
+
 ## Coding Style
 - Methods must follow SRP: each method does one thing. Extract private methods if a method handles multiple concerns or becomes hard to read at a glance.
 - If nesting exceeds 2–3 levels, refactor: extract methods, use early returns, or split the logic.

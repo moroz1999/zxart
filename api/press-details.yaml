@@ -118,6 +118,9 @@ components:
         content:
           type: string
           nullable: true
+          description: >
+            The article text: the processed one, or the archived original while the
+            AI has produced none. Both carry markup.
         tags:
           type: array
           items:
