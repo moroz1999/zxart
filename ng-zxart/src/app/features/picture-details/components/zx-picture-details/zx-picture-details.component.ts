@@ -124,6 +124,8 @@ export class ZxPictureDetailsComponent implements OnChanges, OnDestroy {
             ],
             currentTitle: details.title,
           });
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       shareReplay(1),

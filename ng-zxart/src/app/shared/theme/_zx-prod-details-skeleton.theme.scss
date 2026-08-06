@@ -1,27 +1,33 @@
 :root {
-  /* Product details title placeholder width. */
+  /* Rhythm between the hero and the body block; mirrors zx-page-layout. */
+  --zx-prod-details-skeleton-block-gap: var(--zx-page-layout-content-block-gap);
+
+  /* Gap between the title, the id badge and the year; mirrors zx-hero-title. */
+  --zx-prod-details-skeleton-title-row-gap: var(--zx-hero-title-gap);
+
+  /* Product title placeholder width. */
   --zx-prod-details-skeleton-title-width: 62%;
 
-  /* Product details title placeholder height. */
-  --zx-prod-details-skeleton-title-height: var(--space-32);
+  /* Product title placeholder height: one line of the display heading. */
+  --zx-prod-details-skeleton-title-height: calc(var(--app-typography-display-size) * var(--app-typography-display-line-height));
 
-  /* Video column placeholder width matching the product details hero. */
-  --zx-prod-details-skeleton-cover-width: calc((var(--space-64) * 5) + var(--space-40));
+  /* Id badge placeholder width. */
+  --zx-prod-details-skeleton-badge-width: var(--space-64);
 
-  /* Minimum info column width before wrapping below the video. */
-  --zx-prod-details-skeleton-info-min-width: calc(var(--space-64) * 5);
+  /* Id badge placeholder height. */
+  --zx-prod-details-skeleton-badge-height: var(--space-20);
+
+  /* Id badge placeholder radius. */
+  --zx-prod-details-skeleton-badge-radius: var(--radius-md);
 
   /* Year placeholder width. */
   --zx-prod-details-skeleton-year-width: var(--space-48);
 
-  /* Year placeholder height. */
-  --zx-prod-details-skeleton-year-height: var(--space-20);
+  /* Height of a placeholder standing in for one line of body text. */
+  --zx-prod-details-skeleton-text-line-height: calc(var(--app-typography-body-size) * var(--app-typography-body-line-height));
 
-  /* Alternative title placeholder width. */
-  --zx-prod-details-skeleton-alt-title-width: 44%;
-
-  /* Alternative title placeholder height. */
-  --zx-prod-details-skeleton-alt-title-height: var(--space-12);
+  /* Height of a placeholder standing in for one line of caption text. */
+  --zx-prod-details-skeleton-caption-line-height: calc(var(--zx-caption-size) * var(--zx-caption-line-height));
 
   /* Metadata chip placeholder width. */
   --zx-prod-details-skeleton-chip-width: calc(var(--space-64) + var(--space-16));
@@ -32,38 +38,29 @@
   /* Metadata chip placeholder radius. */
   --zx-prod-details-skeleton-chip-radius: var(--radius-md);
 
-  /* Vote row placeholder width. */
-  --zx-prod-details-skeleton-vote-width: calc(var(--space-64) * 3);
+  /* People metadata placeholder width. */
+  --zx-prod-details-skeleton-people-line-width: 76%;
 
-  /* Vote row placeholder height. */
-  --zx-prod-details-skeleton-vote-height: var(--space-24);
+  /* External links row placeholder width. */
+  --zx-prod-details-skeleton-links-width: 48%;
 
   /* Added-by placeholder width. */
   --zx-prod-details-skeleton-added-width: calc(var(--space-64) * 3);
 
-  /* Added-by placeholder height. */
-  --zx-prod-details-skeleton-added-height: var(--space-12);
+  /* Rating strip placeholder width. */
+  --zx-prod-details-skeleton-vote-width: calc(var(--space-64) * 3);
 
-  /* People metadata placeholder width. */
-  --zx-prod-details-skeleton-people-line-width: 76%;
+  /* Rating strip placeholder height: the vote row's icon buttons. */
+  --zx-prod-details-skeleton-vote-height: var(--space-32);
 
-  /* People metadata placeholder height. */
-  --zx-prod-details-skeleton-people-line-height: var(--space-12);
-
-  /* External link placeholder width. */
-  --zx-prod-details-skeleton-link-width: calc(var(--space-64) + var(--space-32));
-
-  /* External link placeholder height. */
-  --zx-prod-details-skeleton-link-height: var(--space-16);
+  /* Counters placeholder width. */
+  --zx-prod-details-skeleton-counters-width: calc(var(--space-64) * 2);
 
   /* Section heading placeholder width. */
   --zx-prod-details-skeleton-section-title-width: 28%;
 
-  /* Section heading placeholder height. */
-  --zx-prod-details-skeleton-section-title-height: var(--space-24);
-
-  /* Product details description skeleton rib height. */
-  --zx-prod-details-skeleton-description-line-height: var(--space-8);
+  /* Section heading placeholder height: one line of the headline heading. */
+  --zx-prod-details-skeleton-section-title-height: calc(var(--app-typography-headline-size) * var(--app-typography-headline-line-height));
 
   /* Full-width product details description skeleton rib width. */
   --zx-prod-details-skeleton-description-line-width-full: 100%;
@@ -74,17 +71,14 @@
   /* Short product details description skeleton rib width. */
   --zx-prod-details-skeleton-description-line-width-short: 64%;
 
-  /* Top border of the tags area inside the about panel. */
-  --zx-prod-details-skeleton-tags-section-border: var(--border-width-thin) dashed var(--secondary-200);
+  /* Top border of the tags area inside the about panel; mirrors zx-tags-list. */
+  --zx-prod-details-skeleton-tags-section-border: var(--zx-tags-list-border);
 
-  /* Top padding of the tags area inside the about panel. */
-  --zx-prod-details-skeleton-tags-section-padding: var(--padding-md);
+  /* Top padding of the tags area inside the about panel; mirrors zx-tags-list. */
+  --zx-prod-details-skeleton-tags-section-padding: var(--zx-tags-list-padding-top);
 
   /* Tags label placeholder width. */
   --zx-prod-details-skeleton-tags-label-width: var(--space-48);
-
-  /* Tags label placeholder height. */
-  --zx-prod-details-skeleton-tags-label-height: var(--space-12);
 
   /* Tag chip placeholder width. */
   --zx-prod-details-skeleton-tag-width: calc(var(--space-64) + var(--space-16));
@@ -95,17 +89,21 @@
   /* Tag chip placeholder radius. */
   --zx-prod-details-skeleton-tag-radius: var(--radius-md);
 
-  /* Tab bar separator matching zx-tabs. */
-  --zx-prod-details-skeleton-tabs-bar-separator: inset 0 -1px 0 0 var(--secondary-200);
+  /* Tab bar separator; mirrors zx-tabs. */
+  --zx-prod-details-skeleton-tabs-bar-separator: var(--zx-tabs-bar-separator);
 
-  /* Tab bar bottom margin matching zx-tabs. */
-  --zx-prod-details-skeleton-tabs-bar-margin-bottom: var(--space-16);
+  /* Tab bar bottom margin; mirrors zx-tabs. */
+  --zx-prod-details-skeleton-tabs-bar-margin-bottom: var(--zx-tabs-bar-margin-bottom);
 
   /* Tab placeholder width. */
   --zx-prod-details-skeleton-tab-width: calc(var(--space-64) + var(--space-32));
 
-  /* Tab placeholder height matching zx-tabs button vertical rhythm. */
-  --zx-prod-details-skeleton-tab-height: calc(var(--space-40) + var(--space-8));
+  /* Tab placeholder height: the tab button's padding, label line and indicator. */
+  --zx-prod-details-skeleton-tab-height: calc(
+    (var(--space-12) * 2) +
+    (var(--app-typography-body-size) * var(--app-typography-body-line-height)) +
+    var(--border-width-thick)
+  );
 
   /* Tab placeholder radius. */
   --zx-prod-details-skeleton-tab-radius: var(--radius-sm);

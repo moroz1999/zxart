@@ -10,6 +10,7 @@ Do not add a facade skeleton component that imports multiple variants.
 
 - `zx-active-authors-skeleton`
 - `zx-article-preview-skeleton`
+- `zx-breadcrumbs-skeleton`
 - `zx-card-skeleton`
 - `zx-authors-table-skeleton`
 - `zx-comment-skeleton`
@@ -43,5 +44,10 @@ A skeleton must mirror the structure of the block it replaces as closely as poss
 A skeleton that replaces a grid must reuse that grid's layout directive as a host directive (`zx-prods-list-skeleton` uses `ZxProdsGridDirective`) instead of re-declaring `grid-template-columns`. Copied track definitions drift from the real grid and break at the breakpoints nobody re-checks.
 
 Metrics that mirror another component must be aliased in the skeleton's own theme file (`--zx-prods-list-skeleton-body-padding: var(--zx-inset-padding-lg)`), never hardcoded.
+
+A skeleton that stands in for a line of text takes its height from a real line
+box — a bone wrapping a hidden word at the mirrored font size — instead of a
+fixed pixel height, so it keeps the exact height of the text it replaces and
+nothing below it moves. `zx-breadcrumbs-skeleton` works that way.
 
 If no existing skeleton fits the target layout, add a new tailored skeleton instead of reusing a generic one.

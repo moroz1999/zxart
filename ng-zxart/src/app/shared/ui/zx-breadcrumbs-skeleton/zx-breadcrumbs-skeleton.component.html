@@ -1,0 +1,6 @@
+<ng-container *ngFor="let item of items; let last = last">
+  <zx-skeleton-bone class="zx-breadcrumbs-skeleton__item">
+    <span class="zx-breadcrumbs-skeleton__label">{{ item }}</span>
+  </zx-skeleton-bone>
+  <span *ngIf="!last" class="zx-breadcrumbs-skeleton__sep">/</span>
+</ng-container>

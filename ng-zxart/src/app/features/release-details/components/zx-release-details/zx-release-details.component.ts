@@ -80,6 +80,8 @@ export class ZxReleaseDetailsComponent implements OnChanges {
             ],
             currentTitle: details.title,
           });
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       shareReplay(1),

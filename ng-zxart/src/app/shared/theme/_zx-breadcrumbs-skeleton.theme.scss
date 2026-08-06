@@ -1,0 +1,8 @@
+:root {
+  /* Gap between placeholder items and separators; mirrors the trail. */
+  --zx-breadcrumbs-skeleton-gap: var(--zx-breadcrumbs-gap);
+  /* Font size the placeholder bones take their line box from; mirrors the trail. */
+  --zx-breadcrumbs-skeleton-font-size: var(--zx-breadcrumbs-font-size);
+  /* Color of the separator slash; mirrors the trail. */
+  --zx-breadcrumbs-skeleton-sep-color: var(--zx-breadcrumbs-sep-color);
+}

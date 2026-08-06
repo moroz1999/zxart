@@ -1,4 +1,5 @@
+// The trail and its skeleton bring their own display mode (block / flex row);
+// the bar only adds the gap to the page header below it.
 .zx-breadcrumb-bar {
-  display: block;
   margin-bottom: var(--zx-page-layout-header-content-gap);
 }

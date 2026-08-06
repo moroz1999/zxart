@@ -1,42 +1,28 @@
-<nav class="zx-breadcrumbs" aria-label="breadcrumb" [attr.aria-busy]="loading ? 'true' : null">
-  <ng-container *ngIf="loading; else breadcrumbsContent">
-    <ng-container *ngFor="let item of skeletonItems; let last = last">
-      <zx-skeleton-bone
-        class="zx-breadcrumbs__skeleton-item"
-        [style.animation-delay.ms]="item.delayMs"
-        aria-hidden="true">
-        <span class="zx-breadcrumbs__skeleton-label">{{ item.label }}</span>
-      </zx-skeleton-bone>
-      <span *ngIf="!last" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-    </ng-container>
+<nav class="zx-breadcrumbs" aria-label="breadcrumb">
+  <a routerLink="/" class="zx-breadcrumbs__item">ZX-Art</a>
+  <span *ngIf="categories.length || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+
+  <ng-container *ngFor="let cat of categories; let last = last">
+    <a *ngIf="categoryCataloguePath && cat.id; else categoryUrl"
+       [routerLink]="categoryCataloguePath"
+       [queryParams]="{cat: cat.id}"
+       class="zx-breadcrumbs__item">{{ cat.title }}</a>
+    <ng-template #categoryUrl>
+      <a *ngIf="cat.url && cat.url.startsWith('/'); else externalCategory"
+         [routerLink]="cat.url"
+         [queryParams]="cat.queryParams ?? null"
+         class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      <ng-template #externalCategory>
+        <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
+      </ng-template>
+    </ng-template>
+    <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
   </ng-container>
 
-  <ng-template #breadcrumbsContent>
-    <a routerLink="/" class="zx-breadcrumbs__item">ZX-Art</a>
-    <span *ngIf="categories.length || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+  <ng-container *ngIf="parentItem">
+    <a [routerLink]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
+    <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
+  </ng-container>
 
-    <ng-container *ngFor="let cat of categories; let last = last">
-      <a *ngIf="categoryCataloguePath && cat.id; else categoryUrl"
-         [routerLink]="categoryCataloguePath"
-         [queryParams]="{cat: cat.id}"
-         class="zx-breadcrumbs__item">{{ cat.title }}</a>
-      <ng-template #categoryUrl>
-        <a *ngIf="cat.url && cat.url.startsWith('/'); else externalCategory"
-           [routerLink]="cat.url"
-           [queryParams]="cat.queryParams ?? null"
-           class="zx-breadcrumbs__item">{{ cat.title }}</a>
-        <ng-template #externalCategory>
-          <a [href]="cat.url" class="zx-breadcrumbs__item">{{ cat.title }}</a>
-        </ng-template>
-      </ng-template>
-      <span *ngIf="!last || parentItem || currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-    </ng-container>
-
-    <ng-container *ngIf="parentItem">
-      <a [routerLink]="parentItem.url" class="zx-breadcrumbs__item">{{ parentItem.title }}</a>
-      <span *ngIf="currentTitle" class="zx-breadcrumbs__sep" aria-hidden="true">/</span>
-    </ng-container>
-
-    <span *ngIf="currentTitle" class="zx-breadcrumbs__item zx-breadcrumbs__item--current" aria-current="page">{{ currentTitle }}</span>
-  </ng-template>
+  <span *ngIf="currentTitle" class="zx-breadcrumbs__item zx-breadcrumbs__item--current" aria-current="page">{{ currentTitle }}</span>
 </nav>

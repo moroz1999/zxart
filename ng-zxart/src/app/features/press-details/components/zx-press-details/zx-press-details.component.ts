@@ -101,6 +101,8 @@ export class ZxPressDetailsComponent implements OnChanges {
       tap(details => {
         if (details) {
           this.applyPageState(details);
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       map(details => ({

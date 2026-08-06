@@ -6,10 +6,19 @@ import {ZxRowSkeletonComponent} from '../zx-row-skeleton/zx-row-skeleton.compone
 import {ZxStackComponent} from '../../../zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../zx-inline/zx-inline.component';
 import {ZxPanelComponent} from '../../../zx-panel/zx-panel.component';
-import {ZxGridComponent} from '../../../zx-grid/zx-grid.component';
-import {ZxGridItemDirective} from '../../../zx-grid/zx-grid-item.directive';
-import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skeleton.component';
+import {ZxHeroComponent} from '../../../zx-hero/zx-hero.component';
+import {ZxHeroBarComponent} from '../../../zx-hero-bar/zx-hero-bar.component';
 
+/**
+ * Loading placeholder for the prod page. It is built from the containers the
+ * loaded page uses — `zx-hero` with its action bar, then the body `zx-stack`
+ * with its panels and tab bar — so every padding, border and gap around the
+ * placeholders is the real one and cannot drift from the page it replaces.
+ *
+ * The hero opens without media: a prod carries one only when it has a video.
+ * The page title is not part of it — that heading lives in `zx-page-layout`'s
+ * header, which reserves its line on its own.
+ */
 @Component({
   selector: 'zx-prod-details-skeleton',
   standalone: true,
@@ -21,9 +30,8 @@ import {ZxCommentSkeletonComponent} from '../zx-comment-skeleton/zx-comment-skel
     ZxStackComponent,
     ZxInlineComponent,
     ZxPanelComponent,
-    ZxGridComponent,
-    ZxGridItemDirective,
-    ZxCommentSkeletonComponent,
+    ZxHeroComponent,
+    ZxHeroBarComponent,
   ],
   templateUrl: './zx-prod-details-skeleton.component.html',
   styleUrls: ['./zx-prod-details-skeleton.component.scss'],

@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-breadcrumbs-skeleton-gap);
+  font-size: var(--zx-breadcrumbs-skeleton-font-size);
+}
+
+.zx-breadcrumbs-skeleton__sep {
+  color: var(--zx-breadcrumbs-skeleton-sep-color);
+  user-select: none;
+}
+
+.zx-breadcrumbs-skeleton__label {
+  visibility: hidden;
+  white-space: nowrap;
+}

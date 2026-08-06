@@ -73,7 +73,7 @@ export class TagPageStateService {
         structuredData: null,
       };
       this.pageMetadata.applyEntityMetadata(metadata);
-      this.breadcrumbService.setEntityTrail({items: [], currentTitle: title});
+      this.breadcrumbService.setNotFoundTrail();
       return;
     }
 

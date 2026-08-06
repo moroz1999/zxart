@@ -110,6 +110,29 @@ Segments](#optional-trailing-route-segments)) and declares
 the view key it uses to decide whether a navigation scrolls back to the top, so
 switching a tab keeps the reader where they are.
 
+#### Breadcrumbs
+
+`zx-breadcrumb-bar` renders the trail once in the shell, above every page's
+`<h1>`; no page renders `zx-breadcrumbs` itself. `BreadcrumbService` builds the
+trail from the top menu for routes that carry a `titleKey`, and entity detail
+pages push their own richer trail with `setEntityTrail()` once loaded — or
+`setNotFoundTrail()` when the entity does not exist.
+
+Until the trail of the current page is known, the bar renders
+`zx-breadcrumbs-skeleton`, which occupies exactly the row the trail will take,
+so the page below it never moves when the trail arrives. Reserving that row is
+what makes a routed page whose trail loads asynchronously render at its final
+position from the first frame; only the home page, which has no breadcrumbs,
+renders nothing.
+
+Two consequences for routes:
+
+- A route with no `titleKey` and no entity id gets no breadcrumbs at all, so
+  every routed page that is not an entity page needs a `titleKey`.
+- The trail belongs to the entity, not to the URL: it survives in-page
+  navigation (tab segments, query parameters) and is replaced by the skeleton
+  only when another entity opens.
+
 #### Scroll on navigation
 
 `SpaRootComponent` scrolls to the top on `NavigationEnd`, but only when the view

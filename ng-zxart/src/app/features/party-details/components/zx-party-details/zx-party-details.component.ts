@@ -101,6 +101,8 @@ export class ZxPartyDetailsComponent implements OnChanges {
             });
           }
           this.breadcrumbService.setEntityTrail({items, currentTitle: core.title});
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       shareReplay(1),

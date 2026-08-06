@@ -88,6 +88,8 @@ export class ZxAuthorDetailsComponent implements OnChanges {
           this.pageTitleChange.emit(core.title);
           this.pageMetadataService.applyEntityMetadata(core.metadata);
           this.breadcrumbService.setEntityTrail({items: core.breadcrumbs, currentTitle: core.title});
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       shareReplay(1),

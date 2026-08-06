@@ -38,21 +38,23 @@ layout's content area:
 ```
 
 The feature then exposes a **small number of real page blocks** — not a flat
-list of every element. Tightly-coupled top matter (breadcrumbs + hero/header +
-action bar) is grouped into a single **cluster** block with its own tight
-`zx-stack`; the rest (tabs, or the section body) are separate blocks. The layout
-supplies the larger gap *between* those blocks; the feature owns the tight
-spacing *inside* each.
+list of every element. Tightly-coupled top matter (hero/header + action bar) is
+grouped into a single **cluster** block with its own tight `zx-stack`; the rest
+(tabs, or the section body) are separate blocks. The layout supplies the larger
+gap *between* those blocks; the feature owns the tight spacing *inside* each.
 
 ```html
 <!-- inside a feature-view, :host { display: contents } -->
 <zx-stack spacing="xl"><!-- cluster block: tight top matter -->
-  <zx-breadcrumbs …></zx-breadcrumbs>
   <zx-author-header …></zx-author-header>
+  <zx-editing-controls …></zx-editing-controls>
 </zx-stack>
 
 <zx-tabs …></zx-tabs><!-- next page block; layout adds the gap before it -->
 ```
+
+The breadcrumb trail is not part of a page: `zx-breadcrumb-bar` renders it once
+in the shell, directly above the layout.
 
 For a dense body (picture/tune/release/prod) the pattern is **cluster + body**:
 the top matter is one cluster block and all content sections stay together in a

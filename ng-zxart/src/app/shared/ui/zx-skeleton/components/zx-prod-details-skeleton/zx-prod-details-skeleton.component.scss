@@ -1,12 +1,19 @@
-@use 'shared/breakpoints' as bp;
-
+/* The blocks below are the ones the loaded page shows — the hero panel and the
+   body stack — so the page rhythm between them is the layout's, not a local
+   guess. Everything they contain sits in the real containers (zx-hero,
+   zx-hero-bar, zx-panel, zx-stack), which own the paddings and gaps. */
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-prod-details-skeleton-block-gap);
   width: 100%;
 }
 
-.skeleton-prod-details {
-  width: 100%;
+.skeleton-prod-details-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-prod-details-skeleton-title-row-gap);
 }
 
 .skeleton-prod-details-title {
@@ -14,29 +21,15 @@
   height: var(--zx-prod-details-skeleton-title-height);
 }
 
-.skeleton-prod-details-cover,
-.skeleton-prod-details-info {
-  min-width: 0;
-}
-
-.skeleton-prod-details-cover {
-  flex: 0 0 var(--zx-prod-details-skeleton-cover-width);
-  max-width: var(--zx-prod-details-skeleton-cover-width);
-  aspect-ratio: 16 / 9;
-}
-
-.skeleton-prod-details-info {
-  flex: 1 1 var(--zx-prod-details-skeleton-info-min-width);
+.skeleton-prod-details-badge {
+  width: var(--zx-prod-details-skeleton-badge-width);
+  height: var(--zx-prod-details-skeleton-badge-height);
+  border-radius: var(--zx-prod-details-skeleton-badge-radius);
 }
 
 .skeleton-prod-details-year {
   width: var(--zx-prod-details-skeleton-year-width);
-  height: var(--zx-prod-details-skeleton-year-height);
-}
-
-.skeleton-prod-details-alt-title {
-  width: var(--zx-prod-details-skeleton-alt-title-width);
-  height: var(--zx-prod-details-skeleton-alt-title-height);
+  height: var(--zx-prod-details-skeleton-text-line-height);
 }
 
 .skeleton-prod-details-chip {
@@ -45,24 +38,29 @@
   border-radius: var(--zx-prod-details-skeleton-chip-radius);
 }
 
+.skeleton-prod-details-people-line {
+  width: var(--zx-prod-details-skeleton-people-line-width);
+  height: var(--zx-prod-details-skeleton-text-line-height);
+}
+
+.skeleton-prod-details-links {
+  width: var(--zx-prod-details-skeleton-links-width);
+  height: var(--zx-prod-details-skeleton-text-line-height);
+}
+
+.skeleton-prod-details-added {
+  width: var(--zx-prod-details-skeleton-added-width);
+  height: var(--zx-prod-details-skeleton-caption-line-height);
+}
+
 .skeleton-prod-details-vote {
   width: var(--zx-prod-details-skeleton-vote-width);
   height: var(--zx-prod-details-skeleton-vote-height);
 }
 
-.skeleton-prod-details-added {
-  width: var(--zx-prod-details-skeleton-added-width);
-  height: var(--zx-prod-details-skeleton-added-height);
-}
-
-.skeleton-prod-details-people-line {
-  width: var(--zx-prod-details-skeleton-people-line-width);
-  height: var(--zx-prod-details-skeleton-people-line-height);
-}
-
-.skeleton-prod-details-link {
-  width: var(--zx-prod-details-skeleton-link-width);
-  height: var(--zx-prod-details-skeleton-link-height);
+.skeleton-prod-details-counters {
+  width: var(--zx-prod-details-skeleton-counters-width);
+  height: var(--zx-prod-details-skeleton-caption-line-height);
 }
 
 .skeleton-prod-details-section-title {
@@ -71,7 +69,7 @@
 }
 
 .skeleton-prod-description-line {
-  height: var(--zx-prod-details-skeleton-description-line-height);
+  height: var(--zx-prod-details-skeleton-text-line-height);
 }
 
 .skeleton-prod-description-line:first-child {
@@ -93,7 +91,7 @@
 
 .skeleton-prod-details-tags-label {
   width: var(--zx-prod-details-skeleton-tags-label-width);
-  height: var(--zx-prod-details-skeleton-tags-label-height);
+  height: var(--zx-prod-details-skeleton-caption-line-height);
 }
 
 .skeleton-prod-details-tag {
@@ -107,6 +105,7 @@
 }
 
 .skeleton-prod-details-tabs-bar {
+  display: flex;
   box-shadow: var(--zx-prod-details-skeleton-tabs-bar-separator);
   margin-bottom: var(--zx-prod-details-skeleton-tabs-bar-margin-bottom);
 }
@@ -115,12 +114,4 @@
   width: var(--zx-prod-details-skeleton-tab-width);
   height: var(--zx-prod-details-skeleton-tab-height);
   border-radius: var(--zx-prod-details-skeleton-tab-radius);
-}
-
-@include bp.media-breakpoint-down(lg) {
-  .skeleton-prod-details-cover,
-  .skeleton-prod-details-info {
-    flex-basis: 100%;
-    max-width: 100%;
-  }
 }

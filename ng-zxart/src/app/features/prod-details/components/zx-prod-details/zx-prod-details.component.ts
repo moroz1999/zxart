@@ -129,6 +129,8 @@ export class ZxProdDetailsComponent implements OnChanges {
             ],
             currentTitle: core.title,
           });
+        } else {
+          this.breadcrumbService.setNotFoundTrail();
         }
       }),
       shareReplay(1),

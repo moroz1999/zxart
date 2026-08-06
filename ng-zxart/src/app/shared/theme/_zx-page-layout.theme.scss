@@ -3,6 +3,8 @@
   --zx-page-layout-header-content-gap: var(--space-24);
   /* Space between the title and page-level header controls. */
   --zx-page-layout-header-items-gap: var(--space-16);
+  /* One line of the page title, reserved before the title is known. */
+  --zx-page-layout-header-min-height: calc(var(--app-typography-display-size) * var(--app-typography-display-line-height));
   /* Space between independent page content blocks. */
   --zx-page-layout-content-block-gap: var(--space-48);
 }
