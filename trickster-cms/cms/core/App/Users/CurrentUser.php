@@ -197,6 +197,9 @@ class CurrentUser
 
     public function logout(): void
     {
+        // The remember cookie outlives the session by months, so leaving it in
+        // place would silently log the visitor back in once the session expires.
+        $this->forgetUser();
         $anonymousId = $this->checkUser('anonymous', null, true);
         $this->switchUser($anonymousId);
     }
@@ -436,8 +439,4 @@ class CurrentUser
         return $this->userName !== 'anonymous';
     }
 
-    public function hasAds(): bool
-    {
-        return !$this->vip && !$this->volunteer && !$this->supporter;
-    }
 }

@@ -4,7 +4,13 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
 {
     use DependencyInjectionContextTrait;
 
-    protected $sessionStorageEnabled = false;
+    /**
+     * The admin panel is a server-rendered legacy interface, so it is the only
+     * language group whose selection is persisted in a cookie. The public
+     * language is owned by the Angular frontend and travels per request.
+     */
+    private const ADMIN_LANGUAGES_GROUP = 'adminLanguages';
+
     protected $currentLanguageInfo;
     protected $languagesList = [];
     protected $languagesIdList = [];
@@ -19,18 +25,6 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
         'fi' => 'fin',
         'be' => 'bel',
     ];
-    /**
-     * @var ServerSessionManager
-     */
-    protected $serverSessionManager;
-
-    /**
-     * @param ServerSessionManager $serverSessionManager
-     */
-    public function setServerSessionManager($serverSessionManager)
-    {
-        $this->serverSessionManager = $serverSessionManager;
-    }
 
     public function reset()
     {
@@ -166,18 +160,12 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
                 goto finish;
             }
         }
-        $languageCode = $this->getCodeFromSession($groupName);
-        if ($this->checkLanguageCode($languageCode, $groupName)) {
-            goto finish;
-        }
-        $languageCode = $this->getCodeFromCookies($groupName);
-        if ($groupName == 'adminLanguages') {
-            $checkHidden = true;
-        } else {
-            $checkHidden = false;
-        }
-        if ($this->checkLanguageCode($languageCode, $groupName, $checkHidden)) {
-            goto finish;
+        $checkHidden = $groupName === self::ADMIN_LANGUAGES_GROUP;
+        if ($checkHidden) {
+            $languageCode = $this->getCodeFromCookies($groupName);
+            if ($this->checkLanguageCode($languageCode, $groupName, $checkHidden)) {
+                goto finish;
+            }
         }
         $languageCode = $this->getCodeFromConfig();
         if ($this->checkLanguageCode($languageCode, $groupName, $checkHidden)) {
@@ -250,13 +238,16 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
         return $code;
     }
 
-    protected function getCodeFromSession($groupName)
+    /**
+     * Stores an explicitly chosen admin panel language so it survives navigation.
+     * Only the admin interface persists a language; the public one is chosen by
+     * the Angular frontend and sent with every request.
+     */
+    public function persistAdminLanguageCode($code): void
     {
-        $code = false;
-        if ($this->sessionStorageEnabled) {
-            $code = $this->serverSessionManager->get('currentLanguage' . $groupName);
+        if ($this->checkLanguageCode($code, self::ADMIN_LANGUAGES_GROUP) && !headers_sent()) {
+            setcookie('cl_' . self::ADMIN_LANGUAGES_GROUP, $code, time() + 30 * 24 * 60 * 60, '/');
         }
-        return $code;
     }
 
     protected function getCodeFromURI()
@@ -321,12 +312,6 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
         if (!isset($this->currentLanguageInfo[$groupName]) || $this->currentLanguageInfo[$groupName]->iso6393 != $code) {
             if ($info = $this->checkLanguageCode($code, $groupName)) {
                 $this->currentLanguageInfo[$groupName] = $info;
-                if ($this->sessionStorageEnabled) {
-                    $this->serverSessionManager->set('currentLanguage' . $groupName, $code);
-                }
-                if (!headers_sent()) {
-                    setcookie('cl_' . $groupName, $code, time() + 30 * 24 * 60 * 60, '/');
-                }
                 if ($groupName === $publicGroup && $this->getCodeFromURI() === $code) {
                     $this->saveLanguagePreference($code);
                 }

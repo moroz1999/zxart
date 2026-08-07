@@ -1,1 +1,0 @@
-<span class="vote_controls">{if $user->id != $currentUser->id}<span class="vote_minus">-</span>{/if}<span class="vote_current">{$element->votes}</span>{if $user->id != $currentUser->id}<span class="vote_plus">+</span>{/if}</span>

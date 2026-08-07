@@ -106,6 +106,18 @@ class ServerSessionManager
         $this->enabled = $enabled;
     }
 
+    /**
+     * A session exists only once something has been written to it. Reads must
+     * therefore never bring one into being: a visitor who stores nothing on the
+     * server costs no session file and gets no session cookie.
+     */
+    protected function sessionExists(): bool
+    {
+        return $this->started
+            || session_id() !== ''
+            || isset($_COOKIE[$this->sessionName]);
+    }
+
     public function set($key, $value)
     {
         if ($this->enabled) {
@@ -118,7 +130,7 @@ class ServerSessionManager
 
     public function get($key)
     {
-        if ($this->enabled) {
+        if ($this->enabled && $this->sessionExists()) {
             if (!$this->started) {
                 $this->startSession();
             }
@@ -131,7 +143,7 @@ class ServerSessionManager
 
     public function delete($key)
     {
-        if ($this->enabled) {
+        if ($this->enabled && $this->sessionExists()) {
             if (!$this->started) {
                 $this->startSession();
             }
@@ -143,7 +155,7 @@ class ServerSessionManager
 
     public function getAll()
     {
-        if ($this->enabled) {
+        if ($this->enabled && $this->sessionExists()) {
             if (!$this->started) {
                 $this->startSession();
             }

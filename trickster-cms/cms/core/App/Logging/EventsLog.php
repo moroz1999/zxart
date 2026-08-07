@@ -140,7 +140,8 @@ class EventsLog extends errorLogger implements DependencyInjectionContextInterfa
         $object->type = $type;
         $object->userIp = $_SERVER['REMOTE_ADDR'];
         $object->userId = $userId;
-        $object->session = $this->serverSessionManager->getSessionId();
+        // Anonymous visitors have no session, so this stays empty for most events.
+        $object->session = (string)$this->serverSessionManager->getSessionId();
         $object->time = time();
         $object->elementId = $elementId;
         $object->targetId = $targetId;

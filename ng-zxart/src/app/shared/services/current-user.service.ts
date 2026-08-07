@@ -7,7 +7,6 @@ import {CurrentUser} from '../models/current-user';
 const ANONYMOUS_USER: CurrentUser = {
   id: null,
   userName: 'anonymous',
-  hasAds: true,
   authorId: null,
 };
 

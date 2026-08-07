@@ -1,1 +1,0 @@
-<span class="playlist_controls elementid_{$element->id}"></span>

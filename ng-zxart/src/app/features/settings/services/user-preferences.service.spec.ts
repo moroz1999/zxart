@@ -32,13 +32,11 @@ describe('UserPreferencesService', () => {
   const loggedUser: CurrentUser = {
     id: 7,
     userName: 'tester',
-    hasAds: false,
     authorId: null,
   };
   const anonymousUser: CurrentUser = {
     id: null,
     userName: 'anonymous',
-    hasAds: true,
     authorId: null,
   };
 

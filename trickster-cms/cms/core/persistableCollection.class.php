@@ -51,15 +51,7 @@ class persistableCollection extends errorLogger implements DependencyInjectionCo
                     $cache->set($keyName, $this->primaryFields);
                 }
             } else {
-                /**
-                 * @var ServerSessionManager $serverSessionManager
-                 */
-                $serverSessionManager = $this->getService(ServerSessionManager::class);
-
-                if (!$this->primaryFields = $serverSessionManager->get($keyName)) {
-                    $this->primaryFields = $this->transportObject->loadPrimaryFields();
-                    $serverSessionManager->set($keyName, $this->primaryFields);
-                }
+                $this->primaryFields = $this->transportObject->loadPrimaryFields();
             }
 
             if (!is_array($this->primaryFields)) {
@@ -87,15 +79,7 @@ class persistableCollection extends errorLogger implements DependencyInjectionCo
                     $cache->set($keyName, $this->columnNames);
                 }
             } else {
-                /**
-                 * @var ServerSessionManager $serverSessionManager
-                 */
-                $serverSessionManager = $this->getService(ServerSessionManager::class);
-
-                if (!$this->columnNames = $serverSessionManager->get($keyName)) {
-                    $this->columnNames = $this->transportObject->loadColumnNames();
-                    $serverSessionManager->set($keyName, $this->columnNames);
-                }
+                $this->columnNames = $this->transportObject->loadColumnNames();
             }
         }
 

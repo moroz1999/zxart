@@ -9,7 +9,6 @@ readonly class CurrentUserRestDto
     public function __construct(
         public ?int $id,
         public string $userName,
-        public bool $hasAds,
         public ?int $authorId = null,
     ) {
     }

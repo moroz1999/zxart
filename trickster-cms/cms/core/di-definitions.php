@@ -22,10 +22,9 @@ return [
     },
     renderer::class => static fn() => renderer::getInstance(),
 
-    LanguagesManager::class => factory(static function (Container $container, ServerSessionManager $ssm) {
+    LanguagesManager::class => factory(static function (Container $container) {
         $lm = new LanguagesManager();
         $lm->setContainer($container);
-        $lm->setServerSessionManager($ssm);
         return $lm;
     }),
 

@@ -46,6 +46,7 @@ class adminApplication extends controllerApplication implements ThemeCodeProvide
         $languagesManager = $this->getService(LanguagesManager::class);
         if ($langCode = $controller->getParameter('lang')) {
             $languagesManager->setCurrentLanguageCode($langCode, 'adminLanguages');
+            $languagesManager->persistAdminLanguageCode($langCode);
             //change the public language as well, so all public-languages dependent data in admin would be displayed in a same language where possible
             $languagesManager->setCurrentLanguageCode($langCode);
         }

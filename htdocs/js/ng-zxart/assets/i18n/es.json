@@ -995,8 +995,7 @@
         "zxMusic": "Música",
         "pressArticle": "Prensa"
       }
-    },
-    "remove-ads": "Quitar anuncios"
+    }
   },
   "login": {
     "trigger-label": "Iniciar sesión",

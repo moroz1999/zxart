@@ -100,7 +100,6 @@ components:
       required:
         - id
         - userName
-        - hasAds
         - authorId
       properties:
         id:
@@ -111,11 +110,6 @@ components:
           type: string
           description: Account name, or `anonymous` when nobody is logged in.
           example: anonymous
-        hasAds:
-          type: boolean
-          description: >
-            Whether advertising is shown to this user. False for VIP, volunteer
-            and supporter accounts.
         authorId:
           type: integer
           nullable: true

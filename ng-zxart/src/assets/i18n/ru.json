@@ -996,8 +996,7 @@
         "zxMusic": "Музыка",
         "pressArticle": "Пресса"
       }
-    },
-    "remove-ads": "Убрать рекламу"
+    }
   },
   "login": {
     "trigger-label": "Войти",

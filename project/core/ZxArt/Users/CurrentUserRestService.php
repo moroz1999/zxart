@@ -30,7 +30,6 @@ class CurrentUserRestService
         return new CurrentUserRestDto(
             id: $id,
             userName: $userName,
-            hasAds: $user->hasAds(),
             authorId: $authorId,
         );
     }
@@ -40,7 +39,6 @@ class CurrentUserRestService
         return new CurrentUserRestDto(
             id: null,
             userName: 'anonymous',
-            hasAds: true,
         );
     }
 }

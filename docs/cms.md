@@ -13,6 +13,21 @@ In future we will get rid of this unsupported CMS by incorporating its functiona
 - The `project/core/di-definitions.php` overriding a CMS class with a project subclass is a **code smell** — prefer moving the logic into the CMS class itself.
 - In production the `trickster-cms/` directory is served from composer, so changes there must be deployed alongside `project/`.
 
+## The admin panel is being retired
+
+The Smarty admin panel (`adminApplication`, `project/templates/admin/`, the admin
+`structureElementAction` classes) is on its way out. Its features are replaced one
+by one with Angular screens backed by SPA data endpoints; whatever has not been
+replaced yet must keep working until it is.
+
+**Rules:**
+- Never hold back a cleanup of shared engine code because the admin panel depends
+  on the old behaviour. Keep the admin working with the smallest possible
+  compatibility shim, mark the shim as admin-only, and delete it with the screen.
+- Do not build new functionality in the admin panel. New use-cases go to the SPA.
+- Do not extend admin-only mechanisms (session storage attributes, Smarty admin
+  templates, admin cookies) to anything the public site uses.
+
 ## File structure:
 - /htdocs/ - mapped to public web root
 - /ng-zxart/ - Angular frontend. This covers only a pair of views from the whole module yet. See angular.md for more info.
@@ -143,3 +158,4 @@ This is the standard way to trigger actions from the frontend.
 
 ## See also
 - [Controllers and StructureManager](cms/controllers.md) — structureManager context (public/admin), getElementById modes, AJAX operations, error logging
+- [Server sessions](cms/sessions.md) — when a session is created, what may be stored in it, why anonymous visitors have none

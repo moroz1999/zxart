@@ -65,6 +65,17 @@ applies it via `LanguagesManager::setCurrentLanguageCode()`, so every SPA data
 endpoint returns localized content in the selected language, independent of the
 URL or session.
 
+## Backend language detection
+
+`LanguagesManager` keeps no server-side memory of the public language: it is
+resolved per request from the URL segment (legacy pages only), the configured
+default, and the `Accept-Language` header, in that order. Nothing is written to a
+cookie or to the session.
+
+The admin panel is the exception. It is server-rendered, so an explicit `?lang=`
+choice is persisted by `LanguagesManager::persistAdminLanguageCode()` into the
+`cl_adminLanguages` cookie and read back by the `adminLanguages` group only.
+
 ## Auto-login
 
 Auto-login is driven from the frontend. `authGuard`
