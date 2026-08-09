@@ -25,9 +25,9 @@ final class HardwareCompatibilityRulesTest extends TestCase
 
         $groupIds = HardwareCompatibilityRules::itemsToGroups($hardwareItems);
 
-        // Expect groups: zx48 (for many), zx80, sprinter, zxuno
+        // Expect families: spectrum (for many), zx80, sprinter, zxuno
         sort($groupIds);
-        $this->assertSame(['sprinter', 'zx48', 'zx80', 'zxuno'], $groupIds);
+        $this->assertSame(['spectrum', 'sprinter', 'zx80', 'zxuno'], $groupIds);
     }
 
     public function testItemsToGroupsIgnoresUnknownItemsFromOtherCategories(): void
@@ -64,7 +64,7 @@ final class HardwareCompatibilityRulesTest extends TestCase
         $groupIds = HardwareCompatibilityRules::codesToGroups($hardwareCodes);
 
         sort($groupIds);
-        $this->assertSame(['atm', 'tsconf', 'zx48', 'zx81'], $groupIds);
+        $this->assertSame(['atm', 'spectrum', 'tsconf', 'zx81'], $groupIds);
     }
 
     public function testCodesToGroupsSkipsUnknownCodes(): void

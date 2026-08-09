@@ -9,6 +9,7 @@ use feedbackElement;
 use settingsManager;
 use structureManager;
 use ZxArt\Email\EmailValidationService;
+use ZxArt\Feedback\Dto\FeedbackRequestDto;
 use ZxArt\Feedback\Exception\FeedbackException;
 
 /**
@@ -20,6 +21,8 @@ final readonly class FeedbackService
 {
     private const string DISPATCHMENT_TYPE = 'feedbackForm';
     private const string DEFAULT_SENDER_EMAIL = 'noreply@noreply.com';
+    private const int MAX_NAME_LENGTH = 255;
+    private const int MAX_MESSAGE_LENGTH = 10000;
 
     public function __construct(
         private EmailValidationService $emailValidationService,
@@ -30,14 +33,20 @@ final readonly class FeedbackService
     }
 
     /** @throws FeedbackException */
-    public function submit(int $elementId, string $name, string $email, string $message): void
+    public function submit(int $elementId, FeedbackRequestDto $request): void
     {
         $element = $this->structureManager->getElementById($elementId);
         if (!$element instanceof feedbackElement) {
             throw new FeedbackException('Unknown feedback form', 404);
         }
 
-        if (!$this->emailValidationService->isAllowed($email)) {
+        $name = $this->requireText($request->name, 'name', self::MAX_NAME_LENGTH);
+        $email = $this->requireText($request->email, 'email', self::MAX_NAME_LENGTH);
+        $message = $this->requireText($request->message, 'message', self::MAX_MESSAGE_LENGTH);
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new FeedbackException('Invalid email address', 400);
+        }
+        if ($this->emailValidationService->isAllowed($email) === false) {
             throw new FeedbackException('Email address rejected', 422);
         }
 
@@ -50,6 +59,16 @@ final readonly class FeedbackService
         if (!$this->sendEmail($name, $email, $message, $subject, $fromEmail, $receiverEmail, $element->getId())) {
             throw new FeedbackException('Email sending failed', 500);
         }
+    }
+
+    private function requireText(string $value, string $field, int $maxLength): string
+    {
+        $value = trim($value);
+        if ($value === '') {
+            throw new FeedbackException('Empty required field: ' . $field, 400);
+        }
+
+        return mb_substr($value, 0, $maxLength);
     }
 
     private function sendEmail(

@@ -26,7 +26,8 @@ readonly class ReleaseDetailsDto
     /**
      * @param string[]                       $hardwareRequired
      * @param ProdLanguageInfoDto[]          $languages
-     * @param ProdHardwareInfoDto[]          $hardware
+     * @param ProdHardwareInfoDto[]          $hardware the release's own hardware
+     * @param ProdHardwareInfoDto[]          $prodHardware inherited from the production, minus anything the release repeats
      * @param ProdAuthorInfoDto[]            $authors
      * @param ProdGroupRefDto[]              $publishers
      * @param ProdReleaseFormatDto[]         $formats
@@ -50,6 +51,7 @@ readonly class ReleaseDetailsDto
         public ?ProdPartyInfoDto $party,
         public array $languages,
         public array $hardware,
+        public array $prodHardware,
         public array $authors,
         public array $publishers,
         public array $formats,

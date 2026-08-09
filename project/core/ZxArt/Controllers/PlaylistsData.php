@@ -10,8 +10,13 @@ use controller;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Playlists\Dto\PlaylistCreateRequestDto;
+use ZxArt\Playlists\Dto\PlaylistDeleteRequestDto;
 use ZxArt\Playlists\Dto\PlaylistDto;
+use ZxArt\Playlists\Dto\PlaylistRenameRequestDto;
 use ZxArt\Playlists\Exception\PlaylistException;
 use ZxArt\Playlists\PlaylistService;
 use ZxArt\Playlists\Rest\PlaylistRestDto;
@@ -32,6 +37,7 @@ class PlaylistsData extends LoggedControllerApplication
         private readonly CurrentUserService $currentUserService,
         private readonly PlaylistService $playlistService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -54,21 +60,15 @@ class PlaylistsData extends LoggedControllerApplication
                 return;
             }
 
-            $body = json_decode((string)file_get_contents('php://input'), true);
-            $body = is_array($body) ? $body : [];
             $userId = (int)$user->id;
 
             $action = (string)$this->getParameter('action');
             $removedId = 0;
             match ($action) {
                 '' => null,
-                'create' => $this->playlistService->create((string)($body['title'] ?? ''), $userId),
-                'rename' => $this->playlistService->rename(
-                    (int)($body['id'] ?? 0),
-                    (string)($body['title'] ?? ''),
-                    $userId,
-                ),
-                'delete' => $removedId = $this->playlistService->delete((int)($body['id'] ?? 0), $userId),
+                'create' => $this->createPlaylist($userId),
+                'rename' => $this->renamePlaylist($userId),
+                'delete' => $removedId = $this->deletePlaylist($userId),
                 default => throw new PlaylistException('Unsupported playlist action', 400),
             };
 
@@ -81,6 +81,8 @@ class PlaylistsData extends LoggedControllerApplication
                     $this->playlistService->getForUser($userId, $removedId),
                 ),
             ]);
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (PlaylistException $exception) {
             $this->assignError($exception->getMessage(), $exception->getStatusCode());
         } catch (Throwable $e) {
@@ -89,6 +91,34 @@ class PlaylistsData extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    private function createPlaylist(int $userId): void
+    {
+        $request = $this->deserialize(PlaylistCreateRequestDto::class);
+        $this->playlistService->create($request->title, $userId);
+    }
+
+    private function renamePlaylist(int $userId): void
+    {
+        $request = $this->deserialize(PlaylistRenameRequestDto::class);
+        $this->playlistService->rename($request->id, $request->title, $userId);
+    }
+
+    private function deletePlaylist(int $userId): int
+    {
+        $request = $this->deserialize(PlaylistDeleteRequestDto::class);
+        return $this->playlistService->delete($request->id, $userId);
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $requestClass
+     * @return T
+     */
+    private function deserialize(string $requestClass): object
+    {
+        return $this->serializer->deserialize(file_get_contents('php://input'), $requestClass, 'json');
     }
 
     private function assignError(string $message, int $statusCode = 500): void

@@ -313,15 +313,14 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         }));
     }
 
-    /** Hardware group and item names are owned by the SPA; the backend sends codes only. */
+    /**
+     * Item names arrive from the backend catalog already localized; only the
+     * group name is still a code the SPA translates.
+     */
     private buildHardwareSelector(selector: SelectorDto): SelectorDto {
         return selector.map(group => ({
             ...group,
             title: this.translate.instant(`hardware-group.${group.title}`),
-            values: group.values.map(item => ({
-                ...item,
-                title: this.translate.instant(`hardware.${item.value}`),
-            })),
         }));
     }
 

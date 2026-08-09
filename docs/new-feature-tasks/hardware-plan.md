@@ -15,6 +15,9 @@ Decisions taken from the task review (Part F holds the reasoning):
 
 Every fact and line number below was verified against the working tree and the local database.
 
+Implementation progress is tracked in **[hardware-checklist.md](hardware-checklist.md)**, which also
+records any deviation from this plan.
+
 ---
 
 ## Part A — Current state (verified)
@@ -133,9 +136,9 @@ Shared / prod-scoped:
 - `StatsRepository:133-161` joins `DatabaseTable::ZxReleaseHardware`; the model list comes from
   `HardwareCatalog::getGroupItems(COMPUTERS)` (`StatsService:479`).
 - Importers writing codes — audited one by one in **D.7**: `ZxdbImport`, `PouetImport`,
-  `WorldOfSamImport`, `VtrdosImport` (+ `VtrdosHardwareProvider`), `ZxaaaManager.class.php:62,337-338`
-  (derives `hardwareRequired` from file extensions via `$extWords` — a second, pre-existing
-  implementation of Task 0's rules), `TslabsManager.class.php:142` (hardcodes `['zxevolution','tsconf']`).
+  `WorldOfSamImport`, `VtrdosImport` (+ `VtrdosHardwareProvider`), `ZxaaaManager` (machine and sound
+  markers from the title and a sound-chip listing column — no file format anywhere in it),
+  `TslabsManager.class.php:142` (hardcodes `['zxevolution','tsconf']`).
   They all funnel through one line, `ProdsService::updateRelease()` :776-777.
   `HardwareCompatibilityService` does not write codes but compares them, to decide whether an
   imported prod matches an existing one (`ProdResolver:72`) — the D.7 sharp edge.
@@ -187,7 +190,10 @@ DELETE a FROM engine_module_zxrelease_hw_required a
 ```
 
 **Step 2 — the catalog.** Names go into a row-per-language child table, matching how the CMS models
-multi-language module data (`engine_module_language` has `PRIMARY KEY (id, languageId)`).
+multi-language module data. The language is addressed by its **ISO 639-1 code**, not by the CMS
+language element id: `ZxArt\Shared\InterfaceLanguage` (`en`/`ru`/`es`) is the enum behind it, and
+that is also what the SPA translation files and every REST payload use. The CMS's own iso6393
+(`eng`/`rus`/`spa`) is bridged by `InterfaceLanguage::fromIso6393()`.
 ```sql
 engine_hardware
   id        int unsigned AUTO_INCREMENT PK
@@ -198,10 +204,10 @@ engine_hardware
 
 engine_hardware_name
   hardwareId int unsigned NOT NULL
-  languageId int          NOT NULL              -- 2105 eng, 930 rus, 84102 spa
-  name       varchar(255) NOT NULL              -- replaces hardware.item_<code>
-  shortName  varchar(255) NOT NULL              -- replaces hardware_short.item_<code>
-  PRIMARY KEY (hardwareId, languageId)
+  languageCode char(2)    NOT NULL              -- ISO 639-1: en, ru, es
+  name         varchar(255) NOT NULL            -- replaces hardware.item_<code>
+  shortName    varchar(255) NOT NULL            -- replaces hardware_short.item_<code>
+  PRIMARY KEY (hardwareId, languageCode)
   FOREIGN KEY (hardwareId) REFERENCES engine_hardware(id) ON DELETE CASCADE
 ```
 Both InnoDB, `utf8mb4`. Seed: the 118 `HardwareItem` codes with `category`/`position` from
@@ -287,13 +293,14 @@ New in `project/core/ZxArt/Hardware/`:
   `insert()`, `update()`, `delete()`, `codeExists()`, `countUsages(int $hardwareId)`. Query Builder
   only, no raw SQL (docs/php/repositories.md).
 - `Dto/HardwareItemDto.php` — `id`, `code`, `category` (`HardwareGroup`), `position`,
-  `names: array<int, HardwareNameDto>` keyed by languageId; `Dto/HardwareNameDto.php` —
-  `languageId`, `name`, `shortName`.
+  `names: array<string, HardwareNameDto>` keyed by language code; `Dto/HardwareNameDto.php` —
+  `language` (`InterfaceLanguage`), `name`, `shortName`.
 - `Rest/HardwareItemRestDto.php`, `Rest/HardwareNameRestDto.php`, `#[Map(target: …)]` on the Dto side.
 - `Exception/HardwareException.php` — message + status code, like `PlaylistException`.
 - `HardwareCatalogService.php` — per-request cache over the repository:
   `getGroupedCodes()` (drop-in for `HardwareCatalog::getGroupedItems()`), `getCategoryOf()`,
-  `getIdsByCodes(string[]): int[]`, `getLabels(int $languageId)`, plus validated create/update/delete.
+  `getIdsByCodes(string[]): int[]`, `getLabels(?InterfaceLanguage)`, `getPublicLanguages()`,
+  `getCurrentLanguage()`, plus validated create/update/delete.
 - `DatabaseTable::Hardware = 'hardware'`, `DatabaseTable::HardwareName = 'hardware_name'`.
 
 `HardwareItem` (the PHP enum) is **kept** but demoted: it stays the compile-time list that
@@ -376,8 +383,9 @@ contradict. Just add explicit entries for the B.2 codes, using the real icon nam
   `trickster-cms/cms/modules/structureElements/root/structure.actions.php` itself.
 - There is **no** `action.editHardware.class.php`. The privilege is a flag; the new controller checks
   it directly (Task 1.7 forbids the legacy action system).
-**Grant it to the content managers in the migration.** Privileges are held by user *groups*
-(`structureType = 'userGroup'`), and `content_managers` is element **478**. The relevant precedent:
+**Grant it to the catalogue managers in the migration.** Privileges are held by user *groups*
+(`structureType = 'userGroup'`), and `catalogues-managers` is element **1113** — the hardware list
+is catalogue upkeep, so that is the group that maintains it. The relevant precedent:
 478 already holds public-root-scoped content privileges on element 1 — `authorAlias.publicAdd` /
 `publicReceive` / `publicDelete` / `showPublicForm`, `file.*`, `zxMusic.submitTags` — so a
 public-root `root:editHardware` row for the same group is exactly in line with how content editing
@@ -404,10 +412,15 @@ WHERE root.marker = 'public_root'
 (`privilegeId` defaults to 0 and is unused by `privilegesManager`; the `SELECT * FROM …` wrapper in
 the `NOT EXISTS` is the same MySQL self-insert workaround the press-article migration uses.)
 
-The `developers` group (480) needs no row — it already carries the full admin-root set and its
-members are the people who would edit the catalog by hand anyway; add it if you want them to see the
-SPA section without a re-login. Consider `catalogues-managers` (1113) too, if hardware upkeep
-belongs to them rather than to content managers.
+`content_managers` (478) deliberately gets **no** row: hardware is catalogue data, not content, and
+the two groups overlap only partly. Add one if content editors turn out to need it.
+
+**The privilege only resolves for users who may `show` the public root.**
+`ElementPrivilegesService` loads the element before checking, and `structureManager` will not hand
+back an element the user cannot `show` — so `/element-privileges/?id=<root>` answers 404, not
+`false`, for anyone outside `public_visitors` (that group carries `root:show` on element 1). Every
+real account is in it, so this is not a live constraint, but it is a hidden prerequisite of the
+whole management section.
 
 **`privilegesManager::getUserPrivileges()` reads `$user->privileges`, which is session-cached**, so
 this grant does not take effect for a logged-in user until they re-log in or `refreshPrivileges()`
@@ -438,7 +451,9 @@ anywhere. Verified `/hardware-data/` is currently free (404). `PlaylistsData` is
   data the filters and forms need anyway.
 - `GET` → the full catalog in all three languages (the management form edits all at once).
 - `POST ?action=create|update|delete` with a JSON body, `match($action)` dispatch, returning the
-  refreshed catalog, exactly as `PlaylistsData` does.
+  refreshed catalog, exactly as `PlaylistsData` does. The body is denormalized into a typed request
+  DTO by `symfony/serializer` — see [docs/php/rest-api.md](../php/rest-api.md); no array shapes
+  travel below the controller.
 - Validation in `HardwareCatalogService`: non-empty unique `code` matching `[a-z0-9_+]+`, known
   category, name and short name for every public language. `delete` refuses while the code is
   referenced and reports the count; the FK enforces it at the DB level too.
@@ -527,15 +542,30 @@ for and it needs no extra wiring:
 - The no-file branch early-returns at :890-895 after setting `releaseFormat = []`. The hook sits
   after it, so a release without a file is never touched — correct: no format, no rules.
 
+**The no-file branch was split** (it used to be one condition). It could not tell "this release has
+no file" from "the file is missing from disk", so saving a release whose file was absent silently
+wiped its `releaseFormat` — and, with auto-fill hooked in, stopped deriving hardware for it too.
+That is not a hypothetical: software still on sale legitimately has no downloadable file, and a file
+can also go missing temporarily. Now:
+
+- `file === ''` — genuinely fileless: the parsed structure and the formats are cleared, as before.
+- `file` set but unreadable: the structure and formats are **kept**, auto-fill still runs on them,
+  and `parsed` is set so the cron stops retrying.
+
+Formats are metadata in their own right; dropping them would turn a storage problem into permanent
+data loss.
+
 Verified callers of `updateFileStructure()`: `publicAdd` (:46), `publicReceive` (:31),
 `zxProdsUploadForm::batchUpload` (:138), `Crontab.php:673`, `fix.class.php:216`. **Importers are not
 among them** — `ProdsService::updateRelease` only sets `parsed = 0` and leaves the parse to the cron
 pass, so imported releases get auto-fill on the next cron run rather than at import time. That is
 acceptable, but it is not "every import path". See D.7 for the rest of the import story.
 
-`ZxaaaManager.class.php:337-338` already derives `hardwareRequired` from file extensions through its
-own `$extWords` map — a second implementation of these rules. Reconcile it with the new service or
-it will keep writing its own mapping.
+`ZxaaaManager` also writes `hardwareRequired`, but from a different signal and there is nothing to
+reconcile: `$hwWords` and `$hwSoftWords` read machine and sound markers out of the **title**
+(`(Pentagon)`, `(GS)`, `48k`), and `$extWords` reads a listing column of sound chips — its name is
+misleading, it has nothing to do with file extensions. No file format is involved anywhere in it, so
+it derives none of the codes these rules do. The two are complementary and both additive.
 
 ### C.3 Stage 1 — machine-independent rules, always applied
 
@@ -543,8 +573,7 @@ it will keep writing its own mapping.
 |---|---|---|---|
 | `tap`, `tzx` | `tape` | storage | the only medium these encode |
 | `mdr` | `microdrive` | storage | 50 of 219 |
-| `trd`, `scl` | `betadisk` | storage | the only interface that reads them |
-| `trd`, `scl` | `trdos` | dos | **guarded**, C.5 |
+| `trd`, `scl` | `betadisk` | storage | the only interface that reads them. **No DOS** — see the note below |
 | `fdi`, `udi`, `td0` | `betadisk` | storage | Beta Disk containers |
 | `cpm` | `cpm` | dos | 14 of 14 |
 | `opd` | `opd` | dos | 53 of 155 (Opus Discovery) |
@@ -568,18 +597,27 @@ them because the machine is already there.
 
 | format | family | adds |
 |---|---|---|
-| `dsk` | `zx48` (includes +2/+3) | `3dosdisk` + `3dos` |
+| `dsk` | `spectrum` | `3dosdisk` (the drive only — see the note below) |
 | `dsk` | `samcoupe` | `samdos` |
-| `mgt` | `zx48` | `gdos` (new) |
+| `mgt` | `spectrum` | `gdos` (new) |
 | `mgt` | `samcoupe` | `samdos` |
 | `p`, `z81` | `zx81` | nothing further — the machine is the information |
 | `o` | `zx80` | nothing further |
 | any of the above | more than one family, or a family with no row | **nothing** |
 
-`mgt` + `zx48` deliberately adds **`gdos`, not `disciple` + `plusd`**: DISCiPLE and MGT +D are
+`mgt` + `spectrum` deliberately adds **`gdos`, not `disciple` + `plusd`**: DISCiPLE and MGT +D are
 *alternative* interfaces that share the G+DOS disk format. A release needs one of them, never both,
 and the format cannot say which — so the determinable fact is the DOS. Writing both onto ~1 180
 releases would be knowingly-false data.
+
+**Revised after review: a disk container never implies a filesystem.** The
+original rules had `trd`/`scl` add `trdos` and `dsk`+`zx48` add `3dos`. The
+[storage-systems archive](https://github.com/Marginal2k/Data-storage-systems-for-the-ZX-Spectrum/tree/main/Disk%20Images/BetaDisk)
+disproves both: its BetaDisk folder is split by *filesystem* — CP/M, TR-DOS and
+iS-DOS — with CP/M shipping as `.trd` (`ATM_CPM/AncientLand.trd`) and iS-DOS as
+`.fdi`/`.udi`. The +3 likewise shipped with CP/M Plus, so `.dsk` says as little.
+An operating system is now derived only from an extension that names one system
+(`.cpm`, `.opd`, `.tar`); every disk container contributes its interface alone.
 
 ### C.5 Guards
 - **The DOS guard applies to every DOS code any stage emits, not just `trdos`.** Skip a DOS addition
@@ -601,10 +639,10 @@ Take the machine families of the prod's other releases (later, once Task 2 lands
 hardware). If exactly **one** family results, apply that family's stage-2 row — the storage/DOS
 codes **only**. If zero or more than one family results, add nothing beyond stage 1.
 
-Stage 3 must **not** add a concrete computer code. "Family = `zx48`" spans zx48/zx16/zx128/pentagon/
-scorpion/profi/…; picking a representative model would turn a family-level inference into a specific
-claim the data does not support. Roughly 400 releases keeping an incomplete-but-correct record is the
-right outcome.
+Stage 3 must **not** add a concrete computer code. Knowing the family is not knowing the machine —
+`spectrum` holds twenty of them, from a 48K to a Scorpion — so naming one would turn a family-level
+inference into a specific claim the data does not support. Roughly 400 releases keeping an
+incomplete-but-correct record is the right outcome.
 
 ### C.7 No rule at all
 `bin`, `rom`, `img`, `z80`, `sna`, `szx`, `slt`, `$b`, `$c`. Checked each: `img` spreads over
@@ -800,6 +838,12 @@ Implementation:
 - `?dry=1`, resumable `?offset=`, batched, `echo` progress — 53 426 prods will not fit in one request.
 - Clear the element and `hardwareInfo` caches for every touched prod and release.
 - Run **after** the Task 0 backfill (C.8), so derived codes take part in the intersection.
+> **Refined during implementation — see the checklist.** Sourcing from the `original` releases is
+> what shipped, and the reasoning below stands. What it left unsaid is how the shared set comes
+> *off* the releases: taking it as a whole destroys any release narrower than the originals in some
+> category, which is what damaged the live data. Subtraction is per category and only on an exact
+> match.
+
 **Several `original` releases → intersect them.** The task says *"…ТО ЖЕЛЕЗО СОБИРАЕМ ТОЛЬКО С
 НЕГО"*, singular, but **10 184 prods have more than one `original` release with hardware** (of
 36 046 that have any), so the script needs an explicit rule. It is the **intersection of all
@@ -886,7 +930,7 @@ Where each source's hardware actually belongs:
 | **`ZxdbImport`** | `minMachines`/`optionalMachines` keyed by `machinetype_id`, which **falls back from the download to the entry** (:727-729) and again at :761-762. Plus `featureGroups[tag_id]` from the `members` table queried **by `entry_id` only, with no `release_seq` filter** (:815-824), so every release of an entry already gets an identical control set. | **→ prod, with no per-release distribution at all.** The entry *is* the prod and ZxDB is original software. |
 | **`WorldOfSamImport`** | the constant `['samcoupe']` (:492), applied to every release it creates (:518, :542) | **→ prod** |
 | **`VtrdosImport`** | parsed per file from titles, anchors and category (`categoryHardware` :66, `VtrdosHardwareProvider::match()` :829) — vtrdos entries describe individual files and one prod's files genuinely differ | **→ release** (unchanged) |
-| **`ZxaaaManager`** | derived from the file extension via `$extWords` (:62, :337-338) | **→ release** (unchanged) |
+| **`ZxaaaManager`** | machine and sound markers parsed out of the title (`$hwWords`, `$hwSoftWords`) plus a sound-chip listing column (`$extWords` — the name is misleading, these are not file extensions) | **→ release** (unchanged) |
 | **`PouetImport`** | `$prodData['platforms']` through the `$platforms` map (:101-106, :618-626) | **→ dropped entirely.** The source is not trustworthy. |
 
 Changes:
@@ -908,8 +952,8 @@ Changes:
    harmless today only because `DBValueSetDataChunk::persistExtraData()` drops falsy values, which
    is why there are 0 rows with `value = ''`. Deleting the map removes that latent bug too.)
 6. **`VtrdosImport`** and **`ZxaaaManager`** keep writing release-level codes and are otherwise left
-   alone. Note `ZxaaaManager`'s extension-derived logic overlaps `ReleaseHardwareAutofillService`
-   (C.2); reconciling the two is worth doing but is not required by this plan.
+   alone. `ZxaaaManager` does **not** overlap `ReleaseHardwareAutofillService` — it reads titles and
+   a sound-chip column, never a file format (C.2).
 
 **Existing pouet data is not purged.** Hardware rows carry no provenance, so a row cannot be
 attributed to the importer after the fact, and the pouet-imported elements also hold codes the
@@ -969,8 +1013,8 @@ the fix is exactly when duplicates get created.
 - **Import de-duplication (D.7)** silently creates duplicate prods once D.4 strips release hardware,
   because `HardwareCompatibilityService` compares release-level sets. It must ship together with the
   migration, not after it. This is the only issue in the plan whose damage accumulates unnoticed.
-- **`ZxaaaManager`** already auto-derives hardware from extensions; unreconciled, it will fight the
-  new service (D.7).
+- **`ZxaaaManager`** writes hardware too, but from titles and a sound-chip column rather than from
+  file formats, so it does not compete with the auto-fill rules (C.2).
 - **Privileges are session-cached**, so a SQL grant needs a re-login to take effect.
 
 ---
@@ -999,7 +1043,9 @@ All confirmed with the task author during review; the sections named in brackets
    from release-specific.
 8. **The batch upload form gets a hardware field, applied to the prod only** (D.2).
 9. **Several `original` releases → intersect them; empty intersection → leave the prod empty**
-   (D.4). No union fallback: nothing false gets written, and such prods still appear in the
-   catalogue and still match the `hw` filter through the aggregated set.
+   (D.4). Unchanged, but paired during implementation with per-category subtraction: a release drops
+   only the categories it states exactly as the prod does. No union fallback either: nothing false
+   gets written, and such prods still appear in the catalogue and still match the `hw` filter
+   through the aggregated set.
 
 Nothing is left open. Every point of hardware.md has a decided answer.

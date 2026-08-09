@@ -615,7 +615,13 @@
         zxReleaseNotReleaseType - excludes the listed release types
     </li>
     <li>
-        zxReleaseHardware - required hardware codes
+        zxReleaseHardware - hardware codes recorded on the release itself. Hardware shared by a
+        production is stored on the production, so a release inherits it and is not matched here;
+        use zxProdHardware to find software by the hardware it runs on.
+    </li>
+    <li>
+        zxProdHardware - hardware codes; matches software whose production or any of its releases
+        requires the given hardware
     </li>
     <li>
         zxReleaseLanguage - ISO 639-1 language codes, the production's languages are used when the release has none of its own

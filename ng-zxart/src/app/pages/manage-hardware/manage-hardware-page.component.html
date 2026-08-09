@@ -1,0 +1,38 @@
+<zx-page-layout *ngIf="vm$ | async as vm">
+  <h1 zxPageHeader appHeading="display">{{ 'manage-hardware.title' | translate }}</h1>
+  <zx-button zxPageHeader routerLink="/manage/hardware/add" color="primary">
+    {{ 'manage-hardware.add' | translate }}
+  </zx-button>
+
+  <section class="manage-hardware__group" *ngFor="let category of vm.categories">
+    <h2 appHeading="title">{{ 'hardware-group.' + category.code | translate }}</h2>
+
+    <div class="manage-hardware__scroll">
+      <table class="manage-hardware__table">
+        <thead>
+        <tr>
+          <th>{{ 'manage-hardware.col-code' | translate }}</th>
+          <th *ngFor="let language of vm.languages">{{ language | uppercase }}</th>
+          <th class="manage-hardware__col-usages">{{ 'manage-hardware.col-usages' | translate }}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of category.items; trackBy: trackById">
+          <td><code>{{ item.code }}</code></td>
+          <td *ngFor="let language of vm.languages">
+            {{ nameOf(item, language) }}
+            <span class="manage-hardware__short">{{ shortNameOf(item, language) }}</span>
+          </td>
+          <td class="manage-hardware__col-usages">{{ item.usages }}</td>
+          <td>
+            <zx-button [routerLink]="'/manage/hardware/' + item.id" color="outlined" size="sm">
+              {{ 'manage-hardware.edit' | translate }}
+            </zx-button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</zx-page-layout>

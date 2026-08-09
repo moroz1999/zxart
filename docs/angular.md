@@ -47,12 +47,18 @@ empty otherwise. Only lists that are fixed by the hardware (border colour,
 rotation angles) are constants in the component.
 
 A spec marked `clientLabels` sends the bare values instead, for lists the SPA
-translates itself. Software languages and hardware work that way: the backend
-names the codes a production or release can carry, and every name comes from the
-SPA's `language.<code>`, `hardware.<code>` or `hardware-short.<code>`
-translations. Hardware selector groups use `hardware-group.<code>`. Forms,
-catalogue filters, cards and detail pages never read language or hardware names
-from the backend.
+translates itself. Software languages work that way: the backend names the codes
+a production or release can carry and the SPA resolves them through
+`language.<code>`.
+
+Hardware does **not**. Its names live in an editable catalog, so every response
+carries `name`, `shortName` and `category` per code, localized for the request
+language, and the SPA renders what it is given. A spec marked `mode: 'options'`
+receives ready `{value, label, group}` rows; `buildHardwareGroups()`
+(`shared/utils/hardware-groups.ts`) turns them into the grouped picker every
+hardware form uses. Only the category heading is still an SPA string
+(`hardware-group.<code>`), because the category set is a code enum rather than
+editable data.
 
 A `zx-select` displays what its form control holds and reports only what the
 user picks: loading options, writing a value and changing the disabled state

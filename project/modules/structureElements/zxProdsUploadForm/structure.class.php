@@ -9,6 +9,7 @@
  * @property string $legalStatus
  * @property string $tagsText
  * @property string[] $language
+ * @property string[] $hardwareRequired
  * @property string $youtubeId
  * @property int $party
  * @property int $partyplace
@@ -29,6 +30,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
     use PartyElementProviderTrait;
     use CategoryElementsSelectorProviderTrait;
     use DemoCompoTypesProvider;
+    use HardwareProvider;
     use LanguageCodesProviderTrait;
 
     public $languagesParentElementMarker = 'adminLanguages';
@@ -72,6 +74,8 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['legalStatus'] = 'text';
         $moduleStructure['externalLink'] = 'url';
         $moduleStructure['language'] = 'array';
+        // shared by every production the batch creates; it never reaches their releases
+        $moduleStructure['hardwareRequired'] = 'array';
         $moduleStructure['file'] = 'files';
         $moduleStructure['connectedFile'] = 'files';
         $moduleStructure['mapFilesSelector'] = 'files';

@@ -10,6 +10,7 @@ use LanguagesManager;
 use structureManager;
 use userElement;
 use ZxArt\Hardware\HardwareCatalog;
+use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
 use zxProdCategoryElement;
 use ZxArt\Shared\DatabaseTable;
@@ -40,6 +41,7 @@ readonly class StatsService
         private ConfigManager $configManager,
         private LanguagesManager $languagesManager,
         private HardwareCatalog $hardwareCatalog,
+        private HardwareCatalogService $hardwareCatalogService,
         private EntityUrlResolver $entityUrlResolver,
     ) {
     }
@@ -389,7 +391,7 @@ readonly class StatsService
      * @param int[] $years
      * @param int|null $limit keep only the $limit most populous classes, or all when null
      */
-    private function buildDistribution(string $titleKey, array $perYear, array $years, ?int $limit = null): StatsDistributionDto
+    private function buildDistribution(string $titleKey, array $perYear, array $years, ?int $limit = null, ?array $labelOverrides = null): StatsDistributionDto
     {
         $totals = [];
         foreach ($perYear as $classes) {
@@ -403,17 +405,23 @@ readonly class StatsService
             $totals = array_slice($totals, 0, $limit, true);
         }
 
-        $labels = array_map('strval', array_keys($totals));
+        $classes = array_map('strval', array_keys($totals));
 
         $rows = [];
         foreach ($years as $year) {
             $yearClasses = $perYear[$year] ?? [];
             $row = [];
-            foreach ($labels as $label) {
-                $row[] = $yearClasses[$label] ?? 0;
+            foreach ($classes as $class) {
+                $row[] = $yearClasses[$class] ?? 0;
             }
             $rows[] = $row;
         }
+
+        // hardware labels live in the editable catalog, so they are resolved here
+        // rather than left as codes for the frontend to translate
+        $labels = $labelOverrides === null
+            ? $classes
+            : array_map(static fn(string $class): string => $labelOverrides[$class] ?? $class, $classes);
 
         return new StatsDistributionDto($titleKey, $labels, $rows);
     }
@@ -478,8 +486,12 @@ readonly class StatsService
     {
         $computerModels = $this->hardwareCatalog->getGroupItems(HardwareGroup::COMPUTERS);
         $perYear = $this->repository->prodComputerModelDistribution($computerModels);
+        $shortNames = array_map(
+            static fn(array $label): string => $label['shortName'],
+            $this->hardwareCatalogService->getLabels(),
+        );
 
-        return $this->buildDistribution('stats.dist.computer_model', $perYear, $years);
+        return $this->buildDistribution('stats.dist.computer_model', $perYear, $years, null, $shortNames);
     }
 
     /**

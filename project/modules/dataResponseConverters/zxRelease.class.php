@@ -52,11 +52,11 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
 
                 return $urls;
             },
+            // effective, matching what the site shows: `hardwareRequired` right
+            // above is still the release's own codes, but on their own they are
+            // empty for most releases and say nothing about what this one runs on
             'hardwareInfo' => static function (zxReleaseElement $element): array {
-                return array_map(
-                    static fn(string $hardwareCode): array => ['id' => $hardwareCode],
-                    $element->getHardwareCodes(),
-                );
+                return $element->getRunsOnHardwareDetails();
             },
             'inlaysUrls' => 'getInlaysUrls',
             'inlays' => function (zxReleaseElement $element) {

@@ -458,6 +458,12 @@ class Formdata extends LoggedControllerApplication
             }
             $rawItems = $element->{$spec['method']}();
             $mode = $spec['mode'] ?? 'list';
+            if ($mode === 'options') {
+                // the element already produced {value,label,group} rows — used for
+                // hardware, whose names live in the editable catalog
+                $enums[$field] = array_merge($options, array_values((array)$rawItems));
+                continue;
+            }
             if ($mode === 'grouped') {
                 // method returns [groupName => [items]] — flatten to a plain list
                 $flat = [];
@@ -496,6 +502,7 @@ class Formdata extends LoggedControllerApplication
      * Per-entity enum field definitions (option source method + label strategy).
      *
      * @return array<string, array{method: string, mode?: string, prefix?: string, stripDots?: bool, emptyBlank?: bool, emptyLabelKey?: string, clientLabels?: bool}>
+     *         mode `options`: the method returns ready {value,label,group} rows
      */
     private function enumSpecs(string $structureType): array
     {
@@ -519,10 +526,12 @@ class Formdata extends LoggedControllerApplication
             'zxProd' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
+                'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
             ],
             'zxProdsUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
+                'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
             ],
             'zxPicture' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'zxPicture.compo_', 'emptyBlank' => true],
@@ -538,7 +547,7 @@ class Formdata extends LoggedControllerApplication
                 'releaseType' => ['method' => 'getReleaseTypes', 'prefix' => 'zxRelease.type_'],
                 'releaseFormat' => ['method' => 'getReleaseFormats', 'prefix' => 'zxRelease.filetype_'],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
-                'hardwareRequired' => ['method' => 'getHardwareList', 'mode' => 'grouped', 'clientLabels' => true],
+                'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
             ],
             default => [],
         };

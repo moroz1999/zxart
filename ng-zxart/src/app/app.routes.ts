@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {editPrivilegeGuard} from './shared/guards/edit-privilege.guard';
+import {rootPrivilegeGuard} from './shared/guards/root-privilege.guard';
 import {authGuard} from './shared/guards/auth.guard';
 
 /**
@@ -479,6 +480,27 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'about/faq', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'faq', titleKey: 'menu.about-sub.faq'}},
   {path: 'about/support', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'support', titleKey: 'menu.about-sub.support'}},
   {path: 'about/api', loadComponent: () => import('./pages/content/content-page.component').then(m => m.ContentPageComponent), data: {page: 'api', titleKey: 'menu.about-sub.api'}},
+  // Site management. `/admin` belongs to the legacy Smarty panel, so this lives at
+  // /manage. Every screen is gated on a site-wide privilege held on the public root.
+  {
+    path: 'manage/hardware/add',
+    loadComponent: () => import('./pages/manage-hardware-edit/manage-hardware-edit-page.component').then(m => m.ManageHardwareEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {create: true, privilege: 'editHardware', titleKey: 'manage-hardware.add', noIndex: true},
+  },
+  {
+    path: 'manage/hardware/:id',
+    loadComponent: () => import('./pages/manage-hardware-edit/manage-hardware-edit-page.component').then(m => m.ManageHardwareEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'editHardware', titleKey: 'manage-hardware.edit-title', noIndex: true},
+  },
+  {
+    path: 'manage/hardware',
+    loadComponent: () => import('./pages/manage-hardware/manage-hardware-page.component').then(m => m.ManageHardwarePageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'editHardware', titleKey: 'manage-hardware.title', noIndex: true},
+  },
+  {path: 'manage', redirectTo: 'manage/hardware', pathMatch: 'full'},
   {path: 'file-search', loadComponent: () => import('./pages/file-search/file-search-page.component').then(m => m.FileSearchPageComponent), data: {titleKey: 'menu.about-sub.filesearch'}},
   {path: '', loadComponent: () => import('./pages/firstpage/firstpage.component').then(m => m.FirstpageComponent), data: {titleKey: 'menu.home', serverHomePageTitle: true}},
   {path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent), data: {titleKey: 'common.not-found', noIndex: true}},

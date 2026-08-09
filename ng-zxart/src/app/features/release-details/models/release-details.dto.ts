@@ -56,7 +56,10 @@ export interface ReleaseDetailsDto {
   isRealtime: boolean;
   party: ProdPartyInfoDto | null;
   languages: ProdLanguageInfoDto[];
+  /** The release's own hardware — what it adds or changes. */
   hardware: ProdHardwareInfoDto[];
+  /** Inherited from the production, with anything the release repeats removed. */
+  prodHardware: ProdHardwareInfoDto[];
   authors: ProdAuthorInfoDto[];
   publishers: ProdGroupRefDto[];
   formats: ProdReleaseFormatDto[];

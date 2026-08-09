@@ -55,12 +55,16 @@ Concrete release (version) of software production. Contains files specific to th
   - Stored in table `module_zxrelease_format`
 
 #### Hardware Requirements
-- **hardwareRequired** - required hardware (array)
-  - Stored in table `module_zxrelease_hw_required`
-  - Examples: ZX Spectrum 48K, 128K, Pentagon, ZX81, ZX80, TSConf, MB
-  - Determines emulator launch capability
-  - Form and public API contracts expose codes only; the SPA owns full and short
-    labels through `hardware.<code>` and `hardware-short.<code>` translations.
+- **hardwareRequired** - the release's **own** hardware, i.e. what it needs beyond
+  what its production already states (array)
+  - Stored in `module_zxrelease_hw_required` as catalog ids; the property works in codes
+  - `getEffectiveHardwareCodes()` adds the production's set and is what decides
+    behaviour — emulator launch, playable files, list image preset. The raw
+    property is for the edit form and for showing what belongs to this release.
+  - Responses carry the name, short name and category of each code, localized for
+    the request language; the SPA does not translate hardware.
+  - Auto-filled from the release's file format on every save — see
+    [hardware.md](hardware.md).
 
 #### Languages
 - **language** - interface languages (array)
@@ -111,7 +115,7 @@ Concrete release (version) of software production. Contains files specific to th
 ### Emulator Launch Capability
 Determined by combination of:
 1. **releaseType** - file type must be in runnable list
-2. **hardwareRequired** - hardware must be supported by emulator
+2. **hardware** - the effective set (the release's own plus its production's) must be supported by the emulator
 
 #### Launch Rules:
 - **ZX Spectrum (USP)**: formats `trd`, `tap`, `z80`, `sna`, `tzx`, `scl`
@@ -119,7 +123,7 @@ Determined by combination of:
 - **ZX80**: ZX80 hardware
 - **TSConf**: formats `spg`, `img`, `trd`, `scl` + TSConf hardware
 - **MB (Multiboard)**: format `tar` + MB hardware
-- A release requiring hardware the online emulators cannot emulate is not playable regardless of format. `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists such hardware (currently General Sound, `gs`): when present in `hardwareRequired`, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden.
+- A release requiring hardware the online emulators cannot emulate is not playable regardless of format. `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists such hardware (currently General Sound, `gs`): when present in the effective set, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden.
 
 #### Angular Prod Details Emulator
 - Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.

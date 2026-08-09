@@ -35,7 +35,11 @@
     "ext-pdo": "*",
     "ezyang/htmlpurifier": "^4.19",
     "ext-xmlwriter": "*",
-    "symfony/object-mapper": "8.0.*"
+    "symfony/object-mapper": "8.0.*",
+    "symfony/serializer": "8.0.*",
+    "symfony/property-info": "8.0.*",
+    "symfony/property-access": "8.0.*",
+    "phpdocumentor/reflection-docblock": "^6.0"
   },
   "config": {
     "allow-plugins": {

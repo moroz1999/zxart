@@ -61,11 +61,11 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $urls;
             },
             'hardware' => 'getHardware',
+            // the production's own set, matching the `hardware` field right above
+            // and what the site prints on a card: a production is described by
+            // what its releases share, not by everything any one of them needed
             'hardwareInfo' => static function (zxProdElement $element): array {
-                return array_map(
-                    static fn(string $hardwareCode): array => ['id' => $hardwareCode],
-                    $element->getHardwareCodes(),
-                );
+                return $element->getHardwareDetails();
             },
             'maps' => static function ($element) {
                 return $element->getFilesUrlList('mapFilesSelector', 'release');

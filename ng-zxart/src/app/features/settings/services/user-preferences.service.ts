@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, defer, Observable, of, switchMap, take, throwError} from 'rxjs';
 import {catchError, filter, map, shareReplay, tap} from 'rxjs/operators';
 import {DEFAULT_USER_PREFERENCES} from '../models/default-user-preferences';
@@ -102,12 +102,8 @@ export class UserPreferencesService {
           return of(values);
         }
 
-        const body = new HttpParams()
-          .set('code', code)
-          .set('value', value);
-
-        return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        return this.http.put<PreferenceDto[]>('/userpreferences/', {
+          preferences: [{code, value}],
         }).pipe(
           map(preferences => this.fromDtos(preferences)),
           tap(values => this.commit(user.id, values)),
@@ -131,12 +127,7 @@ export class UserPreferencesService {
           return of(values);
         }
 
-        const body = new HttpParams()
-          .set('batch', JSON.stringify(items));
-
-        return this.http.put<PreferenceDto[]>('/userpreferences/', body, {
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).pipe(
+        return this.http.put<PreferenceDto[]>('/userpreferences/', {preferences: items}).pipe(
           map(preferences => this.fromDtos(preferences)),
           tap(values => this.commit(user.id, values)),
           catchError(error => throwError(() => this.toError(error, 'Failed to save preferences'))),

@@ -5,14 +5,18 @@ use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
 use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
+use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
 use ZxArt\Prods\LegalStatus;
+use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
+use ZxArt\Releases\Services\ReleaseHardwareAutofillService;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxFiles\BasicFile;
 
@@ -142,6 +146,10 @@ class zxReleaseElement extends ZxArtItem implements
             'DBValueSet',
             [
                 'tableName' => $this->dataResourceName . '_hw_required',
+                'valueField' => 'hardwareId',
+                'lookupTable' => DatabaseTable::Hardware->value,
+                'lookupIdField' => 'id',
+                'lookupCodeField' => 'code',
             ],
         ];
         $moduleStructure['language'] = [
@@ -333,7 +341,7 @@ class zxReleaseElement extends ZxArtItem implements
     public function getArchiveFilesForHardware(): array
     {
         $structure = $this->getReleaseFlatStructure() ?: [];
-        return $this->getService(ArchiveFileResolverService::class)->filterArchiveFiles($structure, $this->hardwareRequired);
+        return $this->getService(ArchiveFileResolverService::class)->filterArchiveFiles($structure, $this->getEffectiveHardwareCodes());
     }
 
 
@@ -345,7 +353,7 @@ class zxReleaseElement extends ZxArtItem implements
 
     private function resolveEmulatorType(): ?string
     {
-        return $this->getService(EmulatorResolverService::class)->resolveEmulator($this->hardwareRequired, $this->releaseFormat);
+        return $this->getService(EmulatorResolverService::class)->resolveEmulator($this->getEffectiveHardwareCodes(), $this->releaseFormat);
     }
 
     /**
@@ -676,18 +684,19 @@ class zxReleaseElement extends ZxArtItem implements
             "name" => $this->title,
             "url" => $this->getCanonicalUrl(),
         ];
-        $computersList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::COMPUTERS->value]);
-        $dosList = array_intersect($this->hardwareRequired, $this->getHardwareList()[HardwareGroup::DOS->value]);
-        $translationsManager = $this->getService(translationsManager::class);
+        $effectiveHardware = $this->getEffectiveHardwareCodes();
+        $computersList = array_intersect($effectiveHardware, $this->getHardwareList()[HardwareGroup::COMPUTERS->value] ?? []);
+        $dosList = array_intersect($effectiveHardware, $this->getHardwareList()[HardwareGroup::DOS->value] ?? []);
+        $labels = $this->getService(HardwareCatalogService::class)->getLabels();
 
         $computersStrings = [];
         foreach ($computersList as $computer) {
-            $computersStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $computer);
+            $computersStrings[] = $labels[$computer]['name'] ?? $computer;
         }
 
         $dosStrings = [];
         foreach ($dosList as $dos) {
-            $dosStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $dos);
+            $dosStrings[] = $labels[$dos]['name'] ?? $dos;
         }
 
         $prod = $this->getProd();
@@ -829,28 +838,47 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->hardwareRequired;
     }
 
+    /**
+     * The release's own hardware plus what it inherits from its production.
+     *
+     * A release only records what is specific to it, so anything that decides
+     * *behaviour* — can this run in an emulator, which files are playable, which
+     * screenshot preset to use — has to ask for this rather than the raw
+     * property. Display keeps using `hardwareRequired`: a release page shows its
+     * own codes and the inherited ones separately.
+     *
+     * @return list<string>
+     */
+    public function getEffectiveHardwareCodes(): array
+    {
+        return $this->getService(ProdHardwareService::class)
+            ->getEffectiveCodes($this->getPersistedId(), $this->hardwareRequired);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getRunsOnHardwareCodes(): array
+    {
+        return $this->getEffectiveHardwareCodes();
+    }
+
+    /**
+     * What the release runs on — its own codes plus what it inherits. A release
+     * records only its deviations, so its own set is empty for most of the
+     * catalogue and would render as nothing at all.
+     */
     public function getHardwareInfo(bool $short = true)
     {
         if (!isset($this->hardwareInfo[$short])) {
-            /**
-             * @var languagesManager $languagesManager
-             */
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $key = 'hw' . ($short ? 's' : 'f') . $languagesManager->getCurrentLanguageId();
-            if (($this->hardwareInfo[$short] = $this->getCacheKey($key)) === null) {
-                $this->hardwareInfo[$short] = [];
-                /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
-                $translationGroup = $short ? 'hardware_short' : 'hardware';
-                foreach ($this->hardwareRequired as $item) {
-                    $this->hardwareInfo[$short][] = [
-                        'id' => $item,
-                        'title' => html_entity_decode($translationsManager->getTranslationByName($translationGroup . '.item_' . $item), ENT_QUOTES),
-                    ];
-                }
-                $this->setCacheKey($key, $this->hardwareInfo[$short], 24 * 60 * 60);
+            $labels = $this->getService(HardwareCatalogService::class)->getLabels();
+            $this->hardwareInfo[$short] = [];
+            foreach ($this->getEffectiveHardwareCodes() as $item) {
+                $label = $labels[$item] ?? null;
+                $this->hardwareInfo[$short][] = [
+                    'id' => $item,
+                    'title' => ($short ? $label['shortName'] : $label['name']) ?? $item,
+                ];
             }
         }
         return $this->hardwareInfo[$short];
@@ -887,10 +915,24 @@ class zxReleaseElement extends ZxArtItem implements
         $filePath = $this->getFilePath();
         $id = $this->getPersistedId();
 
-        if (empty($filePath) || !is_file($filePath)) {
+        // A release that holds no file reference at all genuinely has no formats.
+        if ($this->file === '') {
             $zxParsingManager->deleteFileStructure($id);
             $this->parsed = 1;
             $this->releaseFormat = [];
+            $this->persistElementData();
+            return;
+        }
+
+        // The reference is there but the file is not readable. That is not the
+        // same thing: a release of software still on sale may legitimately have
+        // no downloadable file, and a file can also go missing temporarily.
+        // Keep the parsed structure and the formats — they are metadata in their
+        // own right, and dropping them would turn a storage problem into
+        // permanent data loss. `parsed` is set so the cron stops retrying.
+        if (!is_file($filePath)) {
+            $this->parsed = 1;
+            $this->autofillHardware();
             $this->persistElementData();
             return;
         }
@@ -915,9 +957,49 @@ class zxReleaseElement extends ZxArtItem implements
             }
         }
 
+        $this->autofillHardware();
+
         $this->parsed = 1;
         $this->persistElementData();
     }
+
+    /**
+     * Adds the hardware the release format implies, on every save.
+     *
+     * Runs after `releaseFormat` has been recomputed above, so it always sees the
+     * current formats. Additive only: an editor's choices are never removed, and
+     * a release that already says everything gets nothing.
+     */
+    public function autofillHardware(): void
+    {
+        $additions = $this->getHardwareAutofillAdditions();
+        if ($additions !== []) {
+            $this->hardwareRequired = [...$this->hardwareRequired, ...$additions];
+        }
+    }
+
+    /**
+     * What auto-fill would add, without changing anything — so the one-off
+     * backfill can preview a batch and then apply the very same result.
+     *
+     * @return list<string>
+     */
+    public function getHardwareAutofillAdditions(): array
+    {
+        // The effective set, not the release's own, and it does both jobs here.
+        // It is where the machine comes from — a release rarely names one, its
+        // production does — so the format×machine rules resolve from the prod.
+        // And it is what "already present" means: a code the production states is
+        // not missing, and re-adding it would push a shared code back down and
+        // undo the prod-hardware split on every save. What does get added is
+        // still written to the release, because a code that is genuinely new
+        // there is release-specific.
+        return $this->getService(ReleaseHardwareAutofillService::class)->getAdditions(
+            $this->releaseFormat,
+            $this->getEffectiveHardwareCodes(),
+        );
+    }
+
 
     public function getCompilationJsonData(): string|false
     {

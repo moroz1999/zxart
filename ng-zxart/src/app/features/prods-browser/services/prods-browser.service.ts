@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {ZxProdDto} from '../../../shared/models/zx-prod-dto';
+import {ZxProdDto, ZxProdHardwareItems} from '../../../shared/models/zx-prod-dto';
 
 /** Raw shape returned by the /prodlist/ REST endpoint. */
 interface ProdRestItem {
@@ -16,7 +16,7 @@ interface ProdRestItem {
   readonly votesAmount: number;
   readonly userVote: number | null;
   readonly denyVoting: boolean;
-  readonly hardwareInfo: Array<{id: string}>;
+  readonly hardwareInfo: ZxProdHardwareItems;
   readonly authorsInfoShort: Array<{id: number; structureType: 'author' | 'authorAlias'; title: string; roles: string[]}>;
   readonly categoriesInfo: Array<{id: number; structureType: 'zxProdCategory'; title: string}>;
   readonly partyInfo: {id: number; structureType: 'party'; title: string} | null;

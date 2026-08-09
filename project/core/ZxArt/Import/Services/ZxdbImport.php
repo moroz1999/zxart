@@ -723,15 +723,6 @@ class ZxdbImport extends errorLogger
                             $releaseInfo['releaseType'] = $this->releaseTypes[$download['sourcetype_id']];
                         }
 
-                        if (empty($download['machinetype_id'])) {
-                            $download['machinetype_id'] = $entry['machinetype_id'];
-                        }
-                        if (isset($this->minMachines[$download['machinetype_id']])) {
-                            $releaseInfo['hardwareRequired'] = [$this->minMachines[$download['machinetype_id']]];
-                        }
-                        if (isset($this->optionalMachines[$download['machinetype_id']])) {
-                            $releaseInfo['hardwareRequired'][] = $this->optionalMachines[$download['machinetype_id']];
-                        }
 
                         if (isset($unusedReleases[$download['release_seq']])) {
                             unset($unusedReleases[$download['release_seq']]);
@@ -758,12 +749,14 @@ class ZxdbImport extends errorLogger
                         if (empty($release['releaseType'])) {
                             $release['releaseType'] = ($release['release_seq'] === 0) ? 'original' : 'rerelease';
                         }
-                        if (empty($release['hardwareRequired']) && isset($this->minMachines[$entry['machinetype_id']])) {
-                            $release['hardwareRequired'] = [$this->minMachines[$entry['machinetype_id']]];
-                        }
                     }
                     unset($release);
                 }
+
+                // ZxDB records hardware per entry, and an entry is a production: the
+                // machine type falls back to it and the control tags are read by entry
+                // id alone. It belongs on the prod, not repeated on every release.
+                $prodInfo['hardwareRequired'] = $this->collectEntryHardware($entry);
 
                 $dto = ProdImportDTO::fromArray($prodInfo);
                 if ($this->prodsService->importProd($dto, $this->origin)) {
@@ -782,6 +775,38 @@ class ZxdbImport extends errorLogger
             }
         }
         return true;
+    }
+
+    /**
+     * Hardware of a ZxDB entry: its machine type plus the control tags recorded
+     * against it. Both are entry-level facts — `members` is queried by entry id
+     * with no release column — so they describe the production.
+     *
+     * @param array<string, mixed> $entry
+     * @return list<string>
+     */
+    protected function collectEntryHardware(array $entry): array
+    {
+        $codes = [];
+        $machineTypeId = $entry['machinetype_id'] ?? null;
+        if (isset($this->minMachines[$machineTypeId])) {
+            $codes[] = $this->minMachines[$machineTypeId];
+        }
+        if (isset($this->optionalMachines[$machineTypeId])) {
+            $codes[] = $this->optionalMachines[$machineTypeId];
+        }
+
+        $controls = $this->zxdb->table('members')
+            ->select('tag_id')
+            ->where('entry_id', '=', $entry['id'])
+            ->get();
+        foreach ($controls as $control) {
+            if (isset($this->featureGroups[$control['tag_id']])) {
+                $codes[] = $this->featureGroups[$control['tag_id']];
+            }
+        }
+
+        return array_values(array_unique($codes));
     }
 
     protected function getReleasesInfo($entry): void
@@ -811,17 +836,6 @@ class ZxdbImport extends errorLogger
                     'labels' => [],
                 ];
                 $releaseInfo['id'] = $release['entry_id'] . '_' . $release['release_seq'];
-
-                if ($controls = $this->zxdb->table('members')
-                    ->select('tag_id')
-                    ->where('entry_id', '=', $entryId)
-                    ->get()) {
-                    foreach ($controls as $control) {
-                        if (isset($this->featureGroups[$control['tag_id']])) {
-                            $releaseInfo['hardwareRequired'][] = $this->featureGroups[$control['tag_id']];
-                        }
-                    }
-                }
 
                 if ($publishers = $this->zxdb->table('publishers')
                     ->select('*')

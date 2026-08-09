@@ -18,6 +18,7 @@ use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\ProdInfoBuilder;
+use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Releases\Dto\ReleaseDetailsDto;
 use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
@@ -37,6 +38,7 @@ readonly class ReleaseDetailsService
         private EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private ProdInfoBuilder $infoBuilder,
+        private ProdHardwareService $prodHardwareService,
         private DescriptionFormatter $descriptionFormatter,
         private ProdMediaService $prodMediaService,
         private ReleaseFormatsProvider $releaseFormatsProvider,
@@ -92,6 +94,17 @@ readonly class ReleaseDetailsService
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),
             hardware: $this->infoBuilder->buildHardware($release),
+            // What the release actually inherits, not everything the production
+            // holds: a category the release speaks about is not inherited at all,
+            // so showing the production's codes there would put a chip on the page
+            // the release does not carry. Nothing needs subtracting afterwards —
+            // what comes back cannot overlap the release's own codes.
+            prodHardware: $this->infoBuilder->buildHardwareFromCodes(
+                $this->prodHardwareService->getInheritedApplicable(
+                    $release->getPersistedId(),
+                    $release->getHardwareCodes(),
+                ),
+            ),
             authors: $this->infoBuilder->buildReleaseAuthors($release),
             publishers: $this->infoBuilder->buildReleasePublishers($release),
             formats: $this->buildFormats($release),

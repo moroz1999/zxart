@@ -64,6 +64,7 @@ class publicReceiveZxProd extends structureElementAction
             'addAuthorRole',
             'legalStatus',
             'language',
+            'hardwareRequired',
             'categories',
             'compilationItems',
             'seriesProds',

@@ -76,9 +76,12 @@ paths:
                   enums:
                     type: object
                     description: >
-                      Select options keyed by field. Options owned by the SPA,
-                      including language and hardware, carry their code in both
-                      value and label; the frontend resolves the visible label.
+                      Select options keyed by field. Most carry a backend label.
+                      Options the SPA still names itself — software `language` —
+                      repeat their code in both value and label. Hardware options
+                      additionally carry `group`, the category they belong to, so
+                      the picker can render them grouped; their labels come from
+                      the editable hardware catalog.
                     additionalProperties:
                       type: array
                       items:
@@ -91,6 +94,9 @@ paths:
                             type: string
                           label:
                             type: string
+                          group:
+                            type: string
+                            description: Only on grouped enums (hardware).
                 additionalProperties: true
         '400':
           description: Missing id or required creation context

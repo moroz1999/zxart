@@ -57,7 +57,7 @@ paths:
   /tunes/?action=play:
     post:
       summary: Report tune play
-      description: Reports a play event for a tune. Accepts JSON or form data.
+      description: Reports a play event for a tune.
       parameters:
         - name: action
           in: query
@@ -71,16 +71,17 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TunePlayRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TunePlayRequest'
       responses:
         '200':
           description: Action result.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponseSuccess'
+                $ref: '#/components/schemas/ActionSuccess'
+        '400':
+          description: Malformed request body.
+        '404':
+          description: Tune not found.
 
   /tune-details/:
     get:
@@ -144,27 +145,21 @@ components:
       properties:
         tuneId:
           type: integer
-          description: Tune ID to log (preferred).
-        id:
-          type: integer
-          description: Tune ID (legacy alias).
+          description: Tune ID to log.
         context:
           type: string
           description: Playback context (radio/page), optional.
-        timestamp:
-          type: string
-          description: Optional client timestamp.
       required:
         - tuneId
 
-    ApiResponseSuccess:
+    ActionSuccess:
       type: object
+      required:
+        - success
       properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        errorMessage:
-          type: string
+        success:
+          type: boolean
+          enum: [true]
 
     AuthorDto:
       type: object
@@ -250,17 +245,6 @@ components:
           description: Distinct `formatGroup` values for all linked tunes, independent of the selected filter.
           items:
             type: string
-
-    ApiResponseTune:
-      type: object
-      properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        responseData:
-          $ref: '#/components/schemas/TuneDto'
-        errorMessage:
-          type: string
 
     ReleaseInfoDto:
       type: object

@@ -12,6 +12,9 @@
         <zx-popover-menu-item *ngIf="user.authorId" [href]="'/author/' + user.authorId">
           {{ 'login.my-page' | translate }}
         </zx-popover-menu-item>
+        <zx-popover-menu-item *ngIf="mayManageHardware$ | async" href="/manage/hardware">
+          {{ 'menu.manage' | translate }}
+        </zx-popover-menu-item>
       </div>
       <zx-button size="sm" color="outlined" (click)="submitLogout()">
         {{ 'login.logout' | translate }}

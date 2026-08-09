@@ -9,9 +9,12 @@ use controller;
 use LanguagesManager;
 use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use structureManager;
 use Throwable;
 use ZxArt\Tunes\Dto\TuneDto;
+use ZxArt\Tunes\Dto\TunePlayRequestDto;
 use ZxArt\Tunes\Exception\TuneNotFoundException;
 use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\Services\TunePlayService;
@@ -29,6 +32,7 @@ class Tunes extends LoggedControllerApplication
         private readonly TunePlayService $tunePlayService,
         private readonly TunesService $tunesService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -97,44 +101,26 @@ class Tunes extends LoggedControllerApplication
 
     private function handlePlay(): void
     {
-        $payload = $this->getRequestPayload();
-        $tuneId = $payload['tuneId'] ?? $payload['id'] ?? null;
-        $tuneId = is_numeric($tuneId) ? (int)$tuneId : 0;
-
-        if ($tuneId === 0) {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Missing tuneId');
-            return;
-        }
-
         try {
-            $this->tunePlayService->logPlay($tuneId);
-            $this->renderer->assign('responseStatus', 'success');
+            $request = $this->serializer->deserialize(
+                file_get_contents('php://input'),
+                TunePlayRequestDto::class,
+                'json',
+            );
+            $this->tunePlayService->logPlay($request->tuneId);
+            $this->renderer->assign('body', ['success' => true]);
+        } catch (SerializerException $exception) {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => $exception->getMessage()]);
         } catch (TuneNotFoundException $exception) {
             $this->logThrowable('Tunes::handlePlay', $exception);
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $exception->getMessage());
+            CmsHttpResponse::getInstance()->setStatusCode('404');
+            $this->renderer->assign('body', ['errorMessage' => $exception->getMessage()]);
         } catch (Throwable $e) {
             $this->logThrowable('Tunes::handlePlay', $e);
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            CmsHttpResponse::getInstance()->setStatusCode('500');
+            $this->renderer->assign('body', ['errorMessage' => 'Internal server error']);
         }
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function getRequestPayload(): array
-    {
-        $raw = file_get_contents('php://input');
-        if (is_string($raw) && $raw !== '') {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                return $decoded;
-            }
-        }
-
-        return $_POST;
     }
 
     public function getUrlName()

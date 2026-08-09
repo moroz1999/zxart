@@ -30,6 +30,9 @@ import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx
 import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
 import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {MultiSelectGroup} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.models';
+import {buildHardwareGroups} from '../../shared/utils/hardware-groups';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -70,6 +73,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
     ZxMultiSelectFilterComponent,
+    TextDirective,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -105,8 +109,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   enums: Record<string, EnumOption[]> = {};
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
-  /** Hardware codes come from the backend; their names are ours (`hardware.<code>`). */
-  hardwareOptions: EnumOption[] = [];
+  /** Hardware arrives labelled and grouped from the backend catalog. */
+  hardwareGroups: MultiSelectGroup[] = [];
   fileNames: Record<string, string> = {};
   fileSelectors: Record<string, FileSelectorItem[]> = {};
 
@@ -210,16 +214,13 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Labels the backend's bare language and hardware codes from the SPA's translations. */
+  /** Labels the backend's bare language codes; hardware arrives already labelled. */
   private buildClientLabelOptions(): void {
     this.languageOptions = this.languageCodes.map(option => ({
       value: option.value,
       label: this.translate.instant(`language.${option.value}`),
     }));
-    this.hardwareOptions = this.hardwareCodes.map(option => ({
-      value: option.value,
-      label: this.translate.instant(`hardware.${option.value}`),
-    }));
+    this.hardwareGroups = buildHardwareGroups(this.hardwareCodes, this.translate);
   }
 
   ngOnDestroy(): void {

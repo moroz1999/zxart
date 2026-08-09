@@ -22,6 +22,13 @@
     <zx-chip *ngIf="showLegalStatus" variant="filled" color="neutral">{{ core.legalStatusLabel }}</zx-chip>
   </zx-inline>
 
+  <!-- the production's own requirements; a release adds its own on its page -->
+  <zx-inline *ngIf="core.hardware.length" spacing="sm" align="center" [wrap]="true">
+    <zx-chip *ngFor="let hw of core.hardware" variant="mono" [href]="'/prods?hw=' + hw.id">
+      <zx-hardware-icon [id]="hw.id" [category]="hw.category"></zx-hardware-icon>{{ hw.name }}
+    </zx-chip>
+  </zx-inline>
+
   <zx-prod-people-row
     [authors]="core.authors"
     [publishers]="core.publishers"

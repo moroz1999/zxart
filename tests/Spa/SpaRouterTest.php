@@ -58,6 +58,10 @@ final class SpaRouterTest extends TestCase
         yield ['/prods/tags'];
         yield ['/prods/batch-upload'];
         yield ['/stats/activity'];
+        yield ['/manage'];
+        yield ['/manage/hardware'];
+        yield ['/manage/hardware/add'];
+        yield ['/manage/hardware/42'];
     }
 
     public static function legacyRoutes(): iterable
@@ -65,13 +69,16 @@ final class SpaRouterTest extends TestCase
         yield ['/eng/software/games/example/'];
         yield ['/index.php?id=123&action=showForm'];
         yield ['/unknown-route'];
+        // the legacy Smarty panel owns /admin, which is why the section lives at /manage
+        yield ['/admin'];
+        yield ['/admin/hardware'];
     }
 
     public static function menuRouteRoots(): iterable
     {
         foreach ([
             'prods', 'pictures', 'music', 'authors', 'parties', 'groups',
-            'comments', 'geo', 'about', 'stats', 'feedback', 'file-search',
+            'comments', 'geo', 'about', 'stats', 'feedback', 'file-search', 'manage',
         ] as $routeRoot) {
             yield $routeRoot => [$routeRoot];
         }

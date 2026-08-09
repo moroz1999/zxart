@@ -12,6 +12,8 @@ enum DatabaseTable: string
     case City = 'module_city';
     case Comment = 'module_comment';
     case Country = 'module_country';
+    case Hardware = 'hardware';
+    case HardwareName = 'hardware_name';
     case Group = 'module_group';
     case GroupAlias = 'module_groupalias';
     case Party = 'module_party';
@@ -23,6 +25,7 @@ enum DatabaseTable: string
     case ZxPicture = 'module_zxpicture';
     case ZxProd = 'module_zxprod';
     case ZxProdCategory = 'module_zxprodcategory';
+    case ZxProdHardware = 'module_zxprod_hw_required';
     case ZxRelease = 'module_zxrelease';
     case ZxReleaseHardware = 'module_zxrelease_hw_required';
 }

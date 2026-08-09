@@ -2,13 +2,16 @@
 
 use App\Paths\PathsManager;
 use Illuminate\Database\Connection;
+use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
+use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\CompilationCategoryIds;
@@ -27,6 +30,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property string $compo
  * @property string $tagsText
  * @property string[] $language
+ * @property string[] $hardwareRequired the production's own hardware; releases carry only their deviations
  * @property string $externalLink
  * @property int $party
  * @property int $commentsAmount
@@ -69,6 +73,7 @@ class zxProdElement extends ZxArtItem implements
     use PartyElementProviderTrait;
     use LanguageCodesProviderTrait;
     use CategoryElementsSelectorProviderTrait;
+    use HardwareProvider;
     use LinksPersistingTrait;
     use PublisherGroupProviderTrait;
     use MaterialsProviderTrait;
@@ -155,6 +160,16 @@ class zxProdElement extends ZxArtItem implements
             'DBValueSet',
             [
                 'tableName' => 'zxitem_language',
+            ],
+        ];
+        $moduleStructure['hardwareRequired'] = [
+            'DBValueSet',
+            [
+                'tableName' => $this->dataResourceName . '_hw_required',
+                'valueField' => 'hardwareId',
+                'lookupTable' => DatabaseTable::Hardware->value,
+                'lookupIdField' => 'id',
+                'lookupCodeField' => 'code',
             ],
         ];
         $moduleStructure['compilationItems'] = [
@@ -822,18 +837,22 @@ class zxProdElement extends ZxArtItem implements
         $releases = $this->getReleasesList();
         $release = $releases[0] ?? null;
         if ($release !== null) {
-            $computersList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::COMPUTERS->value]);
-            $dosList = array_intersect($release->hardwareRequired, $release->getHardwareList()[HardwareGroup::DOS->value]);
-            $translationsManager = $this->getService(translationsManager::class);
+            // the release's effective set, not its own: after the hardware split a
+            // release repeats none of what the production states, so reading its
+            // own codes here would leave the structured data blank
+            $releaseHardware = $release->getEffectiveHardwareCodes();
+            $computersList = array_intersect($releaseHardware, $release->getHardwareList()[HardwareGroup::COMPUTERS->value] ?? []);
+            $dosList = array_intersect($releaseHardware, $release->getHardwareList()[HardwareGroup::DOS->value] ?? []);
+            $labels = $this->getService(HardwareCatalogService::class)->getLabels();
 
             $computersStrings = [];
             foreach ($computersList as $computer) {
-                $computersStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $computer);
+                $computersStrings[] = $labels[$computer]['name'] ?? $computer;
             }
 
             $dosStrings = [];
             foreach ($dosList as $dos) {
-                $dosStrings[] = $translationsManager->getTranslationByName('hardware.item_' . $dos);
+                $dosStrings[] = $labels[$dos]['name'] ?? $dos;
             }
 
             $data['availableOnDevice'] = $computersStrings;
@@ -877,23 +896,14 @@ class zxProdElement extends ZxArtItem implements
     }
 
     /**
-     * @return array<mixed>
+     * The production's **own** hardware — the shared set an editor maintains here
+     * rather than repeating on every release.
+     *
+     * @return string[]
      */
     public function getHardware(): array
     {
-        $db = $this->getService('db');
-        /**
-         * @var QueryFiltersManager $queryFiltersManager
-         */
-        $query = $db->table($this->dataResourceName)->where('id', $this->getId());
-
-        $queryFiltersManager = $this->getService(QueryFiltersManager::class);
-        $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
-        $hwItems = $db->table('module_zxrelease_hw_required')
-            ->whereIn('elementId', $query)
-            ->distinct()
-            ->pluck('value');
-        return (array)$hwItems;
+        return $this->hardwareRequired;
     }
 
     /**
@@ -901,37 +911,51 @@ class zxProdElement extends ZxArtItem implements
      */
     public function getHardwareCodes(): array
     {
-        return array_map(
-            static fn(mixed $hardwareCode): string => (string)$hardwareCode,
-            $this->getHardware(),
-        );
+        return $this->hardwareRequired;
+    }
+
+    /**
+     * Own hardware plus every release's — what describes the production as a
+     * whole, for catalogue cards, structured data and the hardware selector.
+     *
+     * @return list<string>
+     */
+    public function getAggregatedHardwareCodes(): array
+    {
+        return $this->getService(ProdHardwareService::class)->getAggregatedCodes($this->getPersistedId());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getRunsOnHardwareCodes(): array
+    {
+        return $this->getAggregatedHardwareCodes();
     }
 
 
+    /**
+     * The production's own hardware with labels. Own, not aggregated, for the
+     * same reason the cards and the detail page use it: a production is described
+     * by the set its releases share. Matches zxReleaseElement::getHardwareInfo(),
+     * which has always read the element's own codes.
+     */
     public function getHardwareInfo(bool $short = true)
     {
-        if (!isset($this->hardwareInfo)) {
-            /**
-             * @var languagesManager $languagesManager
-             */
-            $languagesManager = $this->getService(LanguagesManager::class);
-            $key = 'hw' . $languagesManager->getCurrentLanguageId();
-            if (($this->hardwareInfo = $this->getCacheKey($key)) === null) {
-                $this->hardwareInfo = [];
-                /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
-                foreach ($this->getHardware() as $item) {
-                    $this->hardwareInfo[] = [
-                        'id' => $item,
-                        'title' => $translationsManager->getTranslationByName($short ? 'hardware_short.item_' . $item : 'hardware.item_' . $item),
-                    ];
-                }
-                $this->setCacheKey($key, $this->hardwareInfo, 24 * 60 * 60);
+        // keyed by $short: the full and short label sets are different lists, and
+        // the previous single-slot cache could serve one where the other was asked for
+        if (!isset($this->hardwareInfo[$short])) {
+            $labels = $this->getService(HardwareCatalogService::class)->getLabels();
+            $this->hardwareInfo[$short] = [];
+            foreach ($this->getHardwareCodes() as $item) {
+                $label = $labels[$item] ?? null;
+                $this->hardwareInfo[$short][] = [
+                    'id' => $item,
+                    'title' => ($short ? $label['shortName'] : $label['name']) ?? $item,
+                ];
             }
         }
-        return $this->hardwareInfo;
+        return $this->hardwareInfo[$short];
     }
 
     public function getPublishersInfo(): array

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace ZxArt\Controllers;
 
+use CmsHttpResponse;
 use controller;
 use LanguagesManager;
 use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use structureManager;
 use Throwable;
+use ZxArt\Radio\Dto\RadioCriteriaDto;
+use ZxArt\Radio\Dto\RadioNextTuneRequestDto;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
-use ZxArt\Radio\Services\RadioCriteriaFactory;
 use ZxArt\Radio\Services\RadioOptionsService;
 use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Rest\TuneRestDto;
@@ -28,7 +32,7 @@ class Radio extends LoggedControllerApplication
         private readonly ObjectMapper $objectMapper,
         private readonly RadioService $radioService,
         private readonly RadioOptionsService $optionsService,
-        private readonly RadioCriteriaFactory $criteriaFactory,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -53,15 +57,13 @@ class Radio extends LoggedControllerApplication
         }
 
         if ($method !== 'POST') {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Method not allowed');
+            $this->assignError('Method not allowed', 405);
             $this->renderer->display();
             return;
         }
 
-        if ($action && $action !== 'next-tune') {
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Unknown action');
+        if ($action !== false && $action !== '' && $action !== 'next-tune') {
+            $this->assignError('Unknown action', 400);
             $this->renderer->display();
             return;
         }
@@ -74,54 +76,41 @@ class Radio extends LoggedControllerApplication
     {
         try {
             $options = $this->optionsService->getOptions();
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $options);
+            $this->renderer->assign('body', $options);
         } catch (Throwable $e) {
             $this->logThrowable('Radio::handleOptions', $e);
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error', 500);
         }
     }
 
     private function handleNextTune(): void
     {
         try {
-            $payload = $this->getRequestPayload();
-            $criteriaData = $payload['criteria'] ?? null;
-            $criteria = is_array($criteriaData)
-                ? $this->criteriaFactory->fromArray($criteriaData)
-                : $this->criteriaFactory->fromArray([]);
+            $body = file_get_contents('php://input');
+            $request = $body === ''
+                ? new RadioNextTuneRequestDto()
+                : $this->serializer->deserialize($body, RadioNextTuneRequestDto::class, 'json');
+            $criteria = $request->criteria ?? new RadioCriteriaDto();
 
             $tuneDto = $this->radioService->getNextTune($criteria);
             $restDto = $this->objectMapper->map($tuneDto, TuneRestDto::class);
 
-            $this->renderer->assign('responseStatus', 'success');
-            $this->renderer->assign('responseData', $restDto);
+            $this->renderer->assign('body', $restDto);
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (RadioTuneNotFoundException $exception) {
             $this->logThrowable('Radio::handleNextTune', $exception);
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', $exception->getMessage());
+            $this->assignError($exception->getMessage(), 404);
         } catch (Throwable $e) {
             $this->logThrowable('Radio::handleNextTune', $e);
-            $this->renderer->assign('responseStatus', 'error');
-            $this->renderer->assign('errorMessage', 'Internal server error');
+            $this->assignError('Internal server error', 500);
         }
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getRequestPayload(): array
+    private function assignError(string $message, int $statusCode): void
     {
-        $raw = file_get_contents('php://input');
-        if (is_string($raw) && $raw !== '') {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                return $decoded;
-            }
-        }
-
-        return $_POST;
+        CmsHttpResponse::getInstance()->setStatusCode((string)$statusCode);
+        $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
     public function getUrlName()

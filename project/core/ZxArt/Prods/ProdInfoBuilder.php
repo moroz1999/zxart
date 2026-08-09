@@ -15,6 +15,7 @@ use structureElement;
 use translationsManager;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdGroupRefDto;
+use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Prods\Dto\ProdHardwareInfoDto;
 use ZxArt\Prods\Dto\ProdLanguageInfoDto;
 use ZxArt\Prods\Dto\ProdLinkInfoDto;
@@ -34,6 +35,7 @@ readonly class ProdInfoBuilder
         private translationsManager $translationsManager,
         private DesignThemesManager $designThemesManager,
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
+        private HardwareCatalogService $hardwareCatalogService,
     ) {
     }
 
@@ -82,17 +84,35 @@ readonly class ProdInfoBuilder
     }
 
     /**
+     * The one place hardware is turned into a response shape. Labels come from
+     * the editable catalog in the request language; a code the catalog no longer
+     * knows falls back to itself rather than rendering blank.
+     *
+     * @param string[] $hardwareCodes
+     * @return ProdHardwareInfoDto[]
+     */
+    public function buildHardwareFromCodes(array $hardwareCodes): array
+    {
+        $labels = $this->hardwareCatalogService->getLabels();
+        $hardware = [];
+        foreach ($hardwareCodes as $hardwareCode) {
+            $label = $labels[$hardwareCode] ?? null;
+            $hardware[] = new ProdHardwareInfoDto(
+                id: $hardwareCode,
+                name: $label['name'] ?? $hardwareCode,
+                shortName: $label['shortName'] ?? $hardwareCode,
+                category: $this->hardwareCatalogService->getCategoryOf($hardwareCode)?->value ?? '',
+            );
+        }
+        return $hardware;
+    }
+
+    /**
      * @return ProdHardwareInfoDto[]
      */
     public function buildHardware(zxProdElement|zxReleaseElement $element): array
     {
-        $hardware = [];
-        foreach ($element->getHardwareCodes() as $hardwareCode) {
-            $hardware[] = new ProdHardwareInfoDto(
-                id: $hardwareCode,
-            );
-        }
-        return $hardware;
+        return $this->buildHardwareFromCodes($element->getHardwareCodes());
     }
 
     /**

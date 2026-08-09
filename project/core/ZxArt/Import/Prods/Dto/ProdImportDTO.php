@@ -20,6 +20,8 @@ final readonly class ProdImportDTO
         public ?string      $instructions = null,
         /** @var string[]|null */
         public ?array       $languages = null,
+        /** Hardware of the production as a whole; releases carry only their own deviations. */
+        public ?array       $hardwareRequired = null,
         public ?LegalStatus $legalStatus = null,
         public ?string      $youtubeId = null,
         public ?string      $externalLink = null,
@@ -96,6 +98,7 @@ final readonly class ProdImportDTO
             altTitle: $a['altTitle'] ?? null,
             description: $a['description'] ?? null,
             languages: isset($a['language']) ? (array)$a['language'] : null,
+            hardwareRequired: isset($a['hardwareRequired']) ? array_values((array)$a['hardwareRequired']) : null,
             legalStatus: $a['legalStatus'] ?? null,
             youtubeId: $a['youtubeId'] ?? null,
             externalLink: $a['externalLink'] ?? null,
@@ -137,6 +140,7 @@ final readonly class ProdImportDTO
             htmlDescription: $this->htmlDescription,
             instructions: $this->instructions,
             languages: $this->languages,
+            hardwareRequired: $this->hardwareRequired,
             legalStatus: $this->legalStatus,
             youtubeId: $this->youtubeId,
             externalLink: $this->externalLink,

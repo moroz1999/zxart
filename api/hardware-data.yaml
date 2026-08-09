@@ -1,0 +1,212 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Hardware Catalog API
+  version: 1.0.0
+  description: >
+    The editable hardware catalog behind the management section.
+
+    Reads are open — hardware names are public data that catalogue filters and
+    entity forms need anyway. Writes require the `editHardware` privilege on the
+    public root; the id of that element comes from `/currentuser/`.
+
+    Every write answers with the refreshed catalog, so a client replaces its copy
+    from the response instead of patching it: the server owns display order and
+    usage counts.
+
+paths:
+  /hardware-data/:
+    get:
+      summary: The whole hardware catalog
+      description: >
+        Names are returned for every interface language at once, because the
+        management form edits all of them together.
+      responses:
+        '200':
+          description: The catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareCatalog'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create, update or delete one hardware item
+      parameters:
+        - in: query
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [create, update, delete]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/HardwareSaveRequest'
+                - $ref: '#/components/schemas/HardwareDeleteRequest'
+      responses:
+        '200':
+          description: The refreshed catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareCatalog'
+        '400':
+          description: >
+            Unsupported action, or a body that does not fit the request DTO
+            (unknown category, unknown language, missing required field).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: The current user lacks `editHardware` on the public root
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No hardware item with that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: >
+            The code is already taken, or the item is still referenced by
+            releases or productions and therefore cannot be deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    HardwareCatalog:
+      type: object
+      required:
+        - languages
+        - categories
+        - items
+      properties:
+        languages:
+          type: array
+          description: Interface languages, as ISO 639-1 codes, in the site's own order.
+          items:
+            type: string
+            enum: [en, ru, es]
+        categories:
+          type: array
+          description: Every category a hardware item can belong to.
+          items:
+            type: string
+            enum: [computers, storage, dos, sound, controls, expansion]
+        items:
+          type: array
+          description: The catalog in display order — by category, then by position.
+          items:
+            $ref: '#/components/schemas/HardwareItem'
+
+    HardwareItem:
+      type: object
+      required:
+        - id
+        - code
+        - category
+        - position
+        - names
+        - usages
+      properties:
+        id:
+          type: integer
+          description: Numeric id; only the link tables use it, everything else works in codes.
+        code:
+          type: string
+          description: Stable identifier, e.g. `zx48`. Lowercase letters, digits, `_` and `+`.
+        category:
+          type: string
+          enum: [computers, storage, dos, sound, controls, expansion]
+        position:
+          type: integer
+          description: Display order within the category.
+        names:
+          type: object
+          description: Labels keyed by two-letter language code.
+          additionalProperties:
+            $ref: '#/components/schemas/HardwareName'
+        usages:
+          type: integer
+          description: How many releases and productions reference it; deletion is refused above 0.
+
+    HardwareName:
+      type: object
+      required:
+        - language
+        - name
+        - shortName
+      properties:
+        language:
+          type: string
+          enum: [en, ru, es]
+        name:
+          type: string
+          description: Full label, for detail pages and forms.
+        shortName:
+          type: string
+          description: Compact label, for cards and badges.
+
+    HardwareSaveRequest:
+      type: object
+      description: Body of `action=create` and `action=update`.
+      required:
+        - code
+        - category
+      properties:
+        id:
+          type: integer
+          description: Required for `update`, ignored by `create`.
+        code:
+          type: string
+        category:
+          type: string
+          enum: [computers, storage, dos, sound, controls, expansion]
+        position:
+          type: integer
+          default: 0
+        names:
+          type: object
+          description: >
+            Labels keyed by two-letter language code. Every interface language
+            needs both a name and a short name; the request is refused otherwise.
+          additionalProperties:
+            type: object
+            required:
+              - name
+              - shortName
+            properties:
+              name:
+                type: string
+              shortName:
+                type: string
+
+    HardwareDeleteRequest:
+      type: object
+      description: Body of `action=delete`.
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - errorMessage
+      properties:
+        errorMessage:
+          type: string

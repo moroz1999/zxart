@@ -22,6 +22,9 @@ import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocompl
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ZxCategoryTreeSelectComponent} from '../../shared/ui/zx-category-tree-select/zx-category-tree-select.component';
 import {ZxMultiSelectFilterComponent} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
+import {MultiSelectGroup} from '../../shared/ui/zx-multi-select-filter/zx-multi-select-filter.models';
+import {buildHardwareGroups} from '../../shared/utils/hardware-groups';
 import {FileMove, ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.component';
 import {CategoryTreeNode, EnumOption, FileSelectorItem, FormParentRef} from '../../shared/models/form-data-response';
@@ -77,6 +80,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate
     ZxMultiEntityAutocompleteComponent,
     ZxCategoryTreeSelectComponent,
     ZxMultiSelectFilterComponent,
+    TextDirective,
     ZxFileSelectorComponent,
     ZxTagsFieldComponent,
     ZxMemberRoleEditorComponent,
@@ -101,6 +105,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     partyplace: this.fb.nonNullable.control(''),
     compo: this.fb.nonNullable.control<string>(''),
     language: this.fb.nonNullable.control<string[]>([]),
+    hardwareRequired: this.fb.nonNullable.control<string[]>([]),
     year: this.fb.nonNullable.control(''),
     youtubeId: this.fb.nonNullable.control(''),
     groups: this.fb.nonNullable.control<EntityRef[]>([]),
@@ -135,6 +140,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   enums: Record<string, EnumOption[]> = {};
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
+  /** Hardware arrives labelled and grouped from the backend catalog. */
+  hardwareGroups: MultiSelectGroup[] = [];
   fileSelectors: Record<string, FileSelectorItem[]> = {};
   readonly emptyFiles: FileSelectorItem[] = [];
   batchUpload = false;
@@ -215,6 +222,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
             partyplace: String(data.fields['partyplace'] ?? ''),
             compo: String(data.fields['compo'] ?? ''),
             language: Array.isArray(data.fields['language']) ? (data.fields['language'] as string[]) : [],
+            hardwareRequired: Array.isArray(data.fields['hardwareRequired']) ? (data.fields['hardwareRequired'] as string[]) : [],
             year: String(data.fields['year'] ?? ''),
             youtubeId: String(data.fields['youtubeId'] ?? ''),
             groups: data.multiRefs['groups'] ?? [],
@@ -235,6 +243,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
           this.languageOptions = this.buildLanguageOptions(data.enums['language']);
+          this.hardwareGroups = buildHardwareGroups(data.enums['hardwareRequired'] ?? [], this.translate);
           this.fileSelectors = data.fileSelectors;
           for (const field of PASSTHROUGH_FIELDS) {
             this.passthrough[field] = data.fields[field] ?? '';
@@ -355,6 +364,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       partyplace: value.partyplace,
       compo: value.compo,
       language: value.language,
+      // always sent, empty included: a field listed in expectedFields but absent
+      // from the request would wipe what is stored
+      hardwareRequired: value.hardwareRequired,
       year: value.year,
       youtubeId: value.youtubeId,
       groups: value.groups.map((ref: EntityRef) => String(ref.id)),

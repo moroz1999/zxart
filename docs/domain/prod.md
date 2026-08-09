@@ -80,10 +80,9 @@ back to the route-driven one built from the menu.
 Prod and release detail responses expose category IDs and raw language, hardware,
 year, and format values. Angular templates build catalogue filter links from
 those values.
-Catalogue hardware selectors and product summaries also expose hardware codes
-only. Angular resolves group names, full filter labels and compact card labels
-through `hardware-group.<code>`, `hardware.<code>` and
-`hardware-short.<code>` translations.
+Catalogue hardware selectors and product summaries carry each code together with
+its name, short name and category, localized for the request language. Only the
+category heading is still an SPA string (`hardware-group.<code>`).
 
 ### Relations with Other Entities
 
@@ -93,6 +92,14 @@ through `hardware-group.<code>`, `hardware.<code>` and
 #### Groups and Publishers
 - **publishers** - publishers (link `zxProdPublishers`, role child)
 - **groups** - developer groups (link `zxProdGroups`, role child)
+
+#### Hardware
+- **hardwareRequired** - the production's own hardware: the set shared by its
+  releases, so it is not repeated on each of them
+  - Stored in `module_zxprod_hw_required` as catalog ids; the property works in codes
+  - `getAggregatedHardwareCodes()` adds every release's set — that is what cards,
+    structured data, the catalogue selector and the stats charts use
+  - Full model, including where the catalog lives: [hardware.md](hardware.md)
 
 #### Categories
 - **categories** - production categories (array of IDs)

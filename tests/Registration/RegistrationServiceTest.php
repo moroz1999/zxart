@@ -25,7 +25,7 @@ final class RegistrationServiceTest extends TestCase
         $service = $this->createService('anonymous');
 
         try {
-            $service->register(new RegistrationRequestDto('', '', '', '', []));
+            $service->register(new RegistrationRequestDto('', '', '', ''));
             self::fail('Expected RegistrationException');
         } catch (RegistrationException $exception) {
             self::assertSame(422, $exception->getStatusCode());
@@ -38,7 +38,7 @@ final class RegistrationServiceTest extends TestCase
         $service = $this->createService('existing-user');
 
         try {
-            $service->register(new RegistrationRequestDto('user', 'user@example.com', 'secret', 'secret', []));
+            $service->register(new RegistrationRequestDto('user', 'user@example.com', 'secret', 'secret'));
             self::fail('Expected RegistrationException');
         } catch (RegistrationException $exception) {
             self::assertSame(409, $exception->getStatusCode());

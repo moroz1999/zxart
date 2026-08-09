@@ -333,6 +333,10 @@ class ProdsService extends ElementsManager
             $element->description = $dto->description;
             $changed = true;
         }
+        if (!$element->hardwareRequired && !empty($dto->hardwareRequired)) {
+            $element->hardwareRequired = array_unique($dto->hardwareRequired);
+            $changed = true;
+        }
         if ($dto->htmlDescription !== null) {
             $element->htmlDescription = $dto->htmlDescription;
             $changed = true;

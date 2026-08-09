@@ -9,6 +9,30 @@ class DBValueSetDataChunk extends DataChunk implements ElementHolderInterface, E
     protected $valueField = 'value';
     protected $tableName;
 
+    /**
+     * Optional code lookup. When `lookupTable` is configured the link table
+     * stores numeric ids in `valueField`, while the element property keeps
+     * working in codes: ids are translated to codes on read and back on write.
+     * Used by hardware, whose catalog is an editable table.
+     */
+    protected $lookupTable;
+    protected $lookupIdField = 'id';
+    protected $lookupCodeField = 'code';
+
+    /**
+     * Lookup maps shared by every chunk instance of a request, keyed by lookup
+     * table name — several element types point at the same lookup table and the
+     * map is small enough to read once.
+     *
+     * @var array<string, array<int, string>>
+     */
+    protected static $lookupCodesById = [];
+
+    /**
+     * @var array<string, array<string, int>>
+     */
+    protected static $lookupIdsByCode = [];
+
     public function getStorageValue()
     {
         if ($this->storageValue === null) {
@@ -28,8 +52,82 @@ class DBValueSetDataChunk extends DataChunk implements ElementHolderInterface, E
         $this->storageValue = [];
 
         if ($rows = $this->getRows()) {
-            $this->storageValue = array_column($rows, $this->valueField);
+            $this->storageValue = $this->convertStoredToCodes(array_column($rows, $this->valueField));
         }
+    }
+
+    protected function hasLookup()
+    {
+        return $this->lookupTable !== null;
+    }
+
+    /**
+     * Reads the lookup table once per request, filling both directions at the
+     * same time — a chunk needs one on read and the other on write.
+     */
+    protected function loadLookupMaps()
+    {
+        if (isset(self::$lookupCodesById[$this->lookupTable])) {
+            return;
+        }
+
+        $codesById = [];
+        $idsByCode = [];
+        if ($db = $this->getService('db')) {
+            $rows = $db->table($this->lookupTable)
+                ->select($this->lookupIdField, $this->lookupCodeField)
+                ->get();
+            foreach ($rows as $row) {
+                $id = (int)$row[$this->lookupIdField];
+                $code = (string)$row[$this->lookupCodeField];
+                $codesById[$id] = $code;
+                $idsByCode[$code] = $id;
+            }
+        }
+
+        self::$lookupCodesById[$this->lookupTable] = $codesById;
+        self::$lookupIdsByCode[$this->lookupTable] = $idsByCode;
+    }
+
+    /**
+     * Stored values to the codes the element exposes. Unknown ids are dropped:
+     * they can only come from a row whose catalog entry is gone.
+     */
+    protected function convertStoredToCodes(array $storedValues)
+    {
+        if (!$this->hasLookup()) {
+            return $storedValues;
+        }
+        $this->loadLookupMaps();
+        $codeById = self::$lookupCodesById[$this->lookupTable];
+        $codes = [];
+        foreach ($storedValues as $storedValue) {
+            $id = (int)$storedValue;
+            if (isset($codeById[$id])) {
+                $codes[] = $codeById[$id];
+            }
+        }
+        return $codes;
+    }
+
+    /**
+     * Codes back to the values the link table stores. Unknown codes are dropped
+     * rather than written as 0, so a stale code can never create a broken row.
+     */
+    protected function convertCodesToStored(array $codes)
+    {
+        if (!$this->hasLookup()) {
+            return $codes;
+        }
+        $this->loadLookupMaps();
+        $idByCode = self::$lookupIdsByCode[$this->lookupTable];
+        $storedValues = [];
+        foreach ($codes as $code) {
+            if (isset($idByCode[$code])) {
+                $storedValues[] = $idByCode[$code];
+            }
+        }
+        return $storedValues;
     }
 
     protected function getRows()
@@ -77,7 +175,9 @@ class DBValueSetDataChunk extends DataChunk implements ElementHolderInterface, E
             return;
         }
         if ($db = $this->getService('db')) {
-            $valuesToInsert = $this->storageValue;
+            // must happen before the diff below: getRows() yields stored values,
+            // so both sides have to be in the same representation
+            $valuesToInsert = $this->convertCodesToStored($this->storageValue);
             $rowsToDelete = $this->getRows();
             foreach ($valuesToInsert as $keyInsert => $value) {
                 if ($value) {

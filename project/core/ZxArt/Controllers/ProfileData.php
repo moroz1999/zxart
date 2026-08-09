@@ -9,7 +9,10 @@ use controller;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Users\Dto\PasswordChangeRequestDto;
 use ZxArt\Users\PasswordChangeResult;
 use ZxArt\Users\Rest\UserProfileRestDto;
 use ZxArt\Users\UserProfileService;
@@ -29,6 +32,7 @@ class ProfileData extends LoggedControllerApplication
         Logger $logger,
         private readonly UserProfileService $userProfileService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -49,6 +53,8 @@ class ProfileData extends LoggedControllerApplication
             } else {
                 $this->respondWithProfile();
             }
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (Throwable $e) {
             $this->logThrowable('Profile::execute', $e);
             $this->assignError('Internal server error');
@@ -59,13 +65,16 @@ class ProfileData extends LoggedControllerApplication
 
     private function changePassword(): void
     {
-        $body = json_decode((string)file_get_contents('php://input'), true);
-        $body = is_array($body) ? $body : [];
+        $request = $this->serializer->deserialize(
+            file_get_contents('php://input'),
+            PasswordChangeRequestDto::class,
+            'json',
+        );
 
         $result = $this->userProfileService->changePassword(
-            (string)($body['currentPassword'] ?? ''),
-            (string)($body['password'] ?? ''),
-            (string)($body['passwordRepeat'] ?? ''),
+            $request->currentPassword,
+            $request->password,
+            $request->passwordRepeat,
         );
 
         match ($result) {

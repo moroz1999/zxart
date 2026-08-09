@@ -65,6 +65,9 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->denyComments = $structureElement->denyComments;
                     $zxProdElement->legalStatus = $structureElement->legalStatus;
                     $zxProdElement->language = $structureElement->language;
+                    // hardware is a property of the production; the releases created below
+                    // get only what their own file format implies
+                    $zxProdElement->hardwareRequired = $structureElement->hardwareRequired;
                     $zxProdElement->youtubeId = $structureElement->youtubeId;
                     $zxProdElement->tagsText = $structureElement->tagsText;
                     $zxProdElement->addAuthor = $structureElement->addAuthor;

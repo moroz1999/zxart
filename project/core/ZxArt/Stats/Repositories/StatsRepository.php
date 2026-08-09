@@ -140,25 +140,23 @@ final readonly class StatsRepository extends AbstractRepository
             return [];
         }
 
-        $prodTable = $this->tableName(DatabaseTable::ZxProd);
-        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
-        $releaseTable = $this->tableName(DatabaseTable::ZxRelease);
-        $hardwareTable = $this->tableName(DatabaseTable::ZxReleaseHardware);
-        // selectRaw is not processed by the grammar, so the table prefix must be applied manually here.
-        $prodIdColumn = $this->db->getTablePrefix() . $prodTable . '.id';
+        // Hardware lives on both sides now, so a production counts if the code is
+        // on the production itself or on one of its releases. The two sources are
+        // read separately and merged on the production id — summing their counts
+        // would double-count a production carrying the same code in both places.
+        $seen = [];
+        foreach ([$this->prodOwnHardwarePairs($computerModels), $this->releaseHardwarePairs($computerModels)] as $pairs) {
+            foreach ($pairs as $pair) {
+                $seen[(int)$pair['year']][(string)$pair['label']][(int)$pair['prodId']] = true;
+            }
+        }
 
-        $query = $this->db->table($prodTable)
-            ->join($linksTable, $linksTable . '.parentStructureId', '=', $prodTable . '.id')
-            ->join($releaseTable, $releaseTable . '.id', '=', $linksTable . '.childStructureId')
-            ->join($hardwareTable, $hardwareTable . '.elementId', '=', $releaseTable . '.id')
-            ->where($linksTable . '.type', '=', LinkTypes::STRUCTURE->value)
-            ->where($prodTable . '.year', '>', 0)
-            ->whereIn($hardwareTable . '.value', $computerModels)
-            ->select([$hardwareTable . '.value AS label', $prodTable . '.year AS year'])
-            ->selectRaw('COUNT(DISTINCT ' . $prodIdColumn . ') AS amount');
-
-        /** @var array<int, array{label: string, year: int|string, amount: int|string}> $rows */
-        $rows = $this->groupBy($query, $prodTable . '.year', $hardwareTable . '.value')->get();
+        $rows = [];
+        foreach ($seen as $year => $byLabel) {
+            foreach ($byLabel as $label => $prodIds) {
+                $rows[] = ['label' => $label, 'year' => $year, 'amount' => count($prodIds)];
+            }
+        }
 
         return $this->distributionRowsToResult($rows);
     }
@@ -345,6 +343,51 @@ final readonly class StatsRepository extends AbstractRepository
         }
 
         return $result;
+    }
+
+    /**
+     * Productions carrying the code themselves.
+     *
+     * @param string[] $computerModels
+     * @return list<array{prodId: int|string, label: string, year: int|string}>
+     */
+    private function prodOwnHardwarePairs(array $computerModels): array
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $prodHardwareTable = $this->tableName(DatabaseTable::ZxProdHardware);
+        $catalogTable = $this->tableName(DatabaseTable::Hardware);
+
+        return $this->db->table($prodTable)
+            ->join($prodHardwareTable, $prodHardwareTable . '.elementId', '=', $prodTable . '.id')
+            ->join($catalogTable, $catalogTable . '.id', '=', $prodHardwareTable . '.hardwareId')
+            ->where($prodTable . '.year', '>', 0)
+            ->whereIn($catalogTable . '.code', $computerModels)
+            ->distinct()
+            ->get([$prodTable . '.id AS prodId', $catalogTable . '.code AS label', $prodTable . '.year AS year']);
+    }
+
+    /**
+     * Productions reaching the code through one of their releases.
+     *
+     * @param string[] $computerModels
+     * @return list<array{prodId: int|string, label: string, year: int|string}>
+     */
+    private function releaseHardwarePairs(array $computerModels): array
+    {
+        $prodTable = $this->tableName(DatabaseTable::ZxProd);
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $releaseHardwareTable = $this->tableName(DatabaseTable::ZxReleaseHardware);
+        $catalogTable = $this->tableName(DatabaseTable::Hardware);
+
+        return $this->db->table($prodTable)
+            ->join($linksTable, $linksTable . '.parentStructureId', '=', $prodTable . '.id')
+            ->join($releaseHardwareTable, $releaseHardwareTable . '.elementId', '=', $linksTable . '.childStructureId')
+            ->join($catalogTable, $catalogTable . '.id', '=', $releaseHardwareTable . '.hardwareId')
+            ->where($linksTable . '.type', '=', LinkTypes::STRUCTURE->value)
+            ->where($prodTable . '.year', '>', 0)
+            ->whereIn($catalogTable . '.code', $computerModels)
+            ->distinct()
+            ->get([$prodTable . '.id AS prodId', $catalogTable . '.code AS label', $prodTable . '.year AS year']);
     }
 
     /**

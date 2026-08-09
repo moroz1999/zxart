@@ -25,28 +25,16 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
-              oneOf:
-                - type: object
-                  properties:
-                    code:
-                      type: string
-                      description: Preference code
-                    value:
-                      type: string
-                      description: Preference value
-                  required:
-                    - code
-                    - value
-                - type: object
-                  properties:
-                    batch:
-                      type: string
-                      description: JSON array of objects containing string code and value fields
-                      example: '[{"code":"homepage_order","value":"newProds,bestTunesOfMonth"},{"code":"homepage_new_prods_start_year","value":"1"}]'
-                  required:
-                    - batch
+              type: object
+              required:
+                - preferences
+              properties:
+                preferences:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PreferenceDto'
       responses:
         '200':
           description: Updated list of preferences
@@ -57,7 +45,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/PreferenceDto'
         '400':
-          description: Invalid preference code, value, or batch format
+          description: Malformed request or invalid preference code or value
           content:
             application/json:
               schema:

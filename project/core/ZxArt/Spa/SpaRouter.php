@@ -44,6 +44,9 @@ final class SpaRouter
         '#^/feedback/?$#',
         '#^/about(/[a-z]+)?/?$#',
         '#^/file-search/?$#',
+        // site management section; `/admin` belongs to the legacy Smarty panel.
+        // Two segments deep: the section, then an item id or `add`.
+        '#^/manage(/[a-z0-9-]+){0,2}/?$#',
     ];
 
     public function isSpaRequest(string $uri): bool

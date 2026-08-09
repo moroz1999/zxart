@@ -58,6 +58,14 @@
         <zx-multi-select-filter formControlName="language" [options]="languageOptions" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
       </zx-form-control>
     </zx-form-field>
+
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label>{{ 'prod-form.hardware-required' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-multi-select-filter formControlName="hardwareRequired" [groups]="hardwareGroups" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
+      </zx-form-control>
+      <p appText="caption" tone="muted">{{ 'prod-form.hardware-hint' | translate }}</p>
+    </zx-form-field>
   </zx-form-section>
 
   <zx-form-section [title]="'form.relations' | translate" icon="open-in-new">

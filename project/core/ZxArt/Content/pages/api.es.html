@@ -615,7 +615,13 @@
         zxReleaseNotReleaseType - excluye los tipos de versión indicados
     </li>
     <li>
-        zxReleaseHardware - códigos del hardware necesario
+        zxReleaseHardware - códigos de hardware registrados en la propia versión. El hardware
+        compartido se guarda en la producción y la versión lo hereda, por lo que no se encuentra
+        con este filtro; use zxProdHardware para buscar software por el hardware que necesita.
+    </li>
+    <li>
+        zxProdHardware - códigos de hardware; encuentra software cuya producción o cualquiera de sus
+        versiones requiere el hardware indicado
     </li>
     <li>
         zxReleaseLanguage - códigos de idioma ISO 639-1; si la versión no tiene idiomas propios se usan los de la producción

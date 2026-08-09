@@ -8,6 +8,8 @@ const ANONYMOUS_USER: CurrentUser = {
   id: null,
   userName: 'anonymous',
   authorId: null,
+  // only used when /currentuser/ itself failed; no privilege can resolve anyway
+  publicRootId: 0,
 };
 
 @Injectable({
@@ -31,6 +33,11 @@ export class CurrentUserService {
 
   readonly userId$: Observable<number | null> = this.user$.pipe(
     map(user => user.id),
+  );
+
+  /** Element that site-wide privileges (`root.*`) are held on. */
+  readonly publicRootId$: Observable<number> = this.user$.pipe(
+    map(user => user.publicRootId),
   );
 
   constructor(private http: HttpClient) {}

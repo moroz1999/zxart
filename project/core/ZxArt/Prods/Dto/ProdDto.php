@@ -8,7 +8,7 @@ readonly class ProdDto
 {
     /**
      * @param string[] $listImagesUrls
-     * @param array<array{id: string}> $hardwareInfo
+     * @param array<array{id: string, name: string, shortName: string, category: string}> $hardwareInfo
      * @param array<array{id: int, structureType: string, title: string, roles: string[]}> $authorsInfoShort
      * @param array<array{id: int, structureType: string, title: string}> $categoriesInfo
      * @param array{id: int, structureType: string, title: string}|null $partyInfo

@@ -19,11 +19,6 @@ use ZxArt\Registration\Exception\RegistrationException;
 
 readonly class RegistrationService
 {
-    private const array USER_FIELDS = [
-        'company', 'firstName', 'lastName', 'userName', 'password',
-        'address', 'email', 'phone', 'city', 'postIndex', 'country', 'website',
-    ];
-
     public function __construct(
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
@@ -66,16 +61,23 @@ readonly class RegistrationService
             throw new RegistrationException('Registration is not configured', 500);
         }
 
-        $mainData = [];
-        foreach (self::USER_FIELDS as $field) {
-            if (array_key_exists($field, $request->fields)) {
-                $mainData[$field] = (string)$request->fields[$field];
-            }
-        }
-        $mainData['userName'] = $userName;
-        $mainData['email'] = $email;
-        $mainData['password'] = $request->password;
-        $mainData['structureName'] = $userName;
+        $mainData = array_filter([
+            'company' => $request->company,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'postIndex' => $request->postIndex,
+            'country' => $request->country,
+            'website' => $request->website,
+        ], static fn(?string $value): bool => $value !== null);
+        $mainData += [
+            'userName' => $userName,
+            'email' => $email,
+            'password' => $request->password,
+            'structureName' => $userName,
+        ];
 
         $userElement = $this->structureManager->createElement('user', 'show', $usersElement->getId());
         if (!$userElement instanceof userElement) {

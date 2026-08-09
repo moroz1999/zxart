@@ -9,6 +9,8 @@ use controller;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 use ZxArt\Registration\Dto\RegistrationRequestDto;
 use ZxArt\Registration\Exception\RegistrationException;
@@ -30,6 +32,7 @@ class RegisterData extends LoggedControllerApplication
         Logger $logger,
         private readonly RegistrationService $registrationService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -45,20 +48,19 @@ class RegisterData extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $body = json_decode((string)file_get_contents('php://input'), true);
-            $body = is_array($body) ? $body : [];
-            $result = $this->registrationService->register(new RegistrationRequestDto(
-                userName: (string)($body['userName'] ?? ''),
-                email: (string)($body['email'] ?? ''),
-                password: (string)($body['password'] ?? ''),
-                passwordRepeat: (string)($body['passwordRepeat'] ?? ''),
-                fields: $body,
-            ));
+            $request = $this->serializer->deserialize(
+                file_get_contents('php://input'),
+                RegistrationRequestDto::class,
+                'json',
+            );
+            $result = $this->registrationService->register($request);
             CmsHttpResponse::getInstance()->setStatusCode('201');
             $this->renderer->assign(
                 'body',
                 $this->objectMapper->map($result, RegistrationResultRestDto::class),
             );
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (RegistrationException $exception) {
             $this->assignError($exception->getMessage(), $exception->getStatusCode());
         } catch (Throwable $e) {

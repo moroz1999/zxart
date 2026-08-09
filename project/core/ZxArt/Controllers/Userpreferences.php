@@ -9,10 +9,13 @@ use controller;
 use LanguagesManager;
 use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use structureManager;
 use Throwable;
 use ZxArt\UserPreferences\DefaultUserPreferencesProvider;
 use ZxArt\UserPreferences\Domain\Exception\UserPreferencesException;
+use ZxArt\UserPreferences\Dto\PreferencesUpdateRequestDto;
 use ZxArt\UserPreferences\Rest\PreferenceRestDto;
 use ZxArt\UserPreferences\UserPreferencesService;
 
@@ -28,6 +31,7 @@ class Userpreferences extends LoggedControllerApplication
         private readonly ObjectMapper $objectMapper,
         private readonly UserPreferencesService $userPreferencesService,
         private readonly DefaultUserPreferencesProvider $defaultUserPreferencesProvider,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -101,42 +105,21 @@ class Userpreferences extends LoggedControllerApplication
 
     protected function handlePut(): void
     {
-        $input = file_get_contents('php://input');
-        parse_str($input, $params);
-
-        $code = $params['code'] ?? null;
-        $value = $params['value'] ?? null;
-        $batch = $params['batch'] ?? null;
-
         try {
-            if ($batch !== null) {
-                $items = json_decode($batch, true);
-                if (!is_array($items)) {
-                    $this->assignError('Invalid batch format: expected JSON array', 400);
-                    return;
-                }
-                $values = [];
-                foreach ($items as $item) {
-                    if (!isset($item['code'], $item['value'])) {
-                        $this->assignError('Each batch item must have code and value', 400);
-                        return;
-                    }
-                    $values[(string)$item['code']] = (string)$item['value'];
-                }
-                $internalDtos = $this->userPreferencesService->setPreferences($values);
-            } else {
-                if ($code === null || $value === null) {
-                    $this->assignError('Missing parameters: code and value required', 400);
-                    return;
-                }
-                $internalDtos = $this->userPreferencesService->setPreference($code, $value);
-            }
+            $request = $this->serializer->deserialize(
+                file_get_contents('php://input'),
+                PreferencesUpdateRequestDto::class,
+                'json',
+            );
+            $internalDtos = $this->userPreferencesService->setPreferences($request->preferences);
 
             $restDtos = array_map(
                 fn($dto) => $this->objectMapper->map($dto, PreferenceRestDto::class),
                 $internalDtos
             );
             $this->assignSuccess($restDtos);
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (UserPreferencesException $e) {
             $this->logThrowable('Userpreferences::handlePut', $e);
             $this->assignError($e->getMessage(), 400);

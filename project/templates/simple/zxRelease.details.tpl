@@ -36,8 +36,8 @@
 					{translations name='zxRelease.hardwareRequired'}:
 				</td>
 				<td class='info_table_value'>
-					{foreach $element->hardwareRequired as $hardwareItem}
-						{translations name="hardware.item_{$hardwareItem}"}
+					{foreach $element->getHardwareInfo(false) as $hardwareItem}
+						{$hardwareItem.title}
 					{/foreach}
 				</td>
 			</tr>

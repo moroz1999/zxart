@@ -9,14 +9,15 @@ use controller;
 use LanguagesManager;
 use Monolog\Logger;
 use structureManager;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Feedback\Dto\FeedbackRequestDto;
 use ZxArt\Feedback\Exception\FeedbackException;
 use ZxArt\Feedback\FeedbackService;
 
 class FeedbackData extends LoggedControllerApplication
 {
-    private const int MAX_NAME_LENGTH = 255;
-    private const int MAX_MESSAGE_LENGTH = 10000;
     private const string FEEDBACK_TYPE = 'feedback';
 
     public $rendererName = 'json';
@@ -27,6 +28,7 @@ class FeedbackData extends LoggedControllerApplication
         private readonly FeedbackService $feedbackService,
         private readonly structureManager $structureManager,
         private readonly LanguagesManager $languagesManager,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -42,7 +44,7 @@ class FeedbackData extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $requestMethod = (string)($_SERVER['REQUEST_METHOD'] ?? 'GET');
+            $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
             if ($requestMethod !== 'POST') {
                 throw new FeedbackException('Method not allowed', 405);
             }
@@ -50,6 +52,8 @@ class FeedbackData extends LoggedControllerApplication
         } catch (FeedbackException $e) {
             $this->logThrowable('FeedbackData::execute', $e);
             $this->assignError($e->getMessage(), $e->getStatusCode());
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (Throwable $e) {
             $this->logThrowable('FeedbackData::execute', $e);
             $this->assignError('Internal server error');
@@ -60,7 +64,7 @@ class FeedbackData extends LoggedControllerApplication
 
     private function handleSubmit(): void
     {
-        $payload = $this->getRequestPayload();
+        $request = $this->readRequest();
         $elementId = (int)($this->getParameter('id') ?? 0);
         if ($elementId <= 0) {
             // No wrapper element id from the SPA: resolve the feedback form by type.
@@ -70,34 +74,13 @@ class FeedbackData extends LoggedControllerApplication
             throw new FeedbackException('Feedback form not found', 404);
         }
 
-        $name = $this->extractString($payload, 'name', self::MAX_NAME_LENGTH);
-        $email = $this->extractString($payload, 'email', self::MAX_NAME_LENGTH);
-        $message = $this->extractString($payload, 'message', self::MAX_MESSAGE_LENGTH);
-
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            throw new FeedbackException('Invalid email address', 400);
-        }
-
-        $this->feedbackService->submit($elementId, $name, $email, $message);
+        $this->feedbackService->submit($elementId, $request);
         $this->renderer->assign('body', ['success' => true]);
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function extractString(array $payload, string $key, int $maxLength): string
+    private function readRequest(): FeedbackRequestDto
     {
-        $value = $payload[$key] ?? null;
-        if (!is_string($value)) {
-            throw new FeedbackException('Missing required field: ' . $key, 400);
-        }
-
-        $value = trim($value);
-        if ($value === '') {
-            throw new FeedbackException('Empty required field: ' . $key, 400);
-        }
-
-        return mb_substr($value, 0, $maxLength);
+        return $this->serializer->deserialize(file_get_contents('php://input'), FeedbackRequestDto::class, 'json');
     }
 
     /** Resolves the feedback form element id by structure type for the current language. */
@@ -115,19 +98,4 @@ class FeedbackData extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getRequestPayload(): array
-    {
-        $raw = file_get_contents('php://input');
-        if (is_string($raw) && $raw !== '') {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                return $decoded;
-            }
-        }
-
-        return $_POST;
-    }
 }

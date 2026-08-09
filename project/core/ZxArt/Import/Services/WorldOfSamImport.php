@@ -489,7 +489,9 @@ final class WorldOfSamImport extends errorLogger
                 $inlayImages[] = $href;
             }
         }
-        $hardwareRequired = ['samcoupe'];
+        // every production on the site is a Sam Coupe one; that is a fact about the
+        // production, not about each of its releases
+        $prodHardwareRequired = ['samcoupe'];
 
         // Build releases
         $releases = [];
@@ -515,7 +517,7 @@ final class WorldOfSamImport extends errorLogger
                 filePath: null,
                 fileUrl: $dl['url'],
                 fileName: $dl['name'],
-                hardwareRequired: $hardwareRequired,
+                hardwareRequired: null,
                 labels: null,
                 authors: null,
                 publishers: null,
@@ -539,7 +541,7 @@ final class WorldOfSamImport extends errorLogger
                 id: $slug . '-unknown',
                 title: $title,
                 releaseType: 'unknown',
-                hardwareRequired: $hardwareRequired,
+                hardwareRequired: null,
                 infoFiles: $infoFiles !== [] ? $infoFiles : null,
             );
         }
@@ -553,6 +555,7 @@ final class WorldOfSamImport extends errorLogger
             htmlDescription: true,
             instructions: $instructions ?: null,
             languages: ["en"],
+            hardwareRequired: $prodHardwareRequired,
             legalStatus: $legalStatus,
             youtubeId: $youtubeId,
             externalLink: null,

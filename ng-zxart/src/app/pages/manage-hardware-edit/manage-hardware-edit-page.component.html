@@ -1,0 +1,78 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">
+    {{ (creating ? 'manage-hardware.add' : 'manage-hardware.edit-title') | translate }}
+  </h1>
+
+  <div *ngIf="loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
+      <zx-form-field>
+        <zx-form-label for="hardware-code" [required]="true">{{ 'manage-hardware.code' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="hardware-code" formControlName="code" type="text"></zx-input>
+          <zx-control-errors [control]="form.controls['code']" [messages]="codeMessages"></zx-control-errors>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="hardware-category" [required]="true">{{ 'manage-hardware.category' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-select id="hardware-category" formControlName="category" [options]="categoryOptions"></zx-select>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="hardware-position">{{ 'manage-hardware.position' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="hardware-position" formControlName="position" type="number"></zx-input>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-section [title]="'manage-hardware.names' | translate" [formGroup]="names">
+        <zx-stack spacing="md">
+          <ng-container *ngFor="let language of languages">
+            <zx-form-field>
+              <zx-form-label [for]="'hardware-name-' + language" [required]="true">
+                {{ 'manage-hardware.name' | translate }} ({{ language | uppercase }})
+              </zx-form-label>
+              <zx-form-control>
+                <zx-input [id]="'hardware-name-' + language" [formControlName]="nameControlName(language)" type="text"></zx-input>
+              </zx-form-control>
+            </zx-form-field>
+
+            <zx-form-field>
+              <zx-form-label [for]="'hardware-short-' + language" [required]="true">
+                {{ 'manage-hardware.short-name' | translate }} ({{ language | uppercase }})
+              </zx-form-label>
+              <zx-form-control>
+                <zx-input [id]="'hardware-short-' + language" [formControlName]="shortNameControlName(language)" type="text"></zx-input>
+              </zx-form-control>
+            </zx-form-field>
+          </ng-container>
+        </zx-stack>
+      </zx-form-section>
+
+      <p *ngIf="!creating && usages > 0" class="manage-hardware-edit__hint" appText="caption" tone="muted">
+        {{ 'manage-hardware.in-use' | translate: {count: usages} }}
+      </p>
+
+      <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+      <zx-form-actions align="start">
+        <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'manage-hardware.save' | translate }}</zx-button>
+        <zx-button color="transparent" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+        <zx-button
+          *ngIf="!creating"
+          color="danger"
+          type="button"
+          [disabled]="submitting || usages > 0"
+          (click)="onDelete()">
+          {{ 'manage-hardware.delete' | translate }}
+        </zx-button>
+      </zx-form-actions>
+    </zx-stack>
+  </form>
+</zx-page-layout>

@@ -75,6 +75,8 @@ export interface FormDataResponse {
 export interface EnumOption {
   value: string;
   label: string;
+  /** Set for grouped enums (hardware), naming the category the option belongs to. */
+  group?: string;
 }
 
 /** One existing file of a multi-file selector ({@link FormDataResponse.fileSelectors}). */

@@ -219,11 +219,27 @@ components:
 
     ProdHardwareInfo:
       type: object
+      description: >
+        One hardware item. Names come from the editable catalog, localized for the
+        request language (X-Language); the SPA does not translate them.
       required:
         - id
+        - name
+        - shortName
+        - category
       properties:
         id:
           type: string
+          description: Hardware code, e.g. `zx48`
+        name:
+          type: string
+          description: Full label, for detail pages and forms
+        shortName:
+          type: string
+          description: Compact label, for cards and badges
+        category:
+          type: string
+          enum: [computers, storage, dos, sound, controls, expansion]
 
     ProdLinkInfo:
       type: object

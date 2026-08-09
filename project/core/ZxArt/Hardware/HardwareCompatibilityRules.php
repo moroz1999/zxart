@@ -4,47 +4,50 @@ declare(strict_types=1);
 namespace ZxArt\Hardware;
 
 /**
- * Encapsulates hardware compatibility rules: mapping concrete hardware items
- * to broader compatibility groups used for matching.
+ * Maps a concrete machine to the **compatibility family** it belongs to: the set
+ * of machines that run each other's software.
  *
- * The mapping is intentionally narrow to the computer families/groups relevant
- * for compatibility checks and mirrors the legacy logic previously embedded in
- * the service.
+ * A family is not a machine. `spectrum` covers the Sinclair models *and* the
+ * clones that run their software — Pentagon, Scorpion, Profi, Byte, Timex,
+ * Didaktik — because for compatibility purposes they are interchangeable. Family
+ * ids are internal: nothing stores or publishes them, they only exist to answer
+ * "could these two be the same software?".
+ *
+ * Deliberately narrow — only the computer families that matter for matching.
  */
 final class HardwareCompatibilityRules
 {
     /**
      * @var array<string,string>
-     * key: HardwareItem value (code), value: group id
+     * key: HardwareItem value (code), value: family id
      */
     private const array ITEM_TO_GROUP = [
-        // ZX48 / ZX128 / cloners — group "zx48"
-        'zx48' => 'zx48',
-        'zx16' => 'zx48',
-        'zx128' => 'zx48',
-        'zx128+2' => 'zx48',
-        'zx128+2b' => 'zx48',
-        'zx128+3' => 'zx48',
-        'timex2048' => 'zx48',
-        'timex2068' => 'zx48',
-        'pentagon128' => 'zx48',
-        'pentagon512' => 'zx48',
-        'pentagon1024' => 'zx48',
-        'pentagon2666' => 'zx48',
-        'profi' => 'zx48',
-        'scorpion' => 'zx48',
-        'scorpion1024' => 'zx48',
-        'byte' => 'zx48',
-        'zxmphoenix' => 'zx48',
-        'tk9x' => 'zx48',
-        'alf' => 'zx48',
-        'didaktik80' => 'zx48',
+        // Sinclair 16/48/128/+2/+3 and the clones that run their software
+        'zx48' => 'spectrum',
+        'zx16' => 'spectrum',
+        'zx128' => 'spectrum',
+        'zx128+2' => 'spectrum',
+        'zx128+2b' => 'spectrum',
+        'zx128+3' => 'spectrum',
+        'timex2048' => 'spectrum',
+        'timex2068' => 'spectrum',
+        'pentagon128' => 'spectrum',
+        'pentagon512' => 'spectrum',
+        'pentagon1024' => 'spectrum',
+        'pentagon2666' => 'spectrum',
+        'profi' => 'spectrum',
+        'scorpion' => 'spectrum',
+        'scorpion1024' => 'spectrum',
+        'byte' => 'spectrum',
+        'zxmphoenix' => 'spectrum',
+        'tk9x' => 'spectrum',
+        'alf' => 'spectrum',
+        'didaktik80' => 'spectrum',
 
         // zx80 family
         'zx80' => 'zx80',
 
         // zx81 family
-        'zx81' => 'zx81',
         'zx811' => 'zx81',
         'zx812' => 'zx81',
         'zx8132' => 'zx81',

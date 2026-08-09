@@ -3,8 +3,11 @@
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Prods\LegalStatus;
+use ZxArt\Prods\Repositories\ProdHardwareRepository;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
+use ZxArt\Hardware\HardwareCatalogService;
+use ZxArt\Shared\DatabaseTable;
 
 const ZXPRODS_TABLE = ProdsRepository::TABLE;
 
@@ -128,7 +131,9 @@ trait ZxProdsList
                 $filters['zxProdCountryId'] = $values;
             }
             if ($values = $this->getSelectorValue('hw')) {
-                $filters['zxReleaseHardware'] = $values;
+                // hardware sits on both the prod and its releases, so each mode
+                // needs the filter typed for what it is listing
+                $filters[$this->getReleasesValue() ? 'zxReleaseEffectiveHardware' : 'zxProdHardware'] = $values;
             }
             if ($values = $this->getSelectorValue('formats')) {
                 $filters['zxReleaseFormat'] = $values;
@@ -417,12 +422,14 @@ trait ZxProdsList
                 /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
-                $queryFiltersManager = $this->getService(QueryFiltersManager::class);
-                $query = $queryFiltersManager->convertTypeData($query, 'zxRelease', 'zxProd', [])->select('id');
-                $hwItems = $db->table('module_zxrelease_hw_required')
-                    ->whereIn('elementId', $query)
-                    ->distinct()
-                    ->pluck('value');
+                $prodIdsQuery = $query->select('id');
+                $hardwareIds = $this->getService(ProdHardwareRepository::class)->getHardwareIdsForProds($prodIdsQuery);
+                $hwItems = $db->table(DatabaseTable::Hardware->value)
+                    ->whereIn('id', $hardwareIds)
+                    ->pluck('code');
+                // item names come from the catalog; the group title stays a code,
+                // which the SPA renders through its `hardware-group.*` strings
+                $labels = $this->getService(HardwareCatalogService::class)->getLabels();
                 foreach ($this->getHardwareList() as $groupName => $groupValues) {
                     $intersected = array_intersect($groupValues, $hwItems);
                     if ($intersected !== []) {
@@ -433,7 +440,7 @@ trait ZxProdsList
                         foreach ($intersected as $hwItem) {
                             $group['values'][] = [
                                 'value' => $hwItem,
-                                'title' => $hwItem,
+                                'title' => $labels[$hwItem]['name'] ?? $hwItem,
                                 'selected' => is_array($values) && in_array($hwItem, $values, true),
                             ];
                         }

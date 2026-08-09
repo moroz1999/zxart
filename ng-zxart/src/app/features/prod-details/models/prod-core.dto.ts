@@ -14,8 +14,16 @@ export interface ProdLanguageInfoDto {
   code: string;
 }
 
+/**
+ * Hardware names come from the backend catalog, localized for the request
+ * language. `category` lets the UI group items and pick a fallback icon for a
+ * code the icon map does not know yet.
+ */
 export interface ProdHardwareInfoDto {
   id: string;
+  name: string;
+  shortName: string;
+  category: string;
 }
 
 export interface ProdLinkInfoDto {

@@ -24,11 +24,15 @@ paths:
               $ref: '#/components/schemas/RadioNextTuneRequest'
       responses:
         '200':
-          description: A JSON object with responseStatus and responseData.
+          description: The selected tune.
           content:
             application/json:
               schema:
-                $ref: 'tunes.yaml#/components/schemas/ApiResponseTune'
+                $ref: 'tunes.yaml#/components/schemas/TuneDto'
+        '400':
+          description: Malformed request body.
+        '404':
+          description: No tune matches the criteria.
   /radio/?action=options:
     get:
       summary: Get radio filter options
@@ -42,11 +46,11 @@ paths:
             enum: [options]
       responses:
         '200':
-          description: A JSON object with responseStatus and responseData.
+          description: Radio filter options.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponseRadioOptions'
+                $ref: '#/components/schemas/RadioFilterOptions'
 
 components:
   schemas:
@@ -113,16 +117,6 @@ components:
           type: boolean
         notVotedByUserId:
           type: integer
-    ApiResponseRadioOptions:
-      type: object
-      properties:
-        responseStatus:
-          type: string
-          enum: [success, error]
-        responseData:
-          $ref: '#/components/schemas/RadioFilterOptions'
-        errorMessage:
-          type: string
     RadioFilterOptions:
       type: object
       properties:

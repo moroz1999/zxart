@@ -23,22 +23,30 @@ final class HardwareCompatibilityServiceTest extends TestCase
     }
 
     /**
+     * The production side is compared as one flat set — its own hardware plus
+     * every release's — so the double only has to answer that.
+     *
      * @return zxProdElement&MockObject
      */
     private function makeProdWithReleases(array $hardwarePerRelease): zxProdElement
     {
+        return $this->makeProd(array_merge([], ...array_values($hardwarePerRelease)));
+    }
+
+    /**
+     * @param list<string> $aggregatedHardware
+     * @return zxProdElement&MockObject
+     */
+    private function makeProd(array $aggregatedHardware): zxProdElement
+    {
         /** @var zxProdElement&MockObject $prod */
         $prod = $this->getMockBuilder(zxProdElement::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['getReleasesList'])
+            ->onlyMethods(['getAggregatedHardwareCodes'])
             ->getMock();
 
-        $releases = [];
-        foreach ($hardwarePerRelease as $hardware) {
-            $releases[] = (object)['hardwareRequired' => $hardware];
-        }
+        $prod->method('getAggregatedHardwareCodes')->willReturn(array_values(array_unique($aggregatedHardware)));
 
-        $prod->method('getReleasesList')->willReturn($releases);
         return $prod;
     }
 
@@ -111,5 +119,37 @@ final class HardwareCompatibilityServiceTest extends TestCase
         $prod = $this->makeProdWithReleases([["samcoupe"], ["zxuno"]]);
 
         $this->assertTrue($this->service->areProdAndDtoCompatible($dto, $prod));
+    }
+
+    public function testProdLevelHardwareOnTheDtoCounts(): void
+    {
+        // ZxDB and World of Sam put hardware on the production, not on its releases
+        $dto = new ProdImportDTO(id: 'dto', title: 'T', hardwareRequired: ['zx128'], releases: null);
+        $prod = $this->makeProd(['timex2068']);
+
+        $this->assertTrue($this->service->areProdAndDtoCompatible($dto, $prod));
+    }
+
+    /**
+     * The regression the whole D.7 rerouting exists for: once the shared codes
+     * have been moved off a production's releases, re-importing it must still
+     * recognise it. Comparing release by release would see empty releases, reject
+     * the match, and make the importer create a duplicate production.
+     */
+    public function testAMigratedProdStillMatchesItsOwnReimport(): void
+    {
+        $dto = new ProdImportDTO(id: 'dto', title: 'T', hardwareRequired: ['zx48'], releases: null);
+        // hardware now sits on the production; its releases carry nothing
+        $prod = $this->makeProd(['zx48']);
+
+        $this->assertTrue($this->service->areProdAndDtoCompatible($dto, $prod));
+    }
+
+    public function testAProdOfADifferentMachineIsStillRejected(): void
+    {
+        $dto = new ProdImportDTO(id: 'dto', title: 'T', hardwareRequired: ['zx48'], releases: null);
+        $prod = $this->makeProd(['samcoupe']);
+
+        $this->assertFalse($this->service->areProdAndDtoCompatible($dto, $prod));
     }
 }

@@ -3,6 +3,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
+import {
+  ROOT_PRIVILEGE_EDIT_HARDWARE,
+  RootPrivilegeService,
+} from '../../../../shared/services/root-privilege.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxFormDirective} from '../../../../shared/ui/zx-form/zx-form.directive';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
@@ -26,6 +30,8 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 })
 export class LoginPopoverContentComponent {
   readonly user$ = this.currentUserService.user$;
+  /** The management section is only offered to users who may actually use it. */
+  readonly mayManageHardware$ = this.rootPrivilegeService.has(ROOT_PRIVILEGE_EDIT_HARDWARE);
 
   userName = '';
   password = '';
@@ -35,6 +41,7 @@ export class LoginPopoverContentComponent {
 
   constructor(
     private readonly currentUserService: CurrentUserService,
+    private readonly rootPrivilegeService: RootPrivilegeService,
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
 

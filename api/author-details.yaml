@@ -429,7 +429,7 @@ components:
         hardwareInfo:
           type: array
           items:
-            $ref: '#/components/schemas/ConnectedItem'
+            $ref: 'prod-details.yaml#/components/schemas/ProdHardwareInfo'
         authorsInfoShort:
           type: array
           items:

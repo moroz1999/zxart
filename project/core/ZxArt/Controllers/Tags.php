@@ -8,7 +8,10 @@ use CmsHttpResponse;
 use controller;
 use Monolog\Logger;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Tags\Dto\TagsSaveRequestDto;
 use ZxArt\Tags\Exception\TagsException;
 use ZxArt\Tags\Rest\TagsRestDto;
 use ZxArt\Tags\TagsService;
@@ -22,6 +25,7 @@ class Tags extends LoggedControllerApplication
         Logger $logger,
         private readonly TagsService $tagsService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -35,7 +39,7 @@ class Tags extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $requestMethod = (string)($_SERVER['REQUEST_METHOD'] ?? 'GET');
+            $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
             if ($requestMethod === 'POST') {
                 $this->handleSave();
             } else {
@@ -44,6 +48,8 @@ class Tags extends LoggedControllerApplication
         } catch (TagsException $e) {
             $this->logThrowable('Tags::execute', $e);
             $this->assignError($e->getMessage(), $e->getStatusCode());
+        } catch (SerializerException $exception) {
+            $this->assignError($exception->getMessage(), 400);
         } catch (Throwable $e) {
             $this->logThrowable('Tags::execute', $e);
             $this->assignError('Internal server error');
@@ -62,21 +68,13 @@ class Tags extends LoggedControllerApplication
     private function handleSave(): void
     {
         $elementId = $this->getElementId();
-        $payload = $this->getRequestPayload();
-        $tagsParameter = $payload['tags'] ?? null;
-        if (!is_array($tagsParameter)) {
-            throw new TagsException('Missing required parameter: tags', 400);
-        }
+        $request = $this->serializer->deserialize(
+            file_get_contents('php://input'),
+            TagsSaveRequestDto::class,
+            'json',
+        );
 
-        $tags = [];
-        foreach ($tagsParameter as $tagParameter) {
-            if (!is_string($tagParameter)) {
-                throw new TagsException('Tags must be strings', 400);
-            }
-            $tags[] = $tagParameter;
-        }
-
-        $tagsDto = $this->tagsService->saveTags($elementId, $tags);
+        $tagsDto = $this->tagsService->saveTags($elementId, $request->tags);
         $this->renderer->assign('body', $this->objectMapper->map($tagsDto, TagsRestDto::class));
     }
 
@@ -96,19 +94,4 @@ class Tags extends LoggedControllerApplication
         $this->renderer->assign('body', ['errorMessage' => $message]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getRequestPayload(): array
-    {
-        $raw = file_get_contents('php://input');
-        if (is_string($raw) && $raw !== '') {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                return $decoded;
-            }
-        }
-
-        return $_POST;
-    }
 }

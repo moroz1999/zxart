@@ -2,12 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 
-interface ApiResponse<T> {
-  responseStatus: string;
-  responseData?: T;
-  errorMessage?: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,13 +14,8 @@ export class TunePlayService {
       payload.context = context;
     }
 
-    return this.http.post<ApiResponse<void>>('/tunes/?action=play', payload).pipe(
-      map(response => {
-        if (response.responseStatus === 'success') {
-          return;
-        }
-        throw new Error(response.errorMessage || 'Failed to log play');
-      }),
+    return this.http.post<{success: true}>('/tunes/?action=play', payload).pipe(
+      map(() => undefined),
     );
   }
 }

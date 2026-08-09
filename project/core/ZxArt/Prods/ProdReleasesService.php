@@ -93,7 +93,10 @@ readonly class ProdReleasesService
             isRealtime: $release->isRealtime(),
             party: $this->infoBuilder->buildParty($release),
             languages: $this->infoBuilder->buildLanguages($release),
-            hardware: $this->infoBuilder->buildHardware($release),
+            // what the release runs on, not the deviations it records: after the
+            // hardware split most releases repeat nothing of their production, and
+            // a row showing their own codes would simply be blank
+            hardware: $this->infoBuilder->buildHardwareFromCodes($release->getEffectiveHardwareCodes()),
             releaseBy: $this->buildReleaseBy($release),
             formats: $this->buildFormats($release),
             isDownloadable: $isDownloadable,

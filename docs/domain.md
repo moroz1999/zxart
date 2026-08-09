@@ -26,6 +26,12 @@ Unique release (version) of prod. Contains actual files and technical requiremen
 Release type, hardware requirements, format. Always belongs to parent prod.
 Detailed logic and structure: [domain/release.md](domain/release.md)
 
+### hardware
+Machines, storage, operating systems, sound, controllers and expansions a production runs on.
+Editable catalog with localized names; productions carry the shared set, releases only their deviations.
+Includes the rules that derive hardware from a release's file format.
+Detailed logic and structure: [domain/hardware.md](domain/hardware.md)
+
 ### press article
 One article of a disk magazine. Always belongs to the prod of its issue.
 Links the authors, people, groups, software, graphics, music and parties it mentions.

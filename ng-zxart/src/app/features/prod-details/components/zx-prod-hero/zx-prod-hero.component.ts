@@ -8,6 +8,7 @@ import {ZxProdEditingControlsComponent} from '../zx-prod-editing-controls/zx-pro
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxChipComponent} from '../../../../shared/ui/zx-chip/zx-chip.component';
+import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxCalloutComponent} from '../../../../shared/ui/zx-callout/zx-callout.component';
 import {ZxAddedByComponent} from '../../../../shared/ui/zx-added-by/zx-added-by.component';
@@ -36,6 +37,7 @@ import {ZxLanguageFlagComponent} from '../../../../shared/ui/zx-language-flag/zx
     ZxButtonComponent,
     ZxButtonControlsComponent,
     ZxChipComponent,
+    ZxHardwareIconComponent,
     ZxInlineComponent,
     ZxCalloutComponent,
     ZxAddedByComponent,

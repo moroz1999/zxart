@@ -9,8 +9,12 @@ use controller;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Users\Dto\PasswordReminderRequestDto;
 use ZxArt\Users\Exception\PasswordReminderException;
+use ZxArt\Users\PasswordReminderAction;
 use ZxArt\Users\PasswordReminderService;
 use ZxArt\Users\Rest\PasswordReminderResultRestDto;
 
@@ -23,6 +27,7 @@ class PasswordReminderData extends LoggedControllerApplication
         Logger $logger,
         private readonly PasswordReminderService $passwordReminderService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -38,25 +43,27 @@ class PasswordReminderData extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            $input = $this->decodeInput();
-            if ($input === []) {
-                throw new PasswordReminderException('password-reminder.error-invalid', 400);
-            } elseif (($input['action'] ?? '') === 'reset') {
-                $result = $this->passwordReminderService->reset(
-                    (string)($input['email'] ?? ''),
-                    (string)($input['key'] ?? ''),
-                    (string)($input['password'] ?? ''),
-                    (string)($input['passwordRepeat'] ?? ''),
-                );
-            } elseif (($input['action'] ?? '') === 'request') {
-                $result = $this->passwordReminderService->request((string)($input['email'] ?? ''));
-            } else {
-                throw new PasswordReminderException('password-reminder.error-invalid', 400);
-            }
+            $request = $this->serializer->deserialize(
+                file_get_contents('php://input'),
+                PasswordReminderRequestDto::class,
+                'json',
+            );
+            $result = match ($request->action) {
+                PasswordReminderAction::Request => $this->passwordReminderService->request($request->email),
+                PasswordReminderAction::Reset => $this->passwordReminderService->reset(
+                    $request->email,
+                    $request->key,
+                    $request->password,
+                    $request->passwordRepeat,
+                ),
+            };
             $this->renderer->assign(
                 'body',
                 $this->objectMapper->map($result, PasswordReminderResultRestDto::class),
             );
+        } catch (SerializerException $exception) {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => $exception->getMessage()]);
         } catch (PasswordReminderException $exception) {
             CmsHttpResponse::getInstance()->setStatusCode((string)$exception->getStatusCode());
             $this->renderer->assign('body', ['errorMessage' => $exception->getMessage()]);
@@ -67,13 +74,6 @@ class PasswordReminderData extends LoggedControllerApplication
         }
 
         $this->renderer->display();
-    }
-
-    /** @return array<string, mixed> */
-    private function decodeInput(): array
-    {
-        $input = json_decode((string)file_get_contents('php://input'), true);
-        return is_array($input) ? $input : [];
     }
 
     #[Override]

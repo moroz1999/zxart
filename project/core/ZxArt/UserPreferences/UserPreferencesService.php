@@ -124,15 +124,18 @@ final readonly class UserPreferencesService
     }
 
     /**
-     * @param array<string, string> $values code => value pairs
+     * @param list<PreferenceDto> $preferences
      * @return PreferenceDto[]
      */
-    public function setPreferences(array $values): array
+    public function setPreferences(array $preferences): array
     {
         $validatedValues = [];
-        foreach ($values as $code => $value) {
-            $preferenceCode = $this->validator->validateCode($code);
-            $validatedValues[$preferenceCode->value] = $this->validator->validateValue($preferenceCode, $value);
+        foreach ($preferences as $preference) {
+            $preferenceCode = $this->validator->validateCode($preference->code);
+            $validatedValues[$preferenceCode->value] = $this->validator->validateValue(
+                $preferenceCode,
+                $preference->value,
+            );
         }
 
         $user = $this->currentUserService->getCurrentUser();

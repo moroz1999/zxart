@@ -263,12 +263,11 @@ export class ZxStatsCategoryComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private distributionLabelPrefix(titleKey: string): string | null {
-    // Format and hardware codes have ready-made short translations; category titles are already localized server-side.
+    // Picture format codes still have client-side short translations; hardware
+    // names and category titles are already localized server-side.
     switch (titleKey) {
       case 'stats.dist.gfx_type':
         return 'picture-format-short';
-      case 'stats.dist.computer_model':
-        return 'hardware-short';
       default:
         return null;
     }

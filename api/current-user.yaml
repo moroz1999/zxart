@@ -100,6 +100,7 @@ components:
       required:
         - id
         - userName
+        - publicRootId
         - authorId
       properties:
         id:
@@ -110,6 +111,12 @@ components:
           type: string
           description: Account name, or `anonymous` when nobody is logged in.
           example: anonymous
+        publicRootId:
+          type: integer
+          description: >
+            Element that site-wide privileges (`root.*`) are held on. The SPA asks
+            `/element-privileges/` about it instead of hardcoding an id — that is
+            how the management section decides whether to offer itself.
         authorId:
           type: integer
           nullable: true

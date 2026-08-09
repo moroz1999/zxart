@@ -6,10 +6,11 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
-use JsonException;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 use ZxArt\Authors\Dto\AuthorAliasCreateDto;
 use ZxArt\Authors\Exception\AuthorAliasFormException;
@@ -26,6 +27,7 @@ class AuthorAliasForm extends LoggedControllerApplication
         Logger $logger,
         private readonly AuthorAliasFormService $authorAliasFormService,
         private readonly ObjectMapper $objectMapper,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -74,23 +76,16 @@ class AuthorAliasForm extends LoggedControllerApplication
 
     private function readCreateRequest(): AuthorAliasCreateDto
     {
-        try {
-            $body = json_decode((string)file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $exception) {
-            throw new AuthorAliasFormException('Invalid request body', 400, $exception);
-        }
-        if (!is_array($body)) {
+        $body = file_get_contents('php://input');
+        if (!is_string($body)) {
             throw new AuthorAliasFormException('Invalid request body', 400);
         }
 
-        return new AuthorAliasCreateDto(
-            authorId: (int)($body['authorId'] ?? 0),
-            title: (string)($body['title'] ?? ''),
-            startDate: (string)($body['startDate'] ?? ''),
-            endDate: (string)($body['endDate'] ?? ''),
-            displayInMusic: ($body['displayInMusic'] ?? false) === true,
-            displayInGraphics: ($body['displayInGraphics'] ?? false) === true,
-        );
+        try {
+            return $this->serializer->deserialize($body, AuthorAliasCreateDto::class, 'json');
+        } catch (SerializerException $exception) {
+            throw new AuthorAliasFormException($exception->getMessage(), 400, $exception);
+        }
     }
 
     private function assignError(string $message, int $statusCode): void

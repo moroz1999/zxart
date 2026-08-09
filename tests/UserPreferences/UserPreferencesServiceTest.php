@@ -293,8 +293,8 @@ class UserPreferencesServiceTest extends TestCase
         );
 
         $preferences = $service->setPreferences([
-            'theme' => 'dark',
-            'picture_border' => '0',
+            new PreferenceDto('theme', 'dark'),
+            new PreferenceDto('picture_border', '0'),
         ]);
 
         $this->assertSame('dark', $this->findPreferenceByCode($preferences, 'theme')?->value);
@@ -323,8 +323,8 @@ class UserPreferencesServiceTest extends TestCase
 
         $this->expectException(PreferenceNotConfiguredException::class);
         $service->setPreferences([
-            'theme' => 'dark',
-            'picture_border' => '0',
+            new PreferenceDto('theme', 'dark'),
+            new PreferenceDto('picture_border', '0'),
         ]);
     }
 

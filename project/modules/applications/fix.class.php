@@ -5,6 +5,7 @@ use Illuminate\Database\Connection;
 use ZxArt\Authors\Constants;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -54,11 +55,167 @@ class fixApplication extends controllerApplication
              */
             $languagesManager = $this->getService(LanguagesManager::class);
             $languagesManager->setCurrentLanguageCode('eng');
-            $this->fixReleases();
+
+            // One-off jobs are selected by ?job=, so a run has to be asked for
+            // explicitly instead of being whatever the file was last edited to do.
+            $job = (string)($controller->getParameter('job') ?: '');
+            match ($job) {
+                'hardware-autofill' => $this->autofillReleaseHardware(),
+                'prod-hardware-migrate' => $this->migrateProdHardware(),
+                '' => $this->fixReleases(),
+                default => print('unknown job: ' . htmlspecialchars($job) . '<br>'),
+            };
 //            $this->addCategoryToQueue(92183, QueueType::AI_SEO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(92534, QueueType::AI_INTRO, QueueStatus::STATUS_TODO, 5000);
 //            $this->addCategoryToQueue(204819, QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
         }
+    }
+
+    /**
+     * Moves the shared hardware of each production out of its releases and onto
+     * the production itself, leaving only release-specific deviations behind.
+     *
+     * `/fix/job:prod-hardware-migrate/` — `dry:1` prints the plan without
+     * writing, `offset:N` / `limit:N` work through the catalogue in batches
+     * (53 000 productions will not fit in one request).
+     *
+     * **Must not be run before the import rerouting is deployed.** Import
+     * de-duplication compares hardware to decide whether an incoming production
+     * already exists; once the releases are stripped it has to compare the
+     * aggregated set instead, or every later import creates duplicate
+     * productions. See the plan's D.7.
+     *
+     * Idempotent: a production that already carries its own hardware is skipped
+     * unless `force:1` is given.
+     */
+    private function migrateProdHardware(): void
+    {
+        $controller = $this->getService(controller::class);
+        $isDryRun = (bool)$controller->getParameter('dry');
+        $isForced = (bool)$controller->getParameter('force');
+        $offset = (int)($controller->getParameter('offset') ?: 0);
+        $limit = (int)($controller->getParameter('limit') ?: 1000);
+
+        $migrationService = $this->getService(ProdHardwareMigrationService::class);
+
+        $ids = $this->db->table(ProdsRepository::TABLE)
+            ->orderBy('id')
+            ->offset($offset)
+            ->limit($limit)
+            ->pluck('id');
+
+        echo 'prod hardware migration' . ($isDryRun ? ' (dry run)' : '') . ': '
+            . count($ids) . ' productions from offset ' . $offset . '<br>';
+
+        $changed = 0;
+        $counter = 0;
+        foreach ($ids as $id) {
+            $counter++;
+            /** @var zxProdElement|null $prod */
+            $prod = $this->structureManager->getElementById((int)$id);
+            if ($prod === null) {
+                continue;
+            }
+            if (!$isForced && $prod->hardwareRequired !== []) {
+                continue;
+            }
+
+            $plan = $migrationService->plan($prod);
+            if ($plan === null) {
+                continue;
+            }
+
+            $changed++;
+            echo $counter . '/' . count($ids) . ' <a href="/prod/' . $id . '" target="_blank">' . $id . '</a> prod: '
+                . implode(', ', $plan['prod']);
+            foreach ($plan['releases'] as $releaseId => $remaining) {
+                echo ' | release ' . $releaseId . ' -> ' . ($remaining === [] ? '(none)' : implode(', ', $remaining));
+            }
+            echo '<br>';
+
+            if ($isDryRun) {
+                continue;
+            }
+
+            $prod->hardwareRequired = $plan['prod'];
+            $prod->persistElementData();
+            foreach ($prod->getReleasesList() as $release) {
+                $releaseId = $release->getPersistedId();
+                if (!array_key_exists($releaseId, $plan['releases'])) {
+                    continue;
+                }
+                $release->hardwareRequired = $plan['releases'][$releaseId];
+                $release->persistElementData();
+                $this->structureManager->clearElementCache($releaseId);
+            }
+            $this->structureManager->clearElementCache((int)$id);
+        }
+
+        echo 'done: ' . $changed . ' of ' . count($ids) . ' productions '
+            . ($isDryRun ? 'would change' : 'changed')
+            . '. Next offset: ' . ($offset + $limit) . '<br>';
+    }
+
+    /**
+     * Backfills the hardware every release's format implies.
+     *
+     * Runs the same {@see ReleaseHardwareAutofillService} the save path uses, so
+     * the backfill and the on-save behaviour can never drift apart. Additive and
+     * idempotent, so re-running is safe and a batch can be repeated.
+     *
+     * `/fix/job:hardware-autofill/` — supports `dry:1` to print the diff without
+     * writing, and `offset:N` / `limit:N` to work through the catalogue in
+     * batches (a full pass is ~85 000 element loads and will not fit in one request).
+     */
+    private function autofillReleaseHardware(): void
+    {
+        $controller = $this->getService(controller::class);
+        $isDryRun = (bool)$controller->getParameter('dry');
+        $offset = (int)($controller->getParameter('offset') ?: 0);
+        $limit = (int)($controller->getParameter('limit') ?: 2000);
+
+        // only releases that have a format at all: the rules read nothing else
+        $ids = $this->db->table('module_zxrelease_format')
+            ->distinct()
+            ->orderBy('elementId')
+            ->offset($offset)
+            ->limit($limit)
+            ->pluck('elementId');
+
+        echo 'hardware autofill' . ($isDryRun ? ' (dry run)' : '') . ': '
+            . count($ids) . ' releases from offset ' . $offset . '<br>';
+
+        $changed = 0;
+        $counter = 0;
+        foreach ($ids as $id) {
+            $counter++;
+            /** @var zxReleaseElement|null $release */
+            $release = $this->structureManager->getElementById((int)$id);
+            if ($release === null) {
+                continue;
+            }
+
+            // goes through the element, so the backfill and an ordinary save can
+            // never disagree about what a release should get
+            $additions = $release->getHardwareAutofillAdditions();
+            if ($additions === []) {
+                continue;
+            }
+
+            $changed++;
+            echo $counter . '/' . count($ids) . ' <a href="/release/' . $id . '" target="_blank">' . $id . '</a> +'
+                . implode(', ', $additions) . '<br>';
+
+            if (!$isDryRun) {
+                $release->hardwareRequired = [...$release->hardwareRequired, ...$additions];
+                $release->persistElementData();
+                $this->structureManager->clearElementCache((int)$id);
+            }
+        }
+
+        echo 'done: ' . $changed . ' of ' . count($ids) . ' releases '
+            . ($isDryRun ? 'would change' : 'changed')
+            . '. Next offset: ' . ($offset + $limit) . '<br>';
     }
 //92177
 //92183

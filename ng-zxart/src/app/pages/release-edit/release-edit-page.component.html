@@ -62,8 +62,9 @@
     <zx-form-field [fullWidth]="true">
       <zx-form-label>{{ 'release-form.hardware-required' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-multi-select-filter formControlName="hardwareRequired" [options]="hardwareOptions" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
+        <zx-multi-select-filter formControlName="hardwareRequired" [groups]="hardwareGroups" [searchPlaceholder]="'form.filter' | translate"></zx-multi-select-filter>
       </zx-form-control>
+      <p appText="caption" tone="muted">{{ 'release-form.hardware-hint' | translate }}</p>
     </zx-form-field>
   </zx-form-section>
 

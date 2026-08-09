@@ -47,6 +47,7 @@ const HW_ICON_MAP: Readonly<Record<string, string>> = {
   nemoide: 'hw-disk',
   profiide: 'hw-disk',
   atmide: 'hw-disk',
+  mb02: 'hw-disk',
 
   // Joystick and game controllers
   kempston: 'gamepad',
@@ -88,6 +89,8 @@ const HW_ICON_MAP: Readonly<Record<string, string>> = {
   tos: 'hw-os',
   bsdos: 'hw-os',
   trdos4x: 'hw-os',
+  samdos: 'hw-os',
+  gdos: 'hw-os',
 
   // Light guns
   gunstick: 'hw-gun',
@@ -98,6 +101,16 @@ const HW_ICON_MAP: Readonly<Record<string, string>> = {
 
   // Network
   trinity: 'globe',
+};
+
+/** Fallback per category, for a code the map above does not list. */
+const CATEGORY_ICON_MAP: Record<string, string> = {
+  computers: 'hw-computer',
+  storage: 'hw-disk',
+  dos: 'hw-os',
+  sound: 'hw-sound',
+  controls: 'gamepad',
+  expansion: 'hw-chip',
 };
 
 const PRELOADED = new Set<string>();
@@ -113,8 +126,15 @@ const PRELOADED = new Set<string>();
 export class ZxHardwareIconComponent implements OnInit {
   @Input({required: true}) id!: string;
 
+  /**
+   * Hardware is editable in the management section, so a code can exist without
+   * an entry in the map above. Its category then picks a sensible icon instead
+   * of falling all the way back to the generic one.
+   */
+  @Input() category = '';
+
   get iconName(): string {
-    return HW_ICON_MAP[this.id] ?? 'hw-computer';
+    return HW_ICON_MAP[this.id] ?? CATEGORY_ICON_MAP[this.category] ?? 'hw-computer';
   }
 
   constructor(private readonly iconReg: SvgIconRegistryService) {}

@@ -8,6 +8,8 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use ZxArt\Shared\Serializer\RequestDenormalizerFactory;
 use ZxArt\Ai\ChunkProcessor;
 use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
@@ -192,6 +194,10 @@ return [
         ->method('setAuthorsManager', DI\get(AuthorsService::class))
         ->method('setGroupsService', DI\get(GroupsService::class))
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
+
+    // Turns JSON request bodies into typed request DTOs; see the factory for why
+    // it is configured the way it is.
+    SerializerInterface::class => factory(static fn(): SerializerInterface => RequestDenormalizerFactory::create()),
 
     // DependencyInjectionContextTrait users — need explicit setContainer
     votesManager::class => autowire()->method('setContainer', DI\get(Container::class)),

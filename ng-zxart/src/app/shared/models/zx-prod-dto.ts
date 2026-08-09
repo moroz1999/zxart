@@ -8,6 +8,9 @@ export type ZxProdConnectedItems = Array<ZxProdConnectedItem>;
 /** Hardware labels live in the SPA and are resolved from this backend code. */
 export interface ZxProdHardwareItem {
     readonly id: string;
+    readonly name: string;
+    readonly shortName: string;
+    readonly category: string;
 }
 
 export type ZxProdHardwareItems = Array<ZxProdHardwareItem>;

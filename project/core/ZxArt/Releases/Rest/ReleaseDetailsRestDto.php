@@ -25,7 +25,8 @@ readonly class ReleaseDetailsRestDto
     /**
      * @param string[]                               $hardwareRequired
      * @param ProdLanguageInfoRestDto[]              $languages
-     * @param ProdHardwareInfoRestDto[]              $hardware
+     * @param ProdHardwareInfoRestDto[]              $hardware the release's own hardware
+     * @param ProdHardwareInfoRestDto[]              $prodHardware inherited from the production, minus anything the release repeats
      * @param ProdAuthorInfoRestDto[]                $authors
      * @param ProdGroupRefRestDto[]                  $publishers
      * @param ProdReleaseFormatRestDto[]             $formats
@@ -51,6 +52,7 @@ readonly class ReleaseDetailsRestDto
         public array $languages,
         #[Map(transform: MapCollection::class)]
         public array $hardware,
+        public array $prodHardware,
         #[Map(transform: MapCollection::class)]
         public array $authors,
         #[Map(transform: MapCollection::class)]

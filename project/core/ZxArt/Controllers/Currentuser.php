@@ -7,8 +7,11 @@ namespace ZxArt\Controllers;
 use CmsHttpResponse;
 use controller;
 use Monolog\Logger;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 use ZxArt\Users\CurrentUserRestService;
+use ZxArt\Users\Dto\LoginRequestDto;
 use ZxArt\Users\LoginService;
 
 class Currentuser extends LoggedControllerApplication
@@ -20,6 +23,7 @@ class Currentuser extends LoggedControllerApplication
         Logger $logger,
         private readonly CurrentUserRestService $currentUserRestService,
         private readonly LoginService $loginService,
+        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -58,19 +62,22 @@ class Currentuser extends LoggedControllerApplication
 
     protected function handleLogin(): void
     {
-        $body = json_decode((string)file_get_contents('php://input'), true) ?? [];
-        $userName = isset($body['userName']) ? (string)$body['userName'] : '';
-        $password = isset($body['password']) ? (string)$body['password'] : '';
-        $remember = isset($body['remember']) && $body['remember'] === true;
-
-        if ($userName === '' || $password === '') {
+        $body = file_get_contents('php://input');
+        if (!is_string($body)) {
             CmsHttpResponse::getInstance()->setStatusCode('400');
-            $this->renderer->assign('body', ['errorMessage' => 'Missing credentials']);
+            $this->renderer->assign('body', ['errorMessage' => 'Invalid request body']);
             return;
         }
 
         try {
-            $userId = $this->loginService->login($userName, $password);
+            $request = $this->serializer->deserialize($body, LoginRequestDto::class, 'json');
+            if ($request->userName === '' || $request->password === '') {
+                CmsHttpResponse::getInstance()->setStatusCode('400');
+                $this->renderer->assign('body', ['errorMessage' => 'Missing credentials']);
+                return;
+            }
+
+            $userId = $this->loginService->login($request->userName, $request->password);
             if ($userId === null) {
                 CmsHttpResponse::getInstance()->setStatusCode('401');
                 $this->renderer->assign('body', ['errorMessage' => 'Invalid credentials']);
@@ -79,13 +86,16 @@ class Currentuser extends LoggedControllerApplication
 
             $this->loginService->switchUser($userId);
 
-            if ($remember) {
-                $this->loginService->remember($userName, $userId);
+            if ($request->remember === true) {
+                $this->loginService->remember($request->userName, $userId);
             } else {
                 $this->loginService->forget();
             }
 
             $this->renderer->assign('body', $this->currentUserRestService->buildDto());
+        } catch (SerializerException $exception) {
+            CmsHttpResponse::getInstance()->setStatusCode('400');
+            $this->renderer->assign('body', ['errorMessage' => $exception->getMessage()]);
         } catch (Throwable $e) {
             $this->logThrowable('Currentuser::handleLogin', $e);
             CmsHttpResponse::getInstance()->setStatusCode('500');

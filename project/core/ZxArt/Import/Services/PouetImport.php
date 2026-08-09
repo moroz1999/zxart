@@ -615,15 +615,9 @@ class PouetImport extends errorLogger
             $releaseFileUrl = $url;
         }
 
-        $hardwareRequired = [];
-        foreach ($prodData['platforms'] as $platform) {
-            $name = $platform['name'];
-            if (isset($this->platforms[$name])) {
-                $hardwareRequired[] = $this->platforms[$name];
-            }
-        }
-        // оставляем пустые значения как ты и хотел
-        $hardwareRequired = $hardwareRequired ?: null;
+        // Pouet's platform list is not specific enough to derive hardware from:
+        // its generic "ZX Spectrum" tag says nothing about the model, and mapping
+        // it to zx48 asserted something untrue for most demos.
 
         $releaseDto = new ReleaseImportDTO(
             id: $prodData['id'],
@@ -636,7 +630,7 @@ class PouetImport extends errorLogger
             fileUrl: $releaseFileUrl,
             fileName: null,
             description: null,
-            hardwareRequired: $hardwareRequired,
+            hardwareRequired: null,
             labels: null,
             authors: null,
             publishers: null,
