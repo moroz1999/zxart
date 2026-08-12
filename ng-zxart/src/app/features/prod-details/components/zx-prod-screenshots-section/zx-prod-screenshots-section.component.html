@@ -3,26 +3,31 @@
   [appInViewport]="!loaded && !loading"
   (inViewport)="onInViewport()"
 >
-  <ng-container *ngIf="loading || (loaded && files.length > 0)">
+  <ng-container *ngIf="!loaded || files.length > 0">
     <h2 appHeading="headline">{{ titleKey | translate }}</h2>
 
-    <zx-screenshot-grid-skeleton *ngIf="loading" [count]="3"></zx-screenshot-grid-skeleton>
+    <zx-screenshot-grid-skeleton *ngIf="!loaded" [count]="3"></zx-screenshot-grid-skeleton>
 
     <ng-container *ngIf="loaded && files.length > 0">
       <zx-picture-gallery-host></zx-picture-gallery-host>
 
-      <div class="prod-screenshots-section__grid">
+      <div zxScreenshotsGrid>
         <figure
           @fileEnter
           *ngFor="let file of visibleFiles; let i = index; trackBy: trackByFileId"
           class="prod-screenshots-section__item"
-          [class.prod-screenshots-section__item--featured]="i === 0"
+          [class.screenshots-grid-featured]="i === 0"
         >
           <div class="prod-screenshots-section__thumb-wrap">
+            <!-- The featured screenshot is the page's LCP element: it is always
+                 in view, so it loads eagerly and outranks its siblings, which
+                 are requested in the same tick and would otherwise share the
+                 connection with it. -->
             <img
               *ngIf="file.imageUrl"
               class="prod-screenshots-section__thumb"
-              loading="lazy"
+              [attr.loading]="i === 0 ? null : 'lazy'"
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
               [src]="file.imageUrl"
               [alt]="file.title"
               [lightbox]="i"
@@ -67,7 +72,7 @@
         </a>
       </div>
 
-      <div *ngIf="showAll && extraFiles.length > 0" class="prod-screenshots-section__extra" [@expandSection]>
+      <div *ngIf="showAll && extraFiles.length > 0" zxScreenshotsGrid [@expandSection]>
         <figure
           *ngFor="let file of extraFiles; let i = index"
           class="prod-screenshots-section__item"

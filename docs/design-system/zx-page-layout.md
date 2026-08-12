@@ -10,6 +10,13 @@ below the header and the vertical rhythm between content blocks
 (`--zx-page-layout-content-block-gap`), and resets margins on its direct content
 children.
 
+The header reserves the title box before the title is known
+(`--zx-page-layout-header-min-height`), because an entity page renders its `<h1>`
+empty until the entity loads. The reservation is
+`--zx-page-layout-header-lines` display lines: one on desktop, two below `md`,
+where a title that fits a single desktop line usually wraps. Without it the
+whole page moves down at the moment the title arrives.
+
 ```html
 <zx-page-layout>
   <h1 zxPageHeader appHeading="display">Title</h1>

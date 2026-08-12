@@ -41,7 +41,7 @@ Do not add a facade skeleton component that imports multiple variants.
 
 A skeleton must mirror the structure of the block it replaces as closely as possible: same number of elements, same hierarchy, same shapes and proportions, same gaps and paddings.
 
-A skeleton that replaces a grid must reuse that grid's layout directive as a host directive (`zx-prods-list-skeleton` uses `ZxProdsGridDirective`) instead of re-declaring `grid-template-columns`. Copied track definitions drift from the real grid and break at the breakpoints nobody re-checks.
+A skeleton that replaces a grid must reuse that grid's layout directive as a host directive (`zx-prods-list-skeleton` uses `ZxProdsGridDirective`, `zx-screenshot-grid-skeleton` uses `ZxScreenshotsGridDirective`) instead of re-declaring `grid-template-columns`. Copied track definitions drift from the real grid and break at the breakpoints nobody re-checks. Cells sized by an aspect ratio in the real grid take the same ratio in the skeleton, never a fixed pixel height.
 
 Metrics that mirror another component must be aliased in the skeleton's own theme file (`--zx-prods-list-skeleton-body-padding: var(--zx-inset-padding-lg)`), never hardcoded.
 
@@ -51,3 +51,11 @@ fixed pixel height, so it keeps the exact height of the text it replaces and
 nothing below it moves. `zx-breadcrumbs-skeleton` works that way.
 
 If no existing skeleton fits the target layout, add a new tailored skeleton instead of reusing a generic one.
+
+## Sections that fetch on demand
+
+A section that starts its fetch from a viewport trigger renders its skeleton from
+the moment it mounts, not from the moment the request goes out — the condition is
+"not loaded yet", never "a request is in flight". Between mounting and the trigger
+firing there is at least one frame, and a section that renders nothing in it
+collapses to its padding and drags everything below it up and back down.

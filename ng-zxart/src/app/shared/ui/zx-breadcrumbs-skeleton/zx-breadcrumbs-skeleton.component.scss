@@ -1,12 +1,18 @@
 :host {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--zx-breadcrumbs-skeleton-gap);
   font-size: var(--zx-breadcrumbs-skeleton-font-size);
+  overflow-x: hidden;
+}
+
+.zx-breadcrumbs-skeleton__item {
+  flex-shrink: 0;
 }
 
 .zx-breadcrumbs-skeleton__sep {
+  flex-shrink: 0;
   color: var(--zx-breadcrumbs-skeleton-sep-color);
   user-select: none;
 }

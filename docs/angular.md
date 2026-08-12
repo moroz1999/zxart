@@ -131,6 +131,11 @@ what makes a routed page whose trail loads asynchronously render at its final
 position from the first frame; only the home page, which has no breadcrumbs,
 renders nothing.
 
+The trail itself stays on that one row: it never wraps, and scrolls sideways
+when it is longer than the viewport. Its length is only known once the entity
+loads, so a wrapping trail would take a second row at that moment and push the
+whole page down.
+
 Two consequences for routes:
 
 - A route with no `titleKey` and no entity id gets no breadcrumbs at all, so
@@ -240,6 +245,44 @@ Page-level actions of this kind are projected into the page header: a second
 element carrying `zxPageHeader` beside the `<h1>` lands on the heading line, at
 the opposite end of the row. Entity deletion works this way — see
 [domain/entity-deletion.md](domain/entity-deletion.md).
+
+### Entity Prefetch Resolvers
+
+A routed page ships in its own chunk, so its API services cannot request
+anything until that chunk and everything it imports has arrived. On a phone
+connection that is over a second of idle connection before the first entity
+request even starts, and every request the page makes *after* mounting adds a
+further round trip to the largest paint.
+
+An entity route therefore resolves its requests from the initial bundle:
+
+```typescript
+{
+  path: 'prod/:id',
+  loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent),
+  resolve: {prefetch: prefetchEntityResolver(['/prod-details/', '/prod-screenshots/'], 'id')},
+}
+```
+
+`prefetchEntityResolver` (`shared/resolvers/`) hands the URLs to
+`EntityPrefetchService` (`shared/services/`) and returns immediately, so the
+navigation is never held up: the requests travel while the router still
+downloads the chunk. The page's own API service then reads through
+`EntityPrefetchService.get()`, which hands over the response already in flight,
+or issues a fresh request when there is nothing prefetched. The service holds
+only the entries of the navigation in flight and gives each one away on first
+read, so revisiting a page still fetches current data.
+
+Two rules follow:
+
+- Prefetch the requests that stand between the navigation and the page's
+  **largest paint** — the entity core and whatever carries its main image. There
+  is nothing to win by prefetching what a visitor reaches only after scrolling,
+  and the bytes compete with the chunk download.
+- The resolver keeps its endpoints in the route config, and the service stays
+  domain-agnostic: it deals in URLs, never in DTOs. Resolvers run after the
+  guards, so the prefetched response carries the interface language the visitor's
+  account asks for, exactly like the page's own request.
 
 ### Route Guards
 

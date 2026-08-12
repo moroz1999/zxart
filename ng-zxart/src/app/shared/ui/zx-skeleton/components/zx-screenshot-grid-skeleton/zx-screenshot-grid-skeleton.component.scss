@@ -1,13 +1,9 @@
-:host {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-16);
-}
-
+// The grid itself comes from the shared `.screenshots-grid` layout applied
+// through the host directive, so the bones occupy the tracks of the real
+// thumbnails and nothing below the grid moves when the screenshots arrive.
 .skeleton-screenshot {
-  width: 256px;
-  height: 192px;
-  flex-shrink: 0;
+  min-width: 0;
+  aspect-ratio: var(--zx-screenshot-grid-skeleton-cell-ratio);
   opacity: 0;
   animation: fadeIn 0.3s ease-out forwards;
 }

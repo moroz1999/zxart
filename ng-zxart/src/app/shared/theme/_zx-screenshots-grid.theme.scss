@@ -1,0 +1,8 @@
+:root {
+  /* Max width of each screenshot column (columns shrink to fit on smaller screens). */
+  --zx-screenshots-grid-column-width: 256px;
+  /* Gap between screenshot cells. */
+  --zx-screenshots-grid-gap: var(--gap-sm);
+  /* Aspect ratio of a screenshot cell, shared by the thumbnails and their placeholders. */
+  --zx-screenshots-grid-cell-ratio: 4/3;
+}

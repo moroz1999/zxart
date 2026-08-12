@@ -126,3 +126,7 @@ Detailed logic and structure: [domain/entity-deletion.md](domain/entity-deletion
 ### entity descriptions
 Storage, API, and frontend rendering rules for picture, tune, prod, and release descriptions.
 Detailed logic and structure: [domain/descriptions.md](domain/descriptions.md)
+
+### social posting
+Telegram announcements of newly created pictures, tunes, prods and releases.
+Detailed logic and structure: [domain/social-posting.md](domain/social-posting.md)

@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {editPrivilegeGuard} from './shared/guards/edit-privilege.guard';
 import {rootPrivilegeGuard} from './shared/guards/root-privilege.guard';
 import {authGuard} from './shared/guards/auth.guard';
+import {prefetchEntityResolver} from './shared/resolvers/entity-prefetch.resolver';
 
 /**
  * New clean-URL routing standard (no language segment). Plural = collection,
@@ -346,6 +347,7 @@ const ROUTED_CHILDREN: Routes = [
   {
     path: 'prod/:id',
     loadComponent: () => import('./pages/prod/prod-page.component').then(m => m.ProdPageComponent),
+    resolve: {prefetch: prefetchEntityResolver(['/prod-details/', '/prod-screenshots/'], 'id')},
     data: {metadataSource: 'entity'},
     children: [{path: ':tab', children: [], data: {metadataSource: 'entity', inPageTab: true}}],
   },

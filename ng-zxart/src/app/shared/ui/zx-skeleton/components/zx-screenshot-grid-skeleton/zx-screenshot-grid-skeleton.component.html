@@ -1,6 +1,7 @@
 @for (i of items; track i) {
   <zx-skeleton-bone
     class="skeleton-screenshot"
+    [class.screenshots-grid-featured]="i === 0"
     [animated]="animated"
     [style.animation-delay.ms]="i * 80"
   ></zx-skeleton-bone>

@@ -32,6 +32,13 @@ abstract class LoggedControllerApplication extends controllerApplication
             $languagesManager = $this->getLanguagesManager();
             // setCurrentLanguageCode validates the code and ignores unknown ones.
             $languagesManager->setCurrentLanguageCode(strtolower($code));
+            // publicStructureManager freezes its element path restriction to whichever
+            // language was current when DI built it, which happens before this header is
+            // applied. Without re-syncing it, element lookups keep searching inside the
+            // previous language branch and elements of the requested language are not found.
+            /** @var \structureManager $structureManager */
+            $structureManager = $this->getService('publicStructureManager');
+            $structureManager->setElementPathRestrictionId($languagesManager->getCurrentLanguageId());
         }
     }
 

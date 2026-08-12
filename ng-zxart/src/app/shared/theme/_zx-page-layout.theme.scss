@@ -1,10 +1,25 @@
+@use 'shared/breakpoints' as bp;
+
 :root {
   /* Space between the page header and the content area. */
   --zx-page-layout-header-content-gap: var(--space-24);
   /* Space between the title and page-level header controls. */
   --zx-page-layout-header-items-gap: var(--space-16);
-  /* One line of the page title, reserved before the title is known. */
-  --zx-page-layout-header-min-height: calc(var(--app-typography-display-size) * var(--app-typography-display-line-height));
+  /* Lines of the page title reserved before the title is known. */
+  --zx-page-layout-header-lines: 1;
+  /* The reserved title box, held while the title of an entity page still loads. */
+  --zx-page-layout-header-min-height: calc(
+    var(--app-typography-display-size) * var(--app-typography-display-line-height) *
+      var(--zx-page-layout-header-lines)
+  );
   /* Space between independent page content blocks. */
   --zx-page-layout-content-block-gap: var(--space-48);
+}
+
+@include bp.media-breakpoint-down(md) {
+  :root {
+    /* A title that fits one desktop line usually wraps to two on a phone, so the
+       narrow layout reserves both and the content below keeps its position. */
+    --zx-page-layout-header-lines: 2;
+  }
 }

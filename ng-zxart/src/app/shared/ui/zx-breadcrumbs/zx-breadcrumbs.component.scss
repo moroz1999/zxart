@@ -2,17 +2,25 @@
   display: block;
 }
 
+// The trail keeps to a single line and scrolls sideways instead of wrapping: its
+// length is only known once the entity loads, and a second line would push the
+// whole page down at that moment. The scrollbar is hidden so the row never
+// reserves space for one either.
 .zx-breadcrumbs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--zx-breadcrumbs-gap);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .zx-breadcrumbs__item {
+  flex-shrink: 0;
   font-size: var(--zx-breadcrumbs-font-size);
   color: var(--zx-breadcrumbs-link-color);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .zx-breadcrumbs__item:hover {
@@ -25,6 +33,7 @@
 }
 
 .zx-breadcrumbs__sep {
+  flex-shrink: 0;
   font-size: var(--zx-breadcrumbs-font-size);
   color: var(--zx-breadcrumbs-sep-color);
   user-select: none;

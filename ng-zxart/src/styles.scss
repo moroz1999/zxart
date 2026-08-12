@@ -202,3 +202,27 @@ zx-header {
     grid-template-columns: 1fr;
   }
 }
+
+// Shared layout: responsive screenshots grid (used via zxScreenshotsGrid directive).
+// The screenshots section and its skeleton both lay out through this grid, so the
+// placeholder cells occupy the same tracks as the real thumbnails at every breakpoint.
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, var(--zx-screenshots-grid-column-width)));
+  justify-content: space-between;
+  gap: var(--zx-screenshots-grid-gap);
+
+  @include breakpoints.media-breakpoint-down(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include breakpoints.media-breakpoint-down(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// The enlarged first cell of a screenshots grid.
+.screenshots-grid-featured {
+  grid-column: span 2;
+  grid-row: span 2;
+}

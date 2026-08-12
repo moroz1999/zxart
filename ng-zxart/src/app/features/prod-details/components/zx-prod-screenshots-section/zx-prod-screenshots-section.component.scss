@@ -1,33 +1,11 @@
-@use 'shared/breakpoints' as bp;
-
 :host {
   display: block;
-}
-
-.prod-screenshots-section__grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, var(--zx-prod-screenshots-thumb-width)));
-  justify-content: space-between;
-  gap: var(--zx-prod-screenshots-grid-gap);
-
-  @include bp.media-breakpoint-down(lg) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @include bp.media-breakpoint-down(sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .prod-screenshots-section__item {
   display: block;
   min-width: 0;
   margin: 0;
-}
-
-.prod-screenshots-section__item--featured {
-  grid-column: span 2;
-  grid-row: span 2;
 }
 
 .prod-screenshots-section__thumb-wrap {
@@ -40,7 +18,7 @@
   display: block;
   width: 100%;
   object-fit: cover;
-  aspect-ratio: 4/3;
+  aspect-ratio: var(--zx-prod-screenshots-thumb-ratio);
   cursor: pointer;
   image-rendering: pixelated;
 }
@@ -72,26 +50,11 @@
 
 
 
-.prod-screenshots-section__extra {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, var(--zx-prod-screenshots-thumb-width)));
-  justify-content: space-between;
-  gap: var(--zx-prod-screenshots-grid-gap);
-
-  @include bp.media-breakpoint-down(lg) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @include bp.media-breakpoint-down(sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .prod-screenshots-section__more {
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 4/3;
+  aspect-ratio: var(--zx-prod-screenshots-thumb-ratio);
   background: var(--zx-prod-screenshots-more-bg);
   color: var(--zx-prod-screenshots-more-text);
   border: var(--zx-prod-screenshots-more-border-width) solid var(--zx-prod-screenshots-more-border);

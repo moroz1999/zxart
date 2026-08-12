@@ -1,10 +1,6 @@
 :root {
-  /* Max width of each thumbnail column (columns shrink to fit on smaller screens). */
-  --zx-prod-screenshots-thumb-width: 256px;
-  /* Width of the enlarged first screenshot: integer 2x of the native 256px column for crisp pixel art. */
-  --zx-prod-screenshots-featured-width: 512px;
-  /* Grid column gap between screenshots. */
-  --zx-prod-screenshots-grid-gap: var(--gap-sm);
+  /* Aspect ratio of a thumbnail; mirrors the shared screenshots grid cell. */
+  --zx-prod-screenshots-thumb-ratio: var(--zx-screenshots-grid-cell-ratio);
   /* Corner radius of each screenshot item. */
   --zx-prod-screenshots-item-radius: var(--radius-sm);
   /* "See more" cell background in the screenshots grid. */

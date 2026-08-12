@@ -17,7 +17,7 @@ import {ZxHeroBarComponent} from '../../../zx-hero-bar/zx-hero-bar.component';
  *
  * The hero opens without media: a prod carries one only when it has a video.
  * The page title is not part of it — that heading lives in `zx-page-layout`'s
- * header, which reserves its line on its own.
+ * header, which reserves its lines on its own.
  */
 @Component({
   selector: 'zx-prod-details-skeleton',

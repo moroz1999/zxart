@@ -48,6 +48,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-stack](design-system/zx-stack.md) — vertical flexbox layout container
 - [zx-inline](design-system/zx-inline.md) — horizontal flexbox layout container
 - [zx-page-layout](design-system/zx-page-layout.md) — routed-page header and content-block layout
+- [zx-screenshots-grid](design-system/zx-screenshots-grid.md) — screenshot thumbnail grid layout directive
 - [zx-grid](design-system/zx-grid.md) — CSS Grid-based layout container; use `zxGridItem` directive on children for asymmetric column spans
 - [zx-inset](design-system/zx-inset.md) — restricted padding layout container
 - [zx-sidebar-layout](design-system/zx-sidebar-layout.md) — sticky companion column beside the main page content

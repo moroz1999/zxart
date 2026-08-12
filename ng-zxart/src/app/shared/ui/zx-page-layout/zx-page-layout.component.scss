@@ -10,9 +10,9 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--zx-page-layout-header-items-gap);
-  /* The header always holds one display-sized <h1>. Reserving its line keeps
-     the page in place while a page whose title loads with its entity still
-     renders that <h1> empty. */
+  /* The header always holds one display-sized <h1>. Reserving the lines that
+     title takes keeps the page in place while a page whose title loads with its
+     entity still renders that <h1> empty. */
   min-height: var(--zx-page-layout-header-min-height);
 }
 

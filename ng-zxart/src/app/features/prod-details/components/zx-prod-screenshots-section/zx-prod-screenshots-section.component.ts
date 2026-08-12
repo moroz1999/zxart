@@ -6,6 +6,7 @@ import {forkJoin} from 'rxjs';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
+import {ZxScreenshotsGridDirective} from '../../../../shared/directives/screenshots-grid.directive';
 import {
   ZxScreenshotGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
@@ -31,6 +32,7 @@ import {ElementPrivilegesApiService} from '../../../../shared/services/element-p
     CommonModule,
     TranslateModule,
     InViewportDirective,
+    ZxScreenshotsGridDirective,
     ZxScreenshotGridSkeletonComponent,
     PictureGalleryHostComponent,
     LightboxModule,
