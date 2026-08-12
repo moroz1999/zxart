@@ -6,6 +6,9 @@ import {PageMetadataService} from '../../../../shared/services/page-metadata.ser
 import {
   ZxProdDetailsSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-prod-details-skeleton/zx-prod-details-skeleton.component';
+import {
+  ZxRowSkeletonComponent
+} from '../../../../shared/ui/zx-skeleton/components/zx-row-skeleton/zx-row-skeleton.component';
 import {ProdCoreApiService} from '../../services/prod-core-api.service';
 import {ProdCoreDto} from '../../models/prod-core.dto';
 import {ZxProdHeroComponent} from '../zx-prod-hero/zx-prod-hero.component';
@@ -59,6 +62,7 @@ const LEGACY_COVERS_TAB_ID = 'inlays';
   imports: [
     CommonModule,
     ZxProdDetailsSkeletonComponent,
+    ZxRowSkeletonComponent,
     ZxProdHeroComponent,
     ZxProdDescriptionComponent,
     ZxProdInstructionsComponent,

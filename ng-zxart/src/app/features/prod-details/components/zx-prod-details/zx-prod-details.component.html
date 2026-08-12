@@ -30,9 +30,13 @@
         [label]="'prod-details.tab.releases' | translate"
         [href]="getMainTabHref('releases')">
         <ng-template zxTabContent>
-          <zx-prod-releases-section
-            [elementId]="core.elementId">
-          </zx-prod-releases-section>
+          @defer (on idle) {
+            <zx-prod-releases-section
+              [elementId]="core.elementId">
+            </zx-prod-releases-section>
+          } @placeholder {
+            <zx-row-skeleton [count]="3"></zx-row-skeleton>
+          }
         </ng-template>
       </zx-tab>
 
@@ -41,6 +45,7 @@
         [label]="'prod-details.tab.media.title' | translate"
         [href]="getMainTabHref('media')">
         <ng-template zxTabContent>
+          @defer (on idle) {
           <zx-tabs [initialActiveIndex]="getMediaTabIndex(core)">
             <zx-tab
               *ngIf="core.tabs.hasDescription"
@@ -110,6 +115,9 @@
               </ng-template>
             </zx-tab>
           </zx-tabs>
+          } @placeholder {
+            <zx-row-skeleton [count]="3"></zx-row-skeleton>
+          }
         </ng-template>
       </zx-tab>
 
@@ -118,7 +126,11 @@
         [label]="'prod-details.tab.articles' | translate"
         [href]="getMainTabHref('articles')">
         <ng-template zxTabContent>
-          <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
+          @defer (on idle) {
+            <zx-prod-articles-section [elementId]="core.elementId"></zx-prod-articles-section>
+          } @placeholder {
+            <zx-row-skeleton [count]="3"></zx-row-skeleton>
+          }
         </ng-template>
       </zx-tab>
 
@@ -127,6 +139,7 @@
         [label]="'prod-details.tab.links.title' | translate"
         [href]="getMainTabHref('links')">
         <ng-template zxTabContent>
+          @defer (on idle) {
           <zx-tabs [initialActiveIndex]="getLinksTabIndex(core)">
             <zx-tab
               *ngIf="core.tabs.hasMentions"
@@ -159,6 +172,9 @@
               </ng-template>
             </zx-tab>
           </zx-tabs>
+          } @placeholder {
+            <zx-row-skeleton [count]="3"></zx-row-skeleton>
+          }
         </ng-template>
       </zx-tab>
 
@@ -166,10 +182,14 @@
         [label]="'prod-details.tab.discussion' | translate"
         [href]="getMainTabHref('discussion')">
         <ng-template zxTabContent>
-          <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
-            <zx-ratings-list-view zxGridItem zxGridDesktopSpan="2" [elementId]="core.elementId"></zx-ratings-list-view>
-            <zx-comments-list-view zxGridItem zxGridDesktopSpan="3" [elementId]="core.elementId"></zx-comments-list-view>
-          </zx-grid>
+          @defer (on idle) {
+            <zx-grid desktopColumns="5" mobileColumns="1" gap="xl" align="start">
+              <zx-ratings-list-view zxGridItem zxGridDesktopSpan="2" [elementId]="core.elementId"></zx-ratings-list-view>
+              <zx-comments-list-view zxGridItem zxGridDesktopSpan="3" [elementId]="core.elementId"></zx-comments-list-view>
+            </zx-grid>
+          } @placeholder {
+            <zx-row-skeleton [count]="3"></zx-row-skeleton>
+          }
         </ng-template>
       </zx-tab>
     </zx-tabs>

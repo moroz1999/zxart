@@ -197,6 +197,29 @@ inside a `@defer` block, so the compiler emits it as its own lazy chunk.
 and is deferred by `ZxFileViewerDialogComponent`: prod and release pages no
 longer download the PDF engine.
 
+#### Tab Content
+
+`zx-tabs` instantiates the template of the active tab only, so the body of every
+`zxTabContent` goes in a `@defer` block with a `@placeholder`:
+
+```html
+<ng-template zxTabContent>
+  @defer (on idle) {
+    <zx-prod-releases-section [elementId]="core.elementId"></zx-prod-releases-section>
+  } @placeholder {
+    <zx-row-skeleton [count]="3"></zx-row-skeleton>
+  }
+</ng-template>
+```
+
+Without it, an entity page ships the code of every one of its tabs — a dozen
+sections a visitor never opens — in the chunks it must download before it can
+render anything. Deferred, each section's code arrives when its tab does.
+
+`on idle` is the trigger to use: on the tab a page opens with, it keeps the
+chunk out of the busy phase where the page's own images are still loading, and
+on a tab the visitor clicks it fires immediately anyway.
+
 #### Feature Sliced Design (FSD)
 All new functionality in Angular must follow Feature Sliced Design principles and the [Design System](design-system.md).
 
