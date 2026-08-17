@@ -1,8 +1,9 @@
 import {ChangeDetectorRef, Directive, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {combineLatest, Subscription} from 'rxjs';
+import {combineLatest, debounceTime, of, Subscription} from 'rxjs';
 import {ZxSelectOption} from './ui/zx-select/zx-select.component';
+import {childRouteParam} from './utils/child-route-param';
 
 export const BROWSER_SORT_KEYS = [
   'title,asc', 'title,desc',
@@ -20,6 +21,12 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   @Input() fixedSorting: string | null = null;
   @Input() showSorting = true;
   @Input() sortingKeys: readonly string[] = BROWSER_SORT_KEYS;
+  /**
+   * Name of a parameter on the page's child route — the optional trailing
+   * segment of a page such as `/pictures/top/:filter` — that the browser
+   * filters by. Its value is in `childParam` when `onQueryParams` runs.
+   */
+  @Input() childParamName: string | null = null;
 
   loading = true;
   error = false;
@@ -37,6 +44,9 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
    * `onQueryParams` and kept in the URL when the page or the sorting changes.
    */
   protected filterParams: Params = {};
+
+  /** Value of `childParamName`, or null while the page has no such segment. */
+  protected childParam: string | null = null;
 
   protected readonly router = inject(Router);
   protected readonly route = inject(ActivatedRoute);
@@ -58,10 +68,23 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.subscriptions.add(combineLatest([this.route.paramMap, this.route.queryParams]).subscribe(([routeParams, params]) => {
+    // A child-route parameter is only known once the navigation has ended, while
+    // the route's own params emit while it is still being activated: one
+    // navigation therefore reaches `combineLatest` twice, and the first pass
+    // still carries the previous segment. `debounceTime` keeps the last one.
+    const routeState$ = this.childParamName === null
+      ? combineLatest([this.route.paramMap, this.route.queryParams, of(null)])
+      : combineLatest([
+        this.route.paramMap,
+        this.route.queryParams,
+        childRouteParam(this.route, this.router, this.childParamName),
+      ]).pipe(debounceTime(0));
+
+    this.subscriptions.add(routeState$.subscribe(([routeParams, params, childParam]) => {
       if (this.elementIdParam !== null) {
         this.elementId = Number(routeParams.get(this.elementIdParam) ?? 0);
       }
+      this.childParam = childParam;
       this.currentPage = params['page'] ? +params['page'] : 1;
       this.sorting = this.fixedSorting ?? params['sorting'] ?? 'title,asc';
       this.onQueryParams(params);

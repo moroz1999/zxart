@@ -7,6 +7,7 @@ namespace ZxArt\PictureList;
 use structureManager;
 use ZxArt\LinkTypes;
 use ZxArt\Pictures\Dto\PictureDto;
+use ZxArt\Pictures\PictureCollectionFilter;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Repositories\PicturesRepository;
 use ZxArt\Shared\SortingParams;
@@ -113,12 +114,30 @@ readonly class PictureListService
 
     /**
      * Returns a paginated+sorted page of the whole picture collection, optionally
-     * narrowed to the pictures carrying a single tag.
+     * narrowed to a single tag or to one of the named collection filters.
      *
      * @return array{total: int, items: PictureDto[]}
      */
-    public function getPagedCollection(int $tagId, SortingParams $sorting, int $start, int $limit): array
-    {
+    public function getPagedCollection(
+        int $tagId,
+        ?PictureCollectionFilter $filter,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        if ($filter !== null) {
+            $formats = $filter->formats();
+            if ($formats !== []) {
+                return [
+                    'total' => $this->picturesRepository->countByFormats($formats),
+                    'items' => $this->loadPictures(
+                        $this->picturesRepository->findPagedIdsByFormats($formats, $sorting, $start, $limit)
+                    ),
+                ];
+            }
+            $tagId = $filter->tagId() ?? 0;
+        }
+
         if ($tagId > 0) {
             return $this->getPagedByLinkedElement($tagId, LinkTypes::TAG->value, $sorting, $start, $limit);
         }

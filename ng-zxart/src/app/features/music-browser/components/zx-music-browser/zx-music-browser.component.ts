@@ -74,8 +74,8 @@ export class ZxMusicBrowserComponent extends BrowserBaseComponent {
   }
 
   protected override fetchPage(start: number, limit: number): void {
-    this.playlistId = `music-browser-${this.linkType}-${this.elementId}`;
-    this.musicBrowserService.getPaged(this.elementId, start, limit, this.sorting, this.linkType).subscribe({
+    this.playlistId = `music-browser-${this.linkType}-${this.childParam ?? this.elementId}`;
+    this.musicBrowserService.getPaged(this.elementId, this.childParam, start, limit, this.sorting, this.linkType).subscribe({
       next: response => {
         this.loading = false;
         this.tunes = response.items;

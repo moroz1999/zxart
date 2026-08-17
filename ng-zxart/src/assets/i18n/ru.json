@@ -698,12 +698,28 @@
     "title": "Топ графики",
     "filter": {
       "all": "Все",
-      "loading-screens": "Игровые заставки",
-      "game-graphics": "Игровая графика"
+      "loading": "Игровые заставки",
+      "ingame": "Игровая графика",
+      "nocopy": "Оригинальные",
+      "gigascreen": "Гигаскрин",
+      "samcoupe": "SAM Coupé",
+      "next": "ZX Spectrum Next"
     }
   },
   "top-music": {
-    "title": "Топ музыки"
+    "title": "Топ музыки",
+    "filter": {
+      "all": "Все",
+      "cover": "Каверы",
+      "original": "Оригиналы",
+      "ay": "AY",
+      "beeper": "Бипер",
+      "digitalay": "Digital AY",
+      "samcoupe": "SAM Coupé",
+      "turbosound": "TurboSound AY",
+      "fm": "FM",
+      "games": "Игры"
+    }
   },
   "firstpage": {
     "title": "Игры, демосцена, графика и музыка ZX Spectrum",

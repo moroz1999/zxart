@@ -6,7 +6,7 @@ import {
   withDisabledInitialNavigation,
 } from '@angular/router';
 import {provideHttpClient, withInterceptors, HttpClient} from '@angular/common/http';
-import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideTranslateService, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AngularSvgIconModule} from 'angular-svg-icon';
@@ -32,7 +32,11 @@ export const appConfig: ApplicationConfig = {
     {provide: APP_BASE_HREF, useValue: '/'},
     provideRouter(APP_ROUTES, withDisabledInitialNavigation(), withComponentInputBinding()),
     provideHttpClient(withInterceptors([languageInterceptor])),
-    provideAnimations(),
+    // The animation engine is a tenth of the initial bundle and every animation
+    // in the app belongs to something the visitor opens, so it loads in its own
+    // chunk. Components render immediately meanwhile: the renderer queues their
+    // animation bindings and replays them once the engine arrives.
+    provideAnimationsAsync(),
     provideTranslateService({
       loader: {
         provide: TranslateLoader,

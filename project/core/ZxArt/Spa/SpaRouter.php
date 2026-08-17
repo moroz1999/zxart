@@ -32,7 +32,9 @@ final class SpaRouter
         '#^/(prods|pictures|music)/?$#',
         '#^/prods/batch-upload/?$#',
         '#^/prods/tags/?$#',
-        '#^/(pictures|music)/(search|tags|top)/?$#',
+        '#^/(pictures|music)/(search|tags)/?$#',
+        // top pages carry their collection filter as an optional trailing segment
+        '#^/(pictures|music)/top(/[a-z0-9-]+)?/?$#',
         '#^/(prods|pictures|music)/tags/\d+/?$#',
         '#^/(groups|authors)(/[a-zA-Z])?/add/?$#',
         '#^/(groups|authors|artists|musicians)(/[a-zA-Z])?/?$#',

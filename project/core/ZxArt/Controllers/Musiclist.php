@@ -17,6 +17,7 @@ use ZxArt\MusicList\MusicListService;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
+use ZxArt\Tunes\MusicCollectionFilter;
 use ZxArt\Tunes\Rest\TuneRestDto;
 
 class Musiclist extends LoggedControllerApplication
@@ -54,6 +55,7 @@ class Musiclist extends LoggedControllerApplication
         $start = (int)($this->getParameter('start') ?? 0);
         $sortingRaw = $this->getParameter('sorting') ?: 'title,asc';
         $linkType = (string)($this->getParameter('linkType') ?: LinkTypes::STRUCTURE->value);
+        $filter = MusicCollectionFilter::tryFrom((string)($this->getParameter('filter') ?: ''));
 
         try {
             if ($action === 'related') {
@@ -74,6 +76,17 @@ class Musiclist extends LoggedControllerApplication
                         ),
                     ]);
                 }
+            } elseif ($filter !== null && $limit !== null) {
+                // Named subset of the whole collection; no catalogue root involved.
+                $sorting = SortingParams::fromRequest($sortingRaw, MusicListService::ALLOWED_SORT_COLUMNS);
+                $result = $this->musicListService->getPagedCollection($filter, $sorting, $start, $limit);
+                $this->assignSuccess([
+                    'total' => $result['total'],
+                    'items' => array_map(
+                        fn(TuneDto $dto) => $this->objectMapper->map($dto, TuneRestDto::class),
+                        $result['items']
+                    ),
+                ]);
             } else {
                 // No wrapper element id from the SPA: resolve the catalogue root by type.
                 $elementId = $elementId > 0 ? $elementId : $this->resolveRootId('musicCatalogue');

@@ -46,12 +46,11 @@ import {ElementPrivilegesApiService} from '../../../../shared/services/element-p
   styleUrls: ['./zx-prod-screenshots-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('fileEnter', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(8px)' }),
-        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
+    // The grid itself does not animate in: its first cell is the page's largest
+    // paint, and an entry animation would both hold that paint back behind an
+    // opacity ramp and, until the animation engine has loaded, replay itself
+    // over content that is already on screen. Only the expansion a visitor asks
+    // for is animated, by which time the engine is long there.
     trigger('expandSection', [
       transition(':enter', [
         style({ height: '0', overflow: 'hidden' }),

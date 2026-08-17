@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Params} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
@@ -45,9 +44,6 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
   readonly galleryId = 'picture-browser';
   readonly skeletonItems = [0, 1, 2, 3, 4, 5];
 
-  /** Tag narrowing the collection; 0 browses all pictures. Comes from the `tag` query param. */
-  private tagId = 0;
-
   constructor(
     private pictureBrowserService: PictureBrowserService,
     private pictureGalleryService: PictureGalleryService,
@@ -57,14 +53,8 @@ export class ZxPictureBrowserComponent extends BrowserBaseComponent {
     super(translateService, cdr);
   }
 
-  protected override onQueryParams(params: Params): void {
-    const queryTagId = params['tag'] ? +params['tag'] : 0;
-    this.tagId = this.elementId > 0 ? this.elementId : queryTagId;
-    this.filterParams = this.elementId === 0 && queryTagId > 0 ? {tag: queryTagId} : {};
-  }
-
   protected override fetchPage(start: number, limit: number): void {
-    this.pictureBrowserService.getPaged(this.tagId, start, limit, this.sorting).subscribe({
+    this.pictureBrowserService.getPaged(this.elementId, this.childParam, start, limit, this.sorting).subscribe({
       next: response => {
         this.loading = false;
         this.pictures = response.items;

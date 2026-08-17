@@ -13,7 +13,6 @@
 
       <div zxScreenshotsGrid>
         <figure
-          @fileEnter
           *ngFor="let file of visibleFiles; let i = index; trackBy: trackByFileId"
           class="prod-screenshots-section__item"
           [class.screenshots-grid-featured]="i === 0"

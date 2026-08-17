@@ -120,6 +120,17 @@ Musical work for ZX Spectrum - chiptunes in various tracker and chip formats. Re
 ### Top Music Route
 - `/music/top` is the dedicated top-music page.
 - The page encapsulates the music browser with descending vote sorting and does not expose the generic sorting control.
+- A chip strip above the browser narrows the top to one named subset, exactly as
+  the top-graphics page does. The chosen subset is the page's optional trailing
+  route segment (`/music/top/cover`), never an element id, and the pagination
+  links keep it.
+- The segments are `cover` (the "Cover" tag), `original` (everything without it),
+  the sound types `ay`, `beeper`, `digitalay`, `samcoupe`, `turbosound` and `fm`
+  (each a set of `formatGroup` values) and `games` (tunes with a linked game);
+  the bare `/music/top` is the whole collection. `MusicCollectionFilter`
+  (`ZxArt\Tunes`) owns the mapping.
+- `GET /musiclist/` serves those subsets when `filter` and `limit` are given: the
+  page then covers the whole tune collection and no catalogue root is involved.
 
 ### Integration with External Services
 - **MP3 Storage**: `https://music.zxart.ee/music/` - MP3 files storage

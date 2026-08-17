@@ -698,12 +698,28 @@
     "title": "Top de gráficos",
     "filter": {
       "all": "Todos",
-      "loading-screens": "Pantallas de carga",
-      "game-graphics": "Gráficos del juego"
+      "loading": "Pantallas de carga",
+      "ingame": "Gráficos del juego",
+      "nocopy": "Originales",
+      "gigascreen": "Gigascreen",
+      "samcoupe": "SAM Coupé",
+      "next": "ZX Spectrum Next"
     }
   },
   "top-music": {
-    "title": "Top de música"
+    "title": "Top de música",
+    "filter": {
+      "all": "Todos",
+      "cover": "Versiones",
+      "original": "Originales",
+      "ay": "AY",
+      "beeper": "Beeper",
+      "digitalay": "Digital AY",
+      "samcoupe": "SAM Coupé",
+      "turbosound": "TurboSound AY",
+      "fm": "FM",
+      "games": "Juegos"
+    }
   },
   "firstpage": {
     "title": "Juegos, Demoscene, Graficos y Musica de ZX Spectrum",

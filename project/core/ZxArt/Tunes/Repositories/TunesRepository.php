@@ -13,6 +13,7 @@ use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Repositories\AbstractRepository;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Shared\StructureType;
+use ZxArt\Tunes\MusicCollectionFilter;
 
 readonly final class TunesRepository extends AbstractRepository
 {
@@ -194,6 +195,67 @@ readonly final class TunesRepository extends AbstractRepository
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'type'), '=', $linkType)
             ->where($this->tableColumn(DatabaseTable::StructureLinks, 'parentStructureId'), '=', $elementId)
             ->count();
+    }
+
+    /**
+     * A sorted page of the whole tune collection, optionally narrowed by a
+     * named collection filter.
+     *
+     * @return int[]
+     */
+    public function findPagedCollectionIds(
+        ?MusicCollectionFilter $filter,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        /** @var int[] $ids */
+        $ids = $this->applyCollectionFilter($this->getSelectSql(), $filter)
+            ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sorting->column), $sorting->direction->value)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
+
+        return $ids;
+    }
+
+    public function countCollection(?MusicCollectionFilter $filter): int
+    {
+        return $this->applyCollectionFilter($this->getSelectSql(), $filter)->count();
+    }
+
+    private function applyCollectionFilter(Builder $query, ?MusicCollectionFilter $filter): Builder
+    {
+        if ($filter === null) {
+            return $query;
+        }
+
+        $formatGroups = $filter->formatGroups();
+        if ($formatGroups !== []) {
+            $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), $formatGroups);
+        }
+        if ($filter->gameOnly()) {
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'game'), '!=', 0);
+        }
+        $tagId = $filter->tagId();
+        if ($tagId !== null) {
+            $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'id'), $this->taggedIdsQuery($tagId));
+        }
+        $excludedTagId = $filter->excludedTagId();
+        if ($excludedTagId !== null) {
+            $query->whereNotIn($this->tableColumn(DatabaseTable::ZxMusic, 'id'), $this->taggedIdsQuery($excludedTagId));
+        }
+
+        return $query;
+    }
+
+    /** Ids of the elements carrying one tag. */
+    private function taggedIdsQuery(int $tagId): Builder
+    {
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->select('childStructureId')
+            ->where('type', '=', LinkTypes::TAG->value)
+            ->where('parentStructureId', '=', $tagId);
     }
 
     private function getSelectSql(): Builder

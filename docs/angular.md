@@ -89,6 +89,13 @@ Components with pagination **must** reflect the current page in the URL and rest
   on page/sorting changes and exposes them as `paginationQueryParams` for
   `<zx-pagination [queryParams]>`. Filters must not be passed in as `@Input()` — the
   router emits the new params before input bindings are updated.
+- A filter that lives in the page's optional trailing segment instead of a query
+  param is named through `[childParamName]`, and the base exposes its value as
+  `childParam` before `onQueryParams` runs. A child-route parameter is only known
+  once the navigation has ended, while the route's own params emit while it is
+  still being activated, so one navigation would otherwise load twice — the base
+  keeps the last pass. `<zx-picture-browser childParamName="filter">` on
+  `/pictures/top/:filter` is the reference.
 - `zx-pagination` rebuilds its page links only when `currentPage`, `pagesAmount`
   or `visibleAmount` change, and tracks them by identity. Hosts are free to build
   `queryParams` in a getter: the fresh object identity makes `ngOnChanges` run on
@@ -196,6 +203,28 @@ inside a `@defer` block, so the compiler emits it as its own lazy chunk.
 `ZxPdfViewerComponent` (`shared/ui/zx-pdf-viewer/`) wraps `ngx-extended-pdf-viewer`
 and is deferred by `ZxFileViewerDialogComponent`: prod and release pages no
 longer download the PDF engine.
+
+#### Animations
+
+The animation engine is a tenth of the initial bundle, so the app provides it
+with `provideAnimationsAsync()`: it ships in its own chunk and loads when the
+first component that animates renders. Nothing waits for it — the renderer keeps
+the plain DOM implementation, queues that component's animation bindings, and
+replays them once the engine arrives.
+
+That replay is the catch, and it decides where animations may be used:
+
+- An animation on **something the visitor opens** — a popover, a dropdown, the
+  player sheet — is always safe. The engine has loaded long before the click.
+- An animation that plays **when content arrives on its own** must be weighed
+  against the replay: if the engine is still in flight, the content paints
+  first, and the queued `:enter` transition then runs over it, so the block
+  visibly blinks out and fades back in.
+- The element that carries a page's **largest paint never animates in**. An
+  entry animation holds the paint behind an opacity ramp, and it is exactly the
+  element on which a replayed animation is most visible. The prod page's
+  screenshot grid is the reference: the grid appears at once, and only the
+  expansion a visitor asks for is animated.
 
 #### Tab Content
 

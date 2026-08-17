@@ -55,6 +55,9 @@ final class SpaRouterTest extends TestCase
         yield ['/group-alias/42/join'];
         yield ['/parties/2026/add'];
         yield ['/pictures/top'];
+        yield ['/pictures/top/loading'];
+        yield ['/music/top'];
+        yield ['/music/top/turbosound'];
         yield ['/prods/tags'];
         yield ['/prods/batch-upload'];
         yield ['/stats/activity'];

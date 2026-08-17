@@ -95,16 +95,22 @@ images beside it (`inspired`, `inspired2`, `sequence`) are ordinary images.
 - `/pictures/top` is the dedicated top-graphics page.
 - Author picture lists and picture view logging use the `/pictures-data/` JSON endpoint.
 - The page encapsulates the picture browser with descending vote sorting and does not expose the generic sorting control.
-- A chip strip above the browser narrows the top to a single tag: all graphics,
-  the "Loading Screen" tag (game loading screens) or the "Game Graphics" tag.
-  The selected tag id lives in the `tag` query param and is preserved by the
-  pagination links.
+- A chip strip above the browser narrows the top to one named subset. The chosen
+  subset is the page's optional trailing route segment (`/pictures/top/loading`),
+  never an element id, and the pagination links keep it.
+- The segments are `loading` (the "Loading Screen" tag), `ingame` ("Game
+  Graphics"), `nocopy` ("No Copy", the original works), `gigascreen` (every
+  gigascreen-based format), `samcoupe` (the Sam Coupé formats) and `next` (the
+  ZX Spectrum Next formats); the bare `/pictures/top` is the whole collection.
+  `PictureCollectionFilter` (`ZxArt\Pictures`) owns the mapping from segment to
+  tag or format list.
 
 ### Picture List Endpoint
 `GET /picturelist/` (`ZxArt\Controllers\Picturelist`) serves three shapes:
 - `limit` present — a paged, sorted slice of the whole picture collection.
-  The optional `tagId` narrows it to the pictures carrying that tag. Sortable by
-  `title`, `date`, `year`, `votes`; the response is `{total, items}`.
+  The optional `tagId` narrows it to the pictures carrying that tag, and the
+  optional `filter` narrows it to a `PictureCollectionFilter` subset instead.
+  Sortable by `title`, `date`, `year`, `votes`; the response is `{total, items}`.
 - `action=related&pictureId=…` — related pictures, with `kind` selecting the
   relation (`author`, `tags`, `prod`).
 - `elementId=…` without `limit` — the pictures of a single element (release,

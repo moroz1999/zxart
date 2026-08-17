@@ -13,6 +13,7 @@ use structureManager;
 use Throwable;
 use ZxArt\PictureList\PictureListService;
 use ZxArt\Pictures\Dto\PictureDto;
+use ZxArt\Pictures\PictureCollectionFilter;
 use ZxArt\Pictures\Rest\PictureRestDto;
 use ZxArt\Shared\SortingParams;
 
@@ -80,10 +81,12 @@ class Picturelist extends LoggedControllerApplication
                     }
                 }
             } elseif ($limit !== null) {
-                // Paged collection browsing: the whole catalogue, optionally narrowed to one tag.
+                // Paged collection browsing: the whole catalogue, optionally narrowed
+                // to one tag or to a named collection filter.
                 $tagId = (int)($this->getParameter('tagId') ?? 0);
+                $filter = PictureCollectionFilter::tryFrom((string)($this->getParameter('filter') ?: ''));
                 $sorting = SortingParams::fromRequest($sortingRaw, PictureListService::ALLOWED_SORT_COLUMNS);
-                $result = $this->pictureListService->getPagedCollection($tagId, $sorting, $start, $limit);
+                $result = $this->pictureListService->getPagedCollection($tagId, $filter, $sorting, $start, $limit);
                 $this->assignSuccess([
                     'total' => $result['total'],
                     'items' => array_map(

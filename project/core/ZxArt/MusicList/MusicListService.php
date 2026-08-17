@@ -7,6 +7,7 @@ namespace ZxArt\MusicList;
 use structureManager;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
+use ZxArt\Tunes\MusicCollectionFilter;
 use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
@@ -56,9 +57,40 @@ readonly class MusicListService
         int $start,
         int $limit,
     ): array {
-        $total = $this->tunesRepository->countByLinkedElement($elementId, $linkType);
-        $ids = $this->tunesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
+        return [
+            'total' => $this->tunesRepository->countByLinkedElement($elementId, $linkType),
+            'items' => $this->loadTunes(
+                $this->tunesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
+            ),
+        ];
+    }
 
+    /**
+     * Returns a paginated+sorted page of the whole tune collection, optionally
+     * narrowed by a named collection filter.
+     *
+     * @return array{total: int, items: TuneDto[]}
+     */
+    public function getPagedCollection(
+        ?MusicCollectionFilter $filter,
+        SortingParams $sorting,
+        int $start,
+        int $limit,
+    ): array {
+        return [
+            'total' => $this->tunesRepository->countCollection($filter),
+            'items' => $this->loadTunes(
+                $this->tunesRepository->findPagedCollectionIds($filter, $sorting, $start, $limit)
+            ),
+        ];
+    }
+
+    /**
+     * @param int[] $ids
+     * @return TuneDto[]
+     */
+    private function loadTunes(array $ids): array
+    {
         $items = [];
         foreach ($ids as $id) {
             $element = $this->structureManager->getElementById($id)
@@ -67,8 +99,7 @@ readonly class MusicListService
                 $items[] = $this->tunesTransformer->toDto($element);
             }
         }
-
-        return ['total' => $total, 'items' => $items];
+        return $items;
     }
 
     /**

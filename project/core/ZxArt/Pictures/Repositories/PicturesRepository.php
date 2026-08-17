@@ -263,6 +263,33 @@ readonly final class PicturesRepository
     }
 
     /**
+     * A sorted page of the pictures stored in one of the given formats.
+     *
+     * @param string[] $formats
+     * @return int[]
+     */
+    public function findPagedIdsByFormats(array $formats, SortingParams $sorting, int $start, int $limit): array
+    {
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
+            ->whereIn('type', $formats)
+            ->orderBy($sorting->column, $sorting->direction->value)
+            ->offset($start)
+            ->limit($limit)
+            ->pluck('id');
+
+        return $ids;
+    }
+
+    /**
+     * @param string[] $formats
+     */
+    public function countByFormats(array $formats): int
+    {
+        return (int)$this->getSelectSql()->whereIn('type', $formats)->count();
+    }
+
+    /**
      * Returns picture IDs that share the most tags with the given tag set,
      * ordered by the number of matched tags (desc), then votes.
      *
