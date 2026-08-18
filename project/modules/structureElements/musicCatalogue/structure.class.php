@@ -28,7 +28,7 @@ class musicCatalogueElement extends structureElement
         $moduleStructure['description'] = 'textarea';
         $moduleStructure['party'] = 'text';
         $moduleStructure['compo'] = 'text';
-        $moduleStructure['game'] = 'text';
+        $moduleStructure['prod'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
         $moduleStructure['year'] = 'naturalNumber';

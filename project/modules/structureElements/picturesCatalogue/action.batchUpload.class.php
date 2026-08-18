@@ -33,7 +33,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
                 $pictureElement->type = $structureElement->type;
                 $pictureElement->border = $structureElement->border;
                 $pictureElement->border = $structureElement->border;
-                $pictureElement->game = $structureElement->game;
+                $pictureElement->prod = $structureElement->prod;
                 $pictureElement->party = $structureElement->party;
                 $pictureElement->author = $structureElement->author;
                 $pictureElement->dateAdded = $pictureElement->dateCreated;
@@ -63,7 +63,7 @@ class batchUploadPicturesCatalogue extends structureElementAction
     {
         $expectedFields = [
             'border',
-            'game',
+            'prod',
             'compo',
             'author',
             'year',

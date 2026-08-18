@@ -201,16 +201,18 @@ readonly final class TunesRepository extends AbstractRepository
      * A sorted page of the whole tune collection, optionally narrowed by a
      * named collection filter.
      *
+     * @param int[] $prodCategoryIds
      * @return int[]
      */
     public function findPagedCollectionIds(
         ?MusicCollectionFilter $filter,
+        array $prodCategoryIds,
         SortingParams $sorting,
         int $start,
         int $limit,
     ): array {
         /** @var int[] $ids */
-        $ids = $this->applyCollectionFilter($this->getSelectSql(), $filter)
+        $ids = $this->applyCollectionFilter($this->getSelectSql(), $filter, $prodCategoryIds)
             ->orderBy($this->tableColumn(DatabaseTable::ZxMusic, $sorting->column), $sorting->direction->value)
             ->offset($start)
             ->limit($limit)
@@ -219,13 +221,23 @@ readonly final class TunesRepository extends AbstractRepository
         return $ids;
     }
 
-    public function countCollection(?MusicCollectionFilter $filter): int
+    /**
+     * @param int[] $prodCategoryIds
+     */
+    public function countCollection(?MusicCollectionFilter $filter, array $prodCategoryIds): int
     {
-        return $this->applyCollectionFilter($this->getSelectSql(), $filter)->count();
+        return $this->applyCollectionFilter($this->getSelectSql(), $filter, $prodCategoryIds)->count();
     }
 
-    private function applyCollectionFilter(Builder $query, ?MusicCollectionFilter $filter): Builder
-    {
+    /**
+     * @param int[] $prodCategoryIds the category subtree the tune's production
+     *                               must belong to, already expanded by the caller
+     */
+    private function applyCollectionFilter(
+        Builder $query,
+        ?MusicCollectionFilter $filter,
+        array $prodCategoryIds,
+    ): Builder {
         if ($filter === null) {
             return $query;
         }
@@ -234,8 +246,11 @@ readonly final class TunesRepository extends AbstractRepository
         if ($formatGroups !== []) {
             $query->whereIn($this->tableColumn(DatabaseTable::ZxMusic, 'formatGroup'), $formatGroups);
         }
-        if ($filter->gameOnly()) {
-            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'game'), '!=', 0);
+        if ($prodCategoryIds !== []) {
+            $query->whereIn(
+                $this->tableColumn(DatabaseTable::ZxMusic, 'prod'),
+                $this->prodsInCategoriesQuery($prodCategoryIds)
+            );
         }
         $tagId = $filter->tagId();
         if ($tagId !== null) {
@@ -256,6 +271,19 @@ readonly final class TunesRepository extends AbstractRepository
             ->select('childStructureId')
             ->where('type', '=', LinkTypes::TAG->value)
             ->where('parentStructureId', '=', $tagId);
+    }
+
+    /**
+     * Ids of the productions filed under any of the given categories.
+     *
+     * @param int[] $categoryIds
+     */
+    private function prodsInCategoriesQuery(array $categoryIds): Builder
+    {
+        return $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+            ->select('childStructureId')
+            ->where('type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
+            ->whereIn('parentStructureId', $categoryIds);
     }
 
     private function getSelectSql(): Builder
@@ -296,8 +324,8 @@ readonly final class TunesRepository extends AbstractRepository
             $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '<=', $criteria->minPartyPlace);
             $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '!=', 0);
         }
-        if ($criteria->requireGame === true) {
-            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'game'), '!=', 0);
+        if ($criteria->requireProd === true) {
+            $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'prod'), '!=', 0);
         }
         if ($criteria->hasParty === true) {
             $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'partyplace'), '>', 0);

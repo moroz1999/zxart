@@ -55,7 +55,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                     $pictureElement->originalName = $originalFileName;
                     $pictureElement->type = $structureElement->type;
                     $pictureElement->border = $structureElement->border;
-                    $pictureElement->game = $structureElement->game;
+                    $pictureElement->prod = $structureElement->prod;
                     $pictureElement->party = $structureElement->party;
                     $pictureElement->partyplace = $structureElement->partyplace;
                     $pictureElement->rotation = $structureElement->rotation;
@@ -144,7 +144,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
         $expectedFields = [
             'pictureTitle',
             'border',
-            'game',
+            'prod',
             'compo',
             'author',
             'originalAuthor',

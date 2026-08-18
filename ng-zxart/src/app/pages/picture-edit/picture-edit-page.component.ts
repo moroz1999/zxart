@@ -121,7 +121,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     rotation: this.fb.nonNullable.control<string>('0'),
     palette: this.fb.nonNullable.control<string>(''),
     year: this.fb.nonNullable.control(''),
-    game: this.fb.control<EntityRef | null>(null),
+    prod: this.fb.control<EntityRef | null>(null),
     tagsText: this.fb.nonNullable.control(''),
     description: this.fb.nonNullable.control(''),
     denyVoting: this.fb.nonNullable.control(false),
@@ -197,8 +197,8 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
       this.returnUrl = `/picture/${this.elementId}`;
     }
     const formData$ = this.batchUpload
-      ? this.formData.loadCreate('pictureBatch', ['party', 'game'], undefined, this.parentId)
-      : this.formData.load(this.elementId, ['party', 'game']);
+      ? this.formData.loadCreate('pictureBatch', ['party', 'prod'], undefined, this.parentId)
+      : this.formData.load(this.elementId, ['party', 'prod']);
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
@@ -221,7 +221,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
             rotation: String(data.fields['rotation'] ?? '0') || '0',
             palette: String(data.fields['palette'] ?? ''),
             year: String(data.fields['year'] ?? ''),
-            game: data.refs['game'] ?? null,
+            prod: data.refs['prod'] ?? null,
             tagsText: String(data.fields['tagsText'] ?? ''),
             description: String(data.fields['description'] ?? ''),
             denyVoting: !!Number(data.fields['denyVoting']),
@@ -304,7 +304,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
       rotation: value.rotation,
       palette: value.palette,
       year: value.year,
-      game: value.game ? String(value.game.id) : '',
+      prod: value.prod ? String(value.prod.id) : '',
       tagsText: value.tagsText,
       description: value.description,
       denyVoting: value.denyVoting ? '1' : '',

@@ -97,7 +97,7 @@ readonly final class PictureSearchRepository
             $builder->where('sequenceName', '!=', '');
         }
         if ($query->fromGameOnly) {
-            $builder->where('game', '!=', '0')->where('game', '!=', '');
+            $builder->where('prod', '!=', '0')->where('prod', '!=', '');
         }
         if ($query->tagsInclude !== []) {
             /** @var int[] $ids */

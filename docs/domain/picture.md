@@ -1,146 +1,121 @@
-## zxPicture (Graphics)
+## Picture (Graphics)
 
 ### Purpose
-Graphic artwork for ZX Spectrum - pictures in native formats (SCR, MC, MG, etc.). Represents a standalone artistic work.
+Graphic artwork for the ZX Spectrum, stored in one of the machine's native screen
+formats (SCR, MC, MG and the rest). A picture is a standalone artistic work.
 
 ### Main Fields
-- **title** - picture title
-- **year** - year of creation
-- **description** - description (pre-formatted text)
-- **image** - image file ID
-- **originalName** - original file name
+- **title** — picture title
+- **year** — year of creation
+- **description** — description
+- **image** — the picture file
+- **originalName** — the file name it was uploaded under
 
-The stored file is a native ZX Spectrum screen, not a browser image format, and
-its extension follows the format it was saved in. So the edit form accepts any
-file in that field and shows no local preview of a picked one (only its name),
-while the thumbnail of the stored file comes from the element's converted image
-URL (`getImageUrl()`) — the `adminImage` preset cannot render it. The reference
-images beside it (`inspired`, `inspired2`, `sequence`) are ordinary images.
+The stored file is a native ZX Spectrum screen rather than a browser image
+format, and its extension follows the format it was saved in, so nothing can
+preview a freshly picked file before it is saved — only its name is shown, and
+the thumbnail appears once the site has converted the stored screen. The
+reference images beside it (inspiration sources, next image in a sequence) are
+ordinary pictures of the archive.
 
 ### Technical Image Parameters
 
 #### Type and Palette
-- **type** - image type:
-  - Standard ZX Spectrum formats (SCR, MC, MG, etc.)
-  - Defines resolution and color model
-- **palette** - palette:
-  - Standard ZX Spectrum palette
-  - Extended palettes (for formats with more colors)
-- **border** - border color (0-7)
-- **rotation** - image rotation (degrees)
+- **type** — the screen format, which fixes the resolution and the colour model
+- **palette** — the standard ZX Spectrum palette, or an extended one for the
+  formats that carry more colours
+- **border** — border colour (0–7)
+- **rotation** — rotation of the image in degrees
 
 #### Special Flags
-- **isRealtime** - created in real-time (at party)
-- **isFlickering** - uses flickering effect
-  - Technique to increase number of colors through rapid frame switching
+- **isRealtime** — created live, in the limited time of a party competition
+- **isFlickering** — uses flickering: colours mixed by switching frames quickly
 
 ### Relations with Other Entities
 
 #### Authorship
-- **author** - picture authors (array of IDs)
-  - Authorship drives the picture's placement and author pages, so it is never
-    left empty: the Angular form requires at least one author, and the backend
-    falls back to the "unknown author" element when none is submitted.
-- **originalAuthor** - original authors (array of IDs)
-  - Used for ported/remade works
+- **author** — the picture's authors. Authorship decides where the picture is
+  filed and which author galleries it appears in, so it is never left empty: at
+  least one author must be given, and a picture submitted without one is
+  credited to the "unknown author".
+- **originalAuthor** — the authors of the original, for ports and remakes
 
 #### Party (Competitions)
-- **party** - party ID (demoparty, competition)
-- **partyplace** - place in competition
-- **compo** - competition name (compo)
-  - Link through `partyPicture`
+- **party** — the demoparty the picture was released at
+- **partyplace** — the place it took in the competition
+- **compo** — the competition it ran in
 
 #### Related Works
-- **game** - related production or release (`gameLink`)
-  - For loading screens and game graphics
-  - Holds a zxProd in almost every case, but a release is allowed too, so the
-    form offers both
-  - Picture list cards display the linked zxProd or zxRelease title when available
-- **inspired** - inspiration source (image file ID)
-  - Original work that inspired the author
-- **inspired2** - second inspiration source
-- **sequence** - next image in sequence
-  - For picture series
+- **prod** — the production or release the picture belongs to: loading screens
+  and in-game graphics. It is a production in almost every case, but a single
+  release may be named instead, so both can be picked. Picture cards show the
+  title of that production or release.
+- **inspired**, **inspired2** — the works that inspired the author
+- **sequence** — the next picture, for works published as a series
 
 #### Executable File
-- **exeFile** - executable file (file ID)
-- **exeFileName** - executable file name
-  - For pictures that are part of a program
+- **exeFile**, **exeFileName** — the runnable program a picture is part of
 
 #### Press
-- **mentions** - press mentions (link `PRESS_PICTURES`, role parent)
+- **mentions** — the press articles that mention the picture
 
 ### Tags and Categorization
-- **tagsText** - tags (text)
-- **tagsAmount** - number of tags
+- **tagsText** — the picture's tags
+- **tagsAmount** — how many tags it carries
 
-#### Special Tags
-- `"Loading Screen"` - game loading screen
-- `"Game Graphics"` - game graphics
+Two tags carry meaning beyond description: "Loading Screen" marks a loading
+screen and "Game Graphics" marks graphics taken from a running program.
 
 ### Voting and Statistics
-- **votes** - average rating
-- **votesAmount** - number of votes
-- **denyVoting** - deny voting
-- **commentsAmount** - number of comments
-- **denyComments** - deny comments
-- **views** - number of views
+- **votes**, **votesAmount** — average rating and how many people voted
+- **denyVoting** — voting is closed for this picture
+- **commentsAmount**, **denyComments** — comments and whether they are closed
+- **views** — how often the picture has been viewed
 
 ### Metadata
-- **dateAdded** - date added
-- **userId** - ID of user who added the element
-- **artCityId** - city ID (for Art City projects)
+- **dateAdded** — when it was added
+- **userId** — the visitor who added it
+- **artCityId** — the city, for Art City projects
 
-### Top Graphics Route
-- `/pictures/top` is the dedicated top-graphics page.
-- Author picture lists and picture view logging use the `/pictures-data/` JSON endpoint.
-- The page encapsulates the picture browser with descending vote sorting and does not expose the generic sorting control.
-- A chip strip above the browser narrows the top to one named subset. The chosen
-  subset is the page's optional trailing route segment (`/pictures/top/loading`),
-  never an element id, and the pagination links keep it.
-- The segments are `loading` (the "Loading Screen" tag), `ingame` ("Game
-  Graphics"), `nocopy` ("No Copy", the original works), `gigascreen` (every
-  gigascreen-based format), `samcoupe` (the Sam Coupé formats) and `next` (the
-  ZX Spectrum Next formats); the bare `/pictures/top` is the whole collection.
-  `PictureCollectionFilter` (`ZxArt\Pictures`) owns the mapping from segment to
-  tag or format list.
+### Top Graphics
+The top-graphics page ranks the whole collection by rating, highest first, and
+offers no other ordering.
 
-### Picture List Endpoint
-`GET /picturelist/` (`ZxArt\Controllers\Picturelist`) serves three shapes:
-- `limit` present — a paged, sorted slice of the whole picture collection.
-  The optional `tagId` narrows it to the pictures carrying that tag, and the
-  optional `filter` narrows it to a `PictureCollectionFilter` subset instead.
-  Sortable by `title`, `date`, `year`, `votes`; the response is `{total, items}`.
-- `action=related&pictureId=…` — related pictures, with `kind` selecting the
-  relation (`author`, `tags`, `prod`).
-- `elementId=…` without `limit` — the pictures of a single element (release,
-  party compo, …), optionally narrowed by `compoType`.
+A strip of chips above it narrows the top to one named subset. The subset is
+part of the page address rather than a hidden setting, so a narrowed top can be
+linked to and shared, and paging through it keeps the subset. The subsets are:
 
-### Viewer Settings
-`PictureSettingsService` owns the picture-viewing settings and persists each one
-as a user preference through `UserPreferencesService`, so anonymous visitors keep
-them in localStorage and logged-in users have them fetched from and written to
-the backend.
+- game loading screens, and graphics taken from running programs — the two
+  special tags above
+- originals — the works tagged as nobody's copy
+- gigascreen — every format built on gigascreen frame mixing
+- SAM Coupé, and ZX Spectrum Next — each machine's own screen formats
 
-- Render settings (`picture_mode`, `picture_border`, `picture_hidden`) are
-  exposed as `settings` and feed `PictureUrlBuilderService`.
-- The details viewer zoom (`picture_scale`: `1`, `2`, `3`, `wide`) is exposed
-  separately as `scale`, because it changes the layout rather than the image URL.
+Without a subset the page ranks the entire collection.
 
-The stored zoom is shared across devices, while the viewer only offers the zooms
-that fit the current screen (`SCALES_BY_DEVICE`). A stored value too large for
-the screen falls back to `wide` for display without being overwritten, so the
-default of `3` renders as 3× on desktop and as `wide` on tablet and phone.
+### Viewing Settings
+How a picture is rendered — the colour mode, whether the border is drawn, and
+whether hidden parts of the screen are shown — is the visitor's own choice and
+follows them: anonymous visitors keep it in their browser, and a logged-in
+visitor has it stored with their account and applied on every device.
+
+The zoom of the detail viewer is stored the same way, but it changes the layout
+rather than the picture, so it is remembered separately. The viewer only offers
+the zooms that fit the screen in front of the visitor: a zoom too large for the
+current screen is shown at the widest that fits, without overwriting what the
+account has stored, so the default reads as 3× on a desktop and as full width on
+a tablet or phone.
 
 ### Constraints and Rules
-1. Image must be in one of native ZX Spectrum formats
-2. Palette and type must correspond to each other
-3. isFlickering indicates use of flickering technique to increase colors
-4. isRealtime means work was created at competition in limited time
-5. originalAuthor is used when picture is a port/remake
-6. game links picture to game (for loading screens and game graphics)
-7. inspired/inspired2 point to inspiration sources (references)
-8. sequence is used to create series of related pictures
-9. Border defines frame color around image (0-7 standard ZX Spectrum colors)
-10. Rotation allows correcting image orientation
-11. A missing year (empty, non-numeric or earlier than 1983) is filled in on save by `ZxArtItem::updateYear()`, shared by every zx item: first from the linked party, then from the linked release. A source without a year of its own is skipped, so it cannot overwrite the value the other one provided. Called from `publicReceive` and from the batch upload actions.
+1. The image must be in one of the native ZX Spectrum formats.
+2. The palette and the format must match each other.
+3. The border colour is one of the eight standard ZX Spectrum colours.
+4. Rotation exists to correct the orientation of the stored screen.
+5. Original authors are named when the picture is a port or a remake.
+6. A missing year — empty, not a number, or earlier than 1983 — is filled in
+   when the picture is saved: first from the party it was released at, then from
+   the production it belongs to. A source that has no year of its own is skipped
+   rather than applied, so it cannot undo the year the other one supplied. The
+   same rule holds for tunes.
+
+How it is built: [../features/picture.md](../features/picture.md)

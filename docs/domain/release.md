@@ -1,140 +1,125 @@
-## zxRelease (Software Release)
+## Release
 
 ### Purpose
-Concrete release (version) of software production. Contains files specific to this version. Always linked to parent zxProd.
+A concrete published version of a production, holding the files that version
+actually consists of. A release always belongs to one production; a production
+with no release is a work the archive knows of but does not hold.
 
 ### Main Fields
-- **title** - release title
-- **version** - release version
-- **year** - release year
-- **description** - release description (HTML)
-- **file** - main release file
-- **fileName** - file name
+- **title** — release title
+- **version** — which version it is
+- **year** — the year it was published
+- **description** — description
+- **file**, **fileName** — the release file itself
 
 ### Relations with Other Entities
 
-#### Parent Product
-- **zxProd** - parent product (link `structure`, role child)
-  - Each release must belong to one prod
-  - Link through structural hierarchy
-  - Required in both the Angular form and the element action (`notEmpty`). Unlike
-    the other works there is no sensible fallback, so a release with no
-    production is rejected: creation answers 422 and nothing is stored.
+#### Parent Production
+Every release belongs to exactly one production. Unlike the other works there is
+no sensible fallback for a missing one, so a release without a production is
+refused rather than filed somewhere arbitrary.
 
 #### Authorship
-- **authors** - authors with roles (code, graphics, music, etc.)
-  - Can differ from prod authors (e.g., for ports)
+A release names its own authors with their roles — code, graphics, music and so
+on. They may differ from the production's, which is what a port or a conversion
+is.
 
 #### Publishers
-- **publishers** - release publishers (link `zxReleasePublishers`, role child)
-  - Can differ from prod publishers
+A release names its own publishers, which may likewise differ from the
+production's.
 
 #### Compilations
-- **compilations** - compilations that include this release (link `compilation`, role child)
+A release records the compilations that include it.
 
 ### Technical Characteristics
 
 #### Release Type
-- **releaseType** - release type:
-  - `tar` - TAR archive (for MB)
-  - `trd` - TR-DOS disk
-  - `tap` - TAP file
-  - `z80` - Z80 snapshot
-  - `sna` - SNA snapshot
-  - `tzx` - TZX file
-  - `scl` - SCL disk
-  - `p` - ZX81 program
-  - `o` - ZX81 program
-  - `spg` - TSConf SPG
-  - `img` - disk image
-  - and other formats
+The kind of file the release is: a TR-DOS disk, a TAP or TZX tape, a Z80 or SNA
+snapshot, an SCL disk, a ZX81 program, a TSConf SPG, a disk image, and so on.
 
 #### Release Format
-- **releaseFormat** - release format(s) (array)
-  - Can contain multiple formats for one release
-  - Stored in table `module_zxrelease_format`
+A release can be published in more than one format at once.
 
 #### Hardware Requirements
-- **hardwareRequired** - the release's **own** hardware, i.e. what it needs beyond
-  what its production already states (array)
-  - Stored in `module_zxrelease_hw_required` as catalog ids; the property works in codes
-  - `getEffectiveHardwareCodes()` adds the production's set and is what decides
-    behaviour — emulator launch, playable files, list image preset. The raw
-    property is for the edit form and for showing what belongs to this release.
-  - Responses carry the name, short name and category of each code, localized for
-    the request language; the SPA does not translate hardware.
-  - Auto-filled from the release's file format on every save — see
-    [hardware.md](hardware.md).
+A release states only the hardware it needs **beyond** what its production
+already states, so the same requirements are not repeated on every release. What
+actually decides behaviour — whether it can be launched, which files are
+playable — is the two sets together.
+
+Hardware is also filled in from the release's file format whenever it is saved,
+so an obviously implied requirement is never missing.
 
 #### Languages
-- **language** - interface languages (array)
-  - Stored in table `zxitem_language`
+The interface languages the release is available in.
 
 ### Files and Media
-- **screenshotsSelector** - release screenshots
-- **inlayFilesSelector** - inlay files (covers)
-- **infoFilesSelector** - information files
-- **adFilesSelector** - advertising materials
-- Release details expose `inlayFilesSelector` and `adFilesSelector` together as `covers`, grouped by kind exactly like a prod's covers (`{kind, items}` per `ProdCoverKind`, empty kinds omitted); the page renders one headed section per group and `tabs.hasCovers` follows both selectors.
-- Release cover images share a 200px display height, while each tile derives its width from the thumbnail's aspect ratio.
-- Release details permits users with `publicReceive` privilege to reorder screenshots stored in `screenshotsSelector` through the shared screenshot move API.
-- Parsed release structure exposes downloadable archive entries. File downloads are triggered from the Angular release details UI as button actions, while file previews are loaded through `/release-file-content/` and rendered in a dialog instead of linking to legacy `viewFile` pages.
-- The parsed file structure is only built and returned when `isDownloadable()` is true (`fileStructure` is empty otherwise, which also hides the Structure tab). This mirrors the legacy gate `{if $element->parsed && $element->isDownloadable()}` and prevents per-file download links from leaking for non-downloadable releases (e.g. `insales` prods, or old forbidden prods to anonymous users).
+Besides the release file itself a release carries screenshots, inlays and covers,
+information files and advertising material. Covers are grouped by kind and shown
+one section per kind.
 
-### Download Gating (legalStatus)
-- `zxReleaseElement::isDownloadable()` is the single source of truth for whether a release file may be downloaded; the release inherits its legal status from its parent prod (`getLegalStatus()` delegates to the prod).
-- A release is downloadable when its (prod's) status is not `forbidden`/`forbiddenzxart`/`insales`, OR it is a `demoversion` release, OR the `downloadDenied` privilege is set, OR — for non-`insales` statuses only — the current user is authorized and the prod year is known and older than 20 years (the "old prods for registered users" case).
-- `insales` ("in sales") is always excluded, including from the old-prod allowance: such prods/releases must never expose a download link. The legacy release row shows a "purchase" external-link button instead.
-- API responses gate `downloadUrl` (and the parsed `fileStructure`) by `isDownloadable()`, evaluated per request against the current session, so authorized-only download URLs are never emitted to anonymous users.
-- The release hero bar offers the prod's external link as a call to action when the prod carries one: a "buy" button for `insales` and a "donate" button for `donationware` (`prodLegalStatus` and `prodExternalLink` on the release details response).
-- Known residual risk (pre-existing in legacy, UI-only protection): the `releasefile` and `zxfile` download applications themselves do not enforce `isDownloadable()`; protection relies on hiding the link rather than blocking the endpoint.
-- Parsed release structure file names are URL-decoded for display only; download and preview lookup URLs continue to use the original stored archive entry data.
-- Parsed release structure can play TAP and supported TZX entries as generated browser audio from the Angular release details UI.
-- Release table thumbnails show an animated larger first-screenshot preview on pointer hover.
+The contents of the release archive are listed, and single files inside it can be
+previewed or downloaded on their own — but only when the release itself may be
+downloaded at all. Tape files inside it can also be played back as sound.
+
+### Downloading
+Whether a release may be downloaded follows the legal status of its production:
+
+- A production that is forbidden, or currently on sale, is not downloadable.
+- A demo version is always downloadable, whatever the production's status.
+- A production explicitly marked as freely downloadable is downloadable.
+- A registered visitor may download an otherwise restricted release when the
+  production is known to be more than twenty years old — but never when it is on
+  sale.
+
+A release nobody may download offers no download at all, and neither its file
+nor the contents of its archive are listed. A production that is on sale or asks
+for donations offers a link to buy or to donate instead.
+
+### Running in the browser
+A release can be launched in an emulator when its file type is one that can be
+started and the hardware it needs — its own plus its production's — can be
+emulated:
+
+- **ZX Spectrum**: TRD, TAP, Z80, SNA, TZX, SCL
+- **ZX81**: TZX, P, O, on ZX81 hardware
+- **ZX80**: on ZX80 hardware
+- **TSConf**: SPG, IMG, TRD, SCL, on TSConf hardware
+- **Multiboard**: TAR, on Multiboard hardware
+
+Hardware the emulators cannot reproduce makes a release unplayable regardless of
+its format.
+
+A screenshot taken while playing is filed with whatever was launched: with the
+release when launched from the release, and with the production when launched
+from the production's list of releases.
 
 ### Usage Statistics
-- **downloads** - number of downloads
-- **plays** - number of emulator launches
+- **downloads** — how often the release has been downloaded
+- **plays** — how often it has been launched in an emulator
 
 ### Voting and Comments
-- **votes** - average rating
-- **votesAmount** - number of votes
-- **denyVoting** - deny voting
-- **commentsAmount** - number of comments
-- **denyComments** - deny comments
-- Selected release legacy details page displays the shared ZX item voting controls for the release itself.
+- **votes**, **votesAmount** — average rating and how many people voted
+- **denyVoting** — voting is closed for this release
+- **commentsAmount**, **denyComments** — comments and whether they are closed
 
 ### Metadata
-- **dateAdded** - date added
-- **userId** - ID of user who added the element
-- **parsed** - flag that file was parsed
+- **dateAdded** — when it was added
+- **userId** — the visitor who added it
+- **parsed** — whether the release file has been read into its contents
 
-### Special Operations
-- **clone** - creates a copy of the release under the same parent prod, carries over hardware, language, publishers and authorship, and resets usage counters. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone.
-
-### Emulator Launch Capability
-Determined by combination of:
-1. **releaseType** - file type must be in runnable list
-2. **hardware** - the effective set (the release's own plus its production's) must be supported by the emulator
-
-#### Launch Rules:
-- **ZX Spectrum (USP)**: formats `trd`, `tap`, `z80`, `sna`, `tzx`, `scl`
-- **ZX81**: formats `tzx`, `p`, `o` + ZX81 hardware
-- **ZX80**: ZX80 hardware
-- **TSConf**: formats `spg`, `img`, `trd`, `scl` + TSConf hardware
-- **MB (Multiboard)**: format `tar` + MB hardware
-- A release requiring hardware the online emulators cannot emulate is not playable regardless of format. `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists such hardware (currently General Sound, `gs`): when present in the effective set, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden.
-
-#### Angular Prod Details Emulator
-- Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.
-- USP uses a 960x720 canvas by default, exactly double the 480x360 emulator viewport.
-- Emulator screenshots launched from prod details release rows are saved to the parent prod, not to the release.
-- Emulator screenshots launched from the release details page are saved directly to the release. The release details API response carries `canUploadScreenshot`; the upload itself goes to `/screenshot-upload/` with the release id.
+### Cloning
+A release can be copied under the same production, carrying over its hardware,
+languages, publishers and authorship, and starting its download and play counts
+from zero. It is how a second format or a second publisher of the same version is
+recorded without typing everything again. Whoever added a release may clone it.
 
 ### Constraints and Rules
-1. Release must always have parent zxProd
-2. Release contains concrete file, unlike abstract prod
-3. One prod can have multiple releases (different versions, platforms, publishers)
-4. Release can have its own authors and publishers, different from prod
-5. Emulator launch capability is determined automatically by file type and hardware requirements
-6. Release file can be parsed to extract metadata (parsed flag)
+1. A release always belongs to a production.
+2. A release holds a concrete file; the production it belongs to is the abstract
+   work.
+3. One production may have many releases — versions, platforms, publishers.
+4. A release may have its own authors and publishers, different from the
+   production's.
+5. Whether a release can be launched follows from its file type and hardware.
+
+How it is built: [../features/release.md](../features/release.md)

@@ -5,7 +5,7 @@ trait LanguageCodesProviderTrait
     /**
      * @return string[]
      *
-     * @psalm-return list{'be', 'bs', 'by', 'ca', 'cs', 'da', 'de', 'el', 'en', 'eo', 'es', 'eu', 'fi', 'fr', 'gl', 'hr', 'hu', 'is', 'it', 'ja', 'la', 'lt', 'lv', 'm-', 'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'sh', 'sk', 'sl', 'sr', 'sv', 'tr', 'ua', 'he'}
+     * @psalm-return list{'be', 'bs', 'by', 'ca', 'cs', 'da', 'de', 'el', 'en', 'eo', 'es', 'et', 'eu', 'fi', 'fr', 'gl', 'hr', 'hu', 'is', 'it', 'ja', 'la', 'lt', 'lv', 'm-', 'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'sh', 'sk', 'sl', 'sr', 'sv', 'tr', 'ua', 'he'}
      */
     public function getLanguageCodes(): array
     {
@@ -21,6 +21,7 @@ trait LanguageCodesProviderTrait
             "en",
             "eo",
             "es",
+            "et",
             "eu",
             "fi",
             "fr",

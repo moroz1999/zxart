@@ -13,6 +13,7 @@ use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
+use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
 
 #[AllowMockObjectsWithoutExpectations]
@@ -54,7 +55,12 @@ class RadioServiceTest extends TestCase
         $transformer = $this->createMock(TunesTransformer::class);
         $transformer->method('toDto')->with($element)->willReturn($tuneDto);
 
-        $service = new RadioService($structureManager, $repository, $transformer);
+        $service = new RadioService(
+            $structureManager,
+            $repository,
+            $transformer,
+            $this->createMock(ProdCategoryTreeService::class),
+        );
 
         $this->assertSame($tuneDto, $service->getNextTune($criteria));
     }
@@ -69,6 +75,7 @@ class RadioServiceTest extends TestCase
             $this->createMock(structureManager::class),
             $repository,
             $this->createMock(TunesTransformer::class),
+            $this->createMock(ProdCategoryTreeService::class),
         );
 
         $this->expectException(RadioTuneNotFoundException::class);
@@ -92,7 +99,7 @@ class RadioServiceTest extends TestCase
             bestVotesLimit: null,
             maxPlays: null,
             minPartyPlace: null,
-            requireGame: null,
+            requireProd: null,
             hasParty: null,
             notVotedByUserId: null,
         );

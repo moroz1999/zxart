@@ -1,50 +1,36 @@
 # Comments
 
-## Business Logic
-- **Authorization**: Only authorized users can post comments.
-- **Targets**: Comments can be attached to various entities (prods, releases, pictures, tunes, authors, etc.) or other comments (replies).
-- **Editing and Deletion**:
-    - Only the author of the comment has permission to edit it, and only within the time window (`EDIT_LIMIT`, default 2 hours).
-    - Deletion rules differ by actor:
-        - **Author**: can delete only within `EDIT_LIMIT`.
-        - **Non-author with `delete` privilege** (moderator/admin): can always delete any comment, regardless of the time window.
-    - When a comment is deleted, all its replies are deleted automatically. This is handled by the CMS core (`deleteElementData`), which recursively traverses `structure` links.
-- **Author Information**:
-    - The `author` field in `commentElement` is deprecated. 
-    - Real author information is stored via a link of type `author` to a `user` element.
-    - If a user is anonymous, the deprecated `author` field might still contain a name.
-    - API responses may contain `author = null` when both linked user and legacy author name are missing; clients must handle this case and skip author rendering.
-- **Content**:
-    - Comment content is plain text. `CommentContentPurifier` runs HTMLPurifier with an empty allowed-element set over everything `CommentsService::addComment()` and `updateComment()` receive: tags are removed and their text kept, `script` and `style` go with their text, bare angle brackets become entities. A comment that is only markup is rejected as empty.
-        - This has to happen in the service: assigning `$commentElement->content` goes through `structureElement::__set()` → `textareaDataChunk::setExternalValue()`, which writes straight to storage. Only the form path (`importExternalData()` → `convertFormToStorage()`) escapes on its own.
-    - URLs in comment content are automatically converted into clickable HTML links on output, so submitted `<a>` tags would collide with that and are removed too.
-    - To get the original content without HTML decorations (e.g., for editing), use `$comment->getValue('content')` on the `commentElement`. This method retrieves the raw storage value from the underlying `dataChunk`.
-- **Translations**:
-    - The legacy multilingual model duplicates rows per language, but comments use the new column-based model.
-    - `content` stores the original comment text.
-    - `text_en`, `text_ru`, and `text_es` store AI-generated translations for English, Russian, and Spanish.
-    - `is_translated` marks whether all translation columns were filled.
-    - **Exception handling in translation pipeline**:
-        - `CommentTranslationAiService` throws `JsonException` (unparseable response) or `UnexpectedValueException` (response is valid JSON but missing required fields). Both are retried up to `MAX_ATTEMPTS` times.
-        - `CommentTranslationService::translateNextBatch()` catches only `JsonException | UnexpectedValueException` per comment — these are expected AI response failures and must not stop the batch. Any other `Throwable` (DB error, network error, etc.) propagates up.
-        - `Crontab::translateComments()` catches the broad `Throwable`, logs it via Monolog (`logger->error`) and the cron log, then returns — so one broken batch does not abort the whole cron run.
+Registered visitors discuss the archive by commenting. A comment hangs on a work,
+a person, a party or another entity of the site, or replies to another comment,
+so a discussion reads as a tree.
 
-## Technical Structure
-- **Linking**:
-    - All comments for an entity are linked via `commentTarget` links.
-    - Parent-child relationships in a tree are represented by the same `commentTarget` links (for root entities) and additionally by `structure` links for nested comments.
-- **Timestamps**:
-    - `dateCreated` and `dateModified` properties contain formatted date strings.
-    - For time calculations, use `getCreatedTimestamp()` and `getModifiedTimestamp()` which return UTC Unix timestamps.
-- **Permissions**:
-    - Upon creation, the author is automatically granted `delete`, `publicReceive` (save), and `publicForm` (edit form) privileges for that specific comment.
-    - Delete permission depends on who is deleting:
-        - **Own comment** (current user == comment author): deletion is allowed only within the time window (`EDIT_LIMIT`). After that, `canDelete = false`.
-        - **Someone else's comment** (current user != comment author): if the user has the `delete` privilege (e.g. a moderator/admin), deletion is always allowed regardless of the time window.
+## Who may change a comment
+- Only its author may edit it, and only for a short while after posting — two
+  hours by default. After that the text stands.
+- Its author may delete it inside the same window.
+- A moderator may delete any comment at any time.
+- Deleting a comment deletes the replies underneath it: a reply to nothing is
+  not worth keeping.
 
-## Angular Integration
-- Comments are rendered with `<app-comments-list element-id="..."></app-comments-list>` in legacy detail templates.
-- The Angular comments component requests data through `CommentsService` against `/comments-data/` (`ZxArt\Controllers\CommentsData`); legacy templates do not include `component.comments.tpl` for the same comments list.
-- The all-comments list is a standalone SPA route `/comments` (`pages/comments`), with the page number in the router query param.
-- REST responses expose `translated` for the requested `lang` query parameter. Angular displays `translated` when it is non-empty and falls back to `content`.
-- Links from latest comments to a product comment include the explicit `/tabs:discussion/` segment before the `#comment{id}` anchor.
+## What a comment contains
+A comment is plain text. Markup a visitor pastes in is stripped and only the
+words survive, so nobody can style, script or lay out a comment. A comment that
+consists of nothing but markup is refused as empty. Web addresses in the text
+become links by themselves, which is why hand-written links are removed too.
+
+## Author of a comment
+A comment names the account that wrote it. Comments carried over from before
+accounts existed may name their author as bare text instead, and a comment may
+end up with no author at all — such a comment is shown without one.
+
+## Translations
+Every comment is stored in the language it was written in and translated
+automatically into English, Russian and Spanish. A visitor reads the translation
+into their own interface language when one exists, and the original otherwise. A
+failed translation is retried and never blocks the rest.
+
+## Where comments are read
+Comments appear on the entity they belong to, and the whole site's comments are
+also listed on one page, newest first, page by page.
+
+How it is built: [../features/comments.md](../features/comments.md)

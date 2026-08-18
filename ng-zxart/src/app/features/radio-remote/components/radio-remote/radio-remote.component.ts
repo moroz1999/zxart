@@ -28,6 +28,7 @@ export class RadioRemoteComponent {
     {key: 'randomgood', label: 'player.preset.randomgood'},
     {key: 'games', label: 'player.preset.games'},
     {key: 'demoscene', label: 'player.preset.demoscene'},
+    {key: 'press', label: 'player.preset.press'},
     {key: 'lastyear', label: 'player.preset.lastyear'},
     {key: 'ay', label: 'player.preset.ay'},
     {key: 'beeper', label: 'player.preset.beeper'},

@@ -1,136 +1,73 @@
-## party (Demoparty, Competitions)
+## Party (Demoparty)
 
 ### Purpose
-Demoparty or competition - an event where competitions are held for creating graphics, music and programs for ZX Spectrum and other platforms. Central entity for organizing competition works.
+A demoparty: an event where competitions are held for graphics, music and
+programs. It is the entity that ties competition works together.
 
 ### Main Fields
-- **title** - party title
-- **abbreviation** - abbreviation/short name
-- **originalName** - original name (in original language)
-- **website** - party website
-- **image** - image ID (logo, poster)
+- **title** — the party's name
+- **abbreviation** — its short name
+- **originalName** — its name in its own language
+- **website** — the party's own site
+- **image** — its logo or poster
 
-### Hierarchy
-- **year** - year of event (parent element in structure)
-  - Party is always inside year element
-  - Retrieved through `getElementsFirstParent()`
+### Year
+A party belongs to the year it was held in. Parties are browsed by year.
 
 ### Location
-- **country** - country ID where event is held
-- **city** - city ID where event is held
-  - Implements `LocationProvider` interface
+A party records the country and city it was held in, and both link to the geo
+section filtered to that place.
 
-### Relations with Competition Works
+### Competitions
+A party holds competitions — compos — for graphics, music and software. A work
+that took part records which party it was, which compo it ran in, and what place
+it took.
 
-#### Competitions (Compos)
-Party contains various competitions (compos) where works participate:
+Within a compo, works are listed by place, best first. A work that took no place
+took part outside the competition and is listed after the ranked ones. A work
+with no compo named at all is grouped separately.
 
-##### Graphics competitions
-- **partyPicture** - link to pictures
-- Method `getPicturesCompos()` - returns pictures grouped by compo
-- Field **compo** in zxPicture defines competition name
-- Field **partyplace** defines place in competition
+Places are shown as medals: gold, silver and bronze for the first three, and a
+plain medal for every place after that. No place means no medal.
 
-##### Music competitions
-- **partyMusic** - link to music
-- Method `getTunesCompos()` - returns tracks grouped by compo
-- Field **compo** in zxMusic defines competition name
-- Field **partyplace** defines place in competition
-
-##### Software competitions
-- **partyProd** - link to productions (prods and releases)
-- Method `getProdsCompos()` - returns prods grouped by compo
-- Field **compo** in zxProd/zxRelease defines competition name
-- Field **partyplace** defines place in competition
-
-#### Sorting Works in Compo
-Works within each compo are sorted by:
-1. **partyplace** - place in competition (ascending)
-2. **id** - element ID (for stable sorting)
-
-Sort key format: `{partyplace}_{id}`
-
-#### Angular Party Place Display
-- Party place numbers are rendered through shared-lib `zx-party-place`.
-- `zx-party-place` uses the design system `zx-medal` primitive.
-- Places 1, 2, and 3 use gold, silver, and bronze medal variants.
-- Any place greater than 3 is still shown and uses the outlined medal variant.
-- Place 0 or null is not shown.
-
-#### Grouping by Compo
-If work has no compo specified, it goes to group `'none'`
+A compo may be called anything; its name is translated for display where a
+translation exists.
 
 ### Statistics
-- **picturesQuantity** - number of pictures at party
-- **tunesQuantity** - number of tracks at party
-- Recalculated automatically through `recalculate()`
-- The party author counter includes picture and tune link authors plus all production and release authorship roles. Author aliases are counted as their main author.
+A party counts the pictures and tunes released at it, and the people who
+released them. Someone credited under an alias counts as the person behind it,
+so nobody is counted twice.
 
 ### Press
-- **mentions** - press mentions (link `PRESS_PARTIES`, role parent)
+A party records the press articles that mention it.
 
-### Results Export
-Party provides methods for exporting results in various formats:
+### Results
+A party's results can be exported to post elsewhere: as forum markup, as plain
+text, or as HTML with the pictures and players embedded. All the works of a
+party can also be downloaded as one archive.
 
-#### Export Formats
-- **BB-code** (`getText('bb')`) - for forums
-  - Pictures as previews with links
-  - Music as list with MP3 links
-- **Text** (`getText('text')`) - plain text
-  - Full information about works
-- **HTML** (`getText('html')`) - HTML markup
-  - Embedded images and audio players
+### Browsing parties
+Parties are shown as cards or as a table listing title, year, country and city.
+The default listing is the most recent parties, newest first; picking a year
+lists that year's parties alphabetically. The chosen year is part of the address,
+so a year can be linked to and shared.
 
-#### Export Structure
-1. Grouping by compo
-2. Reverse order of works (from last to first)
-3. Compo name translations through translations:
-   - `label.compo_{compo}` - for graphics
-   - `musiccompo.compo_{compo}` - for music
+Registered visitors can add a party from the listing; adding it under a year
+files it there.
 
-### Archive Download
-- Method `getSaveUrl()` - URL for downloading all party works in ZIP
-- Format: `/zipItems/language:{lang}/filter:partyId={id}/structure:parties/`
-
-### Party Image
-- Method `getImageUrl(preset)` - party image URL
-- Default preset: `'partyFull'`
-- Fallback: `/images/zxprod_default.png`
-
-### Party Collections
-- Party collections use the shared responsive party-card list with five desktop, three tablet, and one mobile column.
-- The recent-parties homepage module and the routed `/parties` collection use the same list presentation while loading their data independently.
-- The routed party collection displays a page heading and an always-visible year link selector whose options match the party-year routes in the main menu.
-- Authenticated users can open the Angular party creation form from the collection heading. A year route creates under that year; the collection root uses the newest catalogue year.
-- Party creation and editing share the same Angular form component. Creation renders an empty form locally and submits it through `POST /formdata/`; editing loads persisted values through `GET /formdata/?id=`.
-- `GET /parties-data/` returns only the 20 most recent parties; `GET /parties-data/?year=YYYY` returns only the parties from that year.
-- The base `/parties` route shows the recent response; a year route requests and shows the selected year's response.
-- The year selector is ordered from oldest to newest. Parties within a selected year are ordered alphabetically; the recent collection retains newest-first order.
-- The base `/parties` route carries a section heading above the list; a year route drops it, since the selected year chip already names the listing.
-- The collection can be viewed as responsive cards or a table with party title, year, country and city. Country and city are links to their geo pages and are each omitted when the party has no such link; they are part of the collection payload only (search results carry the plain party shape).
-- Initial loading uses a view-specific skeleton that mirrors the active cards or table layout.
-
-### Party Page REST API
-The Angular party page (`zx-party-details`) loads data through dedicated endpoints; full schemas in `api/party-details.yaml`.
-- `GET /party-details/?id=` - core payload: header, location, compos metadata, editions, counters and tabs. The Angular party page builds its breadcrumb links from the clean `/parties` and `/parties/:year` routes. It also carries the page metadata (`metadata`), resolved by `PageMetadataService::getForPath('/party/<id>')` and applied by the page through `PageMetadataService.applyEntityMetadata()`; `partyElement` implements no metadata provider, so the title is the party title plus the site name and there is no description or OpenGraph data.
-- `GET /party-overview/?id=` - "best works" dashboard: the winning entry (lowest positive `partyplace`) of each compo, grouped by medium (`prods`/`pictures`/`tunes`) in full card shapes.
-- `GET /party-prods/?id=&compoType=` - one compo's prods (standard prods-list shape).
-- `GET /party-pictures/?id=&compoType=` - one compo's pictures (`PictureRestDto` shape).
-- `GET /party-music/?id=&compoType=` - one compo's tunes (`TuneRestDto` shape).
-- `GET /party-ratings/?id=&page=&perPage=` and `GET /party-comments/?id=&page=&perPage=&lang=` - paginated votes / comments on the party's works (activity tab).
-
-The heavy media (compos tab) is fetched lazily, one compo per request; Overview loads once. Compo names are resolved per medium by `PartyCompoNameResolver` (sections `party`/`zxPicture`/`musiccompo`).
-
-Party edit/delete and upload actions are rendered inside Angular through `zx-party-editing-controls`, using the shared `zx-editing-controls` popover. The legacy `party.all.tpl` only mounts `zx-party-details`; it must not render separate editing buttons.
+### The party page
+A party page opens on the best works of the party — the winner of every compo —
+and then offers each compo in full, plus the votes and comments its works
+received.
 
 ### Constraints and Rules
-1. Party must always be child element of year
-2. Each work can participate in only one party
-3. Work can participate in one compo at party (compo field is string, not array)
-4. partyplace defines place in competition (1 = first place, 2 = second, etc.)
-5. If partyplace = 0 or null, work participated outside competition
-6. picturesQuantity and tunesQuantity are recalculated automatically when links change
-7. country is checked automatically through `checkCountry()`
-8. Compo can have any name (string), translations through translations
-9. Works in compo are sorted by place, then by ID
-10. Party can have no works (new or planned party)
+1. A party always belongs to a year.
+2. A work takes part in one party only.
+3. A work runs in one compo of that party, not several.
+4. Place 1 is first place; no place means the work ran outside the competition.
+5. The picture and tune counts are kept up to date as works are linked and
+   unlinked.
+6. A compo name is free text, translated for display where a translation exists.
+7. A party may have no works at all — it may be new or still to come.
+
+How it is built: [../features/party.md](../features/party.md)

@@ -10,6 +10,7 @@ use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\MusicCollectionFilter;
 use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
+use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
 
 readonly class MusicListService
@@ -20,6 +21,7 @@ readonly class MusicListService
         private structureManager $structureManager,
         private TunesTransformer $tunesTransformer,
         private TunesRepository $tunesRepository,
+        private ProdCategoryTreeService $prodCategoryTreeService,
     ) {
     }
 
@@ -77,12 +79,27 @@ readonly class MusicListService
         int $start,
         int $limit,
     ): array {
+        $categoryIds = $this->resolveProdCategoryIds($filter);
+
         return [
-            'total' => $this->tunesRepository->countCollection($filter),
+            'total' => $this->tunesRepository->countCollection($filter, $categoryIds),
             'items' => $this->loadTunes(
-                $this->tunesRepository->findPagedCollectionIds($filter, $sorting, $start, $limit)
+                $this->tunesRepository->findPagedCollectionIds($filter, $categoryIds, $sorting, $start, $limit)
             ),
         ];
+    }
+
+    /**
+     * The whole category subtree a production filter accepts: a tune of a
+     * megademo belongs under "Demoscene" just as much as one of a plain demo.
+     *
+     * @return int[]
+     */
+    private function resolveProdCategoryIds(?MusicCollectionFilter $filter): array
+    {
+        $category = $filter?->prodCategory();
+
+        return $category === null ? [] : $this->prodCategoryTreeService->getTreeIds($category->value);
     }
 
     /**

@@ -1,23 +1,24 @@
 ## Voting
 
 ### Scope
-Voting is shared by ZX art items and comments. Public AJAX requests use the CMS `vote` action, so action privileges are checked by `structureManager` before voting logic runs.
+Visitors rate the works of the archive — pictures, tunes and productions — and
+vote on comments. Both are open to registered visitors only.
 
-### ZX Art Items
-- `votes` stores the weighted average rating.
-- `votesAmount` stores the number of accepted votes.
-- Direct voting is rejected when `isVotingDenied()` returns true.
-- Rating calculation and persistence belong to `ZxArt\Voting\VotingService`; structure elements only expose data and compatibility methods.
+### Works
+A work carries its average rating and the number of votes behind it. The average
+is weighted rather than plain, so a work with three enthusiastic votes does not
+outrank one with two hundred.
+
+A work whose voting has been closed accepts no further votes.
 
 ### Comments
-- Comments use `1` and `-1` votes.
-- Comment vote recalculation stays comment-specific.
+A comment is voted up or down — one step in either direction — and carries the
+sum.
 
-### Vote Histories
-Every vote list — recent votes, the votes on an author's, group's or party's
-works, and the votes on a single element — carries the voter as a
-`CommentAuthorDto`. Its `url` is the SPA page of the author the user is
-connected to, resolved through `EntityUrlResolver::urlForUser()`, and `null`
-when the user has no author, so the name renders as plain text.
-`userElement::getUrl()` must not be used for it: it returns the author's legacy
-URL, which does not resolve as an SPA route.
+### Vote histories
+Every list of votes names the voter: the recent votes of the whole site, the
+votes cast on one author's, group's or party's works, and the votes on a single
+work. A voter who has an author page of their own is linked to it; a voter who
+has none is shown as plain text.
+
+How it is built: [../features/voting.md](../features/voting.md)

@@ -15,8 +15,8 @@ const FILTER_LABEL_PREFIX = 'top-music.filter';
 
 /**
  * Subsets of the top music, named by the trailing route segment the chip links
- * to. The backend resolves each slug to its tag, its format groups or its game
- * link (`MusicCollectionFilter`); `null` is the whole collection.
+ * to. The backend resolves each slug to its tag, its format groups or the
+ * category of the production it belongs to; `null` is the whole collection.
  */
 const TOP_MUSIC_FILTERS: readonly FilterSlug[] = [
   null,
@@ -29,6 +29,8 @@ const TOP_MUSIC_FILTERS: readonly FilterSlug[] = [
   'turbosound',
   'fm',
   'games',
+  'demos',
+  'press',
 ];
 
 @Component({

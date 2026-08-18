@@ -17,13 +17,13 @@ Detailed logic and structure: [domain/tune.md](domain/tune.md)
 Music player and radio behavior: [domain/music-player-radio.md](domain/music-player-radio.md)
 
 ### prod
-Software production entity. Abstract product that can have multiple releases.
+A piece of software. The abstract work, which can have many releases.
 Contains metadata, categories, legal status, links to compilations/series, party participation.
 Detailed logic and structure: [domain/prod.md](domain/prod.md)
 
 ### release
-Unique release (version) of prod. Contains actual files and technical requirements.
-Release type, hardware requirements, format. Always belongs to parent prod.
+A published version of a production, holding its actual files and requirements.
+Release type, hardware, format. Always belongs to its production.
 Detailed logic and structure: [domain/release.md](domain/release.md)
 
 ### hardware
@@ -33,22 +33,22 @@ Includes the rules that derive hardware from a release's file format.
 Detailed logic and structure: [domain/hardware.md](domain/hardware.md)
 
 ### press article
-One article of a disk magazine. Always belongs to the prod of its issue.
+One article of a disk magazine. Always belongs to the issue it was published in.
 Links the authors, people, groups, software, graphics, music and parties it mentions.
 Detailed logic and structure: [domain/press.md](domain/press.md)
 
 ### party
-Demoparty or competition event. Contains competitions (compos) for pictures, music, and prods.
+A demoparty. Holds competitions for graphics, music and software.
 Location, year, website. Organizes works by compo and place.
 Detailed logic and structure: [domain/party.md](domain/party.md)
 
 ### category
-Category of zxProds. Classifies software by type: games, demos, utilities, applications.
+Classifies productions by type: games, demos, utilities, applications.
 Special categories for compilations. Supports hierarchy and localization.
 Detailed logic and structure: [domain/category.md](domain/category.md)
 
 ### comment
-User comment. Can be left to one of zx art items.
+A visitor's comment on a work or another entity, or a reply to another comment.
 Detailed logic and structure: [domain/comments.md](domain/comments.md)
 
 ### author
@@ -72,7 +72,7 @@ Detailed logic and structure: [domain/authors-groups.md](domain/authors-groups.m
 ## Features
 
 ### firstpage (main page)
-Configurable modular main page. Users can arrange, enable/disable, and configure content modules.
+A main page each visitor arranges themselves from content blocks.
 Detailed logic and structure: [domain/firstpage.md](domain/firstpage.md)
 
 ### voting
@@ -80,7 +80,7 @@ Shared voting for ZX art items and comments.
 Detailed logic and structure: [domain/voting.md](domain/voting.md)
 
 ### search
-Public full search and header quick search for ZX Art entities.
+Full search across the archive, quick search in the header, and the detailed graphics and music searches.
 Detailed logic and structure: [domain/search.md](domain/search.md)
 
 ### feedback form
@@ -100,33 +100,26 @@ Tag clouds and selected-tag browsers for graphics, music, and software.
 Detailed logic and structure: [domain/tags.md](domain/tags.md)
 
 ### static content pages
-Non-editable About/FAQ/support/API pages served as bundled HTML.
+The About section's editorial pages: introduction, FAQ, support and API documentation.
 Detailed logic and structure: [domain/content.md](domain/content.md)
 
-### interface language & auto-login
-Frontend-owned interface language and route-guard auto-login for the SPA.
-Detailed logic and structure: [domain/language-auth.md](domain/language-auth.md)
-
-### entity URLs in API responses
-Clean SPA routes as the only page URLs services emit, and the resolver that produces them.
-Detailed logic and structure: [domain/entity-urls.md](domain/entity-urls.md)
-
-### public page metadata
-Server and Angular ownership of crawler metadata, redirects, HTTP 404 responses, and analytics page views.
-Detailed logic and structure: [domain/page-metadata.md](domain/page-metadata.md)
+### interface language
+Every visitor reads the site in the language they picked, and the choice follows
+their account across devices.
+How it is built: [features/language-auth.md](features/language-auth.md)
 
 ### playlists
-Personal collections of works owned by one user, managed from `/playlists`.
+Personal collections of works owned by one visitor.
 Detailed logic and structure: [domain/playlists.md](domain/playlists.md)
 
 ### entity deletion
-Delete button on every entity edit form: `publicDelete` privilege, confirmation dialog, no delete route.
+Deleting an entity from its own edit form, behind a confirmation, and only for those allowed to.
 Detailed logic and structure: [domain/entity-deletion.md](domain/entity-deletion.md)
 
 ### entity descriptions
-Storage, API, and frontend rendering rules for picture, tune, prod, and release descriptions.
+How the descriptions of works are written and shown, including fixed-width scene text.
 Detailed logic and structure: [domain/descriptions.md](domain/descriptions.md)
 
 ### social posting
-Telegram announcements of newly created pictures, tunes, prods and releases.
+Telegram announcements of newly added pictures, tunes, productions and releases.
 Detailed logic and structure: [domain/social-posting.md](domain/social-posting.md)

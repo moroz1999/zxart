@@ -111,6 +111,12 @@ class zxProdCategoryElement extends structureElement implements
         return $rootCategory;
     }
 
+    /**
+     * Collects this category's id and every id beneath it.
+     *
+     * @param int[] $ids
+     * @param-out int[] $ids
+     */
     public function getSubCategoriesTreeIds(array &$ids = []): void
     {
         $ids[] = $this->getId();

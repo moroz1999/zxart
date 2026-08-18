@@ -52,7 +52,7 @@ class zxMusicElement extends ZxArtItem implements
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
         $moduleStructure['compo'] = 'text';
-        $moduleStructure['game'] = 'text';
+        $moduleStructure['prod'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['type'] = 'text';
         $moduleStructure['year'] = 'naturalNumber';

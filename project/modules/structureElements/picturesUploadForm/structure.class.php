@@ -31,7 +31,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['party'] = 'text';
         $moduleStructure['partyplace'] = 'text';
         $moduleStructure['compo'] = 'text';
-        $moduleStructure['game'] = 'text';
+        $moduleStructure['prod'] = 'text';
         $moduleStructure['author'] = 'numbersArray';
         $moduleStructure['originalAuthor'] = 'numbersArray';
         $moduleStructure['type'] = 'text';

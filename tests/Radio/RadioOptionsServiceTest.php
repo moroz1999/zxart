@@ -46,7 +46,7 @@ class RadioOptionsServiceTest extends TestCase
                 if ($id === CategoryIds::GAMES->value) {
                     return $gamesCategory;
                 }
-                if ($id === CategoryIds::DEMOS->value) {
+                if ($id === CategoryIds::DEMOSCENE->value) {
                     return $demosCategory;
                 }
                 return null;
@@ -70,7 +70,7 @@ class RadioOptionsServiceTest extends TestCase
                         && $value['categories'] === [
                             ['id' => CategoryIds::PRESS->value, 'title' => 'Press'],
                             ['id' => CategoryIds::GAMES->value, 'title' => 'Games'],
-                            ['id' => CategoryIds::DEMOS->value, 'title' => 'Demoscene'],
+                            ['id' => CategoryIds::DEMOSCENE->value, 'title' => 'Demoscene'],
                         ]
                         && $value['partyOptions'] === ['any', 'yes', 'no'];
                 }),
@@ -88,7 +88,7 @@ class RadioOptionsServiceTest extends TestCase
             [
                 ['id' => CategoryIds::PRESS->value, 'title' => 'Press'],
                 ['id' => CategoryIds::GAMES->value, 'title' => 'Games'],
-                ['id' => CategoryIds::DEMOS->value, 'title' => 'Demoscene'],
+                ['id' => CategoryIds::DEMOSCENE->value, 'title' => 'Demoscene'],
             ],
             $options['categories']
         );

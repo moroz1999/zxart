@@ -262,7 +262,7 @@ All new functionality in Angular must follow Feature Sliced Design principles an
 
 ### Documentation Scope
 
-General Angular documentation must contain domain-neutral architecture rules only. Entity-specific behavior, feature-specific REST contracts, and business rules belong in `docs/domain/*.md` or a narrowly scoped feature document.
+General Angular documentation must contain domain-neutral architecture rules only. Entity-specific behavior and feature-specific REST contracts belong in `docs/features/*.md`; the business rules behind them belong in `docs/domain/*.md`, which never names a class, an endpoint or a file.
 
 When adding a reusable Angular pattern, document the generic rule here and place concrete entity examples in the relevant domain document.
 
@@ -272,7 +272,7 @@ The SPA owns the interface language (`LanguageService`, `shared/services/`). The
 selected language lives in localStorage; `languageInterceptor`
 (`shared/interceptors/`) sends it to every same-origin request as an `X-Language`
 header so backend responses are localized. Never read the language from the URL or
-the backend session. Full behavior: [domain/language-auth.md](domain/language-auth.md).
+the backend session. Full behavior: [features/language-auth.md](features/language-auth.md).
 
 ### Internal Links
 
@@ -281,7 +281,7 @@ internal routes in the template from entity identifiers where the response
 carries them, for example `<a [routerLink]="['/prod', prod.id]">`. Where a
 response carries a URL field instead, it is always a clean SPA route from
 `EntityUrlResolver` and can be bound to `routerLink` as it is — see
-[domain/entity-urls.md](domain/entity-urls.md). Keep plain `[href]` for external
+[features/entity-urls.md](features/entity-urls.md). Keep plain `[href]` for external
 and download URLs. Do not add global click interception.
 
 ### Destructive Actions

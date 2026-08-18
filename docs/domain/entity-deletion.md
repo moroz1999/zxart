@@ -1,46 +1,19 @@
 # Entity deletion
 
-Deleting a whole entity (picture, tune, prod, release, author, author alias,
-group, group alias, party, press article) is available from that entity's edit
-form only. There is no delete route and no delete page: the form header carries
-the button, a confirmation dialog is the single step in between, and the SPA
-navigates away once the element is gone.
+Any entity that can be edited on the site can also be deleted from the site:
+pictures, tunes, productions, releases, authors and their aliases, groups and
+their aliases, parties and press articles.
 
-## Backend
+Deletion is offered from the entity's edit form and nowhere else. There is no
+page of its own for it and no address that deletes something when opened. A
+visitor who may not delete an entity is not shown the possibility at all.
 
-The `publicDelete` action is registered on every element type whose form the SPA
-serves. Its implementation is shared (`shared/action.publicDelete.class.php`) and
-answers in two ways:
+Confirming is a single deliberate step, worded as the destructive action it is.
+Once the entity is gone the visitor lands somewhere that still exists: the
+section the entity belonged to for a top-level entity, and the parent for a
+nested one — a release returns to its production, an author alias to its author.
 
-- on `/ajax/` (JSON renderer) it returns `{"success": true}` and leaves the
-  destination to the client;
-- on a legacy full-page request it redirects to the parent element, whose URL is
-  resolved *before* the element is deleted.
+Whoever creates an entity may delete it, and a visitor who owns an author page
+may delete that author's works.
 
-The privilege is `publicDelete`, checked by `structureManager::performAction()`
-like every other action. An unprivileged request never executes and therefore
-never carries `success`, which the SPA reads as a failure. `publicAdd` grants the
-privilege to the creating user on the elements that support public creation, and
-a user linked to an author gets it for that author's works.
-
-## Frontend
-
-`ZxDeleteEntityButtonComponent` (`shared/ui/zx-delete-entity-button/`) is the
-only entry point. It:
-
-- asks `/element-privileges/` for `publicDelete` on the element and renders
-  nothing when the privilege is missing, the user is anonymous, or the form is
-  in creation/batch mode (no element id yet);
-- opens a danger confirmation dialog through `ConfirmDialogService`;
-- posts the action through `EntityDeleteApiService`
-  (`shared/services/entity-delete-api.service.ts`), which resolves to `false`
-  for anything other than `{"success": true}` and then shows a failure dialog;
-- navigates to the `redirectUrl` the page supplies.
-
-Every edit page projects the button into the page header next to its `<h1>`
-(`zxPageHeader`), so it sits in the top-right corner on the heading line. The
-page supplies an entity-specific visible action label for the button and
-confirmation dialog and owns the destination: collection routes for top-level entities
-(`/pictures`, `/music`, `/prods`, `/authors`, `/groups`, `/parties`), the parent
-entity for nested ones (a release returns to its prod, an author alias to its
-author).
+How it is built: [../features/entity-deletion.md](../features/entity-deletion.md)

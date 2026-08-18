@@ -32,7 +32,7 @@ readonly class RadioCriteriaDto
         public ?int $bestVotesLimit = null,
         public ?int $maxPlays = null,
         public ?int $minPartyPlace = null,
-        public ?bool $requireGame = null,
+        public ?bool $requireProd = null,
         public ?bool $hasParty = null,
         public ?int $notVotedByUserId = null,
     ) {

@@ -21,9 +21,9 @@ class publicReceiveZxMusic extends structureElementAction
             }
 
             if (trim($structureElement->title) == '') {
-                $game = $structureElement->getReleaseElement();
-                if ($game !== null) {
-                    $structureElement->title = $game->title;
+                $prod = $structureElement->getReleaseElement();
+                if ($prod !== null) {
+                    $structureElement->title = $prod->title;
                 } else {
                     if (!is_null($structureElement->getDataChunk("file")->originalName)) {
                         $info = pathinfo($structureElement->getDataChunk("file")->originalName);
@@ -74,7 +74,7 @@ class publicReceiveZxMusic extends structureElementAction
     {
         $expectedFields = [
             'title',
-            'game',
+            'prod',
             'compo',
             'author',
             'year',

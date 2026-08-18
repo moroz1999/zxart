@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Tunes;
 
+use ZxArt\ZxProdCategories\CategoryIds;
+
 /**
  * Named subsets of the music collection offered by the top-music page. The case
  * value is the URL segment the SPA route carries, so a tag element id never
@@ -11,7 +13,7 @@ namespace ZxArt\Tunes;
  *
  * Sound-type filters name the format groups a tune can be written for
  * (`MusicSettingsProvider::getFormatGroups()`); the remaining ones narrow by
- * tag or by the presence of a linked game.
+ * tag or by the category of the production the tune belongs to.
  */
 enum MusicCollectionFilter: string
 {
@@ -26,6 +28,8 @@ enum MusicCollectionFilter: string
     case TurboSound = 'turbosound';
     case Fm = 'fm';
     case Games = 'games';
+    case Demos = 'demos';
+    case Press = 'press';
 
     /** Tag element the tunes must carry, or null when the filter is not tag-based. */
     public function tagId(): ?int
@@ -53,13 +57,21 @@ enum MusicCollectionFilter: string
             self::SamCoupe => ['saa'],
             self::TurboSound => ['ts', 'tsfm'],
             self::Fm => ['fm', 'tsfm'],
-            self::Cover, self::Original, self::Games => [],
+            self::Cover, self::Original, self::Games, self::Demos, self::Press => [],
         };
     }
 
-    /** Whether the filter keeps only tunes written for a game. */
-    public function gameOnly(): bool
+    /**
+     * Category the tune's production must belong to, or null when the filter
+     * does not look at the production. The whole subtree of the category counts.
+     */
+    public function prodCategory(): ?CategoryIds
     {
-        return $this === self::Games;
+        return match ($this) {
+            self::Games => CategoryIds::GAMES,
+            self::Demos => CategoryIds::DEMOSCENE,
+            self::Press => CategoryIds::PRESS,
+            default => null,
+        };
     }
 }

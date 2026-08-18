@@ -718,7 +718,9 @@
       "samcoupe": "SAM Coupé",
       "turbosound": "TurboSound AY",
       "fm": "FM",
-      "games": "Juegos"
+      "games": "Juegos",
+      "demos": "Demoscene",
+      "press": "Prensa"
     }
   },
   "firstpage": {
@@ -853,7 +855,8 @@
       "ay": "AY",
       "beeper": "Beeper",
       "exotic": "Exótico",
-      "underground": "Underground"
+      "underground": "Underground",
+      "press": "Prensa"
     },
     "repeat": {
       "off": "Repetir apagado",
@@ -2036,6 +2039,7 @@
     "en": "Inglés",
     "eo": "Esperanto",
     "es": "Español",
+    "et": "Estonio",
     "eu": "Vasco",
     "fi": "Finlandés",
     "fr": "Francés",

@@ -49,7 +49,7 @@ readonly class PictureListService
 
     /**
      * Returns related pictures for a picture element.
-     * If the picture belongs to a game (release), returns best pictures from that game.
+     * If the picture belongs to a production or release, returns best pictures from it.
      * Otherwise returns best pictures from the same authors.
      *
      * @return array{type: string, items: PictureDto[]}
@@ -205,7 +205,7 @@ readonly class PictureListService
     }
 
     /**
-     * Best pictures from the same game/release (excluding the picture itself).
+     * Best pictures from the same production or release (excluding the picture itself).
      *
      * @return PictureDto[]
      */

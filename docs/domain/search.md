@@ -1,46 +1,37 @@
 ## Search
 
-Public full search is served by `ZxArt\Controllers\Searchresults` at `/searchresults/`.
-The routed Angular entrypoint is `/search`; its `phrase`, `types`, and `page` state lives in query parameters.
+### Full search
+One search covers the whole archive. The visitor types a phrase, optionally
+restricts it to certain kinds of entity, and pages through the results. The
+phrase, the kinds and the page are part of the address, so a search can be
+linked to and shared.
 
-Angular header quick search uses the same REST endpoint with `mode=quick`. Quick mode uses title-oriented instant search filters and does not search full content.
+The quick search in the site header answers the same question while typing, but
+looks at titles only rather than at full content.
 
-The legacy `/ajaxSearch/` application is still used by admin and non-Angular autocomplete widgets, and by the Angular tag/country/city autocompletes (`types:tag|country|city`, `mode:public`).
+### Detailed search
+Graphics and music have a search of their own, because they are looked for by
+properties nothing else has.
 
-## Detailed search
+Graphics can be narrowed by title, year range, rating, competition place, screen
+format, and by whether the picture was made live at a party, is inspired by
+another work, is one of a series, or belongs to a production. Tags can be
+required or excluded, and authors can be narrowed by the country and city they
+live in. The results are either the pictures themselves or the authors who made
+them, and either can be ordered and paged. Every set of results can also be
+fetched through the public export API or downloaded as one archive.
 
-The graphics and music branches of the legacy `detailedSearch` element are replaced by full-AJAX Angular pages:
+Music is searched the same way, with the sound group and file format standing in
+for the screen format, and the title search also looking inside the track file's
+own title.
 
-- Graphics: `zx-picture-search` (`features/picture-search/`)
-- Music: `zx-music-search` (`features/music-search/`)
+Every filter is part of the address, so a search can be linked to and shared.
 
-- Standalone SPA entrypoint: `/pictures/search` (`pages/picture-search`), mounting `zx-picture-search` with `manageUrl=false`.
-- REST: `GET /picture-search/` (`ZxArt\Controllers\PictureSearch` → `ZxArt\PictureSearch\PictureSearchService`). Spec: `api/picture-search.yaml`.
-- `PictureSearchService` builds the query in `ZxArt\PictureSearch\Repositories\PictureSearchRepository` — SQL directly against `module_zxpicture`, `module_author` and `structure_links` (author-location via the `authorPicture` link, tags via `tagsManager`) — and applies ordering, pagination and element loading through `PicturesManager` (`resultsType=author` runs the authors query through `AuthorsService`, narrowed to `displayInGraphics` authors of matching pictures).
-- The response includes legacy-compatible `apiUrl` (`/api/...`) and `zipUrl` (`/zipItems/...`) links built from the request filters.
-- **SPA URL scheme**: filters live in the router query params (`titleWord`, `startYear`, `endYear`, `rating`, `partyPlace`, `pictureType`, `realtime`, `inspiration`, `stages`, `fromGame`, `tagsInclude`, `tagsExclude`, `authorCountry`, `authorCity`, `resultsType`, `sortParameter`, `sortOrder`, `page`); only non-default values are emitted (`models/picture-search-query-params.ts`). `fromGame=1` restricts to pictures that belong to a game (`module_zxpicture.game`); the graphics "games" menu links here. When embedded in a legacy page (`manageUrl=true`) the component still parses/pushes the legacy `name:value/` path segments (`models/picture-search-url.ts`).
-- `action=locations&ids=...` resolves country/city element titles for restoring filter chips from URL ids.
-- Picture format codes are duplicated in `features/picture-search/models/zx-picture-types.ts` and must stay in sync with the backend `ZxPictureTypesProvider` trait; labels live in the `picture-search.format.*` i18n keys.
-- Author-result queries use only the current-language `module_author` row, so totals and pagination count each logical author once.
-- Result skeletons are shown only during the initial request; subsequent pagination keeps the current results visible while pagination is locked.
+### File search
+A visitor who has a file but does not know what is in it can upload it and get
+back the releases its contents belong to. The file is unpacked as deep as it
+goes — archives, disk images and tapes — and every item inside is identified.
+Items nothing matches are marked as not found and can be listed on their own.
+There is no search by typed file name.
 
-Music search uses the same principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService` → `ZxArt\MusicSearch\Repositories\MusicSearchRepository`). Standalone entrypoint `/music/search` (`pages/music-search`). Spec: `api/music-search.yaml`.
-
-- Music-only filters: `formatGroup`, `format`, `realtime`; title search also matches `internalTitle`.
-- Music search runs against `module_zxmusic` and loads elements through `TunesManager`; author location uses the `authorMusic` link and `displayInMusic`.
-- The response includes distinct `formats` for the music format select.
-
-## File search
-
-Standalone SPA route `/file-search` (`pages/file-search` → `zx-parser`): the visitor
-uploads a file and gets back the releases the archive's contents belong to. There is no
-search by typed file name or md5.
-
-- Endpoint: `POST /parser/` with a multipart `file` field (`parserApplication`,
-  `project/modules/applications/parser.class.php`). Accepts up to 50 MB.
-- `ZxParsingManager::parseFileStructure()` walks the upload recursively (archives, disk
-  images, tapes) and yields a tree of items, each with its own md5.
-- Every item's md5 is looked up in `files_registry`; matched elements are returned as
-  `releases` with title, year, authors and clean SPA URLs from `EntityUrlResolver`.
-- Items with neither matches nor children are flagged `notFound`, which drives the
-  "not found only" filter in the UI.
+How it is built: [../features/search.md](../features/search.md)

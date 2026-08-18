@@ -10,8 +10,8 @@ use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\Repositories\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
+use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
-use zxProdCategoryElement;
 
 readonly class RadioService
 {
@@ -19,6 +19,7 @@ readonly class RadioService
         private structureManager $structureManager,
         private TunesRepository $tunesRepository,
         private TunesTransformer $tunesTransformer,
+        private ProdCategoryTreeService $prodCategoryTreeService,
     ) {
     }
 
@@ -47,19 +48,7 @@ readonly class RadioService
             return $criteria;
         }
 
-        $expanded = [];
-        foreach ($criteria->prodCategoriesInclude as $categoryId) {
-            $element = $this->structureManager->getElementById($categoryId);
-            if ($element instanceof zxProdCategoryElement) {
-                $ids = [];
-                $element->getSubCategoriesTreeIds($ids);
-                $expanded = array_merge($expanded, $ids);
-                continue;
-            }
-            $expanded[] = $categoryId;
-        }
-
-        $expanded = array_values(array_unique($expanded));
+        $expanded = $this->prodCategoryTreeService->expandAll($criteria->prodCategoriesInclude);
 
         return new RadioCriteriaDto(
             minRating: $criteria->minRating,
@@ -76,7 +65,7 @@ readonly class RadioService
             bestVotesLimit: $criteria->bestVotesLimit,
             maxPlays: $criteria->maxPlays,
             minPartyPlace: $criteria->minPartyPlace,
-            requireGame: $criteria->requireGame,
+            requireProd: $criteria->requireProd,
             hasParty: $criteria->hasParty,
             notVotedByUserId: $criteria->notVotedByUserId,
         );

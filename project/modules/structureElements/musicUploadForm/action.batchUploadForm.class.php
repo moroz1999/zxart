@@ -15,7 +15,7 @@ class batchUploadFormMusicUploadForm extends structureElementAction
                 } elseif ($parentElement->structureType === 'party') {
                     $structureElement->party = $parentElement->getId();
                 } elseif ($parentElement->structureType === 'zxProd' || $parentElement->structureType === 'zxRelease') {
-                    $structureElement->game = $parentElement->getId();
+                    $structureElement->prod = $parentElement->getId();
                 }
             }
         }

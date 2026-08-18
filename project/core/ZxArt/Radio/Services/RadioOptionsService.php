@@ -88,7 +88,7 @@ readonly class RadioOptionsService
         $categoryIds = [
             CategoryIds::PRESS->value,
             CategoryIds::GAMES->value,
-            CategoryIds::DEMOS->value,
+            CategoryIds::DEMOSCENE->value,
         ];
 
         foreach ($categoryIds as $categoryId) {

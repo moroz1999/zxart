@@ -45,7 +45,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->year = $structureElement->year;
                     $zxMusicElement->file = $zxMusicElement->getId();
                     $zxMusicElement->fileName = $originalFileName;
-                    $zxMusicElement->game = $structureElement->game;
+                    $zxMusicElement->prod = $structureElement->prod;
                     $zxMusicElement->party = $structureElement->party;
                     $zxMusicElement->partyplace = $structureElement->partyplace;
                     $zxMusicElement->compo = $structureElement->compo;
@@ -120,7 +120,7 @@ class batchUploadMusicUploadForm extends structureElementAction
         $expectedFields = [
             'musicTitle',
             'music',
-            'game',
+            'prod',
             'compo',
             'author',
             'year',

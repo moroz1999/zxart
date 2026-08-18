@@ -99,7 +99,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
     frequency: this.fb.nonNullable.control<string>(''),
     intFrequency: this.fb.nonNullable.control<string>(''),
     year: this.fb.nonNullable.control(''),
-    game: this.fb.control<EntityRef | null>(null),
+    prod: this.fb.control<EntityRef | null>(null),
     tagsText: this.fb.nonNullable.control(''),
     description: this.fb.nonNullable.control(''),
     denyPlaying: this.fb.nonNullable.control(false),
@@ -159,8 +159,8 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
       this.returnUrl = `/tune/${this.elementId}`;
     }
     const formData$ = this.batchUpload
-      ? this.formData.loadCreate('musicBatch', ['party', 'game'], undefined, this.parentId)
-      : this.formData.load(this.elementId, ['party', 'game']);
+      ? this.formData.loadCreate('musicBatch', ['party', 'prod'], undefined, this.parentId)
+      : this.formData.load(this.elementId, ['party', 'prod']);
     this.subscriptions.add(
       formData$.subscribe({
         next: data => {
@@ -183,7 +183,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
             frequency: String(data.fields['frequency'] ?? ''),
             intFrequency: String(data.fields['intFrequency'] ?? ''),
             year: String(data.fields['year'] ?? ''),
-            game: data.refs['game'] ?? null,
+            prod: data.refs['prod'] ?? null,
             tagsText: String(data.fields['tagsText'] ?? ''),
             description: String(data.fields['description'] ?? ''),
             denyPlaying: !!Number(data.fields['denyPlaying']),
@@ -275,7 +275,7 @@ export class TuneEditPageComponent implements OnInit, OnDestroy {
       frequency: value.frequency,
       intFrequency: value.intFrequency,
       year: value.year,
-      game: value.game ? String(value.game.id) : '',
+      prod: value.prod ? String(value.prod.id) : '',
       tagsText: value.tagsText,
       description: value.description,
       denyVoting: value.denyVoting ? '1' : '',

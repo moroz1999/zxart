@@ -3,6 +3,7 @@ export type RadioPreset =
   'randomgood' |
   'games' |
   'demoscene' |
+  'press' |
   'lastyear' |
   'ay' |
   'beeper' |

@@ -16,6 +16,7 @@ You MUST read the MD files linked in this document which are relevant to the cur
 - Documentation must describe only the CURRENT state of the code. Do NOT mention services, classes, practices, or techniques that were removed or replaced, and do NOT describe the prior state of refactored code (no "replaces X", "formerly Y", "no longer uses Z", "previously did W"). Git history is the record of the past. (Referencing currently-existing legacy code is fine — the ban is on describing what no longer exists.)
 - Any new knowledge about functionality must be added to separate sub-documents within `domain.md`.
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
+- **Domain documentation (`docs/domain.md` and `docs/domain/*.md`) describes WHAT the site does and WHY, never HOW it is built.** It is written for someone who needs to understand the subject area, not the codebase. Forbidden there: class, service, enum, trait, method, component and file names; namespaces and paths; endpoint URLs, query parameters and response field lists; SQL, table and column names; framework and library names. Name the entities, their fields as the user meets them, the rules they obey and the behaviour visitors see. Implementation belongs in `php.md`, `angular.md`, `cms.md` or a feature document — and the domain document does not link to the code, because code moves and the domain does not.
 - ALWAYS add newly created files to GIT immediately after creation.
 - When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.
 - ALWAYS use MCP tools (JetBrains IDE) when available for code search, file reading, navigation, and locating files, methods, and classes instead of Grep/Glob/Read/Bash.
@@ -29,7 +30,8 @@ You MUST read the MD files linked in this document which are relevant to the cur
 Read ONLY the documents relevant to your task.
 
 ### Core Documentation
-- **[docs/domain.md](docs/domain.md)** - Project domain and entities
+- **[docs/domain.md](docs/domain.md)** - Project domain and entities: WHAT the site does, never HOW
+- **[docs/features/](docs/features/)** - How individual features are built: the implementation behind a domain document
 - **[docs/local-http.md](docs/local-http.md)** - How to reach the local site over HTTP to verify a change
 
 ### Backend (PHP)

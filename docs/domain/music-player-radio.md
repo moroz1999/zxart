@@ -1,59 +1,35 @@
-﻿## Music Player and Radio
+# Music player and radio
 
-### Overview
-The online music player provides playback for tune lists and a radio mode driven by criteria.
-Radio presets are identified by a `radiotype` key and display labels stored in the database.
+## Player
+Tunes play in the browser. A list of tunes anywhere on the site — an author's
+music, a party's compo, a playlist, a search result — becomes the playlist, and
+playback continues while the visitor keeps browsing.
 
-### Radio Filters UI
-- Countries and sound format groups use the `zx-filter-picker` summary control with a popover list.
-- Selection updates criteria immediately; the UI change does not alter the criteria logic.
+A play is counted once the visitor has actually heard three quarters of the
+track. Only time spent playing counts: pausing does not accumulate it and
+seeking forward does not grant it, so a play means someone listened.
 
-### Play Threshold and Analytics
-- Play is logged after 75% of track duration is reached by real playback time.
-- Only time while actively playing counts; pauses accumulate, and seeking does not grant time.
-- Log once per track; if playback exceeds duration, reset the accumulated timer.
-- Analytics event: `ym(94686067, 'reachGoal', 'musicplay')`.
+## Radio
+The radio picks tunes endlessly by criteria instead of following a list.
 
-### Radio Presets (Legacy Parity)
-Preset labels are stored in the database. Presets are frontend-only and are applied by populating filter criteria in the UI.
-Only criteria are sent to the backend.
-Current labels by `radiotype`:
-- `discover`: "Непроголосованные"
-- `randomgood`: "Лучшие"
-- `games`: "Из игр"
-- `demoscene`: "Сцена"
-- `lastyear`: "С прошлого года"
-- `ay`: "AY"
-- `beeper`: "Бипер"
-- `exotic`: "Экзотика"
-- `underground`: "Андерграунд"
+A visitor can narrow it by rating, year, the author's country, the sound group,
+the file format, the party place, whether the tune comes from a party at all, and
+whether they have rated it. Only tunes that can actually be played are offered.
 
-### Radio Criteria Mapping
-Use legacy parity criteria for presets:
-- `randomgood`: min rating = averageVote + 0.2
-- `games`: prod category = Games (including subcategories) + min rating = averageVote + 0.2
-- `demoscene`: prod category = Demoscene (including subcategories) + min rating = averageVote + 0.2
-- `ay`: formatGroup in [ay, aycovox, aydigitalay, ts] + min rating = averageVote + 0.2
-- `beeper`: formatGroup in [beeper, aybeeper] + min rating = averageVote + 0.2
-- `exotic`: formatGroup in [digitalbeeper, tsfm, fm, digitalay, saa] + min rating = averageVote + 0.2
-- `discover`: not voted by current user + best votes = 100
-- `underground`: plays < 10 + best votes = 500
-- `lastyear`: if month < 3 use years [Y-1, Y], otherwise [Y], plus min rating = averageVote + 0.2
-- Always require playable (mp3 exists).
+Presets are ready-made sets of those criteria:
 
-Notes:
-- `averageVote` is loaded from config (current value is 3.8).
-- `not voted by` applies only to authenticated users; anonymous users use their runtime id.
-- `prodCategoriesInclude` uses zxProd categories (Press/Games/Demoscene) and expands to the full subcategory tree before filtering tunes by linked prods.
-- `minPartyPlace` is optional; values <= 0 disable the party place filter.
+- **Undiscovered** — good tunes the visitor has not rated yet
+- **Best** — the best-rated tunes
+- **From games**, **Demoscene**, **Press** — by the category of the production the
+  tune was written for, counting the whole category with everything filed beneath
+  it
+- **Since last year** — recent work
+- **AY**, **Beeper**, **Exotic** — by the sound the tune was written for
+- **Underground** — well-rated tunes hardly anybody has played
 
-### Endpoints
-- New radio endpoint: `POST /radio/next-tune` (criteria-driven only).
-- New play reporting endpoint: `POST /tunes/play`.
-- Radio filter options return category titles from zxProdCategory entities.
-- Legacy `/randomTune/type:{type}` should be removed after the new player replaces the old one.
+A preset only fills the filters in; the visitor can then adjust them.
 
-### Criteria Persistence
-- Radio criteria use the shared User Preferences entry `radio_criteria`.
-- Authenticated users persist criteria on the backend and mirror them in the frontend preference storage.
-- Anonymous users persist criteria only in the frontend preference storage.
+The chosen criteria are remembered: with an account they follow the visitor
+across devices, and without one they stay in the browser.
+
+How it is built: [../features/music-player-radio.md](../features/music-player-radio.md)

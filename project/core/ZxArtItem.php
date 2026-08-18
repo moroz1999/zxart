@@ -272,7 +272,7 @@ abstract class ZxArtItem extends structureElement implements
         $linkExists = false;
         if ($elementLinks = $linksManager->getElementsLinks($this->id, 'gameLink', 'child')) {
             foreach ($elementLinks as $link) {
-                if ($link->parentStructureId != $this->game) {
+                if ($link->parentStructureId != $this->prod) {
                     $link->delete();
                 } else {
                     $linkExists = true;
@@ -280,8 +280,8 @@ abstract class ZxArtItem extends structureElement implements
             }
         }
 
-        if (!$linkExists && $this->game) {
-            $linksManager->linkElements($this->game, $this->id, 'gameLink');
+        if (!$linkExists && $this->prod) {
+            $linksManager->linkElements($this->prod, $this->id, 'gameLink');
         }
     }
 
@@ -379,8 +379,8 @@ abstract class ZxArtItem extends structureElement implements
     {
         if ($this->releaseElementLoaded === false) {
             $this->releaseElementLoaded = true;
-            if ($this->game) {
-                $element = $this->getService('structureManager')->getElementById($this->game);
+            if ($this->prod) {
+                $element = $this->getService('structureManager')->getElementById($this->prod);
                 if ($element instanceof zxReleaseElement || $element instanceof zxProdElement) {
                     $this->releaseElement = $element;
                 }

@@ -1,37 +1,36 @@
 ## Geo Section
 
-The geo section is an Angular-powered map interface exposed through the `zx-geo` custom element and the standalone SPA route `/geo` (`pages/countries`).
+The geo section answers where the scene is: authors, groups and demoparties
+placed on a map of the world.
 
-### Data Scope
-- The map displays authors, groups, and demoparties as independent layers.
-- Countries and cities are filters, not separate navigation pages in the Angular interface.
-- Country and city coordinates come from `country` and `city` structure elements.
-- Entity counters are calculated from `module_author`, `module_group`, and `module_party` location fields.
-- `countryElement` and `cityElement` `getUrl()` point at the nearest `countriesList` ancestor (found via `getFirstParentElement`) with a `?country=<id>` / `?city=<id>` query, so any country/city link across the product opens the geo section in that filtered state.
-- Direct public requests to country or city legacy URLs return a 301 redirect to the geo section with the matching `country` or `city` query.
+### What is on the map
+The three kinds are independent layers, and each can be switched off. A layer's
+switch also carries how many of that kind are in view, and a switched-off layer
+is dimmed rather than hidden from the controls.
 
-### API
-- Endpoint: `/geo-data/` (`ZxArt\Controllers\GeoData`)
-- `action=map` returns countries, cities, coordinates, and aggregate counters.
-- `action=authors`, `action=groups`, and `action=parties` return paginated entity lists.
-- List actions accept `start`, `limit`, `sorting`, `search`, `countryId`, `cityId`, `north`, `south`, `east`, and `west`.
+Zoomed out, the map marks countries. Zoomed in, it marks cities, plus a marker at
+the centre of a country for everyone who is placed in that country without a city.
+Every marker breaks its count down by kind rather than showing one total.
 
-### Frontend Behavior
-- Zoom below the city threshold displays country markers.
-- Higher zoom displays city markers, plus a country-center marker for entities that have a country but no city (the country counter minus its city counters).
-- Selecting a country fits its cities into the map viewport and limits entity lists to that country.
-- Selecting a city centers the map on that city and limits entity lists to that city.
-- The active country/city filter is mirrored in the child route (`/geo/country/<id>` / `/geo/city/<id>`), restored on load, and re-applied on browser back/forward.
-- The map payload arrives after the map is built: when the route selects no place, the markers, the scope counters and the entity list are filled in from the current viewport as soon as it lands.
-- The basemap uses dark CARTO tiles under the dark theme and OpenStreetMap tiles otherwise, switching live with `ThemeService`.
-- Active filters remain applied while the user pans or zooms the map.
-- Each layer toggle (authors, groups, parties) also shows that type's count for the current scope; a disabled layer is dimmed.
-- Each marker shows a per-type breakdown (an authors/groups/parties icon with its count) for the enabled layers, not a single total.
-- The places panel lists viewport countries (or cities, above the city zoom) by default, the selected country's cities under a country filter, and is hidden under a city filter (the viewport place list is not assembled then).
-- The places panel omits rows whose enabled-layer total is zero; the map payload already excludes cities with no entities at all.
-- Author, group, and party list rows show the entity name and location (city, country); group rows also show the localized group type, omitting the `unknown` type.
-- Entity lists use server-side pagination with 50 items per page. The panel is too narrow for a numbered page selector, so the pager is a prev/next pair with the current range; the list itself is marked with `zxLoadingState` while a page loads.
-- The search input is debounced and only the latest list request is kept; superseded requests are cancelled.
-- Entity lists use the selected country or city when a filter is active, and the current map bounding box otherwise.
-- The component height is the viewport height minus the current site header height.
-- Author geo counters and lists use the current language row from `module_author`.
+### Countries and cities as filters
+A country or a city is a filter over the map, not a page of its own. Picking a
+country fits its cities into view and narrows the lists to it; picking a city
+centres on it and narrows the lists further. The choice is part of the address,
+so a filtered map can be linked to and shared, and the browser's back and
+forward buttons move through it.
+
+Country and city links anywhere on the site open the geo section already
+filtered to that place.
+
+### The lists beside the map
+Beside the map are the places in view and the entities in view. A place row is
+left out when nothing enabled is in it. An entity row names the entity and where
+it is; a group also names what kind of group it is, unless that is unknown.
+
+Without a country or city filter the lists follow the map: panning and zooming
+changes what they show. With a filter they follow the filter, and panning does
+not disturb it.
+
+The lists are paged and searchable.
+
+How it is built: [../features/geo.md](../features/geo.md)

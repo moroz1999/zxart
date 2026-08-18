@@ -111,7 +111,7 @@ components:
           type: integer
         minPartyPlace:
           type: integer
-        requireGame:
+        requireProd:
           type: boolean
         hasParty:
           type: boolean

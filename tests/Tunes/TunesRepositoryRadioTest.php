@@ -73,7 +73,7 @@ class TunesRepositoryRadioTest extends TestCase
             bestVotesLimit: $bestVotesLimit,
             maxPlays: null,
             minPartyPlace: null,
-            requireGame: null,
+            requireProd: null,
             hasParty: null,
             notVotedByUserId: null,
         );

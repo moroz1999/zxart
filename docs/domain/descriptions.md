@@ -1,39 +1,19 @@
-# Entity Description Rendering
+# Entity descriptions
 
-Entity APIs HTML-entity-decode description content and return it without
-presentation-only wrapper markup. Angular owns line-break presentation in the
-concrete description blocks.
+Pictures, tunes, productions, releases and press articles carry a description
+written by the people who archive them.
 
-`DescriptionFormatter` resolves nested HTML entities and removes `pre` tags
-while preserving their text content. Tune, picture, prod, and release detail
-services use this formatter at the API boundary.
+Most descriptions are plain text, and the layout they were typed in is part of
+them: scene text is written to a fixed width, with columns, rules and ASCII art
+that only read correctly when every character is the same width and the line
+breaks fall where the author put them. Such a description is shown exactly as it
+was written, and a line too long for the screen scrolls on its own rather than
+widening the page.
 
-The `pre` element belongs to the view. No data chunk, element, or service emits
-it; the view decides to preserve the text's whitespace by rendering it through
-`zx-preformatted` (`shared/ui`), which owns the fixed-width face, `pre-wrap`
-whitespace, word breaking, and the horizontal scroll that keeps a long line
-from widening the page.
+Productions may instead carry a formatted description, chosen per production,
+which reads as ordinary flowing text. Release descriptions are always formatted.
 
-## Content contracts
+Descriptions are never trusted markup: whatever the site accepts is limited to
+what it can safely show.
 
-- Tune and picture descriptions are plain text. Their detail-page blocks use
-  `white-space: pre-wrap`.
-- Prod descriptions are sanitized HTML when `htmlDescription` is true, and the
-  block renders them as ordinary flowing markup. Otherwise they are text laid
-  out on a fixed-width grid and the block renders them through
-  `zx-preformatted`.
-- Release descriptions are sanitized HTML laid out on a fixed-width grid: the
-  release detail block renders them through `zx-preformatted` in `html` mode.
-  The release table row preserves source line breaks with `white-space: pre-wrap`,
-  because a fixed-width block would widen the table's columns.
-- Press article content is plain text on a fixed-width grid and renders through
-  `zx-preformatted`.
-- Legacy no-JavaScript tune, picture, and plain prod description blocks apply
-  the same line-break presentation in their module styles.
-
-## CMS fields
-
-Tune, picture, and batch-upload descriptions use the `text` data chunk. Prod
-and release descriptions use the `html` data chunk. Prod carries an
-`htmlDescription` checkbox that selects between the two prod contracts above.
-Description fields do not use server-side presentation data chunks.
+How it is built: [../features/descriptions.md](../features/descriptions.md)

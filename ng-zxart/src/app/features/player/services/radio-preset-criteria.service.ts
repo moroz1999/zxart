@@ -6,10 +6,11 @@ import {CurrentUserService} from '../../../shared/services/current-user.service'
 
 const AVERAGE_VOTE = 3.8;
 const MIN_RATING_OFFSET = 0.2;
+/** Roots of the prod-category subtrees the presets select; the backend expands each one. */
 const CATEGORY_IDS = {
   press: 244858,
   games: 92177,
-  demoscene: 92159,
+  demoscene: 204819,
 } as const;
 
 @Injectable({
@@ -34,6 +35,8 @@ export class RadioPresetCriteriaService {
             return {...EMPTY_RADIO_CRITERIA, minRating, prodCategoriesInclude: [CATEGORY_IDS.games]};
           case 'demoscene':
             return {...EMPTY_RADIO_CRITERIA, minRating, prodCategoriesInclude: [CATEGORY_IDS.demoscene]};
+          case 'press':
+            return {...EMPTY_RADIO_CRITERIA, minRating, prodCategoriesInclude: [CATEGORY_IDS.press]};
           case 'ay':
             return {...EMPTY_RADIO_CRITERIA, minRating, formatGroupsInclude: ['ay', 'aycovox', 'aydigitalay', 'ts']};
           case 'beeper':
