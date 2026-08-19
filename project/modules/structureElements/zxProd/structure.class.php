@@ -789,42 +789,6 @@ class zxProdElement extends ZxArtItem implements
         return false;
     }
 
-    public function getSplitData(): array
-    {
-        $data = [];
-        $properties = ['title', 'year', 'youtube'];
-        foreach ($properties as $property) {
-            if ($this->$property) {
-                $data['properties'][$property] = $this->$property;
-            }
-        }
-        foreach ($this->getAuthorsInfo(EntityType::Prod->value) as $authorInfo) {
-            if ($authorElement = $authorInfo['authorElement']) {
-                $data['authors'][$authorInfo['id']] = $authorElement->getId() . ' <a target="_blank" href="' . $authorElement->getUrl() . '">' . $authorElement->getSearchTitle() . '</a>';
-            }
-        }
-        foreach ($this->publishers as $publisher) {
-            $data['publishers'][$publisher->id] = $publisher->id . ' <a target="_blank" href="' . $publisher->getUrl() . '">' . $publisher->getSearchTitle() . '</a>';
-        }
-        foreach ($this->groups as $group) {
-            $data['groups'][$group->id] = $group->id . ' <a target="_blank" href="' . $group->getUrl() . '">' . $group->getSearchTitle() . '</a>';
-        }
-        foreach ($this->getReleasesList() as $releaseElement) {
-            $data['releases'][$releaseElement->getId()] = $releaseElement->getId() . ' <a target="_blank" href="' . $releaseElement->getUrl() . '">' . $releaseElement->getSearchTitle() . '</a>';
-        }
-        foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $data['screenshots'][$fileElement->getId()] = $fileElement->getId() . ' <img style="height: 5rem" src="' . $fileElement->getImageUrl('prodImage') . '" />';
-        }
-
-        foreach ($this->getLinksInfo() as $linkInfo) {
-            if ($linkInfo['type'] !== 'wos') {
-                $data['links'][$linkInfo['type'] . ';' . $linkInfo['id']] = $linkInfo['type'] . ' <a target="_blank" href="' . $linkInfo['url'] . '">' . $linkInfo['id'] . '</a>';;
-            }
-        }
-
-        return $data;
-    }
-
     #[Override]
     public function getLdJsonScriptData()
     {

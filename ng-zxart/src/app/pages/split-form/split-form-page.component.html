@@ -1,32 +1,66 @@
 <zx-page-layout>
   <h1 zxPageHeader appHeading="display">{{ 'split-form.submit' | translate }}</h1>
-  <div *ngIf="loading" class="split-form__loading">
+
+  @if (loading) {
     <zx-spinner size="lg"></zx-spinner>
-  </div>
+  } @else {
+    <form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+      <zx-stack spacing="lg">
+        <p appText="body">{{ 'split-form.intro' | translate }}</p>
 
-  <form *ngIf="!loading" (ngSubmit)="onSubmit()">
-    <zx-stack spacing="lg">
-    <p>{{ 'split-form.intro' | translate }}</p>
+        @for (group of groups; track group.group) {
+          <zx-panel [title]="'split-form.group-' + group.group | translate" [formGroupName]="group.group">
+            <zx-stack spacing="sm">
+              @for (item of group.items; track item.key) {
+                <zx-inline gap="sm" align="center" [wrap]="true">
+                  @switch (group.group) {
+                    @case ('properties') {
+                      <zx-checkbox-field
+                        [formControlName]="item.key"
+                        [label]="'split-form.property-' + item.key | translate"
+                      ></zx-checkbox-field>
+                      <span appText="body" tone="muted">{{ item.title }}</span>
+                    }
+                    @case ('screenshots') {
+                      <zx-checkbox-field [formControlName]="item.key" [label]="item.title"></zx-checkbox-field>
+                      <img
+                        class="split-form__thumb"
+                        [src]="item.imageUrl"
+                        [alt]="item.title"
+                        loading="lazy"
+                      />
+                    }
+                    @case ('links') {
+                      <zx-checkbox-field [formControlName]="item.key"></zx-checkbox-field>
+                      <a [href]="item.url" target="_blank" rel="noopener" appText="body" tone="link">{{ item.title }}</a>
+                    }
+                    @default {
+                      <zx-checkbox-field [formControlName]="item.key"></zx-checkbox-field>
+                      <a [routerLink]="item.url" appText="body" tone="link">{{ item.title }}</a>
+                    }
+                  }
+                </zx-inline>
+              }
+            </zx-stack>
+          </zx-panel>
+        }
 
-    <section *ngFor="let group of groups" class="split-form__group">
-      <h3>{{ group.group }}</h3>
-      <label *ngFor="let item of group.items" class="split-form__item">
-        <input
-          type="checkbox"
-          [checked]="isChecked(group.group, item.key)"
-          (change)="onToggle(group.group, item.key, $any($event.target).checked)"
-        />
-        <span>{{ item.label }}</span>
-      </label>
-    </section>
+        @if (!groups.length && !errorMessage) {
+          <p appText="body">{{ 'split-form.nothing' | translate }}</p>
+        }
 
-    <p *ngIf="!groups.length" class="split-form__empty">{{ 'split-form.nothing' | translate }}</p>
+        @if (errorMessage) {
+          <zx-form-message variant="error">{{ errorMessage | translate }}</zx-form-message>
+        }
 
-    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
-
-    <zx-form-actions align="start">
-      <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'split-form.submit' | translate }}</zx-button>
-    </zx-form-actions>
-    </zx-stack>
-  </form>
+        @if (groups.length) {
+          <zx-form-actions align="start">
+            <zx-button color="primary" type="submit" [disabled]="submitting">
+              {{ 'split-form.submit' | translate }}
+            </zx-button>
+          </zx-form-actions>
+        }
+      </zx-stack>
+    </form>
+  }
 </zx-page-layout>

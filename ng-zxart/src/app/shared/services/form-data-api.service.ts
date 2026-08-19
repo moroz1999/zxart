@@ -67,7 +67,6 @@ export class FormDataApiService {
       files: {},
       fileSelectors: {},
       aiStatuses: {},
-      splitGroups: [],
       languages: [],
       members: [],
       roles: [],

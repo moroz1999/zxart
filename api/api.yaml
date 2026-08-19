@@ -53,6 +53,8 @@ paths:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshot-move~1'
   /prod-screenshots/:
     $ref: 'prod-files.yaml#/paths/~1prod-screenshots~1'
+  /prod-split-data/:
+    $ref: 'prod-split-data.yaml#/paths/~1prod-split-data~1'
   /screenshot-upload/:
     $ref: 'prod-files.yaml#/paths/~1screenshot-upload~1'
   /prod-inlays/:

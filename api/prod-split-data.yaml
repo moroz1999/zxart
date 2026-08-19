@@ -1,0 +1,72 @@
+openapi: 3.0.0
+paths:
+  /prod-split-data/:
+    get:
+      summary: Everything of a zxProd the split form can move to a new production
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Split data payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdSplitDataPayload'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Prod not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProdSplitDataPayload:
+      type: object
+      required: [id, title, groups]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdSplitGroup'
+    ProdSplitGroup:
+      type: object
+      required: [group, items]
+      properties:
+        group:
+          type: string
+          enum: [properties, authors, publishers, groups, releases, screenshots, links]
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProdSplitItem'
+    ProdSplitItem:
+      type: object
+      required: [key, title, url, imageUrl]
+      properties:
+        key:
+          type: string
+          description: >-
+            What the split action reads the checked item under: an authorship
+            record for an author, an element id for a related entity or a
+            screenshot, and `origin;id` for an external link.
+        title:
+          type: string
+        url:
+          type: string
+          nullable: true
+          description: SPA route of a related entity, or the external address of a link.
+        imageUrl:
+          type: string
+          nullable: true
+          description: Thumbnail of a screenshot.

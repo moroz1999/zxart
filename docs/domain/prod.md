@@ -89,9 +89,12 @@ its own, since it holds no files itself.
 
 ### Special Operations
 Two productions that turn out to be the same work can be merged, and one
-production that turns out to be several can be split. The site can also be asked
-to generate a production's summary text, its introduction and its categories
-again.
+production that turns out to be several can be split. A split picks out what
+belongs to the other work: the title, the year and the video are copied to the
+new production, and the chosen credits, publishers, developer groups, releases,
+screenshots and links to other sites move to it, leaving the rest where it is. The
+site can also be asked to generate a production's summary text, its introduction
+and its categories again.
 
 ### Browsing productions
 The software section is one page, filtered by category, year, hardware, language,

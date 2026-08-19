@@ -163,6 +163,25 @@ category heading is still an SPA string (`hardware-group.<code>`).
 - **aiRestartIntro** - restart AI for intro
 - **aiRestartCategories** - restart AI for categories
 
+### Split Form
+
+`/prod/:id/split` renders the Angular split form behind the `showSplitForm`
+privilege. `/prod-split-data/` answers with everything the production can give
+away, grouped as `properties`, `authors`, `publishers`, `groups`, `releases`,
+`screenshots` and `links`; empty groups are omitted. Each item carries the `key`
+the `split` action reads it back under — an authorship record for a credit, an
+element id for a related entity or a screenshot, `origin;id` for an external
+link — plus its title, the page it links to (an SPA route for entities, the
+external address for links) and a thumbnail for a screenshot. Group and property
+names are SPA translations (`split-form.group-*`, `split-form.property-*`); the
+titles come from the elements.
+
+The form posts the checked items as `splitData[group][key] = 1` to the legacy
+`split` action. It creates the new production under the same parent and with the
+same categories, copies the checked properties to it, moves the checked credits,
+publishers, groups, releases, screenshots and import origins over, and answers
+with the new id, which the SPA opens.
+
 ### Constraints and Rules
 1. Prod is an abstraction - concrete files are stored in releases
 2. Prod can be a compilation (contains other prods) or be included in compilations

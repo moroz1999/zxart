@@ -54,8 +54,6 @@ export interface FormDataResponse {
   fileSelectors: Record<string, FileSelectorItem[]>;
   /** Current AI queue status per re-queue field, for the AI form (prod/press). */
   aiStatuses: Record<string, string>;
-  /** Splittable items grouped, for the prod split form. */
-  splitGroups: SplitGroup[];
   languages: FormLanguage[];
   members: MemberRoleItem[];
   roles: string[];
@@ -85,10 +83,4 @@ export interface FileSelectorItem {
   title: string;
   isImage: boolean;
   imageUrl: string | null;
-}
-
-/** A group of splittable items for the prod split form ({@link FormDataResponse.splitGroups}). */
-export interface SplitGroup {
-  group: string;
-  items: {key: string; label: string}[];
 }

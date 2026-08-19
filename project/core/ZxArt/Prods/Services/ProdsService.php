@@ -1098,7 +1098,7 @@ class ProdsService extends ElementsManager
                             $this->linksManager->linkElements($categoryId, $newProdElement->getId(), 'zxProdCategory');
                         }
                     }
-                    foreach ($data['properties'] as $property => $value) {
+                    foreach ($data['properties'] ?? [] as $property => $value) {
                         $newProdElement->$property = $mainZxProd->$property;
                     }
                     $newProdElement->dateAdded = time();
