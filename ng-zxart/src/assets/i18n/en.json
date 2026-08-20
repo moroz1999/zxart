@@ -1566,7 +1566,8 @@
     "loading": "Loading emulator…",
     "fullscreen": "Open in fullscreen",
     "screenshot-format-label": "Screenshot format",
-    "samcoupe": "After loading emulator press \"Enter\", type \"boot\" and press \"Enter\" again."
+    "samcoupe": "After loading emulator press \"Enter\", type \"boot\" and press \"Enter\" again.",
+    "powered-by": "Powered by"
   },
   "hardware-group": {
     "computers": "Computers",

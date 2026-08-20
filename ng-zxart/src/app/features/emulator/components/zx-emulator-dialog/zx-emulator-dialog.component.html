@@ -1,7 +1,9 @@
 <zx-dialog titleKey="emulator.title" (closeClick)="close()">
   <div class="zx-emulator-dialog__content">
-    <div class="zx-emulator-dialog__canvas-wrap">
-      <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0" width="960" height="720"></canvas>
+    <div #canvasWrap class="zx-emulator-dialog__canvas-wrap"
+         [class.zx-emulator-dialog__canvas-wrap--own-ui]="rendersOwnUi">
+      <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0" width="960" height="720"
+              [class.zx-emulator-dialog__canvas--hidden]="rendersOwnUi"></canvas>
       <div *ngIf="loading" class="zx-emulator-dialog__overlay">
         <span appText="label" tone="muted">{{ 'emulator.loading' | translate }}</span>
       </div>
@@ -14,7 +16,11 @@
     </p>
   </div>
 
-  <div zxDialogFooter>
+  <div zxDialogFooter class="zx-emulator-dialog__footer">
+    <span *ngIf="homepageLinks.length" class="zx-emulator-dialog__homepage">
+      <span appText="label" tone="muted">{{ 'emulator.powered-by' | translate }}</span>
+      <zx-ext-links [links]="homepageLinks"></zx-ext-links>
+    </span>
     <zx-button-controls align="end" class="zx-emulator-dialog__controls">
       <label *ngIf="showScreenshotControls" class="zx-emulator-dialog__selector">
         <span appText="label" tone="muted">{{ 'emulator.screenshot-format-label' | translate }}</span>

@@ -98,6 +98,7 @@
 
       <zx-download-button
         *ngIf="details.isDownloadable && details.downloadUrl"
+        size="md"
         target="_blank"
         [href]="details.downloadUrl"
         [label]="details.fileName ?? ''">

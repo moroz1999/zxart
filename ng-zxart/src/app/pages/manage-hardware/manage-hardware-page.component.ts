@@ -7,7 +7,11 @@ import {HardwareItemDto} from '../../features/manage-hardware/models/hardware-ca
 import {ManageHardwareApiService} from '../../features/manage-hardware/services/manage-hardware-api.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
+import {LabelDirective} from '../../shared/ui/typography/directives/label.directive';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
+import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxTableComponent} from '../../shared/ui/zx-table/zx-table.component';
 
 interface HardwareCategoryVm {
   code: string;
@@ -27,9 +31,19 @@ interface ManageHardwareVm {
 @Component({
   selector: 'zx-manage-hardware-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, ZxButtonComponent, HeadingDirective, ZxPageLayoutComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    TranslateModule,
+    ZxButtonComponent,
+    HeadingDirective,
+    LabelDirective,
+    TextDirective,
+    ZxPageLayoutComponent,
+    ZxStackComponent,
+    ZxTableComponent,
+  ],
   templateUrl: './manage-hardware-page.component.html',
-  styleUrls: ['./manage-hardware-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageHardwarePageComponent {

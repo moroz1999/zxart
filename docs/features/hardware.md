@@ -85,19 +85,19 @@ re-release under a `zx48, zx128` production keeps saying `zx128` and no more.
 release page asks it for the chips it shows as the production's, so the page can
 never display a code the release does not actually carry.
 
-One consequence is worth knowing before it surprises anyone: a release stating no
-hardware at all inherits everything, and if the production requires `gs` the
-release becomes unplayable, because General Sound is the one code the online
-emulators refuse. Six releases in the catalogue are in that position. It is the
-right answer — the earlier "playable" rested on the release saying nothing, not
-on it being GS-free — but it does remove a button that used to work.
+A release stating no sound of its own inherits the production's whole sound list,
+which is how `gs` — the one code the online emulators refuse — lands on releases
+that never mentioned it. It suppresses the emulator only when it is the sole
+sound code in the effective set; alongside an `ay` or a `beeper` the release stays
+playable and only loses that track. See
+`EmulatorResolverService::isSilencedByUnsupportedHardware()`.
 
 ## Auto-fill from the release format
 
 `ZxArt\Releases\Services\ReleaseHardwareAutofillService` derives the hardware a
-release's file format implies. It runs from
-`zxReleaseElement::updateFileStructure()`, which every save path goes through, so
-re-saving a release re-checks its formats.
+release's file format implies. Saving a release does not apply it: the only thing
+that runs it is the `/fix/job:hardware-autofill/` backfill, which asks each
+release for `getHardwareAutofillAdditions()` and writes the result.
 
 Rules are **additive and idempotent**: they only add codes, never remove what an
 editor chose, and a second run changes nothing. "Add nothing" is the default — a

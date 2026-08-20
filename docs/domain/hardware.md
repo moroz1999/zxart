@@ -49,16 +49,17 @@ A production may well state more than one of its releases does: it describes the
 original, and a re-release or a conversion may be narrower. That is precisely why
 inheritance works this way.
 
-One consequence is worth knowing: a release stating no hardware at all inherits
-everything, so a production requiring General Sound makes such a release
-unplayable in the browser, because that is the one thing the online emulators
-cannot reproduce. That is the correct answer — the release was never known to be
-free of it — but it does remove a play button that used to appear.
+General Sound is the one thing the online emulators cannot reproduce, and it
+reaches a release through inheritance often, since few releases state any sound
+of their own. It only takes the play button away when it is the *only* sound the
+release has: with anything else in the list — an AY, a beeper — the release can
+still be heard, and only the General Sound track is missing.
 
 ## Filling in from the file
-Whenever a release is saved, the hardware its file format implies is filled in.
-This only ever adds: nothing an editor chose is removed, and saving twice changes
-nothing.
+The hardware a release's file format implies can be filled in across the whole
+catalogue, on demand. Saving a release derives nothing from its file — what an
+editor entered is what the release says. The fill only ever adds: nothing an
+editor chose is removed, and running it twice changes nothing.
 
 What a format can say is limited. A disk-image extension names the medium, not
 the system on it — the same Beta Disk image can hold any of several operating

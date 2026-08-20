@@ -53,16 +53,20 @@ class HardwareRepositoryTest extends TestCase
         );
     }
 
-    public function testUsageCountsAreKeyedByHardwareIdAndTyped(): void
+    public function testUsageCountsIncludeProductionsAndReleases(): void
     {
         $repository = $this->createRepository([
+            'module_zxprod_hw_required' => [
+                ['hardwareId' => '1', 'amount' => '4'],
+                ['hardwareId' => '3', 'amount' => '12'],
+            ],
             'module_zxrelease_hw_required' => [
                 ['hardwareId' => '1', 'amount' => '43247'],
                 ['hardwareId' => '2', 'amount' => '432'],
             ],
         ]);
 
-        $this->assertSame([1 => 43247, 2 => 432], $repository->getUsageCounts());
+        $this->assertSame([1 => 43251, 3 => 12, 2 => 432], $repository->getUsageCounts());
     }
 
     public function testFindIdByCodeReturnsNullWhenTheCodeIsUnknown(): void

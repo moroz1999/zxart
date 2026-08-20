@@ -1563,7 +1563,8 @@
     "loading": "Cargando el emulador…",
     "fullscreen": "Abrir en pantalla completa",
     "screenshot-format-label": "Formato de captura",
-    "samcoupe": "Tras cargar el emulador, pulse \"Enter\", escriba \"boot\" y pulse \"Enter\" de nuevo."
+    "samcoupe": "Tras cargar el emulador, pulse \"Enter\", escriba \"boot\" y pulse \"Enter\" de nuevo.",
+    "powered-by": "Funciona con"
   },
   "hardware-group": {
     "computers": "Ordenadores",

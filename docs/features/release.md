@@ -65,8 +65,8 @@ Concrete release (version) of software production. Contains files specific to th
     property is for the edit form and for showing what belongs to this release.
   - Responses carry the name, short name and category of each code, localized for
     the request language; the SPA does not translate hardware.
-  - Auto-filled from the release's file format on every save — see
-    [hardware.md](hardware.md).
+  - Never derived on save; the hardware a file format implies is applied only by
+    the `/fix/job:hardware-autofill/` backfill — see [hardware.md](hardware.md).
 
 #### Languages
 - **language** - interface languages (array)
@@ -125,13 +125,20 @@ Determined by combination of:
 - **ZX80**: ZX80 hardware
 - **TSConf**: formats `spg`, `img`, `trd`, `scl` + TSConf hardware
 - **MB (Multiboard)**: format `tar` + MB hardware
-- A release requiring hardware the online emulators cannot emulate is not playable regardless of format. `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists such hardware (currently General Sound, `gs`): when present in the effective set, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden.
+- **Timex (JSSpeccy)**: formats `tap`, `tzx`, `z80`, `sna`, `szx` + `timex2048` / `timex2068` hardware. Matched before the USP fallback, which would otherwise swallow every Timex release, since only the machine says the SCLD video modes have to be emulated. Each model is its own emulator id, because JSSpeccy boots one machine and TC2048 and TC2068 are not the same one. Cartridges (`dck`) are the Timex-only format and JSSpeccy cannot load them, so a release distributed as one stays unplayable.
+- `EmulatorResolverService::UNSUPPORTED_HARDWARE` lists hardware the online emulators cannot emulate (currently General Sound, `gs`). It is a sound extension, so it suppresses the emulator only when the effective set names no other sound: with `ay`, `beeper` or any other code in the sound category present, the release stays playable and only the GS track is lost. When it does suppress, `resolveEmulator()` returns `null`, so `isPlayable()`/`getEmulatorType()` are false/null and the play button is hidden. The category comes from `HardwareCatalogService::getCategoryOf()`, which is why the resolver is no longer dependency-free.
 
 #### Angular Prod Details Emulator
 - Prod details release rows pass the ZIP play URL to USP and the first runnable file URL to non-USP emulators.
 - USP uses a 960x720 canvas by default, exactly double the 480x360 emulator viewport.
 - Emulator screenshots launched from prod details release rows are saved to the parent prod, not to the release.
 - Emulator screenshots launched from the release details page are saved directly to the release. The release details API response carries `canUploadScreenshot`; the upload itself goes to `/screenshot-upload/` with the release id.
+
+#### Emulator dialog
+- Every emulator id resolves to one engine in `ng-zxart/src/app/features/emulator/engines/`, and `SUPPORTED_EMULATOR_TYPES` (play button and release card) is what decides whether the play button appears at all — an id with no engine is silently not playable.
+- An engine normally draws into the dialog's canvas. One that builds its own interface sets `rendersOwnUi`, mounts into the canvas wrapper it is handed as the third `start()` argument, and the canvas is hidden. The wrapper then gets a width of its own: the dialog is as wide as its content, so a wrapper holding nothing but an emulator that starts at 320px could never grow, leaving the engine no room to scale into.
+- JSSpeccy is such an engine: it lays itself out in whole 320x240 steps, so the engine converts the wrapper's size into a zoom level, on start and on window resize, up to the 960x720 the other emulators run at. The zoom is never set while fullscreen — JSSpeccy answers a zoom change by leaving fullscreen, and entering fullscreen fires a resize, so the two would fight; it restores the zoom itself once fullscreen ends. It is deliberately started paused — JSSpeccy creates its `AudioContext` inside `start()` and never resumes it, so pressing its own play button is what gets the sound out. Its runtime lives in `htdocs/libs/jsspeccy/`; `jsspeccy.js`, the worker, the `.wasm` core and the `roms`/`tapeloaders` directories resolve relative to each other and have to stay together.
+- The dialog footer credits the emulator behind the running engine and links to its home page, from `EMULATOR_HOMEPAGES`. An emulator whose project link is not known yet is mapped to `null` and no credit is shown.
 
 ### Constraints and Rules
 1. Release must always have parent zxProd

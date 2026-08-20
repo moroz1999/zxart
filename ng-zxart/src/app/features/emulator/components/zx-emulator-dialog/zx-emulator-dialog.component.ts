@@ -16,6 +16,7 @@ import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxButtonControlsComponent} from '../../../../shared/ui/zx-button-controls/zx-button-controls.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
+import {ZxExtLinksComponent, ZxExtLinkDto} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {EmulatorEngine, EmulatorType} from '../../engines/emulator-engine';
 import {UspEngine} from '../../engines/usp.engine';
@@ -23,6 +24,8 @@ import {Zx81Engine} from '../../engines/zx81.engine';
 import {TsconfEngine} from '../../engines/tsconf.engine';
 import {SamcoupeEngine} from '../../engines/samcoupe.engine';
 import {ZxNextEngine} from '../../engines/zxnext.engine';
+import {JsSpeccyEngine} from '../../engines/jsspeccy.engine';
+import {EMULATOR_HOMEPAGES, EmulatorHomepage} from '../../models/emulator-homepage';
 import {EmulatorScreenshotService, UspScreenSelection} from '../../services/emulator-screenshot.service';
 import {AnalyticsService} from '../../../../shared/services/analytics.service';
 
@@ -46,6 +49,7 @@ const F2_SCREENSHOT_DELAY_MS = 300;
     ZxDialogComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
+    ZxExtLinksComponent,
     TextDirective,
   ],
   templateUrl: './zx-emulator-dialog.component.html',
@@ -54,10 +58,13 @@ const F2_SCREENSHOT_DELAY_MS = 300;
 })
 export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', {static: true}) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasWrap', {static: true}) canvasWrapRef!: ElementRef<HTMLElement>;
 
   screenshotSelection: UspScreenSelection = '48';
   loading = true;
   error: string | null = null;
+  /** The emulator's own home page, credited at the bottom of the dialog. */
+  homepageLinks: ZxExtLinkDto[] = [];
 
   private engine: EmulatorEngine | null = null;
 
@@ -73,14 +80,21 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
     return this.data.emulatorType === 'samcoupe';
   }
 
+  /** The engine draws its own interface in the wrapper, so the canvas stays out of the way. */
+  get rendersOwnUi(): boolean {
+    return this.engine?.rendersOwnUi ?? false;
+  }
+
   get showScreenshotControls(): boolean {
     return this.data.emulatorType === 'usp' && !!this.data.canScreenshot;
   }
 
   ngOnInit(): void {
+    const homepage: EmulatorHomepage | null = EMULATOR_HOMEPAGES[this.data.emulatorType];
+    this.homepageLinks = homepage ? [{url: homepage.url, label: homepage.name}] : [];
     this.engine = this.createEngine(this.data.emulatorType);
     this.engine
-      .start(this.canvasRef.nativeElement, this.data.fileUrl)
+      .start(this.canvasRef.nativeElement, this.data.fileUrl, this.canvasWrapRef.nativeElement)
       .then(() => {
         this.loading = false;
         this.cdr.markForCheck();
@@ -146,6 +160,8 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
       case 'tsconf': return new TsconfEngine();
       case 'samcoupe': return new SamcoupeEngine();
       case 'zxnext': return new ZxNextEngine();
+      case 'timex2048':
+      case 'timex2068': return new JsSpeccyEngine(type);
     }
   }
 }

@@ -31,7 +31,7 @@ import {TextDirective} from '../../shared/ui/typography/directives/text.directiv
 import {FadeInOut} from '../../shared/animations/fade-in-out';
 import {SlideInOut} from '../../shared/animations/slide-in-out';
 import {RouterLink} from '@angular/router';
-const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
+const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext', 'timex2048', 'timex2068'];
 
 @Component({
   selector: 'zx-prod-release-card',

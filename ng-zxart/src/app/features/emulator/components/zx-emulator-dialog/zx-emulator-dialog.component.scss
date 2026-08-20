@@ -20,6 +20,14 @@
   min-height: 0;
   border-radius: var(--border-radius-md);
   overflow: hidden;
+
+  /* An engine drawing its own interface starts out 320px wide, and the dialog is
+     as wide as its content — without a width of its own the box could never grow,
+     so the engine would have no room to scale into. 960px is three whole steps of
+     the Spectrum display, the size the other emulators run at. */
+  &--own-ui {
+    width: min(90vw, 960px);
+  }
 }
 
 .zx-emulator-dialog__canvas {
@@ -30,6 +38,11 @@
   height: auto !important;;
   image-rendering: pixelated;
   outline: none;
+
+  /* The engine builds its own interface in the wrapper and never draws here */
+  &--hidden {
+    display: none;
+  }
 }
 
 .zx-emulator-dialog__overlay {
@@ -45,8 +58,23 @@
   margin: var(--space-8) 0 0;
 }
 
+.zx-emulator-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-16);
+}
+
+.zx-emulator-dialog__homepage {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
 .zx-emulator-dialog__controls {
   align-items: center;
+  margin-left: auto;
 }
 
 .zx-emulator-dialog__selector {

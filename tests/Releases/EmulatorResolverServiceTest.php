@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Releases;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
+use ZxArt\Hardware\HardwareCatalogService;
+use ZxArt\Hardware\HardwareGroup;
 use ZxArt\Releases\Services\EmulatorResolverService;
 
 /**
@@ -16,13 +19,24 @@ use ZxArt\Releases\Services\EmulatorResolverService;
  * a release repeating nothing still has to resolve a machine — but it means the
  * production can decide a release's playability, which the tests below pin down.
  */
+#[AllowMockObjectsWithoutExpectations]
 class EmulatorResolverServiceTest extends TestCase
 {
     private EmulatorResolverService $service;
 
     protected function setUp(): void
     {
-        $this->service = new EmulatorResolverService();
+        $catalog = $this->createMock(HardwareCatalogService::class);
+        $catalog->method('getCategoryOf')->willReturnCallback(
+            static fn(string $code): ?HardwareGroup => match (true) {
+                in_array($code, ['ay', 'beeper', 'gs', 'ngs', 'ts'], true) => HardwareGroup::SOUND,
+                in_array($code, ['zx48', 'zx128', 'pentagon2666', 'timex2048', 'timex2068', 'samcoupe', 'tsconf', 'zx811'], true) => HardwareGroup::COMPUTERS,
+                in_array($code, ['tape'], true) => HardwareGroup::STORAGE,
+                default => null,
+            },
+        );
+
+        $this->service = new EmulatorResolverService($catalog);
     }
 
     public function testASpectrumReleaseResolvesFromItsFormatAlone(): void
@@ -46,20 +60,50 @@ class EmulatorResolverServiceTest extends TestCase
     }
 
     /**
-     * Observed on production 598457 ("Hi-Color Hero+"): both originals require a
-     * General Sound, so the migration puts `gs` on the production, and release
-     * 601040 — which states no hardware of its own — inherits it and stops being
-     * playable where it was playable before.
-     *
-     * That is the intended reading rather than a regression: the previous answer
-     * rested on the release saying nothing, not on it being GS-free. Six releases
-     * catalogue-wide are in this position.
+     * General Sound is the one thing the online emulators cannot produce, so a
+     * release that has no other way to be heard is not offered at all.
      */
-    public function testUnsupportedHardwareSuppressesTheEmulatorEvenWhenInherited(): void
+    public function testAReleaseWhoseOnlySoundIsUnsupportedIsNotPlayable(): void
     {
         $this->assertSame('usp', $this->service->resolveEmulator([], ['tap']));
         $this->assertNull($this->service->resolveEmulator(['gs'], ['tap']));
-        $this->assertNull($this->service->resolveEmulator(['ay', 'gs', 'pentagon2666'], ['tap', 'scl']));
+        $this->assertNull($this->service->resolveEmulator(['gs', 'pentagon2666'], ['tap', 'scl']));
+    }
+
+    /**
+     * Any other sound in the set is a way for the release to be heard, so the
+     * unsupported one only costs its own track. This is what the effective set
+     * routinely produces: release 598464 states no sound of its own and inherits
+     * `ay`, `gs` and `ngs` together from production 598457 ("Hi-Color Hero+").
+     */
+    public function testUnsupportedSoundAlongsideOtherSoundKeepsTheReleasePlayable(): void
+    {
+        $this->assertSame('usp', $this->service->resolveEmulator(['ay', 'gs', 'pentagon2666'], ['tap', 'scl']));
+        $this->assertSame(
+            'timex2048',
+            $this->service->resolveEmulator(['timex2048', 'timex2068', 'pentagon2666', 'tape', 'ay', 'gs', 'ngs'], ['tap']),
+        );
+    }
+
+    /**
+     * A Timex is a Spectrum by format, so the USP fallback would swallow it —
+     * only the machine says the SCLD video modes have to be emulated, and each
+     * model is its own emulator id because JSSpeccy boots one machine.
+     */
+    public function testATimexMachineWinsOverTheSpectrumFallback(): void
+    {
+        $this->assertSame('timex2048', $this->service->resolveEmulator(['timex2048'], ['tap']));
+        $this->assertSame('timex2068', $this->service->resolveEmulator(['timex2068'], ['tzx']));
+        $this->assertSame('timex2048', $this->service->resolveEmulator(['zx48', 'timex2048'], ['z80']));
+    }
+
+    /**
+     * Cartridges are the Timex-only format, and JSSpeccy cannot load them, so a
+     * release distributed as one alone stays unplayable.
+     */
+    public function testATimexCartridgeIsNotPlayable(): void
+    {
+        $this->assertNull($this->service->resolveEmulator(['timex2068'], ['dck']));
     }
 
     public function testAFormatNoEmulatorHandlesResolvesToNothing(): void

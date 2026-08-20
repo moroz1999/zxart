@@ -1564,7 +1564,8 @@
     "loading": "Загрузка эмулятора…",
     "fullscreen": "Развернуть на полный экран",
     "screenshot-format-label": "Формат скриншота",
-    "samcoupe": "После загрузки эмулятора нажмите «Enter», введите «boot» и снова нажмите «Enter»."
+    "samcoupe": "После загрузки эмулятора нажмите «Enter», введите «boot» и снова нажмите «Enter».",
+    "powered-by": "Работает на"
   },
   "hardware-group": {
     "computers": "Компьютеры",

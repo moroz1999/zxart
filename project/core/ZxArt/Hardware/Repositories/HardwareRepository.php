@@ -161,6 +161,6 @@ final readonly class HardwareRepository extends AbstractRepository
      */
     private function getUsageTables(): array
     {
-        return [DatabaseTable::ZxReleaseHardware];
+        return [DatabaseTable::ZxProdHardware, DatabaseTable::ZxReleaseHardware];
     }
 }

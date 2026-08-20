@@ -4,7 +4,7 @@ import {EmulatorModalService} from '../../../features/emulator/services/emulator
 import {EmulatorType} from '../../../features/emulator/engines/emulator-engine';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
 
-const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext'];
+const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext', 'timex2048', 'timex2068'];
 
 @Component({
   selector: 'zx-emulator-play-button',

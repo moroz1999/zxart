@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace ZxArt\Releases\Services;
 
+use ZxArt\Hardware\HardwareCatalogService;
+use ZxArt\Hardware\HardwareGroup;
+
 final class EmulatorResolverService
 {
     /**
-     * Hardware the online emulators cannot emulate; a release requiring any of it
-     * cannot be launched online (e.g. General Sound).
+     * Hardware the online emulators cannot emulate (General Sound). It is a sound
+     * extension, so it only decides playability when it is the only sound there
+     * is — see {@see isSilencedByUnsupportedHardware()}.
      */
     private const UNSUPPORTED_HARDWARE = ['gs'];
+
+    /** Snapshots and tapes JSSpeccy loads; it has no cartridge (dck) support. */
+    private const JSSPECCY_EXTENSIONS = ['tap', 'tzx', 'z80', 'sna', 'szx'];
 
     private const EMULATORS = [
         'zx80' => [
@@ -37,11 +44,29 @@ final class EmulatorResolverService
             'hardware' => ['zxnext'],
             'extensions' => ['zip', 'nex'],
         ],
+        // JSSpeccy boots one machine, so each Timex model is its own emulator id
+        'timex2048' => [
+            'hardware' => ['timex2048'],
+            'extensions' => self::JSSPECCY_EXTENSIONS,
+        ],
+        'timex2068' => [
+            'hardware' => ['timex2068'],
+            'extensions' => self::JSSPECCY_EXTENSIONS,
+        ],
     ];
 
+    public function __construct(
+        private readonly HardwareCatalogService $catalogService,
+    ) {
+    }
+
+    /**
+     * @param string[] $hardwareRequired
+     * @param string[] $releaseFormats
+     */
     public function resolveEmulator(array $hardwareRequired, array $releaseFormats): ?string
     {
-        if (array_intersect($hardwareRequired, self::UNSUPPORTED_HARDWARE)) {
+        if ($this->isSilencedByUnsupportedHardware($hardwareRequired)) {
             return null;
         }
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'zx80')) {
@@ -59,6 +84,14 @@ final class EmulatorResolverService
 //        if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'zxnext')) {
 //            return 'zxnext';
 //        }
+        // Before the USP fallback: a Timex release is a Spectrum release by format,
+        // and only its machine says the SCLD modes have to be emulated
+        if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'timex2048')) {
+            return 'timex2048';
+        }
+        if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'timex2068')) {
+            return 'timex2068';
+        }
         if ($this->matchFormat($releaseFormats, 'usp')) {
             return 'usp';
         }
@@ -69,6 +102,32 @@ final class EmulatorResolverService
     public function getRunnableTypesForEmulator(?string $emulator): array
     {
         return self::EMULATORS[$emulator]['extensions'] ?? [];
+    }
+
+    /**
+     * A release whose only sound is one the emulators cannot produce would run
+     * mute, which is not worth offering. Any other sound hardware in the set is a
+     * way for it to be heard, so General Sound alongside an AY only costs the GS
+     * track and the release stays playable.
+     *
+     * @param string[] $hardwareRequired
+     */
+    private function isSilencedByUnsupportedHardware(array $hardwareRequired): bool
+    {
+        if (!array_intersect($hardwareRequired, self::UNSUPPORTED_HARDWARE)) {
+            return false;
+        }
+
+        foreach ($hardwareRequired as $code) {
+            if (in_array($code, self::UNSUPPORTED_HARDWARE, true)) {
+                continue;
+            }
+            if ($this->catalogService->getCategoryOf($code) === HardwareGroup::SOUND) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function matchHardwareAndFormat(array $hardwareRequired, array $releaseFormats, string $emulator): bool

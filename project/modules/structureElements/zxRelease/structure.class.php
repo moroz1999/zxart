@@ -18,7 +18,8 @@ use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxArt\Releases\Services\ReleaseHardwareAutofillService;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
-use ZxFiles\BasicFile;
+use ZxFiles\Basic\BasicProgramParser;
+use ZxFiles\ZxSpectrum\Plus3Dos\Plus3DosHeader;
 
 /**
  * @psalm-import-type EngineFileRegistryRow from ZxParsingManager
@@ -450,9 +451,8 @@ class zxReleaseElement extends ZxArtItem implements
                     }
                     break;
                 case 'zx_basic':
-                    $basic = new BasicFile();
-                    $basic->setBinary($content);
-                    return htmlspecialchars($basic->getAsText());
+                    $program = (new BasicProgramParser())->parse($this->stripPlus3DosHeader($content));
+                    return htmlspecialchars($program->toText());
                 case 'zx_image_standard':
                     if ($fileId = $this->getFileId()) {
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:standard/' />";
@@ -480,6 +480,19 @@ class zxReleaseElement extends ZxArtItem implements
         }
 
         return null;
+    }
+
+    /**
+     * +3DOS and esxDOS save a BASIC program behind a 128 byte header. The tokenized program
+     * starts after it, so listing one without stripping it would decode the header as code.
+     */
+    private function stripPlus3DosHeader(string $content): string
+    {
+        if (!str_starts_with($content, Plus3DosHeader::SIGNATURE)) {
+            return $content;
+        }
+
+        return substr($content, Plus3DosHeader::LENGTH);
     }
 
     /**
@@ -932,7 +945,6 @@ class zxReleaseElement extends ZxArtItem implements
         // permanent data loss. `parsed` is set so the cron stops retrying.
         if (!is_file($filePath)) {
             $this->parsed = 1;
-            $this->autofillHardware();
             $this->persistElementData();
             return;
         }
@@ -957,30 +969,14 @@ class zxReleaseElement extends ZxArtItem implements
             }
         }
 
-        $this->autofillHardware();
-
         $this->parsed = 1;
         $this->persistElementData();
     }
 
     /**
-     * Adds the hardware the release format implies, on every save.
-     *
-     * Runs after `releaseFormat` has been recomputed above, so it always sees the
-     * current formats. Additive only: an editor's choices are never removed, and
-     * a release that already says everything gets nothing.
-     */
-    public function autofillHardware(): void
-    {
-        $additions = $this->getHardwareAutofillAdditions();
-        if ($additions !== []) {
-            $this->hardwareRequired = [...$this->hardwareRequired, ...$additions];
-        }
-    }
-
-    /**
-     * What auto-fill would add, without changing anything — so the one-off
-     * backfill can preview a batch and then apply the very same result.
+     * The hardware the release format implies. Saving a release does not apply
+     * it: auto-fill runs only from the `/fix/job:hardware-autofill/` backfill,
+     * which reads this and writes the result itself.
      *
      * @return list<string>
      */
@@ -991,7 +987,7 @@ class zxReleaseElement extends ZxArtItem implements
         // production does — so the format×machine rules resolve from the prod.
         // And it is what "already present" means: a code the production states is
         // not missing, and re-adding it would push a shared code back down and
-        // undo the prod-hardware split on every save. What does get added is
+        // undo the prod-hardware split. What does get added is
         // still written to the release, because a code that is genuinely new
         // there is release-specific.
         return $this->getService(ReleaseHardwareAutofillService::class)->getAdditions(

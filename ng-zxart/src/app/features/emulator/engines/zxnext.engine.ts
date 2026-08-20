@@ -1,5 +1,6 @@
 import {EmulatorEngine, EmulatorType} from './emulator-engine';
-import {MameEmulatorInstance, MameGlobals, loadScriptOnce} from './mame-globals';
+import {MameEmulatorInstance, MameGlobals} from './mame-globals';
+import {loadScriptOnce} from './load-script';
 
 const LOADER_URL = '/libs/mamenextsam/loader.js';
 const LIB_BASE = '/libs/mamenextsam';

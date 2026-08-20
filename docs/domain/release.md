@@ -85,9 +85,15 @@ emulated:
 - **ZX80**: on ZX80 hardware
 - **TSConf**: SPG, IMG, TRD, SCL, on TSConf hardware
 - **Multiboard**: TAR, on Multiboard hardware
+- **Timex**: TAP, TZX, Z80, SNA, SZX, on Timex TC2048 or TC2068 hardware. A
+  cartridge cannot be launched, so a release distributed as one is not playable.
 
-Hardware the emulators cannot reproduce makes a release unplayable regardless of
-its format.
+Hardware the emulators cannot reproduce — General Sound — makes a release
+unplayable only when it is the only sound the release has. Where the release also
+names another sound chip it can still be heard, so it stays playable and only the
+General Sound track is missing.
+
+The emulator window names the emulator it runs and links to its home page.
 
 A screenshot taken while playing is filed with whatever was launched: with the
 release when launched from the release, and with the production when launched

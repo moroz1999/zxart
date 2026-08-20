@@ -159,9 +159,9 @@ class fixApplication extends controllerApplication
     /**
      * Backfills the hardware every release's format implies.
      *
-     * Runs the same {@see ReleaseHardwareAutofillService} the save path uses, so
-     * the backfill and the on-save behaviour can never drift apart. Additive and
-     * idempotent, so re-running is safe and a batch can be repeated.
+     * This is the only thing that applies {@see ReleaseHardwareAutofillService}:
+     * saving a release derives nothing from its format. Additive and idempotent,
+     * so re-running is safe and a batch can be repeated.
      *
      * `/fix/job:hardware-autofill/` — supports `dry:1` to print the diff without
      * writing, and `offset:N` / `limit:N` to work through the catalogue in
@@ -195,8 +195,8 @@ class fixApplication extends controllerApplication
                 continue;
             }
 
-            // goes through the element, so the backfill and an ordinary save can
-            // never disagree about what a release should get
+            // goes through the element, so the rules see the same effective
+            // hardware the release itself resolves
             $additions = $release->getHardwareAutofillAdditions();
             if ($additions === []) {
                 continue;
