@@ -15,7 +15,7 @@
     "tedivm/jshrink": "~1.0",
     "monolog/monolog": "2.9.*",    "moroz1999/sxg": "*",
     "moroz1999/zx-image": "^6.0",
-    "moroz1999/zx-files": "^3.1",
+    "moroz1999/zx-files": "^4.0",
     "ext-json": "*",
     "ext-curl": "*",
     "ext-gd": "*",

@@ -19,6 +19,7 @@ use ZxArt\Releases\Services\ReleaseHardwareAutofillService;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
 use ZxFiles\Basic\BasicProgramParser;
+use ZxFiles\Binary\Binary;
 use ZxFiles\ZxSpectrum\Plus3Dos\Plus3DosHeader;
 
 /**
@@ -483,16 +484,18 @@ class zxReleaseElement extends ZxArtItem implements
     }
 
     /**
-     * +3DOS and esxDOS save a BASIC program behind a 128 byte header. The tokenized program
-     * starts after it, so listing one without stripping it would decode the header as code.
+     * +3DOS and esxDOS save a BASIC program behind a 128 byte header, and the file is
+     * allocated in whole records, so the header is both where the program starts and the
+     * only place the real length is recorded.
      */
     private function stripPlus3DosHeader(string $content): string
     {
-        if (!str_starts_with($content, Plus3DosHeader::SIGNATURE)) {
+        $header = Plus3DosHeader::read(Binary::fromString($content));
+        if ($header === null) {
             return $content;
         }
 
-        return substr($content, Plus3DosHeader::LENGTH);
+        return substr($content, Plus3DosHeader::LENGTH, $header->dataLength);
     }
 
     /**

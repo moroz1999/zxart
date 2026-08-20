@@ -116,7 +116,7 @@ abstract class ZxParsingItem
         return null;
     }
 
-    public function addItem(ZxParsingItemFile|ZxParsingItemRar|ZxParsingItemTrd|ZxParsingItemScl|ZxParsingItemTzx|ZxParsingItemTap|ZxParsingItemFolder|ZxParsingItemZip $item): void
+    public function addItem(self $item): void
     {
         $this->items = $this->items ?: [];
         $this->items[] = $item;

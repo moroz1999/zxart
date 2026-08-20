@@ -14,6 +14,9 @@ import {
 import {ReleaseDetailsApiService} from '../../services/release-details-api.service';
 import {TapeAudioService} from '../../services/tape-audio.service';
 
+/** Containers that ship a directory tree rather than a disk or a tape. */
+const ARCHIVE_TYPES = ['zip', 'rar', 'tar'];
+
 @Component({
   selector: 'zx-release-file-structure',
   standalone: true,
@@ -45,7 +48,7 @@ export class ZxReleaseFileStructureComponent implements OnInit {
 
   getIcon(item: ReleaseFileStructureItemDto): string {
     if (item.type === 'folder') return 'folder';
-    if (item.type === 'zip') return 'zip';
+    if (ARCHIVE_TYPES.includes(item.type)) return 'zip';
     return 'file';
   }
 

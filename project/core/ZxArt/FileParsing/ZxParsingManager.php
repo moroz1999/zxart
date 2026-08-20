@@ -6,6 +6,8 @@ namespace ZxArt\FileParsing;
 use EncodingDetector;
 use errorLogger;
 use Illuminate\Database\Connection;
+use ZxFiles\ContainerFormat;
+use ZxFiles\Detection\ContainerReader;
 
 /**
  * @psalm-type EngineFileRegistryRow = array{
@@ -15,7 +17,7 @@ use Illuminate\Database\Connection;
  *     fileName: string,
  *     size: int,
  *     elementId: int,
- *     type: 'folder'|'trd'|'tap'|'scl'|'file'|'zip'|'7z'|'rar'|'tar'|'tzx',
+ *     type: 'folder'|'file'|'zip'|'7z'|'rar'|'trd'|'scl'|'tap'|'tzx'|'dsk'|'fdi'|'udi'|'opd'|'tar',
  *     encoding: 'UTF-8'|'Windows-1251'|'ISO-8859-1'|'IBM866'|'CP866'|'KOI8-R'|'Windows-1252'|'none',
  *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'binary'
  * }
@@ -31,11 +33,36 @@ final class ZxParsingManager extends errorLogger
         'asm', 'a80', 'a', 'bat', 'cmd'
     ];
 
+    private readonly ContainerReader $containerReader;
+
     public function __construct(
         private readonly Connection $db
     )
     {
+        $this->containerReader = new ContainerReader();
+    }
 
+    public function getContainerReader(): ContainerReader
+    {
+        return $this->containerReader;
+    }
+
+    /**
+     * The parsing item a registry type calls for. Every container format zx-files reads is
+     * one item class, so a new format needs nothing here.
+     */
+    public function createItem(string $type): ZxParsingItem
+    {
+        if ($format = ContainerFormat::fromExtension($type)) {
+            return new ZxParsingItemContainer($this, $format);
+        }
+
+        return match ($type) {
+            'zip' => new ZxParsingItemZip($this),
+            'rar' => new ZxParsingItemRar($this),
+            'folder' => new ZxParsingItemFolder($this),
+            default => new ZxParsingItemFile($this),
+        };
     }
 
 
@@ -141,7 +168,8 @@ final class ZxParsingManager extends errorLogger
             return 'pc_image';
         }
 
-        if ($extension === 'b') {
+        // 'b' is the TR-DOS and tape extension, 'bas' the one +3DOS and esxDOS use.
+        if ($extension === 'b' || $extension === 'bas') {
             return 'zx_basic';
         }
 
@@ -173,21 +201,7 @@ final class ZxParsingManager extends errorLogger
     {
         $structure = [];
         if (is_file($path) && ($type = $this->detectType($path, null, $fileName))) {
-            if ($type === 'tap') {
-                $file = new ZxParsingItemTap($this);
-            } elseif ($type === 'tzx') {
-                $file = new ZxParsingItemTzx($this);
-            } elseif ($type === 'scl') {
-                $file = new ZxParsingItemScl($this);
-            } elseif ($type === 'trd') {
-                $file = new ZxParsingItemTrd($this);
-            } elseif ($type === 'rar') {
-                $file = new ZxParsingItemRar($this);
-            } elseif ($type === 'zip') {
-                $file = new ZxParsingItemZip($this);
-            } else {
-                $file = new ZxParsingItemFile($this);
-            }
+            $file = $this->createItem($type);
             $file->setPath($path);
             if ($fileName) {
                 $file->setItemName($fileName);
@@ -198,23 +212,34 @@ final class ZxParsingManager extends errorLogger
         return $structure;
     }
 
-    public function detectType(string|null $path = null, string|null $content = null, $fileName = null): string
+    /**
+     * The extension a file goes by, which is what decides how it is parsed. Archives without
+     * one are recognised by their signature instead.
+     */
+    public function detectType(string|null $path = null, string|null $content = null, string|null $fileName = null): string
     {
-        if ($fileName && ($extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))) {
-            return $extension;
-        }
-
-        if (!($extension = strtolower(pathinfo($path, PATHINFO_EXTENSION)))) {
-            if ($content || ($content = file_get_contents($path))) {
-                if (str_starts_with($content, 'PK')) {
-                    return 'zip';
-                }
-                if (str_starts_with($content, 'Rar')) {
-                    return 'rar';
-                }
+        foreach ([$fileName, $path] as $name) {
+            if ($name !== null && ($extension = strtolower(pathinfo($name, PATHINFO_EXTENSION))) !== '') {
+                return $extension;
             }
         }
-        return $extension;
+
+        if ($content === null && $path !== null && is_file($path)) {
+            $read = file_get_contents($path);
+            $content = $read === false ? null : $read;
+        }
+        if ($content === null) {
+            return '';
+        }
+
+        if (str_starts_with($content, 'PK')) {
+            return 'zip';
+        }
+        if (str_starts_with($content, 'Rar')) {
+            return 'rar';
+        }
+
+        return '';
     }
 
     public function getFileRecord(int $id)
@@ -306,32 +331,7 @@ final class ZxParsingManager extends errorLogger
 
     private function rowToItem(array $row): ZxParsingItem
     {
-        switch ($row['type']) {
-            case 'tap':
-                $item = new ZxParsingItemTap($this);
-                break;
-            case 'tzx':
-                $item = new ZxParsingItemTzx($this);
-                break;
-            case 'scl':
-                $item = new ZxParsingItemScl($this);
-                break;
-            case 'trd':
-                $item = new ZxParsingItemTrd($this);
-                break;
-            case 'rar':
-                $item = new ZxParsingItemRar($this);
-                break;
-            case 'zip':
-                $item = new ZxParsingItemZip($this);
-                break;
-            case 'folder':
-                $item = new ZxParsingItemFolder($this);
-                break;
-            default:
-                $item = new ZxParsingItemFile($this);
-                break;
-        }
+        $item = $this->createItem((string)$row['type']);
 
         $item->setItemName($row['fileName']);
         $item->setContent('');

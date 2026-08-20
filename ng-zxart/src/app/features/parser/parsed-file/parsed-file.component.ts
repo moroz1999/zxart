@@ -21,6 +21,7 @@ const zxFiles = [
     'z80',
     'fdi',
     'udi',
+    'opd',
     'td0',
     'rom',
     'spg',

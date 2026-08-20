@@ -43,22 +43,9 @@ class ZxParsingItemZip extends ZxParsingItem
                                 $partItem->setItemName($part);
                             } else {
                                 if ($content = $zip->getFromIndex($i)) {
-                                    $type = $this->zxParsingManager->detectType($part, $content);
-                                    if ($type === 'tap') {
-                                        $partItem = new ZxParsingItemTap($this->zxParsingManager);
-                                    } elseif ($type === 'tzx') {
-                                        $partItem = new ZxParsingItemTzx($this->zxParsingManager);
-                                    } elseif ($type === 'scl') {
-                                        $partItem = new ZxParsingItemScl($this->zxParsingManager);
-                                    } elseif ($type === 'trd') {
-                                        $partItem = new ZxParsingItemTrd($this->zxParsingManager);
-                                    } elseif ($type === 'rar') {
-                                        $partItem = new ZxParsingItemRar($this->zxParsingManager);
-                                    } elseif ($type === 'zip') {
-                                        $partItem = new ZxParsingItemZip($this->zxParsingManager);
-                                    } else {
-                                        $partItem = new ZxParsingItemFile($this->zxParsingManager);
-                                    }
+                                    $partItem = $this->zxParsingManager->createItem(
+                                        $this->zxParsingManager->detectType($part, $content)
+                                    );
                                     $partItem->setContent($content);
                                     $partItem->setParentMd5($this->getMd5());
                                     $partItem->setItemName($part);

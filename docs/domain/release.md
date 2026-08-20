@@ -61,6 +61,15 @@ The contents of the release archive are listed, and single files inside it can b
 previewed or downloaded on their own — but only when the release itself may be
 downloaded at all. Tape files inside it can also be played back as sound.
 
+Disks, tapes and archives are opened alike: TR-DOS disks and SCL archives, +3DOS
+and CP/M disks, IS-DOS floppies, Opus Discovery disks, TAP and TZX tapes, TAR
+distribution trees, and ordinary ZIP and RAR archives. The systems that keep real
+folders — an IS-DOS disk, a TAR tree — are listed with them; the flat ones list
+everything at once. A container nobody recognises stays a single file. Names are
+shown as the machine that wrote them would have shown them, Russian catalogues
+included, and a tokenized BASIC program is previewed as a listing whichever
+system saved it.
+
 ### Downloading
 Whether a release may be downloaded follows the legal status of its production:
 

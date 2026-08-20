@@ -4186,54 +4186,6 @@
       <code><![CDATA[RarArchive]]></code>
     </UndefinedClass>
   </file>
-  <file src="project/core/ZxArt/FileParsing/ZxParsingItemScl.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ZxParsingItemScl]]></code>
-    </ClassMustBeFinal>
-    <MixedArgument>
-      <code><![CDATA[$file->getContents()]]></code>
-      <code><![CDATA[$file->getFullName()]]></code>
-    </MixedArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getMd5()]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="project/core/ZxArt/FileParsing/ZxParsingItemTap.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ZxParsingItemTap]]></code>
-    </ClassMustBeFinal>
-    <MixedArgument>
-      <code><![CDATA[$file->getContents()]]></code>
-      <code><![CDATA[$file->getFullName()]]></code>
-    </MixedArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getMd5()]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="project/core/ZxArt/FileParsing/ZxParsingItemTrd.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ZxParsingItemTrd]]></code>
-    </ClassMustBeFinal>
-    <MixedArgument>
-      <code><![CDATA[$file->getContents()]]></code>
-      <code><![CDATA[$file->getFullName()]]></code>
-    </MixedArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getMd5()]]></code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="project/core/ZxArt/FileParsing/ZxParsingItemTzx.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ZxParsingItemTzx]]></code>
-    </ClassMustBeFinal>
-    <MixedArgument>
-      <code><![CDATA[$file->getContents()]]></code>
-      <code><![CDATA[$file->getFullName()]]></code>
-    </MixedArgument>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getMd5()]]></code>
-    </PossiblyNullArgument>
-  </file>
   <file src="project/core/ZxArt/FileParsing/ZxParsingItemZip.php">
     <ClassMustBeFinal>
       <code><![CDATA[ZxParsingItemZip]]></code>
