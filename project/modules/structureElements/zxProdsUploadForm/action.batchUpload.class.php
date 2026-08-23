@@ -171,6 +171,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'legalStatus',
             'externalLink',
             'language',
+            'hardwareRequired',
             'file',
             'youtubeId',
             'tagsText',

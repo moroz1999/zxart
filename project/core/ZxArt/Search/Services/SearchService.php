@@ -18,8 +18,6 @@ use SearchResultSet;
 use structureElement;
 use ZxArtItem;
 use ZxArt\AuthorList\AuthorListTransformer;
-use ZxArt\AuthorList\Dto\AuthorListItemDto;
-use ZxArt\GroupList\Dto\GroupListItemDto;
 use ZxArt\GroupList\GroupListTransformer;
 use ZxArt\Parties\PartiesTransformer;
 use ZxArt\Pictures\PicturesTransformer;
@@ -130,6 +128,7 @@ readonly class SearchService
         $search->setContentMatching(false);
         $search->setFilters([]);
         $search->setSinglePageCombining(true);
+        $search->setRelevanceOrdering();
         $result = $search->getResult();
 
         return new SearchResultsDto(
@@ -255,11 +254,10 @@ readonly class SearchService
             if ($bucket['items'] === []) {
                 continue;
             }
-            $items = $this->sortBucketItems($publicType, $bucket['items']);
             $dtos[] = new SearchResultSetDto(
                 type: $bucket['type'],
-                totalCount: count($items),
-                items: $items,
+                totalCount: count($bucket['items']),
+                items: $bucket['items'],
             );
         }
         return $dtos;
@@ -333,60 +331,6 @@ readonly class SearchService
             $element instanceof ZxArtItem => html_entity_decode($element->getSearchTitle(), ENT_QUOTES, 'UTF-8'),
             default => html_entity_decode((string)$element->getTitle(), ENT_QUOTES, 'UTF-8'),
         };
-    }
-
-    /**
-     * @param object[] $items
-     * @return object[]
-     */
-    private function sortBucketItems(string $publicType, array $items): array
-    {
-        if ($publicType === 'author') {
-            usort($items, function ($a, $b): int {
-                $primary = $this->compareCi($this->authorTitle($a), $this->authorTitle($b));
-                if ($primary !== 0) {
-                    return $primary;
-                }
-                return $this->compareCi($this->authorRealName($a), $this->authorRealName($b));
-            });
-            return $items;
-        }
-        if ($publicType === 'group') {
-            usort($items, function ($a, $b): int {
-                $primary = $this->compareCi($this->groupTitle($a), $this->groupTitle($b));
-                if ($primary !== 0) {
-                    return $primary;
-                }
-                return $this->compareCi($this->groupRealTitle($a), $this->groupRealTitle($b));
-            });
-            return $items;
-        }
-        return $items;
-    }
-
-    private function compareCi(string $a, string $b): int
-    {
-        return strnatcasecmp($a, $b);
-    }
-
-    private function authorTitle(object $item): string
-    {
-        return $item instanceof AuthorListItemDto ? $item->title : '';
-    }
-
-    private function authorRealName(object $item): string
-    {
-        return $item instanceof AuthorListItemDto ? $item->realName : '';
-    }
-
-    private function groupTitle(object $item): string
-    {
-        return $item instanceof GroupListItemDto ? $item->title : '';
-    }
-
-    private function groupRealTitle(object $item): string
-    {
-        return $item instanceof GroupListItemDto ? ($item->realGroupTitle ?? '') : '';
     }
 
     private function buildItem(structureElement $element, string $phrase): ?object

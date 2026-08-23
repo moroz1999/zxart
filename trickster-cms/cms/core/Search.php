@@ -6,14 +6,15 @@ class Search implements DependencyInjectionContextInterface
 {
     use DependencyInjectionContextTrait;
 
-    protected $types = [];
-    protected $filters = [];
+    protected array $types = [];
+    protected array $filters = [];
     protected $offset = 0;
     protected $limit = 50;
     protected $partialMatching = false;
     protected $contentMatching = false;
     protected $singlePageCombining = false;
-    protected $input = '';
+    protected bool $relevanceOrdering = false;
+    protected string $input = '';
     protected $languageId;
 
     public function __construct(Container $container)
@@ -59,7 +60,7 @@ class Search implements DependencyInjectionContextInterface
         $this->contentMatching = (bool)$enabled;
     }
 
-    public function setFilters($filters)
+    public function setFilters(array $filters)
     {
         $this->filters = $filters;
     }
@@ -67,6 +68,15 @@ class Search implements DependencyInjectionContextInterface
     public function setSinglePageCombining($enabled = true)
     {
         $this->singlePageCombining = (bool)$enabled;
+    }
+
+    /**
+     * Instant search shows one page only, so the closest matches have to be on top of it.
+     * Paged search is ordered by title alone: every page is then a part of one alphabetical list.
+     */
+    public function setRelevanceOrdering(bool $enabled = true): void
+    {
+        $this->relevanceOrdering = $enabled;
     }
 
     public function getResult()
@@ -85,7 +95,7 @@ class Search implements DependencyInjectionContextInterface
     protected function performTypeSearch($searchResult, $exact = true, $typePostfix = '', $exclusions = [])
     {
         $structureManager = $this->getService('structureManager');
-        $apiQueriesManager = $this->getService(ApiQueriesManager::class);
+        $queryFiltersManager = $this->getService(QueryFiltersManager::class);
         $idsByType = [];
 
         if ($exact) {
@@ -96,8 +106,6 @@ class Search implements DependencyInjectionContextInterface
 
         if ($input) {
             foreach ($this->types as &$type) {
-                $apiQuery = $apiQueriesManager->getQuery();
-                $apiQuery->setExportType($type);
                 $queryParameters = [];
                 if ($this->contentMatching) {
                     $queryParameters[$type . 'Search'] = $input;
@@ -108,10 +116,14 @@ class Search implements DependencyInjectionContextInterface
                 if (!empty($exclusions[$type])) {
                     $queryParameters['structureSkipId'] = $exclusions[$type];
                 }
-                $apiQuery->setFiltrationParameters($queryParameters);
-                $queryResult = $apiQuery->getFilterQueries();
+                // temporary tables are skipped here: they would drop the ordering the results rely on
+                $queryResult = $queryFiltersManager->getFilterQueries($queryParameters, [$type], true, false);
                 if (!empty($queryResult[$type])) {
-                    $idsByType[$type . $typePostfix] = array_column($queryResult[$type]->get(), 'id');
+                    /** @var \Illuminate\Database\Query\Builder $typeQuery */
+                    $typeQuery = $queryResult[$type];
+                    $this->assignOrdering($typeQuery, $input);
+                    $ids = array_column($typeQuery->get(), 'id');
+                    $idsByType[$type . $typePostfix] = array_values(array_unique($ids));
                 }
             }
             if ($idsByType) {
@@ -203,6 +215,60 @@ class Search implements DependencyInjectionContextInterface
         return $idsByType;
     }
 
+    /**
+     * Orders the whole result set in the database. Instant search puts the closest title matches
+     * on top of its single page; paged search is ordered by title alone, so that every page
+     * is a part of one and the same alphabetical list.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param string|string[] $input
+     * @return void
+     */
+    protected function assignOrdering($query, $input)
+    {
+        $sortColumn = searchQueryFilter::SORT_TITLE_COLUMN;
+        if (!$this->hasSortColumn($query, $sortColumn)) {
+            return;
+        }
+        if ($this->relevanceOrdering) {
+            $words = array_values((array)$input);
+            $wrappedColumn = $query->getGrammar()->wrap($sortColumn);
+            $patterns = [
+                static fn(string $word): string => $word,
+                static fn(string $word): string => $word . '%',
+                static fn(string $word): string => '%' . $word . '%',
+            ];
+            foreach ($patterns as $makePattern) {
+                $conditions = array_fill(0, count($words), $wrappedColumn . ' like ?');
+                $query->orderByRaw(
+                    '(' . implode(' or ', $conditions) . ') desc',
+                    array_map($makePattern, $words)
+                );
+            }
+        }
+        $query->orderBy($sortColumn);
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param string $sortColumn
+     * @return bool
+     */
+    protected function hasSortColumn($query, $sortColumn)
+    {
+        $columns = array_filter($query->columns, 'is_string');
+        foreach ($columns as $column) {
+            if (str_ends_with($column, ' as ' . $sortColumn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param string $query
+     * @return string[]
+     */
     protected function generateQueryStrings($query)
     {
         $queryStrings = [];

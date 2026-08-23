@@ -10,9 +10,14 @@ use ZxFiles\ContainerFormat;
 use ZxFiles\Directory;
 use ZxFiles\Exception\ZxFilesException;
 use ZxFiles\File;
+use ZxFiles\Mgt\MgtFile;
 use ZxFiles\Text\Charset;
 use ZxFiles\Text\TextDecoder;
+use ZxFiles\ZxSpectrum\GDos\GDosFileInfo;
+use ZxFiles\ZxSpectrum\GDos\GDosFileType;
 use ZxFiles\ZxSpectrum\IsDos\IsDosFile;
+use ZxFiles\ZxSpectrum\MDos\MDosFile;
+use ZxFiles\ZxSpectrum\MDos\MDosFileType;
 
 /**
  * A disk, tape or archive image read through zx-files. Every container format the library
@@ -67,9 +72,13 @@ final class ZxParsingItemContainer extends ZxParsingItem
     {
         foreach ($directory->files as $file) {
             $item = new ZxParsingItemFile($this->zxParsingManager);
-            $item->setContent($file->contents());
+            $item->setContent($this->fileContent($file));
             $item->setParentMd5((string)$parent->getMd5());
             $item->setItemName($this->fileName($file));
+            $internalType = $this->internalType($file);
+            if ($internalType !== null) {
+                $item->setInternalType($internalType);
+            }
             $parent->addItem($item);
         }
 
@@ -81,6 +90,31 @@ final class ZxParsingItemContainer extends ZxParsingItem
 
             $this->addDirectory($subDirectory, $item);
         }
+    }
+
+    /**
+     * GDOS and SAMDOS keep a nine byte header in front of a file, repeating what the
+     * catalogue already records, so the item holds the file without it — which is also what
+     * makes a SCREEN$ the 6912 bytes it is. Every other system stores the file as it is.
+     */
+    private function fileContent(File $file): string
+    {
+        return $file instanceof MgtFile ? $file->payload() : $file->contents();
+    }
+
+    /**
+     * What a file is, when its catalogue says so and its name cannot: GDOS records no
+     * extension at all, and MDOS writes the type letter as one. SAM BASIC is deliberately
+     * left out — it is not written in ZX Spectrum tokens and would not list.
+     */
+    private function internalType(File $file): ?string
+    {
+        $isGDosBasic = $file instanceof MgtFile
+            && $file->info instanceof GDosFileInfo
+            && $file->info->type === GDosFileType::BasicProgram;
+        $isMDosBasic = $file instanceof MDosFile && $file->type === MDosFileType::BasicProgram;
+
+        return $isGDosBasic || $isMDosBasic ? 'zx_basic' : null;
     }
 
     /**

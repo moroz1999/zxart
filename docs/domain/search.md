@@ -6,8 +6,14 @@ restricts it to certain kinds of entity, and pages through the results. The
 phrase, the kinds and the page are part of the address, so a search can be
 linked to and shared.
 
+Results of every kind come as one alphabetical list, and a page is a window into
+it, so paging walks that one list instead of re-ordering every page. An entity
+that exists in several languages is listed once.
+
 The quick search in the site header answers the same question while typing, but
-looks at titles only rather than at full content.
+looks at titles only rather than at full content. It has a single page of
+results, so it is ordered by closeness to the phrase instead: an exact title
+first, then titles beginning with it, then titles containing it.
 
 ### Detailed search
 Graphics and music have a search of their own, because they are looked for by

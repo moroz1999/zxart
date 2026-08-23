@@ -111,6 +111,7 @@ class ajaxSearchApplication extends controllerApplication
             $search->setContentMatching(false);
             $search->setFilters($filters);
             $search->setSinglePageCombining(true);
+            $search->setRelevanceOrdering();
             $result = $search->getResult();
             if ($result->count) {
 //                if ($this->mode == "public") {

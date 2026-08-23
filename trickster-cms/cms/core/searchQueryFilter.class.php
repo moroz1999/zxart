@@ -9,7 +9,8 @@ use ZxArt\Search\ExtraSearchFiltersInterface;
  *  1. Search for arguments in title first
  *  2. Search for arguments in content (and/or introduction or any other text fields) last
  *
- *  As a result all found elements with query word in title go first, others go after them.
+ *  The main title is exposed as a known column, so that Search can order the whole result set
+ *  in the database the way the current kind of search needs it.
  *
  *  The only difference between filters are database column names and database table name,
  *  so the inheriting filter should only implement 3 getters to function,
@@ -17,6 +18,12 @@ use ZxArt\Search\ExtraSearchFiltersInterface;
  */
 abstract class searchQueryFilter extends QueryFilter
 {
+    /**
+     * Name the main title column is exposed under. Keeping it in the column list
+     * lets a "distinct" query be ordered by the title as well.
+     */
+    public const string SORT_TITLE_COLUMN = 'searchSortTitle';
+
     /**
      * All search filters implement this method in a same way, so we can use type name for this purpose
      * @return string
@@ -42,7 +49,7 @@ abstract class searchQueryFilter extends QueryFilter
         $titleFields = $this->getTitleFieldNames();
         $contentFields = $this->getContentFieldNames();
         $table = $this->getTable();
-        $query->where(function ($finalQuery) use ($argument, $query, $titleFields, $contentFields, $table) {
+        $query->where(function ($finalQuery) use ($argument, $titleFields, $contentFields, $table) {
             /**
              * @var Builder $finalQuery
              */
@@ -51,14 +58,12 @@ abstract class searchQueryFilter extends QueryFilter
                 foreach ($titleFields as $field) {
                     foreach ($argument as $argumentWord) {
                         $finalQuery->orWhere($table . '.' . $field, 'like', '%' . $argumentWord . '%');
-                        $query->orderByRaw('INSTR(?, ?)', [$table . '.' . $field, $argumentWord]);
                     }
                 }
                 if ($contentFields) {
                     foreach ($contentFields as $field) {
                         foreach ($argument as $argumentWord) {
                             $finalQuery->orWhere($table . '.' . $field, 'like', '%' . $argumentWord . '%');
-                            $query->orderByRaw('INSTR(?, ?)', [$table . '.' . $field, $argumentWord]);
                         }
                     }
                 }
@@ -70,10 +75,34 @@ abstract class searchQueryFilter extends QueryFilter
                 }
             }
         });
+        $this->assignSortColumn($query, $titleFields, $table);
         if ($this instanceof ExtraSearchFiltersInterface){
             $query = $this->assignExtraFilters($query);
         }
         return $query;
+    }
+
+    /**
+     * Exposes the main title column under a known name, so that Search can order the results by it.
+     * Keeping the title in the column list also lets a "distinct" query be ordered by it.
+     * Queries without an explicit column list are left alone, because an added column
+     * would replace their "*" selection.
+     *
+     * @param Builder $query
+     * @param string[]|false $titleFields
+     * @param string $table
+     * @return void
+     */
+    protected function assignSortColumn($query, $titleFields, $table)
+    {
+        if (!is_array($titleFields) || $titleFields === [] || empty($query->columns)) {
+            return;
+        }
+        $column = $table . '.' . reset($titleFields) . ' as ' . self::SORT_TITLE_COLUMN;
+        if (in_array($column, $query->columns, true)) {
+            return;
+        }
+        $query->addSelect($column);
     }
 
     /**

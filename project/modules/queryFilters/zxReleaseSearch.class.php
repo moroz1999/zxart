@@ -1,11 +1,11 @@
 <?php
 
-class zxProdSearchQueryFilter extends searchQueryFilter
+class zxReleaseSearchQueryFilter extends searchQueryFilter
 {
 
     protected function getTypeName()
     {
-        return 'zxProd';
+        return 'zxRelease';
     }
 
     protected function getTitleFieldNames()

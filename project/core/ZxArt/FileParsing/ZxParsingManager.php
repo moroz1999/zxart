@@ -17,7 +17,7 @@ use ZxFiles\Detection\ContainerReader;
  *     fileName: string,
  *     size: int,
  *     elementId: int,
- *     type: 'folder'|'file'|'zip'|'7z'|'rar'|'trd'|'scl'|'tap'|'tzx'|'dsk'|'fdi'|'udi'|'opd'|'tar',
+ *     type: 'folder'|'file'|'zip'|'7z'|'rar'|'trd'|'scl'|'tap'|'tzx'|'dsk'|'fdi'|'udi'|'opd'|'mgt'|'img'|'d80'|'tar',
  *     encoding: 'UTF-8'|'Windows-1251'|'ISO-8859-1'|'IBM866'|'CP866'|'KOI8-R'|'Windows-1252'|'none',
  *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'binary'
  * }
@@ -118,7 +118,10 @@ final class ZxParsingManager extends errorLogger
     private function saveFileStructureLevel(array $structure, int $elementId, ?int $parentId = null): void
     {
         foreach ($structure as $item) {
-            $internalType = $this->getInternalFileType($item->getItemName(), $item->getType(), $item->getSize(), $item->getContent());
+            // A container that reads a file system knows what its files are; only the rest
+            // has to be worked out from the name, the size and the content.
+            $internalType = $item->getInternalType()
+                ?? $this->getInternalFileType($item->getItemName(), $item->getType(), $item->getSize(), $item->getContent());
             if ($internalType === 'plain_text') {
                 $encoding = EncodingDetector::detectEncoding($item->getContent());
             } else {

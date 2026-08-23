@@ -13,6 +13,11 @@ abstract class ZxParsingItem
     protected array|null $items = null;
     protected string|null $parentMd5 = null;
     protected string|null $md5 = null;
+    /**
+     * What the item holds, when the container that produced it already knows and the file
+     * name cannot say. Null leaves the type to be worked out from name, size and content.
+     */
+    protected string|null $internalType = null;
 
     protected ZxParsingManager $zxParsingManager;
 
@@ -29,6 +34,16 @@ abstract class ZxParsingItem
     public function setParentMd5(string $parentMd5): void
     {
         $this->parentMd5 = $parentMd5;
+    }
+
+    public function getInternalType(): ?string
+    {
+        return $this->internalType;
+    }
+
+    public function setInternalType(string $internalType): void
+    {
+        $this->internalType = $internalType;
     }
 
     public function getPath(): ?string

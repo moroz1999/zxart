@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6724bc8deb194dd4f77b2e979172fa0d",
+    "content-hash": "46e52389f49afd059d0cb83482a8648d",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -1309,16 +1309,16 @@
         },
         {
             "name": "moroz1999/zx-files",
-            "version": "4.0.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-files.git",
-                "reference": "a1369398caf048b9e1567806b67f9057678f2255"
+                "reference": "7207d0a8ab7d5c002a647ee2e83b238b910f10b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/a1369398caf048b9e1567806b67f9057678f2255",
-                "reference": "a1369398caf048b9e1567806b67f9057678f2255",
+                "url": "https://api.github.com/repos/moroz1999/zx-files/zipball/7207d0a8ab7d5c002a647ee2e83b238b910f10b4",
+                "reference": "7207d0a8ab7d5c002a647ee2e83b238b910f10b4",
                 "shasum": ""
             },
             "require": {
@@ -1350,9 +1350,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-files/issues",
-                "source": "https://github.com/moroz1999/zx-files/tree/4.0.0"
+                "source": "https://github.com/moroz1999/zx-files/tree/4.1.0"
             },
-            "time": "2026-08-20T15:46:06+00:00"
+            "time": "2026-08-21T20:04:18+00:00"
         },
         {
             "name": "moroz1999/zx-image",
