@@ -18,16 +18,7 @@ class registrationElement extends menuDependantStructureElement
     {
         $moduleStructure['title'] = 'text';
 
-        $moduleStructure['company'] = 'text';
-        $moduleStructure['firstName'] = 'text';
-        $moduleStructure['lastName'] = 'text';
-        $moduleStructure['address'] = 'text';
-        $moduleStructure['city'] = 'text';
-        $moduleStructure['postIndex'] = 'text';
-        $moduleStructure['country'] = 'text';
         $moduleStructure['email'] = 'email';
-        $moduleStructure['phone'] = 'text';
-        $moduleStructure['website'] = 'text';
 
         $moduleStructure['type'] = 'text';
         $moduleStructure['subscribe'] = 'checkbox';

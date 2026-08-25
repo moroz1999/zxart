@@ -72,19 +72,10 @@ class receiveUser extends structureElementAction
     public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
-            'company',
-            'firstName',
-            'lastName',
-            'address',
-            'city',
-            'postIndex',
-            'country',
             'email',
-            'phone',
             'subscribe',
             'userName',
             'password',
-            'website',
             'showemail',
             'userGroups',
         ];

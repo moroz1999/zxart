@@ -65,6 +65,7 @@ final class SpaRouterTest extends TestCase
         yield ['/manage/hardware'];
         yield ['/manage/hardware/add'];
         yield ['/manage/hardware/42'];
+        yield ['/verify-email?email=user%40example.com&key=abc'];
     }
 
     public static function legacyRoutes(): iterable

@@ -34,13 +34,6 @@
       </zx-form-control>
     </zx-form-field>
 
-    <zx-form-field *ngFor="let item of optionalFields">
-      <zx-form-label [for]="'reg-' + item.field">{{ item.labelKey | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-input [id]="'reg-' + item.field" [formControlName]="item.field" type="text"></zx-input>
-      </zx-form-control>
-    </zx-form-field>
-
     <zx-form-message *ngIf="successMessage" variant="success">{{ successMessage }}</zx-form-message>
     <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
 

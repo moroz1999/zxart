@@ -19,11 +19,7 @@ class userDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getValue('dateModified');
             },
             'userName' => 'userName',
-            'firstName' => 'firstName',
-            'lastName' => 'lastName',
             'email' => 'email',
-            'phone' => 'phone',
-            'website' => 'website',
         ];
     }
 
@@ -37,11 +33,7 @@ class userDataResponseConverter extends StructuredDataResponseConverter
                 'dateModified',
                 'url',
                 'userName',
-                'firstName',
-                'lastName',
                 'email',
-                'phone',
-                'website',
             ],
             'search' => [
                 'id',

@@ -2,6 +2,17 @@
 
 use App\Users\CurrentUserService;
 
+/**
+ * @property string $title
+ * @property string $email
+ * @property string $type
+ * @property bool $subscribe
+ * @property bool $needPresentation
+ * @property string $content
+ * @property string $password
+ * @property string $passwordRepeat
+ * @property array<int, string> $dynamicFieldsData
+ */
 class registrationElement extends menuDependantStructureElement
 {
     const string FIELD_LINK_TYPE = 'registrationField';
@@ -22,16 +33,7 @@ class registrationElement extends menuDependantStructureElement
     {
         $moduleStructure['title'] = 'text';
 
-        $moduleStructure['company'] = 'text';
-        $moduleStructure['firstName'] = 'text';
-        $moduleStructure['lastName'] = 'text';
-        $moduleStructure['address'] = 'text';
-        $moduleStructure['city'] = 'text';
-        $moduleStructure['postIndex'] = 'text';
-        $moduleStructure['country'] = 'text';
         $moduleStructure['email'] = 'email';
-        $moduleStructure['phone'] = 'text';
-        $moduleStructure['website'] = 'text';
 
         $moduleStructure['type'] = 'text';
         $moduleStructure['subscribe'] = 'checkbox';
@@ -55,6 +57,9 @@ class registrationElement extends menuDependantStructureElement
         return $result;
     }
 
+    /**
+     * @return registrationInputElement[]
+     */
     public function getConnectedFields()
     {
         if ($this->connectedFields === null) {

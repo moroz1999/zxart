@@ -1894,15 +1894,6 @@
     "email": "Email",
     "password": "Пароль",
     "password-repeat": "Повторите пароль",
-    "first-name": "Имя",
-    "last-name": "Фамилия",
-    "company": "Компания",
-    "website": "Сайт",
-    "phone": "Телефон",
-    "address": "Адрес",
-    "city": "Город",
-    "post-index": "Индекс",
-    "country": "Страна",
     "submit": "Зарегистрироваться",
     "error-username": "Укажите логин",
     "error-email": "Укажите email",
@@ -1910,6 +1901,17 @@
     "error-password": "Укажите пароль",
     "error-password-match": "Пароли не совпадают",
     "error-generic": "Не удалось зарегистрироваться"
+  },
+  "verify-email": {
+    "title": "Подтверждение почты",
+    "pending": "Проверяем адрес почты…",
+    "verified": "Адрес почты подтверждён. Добро пожаловать на ZX-Art!",
+    "already-verified": "Этот адрес почты уже подтверждён. Можно входить.",
+    "continue": "Перейти на сайт",
+    "register-again": "Зарегистрироваться",
+    "error-invalid": "Ссылка подтверждения недействительна.",
+    "error-unknown-account": "Аккаунта с таким адресом почты нет.",
+    "error-generic": "Не удалось подтвердить адрес"
   },
   "join-form": {
     "author-as-alias": "Найти автора и присоединить его как псевдоним",

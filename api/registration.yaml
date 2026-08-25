@@ -37,6 +37,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /verify-email-data/:
+    post:
+      summary: Apply the verification link from a registration email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerificationRequest'
+      responses:
+        '200':
+          description: Address verified, or already verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailVerificationResult'
+        '403':
+          description: The signature does not match the address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No account uses the address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Missing or malformed address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     RegistrationRequest:
@@ -52,6 +86,25 @@ components:
           type: string
         passwordRepeat:
           type: string
+    EmailVerificationRequest:
+      type: object
+      required: [email, key]
+      properties:
+        email:
+          type: string
+          format: email
+        key:
+          type: string
+          description: HMAC signature of the address, taken from the emailed link.
+    EmailVerificationResult:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+          description: Translation key for the SPA to render.
     RegistrationResult:
       type: object
       required: [success, message]

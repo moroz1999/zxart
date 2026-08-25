@@ -31,69 +31,6 @@
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="password"}
 			</td>
 		</tr>
-		<tr{if $formErrors.company} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.company'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.company}" name="{$formNames.company}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="company"}
-			</td>
-		</tr>
-		<tr{if $formErrors.firstName} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.firstname'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.firstName}" name="{$formNames.firstName}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="firstName"}
-			</td>
-		</tr>
-		<tr{if $formErrors.lastName} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.lastname'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.lastName}" name="{$formNames.lastName}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="lastName"}
-			</td>
-		</tr>
-		<tr{if $formErrors.address} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.address'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.address}" name="{$formNames.address}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="address"}
-			</td>
-		</tr>
-		<tr{if $formErrors.city} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.city'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.city}" name="{$formNames.city}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="city"}
-			</td>
-		</tr>
-		<tr{if $formErrors.postIndex} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.postindex'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.postIndex}" name="{$formNames.postIndex}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="postIndex"}
-			</td>
-		</tr>
-		<tr{if $formErrors.country} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.country'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.country}" name="{$formNames.country}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="country"}
-			</td>
-		</tr>
 		<tr{if $formErrors.email} class="form_error"{/if}>
 			<td class="form_label">
 				{translations name='field.email'}:
@@ -101,24 +38,6 @@
 			<td>
 				<input class="input_component" type="text" value="{$formData.email}" name="{$formNames.email}" autocomplete='off' />
 				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="email"}
-			</td>
-		</tr>
-		<tr{if $formErrors.phone} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.phone'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.phone}" name="{$formNames.phone}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="phone"}
-			</td>
-		</tr>
-		<tr{if $formErrors.website} class="form_error"{/if}>
-			<td class="form_label">
-				{translations name='field.website'}:
-			</td>
-			<td>
-				<input class="input_component" type="text" value="{$formData.website}" name="{$formNames.website}" autocomplete='off' />
-				{include file=$theme->template('component.form_help.tpl') structureType=$element->structureType name="website"}
 			</td>
 		</tr>
 		<tr>

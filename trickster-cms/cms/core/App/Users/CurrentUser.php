@@ -23,16 +23,7 @@ class CurrentUser
     public $userName = "";
     public $privileges = [];
     public $storage = [];
-    public $company;
-    public $firstName;
-    public $lastName;
-    public $address;
-    public $city;
-    public $postIndex;
     public $email;
-    public $country;
-    public $phone;
-    public $website;
     public $userType;
     public $subscribe;
     public $showemail;
@@ -71,17 +62,8 @@ class CurrentUser
             if ($this->userDataObject->load()) {
                 $this->id = $this->userDataObject->id;
                 $this->userName = $this->userDataObject->userName;
-                $this->company = $this->userDataObject->company;
-                $this->firstName = $this->userDataObject->firstName;
-                $this->lastName = $this->userDataObject->lastName;
-                $this->city = $this->userDataObject->city;
-                $this->postIndex = $this->userDataObject->postIndex;
-                $this->country = $this->userDataObject->country;
                 $this->email = $this->userDataObject->email;
-                $this->phone = $this->userDataObject->phone;
-                $this->website = $this->userDataObject->website;
                 $this->userType = $this->userDataObject->userType;
-                $this->address = $this->userDataObject->address;
                 $this->subscribe = $this->userDataObject->subscribe;
                 $this->showemail = $this->userDataObject->showemail;
                 $this->supporter = $this->userDataObject->supporter;
@@ -421,12 +403,7 @@ class CurrentUser
     public function getName()
     {
         $name = '';
-        if ($this->firstName) {
-            $name = $this->firstName;
-            if ($this->lastName) {
-                $name .= ' ' . $this->lastName;
-            }
-        } elseif ($this->userName) {
+        if ($this->userName) {
             $name = $this->userName;
         } elseif ($this->email) {
             $name = $this->email;

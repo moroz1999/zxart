@@ -1,0 +1,14 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'verify-email.title' | translate }}</h1>
+  <zx-stack spacing="lg">
+    <ng-container *ngIf="pending; else outcome">
+      <p appText="body" role="status">{{ 'verify-email.pending' | translate }}</p>
+      <zx-spinner size="md"></zx-spinner>
+    </ng-container>
+    <ng-template #outcome>
+      <zx-form-message [variant]="success ? 'success' : 'error'">{{ message | translate }}</zx-form-message>
+      <zx-button *ngIf="success" color="primary" href="/">{{ 'verify-email.continue' | translate }}</zx-button>
+      <zx-button *ngIf="!success" color="secondary" href="/register">{{ 'verify-email.register-again' | translate }}</zx-button>
+    </ng-template>
+  </zx-stack>
+</zx-page-layout>

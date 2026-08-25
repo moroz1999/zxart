@@ -103,8 +103,9 @@ identifiers rather than routed URLs.
 ## Account self-service
 
 `/profile` shows the account name and email read-only and offers exactly one
-change: the password. Everything else about a user (contact details, groups,
-privileges, verification and ban flags) is admin-only.
+change: the password. An account holds nothing beyond `userName`, `email` and
+`password`; the remaining attributes (groups, privileges, verification and ban
+flags, author link) are admin-only.
 
 Changing the password requires the current one, so an unattended session cannot
 be turned into a permanent takeover. The `password` data chunk hashes whatever
@@ -126,6 +127,33 @@ Password-reset links use the application's configured public `baseURL`.
 ## Registration
 
 `POST /register-data/` creates public accounts through `RegistrationService`.
+The request carries only `userName`, `email`, `password` and `passwordRepeat`.
 Invalid fields return 422, duplicate accounts and already-authenticated requests
 return 409, and successful creation returns 201. The service applies the
 registration element's default groups and sends its verification email.
+
+The users folder sits outside the public language subtree, so the service loads
+it directly under the registration element; looking it up by marker alone
+returns nothing on a public request.
+
+The verification email is the registration element's own `sendEmail` action, so
+its body lists that element's connected fields. The service fills their values
+from the account data by autocomplete role, which is why the mail shows the new
+username and email next to the verification link.
+
+## Email verification
+
+The link in that email points at the `/verify-email` Angular route, carrying the
+address and an HMAC of it as query parameters. The page applies the link on load
+through `POST /verify-email-data/`: a bad signature returns 403, an address no
+account uses returns 404, and success marks the account verified and signs the
+visitor in, so registration ends in a usable session.
+
+The token is a plain HMAC of the address and never expires — receiving it in the
+mailbox is what proves ownership, and an account may be verified long after it
+was created.
+
+Links mailed before the SPA owned the public URLs point at the registration
+element's structure URL with an `action:verifyEmail` parameter. `publicApplication`
+redirects those to `/verify-email` with 301, keeping the same signature, so the
+accounts that were registered back then can still be verified.

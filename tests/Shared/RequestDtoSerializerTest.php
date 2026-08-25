@@ -59,20 +59,20 @@ final class RequestDtoSerializerTest extends TestCase
         self::assertSame(8, $tunePlay->tuneId);
     }
 
-    public function testDeserializesEnumAndOptionalRegistrationFields(): void
+    public function testDeserializesEnumAndRegistrationFields(): void
     {
         $passwordReminder = $this->deserialize(
             '{"action":"reset","email":"user@example.com","key":"token","password":"new","passwordRepeat":"new"}',
             PasswordReminderRequestDto::class,
         );
         $registration = $this->deserialize(
-            '{"userName":"user","email":"user@example.com","password":"secret","passwordRepeat":"secret","firstName":"Ada"}',
+            '{"userName":"user","email":"user@example.com","password":"secret","passwordRepeat":"secret"}',
             RegistrationRequestDto::class,
         );
 
         self::assertSame(PasswordReminderAction::Reset, $passwordReminder->action);
-        self::assertSame('Ada', $registration->firstName);
-        self::assertNull($registration->company);
+        self::assertSame('user', $registration->userName);
+        self::assertSame('secret', $registration->passwordRepeat);
     }
 
     public function testDeserializesNestedDtoCollections(): void

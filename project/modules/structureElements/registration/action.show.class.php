@@ -40,16 +40,7 @@ class showRegistration extends structureElementAction
                         }
                     }
                     $structureElement->setFormValue('dynamicFieldsData', $dynamicFieldsData);
-                    $structureElement->setFormValue('company', $user->company);
-                    $structureElement->setFormValue('firstName', $user->firstName);
-                    $structureElement->setFormValue('lastName', $user->lastName);
-                    $structureElement->setFormValue('address', $user->address);
-                    $structureElement->setFormValue('city', $user->city);
-                    $structureElement->setFormValue('postIndex', $user->postIndex);
-                    $structureElement->setFormValue('country', $user->country);
                     $structureElement->setFormValue('email', $user->email);
-                    $structureElement->setFormValue('phone', $user->phone);
-                    $structureElement->setFormValue('website', $user->website);
 
                     $structureElement->setFormValue('subscribe', $user->subscribe);
 

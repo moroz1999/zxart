@@ -16,16 +16,7 @@ class userElement extends structureElement implements JsonDataProvider
 
         $moduleStructure['userGroups'] = 'numbersArray';
 
-        $moduleStructure['website'] = 'url';
-        $moduleStructure['company'] = 'text';
-        $moduleStructure['firstName'] = 'text';
-        $moduleStructure['lastName'] = 'text';
-        $moduleStructure['address'] = 'text';
-        $moduleStructure['city'] = 'text';
-        $moduleStructure['postIndex'] = 'text';
-        $moduleStructure['country'] = 'text';
         $moduleStructure['email'] = 'email';
-        $moduleStructure['phone'] = 'text';
         $moduleStructure['subscribe'] = 'checkbox';
         $moduleStructure['additionalData'] = 'array';
     }
@@ -185,8 +176,6 @@ class userElement extends structureElement implements JsonDataProvider
             return $this->userName;
         } elseif ($this->email) {
             return $this->email;
-        } elseif ($this->firstName) {
-            return $this->firstName . ' ' . $this->lastName;
         } else {
             return parent::getTitle();
         }

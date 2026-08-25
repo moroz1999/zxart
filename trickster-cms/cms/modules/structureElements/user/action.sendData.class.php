@@ -11,18 +11,9 @@ class sendDataUser extends structureElementAction
             $structureElement->generatePassword();
 
             $data = [
-                "company" => $structureElement->company,
-                "firstName" => $structureElement->firstName,
-                "lastName" => $structureElement->lastName,
                 "email" => $structureElement->email,
-                "phone" => $structureElement->phone,
-                "address" => $structureElement->address,
-                "city" => $structureElement->city,
-                "postIndex" => $structureElement->postIndex,
-                "country" => $structureElement->country,
                 "userName" => $structureElement->userName,
                 "password" => $structureElement->password,
-                "website" => $structureElement->website,
             ];
 
             $translationsManager = $this->getService(translationsManager::class);

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Registration\Dto;
 
-readonly class RegistrationRequestDto
+readonly class EmailVerificationRequestDto
 {
     public function __construct(
-        public string $userName,
         public string $email,
-        public string $password,
-        public string $passwordRepeat,
+        public string $key,
     ) {
     }
 }

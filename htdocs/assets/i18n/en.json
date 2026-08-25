@@ -1896,15 +1896,6 @@
     "email": "Email",
     "password": "Password",
     "password-repeat": "Repeat password",
-    "first-name": "First name",
-    "last-name": "Last name",
-    "company": "Company",
-    "website": "Website",
-    "phone": "Phone",
-    "address": "Address",
-    "city": "City",
-    "post-index": "Post code",
-    "country": "Country",
     "submit": "Register",
     "error-username": "Username is required",
     "error-email": "Email is required",
@@ -1912,6 +1903,17 @@
     "error-password": "Password is required",
     "error-password-match": "Passwords do not match",
     "error-generic": "Registration failed"
+  },
+  "verify-email": {
+    "title": "Email verification",
+    "pending": "Verifying your email address…",
+    "verified": "Your email address is verified. Welcome to ZX-Art!",
+    "already-verified": "This email address is already verified. You can sign in.",
+    "continue": "Go to the site",
+    "register-again": "Register",
+    "error-invalid": "This verification link is not valid.",
+    "error-unknown-account": "No account uses this email address.",
+    "error-generic": "Verification failed"
   },
   "join-form": {
     "author-as-alias": "Find an author and attach them as an alias",

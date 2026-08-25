@@ -75,19 +75,9 @@ class submitRegistration extends structureElementAction
                 $structureElement->errorMessage = $translationsManager->getTranslationByName('userdata.bad_email');
             } else {
                 $userDbFields = [
-                    'company',
-                    'firstName',
-                    'lastName',
                     'userName',
                     'password',
-                    'address',
                     'email',
-                    'phone',
-                    'address',
-                    'city',
-                    'postIndex',
-                    'country',
-                    'website',
                 ];
                 $mainData = [];
                 foreach ($userDbFields as &$fieldName) {

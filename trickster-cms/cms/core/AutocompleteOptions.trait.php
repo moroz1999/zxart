@@ -5,17 +5,8 @@ trait AutocompleteOptionsTrait
     public function getAutocompleteSelectOptions()
     {
         $values = [
-            'company',
             'userName',
-            'fullName',
-            'firstName',
-            'lastName',
             'email',
-            'phone',
-            'address',
-            'city',
-            'country',
-            'postIndex',
             'dpdRegion',
             'dpdPoint',
             'post24Region',

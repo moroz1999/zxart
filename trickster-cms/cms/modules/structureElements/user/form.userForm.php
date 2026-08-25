@@ -9,31 +9,7 @@ class UserFormStructure extends ElementForm
         'password' => [
             'type' => 'input.password',
         ],
-        'company' => [
-            'type' => 'input.text',
-        ],
-        'firstName' => [
-            'type' => 'input.text',
-        ],
-        'lastName' => [
-            'type' => 'input.text',
-        ],
-        'address' => [
-            'type' => 'input.text',
-        ],
-        'city' => [
-            'type' => 'input.text',
-        ],
-        'postIndex' => [
-            'type' => 'input.text',
-        ],
-        'country' => [
-            'type' => 'input.text',
-        ],
         'email' => [
-            'type' => 'input.text',
-        ],
-        'phone' => [
             'type' => 'input.text',
         ],
         'subscribe' => [

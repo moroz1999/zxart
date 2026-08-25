@@ -55,24 +55,20 @@ readonly class RegistrationService
         }
 
         $registration = $this->getRegistrationElement();
+        if ($registration === null) {
+            throw new RegistrationException('Registration is not configured', 500);
+        }
+        // The users folder lives outside the public language subtree, so it is
+        // only reachable when loaded directly under the registration element.
         $usersElementId = $this->structureManager->getElementIdByMarker('users');
-        $usersElement = $usersElementId ? $this->structureManager->getElementById($usersElementId) : null;
-        if ($registration === null || !$usersElement instanceof structureElement) {
+        $usersElement = $usersElementId === null
+            ? null
+            : $this->structureManager->getElementById($usersElementId, $registration->getId(), true);
+        if (!$usersElement instanceof structureElement) {
             throw new RegistrationException('Registration is not configured', 500);
         }
 
-        $mainData = array_filter([
-            'company' => $request->company,
-            'firstName' => $request->firstName,
-            'lastName' => $request->lastName,
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'city' => $request->city,
-            'postIndex' => $request->postIndex,
-            'country' => $request->country,
-            'website' => $request->website,
-        ], static fn(?string $value): bool => $value !== null);
-        $mainData += [
+        $mainData = [
             'userName' => $userName,
             'email' => $email,
             'password' => $request->password,
@@ -95,9 +91,29 @@ readonly class RegistrationService
         foreach ($mainData as $field => $value) {
             $registration->$field = $value;
         }
+        $registration->dynamicFieldsData = $this->buildDynamicFieldsData($registration, $mainData);
         $registration->executeAction('sendEmail');
 
         return new RegistrationResultDto(true, $this->translate('userdata.registrationsuccess'));
+    }
+
+    /**
+     * The verification email lists the registration form's connected fields, so
+     * every field the account was created from gets its value by autocomplete role.
+     *
+     * @param array<string, string> $mainData
+     * @return array<int, string>
+     */
+    private function buildDynamicFieldsData(registrationElement $registration, array $mainData): array
+    {
+        $values = [];
+        foreach ($registration->getConnectedFields() as $field) {
+            $role = $field->autocomplete;
+            if (isset($mainData[$role])) {
+                $values[$field->getId()] = $mainData[$role];
+            }
+        }
+        return $values;
     }
 
     private function getRegistrationElement(): ?registrationElement

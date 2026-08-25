@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Registration\EmailVerificationTokenService;
+
 class sendEmailRegistration extends structureElementAction
 {
     /**
@@ -28,9 +30,10 @@ class sendEmailRegistration extends structureElementAction
                 'fields' => $fieldsInfo,
             ];
             if ($structureElement->type == 'registration' && $email) {
-                $secret = $this->getService(ConfigManager::class)->get('emails.dispatchmentSecret');
-                $hash = hash_hmac('sha256', $email, $secret);
-                $data['verifyEmail'] = $structureElement->getUrl('verifyEmail') . '/email:' . $email . '/key:' . $hash;
+                $key = $this->getService(EmailVerificationTokenService::class)->create($email);
+                $data['verifyEmail'] = rtrim((string)$controller->baseURL, '/')
+                    . '/verify-email?email=' . rawurlencode($email)
+                    . '&key=' . rawurlencode($key);
             }
             /**
              * @var $emailDispatcher EmailDispatcher

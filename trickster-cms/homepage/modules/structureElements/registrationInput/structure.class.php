@@ -3,6 +3,15 @@
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
 
+/**
+ * @property string $title
+ * @property string $fieldName
+ * @property string $fieldType
+ * @property string $dataChunk
+ * @property bool $required
+ * @property string $validator
+ * @property string $autocomplete
+ */
 class registrationInputElement extends formFieldStructureElement
 {
     use AutocompleteOptionsTrait;
@@ -32,19 +41,10 @@ class registrationInputElement extends formFieldStructureElement
     public function getInputRoles()
     {
         return [
-            'company',
             'userName',
             'password',
             'passwordRepeat',
-            'firstName',
-            'lastName',
-            'city',
-            'postIndex',
-            'country',
             'email',
-            'phone',
-            'website',
-            'address',
         ];
     }
 
@@ -82,17 +82,8 @@ class registrationInputElement extends formFieldStructureElement
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
             switch ($autocomplete) {
-                case 'company':
                 case 'userName':
-                case 'firstName':
-                case 'lastName':
-                case 'city':
-                case 'postIndex':
-                case 'country':
                 case 'email':
-                case 'phone':
-                case 'website':
-                case 'address':
                     $value = $user->$autocomplete;
             }
         }

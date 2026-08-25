@@ -7,8 +7,6 @@ use App\Users\CurrentUserService;
  * @property bool $supporter
  * @property bool $vip
  * @property string $userName
- * @property string $firstName
- * @property string $lastName
  * @property string $email
  * @property string $password reads back the stored hash; assigning a value hashes it
  * @property int $authorId
@@ -33,16 +31,7 @@ class userElement extends structureElement
 
         $moduleStructure['userGroups'] = 'numbersArray';
 
-        $moduleStructure['website'] = 'url';
-        $moduleStructure['company'] = 'text';
-        $moduleStructure['firstName'] = 'text';
-        $moduleStructure['lastName'] = 'text';
-        $moduleStructure['address'] = 'text';
-        $moduleStructure['city'] = 'text';
-        $moduleStructure['postIndex'] = 'text';
-        $moduleStructure['country'] = 'text';
         $moduleStructure['email'] = 'email';
-        $moduleStructure['phone'] = 'text';
         $moduleStructure['subscribe'] = 'checkbox';
         $moduleStructure['showemail'] = 'checkbox';
         $moduleStructure['additionalData'] = 'array';
@@ -299,8 +288,6 @@ class userElement extends structureElement
             return $this->userName;
         } elseif ($this->email) {
             return $this->email;
-        } elseif ($this->firstName) {
-            return $this->firstName . ' ' . $this->lastName;
         } else {
             return parent::getTitle();
         }
@@ -338,20 +325,6 @@ class userElement extends structureElement
     {
         $this->removeExtras();
         parent::deleteElementData();
-    }
-
-    /**
-     * @return (int|mixed)[]
-     *
-     * @psalm-return array{userId: int, firstName: mixed, lastName: mixed}
-     */
-    public function getElementData(): array
-    {
-        return [
-            'userId' => $this->getId(),
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-        ];
     }
 
     public function setTrackingCode(): void

@@ -18,19 +18,6 @@ import {RegistrationApiService} from '../../features/registration/services/regis
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 
-/** Optional text fields shown below the required ones: control → label key. */
-const OPTIONAL_FIELDS = [
-  {field: 'firstName', labelKey: 'register.first-name'},
-  {field: 'lastName', labelKey: 'register.last-name'},
-  {field: 'company', labelKey: 'register.company'},
-  {field: 'website', labelKey: 'register.website'},
-  {field: 'phone', labelKey: 'register.phone'},
-  {field: 'address', labelKey: 'register.address'},
-  {field: 'city', labelKey: 'register.city'},
-  {field: 'postIndex', labelKey: 'register.post-index'},
-  {field: 'country', labelKey: 'register.country'},
-] as const;
-
 /** Routed page for `register` — static self-service registration. */
 @Component({
   selector: 'zx-register-page',
@@ -56,22 +43,11 @@ const OPTIONAL_FIELDS = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPageComponent implements OnDestroy {
-  readonly optionalFields = OPTIONAL_FIELDS;
-
   readonly form = this.fb.group({
     userName: this.fb.nonNullable.control('', Validators.required),
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
     password: this.fb.nonNullable.control('', Validators.required),
     passwordRepeat: this.fb.nonNullable.control('', Validators.required),
-    firstName: this.fb.nonNullable.control(''),
-    lastName: this.fb.nonNullable.control(''),
-    company: this.fb.nonNullable.control(''),
-    website: this.fb.nonNullable.control(''),
-    phone: this.fb.nonNullable.control(''),
-    address: this.fb.nonNullable.control(''),
-    city: this.fb.nonNullable.control(''),
-    postIndex: this.fb.nonNullable.control(''),
-    country: this.fb.nonNullable.control(''),
   });
 
   readonly userNameMessages = {required: 'register.error-username'};

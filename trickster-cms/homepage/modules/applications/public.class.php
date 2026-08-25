@@ -57,11 +57,43 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
             return null;
         }
 
+        if ($this->redirectLegacyEmailVerification($controller)) {
+            return null;
+        }
+
         $this->redirectLegacyRequest($controller, $requestUri);
         $this->handle404($requestUri);
         $this->saveDbLog();
 
         return null;
+    }
+
+    /**
+     * Verification links mailed before the SPA took over the public URLs point at
+     * the registration element's `verifyEmail` action. That action is gone, so the
+     * accounts they belong to could never be verified; send them to the SPA page
+     * instead, which accepts the very same signature.
+     */
+    private function redirectLegacyEmailVerification(controller $controller): bool
+    {
+        if ($controller->getParameter('action') !== 'verifyEmail') {
+            return false;
+        }
+
+        $email = trim((string)$controller->getParameter('email'));
+        $key = trim((string)$controller->getParameter('key'));
+        if ($email === '' || $key === '') {
+            return false;
+        }
+
+        $controller->redirect(
+            rtrim((string)$controller->baseURL, '/')
+            . '/verify-email?email=' . rawurlencode($email)
+            . '&key=' . rawurlencode($key),
+            '301',
+        );
+
+        return true;
     }
 
     private function redirectLegacyRequest(controller $controller, string $requestUri): void
