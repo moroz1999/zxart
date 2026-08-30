@@ -8,7 +8,6 @@ import {CurrentUserService} from '../../../shared/services/current-user.service'
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
 const STORAGE_KEY = 'preferences';
-const LEGACY_RADIO_CRITERIA_KEY = 'radio-criteria';
 
 interface StoredPreferences {
   userId: number | null;
@@ -57,10 +56,6 @@ export class UserPreferencesService {
 
         if (user.userName === 'anonymous') {
           const localValues = this.loadFromStorage(null);
-          const legacyRadioCriteria = this.localStorage.get<unknown>(LEGACY_RADIO_CRITERIA_KEY);
-          if (localValues['radio_criteria'] === undefined && legacyRadioCriteria !== null) {
-            localValues['radio_criteria'] = JSON.stringify(legacyRadioCriteria);
-          }
           const values = {
             ...DEFAULT_USER_PREFERENCES,
             ...localValues,

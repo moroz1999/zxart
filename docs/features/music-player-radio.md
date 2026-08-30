@@ -60,7 +60,5 @@ Notes:
 - Radio filter options return category titles from zxProdCategory entities.
 - Legacy `/randomTune/type:{type}` should be removed after the new player replaces the old one.
 
-### Criteria Persistence
-- Radio criteria use the shared User Preferences entry `radio_criteria`.
-- Authenticated users persist criteria on the backend and mirror them in the frontend preference storage.
-- Anonymous users persist criteria only in the frontend preference storage.
+### Criteria Lifetime
+- Radio criteria live only in the running player and are not stored; every page load starts from the empty criteria.

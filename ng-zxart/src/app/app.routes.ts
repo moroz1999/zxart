@@ -422,6 +422,7 @@ const ROUTED_CHILDREN: Routes = [
   {path: 'playlist/:id', loadComponent: () => import('./pages/playlist/playlist-page.component').then(m => m.PlaylistPageComponent), data: {titleKey: 'playlists.playlist-title'}},
   {path: 'register', loadComponent: () => import('./pages/register/register-page.component').then(m => m.RegisterPageComponent), data: {titleKey: 'register.title'}},
   {path: 'verify-email', loadComponent: () => import('./pages/verify-email/verify-email-page.component').then(m => m.VerifyEmailPageComponent), data: {titleKey: 'verify-email.title'}},
+  {path: 'approve-claim', loadComponent: () => import('./pages/approve-claim/approve-claim-page.component').then(m => m.ApproveClaimPageComponent), data: {titleKey: 'approve-claim.title'}},
   {path: 'password-reminder', loadComponent: () => import('./pages/password-reminder/password-reminder-page.component').then(m => m.PasswordReminderPageComponent), data: {titleKey: 'password-reminder.title'}},
   {path: 'search', loadComponent: () => import('./pages/search/search-page.component').then(m => m.SearchPageComponent), data: {titleKey: 'menu.gfx.search'}},
   {path: 'prods/tags', loadComponent: () => import('./pages/tags/tags-page.component').then(m => m.TagsPageComponent), data: {section: 'software', tagBasePath: '/prods/tags', titleKey: 'menu.soft.tags'}},

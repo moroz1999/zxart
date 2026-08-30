@@ -7,7 +7,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {FirstpageConfigService} from '../../features/firstpage/services/firstpage-config.service';
-import {FirstpageConfig, ModuleConfig} from '../../features/firstpage/models/firstpage-config';
+import {FirstpageConfig, ModuleConfig, ModuleType} from '../../features/firstpage/models/firstpage-config';
 import {MODULE_COMPONENTS} from '../../features/firstpage/services/module-registry';
 import {MODULE_SETTINGS} from '../../features/firstpage/models/module-settings.token';
 import {
@@ -43,6 +43,14 @@ interface ModuleEntry {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FirstpageComponent implements OnInit {
+  /**
+   * `ngComponentOutlet` recreates its component whenever the injector identity
+   * changes, so a module keeps the injector it was built with until its own
+   * settings change. Together with `trackByType` a config emission leaves the
+   * untouched modules mounted instead of refetching the whole page.
+   */
+  private readonly injectors = new Map<ModuleType, {settingsKey: string; injector: Injector}>();
+
   readonly modules$: Observable<ModuleEntry[]> = this.configService.getConfig().pipe(
     map(config => this.buildModules(config))
   );
@@ -56,6 +64,10 @@ export class FirstpageComponent implements OnInit {
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}settings.svg`, 'settings')?.subscribe();
+  }
+
+  trackByType(_index: number, entry: ModuleEntry): ModuleType {
+    return entry.config.type;
   }
 
   openConfig(): void {
@@ -74,10 +86,22 @@ export class FirstpageComponent implements OnInit {
       .map(moduleConfig => ({
         config: moduleConfig,
         component: MODULE_COMPONENTS[moduleConfig.type],
-        injector: Injector.create({
-          providers: [{provide: MODULE_SETTINGS, useValue: moduleConfig.settings}],
-          parent: this.parentInjector,
-        }),
+        injector: this.resolveInjector(moduleConfig),
       }));
+  }
+
+  private resolveInjector(moduleConfig: ModuleConfig): Injector {
+    const settingsKey = JSON.stringify(moduleConfig.settings);
+    const cached = this.injectors.get(moduleConfig.type);
+    if (cached && cached.settingsKey === settingsKey) {
+      return cached.injector;
+    }
+
+    const injector = Injector.create({
+      providers: [{provide: MODULE_SETTINGS, useValue: moduleConfig.settings}],
+      parent: this.parentInjector,
+    });
+    this.injectors.set(moduleConfig.type, {settingsKey, injector});
+    return injector;
   }
 }

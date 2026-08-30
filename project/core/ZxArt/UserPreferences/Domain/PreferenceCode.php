@@ -37,9 +37,6 @@ enum PreferenceCode: string
     // Homepage per-module startYearOffset
     case HOMEPAGE_NEW_PRODS_START_YEAR = 'homepage_new_prods_start_year';
 
-    // Radio
-    case RADIO_CRITERIA = 'radio_criteria';
-
     // Picture display settings
     case PICTURE_MODE = 'picture_mode';
     case PICTURE_BORDER = 'picture_border';

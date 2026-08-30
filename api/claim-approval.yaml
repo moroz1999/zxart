@@ -1,0 +1,114 @@
+openapi: 3.0.3
+info:
+  title: ZX-Art authorship claim approval API
+  version: 1.0.0
+paths:
+  /approve-claim-data/:
+    get:
+      summary: Describe an authorship claim and whether the visitor may approve it
+      parameters:
+        - $ref: '#/components/parameters/AuthorId'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: The claim
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimApproval'
+        '400':
+          description: Missing author or account id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No such author or account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Approve the claim, linking the account to the author
+      parameters:
+        - $ref: '#/components/parameters/AuthorId'
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: The claim after approval; approving an already approved claim changes nothing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimApproval'
+        '400':
+          description: Missing author or account id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The visitor has no `approveClaim` privilege on the author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No such author or account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    AuthorId:
+      in: query
+      name: authorId
+      required: true
+      schema:
+        type: integer
+    UserId:
+      in: query
+      name: userId
+      required: true
+      schema:
+        type: integer
+  schemas:
+    ClaimApproval:
+      type: object
+      required: [authorId, authorTitle, authorUrl, userId, userName, canApprove, approved]
+      properties:
+        authorId:
+          type: integer
+        authorTitle:
+          type: string
+        authorUrl:
+          type: string
+          description: Routed SPA URL of the claimed author.
+        userId:
+          type: integer
+        userName:
+          type: string
+        canApprove:
+          type: boolean
+          description: Whether the requester holds the `approveClaim` privilege on the author.
+        approved:
+          type: boolean
+          description: Whether the account already holds this author.
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

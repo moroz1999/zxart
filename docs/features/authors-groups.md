@@ -186,6 +186,12 @@ When work is created by group:
 - Deleting an author (public delete, admin delete, cascade, conversion into a group) drops the claim — `authorElement::deleteElementData()` calls the service, so every deletion path is covered.
 - Merging re-points the claim at the surviving author instead, which the merge does explicitly before deleting the absorbed one.
 
+#### Approving a Claim
+- Claiming mails the moderators a request naming the account, the claimed author and a link to that author's page, plus a link to `/approve-claim?authorId=…&userId=…`.
+- That page states the claim to whoever opens it — the mail is forwardable — and offers the confirm button only to a visitor holding `author`/`approveClaim` on the author. `POST /approve-claim-data/` enforces the same privilege, so the button is a convenience, not the guard. The page never shows the claimant's email address.
+- Approving points the account's `authorId` at the author through `userElement::changeConnectedAuthor()` and mails the claimant the result. Approving a claim that already holds changes nothing and sends nothing.
+- Links mailed before the SPA owned the public URLs point at the author's `approveClaim` action and used to approve on the spot; `publicApplication` redirects those to the page with 301, keeping both ids.
+
 #### Author and Group Editing Actions
 - Claiming authorship and the conversions (author → group, group → author, alias → standalone author/group) run straight from the details page: a confirmation dialog, then the legacy action through `/ajax/`.
 - A successful conversion navigates to the created entity; a claim reports the moderation-request result in a dialog.
@@ -202,6 +208,13 @@ from the page heading for authenticated users.
 Author creation and editing share the same Angular form component. Creation
 loads a transient form through `GET /formdata/` and submits it through
 `POST /formdata/`.
+
+Creating an entity needs the `showPublicForm` privilege of its type, which
+regular accounts hold through their registration group. A refused creation is
+answered by cause: `401` when the visitor is not signed in, `403` naming the
+account and the privilege it lacks, and `500` when the catalogue the form would
+be created under could not be loaded. The message is what the controller logs,
+so a report of a refused form can be traced without reproducing it.
 
 The `/artists` and `/musicians` roots are catalogue dashboards. Each dashboard
 shows active authors for a selectable period of one to five years (two years by

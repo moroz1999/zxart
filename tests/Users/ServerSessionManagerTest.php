@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Users;
 
 use App\Paths\PathsManager;
+use ConfigManager;
 use PHPUnit\Framework\TestCase;
 use ServerSessionManager;
 
@@ -15,7 +16,10 @@ final class ServerSessionManagerTest extends TestCase
         $pathsManager = $this->createStub(PathsManager::class);
         $pathsManager->method('getPath')->willReturn(null);
 
-        $manager = new ServerSessionManager($pathsManager);
+        $configManager = $this->createStub(ConfigManager::class);
+        $configManager->method('get')->willReturn('http://');
+
+        $manager = new ServerSessionManager($pathsManager, $configManager);
         $manager->setSessionName('public');
         $manager->setEnabled(true);
 

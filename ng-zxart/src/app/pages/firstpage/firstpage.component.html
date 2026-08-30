@@ -6,7 +6,7 @@
 
   <zx-picture-gallery-host></zx-picture-gallery-host>
 
-  <ng-container *ngFor="let entry of modules$ | async">
+  <ng-container *ngFor="let entry of modules$ | async; trackBy: trackByType">
     <ng-container
       *ngComponentOutlet="entry.component; injector: entry.injector"
     ></ng-container>

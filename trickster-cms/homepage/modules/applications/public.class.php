@@ -61,6 +61,10 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
             return null;
         }
 
+        if ($this->redirectLegacyClaimApproval($controller)) {
+            return null;
+        }
+
         $this->redirectLegacyRequest($controller, $requestUri);
         $this->handle404($requestUri);
         $this->saveDbLog();
@@ -90,6 +94,34 @@ class publicApplication extends controllerApplication implements ThemeCodeProvid
             rtrim((string)$controller->baseURL, '/')
             . '/verify-email?email=' . rawurlencode($email)
             . '&key=' . rawurlencode($key),
+            '301',
+        );
+
+        return true;
+    }
+
+    /**
+     * Claim approval links mailed before the SPA took over the public URLs point
+     * at the author's `approveClaim` action, which used to approve the claim on
+     * the spot. Send them to the SPA page instead: it names both sides of the
+     * claim and asks the moderator to confirm.
+     */
+    private function redirectLegacyClaimApproval(controller $controller): bool
+    {
+        if ($controller->getParameter('action') !== 'approveClaim') {
+            return false;
+        }
+
+        $authorId = (int)$controller->getParameter('id');
+        $userId = (int)$controller->getParameter('userId');
+        if ($authorId <= 0 || $userId <= 0) {
+            return false;
+        }
+
+        $controller->redirect(
+            rtrim((string)$controller->baseURL, '/')
+            . '/approve-claim?authorId=' . $authorId
+            . '&userId=' . $userId,
             '301',
         );
 

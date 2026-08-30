@@ -27,6 +27,5 @@ export const DEFAULT_USER_PREFERENCES: Readonly<PreferenceValues> = {
   picture_border: '1',
   picture_hidden: '0',
   picture_scale: '3',
-  radio_criteria: '{}',
   language: 'eng',
 };

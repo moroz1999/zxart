@@ -100,6 +100,8 @@ paths:
                 additionalProperties: true
         '400':
           description: Missing id or required creation context
+        '401':
+          description: A creation form was requested by an anonymous visitor
         '403':
           description: Opening the form is forbidden
         '404':
@@ -155,6 +157,8 @@ paths:
                     type: integer
         '400':
           description: Unsupported entity type or missing required creation context
+        '401':
+          description: The submission came from an anonymous visitor
         '403':
           description: Creation is forbidden or failed
         '422':

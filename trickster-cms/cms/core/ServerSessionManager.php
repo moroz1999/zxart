@@ -4,17 +4,14 @@ use App\Paths\PathsManager;
 
 class ServerSessionManager
 {
-    protected $sessionId;
-    protected $sessionName;
-    protected $sessionLifeTime = 1440;
+    protected ?string $sessionId = null;
+    protected string $sessionName = '';
+    protected int $sessionLifeTime = 1440;
     protected $sessionsPath;
-    protected $started = false;
-    protected $enabled = false;
+    protected bool $started = false;
+    protected bool $enabled = false;
 
-    /**
-     * @return string
-     */
-    public function getSessionName()
+    public function getSessionName(): string
     {
         return $this->sessionName;
     }
@@ -32,27 +29,24 @@ class ServerSessionManager
         return $this->sessionsPath;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSessionId()
+    public function getSessionId(): ?string
     {
         return $this->sessionId;
     }
 
     public function __construct(
-        protected PathsManager $pathsManager
+        protected PathsManager $pathsManager,
+        protected ConfigManager $configManager,
     )
     {
-        $this->sessionName = '';
     }
 
-    public function setSessionLifeTime($lifetime)
+    public function setSessionLifeTime(int $lifetime): void
     {
         $this->sessionLifeTime = $lifetime;
     }
 
-    public function setSessionName($sessionName)
+    public function setSessionName(string $sessionName): void
     {
         $this->sessionName = $sessionName;
     }
@@ -83,14 +77,55 @@ class ServerSessionManager
             }
             if ($this->sessionLifeTime) {
                 ini_set('session.gc_maxlifetime', $this->sessionLifeTime);
-                session_set_cookie_params($this->sessionLifeTime);
             }
+            session_set_cookie_params(['lifetime' => $this->sessionLifeTime] + $this->cookieAttributes());
 
+            $carriedCookie = isset($_COOKIE[$this->sessionName]);
             session_start();
             if ($this->sessionId === null) {
-                $this->sessionId = session_id();
+                $sessionId = session_id();
+                $this->sessionId = $sessionId === false ? null : $sessionId;
+            }
+            if ($carriedCookie) {
+                $this->prolongCookie();
             }
         }
+    }
+
+    /**
+     * PHP sends the session cookie only when it creates a session, so a visitor
+     * who signed in an hour ago would be dropped mid-work however active they
+     * are. Re-sending the cookie on every request that carried it makes the
+     * configured lifetime the idle timeout it is meant to be.
+     */
+    protected function prolongCookie(): void
+    {
+        if ($this->sessionLifeTime <= 0 || headers_sent()) {
+            return;
+        }
+
+        setcookie(
+            $this->sessionName,
+            (string)session_id(),
+            ['expires' => time() + $this->sessionLifeTime] + $this->cookieAttributes(),
+        );
+    }
+
+    /**
+     * `secure` follows `main.protocol`, the protocol the site declares itself
+     * served over and already 301-redirects to. Reading it from the request
+     * instead would leave the flag off wherever TLS terminates ahead of PHP.
+     *
+     * @return array{path: string, secure: bool, httponly: bool, samesite: string}
+     */
+    protected function cookieAttributes(): array
+    {
+        return [
+            'path' => '/',
+            'secure' => $this->configManager->get('main.protocol') === 'https://',
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
     }
 
     public function close()
@@ -98,10 +133,7 @@ class ServerSessionManager
         session_write_close();
     }
 
-    /**
-     * @param bool $enabled
-     */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
     }

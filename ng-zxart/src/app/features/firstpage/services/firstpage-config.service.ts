@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {catchError, map, shareReplay, switchMap, take} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, map, shareReplay, switchMap, take} from 'rxjs/operators';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {PreferenceValues} from '../../settings/models/preference.dto';
 import {
@@ -22,6 +22,10 @@ export class FirstpageConfigService {
 
   constructor(private preferencesService: UserPreferencesService) {
     this.config$ = this.preferencesService.preferences$.pipe(
+      // The preference store emits on every write, whatever the code. Rebuilding
+      // the config on an unrelated preference would tear down and refetch every
+      // module of the main page, so only homepage_* changes pass through.
+      distinctUntilChanged((previous, current) => this.homepageKey(previous) === this.homepageKey(current)),
       map(preferences => this.buildConfig(preferences)),
       shareReplay({bufferSize: 1, refCount: false}),
     );
@@ -74,6 +78,14 @@ export class FirstpageConfigService {
         : of(false)),
       catchError(() => of(false)),
     );
+  }
+
+  private homepageKey(preferences: PreferenceValues): string {
+    return Object.keys(preferences)
+      .filter(code => code.startsWith('homepage_'))
+      .sort()
+      .map(code => `${code}=${preferences[code]}`)
+      .join('&');
   }
 
   private buildConfig(preferences: PreferenceValues): FirstpageConfig {

@@ -62,6 +62,12 @@ Some modules support additional settings:
 - Data is fetched from `/firstpage/?action={moduleType}&...params` via `FirstpageDataService`.
 - Module catalogue links use the routed `/prods`, `/pictures/search`, and
   `/music/search` URLs with query parameters.
+- The preference store emits on every preference write, whatever its code, so the
+  config stream passes only `homepage_*` changes through. A write of an unrelated
+  preference leaves the page untouched.
+- A module keeps the injector it was created with until its own settings change,
+  and the module list is tracked by module type. A config change therefore
+  remounts only the modules it actually affects; the rest keep their loaded data.
 
 ## Catalogue Homepages
 

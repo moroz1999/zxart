@@ -27,6 +27,7 @@ final class SpaRouter
         '#^/playlist/\d+/?$#',
         '#^/register/?$#',
         '#^/verify-email/?$#',
+        '#^/approve-claim/?$#',
         '#^/password-reminder/?$#',
         '#^/search/?$#',
         '#^/$#',

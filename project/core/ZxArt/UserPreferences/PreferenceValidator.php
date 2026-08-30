@@ -50,7 +50,6 @@ final class PreferenceValidator
             PreferenceCode::PICTURE_SCALE => $this->validatePictureScale($value),
             PreferenceCode::PICTURE_BORDER,
             PreferenceCode::PICTURE_HIDDEN => $this->validateBinaryFlag($code, $value),
-            PreferenceCode::RADIO_CRITERIA => $value,
             PreferenceCode::LANGUAGE => $this->validateLanguageCode($value),
         };
     }

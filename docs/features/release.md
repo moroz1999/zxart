@@ -119,6 +119,8 @@ Concrete release (version) of software production. Contains files specific to th
 - **parsed** - flag that file was parsed
 
 ### Special Operations
+- The release page offers editing only with the `publicReceive` privilege, the
+  same privilege that guards and saves the edit form.
 - **clone** - creates a copy of the release under the same parent prod, carries over hardware, language, publishers and authorship, and resets usage counters. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone.
 
 ### Emulator Launch Capability

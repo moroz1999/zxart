@@ -1915,6 +1915,22 @@
     "error-unknown-account": "No account uses this email address.",
     "error-generic": "Verification failed"
   },
+  "approve-claim": {
+    "title": "Authorship claim",
+    "pending": "Loading the claim…",
+    "summary": "Claim details",
+    "author": "Author",
+    "account": "Account",
+    "explanation": "{{user}} asks to be recognised as {{author}}. Approving links the account to the author and lets it edit that author's works.",
+    "approve": "Approve claim",
+    "approving": "Approving…",
+    "approved": "{{user}} is now linked to {{author}}.",
+    "open-author": "Open author page",
+    "forbidden": "You are not allowed to approve this claim.",
+    "error-invalid": "This approval link is not valid.",
+    "error-not-found": "This claim no longer exists.",
+    "error-failed": "Could not approve the claim."
+  },
   "join-form": {
     "author-as-alias": "Find an author and attach them as an alias",
     "author-merge": "Find an author and attach them by merging",

@@ -147,7 +147,10 @@ The link in that email points at the `/verify-email` Angular route, carrying the
 address and an HMAC of it as query parameters. The page applies the link on load
 through `POST /verify-email-data/`: a bad signature returns 403, an address no
 account uses returns 404, and success marks the account verified and signs the
-visitor in, so registration ends in a usable session.
+visitor in, so registration ends in a usable session. The sign-in happens inside
+that request, so the page re-reads the account through `CurrentUserService`
+before showing the outcome — otherwise the interface would keep its anonymous
+state until the next full page load.
 
 The token is a plain HMAC of the address and never expires — receiving it in the
 mailbox is what proves ownership, and an account may be verified long after it

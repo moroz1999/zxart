@@ -139,7 +139,6 @@ describe('UserPreferencesService', () => {
       userId: null,
       preferences: [{code: 'theme', value: 'light'}],
     });
-    storage.set('radio-criteria', {minRating: 4});
     const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
     const service = createService(http, anonymousUser, storage);
 
@@ -147,7 +146,6 @@ describe('UserPreferencesService', () => {
 
     expect(preferences['theme']).toBe('light');
     expect(preferences['homepage_new_prods_start_year']).toBe('1');
-    expect(preferences['radio_criteria']).toBe('{"minRating":4}');
     expect(Object.keys(preferences).length).toBe(Object.keys(DEFAULT_USER_PREFERENCES).length);
     expect(http.get).not.toHaveBeenCalled();
     expect(storage.get<StoredPreferences>('preferences')?.values['theme']).toBe('light');

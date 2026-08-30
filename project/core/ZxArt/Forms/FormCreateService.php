@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Forms;
 
+use App\Users\CurrentUserService;
 use controller;
 use LanguagesManager;
 use structureElement;
@@ -15,6 +16,7 @@ final readonly class FormCreateService
     public function __construct(
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
+        private CurrentUserService $currentUserService,
     ) {
     }
 
@@ -133,11 +135,34 @@ final readonly class FormCreateService
     ): structureElement
     {
         $element = $this->structureManager->createElement($structureType->value, $formAction, $parentId);
-        if (!$element instanceof structureElement) {
-            throw new FormCreateException('Form creation is forbidden', 403);
+        if ($element instanceof structureElement) {
+            return $element;
         }
 
-        return $element;
+        // The structure manager answers every refusal with a null element, so the
+        // cause is reconstructed here: a bare "forbidden" leaves a report of this
+        // error with nothing to act on, and the controller logs what is thrown.
+        if (!$this->structureManager->getElementById($parentId) instanceof structureElement) {
+            throw new FormCreateException(
+                sprintf('Form parent %d is not available', $parentId),
+                500,
+            );
+        }
+
+        $user = $this->currentUserService->getCurrentUser();
+        if (!$user->isAuthorized()) {
+            throw new FormCreateException('Authentication required', 401);
+        }
+
+        throw new FormCreateException(
+            sprintf(
+                'Form creation is forbidden: user %d holds no %s/%s privilege',
+                (int)$user->id,
+                $structureType->value,
+                $formAction,
+            ),
+            403,
+        );
     }
 
     private function getFormAction(FormCreateType $formType): string

@@ -1,0 +1,48 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'approve-claim.title' | translate }}</h1>
+
+  <ng-container *ngIf="pending; else loaded">
+    <zx-stack spacing="md">
+      <p appText="body" role="status">{{ 'approve-claim.pending' | translate }}</p>
+      <zx-spinner size="md"></zx-spinner>
+    </zx-stack>
+  </ng-container>
+
+  <ng-template #loaded>
+    <zx-stack spacing="lg">
+      <zx-form-message *ngIf="error" variant="error">{{ error | translate }}</zx-form-message>
+
+      <ng-container *ngIf="claim as claim">
+        <zx-panel [title]="'approve-claim.summary' | translate">
+          <zx-stack spacing="sm">
+            <zx-meta-row [label]="'approve-claim.author' | translate">
+              <a [routerLink]="claim.authorUrl">{{ claim.authorTitle }}</a>
+            </zx-meta-row>
+            <zx-meta-row [label]="'approve-claim.account' | translate">{{ claim.userName }}</zx-meta-row>
+          </zx-stack>
+        </zx-panel>
+
+        <ng-container *ngIf="claim.approved; else pendingClaim">
+          <zx-form-message variant="success">
+            {{ 'approve-claim.approved' | translate: {author: claim.authorTitle, user: claim.userName} }}
+          </zx-form-message>
+          <zx-button color="secondary" [href]="claim.authorUrl">{{ 'approve-claim.open-author' | translate }}</zx-button>
+        </ng-container>
+
+        <ng-template #pendingClaim>
+          <p appText="body">
+            {{ 'approve-claim.explanation' | translate: {author: claim.authorTitle, user: claim.userName} }}
+          </p>
+          <ng-container *ngIf="claim.canApprove; else notAllowed">
+            <zx-button color="primary" [disabled]="approving" (click)="approve()">
+              {{ (approving ? 'approve-claim.approving' : 'approve-claim.approve') | translate }}
+            </zx-button>
+          </ng-container>
+          <ng-template #notAllowed>
+            <zx-form-message variant="error">{{ 'approve-claim.forbidden' | translate }}</zx-form-message>
+          </ng-template>
+        </ng-template>
+      </ng-container>
+    </zx-stack>
+  </ng-template>
+</zx-page-layout>

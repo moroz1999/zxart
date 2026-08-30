@@ -2,7 +2,9 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {CurrentUserService} from '../../shared/services/current-user.service';
 import {VerifyEmailApiService} from '../../features/verify-email/services/verify-email-api.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
@@ -44,6 +46,7 @@ export class VerifyEmailPageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly api: VerifyEmailApiService,
+    private readonly currentUserService: CurrentUserService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -58,7 +61,14 @@ export class VerifyEmailPageComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions.add(
-      this.api.verify(email, key).subscribe(result => {
+      this.api.verify(email, key).pipe(
+        // The backend signed the visitor in as part of the verification, so the
+        // account is re-read before the outcome is shown: without it the header
+        // keeps the anonymous state until the next full page load.
+        switchMap(result => result.success
+          ? this.currentUserService.refresh().pipe(map(() => result))
+          : of(result)),
+      ).subscribe(result => {
         this.pending = false;
         this.success = result.success;
         this.message = result.message;

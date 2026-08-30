@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Urls\EntityUrlResolver;
 
 class claimAuthor extends structureElementAction
 {
@@ -16,6 +17,7 @@ class claimAuthor extends structureElementAction
         if (!$user->authorId && $user->authorId != $structureElement->getId()) {
             $settings = $this->getService(settingsManager::class)->getSettingsList();
 
+            $baseUrl = rtrim((string)$controller->baseURL, '/');
             $emailDispatcher = new EmailDispatcher();
             $newDispatchment = $emailDispatcher->getEmptyDispatchment();
             $fromName = isset($settings['default_sender_name']) ? $settings['default_sender_name'] : 'noreply';
@@ -32,8 +34,9 @@ class claimAuthor extends structureElementAction
                     'userEmail' => $user->email,
                     'authorId' => $structureElement->getId(),
                     'author' => $structureElement->title,
-                    'approvalUrl' => $structureElement->getFormActionURL(
-                        ) . 'id:' . $structureElement->getId() . '/action:approveClaim/userId:' . $user->id . '/',
+                    'authorUrl' => $baseUrl . $this->getService(EntityUrlResolver::class)->urlFor($structureElement),
+                    'approvalUrl' => $baseUrl . '/approve-claim?authorId=' . $structureElement->getId()
+                        . '&userId=' . $user->id,
                 ]
             );
             $newDispatchment->setReferenceId($structureElement->getId());

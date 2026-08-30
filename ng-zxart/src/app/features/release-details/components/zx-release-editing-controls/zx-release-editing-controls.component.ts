@@ -6,7 +6,7 @@ import {
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
 
 const RELEASE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'showPublicForm', labelKey: 'release-details.edit'},
+  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'release-details.edit'},
   {
     action: 'clone',
     privilege: 'clone',

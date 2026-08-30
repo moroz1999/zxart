@@ -22,6 +22,26 @@ and receives no session cookie. **Do not add an unconditional session read to a
 code path that runs on every request** — it is free now, but it stops being free
 the moment it is paired with a write.
 
+## The session cookie
+
+`startSession()` resolves the lifetime from `main.{name}SessionLifeTime`
+(`publicSessionLifeTime`, `adminSessionLifeTime`, falling back to
+`defaultSessionLifeTime`), so every application that names a session gets the
+same lifetime for it without repeating the value. An explicit second argument
+still wins.
+
+PHP emits the session cookie only when it creates a session, which would make
+the lifetime an absolute deadline from sign-in. `ServerSessionManager` therefore
+re-sends the cookie on every request that carried one, turning the configured
+lifetime into an idle timeout. A visitor who stores nothing still gets no cookie
+at all — the renewal only happens for a request that already had one.
+
+Both the session cookie and the `loginremember_{sessionName}` cookie carry
+`HttpOnly` and `SameSite=Lax`; `Secure` follows `main.protocol`, the protocol the
+site declares itself served over and redirects to, so a plain HTTP installation
+keeps working. `CurrentUser::forgetUser()` deletes the remember cookie with the
+same attributes it was set with, or the browser would keep the original.
+
 ## What is allowed in the session
 
 Only per-user state that genuinely cannot live anywhere else:

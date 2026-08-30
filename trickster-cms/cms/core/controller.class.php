@@ -36,7 +36,7 @@ class controller
     /**
      * @var ConfigManager
      */
-    public $configManager;
+    public ConfigManager $configManager;
 
     /** @var array<int|string, array<array-key, mixed>> */
     private array $formData = [];
@@ -631,7 +631,7 @@ class controller
         return $this->requestedPath;
     }
 
-    public function getConfigManager()
+    public function getConfigManager(): ConfigManager
     {
         return $this->configManager;
     }

@@ -52,6 +52,18 @@ export class CurrentUserService {
     });
   }
 
+  /**
+   * Re-reads the account from the backend. Email verification signs the visitor
+   * in inside its own request, so the store has to be told rather than waiting
+   * for the next app start.
+   */
+  refresh(): Observable<CurrentUser> {
+    return this.http.get<CurrentUser>(this.apiUrl).pipe(
+      catchError(() => of(ANONYMOUS_USER)),
+      tap(user => this.store.next(user)),
+    );
+  }
+
   login(userName: string, password: string, remember: boolean): Observable<CurrentUser> {
     return this.http.post<CurrentUser>(`${this.apiUrl}?action=login`, {userName, password, remember}).pipe(
       tap(user => this.store.next(user)),

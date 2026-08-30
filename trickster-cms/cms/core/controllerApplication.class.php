@@ -71,9 +71,21 @@ abstract class controllerApplication extends errorLogger implements DependencyIn
         $sessionManager = $this->getService(ServerSessionManager::class);
         $sessionManager->setSessionName($sessionName);
         $sessionManager->setEnabled(true);
-        if ($lifeTime) {
-            $sessionManager->setSessionLifeTime($lifeTime);
-        }
+        $sessionManager->setSessionLifeTime((int)$lifeTime ?: $this->getConfiguredSessionLifeTime($sessionName));
+    }
+
+    /**
+     * One lifetime per session name, held in `main.{name}SessionLifeTime`. An
+     * application that names a session without repeating the value gets the
+     * configured one, so the same session does not expire at different times
+     * depending on which endpoint happened to create it.
+     */
+    private function getConfiguredSessionLifeTime(string $sessionName): int
+    {
+        $configManager = $this->getService(ConfigManager::class);
+
+        return (int)($configManager->get('main.' . $sessionName . 'SessionLifeTime')
+            ?? $configManager->get('main.defaultSessionLifeTime'));
     }
 
     /**

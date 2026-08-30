@@ -201,13 +201,41 @@ class CurrentUser
             $cookieHash = hash('sha256', $userId . $userName . $sessionName . strrev($salt) . $passwordHash);
             $cookieText = json_encode([$userName, $cookieHash]);
             $cookieLifeTime = 90 * 24 * 60 * 60;
-            setcookie('loginremember_' . $sessionName, $cookieText, time() + $cookieLifeTime, '/');
+            setcookie(
+                'loginremember_' . $sessionName,
+                $cookieText,
+                ['expires' => time() + $cookieLifeTime] + $this->rememberCookieAttributes(),
+            );
         }
     }
 
     public function forgetUser(): void
     {
-        setcookie('loginremember_' . $this->serverSessionManager->getSessionName(), '', 0, '/');
+        // The attributes must match the ones the cookie was set with, or the
+        // browser keeps the original instead of replacing it.
+        setcookie(
+            'loginremember_' . $this->serverSessionManager->getSessionName(),
+            '',
+            ['expires' => 0] + $this->rememberCookieAttributes(),
+        );
+    }
+
+    /**
+     * The cookie signs its holder in without a password, so it is kept away from
+     * scripts and cross-site requests. `secure` follows `main.protocol`, the
+     * protocol the site declares itself served over, so a plain HTTP
+     * installation keeps working.
+     *
+     * @return array{path: string, secure: bool, httponly: bool, samesite: string}
+     */
+    private function rememberCookieAttributes(): array
+    {
+        return [
+            'path' => '/',
+            'secure' => controller::getInstance()->getConfigManager()->get('main.protocol') === 'https://',
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
     }
 
     /**
@@ -328,7 +356,9 @@ class CurrentUser
                             'sha256',
                             $loadedUserID . $userName . $sessionName . strrev($salt) . $passwordHash
                         );
-                        if ($cookieContents[1] == $cookieHash) {
+                        // is_string keeps a cookie holding an array or a number
+                        // from reaching hash_equals, which only takes strings.
+                        if (is_string($cookieContents[1]) && hash_equals($cookieHash, $cookieContents[1])) {
                             $userId = $loadedUserID;
                         }
                     }

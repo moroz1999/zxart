@@ -7,7 +7,6 @@ import {RadioApiService} from './radio-api.service';
 import {EMPTY_RADIO_CRITERIA, RadioCriteria} from '../models/radio-criteria';
 import {RadioPreset} from '../models/radio-preset';
 import {TunePlayService} from './tune-play.service';
-import {RadioCriteriaStorageService} from './radio-criteria-storage.service';
 import {AnalyticsService} from '../../../shared/services/analytics.service';
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
@@ -61,17 +60,12 @@ export class PlayerService {
   constructor(
     private radioApiService: RadioApiService,
     private tunePlayService: TunePlayService,
-    private criteriaStorageService: RadioCriteriaStorageService,
     private analyticsService: AnalyticsService,
     private localStorage: LocalStorageService,
   ) {
     this.audio.crossOrigin = 'anonymous';
     this.attachAudioEvents();
     this.initBroadcast();
-    this.criteriaStorageService.loadCriteria().subscribe(criteria => {
-      this.currentCriteria = criteria;
-      this.criteriaSubject.next(criteria);
-    });
   }
 
   get state(): PlayerState {
@@ -570,7 +564,6 @@ export class PlayerService {
   private updateCriteria(criteria: RadioCriteria, preset: RadioPreset | null): void {
     this.currentCriteria = criteria;
     this.currentPreset = preset;
-    this.criteriaStorageService.saveCriteria(criteria).subscribe();
     this.criteriaSubject.next(criteria);
     this.presetSubject.next(preset);
   }

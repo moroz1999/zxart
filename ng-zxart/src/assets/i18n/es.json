@@ -1912,6 +1912,22 @@
     "error-unknown-account": "Ninguna cuenta usa esta dirección de email.",
     "error-generic": "Error en la verificación"
   },
+  "approve-claim": {
+    "title": "Reclamación de autoría",
+    "pending": "Cargando la reclamación…",
+    "summary": "Detalles de la reclamación",
+    "author": "Autor",
+    "account": "Cuenta",
+    "explanation": "{{user}} pide ser reconocido como {{author}}. Al aprobarlo, la cuenta queda vinculada al autor y podrá editar sus obras.",
+    "approve": "Aprobar",
+    "approving": "Aprobando…",
+    "approved": "{{user}} ya está vinculado a {{author}}.",
+    "open-author": "Abrir la página del autor",
+    "forbidden": "No tienes permiso para aprobar esta reclamación.",
+    "error-invalid": "Este enlace de aprobación no es válido.",
+    "error-not-found": "Esta reclamación ya no existe.",
+    "error-failed": "No se pudo aprobar la reclamación."
+  },
   "join-form": {
     "author-as-alias": "Busca un autor y adjúntalo como alias",
     "author-merge": "Busca un autor y adjúntalo mediante fusión",

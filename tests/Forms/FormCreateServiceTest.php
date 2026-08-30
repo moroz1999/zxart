@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Forms;
 
+use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use controller;
 use LanguagesManager;
+use privilegesManager;
+use ServerSessionManager;
 use PHPUnit\Framework\TestCase;
 use structureElement;
 use structureManager;
@@ -23,7 +27,7 @@ final class FormCreateServiceTest extends TestCase
         $languagesManager = $this->createMock(LanguagesManager::class);
         $catalogue = $this->createMock(structureElement::class);
         $draft = $this->createStub(structureElement::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $catalogue->expects($this->once())->method('getId')->willReturn(100);
         $languagesManager->expects($this->once())
@@ -47,7 +51,7 @@ final class FormCreateServiceTest extends TestCase
         $languagesManager = $this->createMock(LanguagesManager::class);
         $catalogue = $this->createMock(structureElement::class);
         $draft = $this->createStub(structureElement::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $catalogue->expects($this->once())->method('getId')->willReturn(200);
         $languagesManager->expects($this->once())
@@ -70,7 +74,7 @@ final class FormCreateServiceTest extends TestCase
         $structureManager = $this->createMock(structureManager::class);
         $languagesManager = $this->createMock(LanguagesManager::class);
         $draft = $this->createStub(structureElement::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $languagesManager->expects($this->never())->method('getCurrentLanguageId');
         $structureManager->expects($this->once())
@@ -87,7 +91,7 @@ final class FormCreateServiceTest extends TestCase
         $languagesManager = $this->createStub(LanguagesManager::class);
         $draft = $this->createMock(structureElement::class);
         $controller = $this->createMock(controller::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
         $fields = ['title' => 'Alias', 'authorId' => '42'];
 
         $structureManager->expects($this->once())
@@ -116,7 +120,7 @@ final class FormCreateServiceTest extends TestCase
         $catalogue = $this->createMock(structureElement::class);
         $draft = $this->createMock(structureElement::class);
         $controller = $this->createMock(controller::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
         $fields = ['title' => 'New party'];
 
         $catalogue->expects($this->once())->method('getId')->willReturn(100);
@@ -153,7 +157,7 @@ final class FormCreateServiceTest extends TestCase
         $catalogue = $this->createStub(structureElement::class);
         $draft = $this->createStub(structureElement::class);
         $controller = $this->createStub(controller::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $catalogue->method('getId')->willReturn(100);
         $draft->method('getIdentifier')->willReturn('authors/type:author/action:showPublicForm');
@@ -173,7 +177,7 @@ final class FormCreateServiceTest extends TestCase
         $structureManager = $this->createMock(structureManager::class);
         $languagesManager = $this->createMock(LanguagesManager::class);
         $draft = $this->createStub(structureElement::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $languagesManager->expects($this->never())->method('getCurrentLanguageId');
         $structureManager->expects($this->once())
@@ -190,7 +194,7 @@ final class FormCreateServiceTest extends TestCase
         $languagesManager = $this->createStub(LanguagesManager::class);
         $draft = $this->createMock(structureElement::class);
         $controller = $this->createStub(controller::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $structureManager->method('createElement')->willReturn($draft);
         $draft->method('getIdentifier')->willReturn('prod/type:pressArticle/action:showPublicForm');
@@ -211,6 +215,7 @@ final class FormCreateServiceTest extends TestCase
         $service = new FormCreateService(
             $this->createStub(structureManager::class),
             $this->createStub(LanguagesManager::class),
+            $this->currentUserService(),
         );
 
         $this->expectException(FormCreateException::class);
@@ -223,7 +228,7 @@ final class FormCreateServiceTest extends TestCase
         $languagesManager = $this->createMock(LanguagesManager::class);
         $year = $this->createMock(structureElement::class);
         $draft = $this->createStub(structureElement::class);
-        $service = new FormCreateService($structureManager, $languagesManager);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
 
         $year->expects($this->once())->method('getTitle')->willReturn('2026');
         $year->expects($this->once())->method('getId')->willReturn(20);
@@ -238,5 +243,96 @@ final class FormCreateServiceTest extends TestCase
             ->willReturn($draft);
 
         self::assertSame($draft, $service->createDraft(FormCreateType::Party, 2026));
+    }
+
+    public function testAnonymousVisitorIsToldToAuthenticate(): void
+    {
+        $structureManager = $this->createStub(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $catalogue = $this->createStub(structureElement::class);
+        $service = new FormCreateService(
+            $structureManager,
+            $languagesManager,
+            $this->currentUserService('anonymous'),
+        );
+
+        $catalogue->method('getId')->willReturn(100);
+        $languagesManager->method('getCurrentLanguageId')->willReturn(7);
+        $structureManager->method('getElementsByType')->willReturn([$catalogue]);
+        $structureManager->method('getElementById')->willReturn($catalogue);
+        $structureManager->method('createElement')->willReturn(null);
+
+        try {
+            $service->createDraft(FormCreateType::Author, null);
+            self::fail('An anonymous visitor must not receive a draft');
+        } catch (FormCreateException $exception) {
+            self::assertSame(401, $exception->getStatusCode());
+        }
+    }
+
+    public function testMissingPrivilegeNamesTheUserAndTheAction(): void
+    {
+        $structureManager = $this->createStub(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $catalogue = $this->createStub(structureElement::class);
+        $service = new FormCreateService(
+            $structureManager,
+            $languagesManager,
+            $this->currentUserService('newcomer', 601334),
+        );
+
+        $catalogue->method('getId')->willReturn(100);
+        $languagesManager->method('getCurrentLanguageId')->willReturn(7);
+        $structureManager->method('getElementsByType')->willReturn([$catalogue]);
+        $structureManager->method('getElementById')->willReturn($catalogue);
+        $structureManager->method('createElement')->willReturn(null);
+
+        try {
+            $service->createDraft(FormCreateType::Author, null);
+            self::fail('A user without the privilege must not receive a draft');
+        } catch (FormCreateException $exception) {
+            self::assertSame(403, $exception->getStatusCode());
+            self::assertStringContainsString('601334', $exception->getMessage());
+            self::assertStringContainsString('author/showPublicForm', $exception->getMessage());
+        }
+    }
+
+    public function testUnavailableParentIsReportedAsServerError(): void
+    {
+        $structureManager = $this->createStub(structureManager::class);
+        $languagesManager = $this->createStub(LanguagesManager::class);
+        $catalogue = $this->createStub(structureElement::class);
+        $service = new FormCreateService($structureManager, $languagesManager, $this->currentUserService());
+
+        $catalogue->method('getId')->willReturn(100);
+        $languagesManager->method('getCurrentLanguageId')->willReturn(7);
+        $structureManager->method('getElementsByType')->willReturn([$catalogue]);
+        $structureManager->method('getElementById')->willReturn(null);
+        $structureManager->method('createElement')->willReturn(null);
+
+        try {
+            $service->createDraft(FormCreateType::Author, null);
+            self::fail('An unreachable parent must not produce a draft');
+        } catch (FormCreateException $exception) {
+            self::assertSame(500, $exception->getStatusCode());
+            self::assertStringContainsString('100', $exception->getMessage());
+        }
+    }
+
+    private function currentUserService(string $userName = 'tester', int $userId = 1): CurrentUserService
+    {
+        // A real instance, uninitialized: its destructor writes to the session
+        // manager, so a doubled CurrentUser would fail on unset typed properties.
+        $user = new CurrentUser(
+            $this->createStub(privilegesManager::class),
+            $this->createStub(ServerSessionManager::class),
+        );
+        $user->userName = $userName;
+        $user->id = $userId;
+
+        $service = $this->createStub(CurrentUserService::class);
+        $service->method('getCurrentUser')->willReturn($user);
+
+        return $service;
     }
 }

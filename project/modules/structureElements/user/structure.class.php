@@ -9,7 +9,7 @@ use App\Users\CurrentUserService;
  * @property string $userName
  * @property string $email
  * @property string $password reads back the stored hash; assigning a value hashes it
- * @property int $authorId
+ * @property int|string $authorId the id column reads back as a string, so compare it cast
  */
 class userElement extends structureElement
 {
