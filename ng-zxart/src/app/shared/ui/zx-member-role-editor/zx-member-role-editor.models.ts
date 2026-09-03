@@ -7,9 +7,13 @@ export interface MemberRoleItem {
   roles: string[];
 }
 
-/** Per-author fields submitted by the editor, keyed by author id. */
+/**
+ * What the editor holds, keyed by member id. The host names the backend fields
+ * these go into: a group form submits the roles of its authors, an author form
+ * the roles it holds in its groups.
+ */
 export interface MemberFields {
-  addAuthorRole: Record<string, string[]>;
-  addAuthorStartDate: Record<string, string>;
-  addAuthorEndDate: Record<string, string>;
+  roles: Record<string, string[]>;
+  startDates: Record<string, string>;
+  endDates: Record<string, string>;
 }

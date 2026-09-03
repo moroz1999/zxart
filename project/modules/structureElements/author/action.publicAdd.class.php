@@ -1,6 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Shared\EntityType;
 
 class publicAddAuthor extends structureElementAction
 {
@@ -26,6 +27,8 @@ class publicAddAuthor extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
+            $structureElement->persistMemberships(EntityType::Group);
+            $structureElement->persistMemberships(EntityType::Prod);
 
             $structureElement->recalculatePicturesData();
             $structureElement->recalculateMusicData();
@@ -66,6 +69,10 @@ class publicAddAuthor extends structureElementAction
             'intFrequency',
             'palette',
             'zxTunesId',
+            'addGroupStartDate',
+            'addGroupEndDate',
+            'addGroupRole',
+            'addProdRole',
         ];
     }
 

@@ -37,6 +37,9 @@ export interface CategoryTreeNode {
  * - `members`   — authorship members (id, title, role, period) for entities that have them.
  * - `roles`     — available author-role keys.
  * - `subgroups` — current subgroups (group entities).
+ * - `groups`    — group memberships of an author (id, title, roles, period).
+ * - `groupRoles`— role keys an author can hold inside a group.
+ * - `prods`     — production authorship of an author (id, title, roles, period).
  */
 export interface FormDataResponse {
   /** Present when the service recovered from a failed form-data request. */
@@ -58,6 +61,9 @@ export interface FormDataResponse {
   members: MemberRoleItem[];
   roles: string[];
   subgroups: EntityRef[];
+  groups: MemberRoleItem[];
+  groupRoles: string[];
+  prods: MemberRoleItem[];
   categoriesTree: CategoryTreeNode[];
   /** Flat connected-author list for tune/picture (plain `author` list, no roles). */
   authorRefs: EntityRef[];

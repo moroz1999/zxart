@@ -51,6 +51,7 @@ class authorElement extends structureElement implements
     use LettersElementsListProviderTrait;
     use AuthorTrait;
     use AuthorshipProviderTrait;
+    use AuthorshipPersister;
     use AliasElementsProvider;
     use CommentsTrait;
     use ImportedItemTrait;
@@ -105,6 +106,13 @@ class authorElement extends structureElement implements
         $moduleStructure['musicRating'] = 'floatNumber';
         $moduleStructure['picturesQuantity'] = 'text';
         $moduleStructure['tunesQuantity'] = 'text';
+
+        $moduleStructure['addGroupStartDate'] = 'array';
+        $moduleStructure['addGroupEndDate'] = 'array';
+        $moduleStructure['addGroupRole'] = 'array';
+
+        // Production authorship carries roles only; the software tab has no dates.
+        $moduleStructure['addProdRole'] = 'array';
 
         $moduleStructure['joinAsAlias'] = 'text';
         $moduleStructure['joinAndDelete'] = 'text';

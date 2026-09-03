@@ -18,6 +18,10 @@ import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
+import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
+import {ZxTabsComponent} from '../../shared/ui/zx-tabs/zx-tabs.component';
+import {ZxTabComponent} from '../../shared/ui/zx-tabs/zx-tab.component';
 import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
@@ -26,6 +30,8 @@ import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {AuthorAliasFormApiService} from '../../features/author-details/services/author-alias-form-api.service';
+
+const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for editing an alias or creating one for a selected author. */
 @Component({
@@ -47,6 +53,9 @@ import {AuthorAliasFormApiService} from '../../features/author-details/services/
     ZxInputComponent,
     ZxEntityAutocompleteComponent,
     ZxStackComponent,
+    ZxMemberRoleEditorComponent,
+    ZxTabsComponent,
+    ZxTabComponent,
     ZxSpinnerComponent,
     HeadingDirective,
     ZxPageLayoutComponent,
@@ -72,11 +81,20 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   loading = true;
   submitting = false;
   errorMessage = '';
+  /** Authorship of the alias itself, editable only once the alias exists. */
+  groups: MemberRoleItem[] = [];
+  groupRoles: string[] = [];
+  prods: MemberRoleItem[] = [];
+  prodRoles: string[] = [];
+  prodsCount = 0;
+  activeTab = 0;
 
   /** Where the user lands once the alias is deleted; the author it belonged to. */
   deleteReturnUrl = '/authors';
 
   elementId = 0;
+  private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private prodFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -140,6 +158,13 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
             displayInMusic: !!Number(data.fields['displayInMusic']),
             displayInGraphics: !!Number(data.fields['displayInGraphics']),
           });
+          this.groups = data.groups;
+          this.groupRoles = data.groupRoles;
+          this.prods = data.prods;
+          this.prodRoles = data.roles;
+          // matches what the editor emits on mount, so the tab count is settled
+          // before the tab bar is first checked
+          this.prodsCount = data.prods.length;
           this.loading = false;
           this.cdr.markForCheck();
         },
@@ -154,6 +179,15 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  onGroupFields(fields: MemberFields): void {
+    this.groupFields = fields;
+  }
+
+  onProdFields(fields: MemberFields): void {
+    this.prodFields = fields;
+    this.prodsCount = Object.keys(fields.roles).length;
   }
 
   onSubmit(): void {
@@ -183,6 +217,10 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
           endDate: fields.endDate,
           displayInMusic: fields.displayInMusic ? '1' : '',
           displayInGraphics: fields.displayInGraphics ? '1' : '',
+          addGroupRole: this.groupFields.roles,
+          addGroupStartDate: this.groupFields.startDates,
+          addGroupEndDate: this.groupFields.endDates,
+          addProdRole: this.prodFields.roles,
         },
       });
     this.subscriptions.add(

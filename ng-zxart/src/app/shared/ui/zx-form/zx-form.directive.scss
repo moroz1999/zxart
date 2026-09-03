@@ -62,3 +62,15 @@
   background: var(--zx-form-footer-bg);
   padding: var(--zx-form-footer-padding);
 }
+
+// Tab panel of a tabbed form. It takes part in the form's own layout, so the
+// sections inside it keep the spacing they have in an untabbed form, and an
+// inactive panel stays in the DOM: editors that hold their own queued state
+// (the member/role editor) would lose it if the panel were destroyed.
+.zx-form-tab-panel {
+  display: contents;
+}
+
+.zx-form-tab-panel[hidden] {
+  display: none;
+}

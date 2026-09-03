@@ -116,9 +116,19 @@ Authors can be members of groups:
 - Membership can change over time
 - Group can have multiple members
 - Edit forms can queue multiple new authors before saving; authorship roles and membership dates are submitted per author ID.
+- Both sides of the membership are editable with the same member/role editor. The group form edits the roster of one group and submits `addAuthorRole`/`addAuthorStartDate`/`addAuthorEndDate` per author ID; the author form edits the groups of one author and submits `addGroupRole`/`addGroupStartDate`/`addGroupEndDate` per group ID. Either side deletes the memberships its form no longer carries; the author form leaves the memberships of the author's aliases alone.
+- The author form loads its memberships from the `groups` list of the form-data response and the roles it may pick from `groupRoles`. Membership roles are one fixed list (`ZxArt\Groups\GroupMemberRoles`), narrower than the authorship roles of works.
 - Group roster data is loaded through a separate endpoint after the group core response.
 - Group connections exclude group members and their author aliases from collaborator people.
 - The group connections tab is shown only when the core group response confirms real collaborator people or published developer groups.
+
+#### Editing Authorship From the Author
+The author form and the author alias form both edit the authorship the works themselves record, from the person's side:
+- Groups are a section of the main tab, with the membership role and period per group.
+- Production authorship is its own **Software** tab, carrying the person's roles per production and no period; the tab label counts the productions currently queued. Roles are the same list the production form offers (`roles` of the form-data response), the productions themselves arrive as `prods`.
+- Both are persisted by `persistMemberships()`, which reads `add<Type>Role`/`add<Type>StartDate`/`add<Type>EndDate` per element ID and deletes the authorship the form no longer carries.
+- An alias holds its own authorship, separate from its main author's, and edits only that. Its blocks appear only when editing an existing alias: alias creation runs through its own endpoint, which carries no authorship fields, and a new alias has none.
+- The form's tab panels stay in the DOM while hidden: the member/role editors own their queued edits, which switching tabs would otherwise discard.
 
 #### Authorship Through Group
 When work is created by group:

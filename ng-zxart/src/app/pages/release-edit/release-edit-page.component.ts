@@ -42,7 +42,7 @@ import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {enumDefaultValue} from '../../shared/utils/enum-default';
 
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `release/:id/edit`. */
 @Component({
@@ -281,7 +281,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
         description: value.description,
         denyVoting: value.denyVoting ? '1' : '',
         denyComments: value.denyComments ? '1' : '',
-        addAuthorRole: this.memberFields.addAuthorRole,
+        addAuthorRole: this.memberFields.roles,
       },
     };
     const save$ = this.creating

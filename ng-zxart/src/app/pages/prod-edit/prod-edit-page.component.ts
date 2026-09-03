@@ -53,7 +53,7 @@ const LEGAL_STATUSES = [
 
 /** expectedFields preserved unchanged on save until they get dedicated UI. */
 const PASSTHROUGH_FIELDS: string[] = [];
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `prod/:id/edit`. */
 @Component({
@@ -378,7 +378,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       denyVoting: value.denyVoting ? '1' : '',
       denyComments: value.denyComments ? '1' : '',
       htmlDescription: value.htmlDescription ? '1' : '',
-      addAuthorRole: this.memberFields.addAuthorRole,
+      addAuthorRole: this.memberFields.roles,
     };
     const save$ = this.batchUpload
       ? this.formSave.create(

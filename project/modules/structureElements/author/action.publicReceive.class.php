@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class publicReceiveAuthor extends structureElementAction
 {
     protected $loggable = true;
@@ -24,6 +26,8 @@ class publicReceiveAuthor extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
+            $structureElement->persistMemberships(EntityType::Group);
+            $structureElement->persistMemberships(EntityType::Prod);
 
             $structureElement->recalculate();
             $structureElement->reconvertMusic();
@@ -55,6 +59,10 @@ class publicReceiveAuthor extends structureElementAction
             'intFrequency',
             'palette',
             'zxTunesId',
+            'addGroupStartDate',
+            'addGroupEndDate',
+            'addGroupRole',
+            'addProdRole',
         ];
     }
 

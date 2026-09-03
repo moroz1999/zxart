@@ -27,11 +27,12 @@ interface EditableMember {
 }
 
 /**
- * Member / role manager for an entity's authorship (e.g. a group's members).
+ * Member / role manager for an entity's authorship. It edits either side of the
+ * relation: the members of a group, or the groups one author is a member of.
  * Members are shown as a responsive grid of cards; each card carries the member's
- * selected roles as removable chips plus a searchable role adder. The author
+ * selected roles as removable chips plus a searchable role adder. The entity
  * picker appends new members to the same card grid, and multiple members can be
- * queued before the form is saved. Emits per-author role and period maps;
+ * queued before the form is saved. Emits per-member role and period maps;
  * persisted-member removal is emitted so the host can run the `deleteAuthor`
  * action live (no page reload).
  *
@@ -232,9 +233,9 @@ export class ZxMemberRoleEditorComponent implements OnChanges {
     }
 
     this.fieldsChange.emit({
-      addAuthorRole: role,
-      addAuthorStartDate: start,
-      addAuthorEndDate: end,
+      roles: role,
+      startDates: start,
+      endDates: end,
     });
   }
 }

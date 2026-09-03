@@ -21,6 +21,7 @@ use ZxArt\Forms\SubmittedFormFields;
 use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
+use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Shared\EntityType;
 use zxPictureElement;
 
@@ -304,6 +305,9 @@ class Formdata extends LoggedControllerApplication
             'members' => $this->buildMembers($element),
             'roles' => method_exists($element, 'getAuthorRoles') ? array_values($element->getAuthorRoles()) : [],
             'subgroups' => $this->buildSubgroups($element),
+            'groups' => $this->buildAuthorships($element, EntityType::Group),
+            'groupRoles' => GroupMemberRoles::LIST,
+            'prods' => $this->buildAuthorships($element, EntityType::Prod),
             'categoriesTree' => $this->buildCategoriesTree($element),
             'authorRefs' => $this->buildAuthorRefs($element),
             'originalAuthorRefs' => $this->buildConnectedRefs($element, 'getOriginalAuthorsList'),
@@ -626,6 +630,35 @@ class Formdata extends LoggedControllerApplication
             ];
         }
         return $members;
+    }
+
+    /**
+     * What one author takes part in: the inverse of {@see buildMembers}, read
+     * from the same authorship records and shaped the same way, so the author
+     * form edits either side with the member/role editor.
+     *
+     * @return list<array{id: int, title: string, startDate: string, endDate: string, roles: list<string>}>
+     */
+    private function buildAuthorships(structureElement $element, EntityType $entityType): array
+    {
+        if (!in_array((string)$element->structureType, ['author', 'authorAlias'], true)) {
+            return [];
+        }
+        $items = [];
+        foreach ($element->getAuthorshipInfo($entityType) as $info) {
+            $target = $info[$entityType->value . 'Element'] ?? null;
+            if (!is_object($target)) {
+                continue;
+            }
+            $items[] = [
+                'id' => (int)$target->getId(),
+                'title' => $this->decode((string)$target->title),
+                'startDate' => (string)($info['startDate'] ?? ''),
+                'endDate' => (string)($info['endDate'] ?? ''),
+                'roles' => array_values($info['roles'] ?? []),
+            ];
+        }
+        return $items;
     }
 
     /** @return list<array{id: int, title: string}> */

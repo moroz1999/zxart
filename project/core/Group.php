@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Shared\EntityType;
 
 trait Group
@@ -117,18 +118,7 @@ trait Group
      */
     public function getAuthorRoles(): array
     {
-        return [
-            'coder',
-            'cracker',
-            'graphician',
-            'hardware',
-            'musician',
-            'organizer',
-            'support',
-            'tester',
-            'gamedesigner',
-            'unknown',
-        ];
+        return GroupMemberRoles::LIST;
     }
 
     public function getProdsInfo(): array

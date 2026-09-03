@@ -32,7 +32,7 @@ import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
 const GROUP_TYPES = ['company', 'studio', 'scene', 'store', 'education'];
-const EMPTY_MEMBER_FIELDS: MemberFields = {addAuthorRole: {}, addAuthorStartDate: {}, addAuthorEndDate: {}};
+const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `group/:id/edit` and for group creation (`groups/add`). */
 @Component({
@@ -209,9 +209,9 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
         startDate: value.startDate,
         endDate: value.endDate,
         slogan: value.slogan,
-        addAuthorRole: this.memberFields.addAuthorRole,
-        addAuthorStartDate: this.memberFields.addAuthorStartDate,
-        addAuthorEndDate: this.memberFields.addAuthorEndDate,
+        addAuthorRole: this.memberFields.roles,
+        addAuthorStartDate: this.memberFields.startDates,
+        addAuthorEndDate: this.memberFields.endDates,
         subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
       },
       image: {field: 'image', file: this.imageFile, remove: this.removeImage},

@@ -20,6 +20,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-multilang-field.component';
+import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
+import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
 import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
 import {ZxButtonControlsComponent} from '../../shared/ui/zx-button-controls/zx-button-controls.component';
@@ -27,12 +29,15 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {ZxTabsComponent} from '../../shared/ui/zx-tabs/zx-tabs.component';
+import {ZxTabComponent} from '../../shared/ui/zx-tabs/zx-tab.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 
 /** Tech fields shown nowhere in the UI but preserved on save (passthrough). */
 const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequency', 'palette'];
+const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `author/:id/edit`. */
 @Component({
@@ -55,6 +60,7 @@ const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequen
     ZxEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxMultilangFieldComponent,
+    ZxMemberRoleEditorComponent,
     ZxFormSectionComponent,
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
@@ -62,6 +68,8 @@ const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequen
     HeadingDirective,
     ZxPageLayoutComponent,
     ZxDeleteEntityButtonComponent,
+    ZxTabsComponent,
+    ZxTabComponent,
   ],
   templateUrl: './author-edit-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,6 +97,14 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   errorMessage = '';
   imageUrl: string | null = null;
   languages: FormLanguage[] = [];
+  groups: MemberRoleItem[] = [];
+  groupRoles: string[] = [];
+  prods: MemberRoleItem[] = [];
+  /** Production roles; the same list the production form offers. */
+  prodRoles: string[] = [];
+  /** Productions currently queued in the software tab, shown as its tab count. */
+  prodsCount = 0;
+  activeTab = 0;
   creating = false;
 
   /** Where the user lands once the author is deleted. */
@@ -99,6 +115,8 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   private imageFile: File | null = null;
   private removeImage = false;
   private passthrough: Record<string, string> = {};
+  private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private prodFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -149,6 +167,13 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
             displayInGraphics: !!Number(data.fields['displayInGraphics']),
           });
           this.imageUrl = data.images['image'] ?? null;
+          this.groups = data.groups;
+          this.groupRoles = data.groupRoles;
+          this.prods = data.prods;
+          this.prodRoles = data.roles;
+          // matches what the editor emits on mount, so the tab count is settled
+          // before the tab bar is first checked
+          this.prodsCount = data.prods.length;
           for (const field of PASSTHROUGH_FIELDS) {
             this.passthrough[field] = String(data.fields[field] ?? '');
           }
@@ -177,6 +202,15 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.removeImage = change.removed;
   }
 
+  onGroupFields(fields: MemberFields): void {
+    this.groupFields = fields;
+  }
+
+  onProdFields(fields: MemberFields): void {
+    this.prodFields = fields;
+    this.prodsCount = Object.keys(fields.roles).length;
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -200,6 +234,10 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
           deny3a: value.deny3a ? '1' : '',
           displayInMusic: value.displayInMusic ? '1' : '',
           displayInGraphics: value.displayInGraphics ? '1' : '',
+          addGroupRole: this.groupFields.roles,
+          addGroupStartDate: this.groupFields.startDates,
+          addGroupEndDate: this.groupFields.endDates,
+          addProdRole: this.prodFields.roles,
         },
         multilang: {realName: value.realName},
         image: {field: 'image', file: this.imageFile, remove: this.removeImage},

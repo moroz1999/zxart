@@ -26,6 +26,7 @@ class authorAliasElement extends structureElement implements
     use JsonDataProviderElement;
     use AuthorTrait;
     use AuthorshipProviderTrait;
+    use AuthorshipPersister;
     use LettersElementsListProviderTrait;
     use ImportedItemTrait;
     use CommentsTrait;
@@ -56,6 +57,13 @@ class authorAliasElement extends structureElement implements
         $moduleStructure['displayInMusic'] = 'checkbox';
         $moduleStructure['displayInGraphics'] = 'checkbox';
         $moduleStructure['joinAndDelete'] = 'text';
+
+        $moduleStructure['addGroupStartDate'] = 'array';
+        $moduleStructure['addGroupEndDate'] = 'array';
+        $moduleStructure['addGroupRole'] = 'array';
+
+        // Production authorship carries roles only; the software tab has no dates.
+        $moduleStructure['addProdRole'] = 'array';
 
         $moduleStructure['articles'] = [
             'ConnectedElements',

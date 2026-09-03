@@ -13,96 +13,138 @@
 </div>
 
 <form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <zx-form-section [title]="'form.identification' | translate" icon="person">
-    <zx-form-field [fullWidth]="true">
-      <zx-form-label for="author-title" [required]="true">{{ 'author-form.title' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-input id="author-title" formControlName="title" type="text"></zx-input>
-        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
-      </zx-form-control>
-    </zx-form-field>
+  <zx-tabs (tabChange)="activeTab = $event">
+    <zx-tab [label]="'form.tab-details' | translate"></zx-tab>
+    <zx-tab [label]="'form.software' | translate" [count]="prodsCount"></zx-tab>
+  </zx-tabs>
 
-    <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'author-form.real-name' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-multilang-field formControlName="realName" [languages]="languages" [columns]="3"></zx-multilang-field>
-      </zx-form-control>
-    </zx-form-field>
-  </zx-form-section>
+  <div class="zx-form-tab-panel" [hidden]="activeTab !== 0">
+    <zx-form-section [title]="'form.identification' | translate" icon="person">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-label for="author-title" [required]="true">{{ 'author-form.title' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="author-title" formControlName="title" type="text"></zx-input>
+          <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
+        </zx-form-control>
+      </zx-form-field>
 
-  <zx-form-section [title]="'form.geography' | translate" icon="location">
-    <zx-form-field>
-      <zx-form-label>{{ 'author-form.country' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-entity-autocomplete formControlName="country" types="country"
-          [placeholder]="'author-form.search-placeholder' | translate"></zx-entity-autocomplete>
-      </zx-form-control>
-    </zx-form-field>
+      <zx-form-field [fullWidth]="true">
+        <zx-form-label>{{ 'author-form.real-name' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-multilang-field formControlName="realName" [languages]="languages" [columns]="3"></zx-multilang-field>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
 
-    <zx-form-field>
-      <zx-form-label>{{ 'author-form.city' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-entity-autocomplete formControlName="city" types="city"
-          [placeholder]="'author-form.search-placeholder' | translate"></zx-entity-autocomplete>
-      </zx-form-control>
-    </zx-form-field>
+    <zx-form-section [title]="'form.geography' | translate" icon="location">
+      <zx-form-field>
+        <zx-form-label>{{ 'author-form.country' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-entity-autocomplete formControlName="country" types="country"
+            [placeholder]="'author-form.search-placeholder' | translate"></zx-entity-autocomplete>
+        </zx-form-control>
+      </zx-form-field>
 
-  </zx-form-section>
+      <zx-form-field>
+        <zx-form-label>{{ 'author-form.city' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-entity-autocomplete formControlName="city" types="city"
+            [placeholder]="'author-form.search-placeholder' | translate"></zx-entity-autocomplete>
+        </zx-form-control>
+      </zx-form-field>
 
-  <zx-form-section [title]="'form.links' | translate" icon="open-in-new">
-    <zx-form-field>
-      <zx-form-label for="author-wiki">{{ 'author-form.wiki' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-input id="author-wiki" formControlName="wikiLink" type="text"></zx-input>
-      </zx-form-control>
-    </zx-form-field>
+    </zx-form-section>
 
-    <zx-form-field>
-      <zx-form-label for="author-zxtunes">{{ 'author-form.zxtunes-id' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-input id="author-zxtunes" formControlName="zxTunesId" type="text"></zx-input>
-      </zx-form-control>
-    </zx-form-field>
+    <zx-form-section [title]="'form.links' | translate" icon="open-in-new">
+      <zx-form-field>
+        <zx-form-label for="author-wiki">{{ 'author-form.wiki' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="author-wiki" formControlName="wikiLink" type="text"></zx-input>
+        </zx-form-control>
+      </zx-form-field>
 
-    <zx-form-field>
-      <zx-form-label for="author-artcity">{{ 'author-form.artcity-id' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-input id="author-artcity" formControlName="artCityId" type="text"></zx-input>
-      </zx-form-control>
-    </zx-form-field>
-  </zx-form-section>
+      <zx-form-field>
+        <zx-form-label for="author-zxtunes">{{ 'author-form.zxtunes-id' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="author-zxtunes" formControlName="zxTunesId" type="text"></zx-input>
+        </zx-form-control>
+      </zx-form-field>
 
-  <zx-form-section [title]="'form.image' | translate" icon="image">
-    <zx-form-field [fullWidth]="true">
-      <zx-form-label>{{ 'author-form.image' | translate }}</zx-form-label>
-      <zx-form-control>
-        <zx-image-upload [imageUrl]="imageUrl" (changed)="onImageChanged($event)"></zx-image-upload>
-      </zx-form-control>
-    </zx-form-field>
-  </zx-form-section>
+      <zx-form-field>
+        <zx-form-label for="author-artcity">{{ 'author-form.artcity-id' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="author-artcity" formControlName="artCityId" type="text"></zx-input>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
 
-  <zx-form-section [title]="'form.display' | translate" icon="eye">
-    <zx-form-field [fullWidth]="true">
-      <zx-form-control>
-        <zx-checkbox-group>
-          <zx-checkbox-field formControlName="displayInMusic" [label]="'author-form.display-in-music' | translate"></zx-checkbox-field>
-          <zx-checkbox-field formControlName="displayInGraphics" [label]="'author-form.display-in-graphics' | translate"></zx-checkbox-field>
-        </zx-checkbox-group>
-      </zx-form-control>
-    </zx-form-field>
-  </zx-form-section>
+    <zx-form-section [title]="'form.image' | translate" icon="image">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-label>{{ 'author-form.image' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-image-upload [imageUrl]="imageUrl" (changed)="onImageChanged($event)"></zx-image-upload>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
 
-  <zx-form-section [title]="'form.restrictions' | translate" icon="cancel">
-    <zx-form-field [fullWidth]="true">
-      <zx-form-control>
-        <zx-checkbox-group>
-          <zx-checkbox-field formControlName="denyVoting" [label]="'author-form.deny-voting' | translate"></zx-checkbox-field>
-          <zx-checkbox-field formControlName="denyComments" [label]="'author-form.deny-comments' | translate"></zx-checkbox-field>
-          <zx-checkbox-field formControlName="deny3a" [label]="'author-form.deny-3a' | translate"></zx-checkbox-field>
-        </zx-checkbox-group>
-      </zx-form-control>
-    </zx-form-field>
-  </zx-form-section>
+    <zx-form-section [title]="'form.groups' | translate" icon="group">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-control>
+          <zx-member-role-editor
+            [members]="groups"
+            [availableRoles]="groupRoles"
+            roleLabelKey="group-details.roles"
+            memberTypes="group,groupAlias"
+            [addPlaceholder]="'form.add-group' | translate"
+            [roleAddPlaceholder]="'form.add-role' | translate"
+            (fieldsChange)="onGroupFields($event)"
+          ></zx-member-role-editor>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
+
+    <zx-form-section [title]="'form.display' | translate" icon="eye">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-control>
+          <zx-checkbox-group>
+            <zx-checkbox-field formControlName="displayInMusic" [label]="'author-form.display-in-music' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="displayInGraphics" [label]="'author-form.display-in-graphics' | translate"></zx-checkbox-field>
+          </zx-checkbox-group>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
+
+    <zx-form-section [title]="'form.restrictions' | translate" icon="cancel">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-control>
+          <zx-checkbox-group>
+            <zx-checkbox-field formControlName="denyVoting" [label]="'author-form.deny-voting' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="denyComments" [label]="'author-form.deny-comments' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="deny3a" [label]="'author-form.deny-3a' | translate"></zx-checkbox-field>
+          </zx-checkbox-group>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
+  </div>
+
+  <div class="zx-form-tab-panel" [hidden]="activeTab !== 1">
+    <zx-form-section [title]="'form.software' | translate" icon="videogame-asset">
+      <zx-form-field [fullWidth]="true">
+        <zx-form-control>
+          <zx-member-role-editor
+            [members]="prods"
+            [availableRoles]="prodRoles"
+            [showDates]="false"
+            roleLabelKey="author.role"
+            memberTypes="zxProd"
+            [addPlaceholder]="'form.add-prod' | translate"
+            [roleAddPlaceholder]="'form.add-role' | translate"
+            (fieldsChange)="onProdFields($event)"
+          ></zx-member-role-editor>
+        </zx-form-control>
+      </zx-form-field>
+    </zx-form-section>
+  </div>
 
   <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
 

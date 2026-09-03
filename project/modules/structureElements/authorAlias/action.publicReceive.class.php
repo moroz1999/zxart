@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Shared\EntityType;
+
 class publicReceiveAuthorAlias extends structureElementAction
 {
     protected $loggable = true;
@@ -15,6 +17,8 @@ class publicReceiveAuthorAlias extends structureElementAction
             $structureElement->structureName = $structureElement->title;
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
+            $structureElement->persistMemberships(EntityType::Group);
+            $structureElement->persistMemberships(EntityType::Prod);
 
             $this->respondFormSaved($controller, $structureElement);
             return;
@@ -32,6 +36,10 @@ class publicReceiveAuthorAlias extends structureElementAction
             'authorId',
             'displayInMusic',
             'displayInGraphics',
+            'addGroupStartDate',
+            'addGroupEndDate',
+            'addGroupRole',
+            'addProdRole',
         ];
     }
 
