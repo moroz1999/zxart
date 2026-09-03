@@ -10,6 +10,7 @@ use DOMNode;
 use DOMXPath;
 use errorLogger;
 use GuzzleHttp\Client;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
@@ -23,7 +24,7 @@ class VtrdosImport extends errorLogger
 
     /** @var array<string, array<int, array<string, mixed>>> */
     protected array $urlsSettings = [];
-    protected string $origin = 'vt';
+    protected ImportOrigin $origin = ImportOrigin::Vtrdos;
     protected string $rootUrl = 'https://vtrd.in/';
     /** @var string[] */
     protected array $alphabet = [

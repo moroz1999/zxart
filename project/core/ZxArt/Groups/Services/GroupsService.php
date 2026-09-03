@@ -15,6 +15,7 @@ use linksManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Services\ImportIdOperator;
@@ -50,10 +51,10 @@ class GroupsService extends ElementsManager
     }
 
 
-    public function importGroup(GroupLabel $label, ?string $origin = null): groupAliasElement|groupElement|null
+    public function importGroup(GroupLabel $label, ImportOrigin $origin): groupAliasElement|groupElement|null
     {
         $element = $this->getGroupByLabel($label, $origin);
-        if (($element !== null) && $origin !== null) {
+        if ($element !== null) {
             $this->importIdOperator->saveImportId($element->id, $label->id, $origin, EntityType::Group);
         }
 
@@ -74,7 +75,7 @@ class GroupsService extends ElementsManager
         return $element;
     }
 
-    private function createGroup(GroupLabel $dto, string $origin): ?groupElement
+    private function createGroup(GroupLabel $dto, ImportOrigin $origin): ?groupElement
     {
         if ($element = $this->manufactureGroupElement($dto->name ?? '')) {
             $this->updateGroup($element, $dto, $origin);
@@ -100,7 +101,7 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    private function updateGroup(groupElement $element, GroupLabel $dto, string $origin): void
+    private function updateGroup(groupElement $element, GroupLabel $dto, ImportOrigin $origin): void
     {
         $changed = false;
 
@@ -195,7 +196,7 @@ class GroupsService extends ElementsManager
         }
     }
 
-    private function createGroupAlias(GroupLabel $dto, string $origin): ?groupAliasElement
+    private function createGroupAlias(GroupLabel $dto, ImportOrigin $origin): ?groupAliasElement
     {
         if ($element = $this->manufactureAliasElement($dto->name ?? '')) {
             $this->updateGroupAlias($element, $dto, $origin);
@@ -220,7 +221,7 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    private function updateGroupAlias(groupAliasElement $element, GroupLabel $groupAlias, string $origin): void
+    private function updateGroupAlias(groupAliasElement $element, GroupLabel $groupAlias, ImportOrigin $origin): void
     {
         $changed = false;
 
@@ -339,7 +340,7 @@ class GroupsService extends ElementsManager
         return $groupElement;
     }
 
-    public function getGroupByLabel(GroupLabel $label, ?string $origin): groupElement|groupAliasElement|null
+    public function getGroupByLabel(GroupLabel $label, ImportOrigin $origin): groupElement|groupAliasElement|null
     {
         /** @var groupElement|null $element */
         $element = $this->importIdOperator->getElementByImportId($label->id, $origin, EntityType::Group);

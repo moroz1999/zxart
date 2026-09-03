@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
-import {FormLanguage} from '../../shared/models/form-data-response';
+import {EnumOption, FormLanguage} from '../../shared/models/form-data-response';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -20,6 +20,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
 import {ZxMultilangFieldComponent} from '../../shared/ui/zx-multilang-field/zx-multilang-field.component';
+import {ZxImportOriginsEditorComponent} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.component';
+import {ImportOriginFields, ImportOriginItem} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxFormSectionComponent} from '../../shared/ui/zx-form/zx-form-section/zx-form-section.component';
@@ -61,6 +63,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     ZxImageUploadComponent,
     ZxMultilangFieldComponent,
     ZxMemberRoleEditorComponent,
+    ZxImportOriginsEditorComponent,
     ZxFormSectionComponent,
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
@@ -100,6 +103,8 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   groups: MemberRoleItem[] = [];
   groupRoles: string[] = [];
   prods: MemberRoleItem[] = [];
+  importOrigins: ImportOriginItem[] = [];
+  importOriginOptions: EnumOption[] = [];
   /** Production roles; the same list the production form offers. */
   prodRoles: string[] = [];
   /** Productions currently queued in the software tab, shown as its tab count. */
@@ -117,6 +122,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   private passthrough: Record<string, string> = {};
   private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private prodFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private importOriginFields: ImportOriginFields = {};
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -171,6 +177,8 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
           this.groupRoles = data.groupRoles;
           this.prods = data.prods;
           this.prodRoles = data.roles;
+          this.importOrigins = data.importOrigins;
+          this.importOriginOptions = data.enums['importOrigins'] ?? [];
           // matches what the editor emits on mount, so the tab count is settled
           // before the tab bar is first checked
           this.prodsCount = data.prods.length;
@@ -206,6 +214,10 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.groupFields = fields;
   }
 
+  onImportOriginFields(fields: ImportOriginFields): void {
+    this.importOriginFields = fields;
+  }
+
   onProdFields(fields: MemberFields): void {
     this.prodFields = fields;
     this.prodsCount = Object.keys(fields.roles).length;
@@ -238,6 +250,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
           addGroupStartDate: this.groupFields.startDates,
           addGroupEndDate: this.groupFields.endDates,
           addProdRole: this.prodFields.roles,
+          importOrigins: this.importOriginFields,
         },
         multilang: {realName: value.realName},
         image: {field: 'image', file: this.imageFile, remove: this.removeImage},

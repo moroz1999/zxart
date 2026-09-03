@@ -3,6 +3,7 @@
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
 use ZxArt\Authors\Constants;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
@@ -773,13 +774,13 @@ class fixApplication extends controllerApplication
                     foreach ($releases as $key => $release) {
                         copy($release->getFilePath(), ROOT_PATH . 'temporary/zxchip/' . $release->fileName);
                     }
-                    $string = $prod->getImportOriginId('zxdb') . ' ';
-                    $string .= $prod->getImportOriginId('3a') . ' ';
+                    $string = $prod->getImportOriginId(ImportOrigin::Zxdb) . ' ';
+                    $string .= $prod->getImportOriginId(ImportOrigin::Zxaaa) . ' ';
                     $string .= $prod->title . ' ';
 
                     $string .= "\n";
                     file_put_contents($this->log, $string, FILE_APPEND);
-                    file_put_contents($this->idLog, $prod->getImportOriginId('zxdb') . ',', FILE_APPEND);
+                    file_put_contents($this->idLog, $prod->getImportOriginId(ImportOrigin::Zxdb) . ',', FILE_APPEND);
                     echo $string . '<br>';
                     flush();
                     $prod->deleteElementData();
@@ -808,13 +809,13 @@ class fixApplication extends controllerApplication
                     foreach ($releases as $key => $release) {
                         copy($release->getFilePath(), ROOT_PATH . 'temporary/wlodek/' . $release->fileName);
                     }
-                    $string = $prod->getImportOriginId('zxdb') . ' ';
-                    $string .= $prod->getImportOriginId('3a') . ' ';
+                    $string = $prod->getImportOriginId(ImportOrigin::Zxdb) . ' ';
+                    $string .= $prod->getImportOriginId(ImportOrigin::Zxaaa) . ' ';
                     $string .= $prod->title . ' ';
 
                     $string .= "\n";
                     file_put_contents($this->log, $string, FILE_APPEND);
-                    file_put_contents($this->idLog, $prod->getImportOriginId('zxdb') . ',', FILE_APPEND);
+                    file_put_contents($this->idLog, $prod->getImportOriginId(ImportOrigin::Zxdb) . ',', FILE_APPEND);
                     echo $string . '<br>';
                     flush();
                     $prod->deleteElementData();

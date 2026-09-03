@@ -60,7 +60,7 @@ ordinary pictures of the archive.
 - **mentions** — the press articles that mention the picture
 
 ### Tags and Categorization
-- **tagsText** — the picture's tags
+- **tags** — the picture's tags
 - **tagsAmount** — how many tags it carries
 
 Two tags carry meaning beyond description: "Loading Screen" marks a loading

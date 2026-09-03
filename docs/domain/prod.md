@@ -11,7 +11,7 @@ in its releases, and one production may have many.
 - **description** — description
 - **instructions** — how to play or use it
 - **youtubeId** — a video of it
-- **tagsText** — its tags
+- **tags** — its tags
 - **language** — the interface languages it is available in
 - **externalLink** — the work's own page elsewhere
 

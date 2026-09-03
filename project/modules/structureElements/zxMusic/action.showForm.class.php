@@ -13,11 +13,6 @@ class showFormZxMusic extends structureElementAction
             $renderer->assign('tabsTemplate', false);
             $renderer->assign('contentSubTemplate', 'zxMusic.form.tpl');
         }
-        if ($structureElement->requested) {
-            if ($structureElement->tagsText == '') {
-                $structureElement->tagsText = $structureElement->generateTagsText();
-            }
-        }
     }
 }
 

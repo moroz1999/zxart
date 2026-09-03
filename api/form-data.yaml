@@ -73,6 +73,33 @@ paths:
                         type: string
                       structureType:
                         type: string
+                  tags:
+                    type: array
+                    description: >
+                      Titles of the tags linked to the item, as the form lists
+                      them. Empty for entities that carry no tags. The whole list
+                      is submitted back under the same name.
+                    items:
+                      type: string
+                  importOrigins:
+                    type: array
+                    description: >
+                      Ids the entity carries on external portals, in the order the
+                      form lists them. Empty for entities that carry none. The
+                      portals to choose from arrive as the `importOrigins` enum;
+                      the whole list is submitted back under the same name.
+                    items:
+                      type: object
+                      required:
+                        - origin
+                        - importId
+                      properties:
+                        origin:
+                          type: string
+                          description: Portal code.
+                        importId:
+                          type: string
+                          description: Id the entity has on that portal.
                   enums:
                     type: object
                     description: >

@@ -2,11 +2,20 @@
 
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Groups\GroupMemberRoles;
+use ZxArt\Import\ImportOrigin;
+use ZxArt\Import\ImportOriginsHolderTrait;
 use ZxArt\Shared\EntityType;
 
 trait Group
 {
+    use ImportOriginsHolderTrait;
+
     protected $linksInfo;
+
+    public function getImportEntityType(): EntityType
+    {
+        return EntityType::Group;
+    }
 
     /**
      * @return zxReleaseElement[]
@@ -40,7 +49,7 @@ trait Group
              */
             $translationsManager = $this->getService(translationsManager::class);
 
-            $types = ['3a', 'zxdb', 's4e', 'worldofsam'];
+            $types = [ImportOrigin::Zxaaa, ImportOrigin::Zxdb, ImportOrigin::Spectrum4Ever, ImportOrigin::WorldOfSam];
 
 
             /**
@@ -50,10 +59,11 @@ trait Group
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
                 ->where('elementId', '=', $this->id)
-                ->whereIn('importOrigin', $types);
+                ->whereIn('importOrigin', array_map(static fn(ImportOrigin $type): string => $type->value, $types));
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] == 'zxdb') {
+                    $origin = ImportOrigin::tryFrom((string)$row['importOrigin']);
+                    if ($origin === ImportOrigin::Zxdb) {
                         $this->linksInfo[] = [
                             'type' => 'sc',
                             'image' => 'icon_sc.png',
@@ -61,7 +71,7 @@ trait Group
                             'url' => 'https://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == '3a') {
+                    } elseif ($origin === ImportOrigin::Zxaaa) {
                         $this->linksInfo[] = [
                             'type' => '3a',
                             'image' => 'icon_3a.png',
@@ -69,7 +79,7 @@ trait Group
                             'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] == 's4e') {
+                    } elseif ($origin === ImportOrigin::Spectrum4Ever) {
                         $this->linksInfo[] = [
                             'type' => 's4e',
                             'image' => 'icon_s4e.png',
@@ -77,7 +87,7 @@ trait Group
                             'url' => 'https://spectrum4ever.org/fulltape.php?go=studio&id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'worldofsam') {
+                    } elseif ($origin === ImportOrigin::WorldOfSam) {
                         $this->linksInfo[] = [
                             'type' => 'worldofsam',
                             'image' => 'icon_worldofsam.png',

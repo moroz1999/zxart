@@ -5,6 +5,7 @@ use ZxArt\Authors\Entities\Author;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
 use ZxArt\Press\Helpers\PressMentions;
 use ZxArt\Shared\EntityType;
@@ -21,7 +22,8 @@ class authorAliasElement extends structureElement implements
     CommentsHolderInterface,
     JsonDataProvider,
     Author,
-    PressMentionsProvider
+    PressMentionsProvider,
+    ImportOriginsHolder
 {
     use JsonDataProviderElement;
     use AuthorTrait;
@@ -64,6 +66,8 @@ class authorAliasElement extends structureElement implements
 
         // Production authorship carries roles only; the software tab has no dates.
         $moduleStructure['addProdRole'] = 'array';
+
+        $moduleStructure['importOrigins'] = 'array';
 
         $moduleStructure['articles'] = [
             'ConnectedElements',

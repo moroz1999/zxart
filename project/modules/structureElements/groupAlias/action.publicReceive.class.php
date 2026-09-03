@@ -15,6 +15,7 @@ class publicReceiveGroupAlias extends structureElementAction
             $structureElement->structureName = $structureElement->title;
             $structureElement->persistElementData();
             $structureElement->persistAuthorship(EntityType::Group);
+            $structureElement->persistImportOrigins();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }
@@ -35,6 +36,7 @@ class publicReceiveGroupAlias extends structureElementAction
             'addAuthorStartDate',
             'addAuthorEndDate',
             'addAuthorRole',
+            'importOrigins',
         ];
     }
 

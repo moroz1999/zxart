@@ -5,6 +5,7 @@ use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
+use ZxArt\Tags\TagsHolderInterface;
 
 /**
  * Class zxMusicElement
@@ -25,7 +26,8 @@ use ZxArt\Queue\QueueType;
  * @property string $compo
  */
 class zxMusicElement extends ZxArtItem implements
-    OpenGraphDataProviderInterface
+    OpenGraphDataProviderInterface,
+    TagsHolderInterface
 {
     use CanonicalUrlTrait;
     use MusicSettingsProvider;
@@ -61,7 +63,7 @@ class zxMusicElement extends ZxArtItem implements
         $moduleStructure['fileName'] = 'fileName';
         $moduleStructure['inspired'] = 'text';
         $moduleStructure['dateAdded'] = 'date';
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['tagsAmount'] = 'text';
         $moduleStructure['votesAmount'] = 'text';
         $moduleStructure['commentsAmount'] = 'text';

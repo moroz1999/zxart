@@ -49,7 +49,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
 
                     $pictureElement->compo = $structureElement->compo;
                     $pictureElement->description = $structureElement->description;
-                    $pictureElement->tagsText = $structureElement->tagsText;
+                    $pictureElement->tags = $structureElement->tags;
                     $pictureElement->year = $structureElement->year;
                     $pictureElement->image = $pictureElement->getId();
                     $pictureElement->originalName = $originalFileName;
@@ -154,7 +154,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
             'type',
             'palette',
             'image',
-            'tagsText',
+            'tags',
             'description',
             'rotation',
             'denyVoting',

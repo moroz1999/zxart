@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -48,7 +49,7 @@ class TslabsManager extends errorLogger
      * @var CountriesManager
      */
     protected $countriesManager;
-    protected $origin = 'tsl';
+    protected ImportOrigin $origin = ImportOrigin::TsLabs;
     protected $rootUrl = 'https://prods.tslabs.info/';
 
     /**

@@ -120,6 +120,10 @@ Detailed logic and structure: [domain/entity-deletion.md](domain/entity-deletion
 How the descriptions of works are written and shown, including fixed-width scene text.
 Detailed logic and structure: [domain/descriptions.md](domain/descriptions.md)
 
+### entities imported from other portals
+Where an imported entity came from, and the outgoing links that identity builds.
+Detailed logic and structure: [domain/imported-entities.md](domain/imported-entities.md)
+
 ### social posting
 Telegram announcements of newly added pictures, tunes, productions and releases.
 Detailed logic and structure: [domain/social-posting.md](domain/social-posting.md)

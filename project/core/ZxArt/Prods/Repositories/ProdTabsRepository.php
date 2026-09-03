@@ -6,6 +6,7 @@ namespace ZxArt\Prods\Repositories;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdTabsDto;
 use ZxArt\Shared\DatabaseTable;
@@ -14,7 +15,6 @@ use ZxArt\Shared\Repositories\AbstractRepository;
 readonly final class ProdTabsRepository extends AbstractRepository
 {
     private const string IMPORT_ORIGIN_TABLE = 'import_origin';
-    private const string MAPS_IMPORT_ORIGIN = 'maps';
 
     public function __construct(private Connection $db)
     {
@@ -90,7 +90,7 @@ readonly final class ProdTabsRepository extends AbstractRepository
     {
         return $this->db->table(self::IMPORT_ORIGIN_TABLE)
             ->where('elementId', '=', $prodId)
-            ->where('importOrigin', '=', self::MAPS_IMPORT_ORIGIN)
+            ->where('importOrigin', '=', ImportOrigin::SpeccyMaps->value)
             ->exists();
     }
 

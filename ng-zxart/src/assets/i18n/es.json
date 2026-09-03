@@ -11,6 +11,11 @@
     "choose-file": "Elegir archivo",
     "nothing-found": "No se encontró nada"
   },
+  "import-origins": {
+    "title": "Identificadores en portales",
+    "id": "Identificador en el portal",
+    "add": "Añadir identificador"
+  },
   "form": {
     "selected-count": "Seleccionado: {{count}}",
     "filter": "Filtrar…",
@@ -194,7 +199,7 @@
     "html-description": "Descripción HTML",
     "description": "Descripción",
     "instructions": "Instrucciones",
-    "tags-text": "Etiquetas",
+    "tags": "Etiquetas",
     "deny-voting": "Desactivar votación",
     "deny-comments": "Desactivar comentarios",
     "authors": "Autores",
@@ -236,7 +241,7 @@
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
     "prod-or-release": "Programa o versión",
-    "tags-text": "Etiquetas",
+    "tags": "Etiquetas",
     "description": "Descripción",
     "deny-playing": "Desactivar reproducción",
     "deny-voting": "Desactivar votación",
@@ -266,7 +271,7 @@
     "partyplace": "Puesto en la fiesta",
     "year": "Año",
     "prod-or-release": "Programa o versión",
-    "tags-text": "Etiquetas",
+    "tags": "Etiquetas",
     "description": "Descripción",
     "deny-voting": "Desactivar votación",
     "deny-comments": "Desactivar comentarios",

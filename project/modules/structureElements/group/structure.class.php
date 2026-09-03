@@ -2,6 +2,7 @@
 
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Groups\GroupTypeProvider;
+use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
 
 /**
@@ -30,7 +31,8 @@ class groupElement extends structureElement implements
     JsonDataProvider,
     Recalculable,
     LocationProvider,
-    PressMentionsProvider
+    PressMentionsProvider,
+    ImportOriginsHolder
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;
@@ -77,6 +79,8 @@ class groupElement extends structureElement implements
         $moduleStructure['addAuthorStartDate'] = 'array';
         $moduleStructure['addAuthorEndDate'] = 'array';
         $moduleStructure['addAuthorRole'] = 'array';
+
+        $moduleStructure['importOrigins'] = 'array';
 
         $moduleStructure['joinAsAlias'] = 'text';
         $moduleStructure['joinAndDelete'] = 'text';

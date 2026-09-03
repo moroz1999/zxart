@@ -76,6 +76,17 @@
           ></zx-member-role-editor>
         </zx-form-control>
       </zx-form-field>
+
+      <zx-form-field *ngIf="!creating" [fullWidth]="true">
+        <zx-form-label>{{ 'import-origins.title' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-import-origins-editor
+            [origins]="importOrigins"
+            [options]="importOriginOptions"
+            (fieldsChange)="onImportOriginFields($event)"
+          ></zx-import-origins-editor>
+        </zx-form-control>
+      </zx-form-field>
     </div>
 
     <div *ngIf="!creating" class="zx-form-tab-panel" [hidden]="activeTab !== 1">

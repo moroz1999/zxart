@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {EnumOption} from '../../shared/models/form-data-response';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -19,6 +20,8 @@ import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxMultiEntityAutocompleteComponent} from '../../shared/ui/zx-multi-entity-autocomplete/zx-multi-entity-autocomplete.component';
 import {ZxImageUploadComponent, ImageUploadChange} from '../../shared/ui/zx-image-upload/zx-image-upload.component';
+import {ZxImportOriginsEditorComponent} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.component';
+import {ImportOriginFields, ImportOriginItem} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
@@ -55,6 +58,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     ZxMultiEntityAutocompleteComponent,
     ZxImageUploadComponent,
     ZxMemberRoleEditorComponent,
+    ZxImportOriginsEditorComponent,
     ZxSelectComponent,
     ZxFormSectionComponent,
     ZxButtonControlsComponent,
@@ -94,6 +98,8 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   imageUrl: string | null = null;
   members: MemberRoleItem[] = [];
   roles: string[] = [];
+  importOrigins: ImportOriginItem[] = [];
+  importOriginOptions: EnumOption[] = [];
   creating = false;
 
   /** Where the user lands once the group is deleted. */
@@ -104,6 +110,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   private imageFile: File | null = null;
   private removeImage = false;
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private importOriginFields: ImportOriginFields = {};
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -155,6 +162,8 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
           this.imageUrl = data.images['image'] ?? null;
           this.members = data.members;
           this.roles = data.roles;
+          this.importOrigins = data.importOrigins;
+          this.importOriginOptions = data.enums['importOrigins'] ?? [];
           this.loading = false;
           this.cdr.markForCheck();
         },
@@ -182,6 +191,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
 
   onMemberFields(fields: MemberFields): void {
     this.memberFields = fields;
+  }
+
+  onImportOriginFields(fields: ImportOriginFields): void {
+    this.importOriginFields = fields;
   }
 
   onRemoveMember(authorId: number): void {
@@ -213,6 +226,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
         addAuthorStartDate: this.memberFields.startDates,
         addAuthorEndDate: this.memberFields.endDates,
         subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
+        importOrigins: this.importOriginFields,
       },
       image: {field: 'image', file: this.imageFile, remove: this.removeImage},
     };

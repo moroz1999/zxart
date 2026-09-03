@@ -8,6 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
 use ZxArt\Import\Prods\ProdResolver;
@@ -120,12 +121,12 @@ final class ProdResolverTest extends TestCase
 
     public function testOriginAlreadyLinkedRejects(): void
     {
-        $e = $this->makeElement('X', '', 1999, static fn(string $origin) => $origin === 'zxdb' ? '123' : null);
+        $e = $this->makeElement('X', '', 1999, static fn(ImportOrigin $origin) => $origin === ImportOrigin::Zxdb ? '123' : null);
         $this->prodsRepository->method('findProdsByTitles')->with('X')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(true);
 
-        $dto = new ProdImportDTO(id: '1', title: 'X', year: 1999, origin: 'zxdb');
+        $dto = new ProdImportDTO(id: '1', title: 'X', year: 1999, origin: ImportOrigin::Zxdb);
         $this->assertNull($this->sut()->resolve($dto));
     }
 

@@ -1,5 +1,6 @@
 import {EntityRef} from './entity-ref';
 import {FormFieldValue} from './form-save';
+import {ImportOriginItem} from '../ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {MemberRoleItem} from '../ui/zx-member-role-editor/zx-member-role-editor.models';
 
 export interface FormLanguage {
@@ -40,6 +41,8 @@ export interface CategoryTreeNode {
  * - `groups`    — group memberships of an author (id, title, roles, period).
  * - `groupRoles`— role keys an author can hold inside a group.
  * - `prods`     — production authorship of an author (id, title, roles, period).
+ * - `importOrigins` — the ids the entity carries on external portals.
+ * - `tags`      — titles of the tags linked to the item.
  */
 export interface FormDataResponse {
   /** Present when the service recovered from a failed form-data request. */
@@ -69,6 +72,10 @@ export interface FormDataResponse {
   authorRefs: EntityRef[];
   /** Connected original-author list for pictures (`originalAuthor` link list). */
   originalAuthorRefs: EntityRef[];
+  /** Portal ids of an imported entity; empty for entities that carry none. */
+  importOrigins: ImportOriginItem[];
+  /** Titles of the tags linked to the item; empty for entities that carry none. */
+  tags: string[];
   /** Enum options; client-owned enums carry their code in both fields. */
   enums: Record<string, EnumOption[]>;
   /** Only on creation forms started from an element; `null` otherwise. */

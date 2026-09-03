@@ -1,6 +1,7 @@
 <?php
 
 use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
 use ZxArt\Press\Helpers\PressMentions;
 
@@ -16,7 +17,8 @@ use ZxArt\Press\Helpers\PressMentions;
 class groupAliasElement extends structureElement implements
     CommentsHolderInterface,
     JsonDataProvider,
-    PressMentionsProvider
+    PressMentionsProvider,
+    ImportOriginsHolder
 {
     use JsonDataProviderElement;
     use AuthorshipPersister;
@@ -51,6 +53,7 @@ class groupAliasElement extends structureElement implements
         $moduleStructure['addAuthorStartDate'] = 'array';
         $moduleStructure['addAuthorEndDate'] = 'array';
         $moduleStructure['addAuthorRole'] = 'array';
+        $moduleStructure['importOrigins'] = 'array';
 
         $moduleStructure['joinAndDelete'] = 'text';
         $moduleStructure['publishedReleases'] = [

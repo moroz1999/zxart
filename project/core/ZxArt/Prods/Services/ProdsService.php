@@ -19,6 +19,7 @@ use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Labels\LabelTransformer;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -188,19 +189,23 @@ class ProdsService extends ElementsManager
         $this->forceUpdateTitles = $forceUpdateTitles;
     }
 
-    public function importProdOld(array $prodInfo, string $origin): ?zxProdElement
+    public function importProdOld(array $prodInfo, ImportOrigin $origin): ?zxProdElement
     {
         return $this->importProd(ProdImportDTO::fromArray($prodInfo), $origin);
     }
 
-    public function importProd(ProdImportDTO $dto, string $origin): ?zxProdElement
+    public function importProd(ProdImportDTO $dto, ImportOrigin $origin): ?zxProdElement
     {
         $prodImportId = $dto->id;
         $element = $this->importIdOperator->getElementByImportId($prodImportId, $origin, EntityType::Prod);
 
         if (!$element && $dto->ids !== null) {
             foreach ($dto->ids as $idOrigin => $id) {
-                if ($element = $this->importIdOperator->getElementByImportId($id, $idOrigin, EntityType::Prod)) {
+                $knownOrigin = ImportOrigin::tryFrom((string)$idOrigin);
+                if ($knownOrigin === null) {
+                    continue;
+                }
+                if ($element = $this->importIdOperator->getElementByImportId($id, $knownOrigin, EntityType::Prod)) {
                     $this->importIdOperator->saveImportId($element->getId(), $prodImportId, $origin, EntityType::Prod);
                     break;
                 }
@@ -236,7 +241,7 @@ class ProdsService extends ElementsManager
         return $element;
     }
 
-    private function createProd(ProdImportDTO $dto, string $origin): ?zxProdElement
+    private function createProd(ProdImportDTO $dto, ImportOrigin $origin): ?zxProdElement
     {
         $category = null;
         if (!empty($dto->directCategories)) {
@@ -259,7 +264,7 @@ class ProdsService extends ElementsManager
     /**
      * @param Label[] $labelsList
      */
-    private function importLabelsInfo(array $labelsList, string $origin): void
+    private function importLabelsInfo(array $labelsList, ImportOrigin $origin): void
     {
         $labelsList = array_reverse($labelsList);
         foreach ($labelsList as $label) {
@@ -298,7 +303,7 @@ class ProdsService extends ElementsManager
         }
     }
 
-    private function updateProd(zxProdElement $element, ProdImportDTO $dto, string $origin, bool $justCreated = false): zxProdElement
+    private function updateProd(zxProdElement $element, ProdImportDTO $dto, ImportOrigin $origin, bool $justCreated = false): zxProdElement
     {
         $changed = false;
         $dtoTitle = $this->sanitizeTitle($dto->title ?? '');
@@ -553,8 +558,12 @@ class ProdsService extends ElementsManager
 
         if (!empty($dto->importIds)) {
             foreach ($dto->importIds as $importOrigin => $id) {
-                if (!$this->importIdOperator->getElementIdByImportId($id, $importOrigin, EntityType::Prod)) {
-                    $this->importIdOperator->saveImportId($element->getPersistedId(), $id, $importOrigin, EntityType::Prod);
+                $knownOrigin = ImportOrigin::tryFrom((string)$importOrigin);
+                if ($knownOrigin === null) {
+                    continue;
+                }
+                if (!$this->importIdOperator->getElementIdByImportId($id, $knownOrigin, EntityType::Prod)) {
+                    $this->importIdOperator->saveImportId($element->getPersistedId(), $id, $knownOrigin, EntityType::Prod);
                 }
             }
         }
@@ -725,7 +734,7 @@ class ProdsService extends ElementsManager
         return null;
     }
 
-    private function importRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
+    private function importRelease(ReleaseImportDTO $dto, string $prodId, ImportOrigin $origin): bool|zxReleaseElement
     {
         $releaseId = $dto->id;
 
@@ -749,7 +758,7 @@ class ProdsService extends ElementsManager
         return $element;
     }
 
-    private function createRelease(ReleaseImportDTO $dto, string $prodId, string $origin): bool|zxReleaseElement
+    private function createRelease(ReleaseImportDTO $dto, string $prodId, ImportOrigin $origin): bool|zxReleaseElement
     {
         $element = false;
         if ($prodElement = $this->importIdOperator->getElementByImportId($prodId, $origin, EntityType::Prod)) {
@@ -764,7 +773,7 @@ class ProdsService extends ElementsManager
         return $element;
     }
 
-    private function updateRelease(zxReleaseElement $element, ReleaseImportDTO $dto, string $origin, bool $justCreated = false): void
+    private function updateRelease(zxReleaseElement $element, ReleaseImportDTO $dto, ImportOrigin $origin, bool $justCreated = false): void
     {
         $changed = false;
         $sanitizedTitle = $this->sanitizeTitle($dto->title);
@@ -1136,7 +1145,9 @@ class ProdsService extends ElementsManager
                     if (!empty($data['links'])) {
                         foreach ($data['links'] as $string => $value) {
                             $parts = explode(';', $string);
-                            if (($origin = $parts[0]) && ($importId = $parts[1])) {
+                            $origin = ImportOrigin::tryFrom($parts[0]);
+                            $importId = $parts[1] ?? '';
+                            if ($origin !== null && $importId !== '') {
                                 $this->importIdOperator->moveImportId(
                                     $mainZxProd->id,
                                     $newProdElement->getId(),

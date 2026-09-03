@@ -4,6 +4,9 @@ use App\Paths\PathsManager;
 use Illuminate\Database\Connection;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
+use ZxArt\Import\ImportOrigin;
+use ZxArt\Import\ImportOriginsHolder;
+use ZxArt\Import\ImportOriginsHolderTrait;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Repositories\ProdsRepository;
@@ -13,6 +16,7 @@ use ZxArt\Queue\QueueStatusProvider;
 use ZxArt\Queue\QueueType;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\EntityType;
+use ZxArt\Tags\TagsHolderInterface;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\CompilationCategoryIds;
 
@@ -28,7 +32,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property string $instructions
  * @property string $legalStatus
  * @property string $compo
- * @property string $tagsText
+ * @property string[] $tags tag titles the form submitted; tags themselves live as links
  * @property string[] $language
  * @property string[] $hardwareRequired the production's own hardware; releases carry only their deviations
  * @property string $externalLink
@@ -62,7 +66,9 @@ class zxProdElement extends ZxArtItem implements
     JsonDataProvider,
     OpenGraphDataProviderInterface,
     ZxSoftInterface,
-    MetadataProviderInterface
+    MetadataProviderInterface,
+    ImportOriginsHolder,
+    TagsHolderInterface
 {
     use CanonicalUrlTrait;
     use QueueStatusProvider;
@@ -70,6 +76,7 @@ class zxProdElement extends ZxArtItem implements
     use AuthorshipPersister;
     use FilesElementTrait;
     use ImportedItemTrait;
+    use ImportOriginsHolderTrait;
     use PartyElementProviderTrait;
     use LanguageCodesProviderTrait;
     use CategoryElementsSelectorProviderTrait;
@@ -142,7 +149,7 @@ class zxProdElement extends ZxArtItem implements
                 'role' => 'parent',
             ],
         ];
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['tagsAmount'] = 'text';
         $moduleStructure['votesAmount'] = 'text';
         $moduleStructure['commentsAmount'] = 'text';
@@ -151,6 +158,8 @@ class zxProdElement extends ZxArtItem implements
 
         $moduleStructure['addAuthor'] = 'text';
         $moduleStructure['addAuthorRole'] = 'array';
+
+        $moduleStructure['importOrigins'] = 'array';
 
         $moduleStructure['dateAdded'] = 'date';
         $moduleStructure['userId'] = 'text';
@@ -633,6 +642,11 @@ class zxProdElement extends ZxArtItem implements
         return $linkInfo['url'] ?? null;
     }
 
+    public function getImportEntityType(): EntityType
+    {
+        return EntityType::Prod;
+    }
+
     public function getLinksInfo(): array
     {
         if ($this->linksInfo === null) {
@@ -643,19 +657,27 @@ class zxProdElement extends ZxArtItem implements
              */
             $db = $this->getService('db');
 
-            if ($this->is3aDenied()) {
-                $types = ['zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'maps'];
-            } else {
-                $types = ['3a', 'zxdb', 'vt', 'dzoo', 'pouet', 'zxd', 'maps', 'worldofsam'];
+            $types = [
+                ImportOrigin::Zxdb,
+                ImportOrigin::Vtrdos,
+                ImportOrigin::Demozoo,
+                ImportOrigin::Pouet,
+                ImportOrigin::Demotopia,
+                ImportOrigin::SpeccyMaps,
+            ];
+            if (!$this->is3aDenied()) {
+                $types[] = ImportOrigin::Zxaaa;
+                $types[] = ImportOrigin::WorldOfSam;
             }
 
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
                 ->where('elementId', '=', $this->getId())
-                ->whereIn('importOrigin', $types);
+                ->whereIn('importOrigin', array_map(static fn(ImportOrigin $type): string => $type->value, $types));
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] === 'zxdb') {
+                    $origin = ImportOrigin::tryFrom((string)$row['importOrigin']);
+                    if ($origin === ImportOrigin::Zxdb) {
                         if (str_contains($row['importId'], 'tag')) {
                             $url = 'https://spectrumcomputing.co.uk/list?group_id=' . substr($row['importId'], 3);
                         } else {
@@ -679,7 +701,7 @@ class zxProdElement extends ZxArtItem implements
                                 'id' => $row['importId'],
                             ];
                         }
-                    } elseif ($row['importOrigin'] === '3a') {
+                    } elseif ($origin === ImportOrigin::Zxaaa) {
                         $this->linksInfo[] = [
                             'type' => '3a',
                             'image' => 'icon_3a.png',
@@ -687,7 +709,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://zxaaa.net/view_demo.php?id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'pouet') {
+                    } elseif ($origin === ImportOrigin::Pouet) {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -695,7 +717,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'dzoo') {
+                    } elseif ($origin === ImportOrigin::Demozoo) {
                         $this->linksInfo[] = [
                             'type' => 'dzoo',
                             'image' => 'icon_dzoo.png',
@@ -703,7 +725,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://demozoo.org/productions/' . $row['importId'] . '/',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'zxd') {
+                    } elseif ($origin === ImportOrigin::Demotopia) {
                         $this->linksInfo[] = [
                             'type' => 'zxd',
                             'image' => 'icon_zxd.png',
@@ -711,7 +733,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://zxdemo.org/productions/' . $row['importId'] . '/',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'maps') {
+                    } elseif ($origin === ImportOrigin::SpeccyMaps) {
                         $this->linksInfo[] = [
                             'type' => 'maps',
                             'image' => 'icon_maps.png',
@@ -719,7 +741,7 @@ class zxProdElement extends ZxArtItem implements
                             'url' => 'https://maps.speccy.cz/map.php?id=' . $row['importId'] . '&sort=0&part=0&ath=0',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'worldofsam') {
+                    } elseif ($origin === ImportOrigin::WorldOfSam) {
                         $this->linksInfo[] = [
                             'type' => 'worldofsam',
                             'image' => 'icon_worldofsam.png',

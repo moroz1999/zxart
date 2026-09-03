@@ -14,6 +14,7 @@ enum DatabaseTable: string
     case Country = 'module_country';
     case Hardware = 'hardware';
     case HardwareName = 'hardware_name';
+    case ImportOrigin = 'import_origin';
     case Group = 'module_group';
     case GroupAlias = 'module_groupalias';
     case Party = 'module_party';

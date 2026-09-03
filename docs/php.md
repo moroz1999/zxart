@@ -56,6 +56,12 @@
 - Pass `StructureType::ZxProd->value` to legacy methods that accept structure type strings (e.g., `privilegesManager::checkPrivilegesForAction()`).
 - Add a new case if you need a structure type not yet listed.
 
+## Import Origins
+- Use `ImportOrigin` enum (`ZxArt\Import\ImportOrigin`) for the portal an entity was imported from — never the bare code (`'zxdb'`, `'vt'`, `'3a'`).
+- Import services and `ImportIdOperator` take the enum itself; an importer declares its portal as `protected ImportOrigin $origin`.
+- Codes that arrive as strings (import payloads, submitted forms) are resolved with `ImportOrigin::tryFrom()` and skipped when they name no known portal.
+- Details: [features/imported-entities.md](features/imported-entities.md).
+
 ## Psalm
 - NEVER use @psalm-suppress. Instead, add clear and minimal type annotations.
 - Do NOT use `@var` by default. Allow it only when native PHP types cannot express the needed information, primarily for generics (including typed arrays) and complex Psalm array shapes.

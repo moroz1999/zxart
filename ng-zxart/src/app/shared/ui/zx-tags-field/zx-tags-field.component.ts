@@ -12,8 +12,8 @@ import {ZxTagsInputComponent} from '../zx-tags-input/zx-tags-input.component';
 /**
  * Reactive-form tag editor: chips + type-to-search autocomplete + "create new
  * tag", the same UX as the public prod page. Implements ControlValueAccessor
- * over the legacy `tagsText` string (comma-joined tag titles), so any form binds
- * it with `<zx-tags-field formControlName="tagsText">`.
+ * over the list of tag titles, so any form binds it with
+ * `<zx-tags-field formControlName="tags">`.
  */
 @Component({
   selector: 'zx-tags-field',
@@ -53,7 +53,7 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private readonly query = new Subject<string>();
   private readonly subscriptions = new Subscription();
-  private onChange: (value: string) => void = () => undefined;
+  private onChange: (value: string[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
   constructor(
@@ -86,12 +86,12 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
     this.subscriptions.unsubscribe();
   }
 
-  writeValue(value: string | null): void {
-    this.tags = this.parse(value ?? '');
+  writeValue(value: readonly string[] | null): void {
+    this.tags = (value ?? []).map(title => ({id: null, title, description: null}));
     this.cdr.markForCheck();
   }
 
-  registerOnChange(fn: (value: string) => void): void {
+  registerOnChange(fn: (value: string[]) => void): void {
     this.onChange = fn;
   }
 
@@ -136,16 +136,8 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   private emit(): void {
-    this.onChange(this.tags.map(tag => tag.title).join(', '));
+    this.onChange(this.tags.map(tag => tag.title));
     this.onTouched();
-  }
-
-  private parse(text: string): TagItem[] {
-    return text
-      .split(',')
-      .map(title => title.trim())
-      .filter(title => title !== '')
-      .map(title => ({id: null, title, description: null}));
   }
 
   private toTagItems(tags: Tag[]): TagItem[] {

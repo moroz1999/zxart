@@ -3,6 +3,7 @@
 use ZxArt\Authors\Entities\Author;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
+use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\EntityType;
 use ZxArt\Users\ClaimedAuthorService;
@@ -41,7 +42,8 @@ class authorElement extends structureElement implements
     Recalculable,
     LocationProvider,
     Author,
-    PressMentionsProvider
+    PressMentionsProvider,
+    ImportOriginsHolder
 {
     use JsonDataProviderElement;
     use CacheOperatingElement;
@@ -113,6 +115,8 @@ class authorElement extends structureElement implements
 
         // Production authorship carries roles only; the software tab has no dates.
         $moduleStructure['addProdRole'] = 'array';
+
+        $moduleStructure['importOrigins'] = 'array';
 
         $moduleStructure['joinAsAlias'] = 'text';
         $moduleStructure['joinAndDelete'] = 'text';

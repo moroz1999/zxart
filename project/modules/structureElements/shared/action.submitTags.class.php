@@ -19,7 +19,7 @@ class submitTagsShared extends structureElementAction
     public function setExpectedFields(&$expectedFields): void
     {
         $expectedFields = [
-            'tagsText',
+            'tags',
         ];
     }
 

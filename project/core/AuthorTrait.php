@@ -2,14 +2,24 @@
 
 use Illuminate\Database\Connection;
 use Symfony\Component\ObjectMapper\ObjectMapper;
+use ZxArt\Import\ImportOrigin;
+use ZxArt\Import\ImportOriginsHolderTrait;
+use ZxArt\Shared\EntityType;
 use ZxArt\Tunes\Rest\TuneRestDto;
 use ZxArt\Tunes\TunesTransformer;
 
 trait AuthorTrait
 {
+    use ImportOriginsHolderTrait;
+
     protected $years = [];
     protected $worksList;
     protected $linksInfo;
+
+    public function getImportEntityType(): EntityType
+    {
+        return EntityType::Author;
+    }
 
     public function getYearsWorks($type = 'authorPicture')
     {
@@ -101,10 +111,9 @@ trait AuthorTrait
             $this->linksInfo = [];
             $translationsManager = $this->getService(translationsManager::class);
 
-            if ($this->is3aDenied()) {
-                $types = ['zxdb', 'pouet', 's4e', 'worldofsam'];
-            } else {
-                $types = ['3a', 'zxdb', 'pouet', 's4e', 'worldofsam'];
+            $types = [ImportOrigin::Zxdb, ImportOrigin::Pouet, ImportOrigin::Spectrum4Ever, ImportOrigin::WorldOfSam];
+            if (!$this->is3aDenied()) {
+                $types[] = ImportOrigin::Zxaaa;
             }
 
             /**
@@ -114,14 +123,15 @@ trait AuthorTrait
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
                 ->where('elementId', '=', $this->id)
-                ->whereIn('importOrigin', $types);
+                ->whereIn('importOrigin', array_map(static fn(ImportOrigin $type): string => $type->value, $types));
             if ($rows = $query->get()) {
                 /**
                  * Psalm type hint for database rows structure
                  * @var iterable<array{importId:string, importOrigin:string}> $rows
                  */
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] === 'zxdb') {
+                    $origin = ImportOrigin::tryFrom($row['importOrigin']);
+                    if ($origin === ImportOrigin::Zxdb) {
                         $this->linksInfo[] = [
                             'type' => 'sc',
                             'image' => 'icon_sc.png',
@@ -129,7 +139,7 @@ trait AuthorTrait
                             'url' => 'https://spectrumcomputing.co.uk/index.php?cat=999&label_id=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === '3a') {
+                    } elseif ($origin === ImportOrigin::Zxaaa) {
                         $this->linksInfo[] = [
                             'type' => '3a',
                             'image' => 'icon_3a.png',
@@ -137,7 +147,7 @@ trait AuthorTrait
                             'url' => 'https://zxaaa.net/view_demos.php?a=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'vt') {
+                    } elseif ($origin === ImportOrigin::Vtrdos) {
                         $this->linksInfo[] = [
                             'type' => 'vt',
                             'image' => 'icon_vt.png',
@@ -145,7 +155,7 @@ trait AuthorTrait
                             'url' => 'https://vtrd.in/release.php?r=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'pouet') {
+                    } elseif ($origin === ImportOrigin::Pouet) {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -153,7 +163,7 @@ trait AuthorTrait
                             'url' => 'https://www.pouet.net/user.php?who=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 's4e') {
+                    } elseif ($origin === ImportOrigin::Spectrum4Ever) {
                         $this->linksInfo[] = [
                             'type' => 's4e',
                             'image' => 'icon_s4e.png',
@@ -161,7 +171,7 @@ trait AuthorTrait
                             'url' => 'https://spectrum4ever.org/fulltape.php?go=releases&id=' . $row['importId'] . '&by=cracker',
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'worldofsam') {
+                    } elseif ($origin === ImportOrigin::WorldOfSam) {
                         $this->linksInfo[] = [
                             'type' => 'worldofsam',
                             'image' => 'icon_worldofsam.png',

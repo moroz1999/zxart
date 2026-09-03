@@ -24,6 +24,7 @@ class publicReceiveGroup extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
             $structureElement->persistAuthorship(EntityType::Group);
+            $structureElement->persistImportOrigins();
             $structureElement->recalculate();
 
             $this->respondFormSaved($controller, $structureElement); return;
@@ -52,6 +53,7 @@ class publicReceiveGroup extends structureElementAction
             'addAuthorEndDate',
             'addAuthorRole',
             'subGroupsSelector',
+            'importOrigins',
         ];
     }
 

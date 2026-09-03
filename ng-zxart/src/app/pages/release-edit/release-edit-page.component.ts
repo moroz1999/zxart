@@ -16,6 +16,8 @@ import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxTextareaComponent} from '../../shared/ui/zx-textarea/zx-textarea.component';
+import {ZxImportOriginsEditorComponent} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.component';
+import {ImportOriginFields, ImportOriginItem} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
@@ -64,6 +66,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     ZxInputComponent,
     ZxTextareaComponent,
     ZxMemberRoleEditorComponent,
+    ZxImportOriginsEditorComponent,
     ZxFileSelectorComponent,
     ZxSelectComponent,
     ZxEntityAutocompleteComponent,
@@ -107,6 +110,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   members: MemberRoleItem[] = [];
   roles: string[] = [];
   enums: Record<string, EnumOption[]> = {};
+  importOrigins: ImportOriginItem[] = [];
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
   /** Hardware arrives labelled and grouped from the backend catalog. */
@@ -133,6 +137,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   private prodId = 0;
   private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private importOriginFields: ImportOriginFields = {};
   private selectorFiles: Record<string, File[]> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
   private languageCodes: EnumOption[] = [];
@@ -197,6 +202,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
           this.members = data.members;
           this.roles = data.roles;
           this.enums = data.enums;
+          this.importOrigins = data.importOrigins;
           this.languageCodes = data.enums['language'] ?? [];
           this.hardwareCodes = data.enums['hardwareRequired'] ?? [];
           this.buildClientLabelOptions();
@@ -229,6 +235,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.router.navigateByUrl(this.returnUrl);
+  }
+
+  onImportOriginFields(fields: ImportOriginFields): void {
+    this.importOriginFields = fields;
   }
 
   onMemberFields(fields: MemberFields): void {
@@ -282,6 +292,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
         denyVoting: value.denyVoting ? '1' : '',
         denyComments: value.denyComments ? '1' : '',
         addAuthorRole: this.memberFields.roles,
+        importOrigins: this.importOriginFields,
       },
     };
     const save$ = this.creating

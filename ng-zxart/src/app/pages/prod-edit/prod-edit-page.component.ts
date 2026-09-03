@@ -30,6 +30,8 @@ import {ZxTagsFieldComponent} from '../../shared/ui/zx-tags-field/zx-tags-field.
 import {CategoryTreeNode, EnumOption, FileSelectorItem, FormParentRef} from '../../shared/models/form-data-response';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ScreenshotMoveApiService} from '../../features/prod-details/services/screenshot-move-api.service';
+import {ZxImportOriginsEditorComponent} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.component';
+import {ImportOriginFields, ImportOriginItem} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxCheckboxGroupComponent} from '../../shared/ui/zx-checkbox-group/zx-checkbox-group.component';
@@ -84,6 +86,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     ZxFileSelectorComponent,
     ZxTagsFieldComponent,
     ZxMemberRoleEditorComponent,
+    ZxImportOriginsEditorComponent,
     ZxCheckboxGroupComponent,
     ZxButtonControlsComponent,
     ZxFormSectionComponent,
@@ -118,7 +121,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     htmlDescription: this.fb.nonNullable.control(false),
     description: this.fb.nonNullable.control(''),
     instructions: this.fb.nonNullable.control(''),
-    tagsText: this.fb.nonNullable.control(''),
+    tags: this.fb.nonNullable.control<string[]>([]),
     denyVoting: this.fb.nonNullable.control(false),
     denyComments: this.fb.nonNullable.control(false),
   });
@@ -138,6 +141,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   roles: string[] = [];
   categoriesTree: CategoryTreeNode[] = [];
   enums: Record<string, EnumOption[]> = {};
+  importOrigins: ImportOriginItem[] = [];
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
   /** Hardware arrives labelled and grouped from the backend catalog. */
@@ -167,6 +171,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   private parentId = 0;
   private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private importOriginFields: ImportOriginFields = {};
   private passthrough: Record<string, FormFieldValue> = {};
   private selectorFiles: Record<string, File[]> = {};
   private readonly subscriptions = new Subscription();
@@ -233,7 +238,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
             htmlDescription: !!Number(data.fields['htmlDescription']),
             description: String(data.fields['description'] ?? ''),
             instructions: String(data.fields['instructions'] ?? ''),
-            tagsText: String(data.fields['tagsText'] ?? ''),
+            tags: data.tags,
             denyVoting: !!Number(data.fields['denyVoting']),
             denyComments: !!Number(data.fields['denyComments']),
           });
@@ -242,6 +247,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           this.categoriesTree = data.categoriesTree;
           this.prefillFromParent(data.parent ?? null);
           this.enums = data.enums;
+          this.importOrigins = data.importOrigins;
           this.languageOptions = this.buildLanguageOptions(data.enums['language']);
           this.hardwareGroups = buildHardwareGroups(data.enums['hardwareRequired'] ?? [], this.translate);
           this.fileSelectors = data.fileSelectors;
@@ -274,6 +280,10 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
 
   onMemberFields(fields: MemberFields): void {
     this.memberFields = fields;
+  }
+
+  onImportOriginFields(fields: ImportOriginFields): void {
+    this.importOriginFields = fields;
   }
 
   onRemoveMember(authorId: number): void {
@@ -374,7 +384,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       categories: value.categories.map((id: number) => String(id)),
       description: value.description,
       instructions: value.instructions,
-      tagsText: value.tagsText,
+      tags: value.tags,
       denyVoting: value.denyVoting ? '1' : '',
       denyComments: value.denyComments ? '1' : '',
       htmlDescription: value.htmlDescription ? '1' : '',
@@ -403,6 +413,7 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           altTitle: value.altTitle,
           compilationItems: value.compilationItems.map((ref: EntityRef) => String(ref.id)),
           seriesProds: value.seriesProds.map((ref: EntityRef) => String(ref.id)),
+          importOrigins: this.importOriginFields,
         },
       });
     this.subscriptions.add(

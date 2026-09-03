@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Import\ImportOrigin;
+
 trait ImportedItemTrait
 {
     protected $linksInfo;
@@ -10,11 +12,11 @@ trait ImportedItemTrait
         return $db->table('import_origin')->where('elementId', '=', $this->id)->delete();
     }
 
-    public function getImportOriginId($origin): ?string
+    public function getImportOriginId(ImportOrigin $origin): ?string
     {
         $db = $this->getService('db');
         return $db->table('import_origin')
-            ->where('elementId', '=', $this->id)->where('importOrigin', '=', $origin)->limit(1)->value('importId');
+            ->where('elementId', '=', $this->id)->where('importOrigin', '=', $origin->value)->limit(1)->value('importId');
     }
 
     public function getImportIdsIndex(): array

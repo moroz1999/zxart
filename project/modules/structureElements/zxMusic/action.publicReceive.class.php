@@ -83,7 +83,7 @@ class publicReceiveZxMusic extends structureElementAction
             'file',
             'trackerFile',
             'inspired',
-            'tagsText',
+            'tags',
             'description',
             'denyPlaying',
             'denyVoting',

@@ -22,7 +22,9 @@ use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Groups\GroupMemberRoles;
+use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\Shared\EntityType;
+use ZxArt\Tags\TagsHolderInterface;
 use zxPictureElement;
 
 /**
@@ -213,7 +215,7 @@ class Formdata extends LoggedControllerApplication
 
     /**
      * @param string[] $refFields
-     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>}
+     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, importOrigins: list<array{origin: string, importId: string}>, tags: list<string>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>}
      */
     private function buildFormData(structureElement $element, array $refFields): array
     {
@@ -311,10 +313,26 @@ class Formdata extends LoggedControllerApplication
             'categoriesTree' => $this->buildCategoriesTree($element),
             'authorRefs' => $this->buildAuthorRefs($element),
             'originalAuthorRefs' => $this->buildConnectedRefs($element, 'getOriginalAuthorsList'),
+            'importOrigins' => $this->buildImportOrigins($element),
+            'tags' => $element instanceof TagsHolderInterface ? $element->getTagsTexts() : [],
             'enums' => $this->buildEnums($element),
             'fileSelectors' => $this->buildFileSelectors($element),
             'aiStatuses' => $this->buildAiStatuses($element),
         ];
+    }
+
+    /**
+     * Portal ids the entity was imported under, edited as portal + id pairs in
+     * the form. Kept out of `fields`: they live beside the element, not in it.
+     *
+     * @return list<array{origin: string, importId: string}>
+     */
+    private function buildImportOrigins(structureElement $element): array
+    {
+        if (!$element instanceof ImportOriginsHolder) {
+            return [];
+        }
+        return $element->getImportOrigins();
     }
 
     /**
@@ -508,6 +526,7 @@ class Formdata extends LoggedControllerApplication
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
                 'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
+                'importOrigins' => ['method' => 'getImportOriginOptions', 'mode' => 'options'],
             ],
             'zxProdsUploadForm' => [
                 'compo' => ['method' => 'getCompoTypes', 'prefix' => 'party.compo_', 'emptyBlank' => true],
@@ -529,6 +548,10 @@ class Formdata extends LoggedControllerApplication
                 'releaseFormat' => ['method' => 'getReleaseFormats', 'prefix' => 'zxRelease.filetype_'],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
                 'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
+                'importOrigins' => ['method' => 'getImportOriginOptions', 'mode' => 'options'],
+            ],
+            'author', 'authorAlias', 'group', 'groupAlias' => [
+                'importOrigins' => ['method' => 'getImportOriginOptions', 'mode' => 'options'],
             ],
             default => [],
         };

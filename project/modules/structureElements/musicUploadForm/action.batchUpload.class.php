@@ -41,7 +41,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->structureName = $zxMusicElement->title;
 
                     $zxMusicElement->description = $structureElement->description;
-                    $zxMusicElement->tagsText = $structureElement->tagsText;
+                    $zxMusicElement->tags = $structureElement->tags;
                     $zxMusicElement->year = $structureElement->year;
                     $zxMusicElement->file = $zxMusicElement->getId();
                     $zxMusicElement->fileName = $originalFileName;
@@ -126,7 +126,7 @@ class batchUploadMusicUploadForm extends structureElementAction
             'year',
             'party',
             'partyplace',
-            'tagsText',
+            'tags',
             'description',
             'chipType',
             'channelsType',

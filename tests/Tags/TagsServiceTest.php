@@ -140,7 +140,6 @@ final class TestTagElement
 final class TestTagsPictureElement extends zxPictureElement
 {
     public string $structureType = 'zxPicture';
-    public string $tagsText = '';
     public bool $persistElementDataCalled = false;
     /** @var string[] */
     public array $updateTagsFromListTitles = [];

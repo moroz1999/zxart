@@ -61,6 +61,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-filter-picker](design-system/zx-filter-picker.md) — popover filter with checkboxes
 - [zx-multi-select-filter](design-system/zx-multi-select-filter.md) — inline multi-select with search, chips and a (optionally grouped) checkbox list
 - [zx-form](design-system/zx-form.md) — form layout family: `[zxForm]` directive, fields, labels, fieldsets, sections, actions
+- `zx-import-origins-editor` — rows of portal + id an imported entity carries, with an add button; see [features/imported-entities.md](features/imported-entities.md)
 - [zx-user](design-system/zx-user.md) — user name with status badges
 - [Skeletons](design-system/skeletons.md) — loading placeholders
 - [Loading states](design-system/loading-states.md) — non-destructive content refresh feedback

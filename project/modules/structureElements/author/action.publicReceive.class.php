@@ -28,6 +28,7 @@ class publicReceiveAuthor extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
+            $structureElement->persistImportOrigins();
 
             $structureElement->recalculate();
             $structureElement->reconvertMusic();
@@ -63,6 +64,7 @@ class publicReceiveAuthor extends structureElementAction
             'addGroupEndDate',
             'addGroupRole',
             'addProdRole',
+            'importOrigins',
         ];
     }
 

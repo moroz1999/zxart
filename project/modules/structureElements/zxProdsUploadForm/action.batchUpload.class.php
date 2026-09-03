@@ -69,7 +69,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     // get only what their own file format implies
                     $zxProdElement->hardwareRequired = $structureElement->hardwareRequired;
                     $zxProdElement->youtubeId = $structureElement->youtubeId;
-                    $zxProdElement->tagsText = $structureElement->tagsText;
+                    $zxProdElement->tags = $structureElement->tags;
                     $zxProdElement->addAuthor = $structureElement->addAuthor;
                     $zxProdElement->addAuthorRole = $structureElement->addAuthorRole;
                     $zxProdElement->connectedFile = $structureElement->connectedFile;
@@ -174,7 +174,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'hardwareRequired',
             'file',
             'youtubeId',
-            'tagsText',
+            'tags',
             'addAuthor',
             'addAuthorRole',
             'connectedFile',

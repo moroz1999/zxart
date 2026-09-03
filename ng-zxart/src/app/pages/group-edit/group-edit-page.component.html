@@ -125,6 +125,18 @@
     </zx-form-field>
   </zx-form-section>
 
+  <zx-form-section [title]="'import-origins.title' | translate" icon="open-in-new">
+    <zx-form-field [fullWidth]="true">
+      <zx-form-control>
+        <zx-import-origins-editor
+          [origins]="importOrigins"
+          [options]="importOriginOptions"
+          (fieldsChange)="onImportOriginFields($event)"
+        ></zx-import-origins-editor>
+      </zx-form-control>
+    </zx-form-field>
+  </zx-form-section>
+
   <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
 
   <zx-form-actions [sticky]="true" align="end">

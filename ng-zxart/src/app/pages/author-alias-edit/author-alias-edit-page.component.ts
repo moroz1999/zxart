@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
+import {EnumOption} from '../../shared/models/form-data-response';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -18,6 +19,8 @@ import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
 import {ZxInputComponent} from '../../shared/ui/zx-input/zx-input.component';
 import {ZxEntityAutocompleteComponent} from '../../shared/ui/zx-entity-autocomplete/zx-entity-autocomplete.component';
 import {ZxStackComponent} from '../../shared/ui/zx-stack/zx-stack.component';
+import {ZxImportOriginsEditorComponent} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.component';
+import {ImportOriginFields, ImportOriginItem} from '../../shared/ui/zx-import-origins-editor/zx-import-origins-editor.models';
 import {ZxMemberRoleEditorComponent} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.component';
 import {MemberFields, MemberRoleItem} from '../../shared/ui/zx-member-role-editor/zx-member-role-editor.models';
 import {ZxTabsComponent} from '../../shared/ui/zx-tabs/zx-tabs.component';
@@ -54,6 +57,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     ZxEntityAutocompleteComponent,
     ZxStackComponent,
     ZxMemberRoleEditorComponent,
+    ZxImportOriginsEditorComponent,
     ZxTabsComponent,
     ZxTabComponent,
     ZxSpinnerComponent,
@@ -86,6 +90,8 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   groupRoles: string[] = [];
   prods: MemberRoleItem[] = [];
   prodRoles: string[] = [];
+  importOrigins: ImportOriginItem[] = [];
+  importOriginOptions: EnumOption[] = [];
   prodsCount = 0;
   activeTab = 0;
 
@@ -95,6 +101,7 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   elementId = 0;
   private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private prodFields: MemberFields = EMPTY_MEMBER_FIELDS;
+  private importOriginFields: ImportOriginFields = {};
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -162,6 +169,8 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
           this.groupRoles = data.groupRoles;
           this.prods = data.prods;
           this.prodRoles = data.roles;
+          this.importOrigins = data.importOrigins;
+          this.importOriginOptions = data.enums['importOrigins'] ?? [];
           // matches what the editor emits on mount, so the tab count is settled
           // before the tab bar is first checked
           this.prodsCount = data.prods.length;
@@ -183,6 +192,10 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
 
   onGroupFields(fields: MemberFields): void {
     this.groupFields = fields;
+  }
+
+  onImportOriginFields(fields: ImportOriginFields): void {
+    this.importOriginFields = fields;
   }
 
   onProdFields(fields: MemberFields): void {
@@ -221,6 +234,7 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
           addGroupStartDate: this.groupFields.startDates,
           addGroupEndDate: this.groupFields.endDates,
           addProdRole: this.prodFields.roles,
+          importOrigins: this.importOriginFields,
         },
       });
     this.subscriptions.add(

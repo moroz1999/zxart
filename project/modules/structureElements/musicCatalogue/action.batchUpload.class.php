@@ -28,7 +28,7 @@ class batchUploadMusicCatalogue extends structureElementAction
                 $zxMusicElement->structureName = $zxMusicElement->title;
 
                 $zxMusicElement->description = $structureElement->description;
-                $zxMusicElement->tagsText = $structureElement->tagsText;
+                $zxMusicElement->tags = $structureElement->tags;
                 $zxMusicElement->year = $structureElement->year;
                 $zxMusicElement->file = $zxMusicElement->getId();
                 $zxMusicElement->fileName = $originalFileName;
@@ -74,7 +74,7 @@ class batchUploadMusicCatalogue extends structureElementAction
             'party',
             'type',
             'music',
-            'tagsText',
+            'tags',
             'description',
             'chipType',
             'channelsType',

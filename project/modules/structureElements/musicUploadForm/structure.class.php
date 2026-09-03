@@ -34,7 +34,7 @@ class musicUploadFormElement extends ZxArtItemUploadFormElement
 
         $moduleStructure['music'] = 'files';
 
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['channelsType'] = 'text';
         $moduleStructure['chipType'] = 'text';
         $moduleStructure['frequency'] = 'text';

@@ -10,6 +10,7 @@ use Illuminate\Database\Connection;
 use Override;
 use RuntimeException;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\PartyRefDTO;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -351,7 +352,7 @@ class PouetImport extends errorLogger
     ];
 
     protected array $urls = [];
-    protected string $origin = 'pouet';
+    protected ImportOrigin $origin = ImportOrigin::Pouet;
 
     public function __construct(
         Connection     $db,
@@ -652,8 +653,8 @@ class PouetImport extends errorLogger
 
         $importIds = [];
         if (isset($prodData['demozoo'])) {
-            $importIds['dzoo'] = $prodData['demozoo'];
-            $importIds['zxd'] = $prodData['demozoo'];
+            $importIds[ImportOrigin::Demozoo->value] = $prodData['demozoo'];
+            $importIds[ImportOrigin::Demotopia->value] = $prodData['demozoo'];
         }
 
         $prodDto = new ProdImportDTO(

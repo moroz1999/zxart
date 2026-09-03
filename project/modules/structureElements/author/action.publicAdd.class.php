@@ -29,6 +29,7 @@ class publicAddAuthor extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
+            $structureElement->persistImportOrigins();
 
             $structureElement->recalculatePicturesData();
             $structureElement->recalculateMusicData();
@@ -73,6 +74,7 @@ class publicAddAuthor extends structureElementAction
             'addGroupEndDate',
             'addGroupRole',
             'addProdRole',
+            'importOrigins',
         ];
     }
 

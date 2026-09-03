@@ -24,6 +24,7 @@ class publicAddGroup extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
             $structureElement->persistAuthorship(EntityType::Group);
+            $structureElement->persistImportOrigins();
             $structureElement->recalculate();
 
             $privilegesManager = $this->getService(privilegesManager::class);
@@ -62,6 +63,7 @@ class publicAddGroup extends structureElementAction
             'addAuthorEndDate',
             'addAuthorRole',
             'subGroupsSelector',
+            'importOrigins',
         ];
     }
 

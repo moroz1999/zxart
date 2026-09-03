@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -104,7 +105,7 @@ class ZxaaaManager extends errorLogger
      * @var CountriesManager
      */
     protected $countriesManager;
-    protected $origin = '3a';
+    protected ImportOrigin $origin = ImportOrigin::Zxaaa;
     protected $rootUrl = 'https://zxaaa.net';
 
     public function __construct()

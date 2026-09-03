@@ -13,6 +13,7 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Hardware\Services\HardwareService;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\PersonLabel;
 use ZxArt\Import\Parties\Party;
@@ -84,7 +85,7 @@ use zxProdElement;
  */
 final class ArticleParsedDataUpdater
 {
-    private const string ORIGIN = 'zxp';
+    private const ImportOrigin ORIGIN = ImportOrigin::ZxPress;
     /**
      * @var authorElement[]
      */

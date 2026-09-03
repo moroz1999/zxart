@@ -5,6 +5,7 @@ use App\Paths\PathsManager;
 use ZxArt\LinkTypes;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueType;
+use ZxArt\Tags\TagsHolderInterface;
 use ZxArt\ZxScreen\ZxPictureCacheManager;
 use ZxArt\ZxScreen\ZxPictureFlickeringHelper;
 use ZxArt\ZxScreen\ZxPictureParametersDto;
@@ -29,7 +30,9 @@ use ZxArt\ZxScreen\ZxPictureUrlHelper;
  * @property int $border
  * @property pressArticleElement[] $mentions
  */
-class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterface
+class zxPictureElement extends ZxArtItem implements
+    OpenGraphDataProviderInterface,
+    TagsHolderInterface
 {
     use CanonicalUrlTrait;
     use PaletteTypesProvider;
@@ -84,7 +87,7 @@ class zxPictureElement extends ZxArtItem implements OpenGraphDataProviderInterfa
         $moduleStructure['exeFile'] = 'file';
         $moduleStructure['exeFileName'] = 'fileName';
         $moduleStructure['dateAdded'] = 'date';
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['tagsAmount'] = 'text';
         $moduleStructure['votesAmount'] = 'text';
         $moduleStructure['commentsAmount'] = 'text';

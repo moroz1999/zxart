@@ -38,7 +38,7 @@ class picturesCatalogueElement extends structureElement
 
         $moduleStructure['image'] = 'files';
 
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
     }
 
     protected function setMultiLanguageFields(&$multiLanguageFields): void

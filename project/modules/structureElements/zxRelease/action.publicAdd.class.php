@@ -30,6 +30,7 @@ class publicAddZxRelease extends structureElementAction
             $structureElement->persistElementData();
 
             $structureElement->persistAuthorship(EntityType::Release);
+            $structureElement->persistImportOrigins();
 
             $structureElement->executeAction('receiveFiles');
 
@@ -67,6 +68,7 @@ class publicAddZxRelease extends structureElementAction
             'addAuthorRole',
             'publishers',
             'zxProd',
+            'importOrigins',
         ];
     }
 

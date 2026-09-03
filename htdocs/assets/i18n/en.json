@@ -11,6 +11,11 @@
     "choose-file": "Choose file",
     "nothing-found": "Nothing found"
   },
+  "import-origins": {
+    "title": "Portal ids",
+    "id": "Id on the portal",
+    "add": "Add portal id"
+  },
   "form": {
     "selected-count": "Selected: {{count}}",
     "filter": "Filter…",
@@ -194,7 +199,7 @@
     "html-description": "HTML description",
     "description": "Description",
     "instructions": "Instructions",
-    "tags-text": "Tags",
+    "tags": "Tags",
     "deny-voting": "Disable voting",
     "deny-comments": "Disable comments",
     "authors": "Authors",
@@ -236,7 +241,7 @@
     "partyplace": "Party place",
     "year": "Year",
     "prod-or-release": "Program or release",
-    "tags-text": "Tags",
+    "tags": "Tags",
     "description": "Description",
     "deny-playing": "Disable playback",
     "deny-voting": "Disable voting",
@@ -266,7 +271,7 @@
     "partyplace": "Party place",
     "year": "Year",
     "prod-or-release": "Program or release",
-    "tags-text": "Tags",
+    "tags": "Tags",
     "description": "Description",
     "deny-voting": "Disable voting",
     "deny-comments": "Disable comments",

@@ -77,6 +77,8 @@ export class FormDataApiService {
       categoriesTree: [],
       authorRefs: [],
       originalAuthorRefs: [],
+      importOrigins: [],
+      tags: [],
       enums: {},
     };
   }

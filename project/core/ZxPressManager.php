@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Shared\EntityType;
@@ -11,7 +12,7 @@ class ZxPressManager extends errorLogger
 {
     protected int $counter = 0;
     protected int $maxCounter = 10000;
-    protected string $origin = 'zxp';
+    protected ImportOrigin $origin = ImportOrigin::ZxPress;
     protected string $rootUrl = 'https://zxpress.ru/';
 
     private $prodsIndex = [];

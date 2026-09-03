@@ -11,6 +11,7 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use PDO;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
@@ -86,7 +87,7 @@ class ZxdbImport extends errorLogger
     protected array $infoFileTypes;
     protected array $adFileTypes;
     protected array $allowedCategoryIdsMap;
-    protected string $origin = 'zxdb';
+    protected ImportOrigin $origin = ImportOrigin::Zxdb;
     protected array $releasesInfo = [];
     protected array $legalStatuses = [
         'D' => LegalStatus::forbidden,

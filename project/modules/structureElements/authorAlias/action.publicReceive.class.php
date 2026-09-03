@@ -19,6 +19,7 @@ class publicReceiveAuthorAlias extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
+            $structureElement->persistImportOrigins();
 
             $this->respondFormSaved($controller, $structureElement);
             return;
@@ -40,6 +41,7 @@ class publicReceiveAuthorAlias extends structureElementAction
             'addGroupEndDate',
             'addGroupRole',
             'addProdRole',
+            'importOrigins',
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -16,7 +17,7 @@ class SpeccyMapsManager extends errorLogger
      * @var ProdsService
      */
     protected $prodsService;
-    protected $origin = 'maps';
+    protected ImportOrigin $origin = ImportOrigin::SpeccyMaps;
     protected $rootUrl = 'https://maps.speccy.cz/';
     protected $prodsIndex;
     private $counter = 0;

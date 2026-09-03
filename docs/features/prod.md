@@ -25,7 +25,7 @@ Software production for ZX Spectrum - games, demos, utilities and other software
   - `donationware` - donationware
 - **externalLink** - external link
   - With `insales` or `donationware` the prod hero bar offers it as a call to action ("purchase" / "donate" button) and the plain link in the links row is labelled as the homepage; otherwise it is only the plain link.
-- **tagsText** - tags (text)
+- **tags** - tag titles; the tags themselves are links, see [tags.md](tags.md)
 - **compo** - competition name (compo)
 - **language** - interface languages (array)
   - The codes a prod or release can carry are the `engine_zxitem_language.value`

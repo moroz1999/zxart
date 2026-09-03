@@ -7,11 +7,6 @@ class showPublicFormShared extends structureElementAction
         if ($structureElement->final) {
             $structureElement->setViewName('form');
         }
-        if ($structureElement->requested) {
-            if ($structureElement->tagsText == '') {
-                $structureElement->tagsText = $structureElement->generateTagsText();
-            }
-        }
     }
 }
 

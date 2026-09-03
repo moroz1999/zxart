@@ -81,7 +81,7 @@ exists. A tune can also be embedded on another site.
 - **plays** — how often the tune has been played
 
 ### Tags and Categorization
-- **tagsText** — the tune's tags
+- **tags** — the tune's tags
 - **tagsAmount** — how many tags it carries
 
 ### Voting and Comments

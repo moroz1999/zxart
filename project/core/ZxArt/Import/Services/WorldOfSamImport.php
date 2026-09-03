@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use RuntimeException;
 use Throwable;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
@@ -93,7 +94,7 @@ final class WorldOfSamImport extends errorLogger
      * Identifier used when storing import provenance. This will be passed into
      * ProdsService::importProd().
      */
-    private string $origin = 'worldofsam';
+    private ImportOrigin $origin = ImportOrigin::WorldOfSam;
     private array $copyrightMap;
     private WorldOfSamLinksRewriter $worldOfSamLinksRewriter;
 

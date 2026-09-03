@@ -1,0 +1,25 @@
+@for (row of rows; track row) {
+  <div class="zx-ioe__row">
+    <zx-select
+      class="zx-ioe__portal"
+      [options]="options"
+      [(ngModel)]="row.origin"
+      (ngModelChange)="onChanged()"
+    ></zx-select>
+    <zx-input
+      class="zx-ioe__id"
+      type="text"
+      [(ngModel)]="row.importId"
+      (ngModelChange)="onChanged()"
+      [placeholder]="'import-origins.id' | translate"
+    ></zx-input>
+    <zx-close-button
+      [ariaLabel]="'common.remove' | translate"
+      (closed)="onRemove(row)"
+    ></zx-close-button>
+  </div>
+}
+
+<zx-button size="sm" color="secondary" type="button" (click)="onAdd()">
+  {{ 'import-origins.add' | translate }}
+</zx-button>

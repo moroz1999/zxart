@@ -11,6 +11,11 @@
     "choose-file": "Выбрать файл",
     "nothing-found": "Ничего не найдено"
   },
+  "import-origins": {
+    "title": "Идентификаторы на порталах",
+    "id": "Идентификатор на портале",
+    "add": "Добавить идентификатор"
+  },
   "form": {
     "selected-count": "Выбрано: {{count}}",
     "filter": "Фильтр…",
@@ -194,7 +199,7 @@
     "html-description": "HTML-описание",
     "description": "Описание",
     "instructions": "Инструкции",
-    "tags-text": "Теги",
+    "tags": "Теги",
     "deny-voting": "Отключить голосование",
     "deny-comments": "Отключить комментарии",
     "authors": "Авторы",
@@ -236,7 +241,7 @@
     "partyplace": "Место на пати",
     "year": "Год",
     "prod-or-release": "Программа или релиз",
-    "tags-text": "Теги",
+    "tags": "Теги",
     "description": "Описание",
     "deny-playing": "Отключить воспроизведение",
     "deny-voting": "Отключить голосование",
@@ -266,7 +271,7 @@
     "partyplace": "Место на пати",
     "year": "Год",
     "prod-or-release": "Программа или релиз",
-    "tags-text": "Теги",
+    "tags": "Теги",
     "description": "Описание",
     "deny-voting": "Отключить голосование",
     "deny-comments": "Отключить комментарии",

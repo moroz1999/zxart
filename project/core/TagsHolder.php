@@ -7,9 +7,19 @@ trait TagsHolder
 {
     protected $tagsList;
 
+    /**
+     * Applies the tag titles the form submitted. Tags live only as links, so the
+     * submitted list is the whole list: titles it no longer carries are unlinked.
+     */
     public function updateTagsInfo(): void
     {
-        $this->updateTagsFromList(explode(',', $this->tagsText));
+        /** @var array<array-key, mixed> $submittedTags */
+        $submittedTags = (array)$this->getValue('tags');
+        $titles = [];
+        foreach ($submittedTags as $title) {
+            $titles[] = (string)$title;
+        }
+        $this->updateTagsFromList($titles);
     }
 
     /**
@@ -101,17 +111,20 @@ trait TagsHolder
     }
 
     /**
-     * @psalm-return list{0?: mixed,...}
+     * Titles of the tags linked to this item, as the form lists them.
+     *
+     * @return list<string>
      */
     public function getTagsTexts(): array
     {
         $tagsTexts = [];
         foreach ($this->getTagsList() as $tag) {
-            $tagsTexts[] = $tag->title;
+            $tagsTexts[] = (string)$tag->title;
         }
         return $tagsTexts;
     }
 
+    /** Tag titles as one line, for the item's keywords in structured data. */
     public function generateTagsText(): string
     {
         return implode(', ', $this->getTagsTexts());

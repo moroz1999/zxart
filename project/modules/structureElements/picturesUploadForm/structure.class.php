@@ -39,7 +39,7 @@ class picturesUploadFormElement extends ZxArtItemUploadFormElement
 
         $moduleStructure['image'] = 'files';
 
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['rotation'] = 'text';
         $moduleStructure['palette'] = 'text';
         $moduleStructure['denyVoting'] = 'checkbox';

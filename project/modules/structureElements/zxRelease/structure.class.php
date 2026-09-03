@@ -7,6 +7,9 @@ use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
+use ZxArt\Import\ImportOrigin;
+use ZxArt\Import\ImportOriginsHolder;
+use ZxArt\Import\ImportOriginsHolderTrait;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Queue\QueueService;
@@ -56,12 +59,14 @@ class zxReleaseElement extends ZxArtItem implements
     JsonDataProvider,
     ZxSoftInterface,
     Recalculable,
-    BreadcrumbsInfoProvider
+    BreadcrumbsInfoProvider,
+    ImportOriginsHolder
 {
     use CanonicalUrlTrait;
     use AuthorshipProviderTrait;
     use AuthorshipPersister;
     use ImportedItemTrait;
+    use ImportOriginsHolderTrait;
     use HardwareProvider;
     use LanguageCodesProviderTrait;
     use LinksPersistingTrait;
@@ -170,6 +175,7 @@ class zxReleaseElement extends ZxArtItem implements
 
         $moduleStructure['addAuthor'] = 'text';
         $moduleStructure['addAuthorRole'] = 'array';
+        $moduleStructure['importOrigins'] = 'array';
         $moduleStructure['parsed'] = 'checkbox';
     }
 
@@ -596,6 +602,11 @@ class zxReleaseElement extends ZxArtItem implements
             );
     }
 
+    public function getImportEntityType(): EntityType
+    {
+        return EntityType::Release;
+    }
+
     public function getLinksInfo()
     {
         if ($this->linksInfo === null) {
@@ -610,10 +621,11 @@ class zxReleaseElement extends ZxArtItem implements
             $query = $db->table('import_origin')
                 ->select('importId', 'importOrigin')
                 ->where('elementId', '=', $this->getId())
-                ->whereIn('importOrigin', ['vt', 'pouet']);
+                ->whereIn('importOrigin', [ImportOrigin::Vtrdos->value, ImportOrigin::Pouet->value]);
             if ($rows = $query->get()) {
                 foreach ($rows as $row) {
-                    if ($row['importOrigin'] === 'pouet') {
+                    $origin = ImportOrigin::tryFrom((string)$row['importOrigin']);
+                    if ($origin === ImportOrigin::Pouet) {
                         $this->linksInfo[] = [
                             'type' => 'pouet',
                             'image' => 'icon_pouet.png',
@@ -621,7 +633,7 @@ class zxReleaseElement extends ZxArtItem implements
                             'url' => 'https://www.pouet.net/prod.php?which=' . $row['importId'],
                             'id' => $row['importId'],
                         ];
-                    } elseif ($row['importOrigin'] === 'vt' && $prodStatus !== LegalStatus::insales->name) {
+                    } elseif ($origin === ImportOrigin::Vtrdos && $prodStatus !== LegalStatus::insales->name) {
                         $this->linksInfo[] = [
                             'type' => 'vt',
                             'image' => 'icon_vt.png',

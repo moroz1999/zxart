@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -41,7 +42,7 @@ class RzxArchiveManager extends errorLogger
      * @var ProdsService
      */
     protected $prodsService;
-    protected $origin = 'rzx';
+    protected ImportOrigin $origin = ImportOrigin::RzxArchive;
     protected $rootUrl = 'https://www.rzxarchive.co.uk/';
     protected $prodsIndex;
     private $debugEntry;

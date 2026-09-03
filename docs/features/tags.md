@@ -7,6 +7,24 @@ Tags are `tag` structure elements linked to items (pictures, music, prods) via
 from these links for the requested item section; `module_tag` stores tag data but
 does not store a shared usage counter.
 
+### Editing
+
+Tags are only ever these links. An item that carries them implements
+`ZxArt\Tags\TagsHolderInterface` (`zxProdElement`, `zxMusicElement`,
+`zxPictureElement`) through the `TagsHolder` trait, and there are two ways in:
+
+- the quick form on the item's page — `GET`/`POST /tags/`
+  (`ZxArt\Controllers\Tags` → `TagsService`), which takes the titles and calls
+  `updateTagsFromList()`;
+- the item's edit form — the `tags` field, a transient `array` chunk of titles
+  listed in `setExpectedFields()`; `updateTagsInfo()` reads it and calls the same
+  `updateTagsFromList()`. `/formdata/` fills it from `getTagsTexts()`, and the
+  batch upload forms carry the same field to every item they create.
+
+Both paths submit the whole list: titles that are new are linked (creating the
+tag element when the title is unknown), links the list no longer carries are
+removed, and `tagsAmount` on the item follows the result.
+
 ### Tag cloud
 
 The graphics, music, and software sections each expose a tag cloud as a

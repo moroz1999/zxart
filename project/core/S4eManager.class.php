@@ -2,6 +2,7 @@
 
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
 
 /**
@@ -15,7 +16,7 @@ class S4eManager extends errorLogger
     protected AuthorsService $authorsManager;
     protected GroupsService $groupsService;
     protected CountriesManager $countriesManager;
-    protected string $origin = 's4e';
+    protected ImportOrigin $origin = ImportOrigin::Spectrum4Ever;
     protected string $rootUrl = 'https://spectrum4ever.org/';
 
     private array $releasers = [];

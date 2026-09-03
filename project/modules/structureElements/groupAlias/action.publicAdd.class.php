@@ -21,6 +21,7 @@ class publicAddGroupAlias extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->persistAuthorship(EntityType::Group);
+            $structureElement->persistImportOrigins();
 
             $privilegesManager->setPrivilege(
                 $user->id,
@@ -62,6 +63,7 @@ class publicAddGroupAlias extends structureElementAction
             'addAuthorStartDate',
             'addAuthorEndDate',
             'addAuthorRole',
+            'importOrigins',
         ];
     }
 }

@@ -35,7 +35,7 @@ class musicCatalogueElement extends structureElement
 
         $moduleStructure['music'] = 'files';
 
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['chipType'] = 'text';
         $moduleStructure['channelsType'] = 'text';
         $moduleStructure['frequency'] = 'text';

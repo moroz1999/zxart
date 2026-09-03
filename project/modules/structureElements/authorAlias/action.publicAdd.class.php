@@ -22,6 +22,7 @@ class publicAddAuthorAlias extends structureElementAction
 
             $structureElement->persistElementData();
             $structureElement->checkParentLetter();
+            $structureElement->persistImportOrigins();
 
             $privilegesManager->setPrivilege(
                 $user->id,
@@ -49,6 +50,7 @@ class publicAddAuthorAlias extends structureElementAction
             'authorId',
             'displayInMusic',
             'displayInGraphics',
+            'importOrigins',
         ];
     }
 }

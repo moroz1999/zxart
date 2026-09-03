@@ -7,7 +7,7 @@
  * @property string $prodTitle
  * @property string $prodAltTitle
  * @property string $legalStatus
- * @property string $tagsText
+ * @property string[] $tags tag titles the form submitted; tags themselves live as links
  * @property string[] $language
  * @property string[] $hardwareRequired
  * @property string $youtubeId
@@ -64,7 +64,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['categories'] = 'array';
         $moduleStructure['publishers'] = 'array';
         $moduleStructure['groups'] = 'array';
-        $moduleStructure['tagsText'] = 'text';
+        $moduleStructure['tags'] = 'array';
         $moduleStructure['denyVoting'] = 'checkbox';
         $moduleStructure['denyComments'] = 'checkbox';
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Connection;
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Shared\EntityType;
 
@@ -18,7 +19,7 @@ class CountriesManager extends errorLogger
     /**
      * @psalm-param array{id: mixed, title: mixed} $countryInfo
      */
-    public function importCountry(array $countryInfo, $origin)
+    public function importCountry(array $countryInfo, ImportOrigin $origin)
     {
         /**
          * @var countryElement $element
@@ -72,7 +73,7 @@ class CountriesManager extends errorLogger
      * @param array $countryInfo
      * @return bool|countryElement
      */
-    protected function createCountry($countryInfo, $origin)
+    protected function createCountry($countryInfo, ImportOrigin $origin)
     {
         $element = false;
         if ($countriesElement = $this->structureManager->getElementByMarker('countries')) {

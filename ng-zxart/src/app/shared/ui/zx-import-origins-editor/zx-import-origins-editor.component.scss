@@ -1,0 +1,31 @@
+@use 'shared/breakpoints' as bp;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+.zx-ioe__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  width: 100%;
+
+  @include bp.media-breakpoint-down(sm) {
+    flex-wrap: wrap;
+  }
+}
+
+// The portal is a short fixed choice, the id a free value, so the id takes the
+// space that is left on the row.
+.zx-ioe__portal {
+  flex: 0 1 220px;
+  min-width: 0;
+}
+
+.zx-ioe__id {
+  flex: 1 1 120px;
+  min-width: 0;
+}

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Prods\Dto;
 
+use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Prods\LegalStatus;
 
@@ -62,7 +63,7 @@ final readonly class ProdImportDTO
         public ?array       $articles = null,
         /** @var ReleaseImportDTO[]|null */
         public ?array       $releases = null,
-        public ?string      $origin = null,
+        public ?ImportOrigin $origin = null,
     )
     {
     }

@@ -97,7 +97,7 @@ class publicReceiveZxPicture extends structureElementAction
             'inspired2',
             'exeFile',
             'sequence',
-            'tagsText',
+            'tags',
             'description',
             'rotation',
             'denyVoting',
