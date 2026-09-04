@@ -15,10 +15,16 @@ use ZxArt\Import\Repositories\ImportOriginsRepository;
 trait ImportOriginsHolderTrait
 {
     /**
+     * A form draft carries none: it is not persisted yet, and its transient
+     * identifier is a structure path that casts to 0 - the id of no element.
+     *
      * @return list<array{origin: string, importId: string}>
      */
     public function getImportOrigins(): array
     {
+        if (!$this->hasActualStructureInfo()) {
+            return [];
+        }
         return $this->getService(ImportOriginsRepository::class)->getElementOrigins($this->getId());
     }
 

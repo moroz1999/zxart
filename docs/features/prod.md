@@ -48,6 +48,8 @@ Authenticated users can open the Angular batch upload form from the catalogue
 page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
 The batch page reuses the Angular prod form with batch-specific file fields; it
 loads and submits its transient form through `/formdata/`.
+Each production the batch creates carries the categories and tags the form
+supplied, so its AI categories-and-tags pass is marked skipped.
 
 The same form is reachable from an author, group or party page
 (`/author/:id/prods/add`, `/group/:id/prods/add`, `/party/:id/prods/add`). The

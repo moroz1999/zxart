@@ -127,6 +127,8 @@ The author form and the author alias form both edit the authorship the works the
 - Groups are a section of the main tab, with the membership role and period per group.
 - Production authorship is its own **Software** tab, carrying the person's roles per production and no period; the tab label counts the productions currently queued. Roles are the same list the production form offers (`roles` of the form-data response), the productions themselves arrive as `prods`.
 - Both are persisted by `persistMemberships()`, which reads `add<Type>Role`/`add<Type>StartDate`/`add<Type>EndDate` per element ID and deletes the authorship the form no longer carries.
+- A creation form carries neither: a draft is not an element yet, its transient
+  identifier is not an element id, and nothing is attributed to it.
 - An alias holds its own authorship, separate from its main author's, and edits only that. Its blocks appear only when editing an existing alias: alias creation runs through its own endpoint, which carries no authorship fields, and a new alias has none.
 - The form's tab panels stay in the DOM while hidden: the member/role editors own their queued edits, which switching tabs would otherwise discard.
 

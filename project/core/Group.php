@@ -27,8 +27,15 @@ trait Group
         return $this->publishedReleases;
     }
 
+    /**
+     * A form draft has no roster: it is not persisted yet, and its transient
+     * identifier is a structure path that casts to 0 - the id of no element.
+     */
     public function getAuthorsInfo($type)
     {
+        if (!$this->hasActualStructureInfo()) {
+            return [];
+        }
         $authorshipRepository = $this->getService(AuthorshipRepository::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
         $info = $authorshipRepository->getAuthorsInfo($this->id, $entityType);

@@ -88,7 +88,9 @@ class batchUploadZxProdsUploadForm extends structureElementAction
 
                     $zxProdElement->executeAction('receiveFiles');
 
-                    $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+                    // the categories and tags come from the upload form, so the created
+                    // production needs no AI pass over them
+                    $queueService->updateStatus($zxProdElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
 
                     $zxProdElement->persistElementData();
