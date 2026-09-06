@@ -1,0 +1,53 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ titleKey | translate }}</h1>
+
+  <div *ngIf="loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
+      <zx-form-field *ngIf="isCity">
+        <zx-form-label for="city-country" [required]="true">
+          {{ 'manage-countries.country' | translate }}
+        </zx-form-label>
+        <zx-form-control>
+          <zx-select id="city-country" formControlName="countryId" [options]="countryOptions"></zx-select>
+          <span appText="caption" tone="muted">{{ 'manage-countries.country-hint' | translate }}</span>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label [required]="true">{{ 'manage-countries.name' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-multilang-field formControlName="titles" [languages]="languages"></zx-multilang-field>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-row [columns]="2">
+        <zx-form-field>
+          <zx-form-label for="place-latitude">{{ 'manage-countries.latitude' | translate }}</zx-form-label>
+          <zx-form-control>
+            <zx-input id="place-latitude" formControlName="latitude" type="number"></zx-input>
+          </zx-form-control>
+        </zx-form-field>
+
+        <zx-form-field>
+          <zx-form-label for="place-longitude">{{ 'manage-countries.longitude' | translate }}</zx-form-label>
+          <zx-form-control>
+            <zx-input id="place-longitude" formControlName="longitude" type="number"></zx-input>
+          </zx-form-control>
+        </zx-form-field>
+      </zx-form-row>
+
+      <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+      <zx-form-actions align="start">
+        <zx-button color="primary" type="submit" [disabled]="submitting">
+          {{ 'manage-countries.save' | translate }}
+        </zx-button>
+        <zx-button color="transparent" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+      </zx-form-actions>
+    </zx-stack>
+  </form>
+</zx-page-layout>

@@ -169,7 +169,10 @@ paths:
                 fields:
                   type: object
                   additionalProperties: true
-                  description: Form values and uploaded files keyed by entity field name.
+                  description: >
+                    Form values and uploaded files keyed by entity field name.
+                    A release form sends its files as `fields[file][]` and gains
+                    one release per file, all carrying the other values.
       responses:
         '200':
           description: Created entity identifier
@@ -182,6 +185,14 @@ paths:
                 properties:
                   id:
                     type: integer
+                  ids:
+                    type: array
+                    items:
+                      type: integer
+                    description: >
+                      Every element the submit created, when a form creates more
+                      than one: a release form creates one release per uploaded
+                      file, in upload order, and `id` is the first of them.
         '400':
           description: Unsupported entity type or missing required creation context
         '401':

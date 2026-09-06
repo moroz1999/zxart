@@ -3,7 +3,7 @@ const SPA_SEGMENTS = new Set<string>([
   'author', 'author-alias', 'group', 'group-alias', 'party', 'prod', 'release',
   'picture', 'tune', 'press', 'profile', 'playlists', 'playlist', 'register',
   'prods', 'groups', 'pictures', 'music', 'authors', 'artists', 'musicians', 'parties', 'stats', 'geo', 'comments', 'feedback', 'about',
-  'file-search',
+  'file-search', 'manage',
 ]);
 
 /**

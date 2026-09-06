@@ -1,0 +1,37 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">
+    {{ (creating ? 'manage-categories.add' : 'manage-categories.edit-title') | translate }}
+  </h1>
+
+  <div *ngIf="loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
+      <zx-form-field>
+        <zx-form-label for="category-parent">{{ 'manage-categories.parent' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-select id="category-parent" formControlName="parentId" [options]="parentOptions"></zx-select>
+          <span appText="caption" tone="muted">{{ 'manage-categories.parent-hint' | translate }}</span>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label [required]="true">{{ 'manage-categories.name' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-multilang-field formControlName="titles" [languages]="languages"></zx-multilang-field>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+      <zx-form-actions align="start">
+        <zx-button color="primary" type="submit" [disabled]="submitting">
+          {{ 'manage-categories.save' | translate }}
+        </zx-button>
+        <zx-button color="transparent" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+      </zx-form-actions>
+    </zx-stack>
+  </form>
+</zx-page-layout>

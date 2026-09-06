@@ -170,9 +170,12 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         // Category (`cat`), filters and page all live in the URL query params.
         this.rootElementId = this.elementId;
         this.routerSub = this.route.queryParams.subscribe(params => this.applyQueryParams(params));
+        // Categories, legal statuses and release types are named by the backend in
+        // the language of the request, so a switch has to fetch the page again;
+        // the languages and hardware we label ourselves come with it.
         this.langSub = this.translate.onLangChange.subscribe(() => {
             if (this.model) {
-                this.buildClientLabelSelectors();
+                this.loadData();
             }
             this.cdr.markForCheck();
         });

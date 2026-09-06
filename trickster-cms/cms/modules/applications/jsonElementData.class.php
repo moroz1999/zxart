@@ -28,6 +28,8 @@ class jsonElementDataApplication extends controllerApplication
 
         $response = new ajaxResponse();
         $languagesManager = $this->getService(LanguagesManager::class);
+        // the SPA reads this endpoint too, and it owns the interface language
+        $languagesManager->applyRequestedLanguageHeader();
 
         $structureManager = $this->getService(
             'structureManager',

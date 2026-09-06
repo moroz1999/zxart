@@ -103,15 +103,15 @@
         <div class="gp-year-rail__count">{{ group.prods.length }}</div>
       </div>
       <div zxProdsGrid class="gp-works-grid">
-        <ng-container *ngFor="let prod of group.prods">
+        <ng-container *ngFor="let entry of group.prods; trackBy: trackByEntry">
           <zx-prod-release-card
-            *ngIf="!isProdEntry(prod)"
-            [release]="asRelease(prod)"
+            *ngIf="entry.release"
+            [release]="entry.release"
             [canUploadScreenshot]="false">
           </zx-prod-release-card>
           <zx-prod-block
-            *ngIf="isProdEntry(prod)"
-            [model]="toProdModel(asProd(prod))"
+            *ngIf="entry.prod"
+            [model]="entry.prod"
             [imagesLayout]="'loading'">
           </zx-prod-block>
         </ng-container>

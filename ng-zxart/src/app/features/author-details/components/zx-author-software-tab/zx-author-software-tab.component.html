@@ -53,7 +53,7 @@
             {{ 'author-details.software-tab.all-roles' | translate }}
           </zx-button>
           <zx-button
-            *ngFor="let role of getVisibleRoles(availableRoles)"
+            *ngFor="let role of visibleRoles"
             size="sm"
             [color]="activeRole === role ? 'secondary' : 'outlined'"
             [disabled]="loading"
@@ -82,24 +82,22 @@
         <div class="ap-year-rail__count">{{ group.prods.length }}</div>
       </div>
       <div zxProdsGrid class="ap-works-grid">
-        <zx-stack *ngFor="let prod of group.prods" gap="xs">
-          <zx-inline *ngIf="getVisibleRoles(prod.rolesInProd).length && activeRole === ''" gap="xs" [wrap]="true" align="center">
-            <zx-chip *ngFor="let role of getVisibleRoles(prod.rolesInProd)" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
+        <zx-stack *ngFor="let entry of group.prods; trackBy: trackByEntry" gap="xs">
+          <zx-inline *ngIf="entry.roles.length && activeRole === ''" gap="xs" [wrap]="true" align="center">
+            <zx-chip *ngFor="let role of entry.roles" variant="opaque" size="sm" [color]="getRoleChipColor(role)">
               {{ getRoleLabelKey(role) | translate }}
             </zx-chip>
           </zx-inline>
-          <ng-container [ngSwitch]="prod.type">
-            <zx-prod-release-card
-              *ngSwitchCase="'release'"
-              [release]="asRelease(prod)"
-              [canUploadScreenshot]="false">
-            </zx-prod-release-card>
-            <zx-prod-block
-              *ngSwitchDefault
-              [model]="toProdModel(asProd(prod))"
-              [imagesLayout]="'loading'">
-            </zx-prod-block>
-          </ng-container>
+          <zx-prod-release-card
+            *ngIf="entry.release"
+            [release]="entry.release"
+            [canUploadScreenshot]="false">
+          </zx-prod-release-card>
+          <zx-prod-block
+            *ngIf="entry.prod"
+            [model]="entry.prod"
+            [imagesLayout]="'loading'">
+          </zx-prod-block>
         </zx-stack>
       </div>
     </div>

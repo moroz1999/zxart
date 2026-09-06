@@ -50,8 +50,11 @@ class receiveFilesShared extends structureElementAction
 
                             $fileElement->persistElementData();
 
+                            // the staged upload is left in the cache: a form that
+                            // creates several elements has every one of them read
+                            // the same file, and CacheCleanupService is what
+                            // removes it once nobody can be reading it any more
                             copy($temporaryFile, $folder . $fileElement->file);
-                            unlink($temporaryFile);
                             if ($isPrivilegesSettingRequired) {
                                 $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'file', 'delete', 'allow');
                             }

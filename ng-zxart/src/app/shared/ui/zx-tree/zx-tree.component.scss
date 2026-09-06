@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+.zx-tree__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.zx-tree__item .zx-tree__list {
+  padding-left: var(--zx-tree-indent);
+}
+
+.zx-tree__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zx-tree-row-gap);
+  padding: var(--zx-tree-row-padding);
+  border-bottom: var(--zx-tree-row-separator);
+  transition: background-color var(--animation-xs);
+}
+
+.zx-tree__row:hover {
+  background-color: var(--zx-tree-row-hover-bg);
+}
+
+.zx-tree__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--zx-tree-toggle-size);
+  height: var(--zx-tree-toggle-size);
+  padding: 0;
+  border: none;
+  border-radius: var(--zx-tree-toggle-radius);
+  background: transparent;
+  color: var(--zx-tree-toggle-color);
+  cursor: pointer;
+  transition: color var(--animation-xs), background-color var(--animation-xs);
+}
+
+.zx-tree__toggle:hover {
+  color: var(--zx-tree-toggle-hover-color);
+  background-color: var(--zx-tree-toggle-hover-bg);
+}
+
+.zx-tree__toggle-icon {
+  width: var(--zx-tree-toggle-icon-size);
+  height: var(--zx-tree-toggle-icon-size);
+}
+
+.zx-tree__toggle-spacer {
+  width: var(--zx-tree-toggle-size);
+  height: var(--zx-tree-toggle-size);
+}
+
+.zx-tree__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.zx-tree__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zx-tree-actions-gap);
+  margin-left: auto;
+}

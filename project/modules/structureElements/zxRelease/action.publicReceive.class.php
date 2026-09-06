@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Forms\StagedUploadsCleaner;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveZxRelease extends structureElementAction
@@ -29,6 +30,7 @@ class publicReceiveZxRelease extends structureElementAction
             $structureElement->persistImportOrigins();
 
             $structureElement->executeAction('receiveFiles');
+            $this->getService(StagedUploadsCleaner::class)->clearElementUploads($structureElement);
             $structureElement->updateFileStructure();
             $this->respondFormSaved($controller, $structureElement); return;
         }

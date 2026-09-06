@@ -36,4 +36,6 @@ enum LinkTypes: string
     case PARTY_MUSIC = 'partyMusic';
     case PARTY_PROD = 'partyProd';
     case TAG = 'tagLink';
+    case SOFT_CATALOGUE = 'softCatalogue';
+    case COUNTRIES = 'countries';
 }

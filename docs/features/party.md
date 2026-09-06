@@ -123,6 +123,13 @@ The Angular party page (`zx-party-details`) loads data through dedicated endpoin
 
 The heavy media (compos tab) is fetched lazily, one compo per request; Overview loads once. Compo names are resolved per medium by `PartyCompoNameResolver` (sections `party`/`zxPicture`/`musiccompo`).
 
+A compo is identified by its **medium and compo key together**, never the key alone: the keys are
+per medium and repeat across them — a party's general graphics compo and its general music compo
+are both `standard`, and works entered in no compo are `none` in every medium. `PartyCompoDto`
+therefore carries a `slug` (`{medium}-{compoType}`), and that is the party page's tab id and URL
+segment (`/party/:id/picture-standard`). The per-compo endpoints still take the raw `compoType`,
+because that is what the works themselves store.
+
 Party edit/delete and upload actions are rendered inside Angular through `zx-party-editing-controls`, using the shared `zx-editing-controls` popover. The legacy `party.all.tpl` only mounts `zx-party-details`; it must not render separate editing buttons.
 
 ### Constraints and Rules

@@ -98,6 +98,10 @@ USAGE RULES
 - Typography directives MUST be applied to the host element only.
 - Combining typography directives with manual typography overrides is FORBIDDEN.
 - Legacy `zx*` typography directives are compatibility-only and MUST NOT be used in new templates.
+- The heading variants (and bare `h1`-`h3`) carry `overflow-wrap: anywhere`. An entity title is
+  whatever it was named, and some are one unbroken string hundreds of characters long; `anywhere`
+  also shrinks the heading's min-content width, which is what lets it fit its column at all. Do not
+  add per-component word-breaking on top of it.
 
 FORBIDDEN EXAMPLES
 

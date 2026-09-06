@@ -23,9 +23,22 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
 
 const PAGE_SIZE = 15;
 
+/**
+ * One work ready to render. The card model and the role chips are built when the
+ * page loads: rebuilding them per change detection hands the cards a new array
+ * on every check, and a screenshot gallery told its urls changed goes back to
+ * the first shot — on the very check the hover triggers.
+ */
+interface SoftwareEntry {
+  key: number;
+  roles: string[];
+  release: AuthorReleaseEntry | null;
+  prod: ZxProd | null;
+}
+
 interface YearGroup {
   year: number | null;
-  prods: AuthorProdItem[];
+  prods: SoftwareEntry[];
 }
 
 @Component({
@@ -64,7 +77,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
   loading = true;
   total = 0;
   yearGroups: YearGroup[] = [];
-  availableRoles: string[] = [];
+  visibleRoles: string[] = [];
 
   private readonly subscriptions = new Subscription();
 
@@ -103,7 +116,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
         next: result => {
           this.loading = false;
           this.total = result.total;
-          this.availableRoles = result.availableRoles;
+          this.visibleRoles = this.getVisibleRoles(result.availableRoles);
           this.yearGroups = this.buildGroups(result.items, this.sortStore.getValue());
           this.cdr.markForCheck();
         },
@@ -148,7 +161,7 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     });
   }
 
-  getVisibleRoles(roles: string[]): string[] {
+  private getVisibleRoles(roles: string[]): string[] {
     return roles.filter(r => r !== 'unknown');
   }
 
@@ -167,16 +180,19 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
     return item.type === 'prod';
   }
 
-  toProdModel(item: AuthorProdEntry): ZxProd {
-    return new ZxProd(item);
+  trackByEntry(_index: number, entry: SoftwareEntry): number {
+    return entry.key;
   }
 
-  asRelease(item: AuthorProdItem): AuthorReleaseEntry {
-    return item as AuthorReleaseEntry;
-  }
+  private toEntry(item: AuthorProdItem): SoftwareEntry {
+    const isRelease = item.type === 'release';
 
-  asProd(item: AuthorProdItem): AuthorProdEntry {
-    return item as AuthorProdEntry;
+    return {
+      key: item.id,
+      roles: this.getVisibleRoles(item.rolesInProd),
+      release: isRelease ? item as AuthorReleaseEntry : null,
+      prod: isRelease ? null : new ZxProd(item as AuthorProdEntry),
+    };
   }
 
   private parseSortKey(sort: string): {sortKey: string; sortDir: string} {
@@ -196,13 +212,13 @@ export class ZxAuthorSoftwareTabComponent implements OnInit, OnDestroy {
 
   private buildGroups(items: AuthorProdItem[], sort: string): YearGroup[] {
     if (sort === 'votes' || sort === 'downloads' || sort === 'plays') {
-      return [{year: null, prods: items}];
+      return [{year: null, prods: items.map(item => this.toEntry(item))}];
     }
-    const byYear = new Map<number, AuthorProdItem[]>();
+    const byYear = new Map<number, SoftwareEntry[]>();
     for (const item of items) {
       const year = this.getItemYear(item);
       const list = byYear.get(year) ?? [];
-      list.push(item);
+      list.push(this.toEntry(item));
       byYear.set(year, list);
     }
     const dir = sort === 'year-asc' ? 1 : -1;

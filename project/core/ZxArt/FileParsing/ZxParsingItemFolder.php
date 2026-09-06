@@ -11,6 +11,11 @@ class ZxParsingItemFolder extends ZxParsingItem
         return 'folder';
     }
 
+    #[Override] public function holdsSeparateFiles(): bool
+    {
+        return true;
+    }
+
     #[Override] protected function parse(): void
     {
         $this->items = [];

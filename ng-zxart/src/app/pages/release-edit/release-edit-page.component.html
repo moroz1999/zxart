@@ -15,11 +15,11 @@
 <form *ngIf="!loading" zxForm [columns]="2" [formGroup]="form" (ngSubmit)="onSubmit()">
   <zx-form-section [title]="'form.identification' | translate" icon="tag">
     <zx-form-field [fullWidth]="true">
-      <zx-form-label for="release-title" [required]="true">{{ 'release-form.title' | translate }}</zx-form-label>
+      <zx-form-label for="release-title">{{ 'release-form.title' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-input id="release-title" formControlName="title" type="text"></zx-input>
-        <zx-control-errors [control]="form.controls['title']" [messages]="titleMessages"></zx-control-errors>
       </zx-form-control>
+      <p appText="caption" tone="muted">{{ 'release-form.title-hint' | translate }}</p>
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">
@@ -97,11 +97,19 @@
   </zx-form-section>
 
   <zx-form-section [title]="'form.files' | translate" icon="download">
-    <zx-form-field [fullWidth]="true">
+    <zx-form-field [fullWidth]="true" *ngIf="!creating">
       <zx-form-label>{{ 'release-form.file' | translate }}</zx-form-label>
       <zx-form-control>
         <zx-file-upload [fileName]="fileNames['file'] || null" (changed)="onFileChanged('file', $event)"></zx-file-upload>
       </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field [fullWidth]="true" *ngIf="creating">
+      <zx-form-label>{{ 'release-form.files' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-selector (filesChange)="onNewReleaseFiles($event)"></zx-file-selector>
+      </zx-form-control>
+      <p appText="caption" tone="muted">{{ 'release-form.files-hint' | translate }}</p>
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true" *ngFor="let def of fileSelectorDefs">

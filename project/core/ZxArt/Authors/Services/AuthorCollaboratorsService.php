@@ -43,6 +43,19 @@ readonly final class AuthorCollaboratorsService
     }
 
     /**
+     * Whether the author shares any work with anyone. Having works of their own
+     * says nothing about it: an author who only ever worked alone has plenty and
+     * no collaborators at all.
+     */
+    public function hasCollaborators(int $authorId): bool
+    {
+        $authorIds = $this->collaboratorsRepository->getAuthorAndAliasIds($authorId);
+
+        return $this->collaboratorsRepository->findCoAuthorStats($authorIds) !== []
+            || $this->collaboratorsRepository->findGroupStats($authorIds) !== [];
+    }
+
+    /**
      * @param int[] $authorIds
      * @return AuthorCollaboratorPersonDto[]
      */

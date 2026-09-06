@@ -1,0 +1,267 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Countries and Cities API
+  version: 1.0.0
+  description: >
+    The editable countries and cities of the geo section, behind the management
+    section.
+
+    Reads are open — place names are public data the geo section shows anyway.
+    A write requires the element action it performs, resolved on the public
+    root: `country/receive`, `country/delete`, `city/receive`, `city/delete`.
+    Countries and cities are separate element types and therefore separate
+    privileges. The id of that root comes from `/currentuser/`.
+
+    Countries and cities arrive as two flat lists, each city naming its country,
+    and every write answers with both of them refreshed.
+
+paths:
+  /countries-data/:
+    get:
+      summary: Every country and city
+      description: >
+        Titles are returned for every interface language at once, because the
+        management form edits all of them together.
+      responses:
+        '200':
+          description: The lists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Places'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create, edit or delete one country or city
+      parameters:
+        - in: query
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [createCountry, updateCountry, deleteCountry, createCity, updateCity, deleteCity]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CountrySaveRequest'
+                - $ref: '#/components/schemas/CitySaveRequest'
+                - $ref: '#/components/schemas/PlaceDeleteRequest'
+      responses:
+        '200':
+          description: The refreshed lists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Places'
+        '400':
+          description: Unsupported action, or a body that does not fit the request DTO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: >
+            The current user lacks the action the request performs — for
+            example `city/delete` for `action=deleteCity`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No country or city with that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: >
+            The country still has cities, or an author, group or party still
+            names the place, so it cannot be deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: A title is missing in one of the interface languages, or a coordinate is off the globe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Places:
+      type: object
+      required:
+        - languages
+        - countries
+        - cities
+      properties:
+        languages:
+          type: array
+          description: Interface languages titles are edited in, in the site's own order.
+          items:
+            $ref: '#/components/schemas/Language'
+        countries:
+          type: array
+          description: Alphabetical by the title of the request language.
+          items:
+            $ref: '#/components/schemas/Country'
+        cities:
+          type: array
+          description: Alphabetical by the title of the request language, each naming its country.
+          items:
+            $ref: '#/components/schemas/City'
+
+    Language:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Country:
+      type: object
+      required:
+        - id
+        - title
+        - titles
+        - latitude
+        - longitude
+        - usages
+        - cities
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: Title in the language of the request.
+        titles:
+          type: object
+          description: Titles keyed by language id.
+          additionalProperties:
+            type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        usages:
+          type: integer
+          description: Authors, groups and parties that name it; deletion is refused above 0.
+        cities:
+          type: integer
+          description: Cities beneath it; deletion is refused above 0.
+
+    City:
+      type: object
+      required:
+        - id
+        - countryId
+        - title
+        - titles
+        - latitude
+        - longitude
+        - usages
+      properties:
+        id:
+          type: integer
+        countryId:
+          type: integer
+        title:
+          type: string
+        titles:
+          type: object
+          additionalProperties:
+            type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        usages:
+          type: integer
+          description: Authors, groups and parties that name it; deletion is refused above 0.
+
+    CountrySaveRequest:
+      type: object
+      description: Body of `action=createCountry` and `action=updateCountry`.
+      required:
+        - titles
+      properties:
+        id:
+          type: integer
+          description: Required for the update, ignored by the creation.
+        titles:
+          type: object
+          description: >
+            Titles keyed by language id. Every interface language needs one; the
+            request is refused otherwise.
+          additionalProperties:
+            type: string
+        latitude:
+          type: number
+          format: float
+          default: 0
+        longitude:
+          type: number
+          format: float
+          default: 0
+
+    CitySaveRequest:
+      type: object
+      description: Body of `action=createCity` and `action=updateCity`.
+      required:
+        - titles
+        - countryId
+      properties:
+        id:
+          type: integer
+          description: Required for the update, ignored by the creation.
+        countryId:
+          type: integer
+          description: >
+            The country the city belongs to. Required on a creation and on an
+            update alike — an update naming another country moves the city
+            there, and a city with no country would be unreachable.
+        titles:
+          type: object
+          additionalProperties:
+            type: string
+        latitude:
+          type: number
+          format: float
+          default: 0
+        longitude:
+          type: number
+          format: float
+          default: 0
+
+    PlaceDeleteRequest:
+      type: object
+      description: Body of `action=deleteCountry` and `action=deleteCity`.
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - errorMessage
+      properties:
+        errorMessage:
+          type: string

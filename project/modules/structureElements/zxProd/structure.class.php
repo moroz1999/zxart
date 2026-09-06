@@ -62,6 +62,7 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  */
 class zxProdElement extends ZxArtItem implements
     StructureElementUploadedFilesPathInterface,
+    FilesElementInterface,
     CommentsHolderInterface,
     JsonDataProvider,
     OpenGraphDataProviderInterface,

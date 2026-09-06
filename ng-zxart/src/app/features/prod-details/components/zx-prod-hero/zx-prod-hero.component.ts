@@ -87,10 +87,23 @@ export class ZxProdHeroComponent implements OnInit {
     return 'prod-details.open_externallink';
   }
 
-  get leafCategories(): ProdCategoryRefDto[] {
-    return this.core.categoriesPaths
-      .map(path => path.categories[path.categories.length - 1])
-      .filter((cat): cat is ProdCategoryRefDto => !!cat);
+  /**
+   * Every category of every path, root first, so the whole chain a production is
+   * filed under is on screen. Paths that share a section repeat it, so an id is
+   * kept only the first time it appears.
+   */
+  get categories(): ProdCategoryRefDto[] {
+    const seen = new Set<number>();
+    const categories: ProdCategoryRefDto[] = [];
+    for (const path of this.core.categoriesPaths) {
+      for (const category of path.categories) {
+        if (!seen.has(category.id)) {
+          seen.add(category.id);
+          categories.push(category);
+        }
+      }
+    }
+    return categories;
   }
 
   get showLegalStatus(): boolean {

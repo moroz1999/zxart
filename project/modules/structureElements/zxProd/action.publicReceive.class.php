@@ -1,5 +1,6 @@
 <?php
 
+use ZxArt\Forms\StagedUploadsCleaner;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -37,6 +38,7 @@ class publicReceiveZxProd extends structureElementAction
             }
 
             $structureElement->executeAction('receiveFiles');
+            $this->getService(StagedUploadsCleaner::class)->clearElementUploads($structureElement);
 
             $this->respondFormSaved($controller, $structureElement); return;
         }

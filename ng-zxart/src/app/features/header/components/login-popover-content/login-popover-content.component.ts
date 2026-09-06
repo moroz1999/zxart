@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {CurrentUserService} from '../../../../shared/services/current-user.service';
 import {
-  ROOT_PRIVILEGE_EDIT_HARDWARE,
+  ROOT_PRIVILEGES_MANAGE,
   RootPrivilegeService,
 } from '../../../../shared/services/root-privilege.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -30,8 +30,11 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 })
 export class LoginPopoverContentComponent {
   readonly user$ = this.currentUserService.user$;
-  /** The management section is only offered to users who may actually use it. */
-  readonly mayManageHardware$ = this.rootPrivilegeService.has(ROOT_PRIVILEGE_EDIT_HARDWARE);
+  /**
+   * The management section is only offered to users who may actually use it —
+   * any one of its screens is enough, and `/manage` opens the first of them.
+   */
+  readonly mayManage$ = this.rootPrivilegeService.hasAny(ROOT_PRIVILEGES_MANAGE);
 
   userName = '';
   password = '';

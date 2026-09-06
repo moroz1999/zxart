@@ -29,9 +29,21 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
 const DEFAULT_PAGE_SIZE = 12;
 const OWN_PAGE_SIZE = 15;
 
+/**
+ * One work ready to render. The card model is built when the page loads:
+ * rebuilding it per change detection hands the card a new model on every check,
+ * and a screenshot gallery told its urls changed goes back to the first shot —
+ * on the very check the hover triggers.
+ */
+interface WorkEntry {
+  key: number;
+  release: GroupReleaseEntry | null;
+  prod: ZxProd | null;
+}
+
 interface YearGroup {
   year: number | null;
-  prods: GroupProdItem[];
+  prods: WorkEntry[];
 }
 
 @Component({
@@ -181,20 +193,18 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
     return `group-details.release-type.${type}`;
   }
 
-  isProdEntry(item: GroupProdItem): item is GroupProdEntry {
-    return item.type === 'prod';
+  trackByEntry(_index: number, entry: WorkEntry): number {
+    return entry.key;
   }
 
-  toProdModel(item: GroupProdEntry): ZxProd {
-    return new ZxProd(item);
-  }
+  private toEntry(item: GroupProdItem): WorkEntry {
+    const isProd = item.type === 'prod';
 
-  asRelease(item: GroupProdItem): GroupReleaseEntry {
-    return item as GroupReleaseEntry;
-  }
-
-  asProd(item: GroupProdItem): GroupProdEntry {
-    return item as GroupProdEntry;
+    return {
+      key: item.id,
+      release: isProd ? null : item as GroupReleaseEntry,
+      prod: isProd ? new ZxProd(item as GroupProdEntry) : null,
+    };
   }
 
   private pageFromParams(params: ParamMap): number {
@@ -225,13 +235,13 @@ export class ZxGroupProdsTabComponent implements OnInit, OnDestroy {
 
   private buildGroups(items: GroupProdItem[], sort: string): YearGroup[] {
     if (sort === 'votes') {
-      return [{year: null, prods: items}];
+      return [{year: null, prods: items.map(item => this.toEntry(item))}];
     }
-    const byYear = new Map<number, GroupProdItem[]>();
+    const byYear = new Map<number, WorkEntry[]>();
     for (const item of items) {
       const year = this.getItemYear(item);
       const list = byYear.get(year) ?? [];
-      list.push(item);
+      list.push(this.toEntry(item));
       byYear.set(year, list);
     }
     const dir = sort === 'year-asc' ? 1 : -1;

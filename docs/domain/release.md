@@ -6,7 +6,9 @@ actually consists of. A release always belongs to one production; a production
 with no release is a work the archive knows of but does not hold.
 
 ### Main Fields
-- **title** — release title
+- **title** — release title. It may be left empty: the release is then named
+  after the file it was uploaded with, and a release uploaded without a file
+  after the production it belongs to.
 - **version** — which version it is
 - **year** — the year it was published
 - **description** — description
@@ -38,7 +40,13 @@ The kind of file the release is: a TR-DOS disk, a TAP or TZX tape, a Z80 or SNA
 snapshot, an SCL disk, a ZX81 program, a TSConf SPG, a disk image, and so on.
 
 #### Release Format
-A release can be published in more than one format at once.
+A release can be published in more than one format at once, and which formats
+those are is read from the file itself: the file handed over, and anything beside
+it in a folder or an archive.
+
+What is *inside* a disk or a tape does not count. A tape image holding a program
+called `PLANET.P` is a tape, not a tape and a ZX81 program — the names in a
+catalogue are that medium's contents, not separate publications.
 
 #### Hardware Requirements
 A release states only the hardware it needs **beyond** what its production
@@ -121,6 +129,14 @@ from the production's list of releases.
 - **dateAdded** — when it was added
 - **userId** — the visitor who added it
 - **parsed** — whether the release file has been read into its contents
+
+### Adding releases
+A production can be given several releases in one go: as many files as are handed
+over, that many releases are created, each carrying the same values entered once.
+It is how a version published in several formats, or a batch of files belonging
+to the same work, is filed without repeating the form. The screenshots, inlays
+and other files added alongside belong to every release created that way, not to
+one of them.
 
 ### Cloning
 A release can be copied under the same production, carrying over its hardware,

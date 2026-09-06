@@ -26,7 +26,7 @@
     <zx-tab
       *ngFor="let compo of core.compos"
       [label]="compo.name"
-      [href]="getTabHref(compo.compoType)">
+      [href]="getTabHref(compo.slug)">
       <ng-template zxTabContent>
         <zx-party-compo [core]="core" [compo]="compo"></zx-party-compo>
       </ng-template>

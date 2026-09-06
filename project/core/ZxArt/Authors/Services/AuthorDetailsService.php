@@ -45,6 +45,7 @@ readonly class AuthorDetailsService
         private AuthorProdsRepository $authorProdsRepository,
         private EntityUrlResolver $entityUrlResolver,
         private PageMetadataService $pageMetadataService,
+        private AuthorCollaboratorsService $collaboratorsService,
     ) {
     }
 
@@ -335,7 +336,7 @@ readonly class AuthorDetailsService
             hasPictures: $hasPictures,
             hasTunes: $hasTunes,
             hasProds: $hasProds,
-            hasCollaborators: $hasPictures || $hasTunes || $hasProds,
+            hasCollaborators: $this->collaboratorsService->hasCollaborators((int)$author->id),
             hasMentions: count($author->getPressMentions()) > 0,
         );
     }

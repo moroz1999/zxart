@@ -106,6 +106,17 @@ abstract class ZxParsingItem
         return $this->itemName;
     }
 
+    /**
+     * Whether what this item holds are files in their own right — what a folder
+     * or an archive holds — rather than the contents of one medium. A file on a
+     * disk or a tape belongs to that image and is not a published file of its
+     * own, however its name reads.
+     */
+    public function holdsSeparateFiles(): bool
+    {
+        return false;
+    }
+
     public function getItemExtension(): string
     {
         if ($itemName = $this->getItemName()) {

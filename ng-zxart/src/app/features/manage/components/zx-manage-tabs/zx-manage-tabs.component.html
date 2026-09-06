@@ -1,0 +1,3 @@
+<zx-tabs *ngIf="vm$ | async as vm" [initialActiveIndex]="vm.activeIndex">
+  <zx-tab *ngFor="let section of vm.sections" [label]="section.labelKey | translate" [href]="section.href"></zx-tab>
+</zx-tabs>

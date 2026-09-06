@@ -36,12 +36,16 @@ enum StructureType: string
     case Year = 'year';
     case ZxProdCategory = 'zxProdCategory';
     case ZxProdCategoriesCatalogue = 'zxProdCategoriesCatalogue';
+    case ZxProdCategories = 'zxProdCategories';
     case ZxProdsUploadForm = 'zxProdsUploadForm';
     case PicturesUploadForm = 'picturesUploadForm';
     case MusicUploadForm = 'musicUploadForm';
     case PicturesCatalogue = 'picturesCatalogue';
     case MusicCatalogue = 'musicCatalogue';
     case CountriesList = 'countriesList';
+    case Countries = 'countries';
+    case Country = 'country';
+    case City = 'city';
     case Stats = 'stats';
     case CommentsList = 'commentsList';
     case Feedback = 'feedback';

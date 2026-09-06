@@ -1,0 +1,34 @@
+<ul class="zx-tree__list">
+  <ng-container *ngTemplateOutlet="branch; context: {$implicit: nodes, level: 0}"></ng-container>
+</ul>
+
+<!-- One branch level; the outlet at the bottom re-enters it for the children. -->
+<ng-template #branch let-items let-level="level">
+  <li *ngFor="let node of items; trackBy: trackById" class="zx-tree__item">
+    <div class="zx-tree__row">
+      <button
+        *ngIf="node.children.length; else toggleSpacer"
+        class="zx-tree__toggle"
+        type="button"
+        [attr.aria-expanded]="isExpanded(node)"
+        [attr.aria-label]="isExpanded(node) ? collapseLabel : expandLabel"
+        (click)="toggle(node)"
+      >
+        <svg-icon [name]="isExpanded(node) ? 'expand-less' : 'expand-more'" class="zx-tree__toggle-icon"></svg-icon>
+      </button>
+      <ng-template #toggleSpacer>
+        <span class="zx-tree__toggle-spacer"></span>
+      </ng-template>
+
+      <span class="zx-tree__label" appText="body" tone="primary">{{ node.label }}</span>
+
+      <span class="zx-tree__actions">
+        <ng-container *ngTemplateOutlet="actions; context: {$implicit: node, level: level}"></ng-container>
+      </span>
+    </div>
+
+    <ul *ngIf="node.children.length && isExpanded(node)" class="zx-tree__list">
+      <ng-container *ngTemplateOutlet="branch; context: {$implicit: node.children, level: level + 1}"></ng-container>
+    </ul>
+  </li>
+</ng-template>

@@ -1,11 +1,34 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 import {CurrentUserService} from './current-user.service';
 import {ElementPrivilegesApiService} from './element-privileges-api.service';
 
-/** Site-wide privileges, held on the public root rather than on any entity. */
+/**
+ * Privileges resolved on the public root rather than on any one entity.
+ *
+ * `editHardware` is a privilege of its own because the hardware catalogue is a
+ * plain table with no element behind it. Everything else is an ordinary element
+ * action in `type.action` form, asked for on the root the same way the backend
+ * asks for it: holding it there means holding it for the whole tree below.
+ */
 export const ROOT_PRIVILEGE_EDIT_HARDWARE = 'editHardware';
+export const PRIVILEGE_CATEGORY_SAVE = 'zxProdCategory.receive';
+export const PRIVILEGE_CATEGORY_DELETE = 'zxProdCategory.delete';
+export const PRIVILEGE_COUNTRY_SAVE = 'country.receive';
+export const PRIVILEGE_COUNTRY_DELETE = 'country.delete';
+export const PRIVILEGE_CITY_DELETE = 'city.delete';
+
+/**
+ * The privileges that open some part of the management section. They are
+ * granted together, but each one gates only its own screen, so anything
+ * offering the section as a whole asks for all of them at once.
+ */
+export const ROOT_PRIVILEGES_MANAGE: readonly string[] = [
+  ROOT_PRIVILEGE_EDIT_HARDWARE,
+  PRIVILEGE_CATEGORY_SAVE,
+  PRIVILEGE_COUNTRY_SAVE,
+];
 
 /**
  * Answers whether the current user holds a site-wide privilege.
@@ -47,5 +70,12 @@ export class RootPrivilegeService {
     this.cache.set(privilege, result$);
 
     return result$;
+  }
+
+  /** Whether the user holds at least one of the privileges. */
+  hasAny(privileges: readonly string[]): Observable<boolean> {
+    return combineLatest(privileges.map(privilege => this.has(privilege))).pipe(
+      map(results => results.includes(true)),
+    );
   }
 }

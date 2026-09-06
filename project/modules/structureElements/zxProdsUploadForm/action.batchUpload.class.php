@@ -2,6 +2,7 @@
 
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
+use ZxArt\Forms\StagedUploadsCleaner;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -144,6 +145,12 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                         }
                     }
                 }
+            }
+            // the productions all read the same staged screenshots and maps, so
+            // receiving them left the uploads in place; the batch is done with
+            // them now
+            if ($firstProd instanceof zxProdElement) {
+                $this->getService(StagedUploadsCleaner::class)->clearElementUploads($firstProd);
             }
             $user->refreshPrivileges();
         }

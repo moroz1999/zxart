@@ -55,6 +55,7 @@ use ZxFiles\ZxSpectrum\Plus3Dos\Plus3DosHeader;
  */
 class zxReleaseElement extends ZxArtItem implements
     StructureElementUploadedFilesPathInterface,
+    FilesElementInterface,
     CommentsHolderInterface,
     JsonDataProvider,
     ZxSoftInterface,

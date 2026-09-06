@@ -2,7 +2,7 @@
   <div class="value-groups">
     <div class="value-group" *ngFor="let group of data.selectorData">
       <div class="value-group-title" appText="label" tone="muted" *ngIf="group.title">{{ group.title }}</div>
-      <div class="value-columns" [style.column-count]="getColumns(group.values.length)">
+      <div class="value-columns" [style.--zx-dialog-selector-columns]="getColumns(group.values.length)">
         <zx-checkbox-field class="value" *ngFor="let value of group.values" [(ngModel)]="selectedValues[value.value]">
           {{ value.title }}
         </zx-checkbox-field>

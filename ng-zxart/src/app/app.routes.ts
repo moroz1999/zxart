@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {editPrivilegeGuard} from './shared/guards/edit-privilege.guard';
+import {manageHomeGuard} from './features/manage/guards/manage-home.guard';
 import {rootPrivilegeGuard} from './shared/guards/root-privilege.guard';
 import {authGuard} from './shared/guards/auth.guard';
 import {prefetchEntityResolver} from './shared/resolvers/entity-prefetch.resolver';
@@ -514,7 +515,57 @@ const ROUTED_CHILDREN: Routes = [
     canActivate: [rootPrivilegeGuard],
     data: {privilege: 'editHardware', titleKey: 'manage-hardware.title', noIndex: true},
   },
-  {path: 'manage', redirectTo: 'manage/hardware', pathMatch: 'full'},
+  {
+    path: 'manage/categories/add',
+    loadComponent: () => import('./pages/manage-category-edit/manage-category-edit-page.component').then(m => m.ManageCategoryEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {create: true, privilege: 'zxProdCategory.receive', titleKey: 'manage-categories.add', noIndex: true},
+  },
+  {
+    path: 'manage/categories/:id',
+    loadComponent: () => import('./pages/manage-category-edit/manage-category-edit-page.component').then(m => m.ManageCategoryEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'zxProdCategory.receive', titleKey: 'manage-categories.edit-title', noIndex: true},
+  },
+  {
+    path: 'manage/categories',
+    loadComponent: () => import('./pages/manage-categories/manage-categories-page.component').then(m => m.ManageCategoriesPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'zxProdCategory.receive', titleKey: 'manage-categories.title', noIndex: true},
+  },
+  {
+    path: 'manage/countries/add',
+    loadComponent: () => import('./pages/manage-place-edit/manage-place-edit-page.component').then(m => m.ManagePlaceEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {create: true, kind: 'country', privilege: 'country.receive', titleKey: 'manage-countries.add', noIndex: true},
+  },
+  {
+    path: 'manage/countries/:id',
+    loadComponent: () => import('./pages/manage-place-edit/manage-place-edit-page.component').then(m => m.ManagePlaceEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {kind: 'country', privilege: 'country.receive', titleKey: 'manage-countries.edit-title', noIndex: true},
+  },
+  {
+    path: 'manage/countries',
+    loadComponent: () => import('./pages/manage-countries/manage-countries-page.component').then(m => m.ManageCountriesPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'country.receive', titleKey: 'manage-countries.title', noIndex: true},
+  },
+  {
+    path: 'manage/cities/add',
+    loadComponent: () => import('./pages/manage-place-edit/manage-place-edit-page.component').then(m => m.ManagePlaceEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {create: true, kind: 'city', privilege: 'city.receive', titleKey: 'manage-countries.add-city', noIndex: true},
+  },
+  {
+    path: 'manage/cities/:id',
+    loadComponent: () => import('./pages/manage-place-edit/manage-place-edit-page.component').then(m => m.ManagePlaceEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {kind: 'city', privilege: 'city.receive', titleKey: 'manage-countries.edit-city-title', noIndex: true},
+  },
+  // `/manage` resolves to the first section the user may open, so a fixed
+  // redirect never lands them on a screen its own guard bounces them off.
+  {path: 'manage', pathMatch: 'full', canActivate: [manageHomeGuard], children: []},
   {path: 'file-search', loadComponent: () => import('./pages/file-search/file-search-page.component').then(m => m.FileSearchPageComponent), data: {titleKey: 'menu.about-sub.filesearch'}},
   {path: '', loadComponent: () => import('./pages/firstpage/firstpage.component').then(m => m.FirstpageComponent), data: {titleKey: 'menu.home', serverHomePageTitle: true}},
   {path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent), data: {titleKey: 'common.not-found', noIndex: true}},

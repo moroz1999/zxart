@@ -59,11 +59,23 @@ preference set elsewhere wins without delaying the first render.
 ## Language on API requests
 
 `languageInterceptor` (`features/settings/interceptors/language.interceptor.ts`)
-adds an `X-Language` header (iso6393) to every same-origin request. The base
-controller `LoggedControllerApplication` reads `X-Language` in its constructor and
-applies it via `LanguagesManager::setCurrentLanguageCode()`, so every SPA data
-endpoint returns localized content in the selected language, independent of the
-URL or session.
+adds an `X-Language` header (iso6393) to every same-origin request.
+`LanguagesManager::applyRequestedLanguageHeader()` is the one place that reads it,
+and every endpoint the SPA calls applies it, so responses are localized in the
+selected language independent of the URL or session:
+
+- `LoggedControllerApplication` calls it in its constructor, which covers every
+  `ZxArt\Controllers\*` endpoint. It then re-syncs `publicStructureManager`'s
+  element path restriction, which DI froze to the language current when it was
+  built.
+- `jsonElementDataApplication` calls it before it resolves the requested path,
+  because the element data it serves — the software catalogue's categories,
+  legal statuses and release types among them — is named in whatever language
+  the elements are loaded in.
+
+A response built this way is language-dependent as a whole, so a component
+showing backend-named values reloads it on `onLangChange` rather than relabelling
+what it holds.
 
 ## Backend language detection
 

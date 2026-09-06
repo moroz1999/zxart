@@ -161,7 +161,6 @@
     "deny-comments": "Disable comments",
     "authors": "Authors",
     "save": "Save",
-    "error-title-required": "Title is required",
     "error-load": "Failed to load the form",
     "error-save": "Failed to save",
     "screenshots": "Screenshots",
@@ -177,7 +176,10 @@
     "add-publisher": "Add publisher…",
     "file": "File",
     "error-prod-required": "Production is required",
-    "hardware-hint": "Whatever is listed here replaces the production's whole category for this release."
+    "hardware-hint": "Whatever is listed here replaces the production's whole category for this release.",
+    "title-hint": "Optional. When empty, the file name is used, or the production's title.",
+    "files": "Files",
+    "files-hint": "One release is created per file, each with the values and the files from this form."
   },
   "prod-form": {
     "files": "Software files",
@@ -2131,5 +2133,56 @@
     "error-code-required": "Code is required",
     "error-save": "Could not save the hardware item",
     "error-delete": "Could not delete the hardware item"
+  },
+  "manage": {
+    "tab-hardware": "Hardware",
+    "tab-categories": "Categories",
+    "tab-countries": "Countries",
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
+  "manage-categories": {
+    "title": "Categories",
+    "add": "Add category",
+    "add-child": "Add sub",
+    "edit": "Edit",
+    "edit-title": "Edit category",
+    "save": "Save",
+    "delete": "Delete",
+    "name": "Name",
+    "parent": "Parent category",
+    "prods": "{{count}} own",
+    "delete-confirm-title": "Delete category",
+    "delete-confirm-message": "The category will be removed from the tree. This cannot be undone.",
+    "error-title-required": "A name is required in every language",
+    "error-save": "Could not save the category",
+    "error-delete": "Could not delete the category",
+    "parent-hint": "Where the category sits in the tree. Changing it moves the category.",
+    "top-level": "— top level —",
+    "prods-tree": "+ {{count}} with subcategories"
+  },
+  "manage-countries": {
+    "title": "Countries",
+    "add": "Add country",
+    "add-city": "Add city",
+    "edit": "Edit",
+    "edit-title": "Edit country",
+    "edit-city-title": "Edit city",
+    "save": "Save",
+    "delete": "Delete",
+    "name": "Name",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "usages": "{{count}} entries",
+    "delete-confirm-title": "Delete country",
+    "delete-confirm-message": "The country will be removed from the geo section. This cannot be undone.",
+    "delete-city-confirm-title": "Delete city",
+    "delete-city-confirm-message": "The city will be removed from its country. This cannot be undone.",
+    "error-title-required": "A name is required in every language",
+    "error-save": "Could not save the place",
+    "error-delete": "Could not delete the place",
+    "country": "Country",
+    "country-hint": "The country the city belongs to. Changing it moves the city.",
+    "error-country-required": "A city needs a country"
   }
 }

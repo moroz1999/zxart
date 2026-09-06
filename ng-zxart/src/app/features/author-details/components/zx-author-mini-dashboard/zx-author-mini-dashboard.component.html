@@ -20,7 +20,7 @@
 </zx-panel>
 
 <ng-container *ngIf="requested">
-  <ng-container *ngIf="data$ | async as data">
+  <ng-container *ngIf="view$ | async as data">
     <zx-panel *ngIf="data.loading" [title]="'author-details.dashboard.title' | translate" titleLevel="h2" variant="elevated">
     <zx-stack spacing="md">
       <zx-picture-grid-skeleton
@@ -119,15 +119,15 @@
             </zx-inline>
           </zx-inset>
           <div zxProdsGrid>
-            <ng-container *ngFor="let prod of data.prods" [ngSwitch]="prod.type">
+            <ng-container *ngFor="let entry of data.entries; trackBy: trackByEntry">
               <zx-prod-release-card
-                *ngSwitchCase="'release'"
-                [release]="asRelease(prod)"
+                *ngIf="entry.release"
+                [release]="entry.release"
                 [canUploadScreenshot]="false">
               </zx-prod-release-card>
               <zx-prod-block
-                *ngSwitchDefault
-                [model]="toProdModel(asProd(prod))"
+                *ngIf="entry.prod"
+                [model]="entry.prod"
                 [imagesLayout]="'loading'">
               </zx-prod-block>
             </ng-container>

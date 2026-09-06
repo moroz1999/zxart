@@ -87,7 +87,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
 })
 export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   readonly form = this.fb.group({
-    title: this.fb.nonNullable.control('', Validators.required),
+    title: this.fb.nonNullable.control(''),
     prod: this.fb.control<EntityRef | null>(null, Validators.required),
     version: this.fb.nonNullable.control(''),
     year: this.fb.nonNullable.control(''),
@@ -101,7 +101,6 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     denyComments: this.fb.nonNullable.control(false),
   });
 
-  readonly titleMessages = {required: 'release-form.error-title-required'};
   readonly prodMessages = {required: 'release-form.error-prod-required'};
 
   loading = true;
@@ -138,6 +137,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private importOriginFields: ImportOriginFields = {};
+  /** Creation mode: one release is created per picked file. */
+  private newReleaseFiles: File[] = [];
   private selectorFiles: Record<string, File[]> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
   private languageCodes: EnumOption[] = [];
@@ -261,6 +262,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     this.fileChanges[field] = change;
   }
 
+  onNewReleaseFiles(files: File[]): void {
+    this.newReleaseFiles = files;
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -276,7 +281,11 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
       remove: change.removed,
     }));
     const payload = {
-      fileSelectors: this.selectorFiles,
+      // creating: the picked files go as `file[]`, and the backend creates one
+      // release per file out of the values below
+      fileSelectors: this.creating
+        ? {...this.selectorFiles, file: this.newReleaseFiles}
+        : this.selectorFiles,
       files,
       fields: {
         title: value.title,
@@ -307,7 +316,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
             return;
           }
-          this.router.navigateByUrl(`/release/${result.id}`);
+          // several releases at once have no single page to land on; their
+          // production lists them all
+          const createdSeveral = (result.ids?.length ?? 1) > 1;
+          this.router.navigateByUrl(createdSeveral ? this.returnUrl : `/release/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {
           this.submitting = false;

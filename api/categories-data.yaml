@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Production Categories API
+  version: 1.0.0
+  description: >
+    The editable production category tree behind the management section.
+
+    Reads are open — category names are public data the software catalogue shows
+    anyway. A write requires the element action it performs, resolved on the
+    public root: `zxProdCategory/receive` to save a category,
+    `zxProdCategory/delete` to remove one. The id of that root comes from
+    `/currentuser/`.
+
+    Every write answers with the refreshed tree, so a client replaces its copy
+    from the response instead of patching it: the server owns the order.
+
+paths:
+  /categories-data/:
+    get:
+      summary: The whole category tree
+      description: >
+        A depth-first list carrying `parentId` and `level`; the client owns the
+        nesting. Titles are returned for every interface language at once,
+        because the management form edits all of them together.
+      responses:
+        '200':
+          description: The tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryTree'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create, rename or delete one category
+      parameters:
+        - in: query
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [create, update, delete]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CategorySaveRequest'
+                - $ref: '#/components/schemas/CategoryDeleteRequest'
+      responses:
+        '200':
+          description: The refreshed tree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryTree'
+        '400':
+          description: Unsupported action, or a body that does not fit the request DTO
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: >
+            The current user lacks the action the request performs —
+            `zxProdCategory/receive` for a save, `zxProdCategory/delete` for a
+            deletion.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No category with that id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: >
+            The category still holds productions or subcategories and therefore
+            cannot be deleted, or it was asked to move into its own subtree.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: A title is missing in one of the interface languages, or is too long
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    CategoryTree:
+      type: object
+      required:
+        - languages
+        - categories
+      properties:
+        languages:
+          type: array
+          description: Interface languages titles are edited in, in the site's own order.
+          items:
+            $ref: '#/components/schemas/Language'
+        categories:
+          type: array
+          description: The tree, depth-first, in display order.
+          items:
+            $ref: '#/components/schemas/CategoryNode'
+
+    Language:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    CategoryNode:
+      type: object
+      required:
+        - id
+        - parentId
+        - level
+        - title
+        - titles
+        - prods
+        - prodsTotal
+        - subCategories
+      properties:
+        id:
+          type: integer
+        parentId:
+          type: integer
+          nullable: true
+          description: The category above it; `null` for a top-level one.
+        level:
+          type: integer
+          description: Depth in the tree, 0 for a top-level category.
+        title:
+          type: string
+          description: Title in the language of the request.
+        titles:
+          type: object
+          description: Titles keyed by language id.
+          additionalProperties:
+            type: string
+        prods:
+          type: integer
+          description: Productions filed under this category itself; deletion is refused above 0.
+        prodsTotal:
+          type: integer
+          description: The same, plus everything filed in its subcategories.
+        subCategories:
+          type: integer
+          description: Direct children; deletion is refused above 0.
+
+    CategorySaveRequest:
+      type: object
+      description: Body of `action=create` and `action=update`.
+      required:
+        - titles
+      properties:
+        id:
+          type: integer
+          description: Required for `update`, ignored by `create`.
+        parentId:
+          type: integer
+          nullable: true
+          description: >
+            The category the one being saved goes under, on a creation and on an
+            update alike; absent or `null` means top-level. A top-level category
+            is also linked into every language's software catalogue, and an
+            update that changes this maintains those links in both directions.
+            A category cannot be moved into its own subtree.
+        titles:
+          type: object
+          description: >
+            Titles keyed by language id. Every interface language needs one; the
+            request is refused otherwise.
+          additionalProperties:
+            type: string
+
+    CategoryDeleteRequest:
+      type: object
+      description: Body of `action=delete`.
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - errorMessage
+      properties:
+        errorMessage:
+          type: string

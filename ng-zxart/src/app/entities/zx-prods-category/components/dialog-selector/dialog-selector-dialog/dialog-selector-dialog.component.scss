@@ -1,3 +1,5 @@
+@use 'shared/breakpoints' as bp;
+
 .value-groups {
   display: flex;
   flex-wrap: wrap;
@@ -10,15 +12,28 @@
   &:last-of-type {
     margin-right: 0;
   }
+
+  // A phone has no room beside a group: each one takes the whole dialog width.
+  @include bp.media-breakpoint-down(md) {
+    width: 100%;
+    margin-right: 0;
+  }
 }
 
 .value-group-title {
   margin-bottom: var(--margin-lg);
 }
 
+// The column count is the group's own size, so the host sets it per group.
 .value-columns {
+  column-count: var(--zx-dialog-selector-columns, 1);
   column-gap: var(--gap-xl);
   column-fill: balance;
+
+  // Columns of a long list do not fit a phone: one value per row instead.
+  @include bp.media-breakpoint-down(md) {
+    column-count: 1;
+  }
 }
 
 .value {

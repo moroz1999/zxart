@@ -1,0 +1,37 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'manage-categories.title' | translate }}</h1>
+  <zx-button zxPageHeader routerLink="/manage/categories/add" color="primary">
+    {{ 'manage-categories.add' | translate }}
+  </zx-button>
+
+  <zx-manage-tabs></zx-manage-tabs>
+
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+  <zx-panel padding="md">
+    <zx-tree
+      [nodes]="(nodes$ | async) ?? []"
+      [actions]="rowActions"
+      [expandLabel]="'manage.expand' | translate"
+      [collapseLabel]="'manage.collapse' | translate"
+    ></zx-tree>
+  </zx-panel>
+</zx-page-layout>
+
+<ng-template #rowActions let-node>
+  <span appText="caption" tone="muted">
+    {{ 'manage-categories.prods' | translate: {count: node.prods} }}
+    <ng-container *ngIf="node.children.length">
+      {{ 'manage-categories.prods-tree' | translate: {count: node.prodsTotal} }}
+    </ng-container>
+  </span>
+  <zx-button [href]="'/manage/categories/add?parent=' + node.id" color="primary" size="sm">
+    {{ 'manage-categories.add-child' | translate }}
+  </zx-button>
+  <zx-button [routerLink]="'/manage/categories/' + node.id" color="outlined" size="sm">
+    {{ 'manage-categories.edit' | translate }}
+  </zx-button>
+  <zx-button *ngIf="mayDelete$ | async" color="danger" size="sm" (click)="onDelete(node)">
+    {{ 'manage-categories.delete' | translate }}
+  </zx-button>
+</ng-template>

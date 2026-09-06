@@ -44,6 +44,10 @@ filter state includes `cat`, `years`, `hw`, `languages`, `statuses`, `formats`,
 `types`, `letter`, `sorting`, `tags`, `countries`, `releases`,
 `includeSubcategoriesProds`, and `page`. Links from production and release
 details use the same query parameters.
+Each of those filters picks its values in a dialog laying its groups out side by
+side, one column per ten values. A phone is too narrow for that, so below the
+`md` breakpoint every group takes the full width and lists one value per row —
+hardware, the longest of them, would otherwise run off the screen.
 Authenticated users can open the Angular batch upload form from the catalogue
 page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
 The batch page reuses the Angular prod form with batch-specific file fields; it
@@ -85,6 +89,10 @@ selector marks the whole ancestor chain of the current category as selected, so
 the chain is derived from the loaded selector and its links are built from the
 category identifiers as `/prods?cat={id}`. At the catalogue root the trail falls
 back to the route-driven one built from the menu.
+The production page names every category of every path `categoriesPaths` carries,
+root first, as one chip apiece linking to `/prods?cat={id}`. An id repeated
+between paths is chipped once, so two genres of the same section do not print
+that section twice.
 Prod and release detail responses expose category IDs and raw language, hardware,
 year, and format values. Angular templates build catalogue filter links from
 those values.

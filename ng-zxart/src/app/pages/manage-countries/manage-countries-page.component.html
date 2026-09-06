@@ -1,0 +1,39 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'manage-countries.title' | translate }}</h1>
+  <zx-button zxPageHeader routerLink="/manage/countries/add" color="primary">
+    {{ 'manage-countries.add' | translate }}
+  </zx-button>
+
+  <zx-manage-tabs></zx-manage-tabs>
+
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+  <zx-panel padding="md">
+    <zx-tree
+      [nodes]="(nodes$ | async) ?? []"
+      [actions]="rowActions"
+      [expandLabel]="'manage.expand' | translate"
+      [collapseLabel]="'manage.collapse' | translate"
+    ></zx-tree>
+  </zx-panel>
+</zx-page-layout>
+
+<ng-template #rowActions let-node let-level="level">
+  <span appText="caption" tone="muted">{{ 'manage-countries.usages' | translate: {count: node.usages} }}</span>
+  <zx-button *ngIf="level === 0" [href]="'/manage/cities/add?country=' + node.id" color="transparent" size="sm">
+    {{ 'manage-countries.add-city' | translate }}
+  </zx-button>
+  <zx-button
+    [routerLink]="(level === 0 ? '/manage/countries/' : '/manage/cities/') + node.id"
+    color="outlined"
+    size="sm"
+  >{{ 'manage-countries.edit' | translate }}</zx-button>
+  <zx-button
+    *ngIf="(level === 0 ? mayDeleteCountry$ : mayDeleteCity$) | async"
+    color="danger"
+    size="sm"
+    (click)="onDelete(node, level)"
+  >
+    {{ 'manage-countries.delete' | translate }}
+  </zx-button>
+</ng-template>

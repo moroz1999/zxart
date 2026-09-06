@@ -18,6 +18,43 @@ The geo section is an Angular-powered map interface exposed through the `zx-geo`
 - `action=authors`, `action=groups`, and `action=parties` return paginated entity lists.
 - List actions accept `start`, `limit`, `sorting`, `search`, `countryId`, `cityId`, `north`, `south`, `east`, and `west`.
 
+### Managing countries and cities
+
+Countries hang under the single `countries` container and carry a `countries`
+link from every geo section — that is what a section lists;
+`ZxArt\Geo\PlacesManageService` establishes both when a country is created.
+A city is an ordinary child of its country.
+
+They are edited at `/manage/countries` through `/countries-data/`, behind the
+places' own element actions — `country/receive`, `country/delete`,
+`city/receive`, `city/delete`, held by the `countries-managers` group; see
+[manage-section.md](manage-section.md). A country and a city are separate types
+and therefore separate privileges. A place holds a title per interface language
+— a blank one is refused — and a pair of coordinates.
+
+`countryId` states which country a city belongs to on every save, creation and
+update alike, and naming another one moves the city there. It has no usable
+default and the request is refused without it: a city with no country hangs off
+nothing, is unreachable through the section it should belong to, and its own
+`getUrl()` cannot find the geo section it must link back to.
+
+Deletion is refused while a country still has cities, or while an author, a
+group or a party still names the place: those references are plain id columns
+and would be left pointing at nothing.
+
+The container lives under the admin root, outside the public URL tree, so the
+public structure manager reaches it by id rather than by path, and only for a
+user whose group holds `countries`/`showFullList` on the public root; without
+that type privilege a country could not be created at all.
+
+Nothing recalculates the section projection on its own. The admin section form
+(`receiveCountriesList`) re-links every country to a section wholesale, and that
+is the only other place those links are written; there is no job to run after a
+change here. A link written straight through `linksManager` does not clear the
+parent's cached copy — only `persistStructureLinks()` does — so a country
+creation and a city move drop the affected elements from the element cache
+themselves.
+
 ### Frontend Behavior
 - Zoom below the city threshold displays country markers.
 - Higher zoom displays city markers, plus a country-center marker for entities that have a country but no city (the country counter minus its city counters).

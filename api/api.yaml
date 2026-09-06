@@ -91,6 +91,12 @@ paths:
     $ref: 'geo.yaml#/paths/~1geo-data~1'
   /authorlist/:
     $ref: 'author-list.yaml#/paths/~1authorlist~1'
+  /hardware-data/:
+    $ref: 'hardware-data.yaml#/paths/~1hardware-data~1'
+  /categories-data/:
+    $ref: 'categories-data.yaml#/paths/~1categories-data~1'
+  /countries-data/:
+    $ref: 'countries-data.yaml#/paths/~1countries-data~1'
 components:
   schemas:
     CommentDto:

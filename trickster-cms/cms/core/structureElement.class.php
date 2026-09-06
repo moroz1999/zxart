@@ -1392,9 +1392,9 @@ abstract class structureElement implements DependencyInjectionContextInterface
         return $this->currentParentElement;
     }
 
-    public function getFirstParentElement()
+    public function getFirstParentElement(): ?structureElement
     {
-        return $this->getService('structureManager')->getElementsFirstParent($this->id);
+        return $this->getService(structureManager::class)->getElementsFirstParent($this->id);
     }
 
     public function getRequestedParentElement(): ?structureElement

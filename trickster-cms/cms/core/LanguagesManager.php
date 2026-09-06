@@ -115,7 +115,10 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
         return $this->languagesList[$groupName];
     }
 
-    public function getLanguagesIdList($groupName = null)
+    /**
+     * @return list<int>
+     */
+    public function getLanguagesIdList($groupName = null): array
     {
         $groupName = $groupName ?: $this->getService(ConfigManager::class)
             ->get('main.rootMarkerPublic');
@@ -123,7 +126,7 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
             $languagesIdList = [];
             $info = $this->getLanguagesList($groupName);
             foreach ($info as &$language) {
-                $languagesIdList[] = $language->id;
+                $languagesIdList[] = (int)$language->id;
             }
             $this->languagesIdList[$groupName] = $languagesIdList;
         }
@@ -303,6 +306,25 @@ class LanguagesManager extends errorLogger implements DependencyInjectionContext
                 ? $map[$code] : false;
         }
         return $result;
+    }
+
+    /**
+     * The SPA owns the interface language and sends it as an `X-Language` header
+     * (iso6393). A data endpoint applies it so its response is localized in the
+     * language the visitor chose, whatever the URL or the session says.
+     *
+     * @return bool whether a language was named and applied
+     */
+    public function applyRequestedLanguageHeader(): bool
+    {
+        $code = $_SERVER['HTTP_X_LANGUAGE'] ?? null;
+        if (!is_string($code) || $code === '') {
+            return false;
+        }
+        // setCurrentLanguageCode validates the code and ignores unknown ones
+        $this->setCurrentLanguageCode(strtolower($code));
+
+        return true;
     }
 
     public function setCurrentLanguageCode($code, $groupName = null)

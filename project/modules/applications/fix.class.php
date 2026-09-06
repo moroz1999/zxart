@@ -3,12 +3,15 @@
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
 use ZxArt\Authors\Constants;
+use ZxArt\FileParsing\ZxParsingItem;
+use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Repositories\ProdsRepository;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueStatus;
+use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxArt\Queue\QueueType;
 use ZxArt\ZxProdCategories\CategoryIds;
 
@@ -62,6 +65,7 @@ class fixApplication extends controllerApplication
             $job = (string)($controller->getParameter('job') ?: '');
             match ($job) {
                 'hardware-autofill' => $this->autofillReleaseHardware(),
+                'release-formats' => $this->rederiveReleaseFormats(),
                 'prod-hardware-migrate' => $this->migrateProdHardware(),
                 '' => $this->fixReleases(),
                 default => print('unknown job: ' . htmlspecialchars($job) . '<br>'),
@@ -153,6 +157,80 @@ class fixApplication extends controllerApplication
         }
 
         echo 'done: ' . $changed . ' of ' . count($ids) . ' productions '
+            . ($isDryRun ? 'would change' : 'changed')
+            . '. Next offset: ' . ($offset + $limit) . '<br>';
+    }
+
+    /**
+     * Re-derives the formats a release was published in from its already parsed
+     * structure.
+     *
+     * The catalogue of a disk or a tape used to be read as formats of its own, so
+     * a plain MGT image could end up filed as MGT and O at once. Nothing is read
+     * from disk here — the stored structure is enough — so a release whose file
+     * has not changed is not re-parsed.
+     *
+     * `/fix/job:release-formats/` — `dry:1` prints the diff without writing,
+     * `offset:N` / `limit:N` work through the catalogue in batches.
+     */
+    private function rederiveReleaseFormats(): void
+    {
+        $controller = $this->getService(controller::class);
+        $isDryRun = (bool)$controller->getParameter('dry');
+        $offset = (int)($controller->getParameter('offset') ?: 0);
+        $limit = (int)($controller->getParameter('limit') ?: 2000);
+
+        $parsingManager = $this->getService(ZxParsingManager::class);
+        $gatherer = $this->getService(ReleaseFileTypesGatherer::class);
+
+        // only releases that have a format at all: nothing else can be wrong
+        $ids = $this->db->table('module_zxrelease_format')
+            ->distinct()
+            ->orderBy('elementId')
+            ->offset($offset)
+            ->limit($limit)
+            ->pluck('elementId');
+
+        echo 'release formats' . ($isDryRun ? ' (dry run)' : '') . ': '
+            . count($ids) . ' releases from offset ' . $offset . '<br>';
+
+        $changed = 0;
+        foreach ($ids as $id) {
+            /** @var zxReleaseElement|null $release */
+            $release = $this->structureManager->getElementById((int)$id);
+            if ($release === null) {
+                continue;
+            }
+            $structure = $parsingManager->getFileStructure((int)$id);
+            if ($structure === []) {
+                continue;
+            }
+            $files = $gatherer->gatherReleaseFiles($structure);
+            if ($files === []) {
+                continue;
+            }
+            $formats = array_values(array_unique(array_map(
+                static fn(ZxParsingItem $item): string => $item->getItemExtension(),
+                $files,
+            )));
+            $stored = $release->releaseFormat;
+            // the set is what a release carries; the order it comes back in is not
+            if (array_diff($formats, $stored) === [] && array_diff($stored, $formats) === []) {
+                continue;
+            }
+
+            $changed++;
+            echo '<a href="/release/' . $id . '" target="_blank">' . $id . '</a> '
+                . implode(', ', $stored) . ' &rarr; ' . implode(', ', $formats) . '<br>';
+
+            if (!$isDryRun) {
+                $release->releaseFormat = $formats;
+                $release->persistElementData();
+                $this->structureManager->clearElementCache((int)$id);
+            }
+        }
+
+        echo 'done: ' . $changed . ' of ' . count($ids) . ' releases '
             . ($isDryRun ? 'would change' : 'changed')
             . '. Next offset: ' . ($offset + $limit) . '<br>';
     }

@@ -70,6 +70,10 @@
   font-weight: var(--app-typography-display-weight);
   line-height: var(--app-typography-display-line-height);
   margin: 0;
+  // A title is whatever the entity is called, and some are one unbroken string
+  // hundreds of characters long. `anywhere` also shrinks the heading's
+  // min-content width, which is what lets it fit a flex or grid column at all.
+  overflow-wrap: anywhere;
 }
 
 .app-typography-headline {
@@ -77,6 +81,10 @@
   font-weight: var(--app-typography-headline-weight);
   line-height: var(--app-typography-headline-line-height);
   margin: 0;
+  // A title is whatever the entity is called, and some are one unbroken string
+  // hundreds of characters long. `anywhere` also shrinks the heading's
+  // min-content width, which is what lets it fit a flex or grid column at all.
+  overflow-wrap: anywhere;
 }
 
 .app-typography-title {
@@ -84,6 +92,10 @@
   font-weight: var(--app-typography-title-weight);
   line-height: var(--app-typography-title-line-height);
   margin: 0;
+  // A title is whatever the entity is called, and some are one unbroken string
+  // hundreds of characters long. `anywhere` also shrinks the heading's
+  // min-content width, which is what lets it fit a flex or grid column at all.
+  overflow-wrap: anywhere;
 }
 
 .app-typography-body {

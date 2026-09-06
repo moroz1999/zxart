@@ -144,6 +144,9 @@ When work is created by group:
 - The author collaborators block lists groups connected to the same works as the author.
 - Product collaborators include developer groups (`zxProdGroups`) and publishers (`zxProdPublishers`) of products where the author has prod authorship.
 - Release collaborators include publishers (`zxReleasePublishers`) of releases where the author has release authorship.
+- The collaborators tab is shown only when `AuthorCollaboratorsService::hasCollaborators()` finds
+  co-author or group statistics, exactly like the group one. Having works of their own says nothing
+  about it: an author who only ever worked alone has plenty and no collaborators at all.
 
 #### Author Works Ordering
 - Author pictures, tunes, productions, and releases sorted by year use `structure_elements.dateCreated` as the secondary key and element ID as the final stable key.

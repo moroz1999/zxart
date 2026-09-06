@@ -10,7 +10,8 @@ a production runs on.
 - **The catalog** is `engine_hardware` + `engine_hardware_name`: a code, a
   category, a display position, and a name and short name per interface language
   (`en`/`ru`/`es`, see `ZxArt\Shared\InterfaceLanguage`). It is edited at
-  `/manage/hardware` behind the `editHardware` privilege.
+  `/manage/hardware` behind the `editHardware` privilege — see
+  [manage-section.md](manage-section.md).
 - **Productions** carry the shared set on `zxProd.hardwareRequired`.
 - **Releases** carry only their own deviations on `zxRelease.hardwareRequired`.
 

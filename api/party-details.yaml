@@ -238,8 +238,12 @@ components:
 
     PartyCompo:
       type: object
-      description: Metadata for one competition. `compoType` matches the `compo` key of the linked pictures/tunes and the prods grouping key.
-      required: [compoType, medium, name, count]
+      description: >
+        Metadata for one competition. `compoType` matches the `compo` key of the linked
+        pictures/tunes and the prods grouping key; `slug` adds the medium to it and is what
+        identifies the compo, because the keys repeat across media — a party's general graphics
+        and general music compo are both `standard`.
+      required: [compoType, medium, name, count, slug]
       properties:
         compoType:
           type: string
@@ -250,6 +254,9 @@ components:
           type: string
         count:
           type: integer
+        slug:
+          type: string
+          description: "`{medium}-{compoType}`; the party page tab is addressed by it."
 
     PartyEdition:
       type: object

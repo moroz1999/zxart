@@ -4,6 +4,8 @@
     {{ 'manage-hardware.add' | translate }}
   </zx-button>
 
+  <zx-manage-tabs></zx-manage-tabs>
+
   <zx-table
     *ngFor="let category of vm.categories"
     [title]="('hardware-group.' + category.code) | translate"

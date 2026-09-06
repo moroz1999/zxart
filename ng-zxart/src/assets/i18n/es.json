@@ -161,7 +161,6 @@
     "deny-comments": "Desactivar comentarios",
     "authors": "Autores",
     "save": "Guardar",
-    "error-title-required": "El título es obligatorio",
     "error-load": "No se pudo cargar el formulario",
     "error-save": "No se pudo guardar",
     "screenshots": "Capturas",
@@ -177,7 +176,10 @@
     "add-publisher": "Añadir editor…",
     "file": "Archivo",
     "error-prod-required": "Se requiere la producción",
-    "hardware-hint": "Lo que se indique aquí sustituye toda la categoría del hardware de la producción para este lanzamiento."
+    "hardware-hint": "Lo que se indique aquí sustituye toda la categoría del hardware de la producción para este lanzamiento.",
+    "title-hint": "Opcional. Si se deja vacío, se usa el nombre del archivo o el título de la producción.",
+    "files": "Archivos",
+    "files-hint": "Se crea un lanzamiento por cada archivo, con los valores y los archivos de este formulario."
   },
   "prod-form": {
     "files": "Archivos de software",
@@ -2128,5 +2130,56 @@
     "error-code-required": "El código es obligatorio",
     "error-save": "No se pudo guardar el hardware",
     "error-delete": "No se pudo eliminar el hardware"
+  },
+  "manage": {
+    "tab-hardware": "Hardware",
+    "tab-categories": "Categorías",
+    "tab-countries": "Países",
+    "expand": "Desplegar",
+    "collapse": "Plegar"
+  },
+  "manage-categories": {
+    "title": "Categorías",
+    "add": "Añadir categoría",
+    "add-child": "Subcategoría",
+    "edit": "Editar",
+    "edit-title": "Editar categoría",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "name": "Nombre",
+    "parent": "Categoría superior",
+    "prods": "{{count}} propios",
+    "delete-confirm-title": "Eliminar categoría",
+    "delete-confirm-message": "La categoría se eliminará del árbol. Esto no se puede deshacer.",
+    "error-title-required": "El nombre es obligatorio en todos los idiomas",
+    "error-save": "No se pudo guardar la categoría",
+    "error-delete": "No se pudo eliminar la categoría",
+    "parent-hint": "El lugar de la categoría en el árbol. Cambiarlo la mueve.",
+    "top-level": "— nivel superior —",
+    "prods-tree": "+ {{count}} con subcategorías"
+  },
+  "manage-countries": {
+    "title": "Países",
+    "add": "Añadir país",
+    "add-city": "Añadir ciudad",
+    "edit": "Editar",
+    "edit-title": "Editar país",
+    "edit-city-title": "Editar ciudad",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "name": "Nombre",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "usages": "{{count}} registros",
+    "delete-confirm-title": "Eliminar país",
+    "delete-confirm-message": "El país se eliminará de la sección geográfica. Esto no se puede deshacer.",
+    "delete-city-confirm-title": "Eliminar ciudad",
+    "delete-city-confirm-message": "La ciudad se eliminará de su país. Esto no se puede deshacer.",
+    "error-title-required": "El nombre es obligatorio en todos los idiomas",
+    "error-save": "No se pudo guardar",
+    "error-delete": "No se pudo eliminar",
+    "country": "País",
+    "country-hint": "El país al que pertenece la ciudad. Cambiarlo la mueve.",
+    "error-country-required": "Una ciudad necesita un país"
   }
 }

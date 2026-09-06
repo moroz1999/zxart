@@ -6,7 +6,10 @@ Domain rules: [../domain/release.md](../domain/release.md).
 Concrete release (version) of software production. Contains files specific to this version. Always linked to parent zxProd.
 
 ### Main Fields
-- **title** - release title
+- **title** - release title. Optional: `publicAdd` names a new release after the
+  file it was uploaded with, and `persistElementData()` falls back to the parent
+  production's title, so a release always carries a name and the public pages
+  need no fallback of their own.
 - **version** - release version
 - **year** - release year
 - **description** - release description (HTML)
@@ -55,6 +58,18 @@ Concrete release (version) of software production. Contains files specific to th
 - **releaseFormat** - release format(s) (array)
   - Can contain multiple formats for one release
   - Stored in table `module_zxrelease_format`
+  - Derived from the parsed structure by `ReleaseFileTypesGatherer`, which walks
+    only what holds files in their own right: the top-level file, and whatever a
+    folder or an archive holds beside it. `ZxParsingItem::holdsSeparateFiles()`
+    is what says so — true for a folder, a ZIP, a RAR and a TAR distribution
+    tree, false for every disk and tape image.
+  - A disk or a tape is therefore not opened for this. Its catalogue names are
+    that image's contents, not files that were published, and reading them as
+    formats is what filed plain TRD images under `trd, o` and `trd, p, o`.
+  - `/fix/job:release-formats/` re-derives the stored formats from the parsed
+    structure — `dry:1` prints the diff, `offset:N`/`limit:N` work in batches.
+    Nothing is read from disk, so a release whose file has not changed is not
+    re-parsed.
 
 #### Hardware Requirements
 - **hardwareRequired** - the release's **own** hardware, i.e. what it needs beyond
@@ -117,6 +132,27 @@ Concrete release (version) of software production. Contains files specific to th
 - **dateAdded** - date added
 - **userId** - ID of user who added the element
 - **parsed** - flag that file was parsed
+
+### Creating releases
+The creation form takes **several files at once** and posts them in one request
+as `fields[file][]`. `ZxArt\Releases\Services\ReleaseBatchCreateService` is what
+splits it: PHP hands a single upload over as its own properties and several as a
+list of those, which is what tells the two apart, and each file is submitted
+through `FormCreateService` with the rest of the form beside it. So a production
+gains as many releases as files were picked, all sharing the values that were
+typed once, and a submit with no file still creates the one release the form
+describes.
+
+The screenshots, inlays and other files beside them go to **every** release, as
+the very same staged upload: receiving one copies it out of the upload cache and
+leaves it there for the next release to read. The service deletes them once the
+last release has, whether the batch finished or failed — see
+[../cms.md](../cms.md#staged-uploads).
+
+`/formdata/` answers with `ids` — every release created, in upload order — and
+`id`, the first of them. One created release lands on its own page, several
+return to the production. Editing an existing release keeps the single-file
+field.
 
 ### Special Operations
 - The release page offers editing only with the `publicReceive` privilege, the

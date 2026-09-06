@@ -11,6 +11,7 @@ readonly class PartyCompoRestDto
         public string $medium,
         public string $name,
         public int $count,
+        public string $slug,
     ) {
     }
 }

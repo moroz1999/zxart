@@ -54,6 +54,7 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-sidebar-layout](design-system/zx-sidebar-layout.md) — sticky companion column beside the main page content
 - [zx-table](design-system/zx-table.md) — table wrapper with edge-to-edge rows
 - [zx-tabs](design-system/zx-tabs.md) — tab navigation and active content outlet
+- [zx-tree](design-system/zx-tree.md) — collapsible tree of rows with caller-supplied row actions
 - [zx-button](design-system/zx-button.md) — button with colors and sizes
 - [zx-button-controls](design-system/zx-button-controls.md) — wrapper for button groups
 - [zx-pagination](design-system/zx-pagination.md) — page navigation

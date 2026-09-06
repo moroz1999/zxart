@@ -86,6 +86,7 @@ readonly class PartyDetailsService
                     medium: $medium,
                     name: $this->compoNameResolver->resolve($medium, $compoType),
                     count: count($entries),
+                    slug: $medium . '-' . $compoType,
                 );
             }
         }

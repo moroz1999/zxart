@@ -12,7 +12,7 @@
         <zx-popover-menu-item *ngIf="user.authorId" [href]="'/author/' + user.authorId">
           {{ 'login.my-page' | translate }}
         </zx-popover-menu-item>
-        <zx-popover-menu-item *ngIf="mayManageHardware$ | async" href="/manage/hardware">
+        <zx-popover-menu-item *ngIf="mayManage$ | async" href="/manage">
           {{ 'menu.manage' | translate }}
         </zx-popover-menu-item>
       </div>

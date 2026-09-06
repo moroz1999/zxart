@@ -15,10 +15,20 @@ export class ZxCardScreenshotGalleryComponent implements OnChanges {
 
   activeUrl = '';
 
+  /**
+   * What is shown follows the urls, not the array holding them. A host that
+   * rebuilds that array on every check would otherwise send the gallery back to
+   * the first shot on the very change detection the hover triggers, so the
+   * selector would look alive and nothing would ever change.
+   */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['imageUrls']) {
+    if (changes['imageUrls'] && !this.imageUrls.includes(this.activeUrl)) {
       this.activeUrl = this.imageUrls[0] ?? '';
     }
+  }
+
+  trackByUrl(_index: number, url: string): string {
+    return url;
   }
 
   setActive(url: string): void {

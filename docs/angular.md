@@ -495,6 +495,26 @@ OnPush only re-checks a component when:
 
 This means **imperative state mutations inside `.subscribe()` callbacks are invisible to OnPush** and MUST NOT be used. Always follow the BehaviorSubject pattern (see RxJS section above).
 
+#### Never build an input value in the template
+
+A template expression runs on every check, so `[model]="toModel(item)"` or a
+getter returning `arr.map(…)` hands the child a **new reference every time**. For
+an OnPush child that is an input change on every check, and the damage lands on
+whatever the child remembers:
+
+- A child that resets state in `ngOnChanges` resets it on the very check the
+  user's own event triggered — this is what stopped card screenshots flipping on
+  hover: the pointer event ran change detection, the host rebuilt the url array,
+  and the gallery went back to the first shot.
+- An `*ngFor` over a rebuilt array without `trackBy` destroys and recreates every
+  row, so images reload and a pressed button disappears under the pointer (see
+  also the pagination note above).
+
+Build the view model where the data arrives — in the subscription that stores it,
+or in a `map` on the stream the template consumes — and give every `*ngFor` over
+it a `trackBy`. A child that keeps state of its own defends itself too: react to
+the values changing, not to the array identity.
+
 #### ViewModel pattern for base-class components
 
 When a component inherits from a base `@Directive` class that manages async state (e.g., `FirstpageModuleBase`), the base class MUST expose a single `vm$: Observable<Vm>` combining all template-relevant state via `combineLatest` + `map`. Templates subscribe once with `*ngIf="vm$ | async as vm"` and access all fields from `vm`.

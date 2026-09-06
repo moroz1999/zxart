@@ -46,6 +46,18 @@ The production the picture belongs to is the `prod` field, linked through
 `gameLink` by `ZxArtItem::updateProdLink()`. The link type keeps its historical
 name; the column does not.
 
+## Rendered image URLs
+
+A native ZX screen is rendered on request by `ZxArt\Controllers\Zximages`, and
+every address it is served at is built by `ZxArt\ZxScreen\ZxPictureUrlHelper`:
+`/zximages/id=<file>;border=…;mode=…;pal=…;type=…;zoom=…`. The id is the stored
+file, not the picture element.
+
+The same parameters used to be written as path segments under `/zxscreen/`.
+`ZxArt\Controllers\Zxscreen` reads them as ordinary request parameters, hands
+them to the same helper and answers 301 with the current address, so links and
+indexed images from that era keep working.
+
 ## Viewer settings
 
 `PictureSettingsService` persists every viewing setting as a user preference

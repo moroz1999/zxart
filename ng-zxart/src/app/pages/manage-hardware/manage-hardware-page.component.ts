@@ -5,6 +5,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
 import {HardwareItemDto} from '../../features/manage-hardware/models/hardware-catalog.dto';
 import {ManageHardwareApiService} from '../../features/manage-hardware/services/manage-hardware-api.service';
+import {ZxManageTabsComponent} from '../../features/manage/components/zx-manage-tabs/zx-manage-tabs.component';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {LabelDirective} from '../../shared/ui/typography/directives/label.directive';
@@ -36,6 +37,7 @@ interface ManageHardwareVm {
     RouterLink,
     TranslateModule,
     ZxButtonComponent,
+    ZxManageTabsComponent,
     HeadingDirective,
     LabelDirective,
     TextDirective,

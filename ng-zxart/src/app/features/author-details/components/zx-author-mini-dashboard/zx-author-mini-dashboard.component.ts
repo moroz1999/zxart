@@ -2,12 +2,12 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges,
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {Observable, Subscription} from 'rxjs';
+import {map, Observable, shareReplay, Subscription} from 'rxjs';
 import {AuthorTabsDto} from '../../models/author-core.dto';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {AuthorMiniDashboardData, AuthorMiniDashboardService} from '../../services/author-mini-dashboard.service';
 import {PlayerService} from '../../../player/services/player.service';
-import {AuthorProdEntry, AuthorProdItem, AuthorReleaseEntry} from '../../services/author-prods-api.service';
+import {AuthorProdEntry, AuthorReleaseEntry} from '../../services/author-prods-api.service';
 import {ZxPictureCardComponent} from '../../../../entities/zx-picture-card/zx-picture-card.component';
 import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.component';
 import {ZxProdBlockComponent} from '../../../../entities/zx-prod-block/zx-prod-block.component';
@@ -30,6 +30,13 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
 import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
+
+/** One dashboard work ready to render: a release card, or a prod card model. */
+interface DashboardEntry {
+  key: number;
+  release: AuthorReleaseEntry | null;
+  prod: ZxProd | null;
+}
 
 @Component({
   selector: 'zx-author-mini-dashboard',
@@ -68,6 +75,13 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
   @Input() tabs!: AuthorTabsDto;
 
   readonly data$: Observable<AuthorMiniDashboardData>;
+  /**
+   * The same data with each work's card model built once. Building it in the
+   * template hands the card a new model on every check, and a screenshot gallery
+   * told its urls changed goes back to the first shot — on the very check the
+   * hover triggers.
+   */
+  readonly view$: Observable<AuthorMiniDashboardData & {entries: DashboardEntry[]}>;
   playingTuneId: number | null = null;
 
   private playlistId = '';
@@ -91,6 +105,17 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     private readonly pictureGalleryService: PictureGalleryService,
   ) {
     this.data$ = this.dashboardService.data$;
+    this.view$ = this.data$.pipe(
+      map(data => ({
+        ...data,
+        entries: data.prods.map((item): DashboardEntry => ({
+          key: item.id,
+          release: item.type === 'release' ? item as AuthorReleaseEntry : null,
+          prod: item.type === 'release' ? null : new ZxProd(item as AuthorProdEntry),
+        })),
+      })),
+      shareReplay({bufferSize: 1, refCount: true}),
+    );
   }
 
   ngOnInit(): void {
@@ -151,16 +176,8 @@ export class ZxAuthorMiniDashboardComponent implements OnInit, OnChanges, OnDest
     this.dashboardService.setContext(this.elementId, this.tabs);
   }
 
-  toProdModel(item: AuthorProdEntry): ZxProd {
-    return new ZxProd(item);
-  }
-
-  asRelease(item: AuthorProdItem): AuthorReleaseEntry {
-    return item as AuthorReleaseEntry;
-  }
-
-  asProd(item: AuthorProdItem): AuthorProdEntry {
-    return item as AuthorProdEntry;
+  trackByEntry(_index: number, entry: DashboardEntry): number {
+    return entry.key;
   }
 
   onPlayRequested(tune: ZxTuneDto): void {

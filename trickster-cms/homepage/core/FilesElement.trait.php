@@ -71,6 +71,21 @@ trait FilesElementTrait
     }
 
     /**
+     * @return list<array<array-key, mixed>>
+     */
+    public function getSubmittedUploads(string $propertyName): array
+    {
+        $uploads = [];
+        foreach ((array)$this->$propertyName as $upload) {
+            if (is_array($upload)) {
+                $uploads[] = $upload;
+            }
+        }
+
+        return $uploads;
+    }
+
+    /**
      * @param fileElement $file
      * @param string $propertyName
      */

@@ -53,6 +53,10 @@ The categories the production belongs to. Categories are what the software
 section is browsed by, so a production is never without one: at least one must be
 given, and a production submitted without any is filed under miscellaneous.
 
+The production's page shows the whole chain it is filed under, from the section
+down to the precise category, and each step of it browses the software section by
+that category.
+
 #### Compilations and series
 A production may be a compilation, listing the works it collects, or be part of
 one. It may likewise be a series, listing its parts, or be part of one. A

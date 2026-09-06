@@ -22,6 +22,12 @@ export interface PartyCompoDto {
   readonly medium: PartyCompoMedium;
   readonly name: string;
   readonly count: number;
+  /**
+   * Medium and compo key together, and the only thing that identifies a compo:
+   * the general graphics compo and the general music compo are both `standard`,
+   * so the key alone gives them one and the same tab.
+   */
+  readonly slug: string;
 }
 
 export interface PartyEditionDto {

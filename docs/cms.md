@@ -73,6 +73,33 @@ Most CMS objects (controllers, structure elements, actions) use this trait, whic
 ## CMS Core Mechanics
 - **Recursive Deletion**: Method `structureElement::deleteElementData()` automatically deletes all child elements linked via `structure` links (or other links returned by `getDeletionLinkTypes()`). This ensures data integrity without manual recursion in services.
 
+### Staged uploads
+
+An uploaded file does not go straight to its element. `fileDataChunk` and
+`filesDataChunk` move it into the `uploadsCache` directory under the name PHP gave
+it, and it is copied from there to where the element keeps its files — by
+`persistExtraData` for a single-file field, by the `receiveFiles` action for a
+multi-file selector.
+
+**A multi-file selector's staged upload is read, never consumed.** `receiveFiles`
+leaves the cached file in place, because one submitted form may create several
+elements that all read the same upload — the release form creates one release per
+uploaded file, each with the same screenshots and inlays. Anything that needs a
+staged file more than once just reads it again; nothing has to copy it into the
+cache itself.
+
+**Whoever received the form deletes the staged uploads when it is done with
+them**, through `ZxArt\Forms\StagedUploadsCleaner` — `clearElementUploads()` for
+an element implementing `FilesElementInterface`, `clear()` for the raw submitted
+file infos. Nothing sweeps the directory later, so every caller of `receiveFiles`
+has to clear up after itself: the prod and release `publicReceive` actions do it
+right after receiving, the two batch creators once every element has read the
+uploads (`ReleaseBatchCreateService` in a `finally`, so a batch that gave up half
+way leaves nothing behind).
+
+A single-file field is the element's own: `persistExtraData` still takes its
+upload with it.
+
 ## Text Datachunk Encoding
 
 **All text datachunks (fields declared as `'text'` or `'html'` in `$moduleStructure`) are stored HTML-entity-encoded in the database.** Raw magic-property access on a `structureElement` returns the encoded value (e.g., `&amp;` instead of `&`).

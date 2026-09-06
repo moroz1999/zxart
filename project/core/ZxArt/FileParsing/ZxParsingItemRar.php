@@ -10,6 +10,11 @@ class ZxParsingItemRar extends ZxParsingItem
         return 'rar';
     }
 
+    #[Override] public function holdsSeparateFiles(): bool
+    {
+        return true;
+    }
+
     #[Override] protected function parse(): void
     {
         if ($this->items === null) {

@@ -27,7 +27,7 @@ import {CommentsListComponent} from '../../../comments/components/comments-list/
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 import {RouterLink} from '@angular/router';
 import {PageMetadataService} from '../../../../shared/services/page-metadata.service';
-/** Static tab ids; competition tabs use their raw `compoType` as the id. */
+/** Static tab ids; a competition tab is addressed by its `slug` (medium + compo key). */
 type PartyTabId = 'overview' | 'activity' | string;
 
 @Component({
@@ -127,7 +127,7 @@ export class ZxPartyDetailsComponent implements OnChanges {
     const tabs: PartyTabId[] = [];
 
     if (core.tabs.hasOverview) tabs.push('overview');
-    for (const compo of core.compos) tabs.push(compo.compoType);
+    for (const compo of core.compos) tabs.push(compo.slug);
     if (core.tabs.hasActivity) tabs.push('activity');
 
     return tabs;

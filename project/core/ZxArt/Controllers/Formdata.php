@@ -8,7 +8,6 @@ use CmsHttpResponse;
 use controller;
 use DbLoggableApplication;
 use imageDataChunk;
-use LanguagesManager;
 use Monolog\Logger;
 use Override;
 use structureElement;
@@ -16,13 +15,16 @@ use structureManager;
 use Throwable;
 use translationsManager;
 use ZxArt\ElementPrivileges\ElementPrivilegesService;
+use ZxArt\Forms\Dto\FormLanguageDto;
 use ZxArt\Forms\FormCreateService;
+use ZxArt\Forms\FormLanguagesProvider;
 use ZxArt\Forms\SubmittedFormFields;
 use ZxArt\Forms\FormCreateException;
 use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Import\ImportOriginsHolder;
+use ZxArt\Releases\Services\ReleaseBatchCreateService;
 use ZxArt\Shared\EntityType;
 use ZxArt\Tags\TagsHolderInterface;
 use zxPictureElement;
@@ -51,8 +53,9 @@ class Formdata extends LoggedControllerApplication
         Logger $logger,
         private readonly structureManager $structureManager,
         private readonly ElementPrivilegesService $elementPrivilegesService,
-        private readonly LanguagesManager $languagesManager,
+        private readonly FormLanguagesProvider $formLanguagesProvider,
         private readonly FormCreateService $formCreateService,
+        private readonly ReleaseBatchCreateService $releaseBatchCreateService,
         private readonly translationsManager $translationsManager,
     ) {
         parent::__construct($controller, $logger);
@@ -84,13 +87,7 @@ class Formdata extends LoggedControllerApplication
                         ? (int)$this->getParameter('parentId')
                         : null;
                     if ($this->isCreateSubmission()) {
-                        $this->formCreateService->submit(
-                            $formType,
-                            $year,
-                            $this->controller,
-                            $this->getCreateFields(),
-                            $parentId,
-                        );
+                        $this->submitCreateForm($formType, $year, $parentId);
                     } else {
                         $draft = $this->formCreateService->createDraft($formType, $year, $parentId);
                         $this->assignSuccess([
@@ -140,6 +137,24 @@ class Formdata extends LoggedControllerApplication
     private function isCreateSubmission(): bool
     {
         return ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
+    }
+
+    /**
+     * A release form creates one release per uploaded file, so its response names
+     * every one of them and the SPA decides where to go. Every other form creates
+     * a single element and answers through the element action itself.
+     */
+    private function submitCreateForm(FormCreateType $formType, ?int $year, ?int $parentId): void
+    {
+        $fields = $this->getCreateFields();
+        if ($formType !== FormCreateType::Release) {
+            $this->formCreateService->submit($formType, $year, $this->controller, $fields, $parentId);
+            return;
+        }
+
+        $releases = $this->releaseBatchCreateService->create($this->controller, $fields, $parentId);
+        $ids = array_map(static fn(structureElement $release): int => $release->getId(), $releases);
+        $this->assignSuccess(['id' => $ids[0], 'ids' => $ids]);
     }
 
     /**
@@ -215,7 +230,7 @@ class Formdata extends LoggedControllerApplication
 
     /**
      * @param string[] $refFields
-     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<array{id: int, name: string}>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, importOrigins: list<array{origin: string, importId: string}>, tags: list<string>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>}
+     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<FormLanguageDto>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, importOrigins: list<array{origin: string, importId: string}>, tags: list<string>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>}
      */
     private function buildFormData(structureElement $element, array $refFields): array
     {
@@ -705,17 +720,10 @@ class Formdata extends LoggedControllerApplication
         return html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
-    /** @return list<array{id: int, name: string}> */
+    /** @return list<FormLanguageDto> */
     private function buildLanguages(): array
     {
-        $languages = [];
-        foreach ($this->languagesManager->getLanguagesList() as $language) {
-            $languages[] = [
-                'id' => (int)$language->id,
-                'name' => html_entity_decode((string)$language->title, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-            ];
-        }
-        return $languages;
+        return $this->formLanguagesProvider->getLanguages();
     }
 
     private function hasPrivilege(int $id, string $privilege): bool

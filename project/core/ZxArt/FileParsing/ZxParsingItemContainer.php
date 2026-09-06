@@ -38,6 +38,16 @@ final class ZxParsingItemContainer extends ZxParsingItem
         return $this->format->value;
     }
 
+    /**
+     * A TAR is a distribution tree: what it holds are files that were put there
+     * side by side. Every other format this class reads is a disk or a tape, and
+     * what it holds is that medium's contents.
+     */
+    #[Override] public function holdsSeparateFiles(): bool
+    {
+        return $this->format === ContainerFormat::Tar;
+    }
+
     #[Override] protected function parse(): void
     {
         $this->items = [];

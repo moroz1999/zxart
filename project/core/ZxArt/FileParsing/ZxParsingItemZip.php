@@ -13,6 +13,11 @@ class ZxParsingItemZip extends ZxParsingItem
         return 'zip';
     }
 
+    #[Override] public function holdsSeparateFiles(): bool
+    {
+        return true;
+    }
+
     #[Override] protected function parse(): void
     {
         if ($this->items === null) {

@@ -1170,25 +1170,35 @@ class structureManager implements DependencyInjectionContextInterface
      *
      * @param string $marker - element's marker to search for
      * @param ?int|null $parentElementId - restriction by parent id
+     * @param bool $directlyToParent - load the element by id instead of resolving
+     *        its URL path; needed for containers that live outside the current
+     *        root's tree, e.g. the admin-rooted catalogues asked for by a public
+     *        request
      */
-    public function getElementByMarker(string $marker, ?int $parentElementId = null): ?structureElement
+    public function getElementByMarker(
+        string $marker,
+        ?int $parentElementId = null,
+        bool $directlyToParent = false,
+    ): ?structureElement
     {
         $cacheParentElementId = $parentElementId ?? $this->getRootElementId();
+        $cacheKey = $directlyToParent ? $marker . ':direct' : $marker;
 
-        if (!array_key_exists($marker, $this->cachedMarkers[$cacheParentElementId] ?? [])) {
+        if (!array_key_exists($cacheKey, $this->cachedMarkers[$cacheParentElementId] ?? [])) {
             $searchFields = ['marker' => $marker];
             $dataCollection = $this->elementsDataCollection->load($searchFields);
             foreach ($dataCollection as $dataElement) {
                 if (!$parentElementId || $this->checkElementInParent($dataElement->id, $parentElementId)) {
-                    $this->cachedMarkers[$cacheParentElementId][$marker] = $this->getElementById(
+                    $this->cachedMarkers[$cacheParentElementId][$cacheKey] = $this->getElementById(
                         $dataElement->id,
-                        $parentElementId
+                        $parentElementId,
+                        $directlyToParent
                     );
                     break;
                 }
             }
         }
-        return $this->cachedMarkers[$cacheParentElementId][$marker] ?? null;
+        return $this->cachedMarkers[$cacheParentElementId][$cacheKey] ?? null;
     }
 
     public function checkElementInParent($id, $parentId)
