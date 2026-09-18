@@ -481,6 +481,11 @@ class zxReleaseElement extends ZxArtItem implements
                         return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:gigascreen/' />";
                     }
                     break;
+                case 'zx_image_lce':
+                    if ($fileId = $this->getFileId()) {
+                        return "<img src='" . $controller->baseURL . "zxFileScreen/id:" . $this->getId() . "/fileId:" . $fileId . "/type:lce/' />";
+                    }
+                    break;
                 default:
                     $hex = new HexViewer();
                     return htmlspecialchars($hex->getFormatted($content));

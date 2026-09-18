@@ -116,6 +116,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
             's80' => 's80',
             's81' => 's81',
             'img' => 'gigascreen',
+            'lce' => 'lce',
             'nxi' => 'nxi',
             'sl2' => 'sl2',
             'ssx' => 'ssx',

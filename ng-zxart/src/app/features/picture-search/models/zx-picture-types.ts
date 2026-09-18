@@ -21,6 +21,7 @@ export const ZX_PICTURE_TYPES = [
   'mlt',
   'mc',
   'gigascreen',
+  'lce',
   'mg1',
   'mg2',
   'mg4',

@@ -1356,16 +1356,16 @@
         },
         {
             "name": "moroz1999/zx-image",
-            "version": "6.0.1",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moroz1999/zx-image.git",
-                "reference": "3a69960e16c9136060fadff65d124d6797e9ecb6"
+                "reference": "0cc993f84272e0e79fb839ce004ce1cf86b07217"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/3a69960e16c9136060fadff65d124d6797e9ecb6",
-                "reference": "3a69960e16c9136060fadff65d124d6797e9ecb6",
+                "url": "https://api.github.com/repos/moroz1999/zx-image/zipball/0cc993f84272e0e79fb839ce004ce1cf86b07217",
+                "reference": "0cc993f84272e0e79fb839ce004ce1cf86b07217",
                 "shasum": ""
             },
             "require": {
@@ -1397,9 +1397,9 @@
             ],
             "support": {
                 "issues": "https://github.com/moroz1999/zx-image/issues",
-                "source": "https://github.com/moroz1999/zx-image/tree/6.0.1"
+                "source": "https://github.com/moroz1999/zx-image/tree/6.0.2"
             },
-            "time": "2026-06-03T21:08:09+00:00"
+            "time": "2026-09-06T22:26:11+00:00"
         },
         {
             "name": "nesbot/carbon",

@@ -19,7 +19,7 @@ use ZxFiles\Detection\ContainerReader;
  *     elementId: int,
  *     type: 'folder'|'file'|'zip'|'7z'|'rar'|'trd'|'scl'|'tap'|'tzx'|'dsk'|'fdi'|'udi'|'opd'|'mgt'|'img'|'d80'|'tar',
  *     encoding: 'UTF-8'|'Windows-1251'|'ISO-8859-1'|'IBM866'|'CP866'|'KOI8-R'|'Windows-1252'|'none',
- *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'binary'
+ *     internalType: 'plain_text'|'source_code'|'pc_image'|'zx_basic'|'zx_image_standard'|'zx_image_monochrome'|'zx_image_tricolor'|'zx_image_gigascreen'|'zx_image_lce'|'binary'
  * }
  */
 final class ZxParsingManager extends errorLogger
@@ -189,7 +189,8 @@ final class ZxParsingManager extends errorLogger
         }
 
         if ($size === 13824) {
-            return 'zx_image_gigascreen';
+            // lce shares the gigascreen layout, so only the extension tells them apart
+            return $extension === 'lce' ? 'zx_image_lce' : 'zx_image_gigascreen';
         }
 
         return 'binary';

@@ -32,6 +32,7 @@ trait ZxPictureTypesProvider
             'mlt' => 'field.format_mlt',
             'mc' => 'field.format_mc',
             'gigascreen' => 'field.format_gigascreen',
+            'lce' => 'field.format_lce',
             'mg1' => 'field.format_mg1',
             'mg2' => 'field.format_mg2',
             'mg4' => 'field.format_mg4',
