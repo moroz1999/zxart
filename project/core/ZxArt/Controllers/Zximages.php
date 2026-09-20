@@ -45,12 +45,19 @@ class Zximages extends LoggedControllerApplication
             }
         }
         $this->renderer->assign('path', $filePath);
-        $this->renderer->assign('type', $params->type);
-        $this->renderer->assign('mode', $params->mode);
-        $this->renderer->assign('palette', $params->palette);
-        $this->renderer->assign('border', $params->border);
-        $this->renderer->assign('zoom', $params->zoom);
-        $this->renderer->assign('rotation', $params->rotation ?? 1);
+        $attributes = [
+            'type' => $params->type,
+            'mode' => $params->mode,
+            'palette' => $params->palette,
+            'border' => $params->border,
+            'zoom' => $params->zoom,
+            'rotation' => $params->rotation ?? 1,
+        ];
+        foreach ($attributes as $name => $value) {
+            if ($value !== null) {
+                $this->renderer->assign($name, $value);
+            }
+        }
         $this->renderer->assign('cacheEnabled', true);
         $this->renderer->assign('cacheFileName', $cacheDir . $cacheName);
         $this->renderer->setContentDisposition('inline');

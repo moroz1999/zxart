@@ -57,12 +57,19 @@ class Zximagesdownload extends LoggedControllerApplication
         }
 
         $this->renderer->assign('path', $filePath);
-        $this->renderer->assign('type', $this->type);
-        $this->renderer->assign('mode', $this->mode);
-        $this->renderer->assign('palette', $this->palette);
-        $this->renderer->assign('border', $this->border);
-        $this->renderer->assign('zoom', $this->zoom);
-        $this->renderer->assign('rotation', $this->rotation);
+        $attributes = [
+            'type' => $this->type,
+            'mode' => $this->mode,
+            'palette' => $this->palette,
+            'border' => $this->border,
+            'zoom' => $this->zoom,
+            'rotation' => $this->rotation,
+        ];
+        foreach ($attributes as $name => $value) {
+            if ($value !== null) {
+                $this->renderer->assign($name, $value);
+            }
+        }
         $this->renderer->assign('cacheEnabled', false);
 
         $this->renderer->setContentDisposition('attachment');
