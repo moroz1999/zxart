@@ -13,6 +13,7 @@ use linksManager;
 use pressArticleElement;
 use privilegesManager;
 use ProdsDownloader;
+use RuntimeException;
 use structureElement;
 use structureManager;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -406,7 +407,7 @@ class ProdsService extends ElementsManager
             foreach ($dto->undetermined as $undeterminedId => $roles) {
                 $existingElementId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Group);
                 if ($existingElementId === null) {
-                    $authorId = $this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Author);
+                    $authorId = $this->resolveImportedAuthorId($undeterminedId, $origin, $element);
                     if ($authorId !== null) {
                         $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                     }
@@ -420,7 +421,8 @@ class ProdsService extends ElementsManager
         $authorRoles = $dto->authorRoles ?? [];
         if (($this->forceUpdateAuthors || $justCreated || !$authorsInfo) && ($authorRoles !== [])) {
             foreach ($authorRoles as $importAuthorId => $roles) {
-                if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, EntityType::Author)) {
+                $authorId = $this->resolveImportedAuthorId($importAuthorId, $origin, $element);
+                if ($authorId !== null) {
                     $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                 }
             }
@@ -576,7 +578,7 @@ class ProdsService extends ElementsManager
      */
     private function importElementFile(zxReleaseElement|zxProdElement $element, string $fileUrl, array $existingFiles, string|null $fileAuthor = null, string $propertyName = 'connectedFile'): void
     {
-        $this->structureManager->setNewElementLinkType($element->getConnectedFileType($propertyName));
+        $fileLinkType = $element->getConnectedFileType($propertyName);
         $uploadsPath = $this->pathsManager->getPath('uploads');
 
         $originalFileName = urldecode(basename($fileUrl));
@@ -614,7 +616,9 @@ class ProdsService extends ElementsManager
             if ($filePath && ($fileElement = $this->structureManager->createElement(
                     'file',
                     'showForm',
-                    $element->getPersistedId()
+                    $element->getPersistedId(),
+                    false,
+                    $fileLinkType
                 ))) {
 
                 $destinationFolder = $element->getUploadedFilesPath($propertyName);
@@ -646,9 +650,6 @@ class ProdsService extends ElementsManager
                 $element->appendFileToList($fileElement, $propertyName);
             }
         }
-
-        $this->structureManager->setNewElementLinkType();
-
     }
 
     private function importElementFiles(zxReleaseElement|zxProdElement $element, array $fileUrls, string $propertyName = 'connectedFile'): void
@@ -666,6 +667,37 @@ class ProdsService extends ElementsManager
                 }
             }
         }
+    }
+
+    /**
+     * Authorship is stored by element id, so an import id pointing at an element
+     * the structure cannot load would attach the credit to nothing and break the
+     * next import run the same way. Name that author and let the import stop.
+     */
+    private function resolveImportedAuthorId(int|string $importAuthorId, ImportOrigin $origin, structureElement $element): ?int
+    {
+        $importId = (string)$importAuthorId;
+        $authorId = $this->importIdOperator->getElementIdByImportId($importId, $origin, EntityType::Author);
+        if ($authorId === null) {
+            return null;
+        }
+
+        $authorElement = $this->structureManager->getElementById($authorId);
+        if ($authorElement === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'Author element %d (%s import id %s) is not available in the structure and is likely half-created. Reached while importing %s %d "%s"',
+                    $authorId,
+                    $origin->value,
+                    $importId,
+                    $element->structureType,
+                    $element->getId(),
+                    $element->title
+                )
+            );
+        }
+
+        return $authorId;
     }
 
     private function linkReleaseWithAuthor(int $authorId, int $prodId, array $roles = []): void
@@ -856,7 +888,8 @@ class ProdsService extends ElementsManager
         if ($this->forceUpdateReleaseAuthors || (($justCreated) && !empty($releaseAuthors))) {
             if ($this->forceUpdateReleaseAuthors || !$element->getAuthorsInfo(EntityType::Release->value)) {
                 foreach ($releaseAuthors as $importAuthorId => $roles) {
-                    if ($authorId = $this->importIdOperator->getElementIdByImportId($importAuthorId, $origin, EntityType::Author)) {
+                    $authorId = $this->resolveImportedAuthorId($importAuthorId, $origin, $element);
+                    if ($authorId !== null) {
                         $this->linkReleaseWithAuthor($authorId, $element->getId(), $roles);
                     }
                 }

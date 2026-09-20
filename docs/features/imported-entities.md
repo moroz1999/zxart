@@ -64,3 +64,39 @@ a text input for the id — plus an add button, and emits the whole list keyed b
 row index on every change. The page stores that map and submits it as the
 `importOrigins` form field. It is not shown on the batch upload form, and on the
 author alias form only when editing an existing alias.
+
+## ZxDB author roles
+
+ZxDB keeps credits and roles in two tables: `authors` names who worked on an
+entry, `roles` adds one row per role that author is credited with. Most credits
+carry no role row at all, so such an author is imported with an empty role list
+— the role is simply unknown, not missing data. An author credited with several
+roles produces several rows, and every one of them is imported.
+
+`ZxArt\Import\ZxdbRoleType` holds the closed set of role codes ZxDB can emit
+(its `roletypes` table, which `roles.roletype_id` references) and the ZxArt
+authorship role each code maps to. A code outside that set means ZxDB gained a
+role type this import does not know: `ZxdbImport` logs it and aborts, instead of
+dropping the credit silently, as the Pouet import does for unknown roles and
+categories.
+
+## When an import fails
+
+The ZxDB import prints every production to its browser log *before* importing it
+(`prod <counter>/<total> <importId> <title> importing`), so the last line on
+screen always names the entry being worked on. Anything thrown while importing
+one production is printed with its class, message, file, line and stack trace,
+written to the error log, and stops the run; the resume counter is not advanced,
+so the next run starts again at the same entry once the data is repaired.
+
+That only helps if the exceptions say what is broken, so the import path names
+the entity instead of failing bare:
+
+- authorship whose stored `roles` cannot be read names the element, the author
+  and the stored value (an empty string is the legacy way of saying "no roles"
+  and is read as such);
+- an import id pointing at an author element the structure cannot load — a
+  half-created author — names the author element, the portal id and the
+  production that reached it;
+- an author that cannot be created names the author and what was missing (the
+  authors section, its letter, or the element itself).

@@ -17,6 +17,7 @@ use letterElement;
 use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
+use RuntimeException;
 use structureManager;
 use TranslitHelper;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
@@ -160,7 +161,9 @@ class AuthorsService extends ElementsManager
         /** @var authorsElement|null $authorsElement */
         $authorsElement = $this->structureManager->getElementByMarker('authors');
         if (!$authorsElement) {
-            return null;
+            throw new RuntimeException(
+                sprintf('Authors section is not available, author "%s" cannot be created', $title)
+            );
         }
 
         $authorLetterElement = null;
@@ -174,13 +177,23 @@ class AuthorsService extends ElementsManager
         }
 
         if (!$authorLetterElement) {
-            return null;
+            throw new RuntimeException(
+                sprintf('Authors section has no "%s" letter, author "%s" cannot be created', $firstLetter, $title)
+            );
         }
 
         /** @var authorElement|null $element */
         $element = $this->structureManager->createElement('author', 'show', $authorLetterElement->getId());
         if (!$element) {
-            return null;
+            throw new RuntimeException(
+                sprintf(
+                    'Author "%s" (%s import id %s) could not be created under letter element %d',
+                    $title,
+                    $origin->value,
+                    $dto->id ?? '',
+                    $authorLetterElement->getId()
+                )
+            );
         }
 
         $this->updateAuthor($element, $dto, $origin);

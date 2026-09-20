@@ -10,9 +10,12 @@ use errorLogger;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use PDO;
+use RuntimeException;
+use Throwable;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
+use ZxArt\Import\ZxdbRoleType;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdsService;
 
@@ -81,6 +84,7 @@ class ZxdbImport extends errorLogger
     protected string $nvgLink = 'https://archive.org/download/mirror-ftp-nvg/Mirror_ftp_nvg.zip/';
     protected string $wosFilesPath;
     protected array $releaseFileTypes;
+    /** @var array<string, string> */
     protected array $releaseTypes;
     protected array $inlayFileTypes;
     protected array $mapFileTypes;
@@ -103,6 +107,7 @@ class ZxdbImport extends errorLogger
         56, //SC rzx
         31, //itch.io
     ];
+    /** @var array<int, string> */
     protected array $minMachines = [
         24 => "atm",
         14 => "pentagon128",
@@ -130,24 +135,13 @@ class ZxdbImport extends errorLogger
         23 => "zx8164",
         32 => "lambda8300",
     ];
+    /** @var array<int, string> */
     protected array $optionalMachines = [
         9 => "zx128+3",
         13 => "timex2068",
         6 => "zx128",
         4 => "zx128",
         2 => "zx48",
-    ];
-    protected array $roles = [
-        "C" => "code",
-        "D" => "gamedesign",
-        "G" => "graphics",
-        "A" => "illustrating",
-        "V" => "leveldesign",
-        "S" => "loading_screen",
-        "T" => "localization",
-        "M" => "music",
-        "X" => "sfx",
-        "W" => "story",
     ];
     protected array $featureGroups = [
         9003 => "cursor",
@@ -164,6 +158,7 @@ class ZxdbImport extends errorLogger
         1065 => "beeper",
         1026 => "beeper",
     ];
+    /** @var array<string, list<string>> */
     protected array $languages = [
         "be" => ["be"],
         "bs" => ["bs"],
@@ -486,14 +481,19 @@ class ZxdbImport extends errorLogger
                 $prodInfo['categories'] = array_unique($prodInfo['categories']);
 
                 $dto = ProdImportDTO::fromArray($prodInfo);
-                if ($this->prodsService->importProd($dto, $this->origin)) {
-                    $this->counter++;
-                    $this->markProgress(
-                        'series ' . $this->counter . '/' . count($entries ?? []) .
-                        ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
-                    );
+                $seriesLabel = 'series ' . $this->counter . '/' . count($entries ?? []) .
+                    ' ' . $prodInfo['id'] . ' ' . $prodInfo['title'];
+                $this->markProgress($seriesLabel . ' importing');
+                try {
+                    $importedSeries = $this->prodsService->importProd($dto, $this->origin);
+                } catch (Throwable $exception) {
+                    $this->reportProdFailure($seriesLabel, $exception);
+                    return;
+                }
+                if ($importedSeries === null) {
+                    $this->markProgress($seriesLabel . ' not imported');
                 } else {
-                    $this->markProgress('series failed ' . $prodInfo['id'] . ' ' . $prodInfo['title']);
+                    $this->counter++;
                 }
             }
         }
@@ -546,8 +546,9 @@ class ZxdbImport extends errorLogger
                     'origin' => $this->origin,
                 ];
 
-                if ($entry['language_id'] && isset($this->languages[$entry['language_id']])) {
-                    $prodInfo['language'] = $this->languages[$entry['language_id']] ?? null;
+                $entryLanguageId = $entry['language_id'] !== null ? (string)$entry['language_id'] : null;
+                if ($entryLanguageId !== null && isset($this->languages[$entryLanguageId])) {
+                    $prodInfo['language'] = $this->languages[$entryLanguageId];
                 }
 
                 if (!empty($entry['availabletype_id']) && isset($this->legalStatuses[$entry['availabletype_id']])) {
@@ -597,21 +598,22 @@ class ZxdbImport extends errorLogger
                     ->where('authors.entry_id', '=', $entry['id'])
                     ->orderBy('author_seq');
 
-                if ($authors = $query->get()) {
-                    foreach ($authors as $author) {
-                        $labelId = $author['label_id'];
-                        $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $labelId);
-                        if ($labelInfo) {
-                            if ($labelInfo['isPerson']) {
-                                if (isset($this->roles[$author['roletype_id']])) {
-                                    $prodInfo['authors'][$labelInfo['id']] = [$this->roles[$author['roletype_id']]];
-                                } else {
-                                    $prodInfo['authors'][$labelInfo['id']] = [];
-                                }
-                            } elseif ($labelInfo['isGroup']) {
-                                $prodInfo['groups'][] = $labelInfo['id'];
-                            }
+                foreach ($query->get() as $author) {
+                    $labelInfo = $this->gatherLabelsInfo($prodInfo['labels'], $author['label_id']);
+                    if (!$labelInfo) {
+                        continue;
+                    }
+                    if ($labelInfo['isPerson']) {
+                        $authorId = (int)$labelInfo['id'];
+                        $roleTypeId = $author['roletype_id'] !== null ? (string)$author['roletype_id'] : null;
+                        $role = $this->resolveAuthorRole($roleTypeId, (int)$entry['id']);
+                        $roles = $prodInfo['authors'][$authorId] ?? [];
+                        if ($role !== null) {
+                            $roles[] = $role;
                         }
+                        $prodInfo['authors'][$authorId] = $roles;
+                    } elseif ($labelInfo['isGroup']) {
+                        $prodInfo['groups'][] = $labelInfo['id'];
                     }
                 }
 
@@ -708,8 +710,12 @@ class ZxdbImport extends errorLogger
                             continue;
                         }
 
-                        if ($download['language_id'] !== $entry['language_id'] && isset($this->languages[$download['language_id']])) {
-                            $releaseInfo['language'] = $this->languages[$download['language_id']] ?? null;
+                        $downloadLanguageId = $download['language_id'] !== null ? (string)$download['language_id'] : null;
+                        if ($downloadLanguageId !== null
+                            && $downloadLanguageId !== $entry['language_id']
+                            && isset($this->languages[$downloadLanguageId])
+                        ) {
+                            $releaseInfo['language'] = $this->languages[$downloadLanguageId];
                         }
 
                         $releaseInfo['fileUrl'] = $this->resolveDownloadUrl($download['file_link'], true);
@@ -720,8 +726,9 @@ class ZxdbImport extends errorLogger
                             $releaseInfo['version'] = $download['comments'];
                         }
 
-                        if (isset($this->releaseTypes[$download['sourcetype_id']])) {
-                            $releaseInfo['releaseType'] = $this->releaseTypes[$download['sourcetype_id']];
+                        $sourceTypeId = $download['sourcetype_id'] !== null ? (string)$download['sourcetype_id'] : null;
+                        if ($sourceTypeId !== null && isset($this->releaseTypes[$sourceTypeId])) {
+                            $releaseInfo['releaseType'] = $this->releaseTypes[$sourceTypeId];
                         }
 
 
@@ -760,13 +767,18 @@ class ZxdbImport extends errorLogger
                 $prodInfo['hardwareRequired'] = $this->collectEntryHardware($entry);
 
                 $dto = ProdImportDTO::fromArray($prodInfo);
-                if ($this->prodsService->importProd($dto, $this->origin)) {
-                    $this->markProgress(
-                        'prod ' . $this->counter . '/' . count($entries) .
-                        ' imported ' . $prodInfo['id'] . ' ' . $prodInfo['title']
-                    );
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo['id'] . ' ' . $prodInfo['title']);
+                $prodLabel = 'prod ' . $this->counter . '/' . count($entries) .
+                    ' ' . $prodInfo['id'] . ' ' . $prodInfo['title'];
+                // Printed before the import, so a crash names the entry it died on
+                $this->markProgress($prodLabel . ' importing');
+                try {
+                    $importedProd = $this->prodsService->importProd($dto, $this->origin);
+                } catch (Throwable $exception) {
+                    $this->reportProdFailure($prodLabel, $exception);
+                    return false;
+                }
+                if ($importedProd === null) {
+                    $this->markProgress($prodLabel . ' not imported');
                 }
 
                 file_put_contents($this->getStatusPath(), $this->counter);
@@ -789,12 +801,14 @@ class ZxdbImport extends errorLogger
     protected function collectEntryHardware(array $entry): array
     {
         $codes = [];
-        $machineTypeId = $entry['machinetype_id'] ?? null;
-        if (isset($this->minMachines[$machineTypeId])) {
-            $codes[] = $this->minMachines[$machineTypeId];
-        }
-        if (isset($this->optionalMachines[$machineTypeId])) {
-            $codes[] = $this->optionalMachines[$machineTypeId];
+        $machineTypeId = isset($entry['machinetype_id']) ? (int)$entry['machinetype_id'] : null;
+        if ($machineTypeId !== null) {
+            if (isset($this->minMachines[$machineTypeId])) {
+                $codes[] = $this->minMachines[$machineTypeId];
+            }
+            if (isset($this->optionalMachines[$machineTypeId])) {
+                $codes[] = $this->optionalMachines[$machineTypeId];
+            }
         }
 
         $controls = $this->zxdb->table('members')
@@ -882,6 +896,30 @@ class ZxdbImport extends errorLogger
         }
 
         return $this->wosLink . $url;
+    }
+
+    /**
+     * ZxDB keeps credits and roles apart: `authors` lists who worked on an entry,
+     * `roles` adds one row per credited role. Most credits have no role row at
+     * all, so the left join hands back a NULL roletype — an author whose role
+     * ZxDB does not state, not an error. A code outside the `roletypes` set
+     * means ZxDB gained a role this import cannot map yet, and importing it
+     * silently would drop the credit.
+     */
+    protected function resolveAuthorRole(?string $roleTypeId, int $entryId): ?string
+    {
+        if ($roleTypeId === null) {
+            return null;
+        }
+
+        $roleType = ZxdbRoleType::tryFrom($roleTypeId);
+        if ($roleType === null) {
+            $message = 'Zxdb: unknown author role "' . $roleTypeId . '" in entry ' . $entryId;
+            $this->logError($message);
+            throw new RuntimeException($message);
+        }
+
+        return $roleType->authorshipRole();
     }
 
     /**
@@ -975,6 +1013,21 @@ class ZxdbImport extends errorLogger
         }
     }
 
+    /**
+     * The import runs in a browser and writes its own log, so a failed entry has
+     * to name itself there as well as in the error log — otherwise the last line
+     * on screen is the previous production and the failing one stays unknown.
+     */
+    protected function reportProdFailure(string $prodLabel, Throwable $exception): void
+    {
+        $message = $prodLabel . ' import stopped: ' . $exception::class . ': ' . $exception->getMessage()
+            . ' at ' . $exception->getFile() . ':' . $exception->getLine();
+
+        $this->markProgress($message);
+        $this->markProgress($exception->getTraceAsString());
+        $this->logError($message . "\n" . $exception->getTraceAsString());
+    }
+
     protected function markProgress(string $text): void
     {
         static $previousTime;
@@ -984,7 +1037,7 @@ class ZxdbImport extends errorLogger
         }
         $endTime = microtime(true);
         $time = sprintf("%.2f", $endTime - $previousTime);
-        echo $text . ' ' . $time . '<br/>';
+        echo nl2br(htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')) . ' ' . $time . '<br/>';
         flush();
         file_put_contents(PUBLIC_PATH . 'import.log', date('H:i') . ' ' . $text . ' ' . $time . "\n", FILE_APPEND);
         $previousTime = $endTime;

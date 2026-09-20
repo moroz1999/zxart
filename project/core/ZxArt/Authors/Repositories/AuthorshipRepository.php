@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Repositories;
 
 use Illuminate\Database\Connection;
 use JsonException;
+use RuntimeException;
 use structureManager;
 use ZxArt\Shared\EntityType;
 
@@ -93,6 +94,7 @@ final class AuthorshipRepository
             $query->where('type', '=', $type->value);
         }
         if ($records = $query->get()) {
+            /** @var array<string, mixed> $record */
             foreach ($records as &$record) {
                 if ($record['startDate']) {
                     $record['startDate'] = date('d.m.Y', $record['startDate']);
@@ -105,7 +107,12 @@ final class AuthorshipRepository
                     $record['endDate'] = '';
                 }
 
-                $record['roles'] = json_decode($record['roles'], true);
+                $record['roles'] = $this->readStoredRoles(
+                    (string)$record['roles'],
+                    (int)$record['elementId'],
+                    $authorId,
+                    $type
+                );
             }
         }
         return $records;
@@ -124,17 +131,47 @@ final class AuthorshipRepository
             ->where('type', '=', $type->value)
             ->first()
         ) {
-            $existingRoles = json_decode($existingRecord['roles'], true, 512, JSON_THROW_ON_ERROR);
-
-            if (!is_array($existingRoles)) {
-                $existingRoles = [];
-            }
+            $existingRoles = $this->readStoredRoles((string)$existingRecord['roles'], $elementId, $authorId, $type);
             $allRoles = array_unique(array_merge($roles, $existingRoles));
             array_filter($allRoles, fn($role) => $role !== 'unknown');
             $this->updateRoles($elementId, (int)$authorId, $type->value, $allRoles, (int)$startDate, (int)$endDate);
         } else {
             $this->insertRoles($elementId, (int)$authorId, $type->value, $roles, (int)$startDate, (int)$endDate);
         }
+    }
+
+    /**
+     * The `roles` column holds a JSON list, except in old rows where it is an
+     * empty string standing for "no roles". Anything else there is broken data,
+     * and a bare "Syntax error" from json_decode says nothing about which
+     * record has to be repaired.
+     *
+     * @return array<array-key, mixed>
+     */
+    private function readStoredRoles(string $storedRoles, int $elementId, int|string $authorId, ?EntityType $type): array
+    {
+        if ($storedRoles === '') {
+            return [];
+        }
+
+        try {
+            /** @var mixed $decodedRoles */
+            $decodedRoles = json_decode($storedRoles, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $exception) {
+            throw new RuntimeException(
+                sprintf(
+                    'Authorship of element %d and author %s (%s) holds unreadable roles: "%s"',
+                    $elementId,
+                    $authorId,
+                    $type?->value ?? 'any type',
+                    $storedRoles
+                ),
+                0,
+                $exception
+            );
+        }
+
+        return is_array($decodedRoles) ? $decodedRoles : [];
     }
 
     /**
