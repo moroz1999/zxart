@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
@@ -44,6 +45,7 @@ export class LatestCommentsComponent implements OnInit {
   constructor(
     private commentsService: CommentsService,
     private sanitizer: DomSanitizer,
+    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,9 @@ export class LatestCommentsComponent implements OnInit {
 
   private loadComments(): void {
     this.loading.set(true);
-    this.commentsService.getLatestComments(10).subscribe({
+    this.commentsService.getLatestComments(10).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (comments) => {
         this.comments.set(comments);
         this.loading.set(false);

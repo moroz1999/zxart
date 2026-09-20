@@ -1572,13 +1572,62 @@
     "filter-media-tape": "Лента",
     "filter-media-other": "Другое"
   },
+  "release-format": {
+    "dsk": "DSK диск",
+    "trd": "TRD диск",
+    "scl": "SCL диск",
+    "fdi": "FDI диск",
+    "udi": "UDI диск",
+    "td0": "TD0 диск",
+    "mgt": "MGT диск",
+    "opd": "OPD диск",
+    "mld": "MLD (Multiload)",
+    "mbd": "MBD диск",
+    "img": "IMG диск",
+    "sad": "SAD - SAM Disk",
+    "d40": "D40 диск",
+    "d80": "D80 диск",
+    "cpm": "CPM диск",
+    "tzx": "TZX лента",
+    "tap": "TAP лента",
+    "mdr": "Картридж Microdrive",
+    "p": "Образ ленты P",
+    "o": "Образ ленты O",
+    "bas": "Программа NextBASIC",
+    "bin": "BIN файл",
+    "rom": "ROM",
+    "spg": "SPG",
+    "nex": "NEX файл",
+    "snx": "Снапшот SNX (Spectrum Next)",
+    "tar": "TAR",
+    "dot": "Команда NextZXOS (dot)",
+    "sna": "Снапшот SNA",
+    "szx": "Снапшот SZX (Spectaculator)",
+    "dck": "Картридж DCK",
+    "z80": "Z80 снапшот",
+    "z81": "Z81 снапшот",
+    "slt": "Снапшот SLT",
+    "$b": "Hobeta $b",
+    "$c": "Hobeta $c"
+  },
   "emulator": {
     "title": "Эмулятор",
     "loading": "Загрузка эмулятора…",
     "fullscreen": "Развернуть на полный экран",
     "screenshot-format-label": "Формат скриншота",
     "samcoupe": "После загрузки эмулятора нажмите «Enter», введите «boot» и снова нажмите «Enter».",
-    "powered-by": "Работает на"
+    "powered-by": "Работает на",
+    "restart": "Перезапустить",
+    "status": {
+      "downloading": "Скачивание релиза…",
+      "staging": "Запись SD-карты…",
+      "starting": "Запуск {{name}}…"
+    },
+    "error": {
+      "download": "Не удалось скачать релиз (HTTP {{status}}).",
+      "archive-format": "Релиз упакован в {{format}}, браузер такой архив не распакует. Скачайте его, чтобы запустить.",
+      "too-big": "Релизу нужно {{size}} МБ на SD-карте — больше, чем {{limit}} МБ, которые вмещает эмулируемая карта."
+    }
   },
   "hardware-group": {
     "computers": "Компьютеры",

@@ -14,9 +14,12 @@ export class CommentsService {
     private languageService: LanguageService,
   ) {}
 
+  /**
+   * Stays subscribed to the language so the latest-comments widget reloads
+   * server-localized content after a language switch.
+   */
   getLatestComments(limit: number = 10): Observable<CommentDto[]> {
     return this.languageService.languageCode$.pipe(
-      take(1),
       switchMap(languageCode => this.http.get<CommentDto[]>(`/comments-data/?action=latest&limit=${limit}&lang=${languageCode}`)),
       catchError(err => throwError(() => err))
     );

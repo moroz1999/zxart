@@ -57,6 +57,9 @@
 	AddOutputFilterByType DEFLATE application/javascript
 	AddOutputFilterByType DEFLATE text/javascript
 	AddOutputFilterByType DEFLATE text/css
+	# The emulator cores are the largest static files the site serves:
+	# MAME's mame.wasm is 30 MB raw and about 8 MB deflated.
+	AddOutputFilterByType DEFLATE application/wasm
 </ifmodule>
 AddType application/wasm wasm
 AddCharset UTF-8 .json

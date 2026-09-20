@@ -1571,13 +1571,62 @@
     "filter-media-tape": "Cinta",
     "filter-media-other": "Otro"
   },
+  "release-format": {
+    "dsk": "Disco DSK",
+    "trd": "Disco TRD",
+    "scl": "Disco SCL",
+    "fdi": "Disco FDI",
+    "udi": "Disco UDI",
+    "td0": "Disco TD0",
+    "mgt": "Disco MGT",
+    "opd": "Disco OPD",
+    "mld": "MLD (Multiload)",
+    "mbd": "Disco MBD",
+    "img": "Disco IMG",
+    "sad": "SAD - SAM Disk",
+    "d40": "Disco D40",
+    "d80": "Disco D80",
+    "cpm": "CPM disk",
+    "tzx": "Cinta TZX",
+    "tap": "Cinta TAP",
+    "mdr": "Cartucho de Microdrive",
+    "p": "P tape dump",
+    "o": "O tape dump",
+    "bas": "Programa NextBASIC",
+    "bin": "Archivo BIN",
+    "rom": "ROM",
+    "spg": "SPG",
+    "nex": "Archivo NEX",
+    "snx": "Spectrum Next snapshot SNX",
+    "tar": "TAR",
+    "dot": "Comando dot de NextZXOS",
+    "sna": "Instantánea SNA",
+    "szx": "Instantánea SZX (Spectaculator)",
+    "dck": "Cartucho DCK",
+    "z80": "Instantánea Z80",
+    "z81": "Instantánea Z81",
+    "slt": "Instantánea SLT",
+    "$b": "Hobeta $b",
+    "$c": "Hobeta $c"
+  },
   "emulator": {
     "title": "Emulador",
     "loading": "Cargando el emulador…",
     "fullscreen": "Abrir en pantalla completa",
     "screenshot-format-label": "Formato de captura",
     "samcoupe": "Tras cargar el emulador, pulse \"Enter\", escriba \"boot\" y pulse \"Enter\" de nuevo.",
-    "powered-by": "Funciona con"
+    "powered-by": "Funciona con",
+    "restart": "Reiniciar",
+    "status": {
+      "downloading": "Descargando la versión…",
+      "staging": "Escribiendo la tarjeta SD…",
+      "starting": "Iniciando {{name}}…"
+    },
+    "error": {
+      "download": "No se ha podido descargar la versión (HTTP {{status}}).",
+      "archive-format": "Esta versión está empaquetada como {{format}}, que el navegador no puede descomprimir. Descárgala para jugarla.",
+      "too-big": "Esta versión necesita {{size}} MB en la tarjeta SD, más de los {{limit}} MB que admite una tarjeta emulada."
+    }
   },
   "hardware-group": {
     "computers": "Ordenadores",

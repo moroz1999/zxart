@@ -20,6 +20,18 @@ final class ArchiveFileResolverService
         'sinclairql' => ['tar', 'zip', 'rar', '7z', 'img', 'bin', 'tap'],
     ];
 
+    /**
+     * Types a machine never runs, even when another machine in the release's
+     * effective set does. The Next keeps a title's data in `.bin` files beside
+     * the program, and those are data, not something to start — a Next release
+     * that also states a 128K would otherwise pick them up from its list.
+     *
+     * @var array<string, string[]>
+     */
+    private const array EXCLUDED_FILE_TYPES = [
+        'zxnext' => ['bin'],
+    ];
+
     private const array ZX81_CODES = ['zx8116', 'zx811', 'zx812', 'zx8132', 'zx8164', 'lambda8300'];
     private const array TOP_LEVEL_PARENT_VALUES = [null, 0];
     private const array HOBETA_FILE_TYPES = ['$c', '$b'];
@@ -30,14 +42,21 @@ final class ArchiveFileResolverService
     private function getArchiveFileTypesForHardware(array $hardwareCodes): array
     {
         $result = [];
+        $excluded = [];
 
         foreach ($hardwareCodes as $hardware) {
             if (!empty(self::ARCHIVE_FILE_TYPES[$hardware])) {
                 $result = array_merge($result, self::ARCHIVE_FILE_TYPES[$hardware]);
             }
+            if (!empty(self::EXCLUDED_FILE_TYPES[$hardware])) {
+                $excluded = array_merge($excluded, self::EXCLUDED_FILE_TYPES[$hardware]);
+            }
         }
 
-        return array_values(array_unique($result));
+        return $result
+                |> array_unique(...)
+                |> (static fn($x) => array_diff($x, $excluded))
+                |> array_values(...);
     }
 
     private function findHobeta(array $releaseStructure): array

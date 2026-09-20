@@ -27,6 +27,7 @@ export class ZxEmulatorPlayButtonComponent {
   @Input({required: true}) isDownloadable!: boolean;
   @Input({required: true}) playUrl!: string | null;
   @Input({required: true}) emulatorType!: string | null;
+  @Input() launchFilePath: string | null = null;
   @Input() canUploadScreenshot = false;
   @Input() screenshotUploadElementId: number | null = null;
   @Input() size: 'xs' | 'sm' | 'md' = 'md';
@@ -58,6 +59,7 @@ export class ZxEmulatorPlayButtonComponent {
     this.emulator.open({
       emulatorType: type,
       fileUrl: this.playUrl,
+      launchFilePath: this.launchFilePath ?? undefined,
       uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });

@@ -183,8 +183,10 @@ class fixApplication extends controllerApplication
         $parsingManager = $this->getService(ZxParsingManager::class);
         $gatherer = $this->getService(ReleaseFileTypesGatherer::class);
 
-        // only releases that have a format at all: nothing else can be wrong
-        $ids = $this->db->table('module_zxrelease_format')
+        // Every release with a parsed structure, not only those that already
+        // have a format: a format newly added to the catalogue is missing from
+        // exactly the releases that carry nothing else.
+        $ids = $this->db->table(ZxParsingManager::table)
             ->distinct()
             ->orderBy('elementId')
             ->offset($offset)

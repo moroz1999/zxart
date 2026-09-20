@@ -12,6 +12,7 @@ use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Releases\Repositories\ReleasesRepository;
+use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use ZxArt\Shared\DescriptionFormatter;
 use zxReleaseElement;
@@ -27,6 +28,7 @@ readonly class ProdReleasesService
         private ProdMediaService $prodMediaService,
         private ReleasesRepository $releasesRepository,
         private structureManager $structureManager,
+        private EmulatorResolverService $emulatorResolver,
     ) {
     }
 
@@ -102,9 +104,11 @@ readonly class ProdReleasesService
             isDownloadable: $isDownloadable,
             isPlayable: $isPlayable,
             downloadUrl: $isDownloadable && $release->fileName !== '' ? $release->getFileUrl() : null,
-            playUrl: $isPlayable ? $release->getPlayUrl($emulatorType === 'usp') : null,
+            playUrl: $isPlayable ? $release->getPlayUrl($this->emulatorResolver->servesWholeArchive($emulatorType)) : null,
             fileName: $release->fileName !== '' ? $release->fileName : null,
             emulatorType: $emulatorType,
+            launchFileId: $isPlayable ? $release->getLaunchFileId() : null,
+            launchFilePath: $isPlayable ? $release->getLaunchFilePath() : null,
             prodLegalStatus: $prodLegalStatus,
             prodExternalLink: $prodExternalLink,
             downloadsCount: $release->getDownloadsCount(),
@@ -150,7 +154,6 @@ readonly class ProdReleasesService
             }
             $formats[] = new ProdReleaseFormatDto(
                 format: $format,
-                label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
             );
         }

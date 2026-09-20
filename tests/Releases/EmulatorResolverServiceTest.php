@@ -30,7 +30,7 @@ class EmulatorResolverServiceTest extends TestCase
         $catalog->method('getCategoryOf')->willReturnCallback(
             static fn(string $code): ?HardwareGroup => match (true) {
                 in_array($code, ['ay', 'beeper', 'gs', 'ngs', 'ts'], true) => HardwareGroup::SOUND,
-                in_array($code, ['zx48', 'zx128', 'pentagon2666', 'timex2048', 'timex2068', 'samcoupe', 'tsconf', 'zx811'], true) => HardwareGroup::COMPUTERS,
+                in_array($code, ['zx48', 'zx128', 'pentagon2666', 'timex2048', 'timex2068', 'samcoupe', 'tsconf', 'zx811', 'atm', 'atm2', 'baseconf'], true) => HardwareGroup::COMPUTERS,
                 in_array($code, ['tape'], true) => HardwareGroup::STORAGE,
                 default => null,
             },
@@ -86,6 +86,30 @@ class EmulatorResolverServiceTest extends TestCase
     }
 
     /**
+     * The ATM family is what nothing here emulates, and its releases are TR-DOS
+     * disks — so without a rule of its own the Spectrum fallback would offer one
+     * on a machine it is not.
+     */
+    public function testAReleaseOnlyForAnUnsupportedMachineIsNotPlayable(): void
+    {
+        $this->assertNull($this->service->resolveEmulator(['baseconf'], ['trd']));
+        $this->assertNull($this->service->resolveEmulator(['atm'], ['trd']));
+        $this->assertNull($this->service->resolveEmulator(['atm2'], ['scl']));
+        $this->assertNull($this->service->resolveEmulator(['baseconf', 'betadisk', 'ay'], ['scl', 'trd']));
+    }
+
+    /**
+     * Any other computer in the set is a machine the release also runs on, so
+     * the unsupported one costs only its own version.
+     */
+    public function testAnUnsupportedMachineAlongsideASupportedOneStaysPlayable(): void
+    {
+        $this->assertSame('usp', $this->service->resolveEmulator(['baseconf', 'zx128'], ['trd']));
+        $this->assertSame('usp', $this->service->resolveEmulator(['atm', 'atm2', 'pentagon2666'], ['scl']));
+        $this->assertSame('tsconf', $this->service->resolveEmulator(['baseconf', 'tsconf'], ['spg']));
+    }
+
+    /**
      * A Timex is a Spectrum by format, so the USP fallback would swallow it —
      * only the machine says the SCLD video modes have to be emulated, and each
      * model is its own emulator id because JSSpeccy boots one machine.
@@ -109,5 +133,46 @@ class EmulatorResolverServiceTest extends TestCase
     public function testAFormatNoEmulatorHandlesResolvesToNothing(): void
     {
         $this->assertNull($this->service->resolveEmulator(['zx48'], ['rom']));
+    }
+
+    /**
+     * The Next boots NextZXOS off an SD card and the whole release is mounted on
+     * it, so the machine alone decides here and no format can rule it out.
+     * Whether the release holds anything startable is asked separately, by
+     * zxReleaseElement.
+     */
+    public function testTheNextResolvesFromItsMachineWhateverTheFormat(): void
+    {
+        $this->assertSame('zxnext', $this->service->resolveEmulator(['zxnext'], ['nex']));
+        $this->assertSame('zxnext', $this->service->resolveEmulator(['zxnext'], ['snx']));
+        $this->assertSame('zxnext', $this->service->resolveEmulator(['zxnext'], ['tap']));
+        $this->assertSame('zxnext', $this->service->resolveEmulator(['zxnext'], []));
+    }
+
+    /**
+     * A tape on a Next is a Next release, so it must not fall through to the
+     * Spectrum fallback: playing it there would run it on the wrong machine.
+     */
+    public function testANextTapeDoesNotFallThroughToTheSpectrum(): void
+    {
+        $this->assertSame('zxnext', $this->service->resolveEmulator(['zx128', 'zxnext'], ['tap']));
+    }
+
+    public function testOnlyWholeArchiveEmulatorsAreHandedTheReleaseFile(): void
+    {
+        $this->assertTrue($this->service->servesWholeArchive('usp'));
+        $this->assertTrue($this->service->servesWholeArchive('zxnext'));
+        $this->assertTrue($this->service->servesWholeArchive('tsconf'));
+        $this->assertFalse($this->service->servesWholeArchive('samcoupe'));
+        $this->assertFalse($this->service->servesWholeArchive(null));
+    }
+
+    /** What the Next is offered to start, ranked by zxReleaseElement. */
+    public function testTheNextRunsWhatNextZxosCanStart(): void
+    {
+        $this->assertSame(
+            ['nex', 'dot', 'bas', 'snx', 'b', 'tap', 'tzx'],
+            $this->service->getRunnableTypesForEmulator('zxnext'),
+        );
     }
 }

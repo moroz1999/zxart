@@ -31,6 +31,8 @@ import {TextDirective} from '../../shared/ui/typography/directives/text.directiv
 import {FadeInOut} from '../../shared/animations/fade-in-out';
 import {SlideInOut} from '../../shared/animations/slide-in-out';
 import {RouterLink} from '@angular/router';
+import {ReleaseFormatLabelPipe} from '../../shared/pipes/release-format-label.pipe';
+
 const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext', 'timex2048', 'timex2068'];
 
 @Component({
@@ -40,7 +42,7 @@ const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 't
     trigger('fadeInOut', FadeInOut),
     trigger('slideInOut', SlideInOut),
   ],
-  imports: [RouterLink, 
+  imports: [ReleaseFormatLabelPipe, RouterLink, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,
@@ -159,6 +161,7 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
     this.emulator.open({
       emulatorType: type,
       fileUrl: this.release.playUrl,
+      launchFilePath: this.release.launchFilePath ?? undefined,
       uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });

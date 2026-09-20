@@ -106,7 +106,7 @@ Detailed logic and structure: [domain/content.md](domain/content.md)
 ### interface language
 Every visitor reads the site in the language they picked, and the choice follows
 their account across devices.
-How it is built: [features/language-auth.md](features/language-auth.md)
+How it is built: [i18n.md](i18n.md)
 
 ### playlists
 Personal collections of works owned by one visitor.

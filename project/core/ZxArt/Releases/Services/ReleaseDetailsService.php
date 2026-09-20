@@ -22,6 +22,7 @@ use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Prods\ProdMediaService;
 use ZxArt\Releases\Dto\ReleaseDetailsDto;
 use ZxArt\Releases\Dto\ReleaseFileStructureItemDto;
+use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Dto\ReleaseProdRefDto;
 use ZxArt\Releases\Dto\ReleaseTabsDto;
 use ZxArt\Shared\EntityType;
@@ -45,6 +46,7 @@ readonly class ReleaseDetailsService
         private controller $controller,
         private privilegesManager $privilegesManager,
         private PictureListService $pictureListService,
+        private EmulatorResolverService $emulatorResolver,
     ) {
     }
 
@@ -111,9 +113,11 @@ readonly class ReleaseDetailsService
             isDownloadable: $isDownloadable,
             isPlayable: $isPlayable,
             downloadUrl: $isDownloadable && $release->fileName !== '' ? $release->getFileUrl() : null,
-            playUrl: $isPlayable ? $release->getPlayUrl($emulatorType === 'usp') : null,
+            playUrl: $isPlayable ? $release->getPlayUrl($this->emulatorResolver->servesWholeArchive($emulatorType)) : null,
             fileName: $release->fileName !== '' ? $this->decodeFileNameForDisplay($release->fileName) : null,
             emulatorType: $emulatorType,
+            launchFileId: $isPlayable ? $release->getLaunchFileId() : null,
+            launchFilePath: $isPlayable ? $release->getLaunchFilePath() : null,
             prodLegalStatus: $release->getLegalStatus(),
             prodExternalLink: $release->getProd()?->externalLink ?? '',
             downloadsCount: $release->getDownloadsCount(),
@@ -232,7 +236,6 @@ readonly class ReleaseDetailsService
             }
             $formats[] = new ProdReleaseFormatDto(
                 format: $format,
-                label: $this->infoBuilder->translate('zxRelease.filetype_' . $format),
                 emoji: $this->releaseFormatsProvider->getFormatEmoji($format),
             );
         }

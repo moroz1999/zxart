@@ -1574,13 +1574,62 @@
     "filter-media-tape": "Tape",
     "filter-media-other": "Other"
   },
+  "release-format": {
+    "dsk": "DSK disk",
+    "trd": "TRD disk",
+    "scl": "SCL disk",
+    "fdi": "FDI disk",
+    "udi": "UDI disk",
+    "td0": "TD0 disk",
+    "mgt": "MGT disk",
+    "opd": "OPD disk",
+    "mld": "MLD (Multiload)",
+    "mbd": "MBD disk",
+    "img": "IMG disk",
+    "sad": "SAD - SAM Disk",
+    "d40": "D40 disk",
+    "d80": "D80 disk",
+    "cpm": "CPM disk",
+    "tzx": "TZX tape",
+    "tap": "TAP tape",
+    "mdr": "Microdrive Cartridge",
+    "p": "P tape dump",
+    "o": "O tape dump",
+    "bas": "NextBASIC program",
+    "bin": "BIN file",
+    "rom": "ROM",
+    "spg": "SPG",
+    "nex": "NEX file",
+    "snx": "Spectrum Next snapshot SNX",
+    "tar": "TAR",
+    "dot": "NextZXOS dot command",
+    "sna": "Snapshot SNA",
+    "szx": "Snapshot SZX (Spectaculator)",
+    "dck": "Cartridge DCK",
+    "z80": "Snapshot Z80",
+    "z81": "Snapshot Z81",
+    "slt": "Snapshot SLT",
+    "$b": "Hobeta $b",
+    "$c": "Hobeta $c"
+  },
   "emulator": {
     "title": "Emulator",
     "loading": "Loading emulator…",
     "fullscreen": "Open in fullscreen",
     "screenshot-format-label": "Screenshot format",
     "samcoupe": "After loading emulator press \"Enter\", type \"boot\" and press \"Enter\" again.",
-    "powered-by": "Powered by"
+    "powered-by": "Powered by",
+    "restart": "Restart",
+    "status": {
+      "downloading": "Downloading the release…",
+      "staging": "Writing the SD card…",
+      "starting": "Starting {{name}}…"
+    },
+    "error": {
+      "download": "The release could not be downloaded (HTTP {{status}}).",
+      "archive-format": "This release is packed as {{format}}, which cannot be unpacked in the browser. Download it to play it.",
+      "too-big": "This release needs {{size}} MB on the SD card, more than the {{limit}} MB an emulated card holds."
+    }
   },
   "hardware-group": {
     "computers": "Computers",

@@ -27,11 +27,12 @@ import {ZxFactComponent} from '../../../../shared/ui/zx-facts/zx-fact.component'
 import {ZxCounterItem, ZxCountersComponent} from '../../../../shared/ui/zx-counters/zx-counters.component';
 import {ZxPartyProvenanceComponent} from '../../../../shared/lib/zx-party-provenance/zx-party-provenance.component';
 import {ZxLanguageFlagComponent} from '../../../../shared/ui/zx-language-flag/zx-language-flag.component';
+import {ReleaseFormatLabelPipe} from '../../../../shared/pipes/release-format-label.pipe';
 
 @Component({
   selector: 'zx-release-hero',
   standalone: true,
-  imports: [ZxLanguageFlagComponent, 
+  imports: [ReleaseFormatLabelPipe, ZxLanguageFlagComponent, 
     CommonModule,
     TranslateModule,
     SvgIconComponent,

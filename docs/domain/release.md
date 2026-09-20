@@ -102,13 +102,39 @@ emulated:
 - **ZX80**: on ZX80 hardware
 - **TSConf**: SPG, IMG, TRD, SCL, on TSConf hardware
 - **Multiboard**: TAR, on Multiboard hardware
+- **ZX Spectrum Next**: on Next hardware, whatever the file type
 - **Timex**: TAP, TZX, Z80, SNA, SZX, on Timex TC2048 or TC2068 hardware. A
   cartridge cannot be launched, so a release distributed as one is not playable.
+
+A Next or TSConf release is not opened as a single file: the whole release is
+placed on an SD card first, with its file names and folders intact, so a
+program finds the data files it loads while it runs. A TSConf release that
+carries a ready-made card of its own, or that is a TR-DOS disk, is played as
+that card or that disk instead.
+
+A Next release starts by itself when what it runs is a Next program or a
+NextZXOS command. In any other form the machine comes up in NextZXOS and the
+release is opened from its file browser — which is what lets a tape belonging
+to a Next release run as a Next release rather than turning the machine into an
+ordinary 128K.
+
+Which file the release is arranged around is not simply the first one found: a
+Next program wins over a NextBASIC program, which wins over a tape; a TSConf
+program wins over a TR-DOS disk, which wins over a whole card image; and a file
+near the top of the release wins over one buried deeper, so a game's own
+program is chosen over a loader in its source tree. Entries inside a tape or a
+disk belong to that medium and are never chosen. A release holding nothing the
+machine can start is not offered for playing.
 
 Hardware the emulators cannot reproduce — General Sound — makes a release
 unplayable only when it is the only sound the release has. Where the release also
 names another sound chip it can still be heard, so it stays playable and only the
 General Sound track is missing.
+
+The same holds for a machine none of the emulators can be, today the ATM Turbo
+family — ATM, ATM2, BaseConf: a release that runs only there is not offered for
+playing, and where it also names a machine that can be emulated only the ATM
+version is out of reach.
 
 The emulator window names the emulator it runs and links to its home page.
 

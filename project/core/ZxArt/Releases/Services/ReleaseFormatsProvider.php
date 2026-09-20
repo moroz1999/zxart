@@ -34,11 +34,16 @@ final class ReleaseFormatsProvider
         ],
         'rom' => [
             'bin',
+            // NextBASIC, which the Next runs as a program in its own right
+            'bas',
             'rom',
             'spg',
             'nex',
             'snx',
             'tar',
+            // A NextZXOS dot command: a program in its own right, and how a
+            // Next release of one is published
+            'dot',
         ],
         'snapshot' => [
             'sna',

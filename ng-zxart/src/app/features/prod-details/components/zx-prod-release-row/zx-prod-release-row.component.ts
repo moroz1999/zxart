@@ -12,17 +12,22 @@ import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type
 import {LightboxModule} from 'ng-gallery/lightbox';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
-import {ZxEmulatorPlayButtonComponent} from '../../../../shared/ui/zx-emulator-play-button/zx-emulator-play-button.component';
+import {
+  ZxEmulatorPlayButtonComponent
+} from '../../../../shared/ui/zx-emulator-play-button/zx-emulator-play-button.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxHardwareIconComponent} from '../../../../shared/ui/zx-hardware-icon/zx-hardware-icon.component';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {animate, style, transition, trigger} from '@angular/animations';
 
 
-import {RouterLink} from '@angular/router';@Component({
+import {RouterLink} from '@angular/router';
+import {ReleaseFormatLabelPipe} from '../../../../shared/pipes/release-format-label.pipe';
+
+@Component({
   selector: 'tr[zxProdReleaseRow]',
   standalone: true,
-  imports: [RouterLink, 
+  imports: [ReleaseFormatLabelPipe, RouterLink,
     CommonModule,
     TranslateModule,
     SvgIconComponent,
@@ -69,7 +74,8 @@ export class ZxProdReleaseRowComponent implements OnInit {
   constructor(
     private readonly iconReg: SvgIconRegistryService,
     private readonly gallery: PictureGalleryService,
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.iconReg.loadSvg(`${environment.svgUrl}download.svg`, 'download')?.subscribe();

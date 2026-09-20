@@ -76,6 +76,8 @@ components:
         - playUrl
         - fileName
         - emulatorType
+        - launchFileId
+        - launchFilePath
         - prodLegalStatus
         - prodExternalLink
         - downloadsCount
@@ -150,6 +152,19 @@ components:
           type: string
           nullable: true
         emulatorType:
+          type: string
+          nullable: true
+        launchFileId:
+          description: >-
+            Parsed-structure id of the file the emulator should start. Set only
+            for emulators handed the release file whole; null when the release
+            holds nothing the emulator can run.
+          type: integer
+          nullable: true
+        launchFilePath:
+          description: >-
+            That file's path inside the release file, as the emulator meets it
+            unpacked. The bare name when the release is a single file.
           type: string
           nullable: true
         prodLegalStatus:

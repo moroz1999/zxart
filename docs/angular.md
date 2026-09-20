@@ -272,7 +272,7 @@ The SPA owns the interface language (`LanguageService`, `shared/services/`). The
 selected language lives in localStorage; `languageInterceptor`
 (`shared/interceptors/`) sends it to every same-origin request as an `X-Language`
 header so backend responses are localized. Never read the language from the URL or
-the backend session. Full behavior: [features/language-auth.md](features/language-auth.md).
+the backend session. Full behavior: [i18n.md](i18n.md).
 
 ### Internal Links
 
@@ -636,5 +636,5 @@ If a component is used in more than one feature, it belongs in `entities/`, not 
     2. **DTOs**: All interfaces and DTOs must be stored in the `models/` folder within the corresponding module/feature. Do not mix type definitions with service or component code.
     3. **File Separation**: For each component, the template (HTML), styles (SCSS), and logic (TS) must reside in separate files. Using inline templates and styles within the `@Component` decorator is prohibited.
     4. **Services**: Shared services are stored in `app/shared/services/`, while feature-specific services are stored in `features/{feature-name}/services/`.
-    5. **Translations**: All user-facing text must be implemented using `ngx-translate`. Translations must be added to `src/assets/i18n/` for three languages: English (`en.json`), Russian (`ru.json`), and Spanish (`es.json`). Hardcoding strings in templates or components is forbidden.
+    5. **Translations**: All user-facing text must be implemented using `ngx-translate`, with keys added to `src/assets/i18n/` for all three languages — `en.json`, `ru.json`, `es.json`. Hardcoding strings in templates or components is forbidden, and so is adding a backend translation — see [i18n.md](i18n.md).
     6. **Component Wrapper**: If a component's template consists of a single wrapper element, that wrapper is unnecessary. Instead, apply the required styles and classes directly to the component's host element using the `:host` selector in SCSS and `@HostBinding('class.className')` in the TypeScript class.

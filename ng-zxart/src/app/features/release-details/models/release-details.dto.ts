@@ -69,6 +69,10 @@ export interface ReleaseDetailsDto {
   playUrl: string | null;
   fileName: string | null;
   emulatorType: string | null;
+  /** Parsed-structure id of the file the emulator should start, when one was found. */
+  launchFileId: number | null;
+  /** That file's path inside the release file, as the emulator meets it unpacked. */
+  launchFilePath: string | null;
   prodLegalStatus: string;
   prodExternalLink: string;
   downloadsCount: number;

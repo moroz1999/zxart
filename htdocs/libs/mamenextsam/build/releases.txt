@@ -1,0 +1,9 @@
+# Releases staged onto the demo SD card image, one per line:
+#   <zxart release id>:<file name>:<card folder>
+# The file is fetched from zxart.ee and, if it is a ZIP, unpacked into the
+# folder; anything else is written into the folder as it is.
+600669:InfernoDash_1.52.zip:inferno-dash
+601934:f2027_invite.zip:forever-2027
+552335:RED_SUPREMACY_4KB.zip:red-supremacy
+539496:HOLYTOW2.ZIP:holy-tower-2
+494986:MAGMAGIC_NXT.ZIP:mag-the-magician

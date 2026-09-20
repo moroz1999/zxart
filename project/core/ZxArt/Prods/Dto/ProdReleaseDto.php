@@ -41,6 +41,8 @@ readonly class ProdReleaseDto
         public ?string $playUrl,
         public ?string $fileName,
         public ?string $emulatorType,
+        public ?int $launchFileId,
+        public ?string $launchFilePath,
         public string $prodLegalStatus,
         public string $prodExternalLink,
         public int $downloadsCount,

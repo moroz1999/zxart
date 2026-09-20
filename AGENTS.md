@@ -33,6 +33,7 @@ Read ONLY the documents relevant to your task.
 - **[docs/domain.md](docs/domain.md)** - Project domain and entities: WHAT the site does, never HOW
 - **[docs/features/](docs/features/)** - How individual features are built: the implementation behind a domain document
 - **[docs/local-http.md](docs/local-http.md)** - How to reach the local site over HTTP to verify a change
+- **[docs/i18n.md](docs/i18n.md)** - Translations and interface language: new text is frontend-only, backend translations are legacy
 
 ### Backend (PHP)
 - **[docs/cms.md](docs/cms.md)** - CMS structure, modules, actions, privileges, view system

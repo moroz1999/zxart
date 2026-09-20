@@ -17,7 +17,7 @@ export const EMULATOR_HOMEPAGES: Record<EmulatorType, EmulatorHomepage | null> =
   zx81: {name: 'JtyOne', url: 'https://github.com/hammingweight/zx81-javascript-emulator'},
   tsconf: null,
   samcoupe: null,
-  zxnext: null,
+  zxnext: {name: 'MAME', url: 'https://www.mamedev.org/'},
   timex2048: JSSPECCY,
   timex2068: JSSPECCY,
 };

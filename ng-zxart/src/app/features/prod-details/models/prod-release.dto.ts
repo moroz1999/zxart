@@ -10,7 +10,6 @@ import {ProdFileDto} from './prod-file.dto';
 
 export interface ProdReleaseFormatDto {
   format: string;
-  label: string;
   emoji: string;
 }
 
@@ -36,6 +35,8 @@ export interface ProdReleaseDto {
   playUrl: string | null;
   fileName: string | null;
   emulatorType: string | null;
+  launchFileId: number | null;
+  launchFilePath: string | null;
   prodLegalStatus: string;
   prodExternalLink: string;
   downloadsCount: number;

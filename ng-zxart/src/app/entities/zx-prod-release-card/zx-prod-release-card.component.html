@@ -77,7 +77,7 @@
               <span appText="label" tone="muted">{{ 'release-row.col-format' | translate }}</span>
               <span class="release-card__row-value" appText="label" tone="primary">
                 <ng-container *ngFor="let fmt of release.formats; let last = last">
-                  {{ fmt.label }}<ng-container *ngIf="!last">, </ng-container>
+                  {{ fmt | releaseFormatLabel }}<ng-container *ngIf="!last">, </ng-container>
                 </ng-container>
               </span>
             </zx-inline>

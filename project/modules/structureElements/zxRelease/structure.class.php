@@ -102,6 +102,38 @@ class zxReleaseElement extends ZxArtItem implements
     private const array TsconfReleaseTypeRunnable = ['spg', 'img', 'trd', 'scl'];
     private const array TsconfHardwareRunnable = ["tsconf"];
 
+    /**
+     * Extension priority for {@see getLaunchFileId()}: lower wins. Each
+     * emulator's runnable types stand on their own here, so the order only has
+     * to be right within one machine.
+     *
+     * For the Next a program beats a NextZXOS command, which beats a
+     * NextBASIC program, which beats a snapshot, which beats a tape; `.b` is
+     * TR-DOS BASIC and comes last. For TSConf a native program beats a TR-DOS
+     * disk, which beats a whole SD card image — the card carries the release's
+     * data files, and the program on it is what gets started.
+     */
+    private const array LaunchPriorities = [
+        'nex' => 0,
+        'spg' => 0,
+        'dot' => 1,
+        'bas' => 2,
+        'snx' => 3,
+        'tap' => 4,
+        'tzx' => 4,
+        'b' => 5,
+        'trd' => 6,
+        'scl' => 6,
+        'img' => 7,
+    ];
+
+    /**
+     * Parsed structure types that hold files in their own right, mirroring
+     * ZxParsingItem::holdsSeparateFiles() — everything else is one medium
+     * whose catalogue entries are its contents, not staged files.
+     */
+    private const array SeparateFileHolders = ['folder', 'zip', 'rar', '7z', 'tar'];
+
     public function __construct($rootMarkerPublic)
     {
         parent::__construct($rootMarkerPublic);
@@ -347,6 +379,127 @@ class zxReleaseElement extends ZxArtItem implements
         return $playableFiles;
     }
 
+    /**
+     * Which file of the release an emulator that mounts the whole archive
+     * should start — a recommendation computed from the parsed structure, not
+     * a stored property. Nothing is picked blindly: among the files the
+     * emulator can run, a native program wins over a tape, and a shallower
+     * one wins over a deeper one, so a game's own program beats a loader
+     * buried in a source tree. Null when the release holds nothing runnable,
+     * which for the Next still leaves a browsable card.
+     */
+    public function getLaunchFileId(): ?int
+    {
+        $file = $this->getLaunchFile();
+        return $file === null ? null : (int)$file['id'];
+    }
+
+    /**
+     * Where {@see getLaunchFileId()} sits inside the release file, as the
+     * emulator meets it once the release is unpacked: a path relative to the
+     * archive root, or the bare name when the release is that one file. Sent
+     * alongside the id so the emulator needs no rule of its own for choosing.
+     */
+    public function getLaunchFilePath(): ?string
+    {
+        $file = $this->getLaunchFile();
+        if ($file === null) {
+            return null;
+        }
+
+        $rows = $this->getStructureRowsById();
+        $segments = [(string)$file['fileName']];
+        $parentId = (int)($file['parentId'] ?? 0);
+        // The top-level row is the release file itself, and its name is not
+        // part of any path inside it — so ancestors are collected only down to
+        // it, never including it. When the release IS one file, that row is
+        // the launch file and the loop never runs.
+        while ($parentId !== 0 && isset($rows[$parentId])) {
+            $parent = $rows[$parentId];
+            if ((int)($parent['parentId'] ?? 0) === 0) {
+                break;
+            }
+            array_unshift($segments, (string)$parent['fileName']);
+            $parentId = (int)$parent['parentId'];
+        }
+
+        return implode('/', $segments);
+    }
+
+    /**
+     * @return array<string,mixed>|null the chosen parsed structure row
+     */
+    private function getLaunchFile(): ?array
+    {
+        return $this->findLaunchFile($this->getRunnableTypes());
+    }
+
+    /**
+     * @param string[] $types the extensions an emulator can start
+     *
+     * @return array<string,mixed>|null the chosen parsed structure row
+     */
+    private function findLaunchFile(array $types): ?array
+    {
+        $rows = $this->getStructureRowsById();
+        $best = null;
+        $bestRank = null;
+        foreach ($rows as $row) {
+            $extension = strtolower(pathinfo((string)$row['fileName'], PATHINFO_EXTENSION));
+            if (!in_array($extension, $types, true)) {
+                continue;
+            }
+            $depth = $this->getStagedDepth((int)$row['id'], $rows);
+            if ($depth === null) {
+                continue;
+            }
+            $rank = [self::LaunchPriorities[$extension] ?? 9, $depth];
+            if ($bestRank === null || $rank < $bestRank) {
+                $best = $row;
+                $bestRank = $rank;
+            }
+        }
+
+        return $best;
+    }
+
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    private function getStructureRowsById(): array
+    {
+        $rows = [];
+        foreach ($this->getReleaseFlatStructure() ?: [] as $row) {
+            $rows[(int)$row['id']] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * How deep a parsed entry sits among the files that actually get staged,
+     * or null when it is not one of them. A tape or a disk in the release is
+     * itself a file, but its catalogue entries belong to that medium and never
+     * land on the card — reading them as launch candidates is what picked a
+     * tape block over the tape holding it.
+     *
+     * @param array<int,array<string,mixed>> $rows parsed structure by id
+     */
+    private function getStagedDepth(int $id, array $rows): ?int
+    {
+        $depth = 0;
+        $parentId = (int)($rows[$id]['parentId'] ?? 0);
+        while ($parentId !== 0 && isset($rows[$parentId]) && $depth < 64) {
+            if (!in_array((string)$rows[$parentId]['type'], self::SeparateFileHolders, true)) {
+                return null;
+            }
+            $depth++;
+            $parentId = (int)($rows[$parentId]['parentId'] ?? 0);
+        }
+
+        return $depth;
+    }
+
     public function getArchiveFilesForHardware(): array
     {
         $structure = $this->getReleaseFlatStructure() ?: [];
@@ -360,9 +513,29 @@ class zxReleaseElement extends ZxArtItem implements
         return $this->getService(EmulatorResolverService::class)->getRunnableTypesForEmulator($emulator);
     }
 
+    private ?string $resolvedEmulatorType = null;
+    private bool $emulatorTypeResolved = false;
+
     private function resolveEmulatorType(): ?string
     {
-        return $this->getService(EmulatorResolverService::class)->resolveEmulator($this->getEffectiveHardwareCodes(), $this->releaseFormat);
+        if ($this->emulatorTypeResolved) {
+            return $this->resolvedEmulatorType;
+        }
+        $this->emulatorTypeResolved = true;
+
+        $resolver = $this->getService(EmulatorResolverService::class);
+        $emulator = $resolver->resolveEmulator($this->getEffectiveHardwareCodes(), $this->releaseFormat);
+        // The Next and TSConf are matched on hardware alone, so a release
+        // holding nothing either machine can start would offer an emulator
+        // with nothing to run on it. Their runnable types are asked for
+        // directly: going through getRunnableTypes() would come back here.
+        if (in_array($emulator, ['zxnext', 'tsconf'], true)
+            && $this->findLaunchFile($resolver->getRunnableTypesForEmulator($emulator)) === null) {
+            $emulator = null;
+        }
+        $this->resolvedEmulatorType = $emulator;
+
+        return $emulator;
     }
 
     /**

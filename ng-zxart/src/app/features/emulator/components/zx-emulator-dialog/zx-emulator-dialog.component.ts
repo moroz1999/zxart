@@ -19,6 +19,7 @@ import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.compo
 import {ZxExtLinksComponent, ZxExtLinkDto} from '../../../../shared/ui/zx-ext-links/zx-ext-links.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {EmulatorEngine, EmulatorType} from '../../engines/emulator-engine';
+import {EmulatorError} from '../../engines/emulator-error';
 import {UspEngine} from '../../engines/usp.engine';
 import {Zx81Engine} from '../../engines/zx81.engine';
 import {TsconfEngine} from '../../engines/tsconf.engine';
@@ -32,6 +33,8 @@ import {AnalyticsService} from '../../../../shared/services/analytics.service';
 export interface EmulatorDialogData {
   emulatorType: EmulatorType;
   fileUrl: string;
+  /** Path inside the release file of the program to start, for emulators that mount the whole release. */
+  launchFilePath?: string;
   /** Prod or release element the captured screenshot is attached to. */
   uploadElementId?: number;
   canScreenshot?: boolean;
@@ -63,6 +66,12 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
   screenshotSelection: UspScreenSelection = '48';
   loading = true;
   error: string | null = null;
+  /** What a slow start is doing right now, as a translation key and its parameters. */
+  statusKey: string | null = null;
+  statusParams: Record<string, unknown> | undefined;
+  /** A failure the person is meant to read, in their own language. */
+  errorKey: string | null = null;
+  errorParams: Record<string, unknown> | undefined;
   /** The emulator's own home page, credited at the bottom of the dialog. */
   homepageLinks: ZxExtLinkDto[] = [];
 
@@ -94,15 +103,28 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
     this.homepageLinks = homepage ? [{url: homepage.url, label: homepage.name}] : [];
     this.engine = this.createEngine(this.data.emulatorType);
     this.engine
-      .start(this.canvasRef.nativeElement, this.data.fileUrl, this.canvasWrapRef.nativeElement)
+      .start(this.canvasRef.nativeElement, this.data.fileUrl, this.canvasWrapRef.nativeElement, {
+        launchFilePath: this.data.launchFilePath,
+        onStatus: (key, params) => {
+          this.statusKey = key;
+          this.statusParams = params;
+          this.cdr.markForCheck();
+        },
+      })
       .then(() => {
         this.loading = false;
+        this.statusKey = null;
         this.cdr.markForCheck();
         this.analytics.reachGoal('emulatorstart');
       })
       .catch((err: unknown) => {
         this.loading = false;
-        this.error = err instanceof Error ? err.message : String(err);
+        if (err instanceof EmulatorError) {
+          this.errorKey = err.translationKey;
+          this.errorParams = err.params;
+        } else {
+          this.error = err instanceof Error ? err.message : String(err);
+        }
         this.cdr.markForCheck();
       });
   }
@@ -114,6 +136,15 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
 
   setFullscreen(): void {
     this.engine?.setFullscreen();
+  }
+
+  /** Only engines that can reboot in place offer it. */
+  get canRestart(): boolean {
+    return !this.loading && !this.error && !this.errorKey && !!this.engine?.restart;
+  }
+
+  restart(): void {
+    this.engine?.restart?.();
   }
 
   close(): void {

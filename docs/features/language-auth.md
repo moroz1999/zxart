@@ -1,34 +1,6 @@
-# Interface language & auto-login
+# Account session, preferences & auto-login
 
-The SPA owns the interface language. There is no language segment in SPA URLs and
-no reliance on the backend session language.
-
-## Language model (frontend)
-
-The interface language is a **user preference** (`PreferenceCode::LANGUAGE`,
-iso6393 value), so it flows through `UserPreferencesService` exactly like the
-theme. `LanguageService` (`features/settings/services/language.service.ts`) is the
-single owner and mirrors `ThemeService`:
-
-- The supported languages are a frontend constant (`SUPPORTED_LANGUAGES`) matching
-  the shipped i18n bundles. Each entry maps a short code (`en`/`ru`/`es`, used by
-  ngx-translate) to a backend iso6393 code (`eng`/`rus`/`spa`), plus a native
-  title and flag.
-- `initialize()` applies the stored language immediately (the `language`
-  preference from localStorage, or English by default), then calls
-  `UserPreferencesService.initialize()` and re-applies the value fetched for a
-  logged-in user. It registers the langs, sets the default lang, and calls
-  `translate.use()`.
-- `setLanguage(short)` (switcher) applies the language and persists it via
-  `UserPreferencesService.setPreference('language', …)` — which stores it in
-  localStorage for anonymous visitors and PUTs it to the backend for logged-in
-  users. Anonymous visitors never send anything to the backend.
-- `languageCode$` exposes the current iso6393 code; language-scoped API callers
-  (comments, backend links) subscribe to it.
-
-Because the language is a normal preference, a logged-in user's stored language
-arrives through the usual `/userpreferences/` fetch — it is **not** carried on the
-current-user response. Both frontend and backend preference defaults use `eng`.
+Interface language and translations: [../i18n.md](../i18n.md).
 
 ## Preference storage
 
@@ -55,38 +27,6 @@ entry point every preference owner waits on:
 Owners (`ThemeService`, `LanguageService`, `PictureSettingsService`) apply the
 stored value synchronously first and re-apply once `initialize()` resolves, so a
 preference set elsewhere wins without delaying the first render.
-
-## Language on API requests
-
-`languageInterceptor` (`features/settings/interceptors/language.interceptor.ts`)
-adds an `X-Language` header (iso6393) to every same-origin request.
-`LanguagesManager::applyRequestedLanguageHeader()` is the one place that reads it,
-and every endpoint the SPA calls applies it, so responses are localized in the
-selected language independent of the URL or session:
-
-- `LoggedControllerApplication` calls it in its constructor, which covers every
-  `ZxArt\Controllers\*` endpoint. It then re-syncs `publicStructureManager`'s
-  element path restriction, which DI froze to the language current when it was
-  built.
-- `jsonElementDataApplication` calls it before it resolves the requested path,
-  because the element data it serves — the software catalogue's categories,
-  legal statuses and release types among them — is named in whatever language
-  the elements are loaded in.
-
-A response built this way is language-dependent as a whole, so a component
-showing backend-named values reloads it on `onLangChange` rather than relabelling
-what it holds.
-
-## Backend language detection
-
-`LanguagesManager` keeps no server-side memory of the public language: it is
-resolved per request from the URL segment (legacy pages only), the configured
-default, and the `Accept-Language` header, in that order. Nothing is written to a
-cookie or to the session.
-
-The admin panel is the exception. It is server-rendered, so an explicit `?lang=`
-choice is persisted by `LanguagesManager::persistAdminLanguageCode()` into the
-`cl_adminLanguages` cookie and read back by the `adminLanguages` group only.
 
 ## Auto-login
 

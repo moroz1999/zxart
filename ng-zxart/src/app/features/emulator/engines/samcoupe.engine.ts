@@ -1,10 +1,20 @@
 import {EmulatorEngine, EmulatorType} from './emulator-engine';
 import {MameEmulatorInstance, MameGlobals} from './mame-globals';
 import {loadScriptOnce} from './load-script';
+import {settleCanvasSize} from './mame-canvas';
+import {useInMemoryFileSystem} from './mame-memory-fs';
 
 const BROWSERFS_URL = '/libs/mamenextsam/browserfs.min.js';
 const LOADER_URL = '/libs/mamenextsam/loader.js';
 const LIB_BASE = '/libs/mamenextsam';
+
+/**
+ * The size the SAM runs at in the dialog, and the machine's own: it is what
+ * MAME is launched with and what the canvas is nudged back to, so no other
+ * emulator's resolution reaches this one.
+ */
+const NATIVE_WIDTH = 576;
+const NATIVE_HEIGHT = 550;
 
 export class SamcoupeEngine implements EmulatorEngine {
   readonly type: EmulatorType = 'samcoupe';
@@ -29,6 +39,7 @@ export class SamcoupeEngine implements EmulatorEngine {
   async start(canvas: HTMLCanvasElement, fileUrl: string): Promise<void> {
     await loadScriptOnce(this.browserFsState, BROWSERFS_URL);
     await loadScriptOnce(this.scriptState, LOADER_URL);
+    await useInMemoryFileSystem();
     this.canvas = canvas;
     canvas.addEventListener('click', this.pointerLockHandler);
     document.addEventListener('visibilitychange', this.visibilityHandler);
@@ -58,7 +69,7 @@ export class SamcoupeEngine implements EmulatorEngine {
 
     const loader = new MAMELoader(
       MAMELoader.driver('samcoupe'),
-      MAMELoader.nativeResolution(576, 550),
+      MAMELoader.nativeResolution(NATIVE_WIDTH, NATIVE_HEIGHT),
       MAMELoader.emulatorJS(`${LIB_BASE}/mame.js`),
       MAMELoader.emulatorWASM(`${LIB_BASE}/mame.wasm`),
       MAMELoader.mountFile('samcoupe.zip', MAMELoader.fetchFile('Bios', `${LIB_BASE}/roms/samcoupe.zip`)),
@@ -73,6 +84,7 @@ export class SamcoupeEngine implements EmulatorEngine {
 
     const emulator = new Emulator(canvas, null, loader);
     emulator.start({waitAfterDownloading: false});
+    settleCanvasSize(NATIVE_WIDTH, NATIVE_HEIGHT, () => this.emulator !== null);
     return emulator;
   }
 }

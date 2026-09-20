@@ -75,7 +75,7 @@
     <ng-container *ngFor="let fmt of release.formats; let last = last">
       <a appText="body" class="release-row__format-link"
          routerLink="/prods" [queryParams]="{formats: fmt.format}">
-        <ng-container *ngIf="fmt.emoji">{{ fmt.emoji }} </ng-container>{{ fmt.label }}
+        <ng-container *ngIf="fmt.emoji">{{ fmt.emoji }} </ng-container>{{ fmt | releaseFormatLabel }}
       </a><ng-container *ngIf="!last">, </ng-container>
     </ng-container>
   </td>
@@ -103,6 +103,7 @@
           [isDownloadable]="release.isDownloadable"
           [playUrl]="release.playUrl"
           [emulatorType]="release.emulatorType"
+          [launchFilePath]="release.launchFilePath"
           [canUploadScreenshot]="canUploadScreenshot"
           [screenshotUploadElementId]="screenshotUploadElementId"
         >

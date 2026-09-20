@@ -5,10 +5,14 @@
       <canvas #canvas class="zx-emulator-dialog__canvas" id="canvas" tabindex="0" width="960" height="720"
               [class.zx-emulator-dialog__canvas--hidden]="rendersOwnUi"></canvas>
       <div *ngIf="loading" class="zx-emulator-dialog__overlay">
-        <span appText="label" tone="muted">{{ 'emulator.loading' | translate }}</span>
+        <span appText="label" tone="muted">{{
+          statusKey ? (statusKey | translate:statusParams) : ('emulator.loading' | translate)
+        }}</span>
       </div>
-      <div *ngIf="error" class="zx-emulator-dialog__overlay">
-        <span appText="label" tone="danger">{{ error }}</span>
+      <div *ngIf="error || errorKey" class="zx-emulator-dialog__overlay">
+        <span appText="label" tone="danger">{{
+          errorKey ? (errorKey | translate:errorParams) : error
+        }}</span>
       </div>
     </div>
     <p *ngIf="showSamcoupeNote" class="zx-emulator-dialog__note" appText="label" tone="muted">
@@ -30,6 +34,7 @@
           <option value="giga">giga</option>
         </select>
       </label>
+      <zx-button *ngIf="canRestart" color="outlined" (click)="restart()">{{ 'emulator.restart' | translate }}</zx-button>
       <zx-button color="outlined" (click)="setFullscreen()">{{ 'emulator.fullscreen' | translate }}</zx-button>
     </zx-button-controls>
   </div>

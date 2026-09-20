@@ -71,6 +71,6 @@ clears it — otherwise an expired session would silently log the visitor back i
 ## Language and theme are not in the session
 
 The interface language and the theme are frontend preferences. See
-[language & auto-login](../features/language-auth.md). The `adminLanguages` cookie
+[i18n.md](../i18n.md). The `adminLanguages` cookie
 written by `LanguagesManager::persistAdminLanguageCode()` is the single remaining
 server-side language memory, and it exists only for the admin panel.
