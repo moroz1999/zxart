@@ -12,6 +12,7 @@ use structureElement;
 use tagElement;
 use userElement;
 use privilegesManager;
+use ZxArt\Import\Services\ZxdbEntryIdsProvider;
 use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Dto\ProdAuthorInfoDto;
 use ZxArt\Prods\Dto\ProdCategoryPathDto;
@@ -37,6 +38,7 @@ readonly class ProdCoreService
         private ProdTabsRepository $prodTabsRepository,
         private privilegesManager $privilegesManager,
         private PageMetadataService $pageMetadataService,
+        private ZxdbEntryIdsProvider $zxdbEntryIdsProvider,
     ) {
     }
 
@@ -69,6 +71,7 @@ readonly class ProdCoreService
                 'publicAdd',
                 StructureType::ZxRelease->value,
             ) === true,
+            hasZxdbEntry: $this->zxdbEntryIdsProvider->hasEntry($element->getId()),
             downloadsCount: $this->sumReleaseDownloads($element),
             playsCount: $this->sumReleasePlays($element),
             categoriesPaths: $this->buildCategoriesPaths($element),

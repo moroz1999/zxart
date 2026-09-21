@@ -159,7 +159,7 @@ field.
 ### Special Operations
 - The release page offers editing only with the `publicReceive` privilege, the
   same privilege that guards and saves the edit form.
-- **clone** - creates a copy of the release under the same parent prod, carries over hardware, language, publishers and authorship, and resets usage counters. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone.
+- **clone** - creates a copy of the release under the same parent prod, carries over hardware, language, publishers and authorship, resets usage counters, and records the cloning user and the current time as who added it and when. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone.
 
 ### Emulator Launch Capability
 Determined by combination of:

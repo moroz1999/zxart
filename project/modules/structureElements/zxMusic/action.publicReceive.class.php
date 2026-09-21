@@ -31,7 +31,7 @@ class publicReceiveZxMusic extends structureElementAction
                     }
                 }
             }
-            $structureElement->dateAdded = $structureElement->dateCreated;
+            $structureElement->dateAdded = $structureElement->getCreatedTimestamp();
             $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
 
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {

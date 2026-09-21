@@ -75,6 +75,13 @@ Screenshots, covers and inlays, maps, and recorded playthroughs. Covers of a
 production include the covers and advertising material of its releases, so
 everything printed for the work is in one place.
 
+A production known to Spectrum Computing can take its loading, opening and
+running screens from there: an editor asks for them from the production's add menu, and
+the screens its entries publish are added to the gallery — loading screens
+first, then opening, then running ones. A screen the gallery
+already holds is not added twice, and when Spectrum Computing offers the same
+screen both as a native Spectrum screen and as a picture, the native one is taken.
+
 #### Releases
 The concrete published versions. A production can be marked as showing only its
 releases, when the production itself is nothing more than their common heading.
@@ -89,7 +96,8 @@ releases, when the production itself is nothing more than their common heading.
 - **userId** — the visitor who added it
 
 Downloads and plays are counted on releases; a production shows the totals of
-its own, since it holds no files itself.
+its own, since it holds no files itself. For a production on sale neither the
+totals nor the per-release counts are shown.
 
 ### Special Operations
 Two productions that turn out to be the same work can be merged, and one
@@ -105,6 +113,10 @@ The software section is one page, filtered by category, year, hardware, language
 legal status, format, type, first letter, tags and country, and ordered as the
 visitor chooses. Every filter is part of the address, so a filtered catalogue can
 be linked to and shared.
+
+The year filter also understands "this year", which the front page's "view more"
+links use. It means the current year only, except in January, when the previous
+year is included too, because the new year has hardly anything in it yet.
 
 Browsing a category makes that category the subject of the page: it names the
 heading and the document title, and the trail shows the chain it sits in.

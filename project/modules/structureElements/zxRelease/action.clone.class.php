@@ -1,5 +1,6 @@
 <?php
 
+use App\Users\CurrentUserService;
 use ZxArt\Prods\Services\ProdsService;
 
 class cloneZxRelease extends structureElementAction
@@ -33,6 +34,8 @@ class cloneZxRelease extends structureElementAction
         $clonedElement->publishers = $structureElement->publishers;
         $clonedElement->downloads = 0;
         $clonedElement->plays = 0;
+        $clonedElement->dateAdded = time();
+        $clonedElement->userId = $this->getService(CurrentUserService::class)->getCurrentUser()->id;
         $clonedElement->persistElementData();
 
         $prodsService = $this->getService(ProdsService::class);

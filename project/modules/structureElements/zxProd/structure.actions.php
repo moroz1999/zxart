@@ -28,3 +28,4 @@ $moduleActions[] = 'uploadScreenshot';
 $moduleActions[] = 'submitTags';
 $moduleActions[] = 'showAiForm';
 $moduleActions[] = 'receiveAiForm';
+$moduleActions[] = 'importScScreenshots';

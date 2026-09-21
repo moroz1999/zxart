@@ -84,13 +84,15 @@
     <ng-container *ngIf="release.voting.votes > 0">{{ release.voting.votes | number:'1.0-2' }}</ng-container>
   </td>
 
-  <td class="release-row__downloads" appText="body" tone="muted">
-    <ng-container *ngIf="release.isDownloadable">{{ release.downloadsCount }}</ng-container>
-  </td>
+  <ng-container *ngIf="!isInSales">
+    <td class="release-row__downloads" appText="body" tone="muted">
+      <ng-container *ngIf="release.isDownloadable">{{ release.downloadsCount }}</ng-container>
+    </td>
 
-  <td class="release-row__plays" appText="body" tone="muted">
-    <ng-container *ngIf="release.isDownloadable">{{ release.playsCount }}</ng-container>
-  </td>
+    <td class="release-row__plays" appText="body" tone="muted">
+      <ng-container *ngIf="release.isDownloadable">{{ release.playsCount }}</ng-container>
+    </td>
+  </ng-container>
 
   <td class="release-row__actions">
     <zx-inline gap="xs" align="center">

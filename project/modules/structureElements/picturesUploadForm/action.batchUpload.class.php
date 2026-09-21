@@ -68,7 +68,7 @@ class batchUploadPicturesUploadForm extends structureElementAction
                         $pictureElement->author = $structureElement->author;
                     }
                     $pictureElement->originalAuthor = $structureElement->originalAuthor;
-                    $pictureElement->dateAdded = $pictureElement->dateCreated;
+                    $pictureElement->dateAdded = $pictureElement->getCreatedTimestamp();
                     $currentUserService = $this->getService(CurrentUserService::class);
                     $pictureElement->userId = $currentUserService->getCurrentUser()->id;
 

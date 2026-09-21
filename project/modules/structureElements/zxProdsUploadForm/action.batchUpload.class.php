@@ -76,7 +76,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->connectedFile = $structureElement->connectedFile;
                     $zxProdElement->mapFilesSelector = $structureElement->mapFilesSelector;
 
-                    $zxProdElement->dateAdded = $zxProdElement->dateCreated;
+                    $zxProdElement->dateAdded = $zxProdElement->getCreatedTimestamp();
                     $currentUserService = $this->getService(CurrentUserService::class);
                     $zxProdElement->userId = $currentUserService->getCurrentUser()->id;
 
@@ -125,7 +125,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
 
                             $zxReleaseElement->structureName = $zxReleaseElement->title;
                             $zxReleaseElement->file = $zxReleaseElement->getPersistedId();
-                            $zxReleaseElement->dateAdded = $zxReleaseElement->dateCreated;
+                            $zxReleaseElement->dateAdded = $zxReleaseElement->getCreatedTimestamp();
                             $currentUserService = $this->getService(CurrentUserService::class);
                             $zxReleaseElement->userId = $currentUserService->getCurrentUser()->id;
 

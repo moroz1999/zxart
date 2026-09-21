@@ -44,6 +44,8 @@ export interface ZxEditingControlRun {
   readonly successKey?: string;
   /** Result message shown when the action fails. */
   readonly failureKey: string;
+  /** Reloads the page after a successful action, for actions that change content the page already shows. */
+  readonly reloadOnSuccess?: boolean;
 }
 
 export interface ZxEditingControlAction {
@@ -239,6 +241,9 @@ export class ZxEditingControlsComponent implements OnChanges {
       }
       const succeeded = (result as {success?: boolean}).success !== false;
       await this.notify(action, succeeded && run.successKey ? run.successKey : run.failureKey);
+      if (succeeded && run.reloadOnSuccess) {
+        this.document.location.reload();
+      }
     } catch {
       await this.notify(action, run.failureKey);
     }

@@ -96,7 +96,7 @@ class DmdManager
                 $zxPictureElement->originalName = $fileName;
                 $zxPictureElement->author = [$authorElement->getId()];
                 $zxPictureElement->type = 'attributes';
-                $zxPictureElement->dateAdded = $zxPictureElement->dateCreated;
+                $zxPictureElement->dateAdded = $zxPictureElement->getCreatedTimestamp();
 
                 $zxPictureElement->updateYear();
 

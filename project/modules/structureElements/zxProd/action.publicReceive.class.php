@@ -17,7 +17,7 @@ class publicReceiveZxProd extends structureElementAction
     {
         if ($this->validated) {
             $structureElement->structureName = $structureElement->title;
-            $structureElement->dateAdded = $structureElement->dateCreated;
+            $structureElement->dateAdded = $structureElement->getCreatedTimestamp();
 
             $oldCategoriesIds = $structureElement->getConnectedCategoriesIds();
 

@@ -42,6 +42,7 @@ components:
         - generatedDescription
         - dateCreated
         - canAddRelease
+        - hasZxdbEntry
         - downloadsCount
         - playsCount
         - categoriesPaths
@@ -86,6 +87,9 @@ components:
           type: string
         canAddRelease:
           type: boolean
+        hasZxdbEntry:
+          type: boolean
+          description: The prod is linked to at least one Spectrum Computing (ZxDB) entry.
         downloadsCount:
           type: integer
           description: Total downloads summed over the prod's releases.

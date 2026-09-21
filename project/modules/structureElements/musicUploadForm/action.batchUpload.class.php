@@ -49,7 +49,7 @@ class batchUploadMusicUploadForm extends structureElementAction
                     $zxMusicElement->party = $structureElement->party;
                     $zxMusicElement->partyplace = $structureElement->partyplace;
                     $zxMusicElement->compo = $structureElement->compo;
-                    $zxMusicElement->dateAdded = $zxMusicElement->dateCreated;
+                    $zxMusicElement->dateAdded = $zxMusicElement->getCreatedTimestamp();
                     $currentUserService = $this->getService(CurrentUserService::class);
                     $zxMusicElement->userId = $currentUserService->getCurrentUser()->id;
                     $zxMusicElement->chipType = $structureElement->chipType;

@@ -107,6 +107,8 @@ export interface ProdCoreDto {
   generatedDescription: string;
   dateCreated: string;
   canAddRelease: boolean;
+  /** Linked to at least one Spectrum Computing (ZxDB) entry. */
+  hasZxdbEntry: boolean;
   /** Downloads summed over the prod's releases. */
   downloadsCount: number;
   /** Online plays summed over the prod's releases. */

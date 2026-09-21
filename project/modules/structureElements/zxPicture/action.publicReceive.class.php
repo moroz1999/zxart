@@ -27,7 +27,7 @@ class publicReceiveZxPicture extends structureElementAction
                     $structureElement->title = str_replace('_', ' ', ucfirst($structureElement->title));
                 }
             }
-            $structureElement->dateAdded = $structureElement->dateCreated;
+            $structureElement->dateAdded = $structureElement->getCreatedTimestamp();
             if ($structureElement->getDataChunk("image")->originalName !== null) {
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;

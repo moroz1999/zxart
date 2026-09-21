@@ -101,10 +101,10 @@
                 <th class="prod-releases-section__col-rating" (click)="sortBy('rating')">
                   {{ 'release-row.col-rating' | translate }}{{ sortArrow('rating') }}
                 </th>
-                <th class="prod-releases-section__col-downloads" (click)="sortBy('downloads')">
+                <th *ngIf="showCounters" class="prod-releases-section__col-downloads" (click)="sortBy('downloads')">
                   {{ 'release-row.col-downloads' | translate }}{{ sortArrow('downloads') }}
                 </th>
-                <th class="prod-releases-section__col-plays" (click)="sortBy('plays')">
+                <th *ngIf="showCounters" class="prod-releases-section__col-plays" (click)="sortBy('plays')">
                   {{ 'release-row.col-plays' | translate }}{{ sortArrow('plays') }}
                 </th>
                 <th class="prod-releases-section__col-actions"></th>

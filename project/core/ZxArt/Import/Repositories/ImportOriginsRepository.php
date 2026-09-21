@@ -44,6 +44,20 @@ final readonly class ImportOriginsRepository extends AbstractRepository
     }
 
     /**
+     * @return list<string>
+     */
+    public function getElementImportIds(int $elementId, ImportOrigin $origin): array
+    {
+        /** @var list<string> $importIds */
+        $importIds = $this->db->table($this->tableName(DatabaseTable::ImportOrigin))
+            ->where('elementId', '=', $elementId)
+            ->where('importOrigin', '=', $origin->value)
+            ->orderBy('importId')
+            ->pluck('importId');
+        return $importIds;
+    }
+
+    /**
      * Points the portal id at this element. The same id of the same portal can
      * only describe one element of a type, so an existing record is moved
      * instead of duplicated.

@@ -128,8 +128,10 @@ export class ZxProdHeroComponent implements OnInit {
       items.push({value: this.core.voting.votes.toFixed(2), labelKey: 'hero.rating'});
     }
     items.push({value: this.core.voting.votesAmount, labelKey: 'hero.votes'});
-    items.push({value: this.core.downloadsCount, labelKey: 'hero.downloads'});
-    items.push({value: this.core.playsCount, labelKey: 'hero.plays'});
+    if (this.core.legalStatus !== 'insales') {
+      items.push({value: this.core.downloadsCount, labelKey: 'hero.downloads'});
+      items.push({value: this.core.playsCount, labelKey: 'hero.plays'});
+    }
     return items;
   }
 }

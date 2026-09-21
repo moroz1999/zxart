@@ -117,6 +117,11 @@ export class ZxProdReleasesSectionComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Download and play counters are not shown for prods on sale. */
+  get showCounters(): boolean {
+    return this.releases[0]?.prodLegalStatus !== 'insales';
+  }
+
   get availableLangs(): LabeledOption[] {
     const seen = new Map<string, string>();
     for (const r of this.releases) {

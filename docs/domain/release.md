@@ -168,7 +168,8 @@ one of them.
 A release can be copied under the same production, carrying over its hardware,
 languages, publishers and authorship, and starting its download and play counts
 from zero. It is how a second format or a second publisher of the same version is
-recorded without typing everything again. Whoever added a release may clone it.
+recorded without typing everything again. Whoever added a release may clone it;
+the copy counts as added by whoever cloned it, at the moment of cloning.
 
 ### Constraints and Rules
 1. A release always belongs to a production.

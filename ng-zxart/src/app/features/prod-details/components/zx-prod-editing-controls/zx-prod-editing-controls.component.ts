@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
 import {
   ZxEditingControlAction,
@@ -27,6 +27,20 @@ const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   },
 ];
 
+/** Offered only for prods linked to a Spectrum Computing entry. */
+const IMPORT_SC_SCREENSHOTS_ACTION: ZxEditingControlAction = {
+  action: 'importScScreenshots',
+  privilege: 'importScScreenshots',
+  labelKey: 'prod-details.import-sc-screenshots',
+  color: 'secondary',
+  run: {
+    action: 'importScScreenshots',
+    successKey: 'prod-details.import-sc-screenshots-done',
+    failureKey: 'prod-details.import-sc-screenshots-failed',
+    reloadOnSuccess: true,
+  },
+};
+
 @Component({
   selector: 'zx-prod-editing-controls',
   standalone: true,
@@ -35,11 +49,16 @@ const PROD_ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   styleUrl: './zx-prod-editing-controls.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxProdEditingControlsComponent {
+export class ZxProdEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
+  @Input() hasZxdbEntry = false;
 
   readonly editActions = PROD_EDIT_ACTIONS;
-  readonly addActions = PROD_ADD_ACTIONS;
+  addActions: readonly ZxEditingControlAction[] = PROD_ADD_ACTIONS;
+
+  ngOnChanges(): void {
+    this.addActions = this.hasZxdbEntry ? [...PROD_ADD_ACTIONS, IMPORT_SC_SCREENSHOTS_ACTION] : PROD_ADD_ACTIONS;
+  }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {
     switch (action) {

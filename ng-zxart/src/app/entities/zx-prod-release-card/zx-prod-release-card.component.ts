@@ -144,6 +144,11 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
     this.iconReg.loadSvg(`${environment.svgUrl}play.svg`, 'play')?.subscribe();
   }
 
+  /** Download and play counters are not shown for prods on sale. */
+  get showCounters(): boolean {
+    return this.release.isDownloadable && this.release.prodLegalStatus !== 'insales';
+  }
+
   get canPlay(): boolean {
     const type = this.release.emulatorType;
     return this.release.isPlayable

@@ -17,6 +17,6 @@ While authenticated privilege data is loading, the component renders three skele
 An action may carry two optional descriptors:
 
 - `confirm` — opens `ConfirmDialogService.confirm()` before the action runs; cancelling stops it. Only `messageKey` is required: the title and confirm-button labels fall back to the action label, the cancel label to `form.cancel`. Set `danger: true` for destructive actions.
-- `run` — executes the legacy action through `FormSaveApiService` (`/ajax/`) instead of navigating to a confirmation page. With `targetPath` the component navigates to `/{targetPath}/{id}` of the element returned by the action; without it, the result is reported in a single-button dialog (`successKey` / `failureKey`), which is also used when the request fails.
+- `run` — executes the legacy action through `FormSaveApiService` (`/ajax/`) instead of navigating to a confirmation page. With `targetPath` the component navigates to `/{targetPath}/{id}` of the element returned by the action; without it, the result is reported in a single-button dialog (`successKey` / `failureKey`), which is also used when the request fails. `reloadOnSuccess` reloads the page once that dialog is closed after a successful run, for actions that change content already on the page.
 
 An action that only needs a yes/no step before doing its work must combine `confirm` with `run` rather than routing to a dedicated confirmation page.
