@@ -258,7 +258,8 @@ trait ZxProdsList
             if ($query = $this->getSelectorQuery('years')) {
                 $values = $this->getSelectorValue('years');
                 if ($values && $values[0] === 'this') {
-                    $values = [date('Y'), date('Y') - 1];
+                    // In January the current year is nearly empty, so the previous year is included too.
+                    $values = date('n') === '1' ? [date('Y') - 1, (int)date('Y')] : [(int)date('Y')];
                 }
                 $years = $query
                     ->distinct()
