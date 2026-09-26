@@ -92,7 +92,7 @@ export class ZxAuthorDetailsComponent implements OnChanges {
           this.breadcrumbService.setNotFoundTrail();
         }
       }),
-      shareReplay(1),
+      shareReplay({bufferSize: 1, refCount: true}),
     );
   }
 

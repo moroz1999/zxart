@@ -90,7 +90,7 @@ export class ZxGroupDetailsComponent implements OnChanges {
           this.breadcrumbService.setNotFoundTrail();
         }
       }),
-      shareReplay(1),
+      shareReplay({bufferSize: 1, refCount: true}),
     );
   }
 
