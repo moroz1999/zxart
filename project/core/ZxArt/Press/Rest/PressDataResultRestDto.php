@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ZxArt\Press\Rest;
 
+/**
+ * @psalm-api
+ */
 final readonly class PressDataResultRestDto
 {
     public function __construct(

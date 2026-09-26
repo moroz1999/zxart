@@ -14,6 +14,8 @@ use ZxArt\Shared\StructureType;
  * Audit trail of content changes: every create, update and delete records the
  * acting user in the actions log, under the action's privilege name, the way
  * loggable legacy element actions do.
+ *
+ * @psalm-api
  */
 final readonly class ActionsLogService
 {

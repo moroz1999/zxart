@@ -15,6 +15,8 @@ use ZxArt\Shared\StructureType;
 /**
  * Changes to an author alias requested through `/author-alias-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class AuthorAliasDataService
 {

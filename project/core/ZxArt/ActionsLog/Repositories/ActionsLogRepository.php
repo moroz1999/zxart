@@ -9,6 +9,9 @@ use ZxArt\ActionsLog\Dto\ActionsLogRecordDto;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Repositories\AbstractRepository;
 
+/**
+ * @psalm-api
+ */
 final readonly class ActionsLogRepository extends AbstractRepository
 {
     public function __construct(

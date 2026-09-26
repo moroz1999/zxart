@@ -9,6 +9,8 @@ use ZxArt\Prods\Rest\ProdDataResultRestDto;
 
 /**
  * Outcome of a production change: the id of the element the change produced.
+ *
+ * @psalm-api
  */
 #[Map(target: ProdDataResultRestDto::class)]
 final readonly class ProdDataResultDto

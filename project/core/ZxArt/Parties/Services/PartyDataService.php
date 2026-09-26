@@ -15,6 +15,8 @@ use ZxArt\Shared\StructureType;
 /**
  * Changes to a party requested through `/party-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class PartyDataService
 {

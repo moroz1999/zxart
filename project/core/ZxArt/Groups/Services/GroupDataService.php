@@ -16,6 +16,8 @@ use ZxArt\Shared\StructureType;
 /**
  * Changes to a group requested through `/group-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class GroupDataService
 {

@@ -9,6 +9,8 @@ use ZxArt\Authors\Rest\AuthorDataResultRestDto;
 
 /**
  * Outcome of a author change: the id of the element the change produced.
+ *
+ * @psalm-api
  */
 #[Map(target: AuthorDataResultRestDto::class)]
 final readonly class AuthorDataResultDto

@@ -15,6 +15,8 @@ use zxMusicElement;
 /**
  * Changes to a tune requested through `/tune-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class TuneDataService
 {

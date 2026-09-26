@@ -15,6 +15,8 @@ use zxProdElement;
 /**
  * Changes to a production requested through `/prod-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class ProdDataService
 {

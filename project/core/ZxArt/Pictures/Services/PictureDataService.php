@@ -15,6 +15,8 @@ use zxPictureElement;
 /**
  * Changes to a picture requested through `/picture-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class PictureDataService
 {

@@ -15,6 +15,8 @@ use ZxArt\Shared\StructureType;
 /**
  * Changes to a press article requested through `/press-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class PressDataService
 {

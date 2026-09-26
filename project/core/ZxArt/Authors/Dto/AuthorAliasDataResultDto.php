@@ -9,6 +9,8 @@ use ZxArt\Authors\Rest\AuthorAliasDataResultRestDto;
 
 /**
  * Outcome of a author alias change: the id of the element the change produced.
+ *
+ * @psalm-api
  */
 #[Map(target: AuthorAliasDataResultRestDto::class)]
 final readonly class AuthorAliasDataResultDto

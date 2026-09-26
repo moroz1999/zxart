@@ -15,6 +15,8 @@ use zxReleaseElement;
 /**
  * Changes to a release requested through `/release-data/`. Each change checks the
  * privilege of the matching legacy action and is recorded in the actions log.
+ *
+ * @psalm-api
  */
 final readonly class ReleaseDataService
 {

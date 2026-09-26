@@ -9,6 +9,8 @@ use ZxArt\Pictures\Rest\PictureDataResultRestDto;
 
 /**
  * Outcome of a picture change: the id of the element the change produced.
+ *
+ * @psalm-api
  */
 #[Map(target: PictureDataResultRestDto::class)]
 final readonly class PictureDataResultDto
