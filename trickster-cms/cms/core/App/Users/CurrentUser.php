@@ -19,7 +19,13 @@ class CurrentUser
      * @var int|null
      */
     public $id = null;
+    /**
+     * @var string|null
+     */
     public $IP;
+    /**
+     * @var string
+     */
     public $userName = "";
     public $privileges = [];
     public $storage = [];
@@ -61,7 +67,7 @@ class CurrentUser
         ) {
             if ($this->userDataObject->load()) {
                 $this->id = $this->userDataObject->id;
-                $this->userName = $this->userDataObject->userName;
+                $this->userName = (string)$this->userDataObject->userName;
                 $this->email = $this->userDataObject->email;
                 $this->userType = $this->userDataObject->userType;
                 $this->subscribe = $this->userDataObject->subscribe;

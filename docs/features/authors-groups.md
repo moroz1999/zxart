@@ -209,7 +209,7 @@ When work is created by group:
 
 #### Author and Group Editing Actions
 - Claiming authorship and the conversions (author → group, group → author, alias → standalone author/group) run straight from the details page: a confirmation dialog, then the action.
-- The four conversions run through `POST /entity-conversion-data/?id=&target=author|group` (`EntityConversionService`). The source element's type and the target pick the conversion; a pair that is not one of the four answers `400`. The source must grant `convertToAuthor`/`convertToGroup` matching the target (`403` otherwise). Success answers the created entity's `{id}`; errors come as HTTP statuses with `errorMessage`. The claim still runs its legacy action through `/ajax/`.
+- Each conversion is an action of the source's own data endpoint: `POST /author-data/?id=&action=convertToGroup`, `/group-data/…convertToAuthor`, `/author-alias-data/…convertToAuthor`, `/group-alias-data/…convertToGroup` (`AuthorDataService`, `GroupDataService`, `AuthorAliasDataService`, `GroupAliasDataService`). The source must grant the privilege named like the action (`403` otherwise). Success answers the created entity's `{id}` and is recorded in the actions log; errors come as HTTP statuses with `errorMessage`. The claim still runs its legacy action through `/ajax/`.
 - Converting an author alias copies the alias's own element privileges onto the new author.
 - A successful conversion navigates to the created entity; a claim reports the moderation-request result in a dialog.
 - These actions have no routed page of their own — see [zx-editing-controls](../design-system/zx-editing-controls.md) for the `confirm`/`run` action descriptors.

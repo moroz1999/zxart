@@ -6,6 +6,7 @@ namespace ZxArt\Shared;
 
 enum DatabaseTable: string
 {
+    case ActionsLog = 'actions_log';
     case Author = 'module_author';
     case AuthorAlias = 'module_authoralias';
     case Authorship = 'authorship';

@@ -2111,6 +2111,16 @@
       <code><![CDATA[$vote]]></code>
     </MixedOperand>
   </file>
+  <file src="project/core/ZxArt/ActionsLog/ActionsLogService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/ActionsLog/Repositories/ActionsLogRepository.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="project/core/ZxArt/Ai/ChunkProcessor.php">
     <ClassMustBeFinal>
       <code><![CDATA[ChunkProcessor]]></code>
@@ -2414,6 +2424,11 @@
       <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Dto/AuthorAliasDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Authors/Dto/AuthorAliasFormAuthorDto.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$id]]></code>
@@ -2497,6 +2512,11 @@
     </ClassMustBeFinal>
     <PossiblyUnusedProperty>
       <code><![CDATA[$comments]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Authors/Dto/AuthorDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Authors/Dto/AuthorGroupDto.php">
@@ -2754,6 +2774,14 @@
       <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Rest/AuthorAliasDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Authors/Rest/AuthorAliasFormAuthorRestDto.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2870,6 +2898,14 @@
       <code><![CDATA[$tunes]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Rest/AuthorDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Authors/Rest/AuthorGroupRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[AuthorGroupRestDto]]></code>
@@ -2976,12 +3012,22 @@
       <code><![CDATA[$userName]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Services/AuthorAliasDataService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="project/core/ZxArt/Authors/Services/AuthorAliasFormService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Authors/Services/AuthorCollaboratorsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Authors/Services/AuthorDataService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -3404,6 +3450,21 @@
       <code><![CDATA[ApproveClaimData]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/AuthorAliasData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthorAliasData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[AuthorAliasData]]></code>
+      <code><![CDATA[AuthorAliasData]]></code>
+      <code><![CDATA[AuthorAliasData]]></code>
+      <code><![CDATA[AuthorAliasData]]></code>
+      <code><![CDATA[AuthorAliasData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[AuthorAliasData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/AuthorAliasForm.php">
     <ClassMustBeFinal>
       <code><![CDATA[AuthorAliasForm]]></code>
@@ -3429,6 +3490,21 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[AuthorCollaborators]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/AuthorData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthorData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[AuthorData]]></code>
+      <code><![CDATA[AuthorData]]></code>
+      <code><![CDATA[AuthorData]]></code>
+      <code><![CDATA[AuthorData]]></code>
+      <code><![CDATA[AuthorData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[AuthorData]]></code>
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/AuthorDetails.php">
@@ -3860,21 +3936,6 @@
       <code><![CDATA[ElementPrivileges]]></code>
     </UnusedClass>
   </file>
-  <file src="project/core/ZxArt/Controllers/EntityConversionData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[EntityConversionData]]></code>
-    </ClassMustBeFinal>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[EntityConversionData]]></code>
-      <code><![CDATA[EntityConversionData]]></code>
-      <code><![CDATA[EntityConversionData]]></code>
-      <code><![CDATA[EntityConversionData]]></code>
-      <code><![CDATA[EntityConversionData]]></code>
-    </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[EntityConversionData]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/core/ZxArt/Controllers/FeedbackData.php">
     <ClassMustBeFinal>
       <code><![CDATA[FeedbackData]]></code>
@@ -4069,6 +4130,21 @@
       <code><![CDATA[GeoData]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/GroupAliasData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[GroupAliasData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[GroupAliasData]]></code>
+      <code><![CDATA[GroupAliasData]]></code>
+      <code><![CDATA[GroupAliasData]]></code>
+      <code><![CDATA[GroupAliasData]]></code>
+      <code><![CDATA[GroupAliasData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[GroupAliasData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/GroupCollaborators.php">
     <PropertyNotSetInConstructor>
       <code><![CDATA[GroupCollaborators]]></code>
@@ -4091,6 +4167,21 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[GroupComments]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/GroupData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[GroupData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[GroupData]]></code>
+      <code><![CDATA[GroupData]]></code>
+      <code><![CDATA[GroupData]]></code>
+      <code><![CDATA[GroupData]]></code>
+      <code><![CDATA[GroupData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[GroupData]]></code>
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/GroupDetails.php">
@@ -4349,6 +4440,21 @@
       <code><![CDATA[PartyComments]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/PartyData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PartyData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[PartyData]]></code>
+      <code><![CDATA[PartyData]]></code>
+      <code><![CDATA[PartyData]]></code>
+      <code><![CDATA[PartyData]]></code>
+      <code><![CDATA[PartyData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[PartyData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/PartyDetails.php">
     <ClassMustBeFinal>
       <code><![CDATA[PartyDetails]]></code>
@@ -4449,6 +4555,21 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[PasswordReminderData]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/PictureData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PictureData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[PictureData]]></code>
+      <code><![CDATA[PictureData]]></code>
+      <code><![CDATA[PictureData]]></code>
+      <code><![CDATA[PictureData]]></code>
+      <code><![CDATA[PictureData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[PictureData]]></code>
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PictureDetails.php">
@@ -4611,6 +4732,21 @@
       <code><![CDATA[Pouet]]></code>
     </PropertyNotSetInConstructor>
   </file>
+  <file src="project/core/ZxArt/Controllers/PressData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PressData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[PressData]]></code>
+      <code><![CDATA[PressData]]></code>
+      <code><![CDATA[PressData]]></code>
+      <code><![CDATA[PressData]]></code>
+      <code><![CDATA[PressData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[PressData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/PressDetails.php">
     <ClassMustBeFinal>
       <code><![CDATA[PressDetails]]></code>
@@ -4669,6 +4805,21 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[ProdCompilations]]></code>
+    </UnusedClass>
+  </file>
+  <file src="project/core/ZxArt/Controllers/ProdData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProdData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ProdData]]></code>
+      <code><![CDATA[ProdData]]></code>
+      <code><![CDATA[ProdData]]></code>
+      <code><![CDATA[ProdData]]></code>
+      <code><![CDATA[ProdData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[ProdData]]></code>
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/ProdDescription.php">
@@ -4963,6 +5114,21 @@
       <code><![CDATA[RegisterData]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/ReleaseData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ReleaseData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ReleaseData]]></code>
+      <code><![CDATA[ReleaseData]]></code>
+      <code><![CDATA[ReleaseData]]></code>
+      <code><![CDATA[ReleaseData]]></code>
+      <code><![CDATA[ReleaseData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[ReleaseData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/ReleaseDetails.php">
     <ClassMustBeFinal>
       <code><![CDATA[ReleaseDetails]]></code>
@@ -5205,6 +5371,21 @@
       <code><![CDATA[TagsListData]]></code>
     </UnusedClass>
   </file>
+  <file src="project/core/ZxArt/Controllers/TuneData.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TuneData]]></code>
+    </ClassMustBeFinal>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[TuneData]]></code>
+      <code><![CDATA[TuneData]]></code>
+      <code><![CDATA[TuneData]]></code>
+      <code><![CDATA[TuneData]]></code>
+      <code><![CDATA[TuneData]]></code>
+    </PropertyNotSetInConstructor>
+    <UnusedClass>
+      <code><![CDATA[TuneData]]></code>
+    </UnusedClass>
+  </file>
   <file src="project/core/ZxArt/Controllers/TuneDetails.php">
     <ClassMustBeFinal>
       <code><![CDATA[TuneDetails]]></code>
@@ -5442,28 +5623,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="project/core/ZxArt/EntityConversion/Dto/ConvertedEntityDto.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="project/core/ZxArt/EntityConversion/Rest/ConvertedEntityRestDto.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="project/core/ZxArt/EntityConversion/Services/EntityConversionService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(string)$element->structureType]]></code>
-      <code><![CDATA[(string)$element->structureType]]></code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="project/core/ZxArt/Exception/CrawlerBlockedException.php">
     <ClassMustBeFinal>
@@ -6082,6 +6241,11 @@
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Groups/Dto/GroupAliasDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Groups/Dto/GroupBreadcrumbDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[GroupBreadcrumbDto]]></code>
@@ -6143,6 +6307,11 @@
     </ClassMustBeFinal>
     <PossiblyUnusedProperty>
       <code><![CDATA[$comments]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Groups/Dto/GroupDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Groups/Dto/GroupLinkDto.php">
@@ -6272,6 +6441,14 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Groups/Rest/GroupAliasDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Groups/Rest/GroupBreadcrumbRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[GroupBreadcrumbRestDto]]></code>
@@ -6354,6 +6531,14 @@
       <code><![CDATA[$published]]></code>
       <code><![CDATA[$releases]]></code>
       <code><![CDATA[$subgroups]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Groups/Rest/GroupDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Groups/Rest/GroupLinkRestDto.php">
@@ -6474,7 +6659,17 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Groups/Services/GroupAliasDataService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="project/core/ZxArt/Groups/Services/GroupCollaboratorsService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Groups/Services/GroupDataService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8590,6 +8785,11 @@
       <code><![CDATA[$tunes]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Parties/Dto/PartyDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Parties/Dto/PartyDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PartyDto]]></code>
@@ -8822,6 +9022,14 @@
       <code><![CDATA[$tunes]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Parties/Rest/PartyDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Parties/Rest/PartyEditionRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PartyEditionRestDto]]></code>
@@ -8925,6 +9133,11 @@
     <ClassMustBeFinal>
       <code><![CDATA[PartyCompoNameResolver]]></code>
     </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Parties/Services/PartyDataService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -9106,6 +9319,11 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$title]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Pictures/Dto/PictureDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Pictures/Dto/PictureDetailsDto.php">
@@ -9544,6 +9762,14 @@
       <code><![CDATA[$topN]]></code>
     </UnusedParam>
   </file>
+  <file src="project/core/ZxArt/Pictures/Rest/PictureDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Pictures/Rest/PictureDetailsRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PictureDetailsRestDto]]></code>
@@ -9720,6 +9946,11 @@
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Pictures/Services/PictureDataService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
   <file src="project/core/ZxArt/Pictures/Services/PictureDetailsService.php">
     <ClassMustBeFinal>
       <code><![CDATA[PictureDetailsService]]></code>
@@ -9873,6 +10104,11 @@
       <code><![CDATA[$titleHtml]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$year]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Press/Dto/PressDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Press/Dto/PressDetailsDto.php">
@@ -10037,6 +10273,14 @@
       <code><![CDATA[$year]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Press/Rest/PressDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Press/Rest/PressDetailsRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PressDetailsRestDto]]></code>
@@ -10103,6 +10347,11 @@
       <code><![CDATA[$title]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Press/Services/PressDataService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Press/Services/PressDetailsService.php">
     <ClassMustBeFinal>
@@ -10258,6 +10507,11 @@
     <ClassMustBeFinal>
       <code><![CDATA[ProdCoversDto]]></code>
     </ClassMustBeFinal>
+  </file>
+  <file src="project/core/ZxArt/Prods/Dto/ProdDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/Dto/ProdDescriptionDto.php">
     <ClassMustBeFinal>
@@ -11024,6 +11278,14 @@
       <code><![CDATA[$groups]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Prods/Rest/ProdDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Prods/Rest/ProdDescriptionRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[ProdDescriptionRestDto]]></code>
@@ -11445,6 +11707,11 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/ScreenshotMoveService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Prods/Services/ProdDataService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -12134,6 +12401,11 @@
       <code><![CDATA[$success]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Releases/Dto/ReleaseDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Releases/Dto/ReleaseDetailsDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[ReleaseDetailsDto]]></code>
@@ -12287,6 +12559,14 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Releases/Rest/ReleaseDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Releases/Rest/ReleaseDetailsRestDto.php">
     <ClassMustBeFinal>
@@ -12464,6 +12744,11 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Releases/Services/ReleaseBatchCreateService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Releases/Services/ReleaseDataService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -13512,6 +13797,11 @@
       <code><![CDATA[$token]]></code>
     </UnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Tunes/Dto/TuneDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Tunes/Dto/TuneDetailsDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[TuneDetailsDto]]></code>
@@ -13629,6 +13919,14 @@
     <TooManyArguments>
       <code><![CDATA[groupBy]]></code>
     </TooManyArguments>
+  </file>
+  <file src="project/core/ZxArt/Tunes/Rest/TuneDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Tunes/Rest/TuneDetailsRestDto.php">
     <ClassMustBeFinal>
@@ -13763,6 +14061,11 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Tunes/Services/TuneDataService.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Tunes/Services/TuneDetailsService.php">
     <ClassMustBeFinal>

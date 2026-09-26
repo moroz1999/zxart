@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption} from '../../shared/models/form-data-response';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -29,6 +29,8 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {AuthorAliasDataApiService} from '../../shared/api/author-alias-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
@@ -97,6 +99,7 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
 
   /** Where the user lands once the alias is deleted; the author it belonged to. */
   deleteReturnUrl = '/authors';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> => this.authorAliasDataApi.delete(id);
 
   elementId = 0;
   private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
@@ -105,6 +108,7 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly authorAliasDataApi: AuthorAliasDataApiService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,

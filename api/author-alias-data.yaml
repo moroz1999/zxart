@@ -1,0 +1,78 @@
+openapi: 3.0.3
+info:
+  title: ZX-Art author alias changes API
+  version: 1.0.0
+paths:
+  /author-alias-data/:
+    post:
+      summary: Run one change on an author alias
+      description: |
+        The action is selected by `action`. Each one checks the privilege of the
+        matching legacy action on the author alias and is recorded in the actions log.
+        - `delete` removes the author alias; needs `publicDelete`. Answers the deleted id.
+        - `convertToAuthor` turns the alias into a standalone author with the alias privileges, and deletes the alias; needs `convertToAuthor`. Answers the created entity's id.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Id of the author alias.
+        - in: query
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [delete, convertToAuthor]
+      responses:
+        '200':
+          description: The change is done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeResult'
+        '400':
+          description: Missing id or unknown action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The visitor lacks the action's privilege on the author alias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No author alias with this id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Not a POST request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: The change failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ChangeResult:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: Id of the element the change produced.
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

@@ -3,10 +3,9 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/cor
 import {Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
-import {EntityDeleteApiService} from '../../services/entity-delete-api.service';
 import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service';
 import {ZxEditButtonComponent} from '../zx-edit-button/zx-edit-button.component';
 
@@ -15,7 +14,8 @@ const DELETE_PRIVILEGE = 'publicDelete';
 /**
  * Deletes the entity a form belongs to. Renders nothing unless the current user
  * holds `publicDelete` on the element; the deletion itself runs behind a
- * confirmation dialog and never navigates to a page of its own.
+ * confirmation dialog and never navigates to a page of its own. The page hands
+ * in the deletion call of its entity's data API service.
  */
 @Component({
   selector: 'zx-delete-entity-button',
@@ -32,6 +32,8 @@ const DELETE_PRIVILEGE = 'publicDelete';
 })
 export class ZxDeleteEntityButtonComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
+  /** Deletes the element, e.g. `ProdDataApiService.delete`; fails with an HTTP error status. */
+  @Input({required: true}) deleteRequest!: (elementId: number) => Observable<unknown>;
   /** Route the user lands on once the entity is gone. */
   @Input({required: true}) redirectUrl!: string;
   /** Entity-specific action label used by the button and confirmation dialog. */
@@ -58,7 +60,6 @@ export class ZxDeleteEntityButtonComponent implements OnChanges {
   constructor(
     private readonly currentUserService: CurrentUserService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
-    private readonly entityDeleteApi: EntityDeleteApiService,
     private readonly confirmDialog: ConfirmDialogService,
     private readonly translate: TranslateService,
     private readonly router: Router,
@@ -89,7 +90,12 @@ export class ZxDeleteEntityButtonComponent implements OnChanges {
       return;
     }
 
-    const deleted = await firstValueFrom(this.entityDeleteApi.delete(this.elementId));
+    const deleted = await firstValueFrom(
+      this.deleteRequest(this.elementId).pipe(
+        map(() => true),
+        catchError(() => of(false)),
+      ),
+    );
     if (!deleted) {
       await firstValueFrom(this.confirmDialog.notify({
         title: deleteLabel,

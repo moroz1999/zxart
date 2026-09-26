@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
@@ -39,6 +39,8 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {ReleaseDataApiService} from '../../shared/api/release-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {FileUploadField} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
@@ -130,6 +132,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
 
   /** Where the user lands once the release is deleted; the parent production. */
   deleteReturnUrl = '/prods';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> => this.releaseDataApi.delete(id);
 
   elementId = 0;
   /** The production the new release belongs to. */
@@ -146,6 +149,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly releaseDataApi: ReleaseDataApiService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,

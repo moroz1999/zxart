@@ -56,6 +56,11 @@ $restDtos = array_map(fn($dto) => $this->objectMapper->map($dto, MyRestDto::clas
 - On error, return the appropriate HTTP error code; the body is `{"errorMessage": "..."}`.
 - Use `$this->renderer->assign('body', $data)` to output the body directly without any envelope wrapper.
 
+## Entity Data Endpoints
+- Changes to an entity go through that entity type's own endpoint: controller `<Entity>Data` (`/<entity>-data/`), `POST ?id=&action=`, backed by `<Entity>DataService`, `<Entity>DataException` and `<Entity>DataResultDto` in the entity's domain namespace. `ProdData` / `ProdDataService` is the reference; the frontend calls it only through `ProdDataApiService` (see [angular.md](../angular.md)).
+- Never serve several entity types from one endpoint or one service. Each service loads its own element class (another type answers `404`) and checks the privilege of the matching legacy action through `privilegesManager` (`403`).
+- Every create, update and delete is recorded through `ZxArt\ActionsLog\ActionsLogService::log()` under the action's privilege name — the same `actions_log` rows loggable legacy actions write.
+
 ## Legacy: `responseStatus` Field
 - The `responseStatus: 'success'|'error'` field in JSON responses is a **legacy pattern**. Do NOT use it in new controllers.
 - Existing controllers (Comments, Ratings, Radio, etc.) still use it — migrate them to HTTP status codes when refactoring.

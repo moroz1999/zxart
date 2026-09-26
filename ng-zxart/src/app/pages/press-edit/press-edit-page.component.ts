@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx-form-actions.component';
@@ -23,6 +23,8 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {PressDataApiService} from '../../shared/api/press-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {FormLanguage} from '../../shared/models/form-data-response';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
@@ -103,6 +105,7 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
 
   /** Where the user lands once the article is deleted; the production it belonged to. */
   deleteReturnUrl = '/prods';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> => this.pressDataApi.delete(id);
 
   elementId = 0;
   /** The production the new article belongs to. */
@@ -111,6 +114,7 @@ export class PressEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly pressDataApi: PressDataApiService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,

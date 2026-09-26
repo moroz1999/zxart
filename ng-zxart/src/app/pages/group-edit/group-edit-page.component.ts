@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption} from '../../shared/models/form-data-response';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
@@ -31,6 +31,9 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {GroupDataApiService} from '../../shared/api/group-data-api.service';
+import {GroupAliasDataApiService} from '../../shared/api/group-alias-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
@@ -101,9 +104,13 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   importOrigins: ImportOriginItem[] = [];
   importOriginOptions: EnumOption[] = [];
   creating = false;
+  /** The group alias route reuses this page for an alias. */
+  private isAlias = false;
 
   /** Where the user lands once the group is deleted. */
   readonly deleteReturnUrl = '/groups';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> =>
+    this.isAlias ? this.groupAliasDataApi.delete(id) : this.groupDataApi.delete(id);
 
   elementId = 0;
   private returnUrl = '/groups';
@@ -114,6 +121,8 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly groupDataApi: GroupDataApiService,
+    private readonly groupAliasDataApi: GroupAliasDataApiService,
     private readonly fb: FormBuilder,
     private readonly translate: TranslateService,
     private readonly route: ActivatedRoute,
@@ -126,6 +135,7 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.creating = this.route.snapshot.data['create'] === true;
+    this.isAlias = this.route.snapshot.data['alias'] === true;
     if (this.creating) {
       const letter = this.route.snapshot.paramMap.get('letter');
       this.returnUrl = letter ? `/groups/${encodeURIComponent(letter)}` : '/groups';

@@ -1,43 +1,11 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnChanges} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
+import {AuthorDataApiService} from '../../../../shared/api/author-data-api.service';
+import {AuthorAliasDataApiService} from '../../../../shared/api/author-alias-data-api.service';
 import {
   ZxEditingControlAction,
   ZxEditingControlsComponent,
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
-
-const AUTHOR_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
-  {
-    action: 'claim',
-    privilege: 'claim',
-    labelKey: 'author-details.action.claim',
-    color: 'secondary',
-    confirm: {messageKey: 'claim.message', confirmLabelKey: 'claim.confirm'},
-    run: {action: 'claim', successKey: 'claim.sent', failureKey: 'claim.failed'},
-  },
-  {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
-  {
-    action: 'convertToGroup',
-    privilege: 'convertToGroup',
-    labelKey: 'author-details.action.convertToGroup',
-    color: 'secondary',
-    confirm: {messageKey: 'convert.author-to-group', confirmLabelKey: 'convert.confirm'},
-    run: {endpoint: '/entity-conversion-data/', params: {target: 'group'}, targetPath: 'group', failureKey: 'convert.failed'},
-  },
-];
-
-const AUTHOR_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
-  {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
-  {
-    action: 'convertToAuthor',
-    privilege: 'convertToAuthor',
-    labelKey: 'author-details.action.convertToAuthor',
-    color: 'secondary',
-    confirm: {messageKey: 'convert.alias-to-author', confirmLabelKey: 'convert.confirm'},
-    run: {endpoint: '/entity-conversion-data/', params: {target: 'author'}, targetPath: 'author', failureKey: 'convert.failed'},
-  },
-];
 
 const ADD_ALIAS_ACTION: ZxEditingControlAction = {
   action: 'authorAlias.showPublicForm',
@@ -87,11 +55,48 @@ export class ZxAuthorEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'author' | 'authorAlias';
 
-  editActions: readonly ZxEditingControlAction[] = AUTHOR_EDIT_ACTIONS;
+  private readonly authorDataApi = inject(AuthorDataApiService);
+  private readonly authorAliasDataApi = inject(AuthorAliasDataApiService);
+
+  private readonly authorEditActions: readonly ZxEditingControlAction[] = [
+    {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
+    {
+      action: 'claim',
+      privilege: 'claim',
+      labelKey: 'author-details.action.claim',
+      color: 'secondary',
+      confirm: {messageKey: 'claim.message', confirmLabelKey: 'claim.confirm'},
+      run: {action: 'claim', successKey: 'claim.sent', failureKey: 'claim.failed'},
+    },
+    {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
+    {
+      action: 'convertToGroup',
+      privilege: 'convertToGroup',
+      labelKey: 'author-details.action.convertToGroup',
+      color: 'secondary',
+      confirm: {messageKey: 'convert.author-to-group', confirmLabelKey: 'convert.confirm'},
+      run: {execute: id => this.authorDataApi.convertToGroup(id), targetPath: 'group', failureKey: 'convert.failed'},
+    },
+  ];
+
+  private readonly authorAliasEditActions: readonly ZxEditingControlAction[] = [
+    {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'author-details.action.showPublicForm'},
+    {action: 'showJoinForm', privilege: 'join', labelKey: 'author-details.action.showJoinForm', color: 'secondary'},
+    {
+      action: 'convertToAuthor',
+      privilege: 'convertToAuthor',
+      labelKey: 'author-details.action.convertToAuthor',
+      color: 'secondary',
+      confirm: {messageKey: 'convert.alias-to-author', confirmLabelKey: 'convert.confirm'},
+      run: {execute: id => this.authorAliasDataApi.convertToAuthor(id), targetPath: 'author', failureKey: 'convert.failed'},
+    },
+  ];
+
+  editActions: readonly ZxEditingControlAction[] = this.authorEditActions;
   addActions: readonly ZxEditingControlAction[] = [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
 
   ngOnChanges(): void {
-    this.editActions = this.entityType === 'authorAlias' ? AUTHOR_ALIAS_EDIT_ACTIONS : AUTHOR_EDIT_ACTIONS;
+    this.editActions = this.entityType === 'authorAlias' ? this.authorAliasEditActions : this.authorEditActions;
     this.addActions = this.entityType === 'authorAlias' ? CONTENT_ADD_ACTIONS : [ADD_ALIAS_ACTION, ...CONTENT_ADD_ACTIONS];
   }
 

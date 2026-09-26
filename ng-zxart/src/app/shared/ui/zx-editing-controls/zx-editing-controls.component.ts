@@ -8,7 +8,7 @@ import {map, startWith, switchMap} from 'rxjs/operators';
 import {isSpaUrl} from '../../utils/spa-url';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
-import {ElementActionApiService} from '../../services/element-action-api.service';
+import {EntityChangeResult} from '../../models/entity-change-result';
 import {FormSaveApiService} from '../../services/form-save-api.service';
 import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
@@ -52,14 +52,12 @@ export interface ZxEditingControlLegacyRun extends ZxEditingControlRunBase {
   readonly action: string;
 }
 
-/** SPA data endpoint the element id is posted to (`POST {endpoint}?id=`); answers `{id}`. */
-export interface ZxEditingControlEndpointRun extends ZxEditingControlRunBase {
-  readonly endpoint: string;
-  /** Extra query parameters posted with the id. */
-  readonly params?: Readonly<Record<string, string>>;
+/** Call of the entity's data API service, e.g. `AuthorDataApiService.convertToGroup`. */
+export interface ZxEditingControlExecuteRun extends ZxEditingControlRunBase {
+  readonly execute: (elementId: number) => Observable<EntityChangeResult>;
 }
 
-export type ZxEditingControlRun = ZxEditingControlLegacyRun | ZxEditingControlEndpointRun;
+export type ZxEditingControlRun = ZxEditingControlLegacyRun | ZxEditingControlExecuteRun;
 
 export interface ZxEditingControlAction {
   readonly action: string;
@@ -164,7 +162,6 @@ export class ZxEditingControlsComponent implements OnChanges {
     private readonly currentUserService: CurrentUserService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly formSave: FormSaveApiService,
-    private readonly elementActionApi: ElementActionApiService,
     private readonly confirmDialog: ConfirmDialogService,
     private readonly translate: TranslateService,
     private readonly router: Router,
@@ -244,8 +241,8 @@ export class ZxEditingControlsComponent implements OnChanges {
 
   private async execute(action: ZxEditingControlAction, run: ZxEditingControlRun): Promise<void> {
     try {
-      const result = await firstValueFrom('endpoint' in run
-        ? this.elementActionApi.run(run.endpoint, this.elementId, run.params)
+      const result = await firstValueFrom('execute' in run
+        ? run.execute(this.elementId)
         : this.formSave.save(this.elementId, {fields: {}}, run.action));
       if (run.targetPath) {
         if (result.id > 0) {

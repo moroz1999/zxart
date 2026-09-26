@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {EnumOption, FormLanguage} from '../../shared/models/form-data-response';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
@@ -31,6 +31,8 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {AuthorDataApiService} from '../../shared/api/author-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {ZxTabsComponent} from '../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../shared/ui/zx-tabs/zx-tab.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
@@ -114,6 +116,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
 
   /** Where the user lands once the author is deleted. */
   readonly deleteReturnUrl = '/authors';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> => this.authorDataApi.delete(id);
 
   elementId = 0;
   private returnUrl = '/authors';
@@ -126,6 +129,7 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly authorDataApi: AuthorDataApiService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,

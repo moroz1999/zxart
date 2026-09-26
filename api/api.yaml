@@ -37,8 +37,26 @@ paths:
     $ref: 'profile.yaml#/paths/~1profile-data~1'
   /approve-claim-data/:
     $ref: 'claim-approval.yaml#/paths/~1approve-claim-data~1'
-  /entity-conversion-data/:
-    $ref: 'entity-conversion.yaml#/paths/~1entity-conversion-data~1'
+  /prod-data/:
+    $ref: 'prod-data.yaml#/paths/~1prod-data~1'
+  /release-data/:
+    $ref: 'release-data.yaml#/paths/~1release-data~1'
+  /picture-data/:
+    $ref: 'picture-data.yaml#/paths/~1picture-data~1'
+  /tune-data/:
+    $ref: 'tune-data.yaml#/paths/~1tune-data~1'
+  /press-data/:
+    $ref: 'press-data.yaml#/paths/~1press-data~1'
+  /party-data/:
+    $ref: 'party-data.yaml#/paths/~1party-data~1'
+  /author-data/:
+    $ref: 'author-data.yaml#/paths/~1author-data~1'
+  /author-alias-data/:
+    $ref: 'author-alias-data.yaml#/paths/~1author-alias-data~1'
+  /group-data/:
+    $ref: 'group-data.yaml#/paths/~1group-data~1'
+  /group-alias-data/:
+    $ref: 'group-alias-data.yaml#/paths/~1group-alias-data~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /tags/:

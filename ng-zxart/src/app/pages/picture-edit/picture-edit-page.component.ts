@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
@@ -30,6 +30,8 @@ import {ZxSpinnerComponent} from '../../shared/ui/zx-spinner/zx-spinner.componen
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
+import {PictureDataApiService} from '../../shared/api/picture-data-api.service';
+import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-select.component';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
@@ -161,6 +163,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   /** Where the user lands once the picture is deleted. */
   readonly deleteReturnUrl = '/pictures';
+  readonly deleteRequest = (id: number): Observable<EntityChangeResult> => this.pictureDataApi.delete(id);
 
   elementId = 0;
   /** Element the batch upload was started from (author or party). */
@@ -173,6 +176,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   constructor(
+    private readonly pictureDataApi: PictureDataApiService,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,

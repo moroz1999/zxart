@@ -1,8 +1,9 @@
 # Remaining `/ajax/` usages
 
-Move each of these off the legacy `/ajax/` application to a dedicated SPA data
-endpoint: its own controller, service, typed DTOs, HTTP status codes and an
-`{"errorMessage": ...}` body on failure. `/entity-conversion-data/` is the reference.
+Move each of these off the legacy `/ajax/` application to the entity type's own
+data endpoint (`<Entity>Data` controller, `<Entity>DataService`, typed DTOs, HTTP
+status codes and an `{"errorMessage": ...}` body on failure, recorded in the
+actions log) — see `docs/php/rest-api.md`. `/prod-data/?action=delete` with `ProdDataApiService` is the reference.
 
 `/ajax/` answers `200` with `responseStatus: success` whenever it finds the
 element, whether or not the action did anything, so a silently skipped action
@@ -14,6 +15,8 @@ looks like a success.
 - `join-form` — `join`
 - `ai-form` — `receiveAiForm`
 - `split-form` — `split`
+
+Each call goes through the entity's `<Entity>DataApiService` (`shared/api/`) instead of the generic `FormSaveApiService`.
 
 Somewhat protected: `publicReceive` must answer `{id}` (`respondFormSaved`), so an empty response is treated as an error.
 
@@ -32,21 +35,9 @@ The response is never checked, so a failure goes unnoticed.
 - `importScScreenshots` — prod page
 - `importItchIoReleases` — prod page
 
-Switch to `run: {endpoint, params}` the same way the conversions were.
-
-## 4. Entity deletion — `EntityDeleteApiService` → `publicDelete`
-
-Reads `{"success": true}` from the body instead of the HTTP status.
+Switch to `run: {execute}` calling the entity's data API service, the same way the conversions were.
 
 ## 5. Votes and playlists (legacy `responseStatus` envelope)
 
 - `VoteService` → `vote`
 - `PlaylistService` → `getPlaylistIds`, `addToPlaylist`, `removeFromPlaylist` (URL `/ajax/playlistId:N/`)
-
-## Outside the SPA
-
-- `project/js/public/logics.playlist.js`
-- `project/js/public/logics.zxPictures.js`
-- `trickster-cms/homepage/js/public/component.ajaxForm.js`
-
-Probably dead now that the SPA is the only public frontend; check whether anything still loads them.

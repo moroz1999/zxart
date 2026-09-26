@@ -10,20 +10,22 @@ navigates away once the element is gone.
 
 ## Backend
 
-The `publicDelete` action is registered on every element type whose form the SPA
-serves. Its implementation is shared (`shared/action.publicDelete.class.php`) and
-answers in two ways:
+Every entity type has its own data endpoint — `/prod-data/`, `/release-data/`,
+`/picture-data/`, `/tune-data/`, `/press-data/`, `/party-data/`,
+`/author-data/`, `/author-alias-data/`, `/group-data/`, `/group-alias-data/` —
+backed by its own `<Entity>DataService` in the entity's domain namespace.
+`POST ?id=&action=delete` deletes the element and answers its `{id}`.
 
-- on `/ajax/` (JSON renderer) it returns `{"success": true}` and leaves the
-  destination to the client;
-- on a legacy full-page request it redirects to the parent element, whose URL is
-  resolved *before* the element is deleted.
+- An id of another entity type answers `404`: the endpoint names the type.
+- The privilege is `publicDelete` on the element (`403` otherwise). `publicAdd`
+  grants it to the creating user on the elements that support public creation,
+  and a user linked to an author gets it for that author's works.
+- The deletion is recorded in the actions log (`ActionsLogService`) before the
+  element data is removed.
+- Errors come as HTTP statuses with an `errorMessage` body.
 
-The privilege is `publicDelete`, checked by `structureManager::performAction()`
-like every other action. An unprivileged request never executes and therefore
-never carries `success`, which the SPA reads as a failure. `publicAdd` grants the
-privilege to the creating user on the elements that support public creation, and
-a user linked to an author gets it for that author's works.
+The shared legacy `publicDelete` action serves only the legacy full-page
+request: it redirects to the parent element, resolved before the deletion.
 
 ## Frontend
 
@@ -34,9 +36,9 @@ only entry point. It:
   nothing when the privilege is missing, the user is anonymous, or the form is
   in creation/batch mode (no element id yet);
 - opens a danger confirmation dialog through `ConfirmDialogService`;
-- posts the action through `EntityDeleteApiService`
-  (`shared/services/entity-delete-api.service.ts`), which resolves to `false`
-  for anything other than `{"success": true}` and then shows a failure dialog;
+- runs the `deleteRequest` the page supplies — the `delete` call of its entity's
+  data API service (`ProdDataApiService.delete`, …, `shared/api/`) — and shows
+  a failure dialog on an error status;
 - navigates to the `redirectUrl` the page supplies.
 
 Every edit page projects the button into the page header next to its `<h1>`

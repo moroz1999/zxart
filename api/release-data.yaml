@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: ZX-Art release changes API
+  version: 1.0.0
+paths:
+  /release-data/:
+    post:
+      summary: Run one change on a release
+      description: |
+        The action is selected by `action`. Each one checks the privilege of the
+        matching legacy action on the release and is recorded in the actions log.
+        - `delete` removes the release; needs `publicDelete`. Answers the deleted id.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Id of the release.
+        - in: query
+          name: action
+          required: true
+          schema:
+            type: string
+            enum: [delete]
+      responses:
+        '200':
+          description: The change is done
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeResult'
+        '400':
+          description: Missing id or unknown action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The visitor lacks the action's privilege on the release
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No release with this id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Not a POST request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: The change failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ChangeResult:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: Id of the element the change produced.
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

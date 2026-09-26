@@ -1,35 +1,11 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnChanges} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
+import {GroupDataApiService} from '../../../../shared/api/group-data-api.service';
+import {GroupAliasDataApiService} from '../../../../shared/api/group-alias-data-api.service';
 import {
   ZxEditingControlAction,
   ZxEditingControlsComponent,
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
-
-const GROUP_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
-  {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
-  {
-    action: 'convertToAuthor',
-    privilege: 'convertToAuthor',
-    labelKey: 'group-details.action.convertToAuthor',
-    color: 'secondary',
-    confirm: {messageKey: 'convert.group-to-author', confirmLabelKey: 'convert.confirm'},
-    run: {endpoint: '/entity-conversion-data/', params: {target: 'author'}, targetPath: 'author', failureKey: 'convert.failed'},
-  },
-];
-
-const GROUP_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
-  {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
-  {
-    action: 'convertToGroup',
-    privilege: 'convertToGroup',
-    labelKey: 'group-details.action.convertToGroup',
-    color: 'secondary',
-    confirm: {messageKey: 'convert.alias-to-group', confirmLabelKey: 'convert.confirm'},
-    run: {endpoint: '/entity-conversion-data/', params: {target: 'group'}, targetPath: 'group', failureKey: 'convert.failed'},
-  },
-];
 
 const ADD_ACTIONS: readonly ZxEditingControlAction[] = [
   {
@@ -52,11 +28,40 @@ export class ZxGroupEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input({required: true}) entityType!: 'group' | 'groupAlias';
 
-  editActions: readonly ZxEditingControlAction[] = GROUP_EDIT_ACTIONS;
+  private readonly groupDataApi = inject(GroupDataApiService);
+  private readonly groupAliasDataApi = inject(GroupAliasDataApiService);
+
+  private readonly groupEditActions: readonly ZxEditingControlAction[] = [
+    {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
+    {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
+    {
+      action: 'convertToAuthor',
+      privilege: 'convertToAuthor',
+      labelKey: 'group-details.action.convertToAuthor',
+      color: 'secondary',
+      confirm: {messageKey: 'convert.group-to-author', confirmLabelKey: 'convert.confirm'},
+      run: {execute: id => this.groupDataApi.convertToAuthor(id), targetPath: 'author', failureKey: 'convert.failed'},
+    },
+  ];
+
+  private readonly groupAliasEditActions: readonly ZxEditingControlAction[] = [
+    {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'group-details.action.showPublicForm'},
+    {action: 'showJoinForm', privilege: 'join', labelKey: 'group-details.action.showJoinForm', color: 'secondary'},
+    {
+      action: 'convertToGroup',
+      privilege: 'convertToGroup',
+      labelKey: 'group-details.action.convertToGroup',
+      color: 'secondary',
+      confirm: {messageKey: 'convert.alias-to-group', confirmLabelKey: 'convert.confirm'},
+      run: {execute: id => this.groupAliasDataApi.convertToGroup(id), targetPath: 'group', failureKey: 'convert.failed'},
+    },
+  ];
+
+  editActions: readonly ZxEditingControlAction[] = this.groupEditActions;
   readonly addActions = ADD_ACTIONS;
 
   ngOnChanges(): void {
-    this.editActions = this.entityType === 'groupAlias' ? GROUP_ALIAS_EDIT_ACTIONS : GROUP_EDIT_ACTIONS;
+    this.editActions = this.entityType === 'groupAlias' ? this.groupAliasEditActions : this.groupEditActions;
   }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {

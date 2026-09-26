@@ -261,6 +261,7 @@ const ROUTED_CHILDREN: Routes = [
     loadComponent: () => import('./pages/group-edit/group-edit-page.component').then(m => m.GroupEditPageComponent),
     canActivate: [editPrivilegeGuard],
     data: {
+      alias: true,
       privilege: 'publicReceive',
       entityPath: 'group',
       titleKey: 'group-details.action.showPublicForm',
