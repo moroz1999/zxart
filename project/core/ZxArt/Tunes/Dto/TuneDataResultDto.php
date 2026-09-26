@@ -9,8 +9,6 @@ use ZxArt\Tunes\Rest\TuneDataResultRestDto;
 
 /**
  * Outcome of a tune change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: TuneDataResultRestDto::class)]
 final readonly class TuneDataResultDto

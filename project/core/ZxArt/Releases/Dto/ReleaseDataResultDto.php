@@ -9,8 +9,6 @@ use ZxArt\Releases\Rest\ReleaseDataResultRestDto;
 
 /**
  * Outcome of a release change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: ReleaseDataResultRestDto::class)]
 final readonly class ReleaseDataResultDto

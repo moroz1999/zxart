@@ -9,8 +9,6 @@ use ZxArt\Parties\Rest\PartyDataResultRestDto;
 
 /**
  * Outcome of a party change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: PartyDataResultRestDto::class)]
 final readonly class PartyDataResultDto

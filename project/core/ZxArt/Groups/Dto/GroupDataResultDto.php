@@ -9,8 +9,6 @@ use ZxArt\Groups\Rest\GroupDataResultRestDto;
 
 /**
  * Outcome of a group change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: GroupDataResultRestDto::class)]
 final readonly class GroupDataResultDto

@@ -2414,6 +2414,11 @@
       <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Dto/AuthorAliasDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Authors/Dto/AuthorAliasFormAuthorDto.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$id]]></code>
@@ -2497,6 +2502,11 @@
     </ClassMustBeFinal>
     <PossiblyUnusedProperty>
       <code><![CDATA[$comments]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Authors/Dto/AuthorDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Authors/Dto/AuthorGroupDto.php">
@@ -2754,6 +2764,14 @@
       <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Authors/Rest/AuthorAliasDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Authors/Rest/AuthorAliasFormAuthorRestDto.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
@@ -2868,6 +2886,14 @@
       <code><![CDATA[$pictures]]></code>
       <code><![CDATA[$prods]]></code>
       <code><![CDATA[$tunes]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Authors/Rest/AuthorDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Authors/Rest/AuthorGroupRestDto.php">
@@ -6135,6 +6161,11 @@
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Groups/Dto/GroupAliasDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Groups/Dto/GroupBreadcrumbDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[GroupBreadcrumbDto]]></code>
@@ -6196,6 +6227,11 @@
     </ClassMustBeFinal>
     <PossiblyUnusedProperty>
       <code><![CDATA[$comments]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Groups/Dto/GroupDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Groups/Dto/GroupLinkDto.php">
@@ -6325,6 +6361,14 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Groups/Rest/GroupAliasDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Groups/Rest/GroupBreadcrumbRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[GroupBreadcrumbRestDto]]></code>
@@ -6407,6 +6451,14 @@
       <code><![CDATA[$published]]></code>
       <code><![CDATA[$releases]]></code>
       <code><![CDATA[$subgroups]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Groups/Rest/GroupDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Groups/Rest/GroupLinkRestDto.php">
@@ -8643,6 +8695,11 @@
       <code><![CDATA[$tunes]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Parties/Dto/PartyDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Parties/Dto/PartyDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PartyDto]]></code>
@@ -8873,6 +8930,14 @@
       <code><![CDATA[$pictures]]></code>
       <code><![CDATA[$prods]]></code>
       <code><![CDATA[$tunes]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Parties/Rest/PartyDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Parties/Rest/PartyEditionRestDto.php">
@@ -9159,6 +9224,11 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$title]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Pictures/Dto/PictureDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Pictures/Dto/PictureDetailsDto.php">
@@ -9597,6 +9667,14 @@
       <code><![CDATA[$topN]]></code>
     </UnusedParam>
   </file>
+  <file src="project/core/ZxArt/Pictures/Rest/PictureDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Pictures/Rest/PictureDetailsRestDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PictureDetailsRestDto]]></code>
@@ -9928,6 +10006,11 @@
       <code><![CDATA[$year]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Press/Dto/PressDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Press/Dto/PressDetailsDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[PressDetailsDto]]></code>
@@ -10088,6 +10171,14 @@
       <code><![CDATA[$titleHtml]]></code>
       <code><![CDATA[$url]]></code>
       <code><![CDATA[$year]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Press/Rest/PressDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Press/Rest/PressDetailsRestDto.php">
@@ -10311,6 +10402,11 @@
     <ClassMustBeFinal>
       <code><![CDATA[ProdCoversDto]]></code>
     </ClassMustBeFinal>
+  </file>
+  <file src="project/core/ZxArt/Prods/Dto/ProdDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/Dto/ProdDescriptionDto.php">
     <ClassMustBeFinal>
@@ -11075,6 +11171,14 @@
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$groups]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="project/core/ZxArt/Prods/Rest/ProdDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Prods/Rest/ProdDescriptionRestDto.php">
@@ -12187,6 +12291,11 @@
       <code><![CDATA[$success]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Releases/Dto/ReleaseDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Releases/Dto/ReleaseDetailsDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[ReleaseDetailsDto]]></code>
@@ -12340,6 +12449,14 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Releases/Rest/ReleaseDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Releases/Rest/ReleaseDetailsRestDto.php">
     <ClassMustBeFinal>
@@ -13565,6 +13682,11 @@
       <code><![CDATA[$token]]></code>
     </UnusedProperty>
   </file>
+  <file src="project/core/ZxArt/Tunes/Dto/TuneDataResultDto.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="project/core/ZxArt/Tunes/Dto/TuneDetailsDto.php">
     <ClassMustBeFinal>
       <code><![CDATA[TuneDetailsDto]]></code>
@@ -13682,6 +13804,14 @@
     <TooManyArguments>
       <code><![CDATA[groupBy]]></code>
     </TooManyArguments>
+  </file>
+  <file src="project/core/ZxArt/Tunes/Rest/TuneDataResultRestDto.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$id]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Tunes/Rest/TuneDetailsRestDto.php">
     <ClassMustBeFinal>

@@ -9,8 +9,6 @@ use ZxArt\Groups\Rest\GroupAliasDataResultRestDto;
 
 /**
  * Outcome of a group alias change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: GroupAliasDataResultRestDto::class)]
 final readonly class GroupAliasDataResultDto

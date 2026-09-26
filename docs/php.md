@@ -80,7 +80,7 @@
 - Annotate magic variables and methods in original legacy classes.
 - A controller the framework reaches through URL routing (`ZxArt\Controllers\*`) is marked `@psalm-api` in its class docblock: nothing references it by name, so Psalm would report it as unused. Do NOT baseline `UnusedClass` for it.
 - New controllers are `final`; do NOT baseline `ClassMustBeFinal`.
-- The same `@psalm-api` marks services built only by the DI container and DTOs read only by `ObjectMapper` or JSON output: Psalm sees no caller of their constructor or reader of their properties. Do NOT baseline `PossiblyUnusedMethod`/`PossiblyUnusedProperty` for them.
+- The same `@psalm-api` marks services built only by the DI container: Psalm sees no caller of their constructor. Do NOT put it on DTOs — it would hide properties that nothing reads any more.
 
 ## Post-Task Checklist
 - After finishing work on any PHP files, request IDE diagnostics (errors, warnings, notices) for all modified files via the MCP IDE tool and fix all reported issues in added code before considering the task done.

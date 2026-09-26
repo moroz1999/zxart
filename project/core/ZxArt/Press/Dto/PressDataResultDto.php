@@ -9,8 +9,6 @@ use ZxArt\Press\Rest\PressDataResultRestDto;
 
 /**
  * Outcome of a press article change: the id of the element the change produced.
- *
- * @psalm-api
  */
 #[Map(target: PressDataResultRestDto::class)]
 final readonly class PressDataResultDto
