@@ -17,8 +17,10 @@ use ZxArt\Pictures\Services\PictureDataService;
 /**
  * Changes to one picture: POST `/picture-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class PictureData extends LoggedControllerApplication
+final class PictureData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

@@ -17,8 +17,10 @@ use ZxArt\Authors\Services\AuthorAliasDataService;
 /**
  * Changes to one author alias: POST `/author-alias-data/?id=&action=` with the action one of
  * `delete`, `convertToAuthor`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class AuthorAliasData extends LoggedControllerApplication
+final class AuthorAliasData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

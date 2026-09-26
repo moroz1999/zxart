@@ -3451,9 +3451,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/AuthorAliasData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AuthorAliasData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[AuthorAliasData]]></code>
       <code><![CDATA[AuthorAliasData]]></code>
@@ -3461,9 +3458,6 @@
       <code><![CDATA[AuthorAliasData]]></code>
       <code><![CDATA[AuthorAliasData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[AuthorAliasData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/AuthorAliasForm.php">
     <ClassMustBeFinal>
@@ -3493,9 +3487,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/AuthorData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[AuthorData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[AuthorData]]></code>
       <code><![CDATA[AuthorData]]></code>
@@ -3503,9 +3494,6 @@
       <code><![CDATA[AuthorData]]></code>
       <code><![CDATA[AuthorData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[AuthorData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/AuthorDetails.php">
     <ClassMustBeFinal>
@@ -4131,9 +4119,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/GroupAliasData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GroupAliasData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[GroupAliasData]]></code>
       <code><![CDATA[GroupAliasData]]></code>
@@ -4141,9 +4126,6 @@
       <code><![CDATA[GroupAliasData]]></code>
       <code><![CDATA[GroupAliasData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[GroupAliasData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/GroupCollaborators.php">
     <PropertyNotSetInConstructor>
@@ -4170,9 +4152,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/GroupData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[GroupData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[GroupData]]></code>
       <code><![CDATA[GroupData]]></code>
@@ -4180,9 +4159,6 @@
       <code><![CDATA[GroupData]]></code>
       <code><![CDATA[GroupData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[GroupData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/GroupDetails.php">
     <ClassMustBeFinal>
@@ -4441,9 +4417,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PartyData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[PartyData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[PartyData]]></code>
       <code><![CDATA[PartyData]]></code>
@@ -4451,9 +4424,6 @@
       <code><![CDATA[PartyData]]></code>
       <code><![CDATA[PartyData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[PartyData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PartyDetails.php">
     <ClassMustBeFinal>
@@ -4558,9 +4528,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PictureData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[PictureData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[PictureData]]></code>
       <code><![CDATA[PictureData]]></code>
@@ -4568,9 +4535,6 @@
       <code><![CDATA[PictureData]]></code>
       <code><![CDATA[PictureData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[PictureData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PictureDetails.php">
     <ClassMustBeFinal>
@@ -4733,9 +4697,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="project/core/ZxArt/Controllers/PressData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[PressData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[PressData]]></code>
       <code><![CDATA[PressData]]></code>
@@ -4743,9 +4704,6 @@
       <code><![CDATA[PressData]]></code>
       <code><![CDATA[PressData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[PressData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/PressDetails.php">
     <ClassMustBeFinal>
@@ -4808,9 +4766,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/ProdData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ProdData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[ProdData]]></code>
       <code><![CDATA[ProdData]]></code>
@@ -4818,9 +4773,6 @@
       <code><![CDATA[ProdData]]></code>
       <code><![CDATA[ProdData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[ProdData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/ProdDescription.php">
     <ClassMustBeFinal>
@@ -5115,9 +5067,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/ReleaseData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ReleaseData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[ReleaseData]]></code>
       <code><![CDATA[ReleaseData]]></code>
@@ -5125,9 +5074,6 @@
       <code><![CDATA[ReleaseData]]></code>
       <code><![CDATA[ReleaseData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[ReleaseData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/ReleaseDetails.php">
     <ClassMustBeFinal>
@@ -5372,9 +5318,6 @@
     </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/TuneData.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[TuneData]]></code>
-    </ClassMustBeFinal>
     <PropertyNotSetInConstructor>
       <code><![CDATA[TuneData]]></code>
       <code><![CDATA[TuneData]]></code>
@@ -5382,9 +5325,6 @@
       <code><![CDATA[TuneData]]></code>
       <code><![CDATA[TuneData]]></code>
     </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[TuneData]]></code>
-    </UnusedClass>
   </file>
   <file src="project/core/ZxArt/Controllers/TuneDetails.php">
     <ClassMustBeFinal>

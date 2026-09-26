@@ -17,8 +17,10 @@ use ZxArt\Prods\Services\ProdDataService;
 /**
  * Changes to one production: POST `/prod-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class ProdData extends LoggedControllerApplication
+final class ProdData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

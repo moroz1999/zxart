@@ -17,8 +17,10 @@ use ZxArt\Groups\Services\GroupDataService;
 /**
  * Changes to one group: POST `/group-data/?id=&action=` with the action one of
  * `delete`, `convertToAuthor`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class GroupData extends LoggedControllerApplication
+final class GroupData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

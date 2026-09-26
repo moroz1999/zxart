@@ -17,8 +17,10 @@ use ZxArt\Releases\Services\ReleaseDataService;
 /**
  * Changes to one release: POST `/release-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class ReleaseData extends LoggedControllerApplication
+final class ReleaseData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

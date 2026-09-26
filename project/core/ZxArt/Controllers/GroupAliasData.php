@@ -17,8 +17,10 @@ use ZxArt\Groups\Services\GroupAliasDataService;
 /**
  * Changes to one group alias: POST `/group-alias-data/?id=&action=` with the action one of
  * `delete`, `convertToGroup`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class GroupAliasData extends LoggedControllerApplication
+final class GroupAliasData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

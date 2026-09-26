@@ -17,8 +17,10 @@ use ZxArt\Parties\Services\PartyDataService;
 /**
  * Changes to one party: POST `/party-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class PartyData extends LoggedControllerApplication
+final class PartyData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

@@ -78,6 +78,8 @@
 - If a legacy method cannot be reasonably typed directly, introduce a named accessor with an explicit return type and keep the local cast or normalization inside that accessor, not at each call site.
 - When handling legacy values, first convert them to the target type, then validate or branch on the typed result. Do NOT scatter repeated strict checks against multiple raw legacy representations such as `false`, `''`, `0`, and `'0'`.
 - Annotate magic variables and methods in original legacy classes.
+- A controller the framework reaches through URL routing (`ZxArt\Controllers\*`) is marked `@psalm-api` in its class docblock: nothing references it by name, so Psalm would report it as unused. Do NOT baseline `UnusedClass` for it.
+- New controllers are `final`; do NOT baseline `ClassMustBeFinal`.
 
 ## Post-Task Checklist
 - After finishing work on any PHP files, request IDE diagnostics (errors, warnings, notices) for all modified files via the MCP IDE tool and fix all reported issues in added code before considering the task done.

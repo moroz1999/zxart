@@ -17,8 +17,10 @@ use ZxArt\Tunes\Services\TuneDataService;
 /**
  * Changes to one tune: POST `/tune-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class TuneData extends LoggedControllerApplication
+final class TuneData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

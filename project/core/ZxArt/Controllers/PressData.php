@@ -17,8 +17,10 @@ use ZxArt\Press\Services\PressDataService;
 /**
  * Changes to one press article: POST `/press-data/?id=&action=` with the action one of
  * `delete`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class PressData extends LoggedControllerApplication
+final class PressData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 

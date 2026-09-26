@@ -17,8 +17,10 @@ use ZxArt\Authors\Services\AuthorDataService;
 /**
  * Changes to one author: POST `/author-data/?id=&action=` with the action one of
  * `delete`, `convertToGroup`. Answers the id of the element the change produced.
+ *
+ * @psalm-api
  */
-class AuthorData extends LoggedControllerApplication
+final class AuthorData extends LoggedControllerApplication
 {
     public $rendererName = 'json';
 
