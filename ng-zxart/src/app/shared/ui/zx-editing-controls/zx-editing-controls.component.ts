@@ -8,6 +8,7 @@ import {map, startWith, switchMap} from 'rxjs/operators';
 import {isSpaUrl} from '../../utils/spa-url';
 import {CurrentUserService} from '../../services/current-user.service';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
+import {ElementActionApiService} from '../../services/element-action-api.service';
 import {FormSaveApiService} from '../../services/form-save-api.service';
 import {ConfirmDialogService} from '../zx-confirm-dialog/confirm-dialog.service';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
@@ -31,13 +32,11 @@ export interface ZxEditingControlConfirm {
 }
 
 /**
- * Runs a legacy element action through `/ajax/` instead of navigating to a
- * confirmation page. Combine with `confirm` so the dialog is the only step
- * between the button and the action.
+ * Runs an element action in place instead of navigating to a confirmation
+ * page. Combine with `confirm` so the dialog is the only step between the
+ * button and the action.
  */
-export interface ZxEditingControlRun {
-  /** Legacy action name posted to `/ajax/`. */
-  readonly action: string;
+interface ZxEditingControlRunBase {
   /** Route prefix of the resulting entity — navigates to `/{targetPath}/{id}`. */
   readonly targetPath?: string;
   /** Result message shown when the action does not navigate. */
@@ -47,6 +46,20 @@ export interface ZxEditingControlRun {
   /** Reloads the page after a successful action, for actions that change content the page already shows. */
   readonly reloadOnSuccess?: boolean;
 }
+
+/** Legacy element action posted to `/ajax/`. */
+export interface ZxEditingControlLegacyRun extends ZxEditingControlRunBase {
+  readonly action: string;
+}
+
+/** SPA data endpoint the element id is posted to (`POST {endpoint}?id=`); answers `{id}`. */
+export interface ZxEditingControlEndpointRun extends ZxEditingControlRunBase {
+  readonly endpoint: string;
+  /** Extra query parameters posted with the id. */
+  readonly params?: Readonly<Record<string, string>>;
+}
+
+export type ZxEditingControlRun = ZxEditingControlLegacyRun | ZxEditingControlEndpointRun;
 
 export interface ZxEditingControlAction {
   readonly action: string;
@@ -151,6 +164,7 @@ export class ZxEditingControlsComponent implements OnChanges {
     private readonly currentUserService: CurrentUserService,
     private readonly elementPrivilegesApi: ElementPrivilegesApiService,
     private readonly formSave: FormSaveApiService,
+    private readonly elementActionApi: ElementActionApiService,
     private readonly confirmDialog: ConfirmDialogService,
     private readonly translate: TranslateService,
     private readonly router: Router,
@@ -230,7 +244,9 @@ export class ZxEditingControlsComponent implements OnChanges {
 
   private async execute(action: ZxEditingControlAction, run: ZxEditingControlRun): Promise<void> {
     try {
-      const result = await firstValueFrom(this.formSave.save(this.elementId, {fields: {}}, run.action));
+      const result = await firstValueFrom('endpoint' in run
+        ? this.elementActionApi.run(run.endpoint, this.elementId, run.params)
+        : this.formSave.save(this.elementId, {fields: {}}, run.action));
       if (run.targetPath) {
         if (result.id > 0) {
           void this.router.navigateByUrl(`/${run.targetPath}/${result.id}`);

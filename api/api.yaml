@@ -37,6 +37,8 @@ paths:
     $ref: 'profile.yaml#/paths/~1profile-data~1'
   /approve-claim-data/:
     $ref: 'claim-approval.yaml#/paths/~1approve-claim-data~1'
+  /entity-conversion-data/:
+    $ref: 'entity-conversion.yaml#/paths/~1entity-conversion-data~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /tags/:

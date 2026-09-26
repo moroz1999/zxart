@@ -14,7 +14,7 @@ const GROUP_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
     labelKey: 'group-details.action.convertToAuthor',
     color: 'secondary',
     confirm: {messageKey: 'convert.group-to-author', confirmLabelKey: 'convert.confirm'},
-    run: {action: 'convertToAuthor', targetPath: 'author', failureKey: 'convert.failed'},
+    run: {endpoint: '/entity-conversion-data/', params: {target: 'author'}, targetPath: 'author', failureKey: 'convert.failed'},
   },
 ];
 
@@ -27,7 +27,7 @@ const GROUP_ALIAS_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
     labelKey: 'group-details.action.convertToGroup',
     color: 'secondary',
     confirm: {messageKey: 'convert.alias-to-group', confirmLabelKey: 'convert.confirm'},
-    run: {action: 'convertToGroup', targetPath: 'group', failureKey: 'convert.failed'},
+    run: {endpoint: '/entity-conversion-data/', params: {target: 'group'}, targetPath: 'group', failureKey: 'convert.failed'},
   },
 ];
 

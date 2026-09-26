@@ -547,45 +547,37 @@ class AuthorsService extends ElementsManager
         return true;
     }
 
-    public function convertAliasToAuthor(int $aliasId): authorElement|false
+    public function convertAliasToAuthor(authorAliasElement $aliasElement): ?authorElement
     {
-        $newAuthorElement = false;
-        /**
-         * @var authorAliasElement $aliasElement
-         */
-        if ($aliasElement = $this->structureManager->getElementById($aliasId)) {
-            /**
-             * @var authorElement $newAuthorElement
-             */
-            if ($newAuthorElement = $this->manufactureAuthorElement($aliasElement->title)) {
-                $this->privilegesManager->copyPrivileges($aliasId, $aliasId);
+        $newAuthorElement = $this->manufactureAuthorElement($aliasElement->title);
+        if ($newAuthorElement === null) {
+            return null;
+        }
+        $aliasId = $aliasElement->getId();
 
-                if ($links = $this->linksManager->getElementsLinks($aliasId, null, 'parent')) {
-                    foreach ($links as $link) {
-                        $this->linksManager->unLinkElements($aliasId, $link->childStructureId, $link->type);
-                        $this->linksManager->linkElements(
-                            $newAuthorElement->getPersistedId(),
-                            $link->childStructureId,
-                            $link->type
-                        );
-                    }
-                }
+        $newAuthorElement->title = $aliasElement->title;
+        $newAuthorElement->structureName = $aliasElement->title;
+        $newAuthorElement->persistElementData();
+        $newAuthorId = $newAuthorElement->getId();
 
-                $newAuthorElement->title = $aliasElement->title;
-                $newAuthorElement->structureName = $aliasElement->title;
-                $newAuthorElement->persistElementData();
+        $this->privilegesManager->copyPrivileges($aliasId, $newAuthorId);
 
-                $this->db->table('authorship')
-                    ->where('authorId', '=', $aliasId)
-                    ->update(['authorId' => $newAuthorElement->getId()]);
-
-                $this->db->table('import_origin')
-                    ->where('elementId', '=', $aliasId)
-                    ->update(['elementId' => $newAuthorElement->getId()]);
-
-                $aliasElement->deleteElementData();
+        if ($links = $this->linksManager->getElementsLinks($aliasId, null, 'parent')) {
+            foreach ($links as $link) {
+                $this->linksManager->unLinkElements($aliasId, $link->childStructureId, $link->type);
+                $this->linksManager->linkElements($newAuthorId, $link->childStructureId, $link->type);
             }
         }
+
+        $this->db->table('authorship')
+            ->where('authorId', '=', $aliasId)
+            ->update(['authorId' => $newAuthorId]);
+
+        $this->db->table('import_origin')
+            ->where('elementId', '=', $aliasId)
+            ->update(['elementId' => $newAuthorId]);
+
+        $aliasElement->deleteElementData();
 
         return $newAuthorElement;
     }

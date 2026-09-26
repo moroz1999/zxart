@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: ZX-Art entity conversion API
+  version: 1.0.0
+paths:
+  /entity-conversion-data/:
+    post:
+      summary: Convert an author, a group or one of their aliases into another entity
+      description: >-
+        Supported conversions: author alias → author, author → group,
+        group → author, group alias → group. The source's works, links and
+        import origins move to a newly created entity and the source is deleted.
+        The source must grant the `convertToAuthor` / `convertToGroup` privilege
+        matching the target.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Id of the element to convert.
+        - in: query
+          name: target
+          required: true
+          schema:
+            type: string
+            enum: [author, group]
+          description: What the element becomes.
+      responses:
+        '200':
+          description: The created entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConvertedEntity'
+        '400':
+          description: Missing id, unknown target, or a conversion the element does not support
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The visitor has no conversion privilege on the element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No such element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Not a POST request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: The target entity could not be created, or an internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ConvertedEntity:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: Id of the created author or group.
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string
