@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ZxProdComponent} from '../../shared/components/zx-prod-component';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 
@@ -20,11 +20,8 @@ import {TextDirective} from '../../shared/ui/typography/directives/text.directiv
         TextDirective,
     ],
 })
-export class ZxProdRowComponent extends ZxProdComponent implements OnInit {
+export class ZxProdRowComponent extends ZxProdComponent {
     constructor() {
         super();
-    }
-
-    ngOnInit(): void {
     }
 }

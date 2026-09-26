@@ -7,7 +7,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild
+  ViewChild, OnDestroy
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -35,7 +35,7 @@ type ZxRangeThumb = 'min' | 'max';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxMinMaxRangeComponent implements ControlValueAccessor, OnChanges {
+export class ZxMinMaxRangeComponent implements ControlValueAccessor, OnChanges, OnDestroy {
   @Input() min = 0;
   @Input() max = 100;
   @Input() step = 1;

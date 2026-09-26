@@ -59,7 +59,7 @@ export class ZxProdsListComponent {
 
 
     private getYears(items: ZxProd[]): YearProds[] {
-        let years = [] as Array<YearProds>;
+        const years = [] as Array<YearProds>;
         items.map(zxProd => {
             let prodYear = years.find(year => year.year === +zxProd.year);
             if (!prodYear) {

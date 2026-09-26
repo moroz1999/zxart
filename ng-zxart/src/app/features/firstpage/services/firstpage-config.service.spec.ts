@@ -1,4 +1,5 @@
 import {BehaviorSubject, firstValueFrom, of} from 'rxjs';
+import {describe, expect, it, vi} from 'vitest';
 import {PreferenceDto, PreferenceValues} from '../../settings/models/preference.dto';
 import {UserPreferencesService} from '../../settings/services/user-preferences.service';
 import {FirstpageConfigService} from './firstpage-config.service';
@@ -11,7 +12,7 @@ describe('FirstpageConfigService', () => {
       homepage_new_prods_min_rating: '0',
       homepage_new_prods_start_year: '1',
     });
-    const setPreferences = jasmine.createSpy('setPreferences').and.callFake(
+    const setPreferences = vi.fn(
       (items: PreferenceDto[]) => {
         const values = Object.fromEntries(items.map(item => [item.code, item.value]));
         preferences.next(values);
@@ -32,12 +33,12 @@ describe('FirstpageConfigService', () => {
 
     await firstValueFrom(service.saveConfig(config.modules));
 
-    const savedItems = setPreferences.calls.mostRecent().args[0] as PreferenceDto[];
-    expect(savedItems).toContain({
+    const savedItems = setPreferences.mock.calls.at(-1)?.[0] as PreferenceDto[];
+    expect(savedItems).toContainEqual({
       code: 'homepage_new_prods_start_year',
       value: '1',
     });
-    expect(savedItems).toContain({
+    expect(savedItems).toContainEqual({
       code: 'homepage_new_prods_min_rating',
       value: '0',
     });

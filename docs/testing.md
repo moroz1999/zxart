@@ -5,7 +5,21 @@
 ```bash
 composer run test        # Run all PHPUnit tests
 composer run psalm       # Static analysis
+cd ng-zxart && npm test  # Run all Angular Vitest tests once
+cd ng-zxart && npm run test:watch # Run Angular tests in watch mode
 ```
+
+Run one Angular spec from `ng-zxart/` with
+`npm test -- src/app/path/example.spec.ts`, or filter by test name with
+`npm test -- -t "test name"`.
+
+## Angular Tests
+
+- Angular tests use Vitest and live next to the tested source as `*.spec.ts`.
+- Import test functions and mocks from `vitest`; do not use Jasmine APIs.
+- Prefer isolated service and utility tests. Use Angular `TestBed` only when the
+  behavior depends on Angular dependency injection or rendering.
+- Keep each test deterministic and focused on observable behavior.
 
 ## Core Testing Principles
 

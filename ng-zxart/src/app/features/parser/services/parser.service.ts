@@ -17,7 +17,7 @@ export class ParserService {
     }
 
     public parseData(file: File): Observable<ParserData[]> {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
 
         return this.http.post<JsonResponse<ParserData[]>>(this.apiUrl, formData).pipe(

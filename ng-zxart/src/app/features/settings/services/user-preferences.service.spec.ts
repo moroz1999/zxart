@@ -1,5 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom, of, throwError} from 'rxjs';
+import {describe, expect, it, vi} from 'vitest';
 import {CurrentUserService} from '../../../shared/services/current-user.service';
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
 import {CurrentUser} from '../../../shared/models/current-user';
@@ -10,6 +11,13 @@ import {UserPreferencesService} from './user-preferences.service';
 interface StoredPreferences {
   userId: number | null;
   values: PreferenceValues;
+}
+
+function createHttpMock() {
+  return {
+    get: vi.fn(),
+    put: vi.fn(),
+  };
 }
 
 class MemoryLocalStorage {
@@ -46,9 +54,9 @@ describe('UserPreferencesService', () => {
       userId: loggedUser.id,
       values: {homepage_new_prods_start_year: '0'},
     } satisfies StoredPreferences);
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    http.get.and.returnValue(of([{code: 'homepage_new_prods_start_year', value: '1'}]));
-    const service = createService(http, loggedUser, storage);
+    const http = createHttpMock();
+    http.get.mockReturnValue(of([{code: 'homepage_new_prods_start_year', value: '1'}]));
+    const service = createService(http as unknown as HttpClient, loggedUser, storage);
 
     await firstValueFrom(service.initialize());
 
@@ -64,9 +72,9 @@ describe('UserPreferencesService', () => {
       userId: loggedUser.id,
       values: {theme: 'light'},
     } satisfies StoredPreferences);
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    http.get.and.returnValue(throwError(() => new Error('load failed')));
-    const service = createService(http, loggedUser, storage);
+    const http = createHttpMock();
+    http.get.mockReturnValue(throwError(() => new Error('load failed')));
+    const service = createService(http as unknown as HttpClient, loggedUser, storage);
 
     expect(await firstValueFrom(service.initialize())).toEqual({theme: 'light'});
 
@@ -74,7 +82,7 @@ describe('UserPreferencesService', () => {
       userId: 99,
       values: {theme: 'dark'},
     } satisfies StoredPreferences);
-    const otherSessionService = createService(http, loggedUser, storage);
+    const otherSessionService = createService(http as unknown as HttpClient, loggedUser, storage);
 
     expect(await firstValueFrom(otherSessionService.initialize())).toEqual({});
     expect(storage.get<StoredPreferences>('preferences')).toEqual({
@@ -85,10 +93,10 @@ describe('UserPreferencesService', () => {
 
   it('updates localStorage only after a successful logged-in save', async () => {
     const storage = new MemoryLocalStorage();
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    http.get.and.returnValue(of([{code: 'homepage_new_prods_start_year', value: '0'}]));
-    http.put.and.returnValue(of([{code: 'homepage_new_prods_start_year', value: '1'}]));
-    const service = createService(http, loggedUser, storage);
+    const http = createHttpMock();
+    http.get.mockReturnValue(of([{code: 'homepage_new_prods_start_year', value: '0'}]));
+    http.put.mockReturnValue(of([{code: 'homepage_new_prods_start_year', value: '1'}]));
+    const service = createService(http as unknown as HttpClient, loggedUser, storage);
     await firstValueFrom(service.initialize());
 
     await firstValueFrom(service.setPreferences([
@@ -102,15 +110,15 @@ describe('UserPreferencesService', () => {
 
   it('keeps the previous local snapshot after a failed logged-in save', async () => {
     const storage = new MemoryLocalStorage();
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    http.get.and.returnValue(of([{code: 'homepage_new_prods_start_year', value: '0'}]));
-    http.put.and.returnValue(throwError(() => new Error('save failed')));
-    const service = createService(http, loggedUser, storage);
+    const http = createHttpMock();
+    http.get.mockReturnValue(of([{code: 'homepage_new_prods_start_year', value: '0'}]));
+    http.put.mockReturnValue(throwError(() => new Error('save failed')));
+    const service = createService(http as unknown as HttpClient, loggedUser, storage);
     await firstValueFrom(service.initialize());
 
-    await expectAsync(firstValueFrom(service.setPreferences([
+    await expect(firstValueFrom(service.setPreferences([
       {code: 'homepage_new_prods_start_year', value: '1'},
-    ]))).toBeRejected();
+    ]))).rejects.toThrow('Failed to save preferences');
 
     expect(storage.get<StoredPreferences>('preferences')?.values).toEqual({
       homepage_new_prods_start_year: '0',
@@ -119,8 +127,8 @@ describe('UserPreferencesService', () => {
 
   it('persists anonymous changes locally without an HTTP request', async () => {
     const storage = new MemoryLocalStorage();
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    const service = createService(http, anonymousUser, storage);
+    const http = createHttpMock();
+    const service = createService(http as unknown as HttpClient, anonymousUser, storage);
     await firstValueFrom(service.initialize());
 
     await firstValueFrom(service.setPreference('homepage_new_prods_start_year', '1'));
@@ -139,8 +147,8 @@ describe('UserPreferencesService', () => {
       userId: null,
       preferences: [{code: 'theme', value: 'light'}],
     });
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    const service = createService(http, anonymousUser, storage);
+    const http = createHttpMock();
+    const service = createService(http as unknown as HttpClient, anonymousUser, storage);
 
     const preferences = await firstValueFrom(service.initialize());
 
@@ -153,8 +161,8 @@ describe('UserPreferencesService', () => {
 
   it('returns frontend defaults to an anonymous user without an HTTP request', async () => {
     const storage = new MemoryLocalStorage();
-    const http = jasmine.createSpyObj<HttpClient>('HttpClient', ['get', 'put']);
-    const service = createService(http, anonymousUser, storage);
+    const http = createHttpMock();
+    const service = createService(http as unknown as HttpClient, anonymousUser, storage);
 
     expect(await firstValueFrom(service.getDefaults())).toEqual(DEFAULT_USER_PREFERENCES);
     expect(http.get).not.toHaveBeenCalled();

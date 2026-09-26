@@ -1,5 +1,10 @@
 import {mapPictureToGalleryItem} from './picture-gallery.mapper';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
+import {describe, expect, it, vi} from 'vitest';
+
+vi.mock('ng-gallery', () => ({
+  ImageItem: class {},
+}));
 
 describe('pictureGalleryMapper', () => {
   const basePicture: ZxPictureDto = {
@@ -7,6 +12,7 @@ describe('pictureGalleryMapper', () => {
     title: 'Picture',
     url: '/pictures/42/',
     imageUrl: '/thumb.png',
+    largeImageUrl: '/large.png',
     fileId: 1,
     type: 'standard',
     pictureBorder: 1,
@@ -15,6 +21,7 @@ describe('pictureGalleryMapper', () => {
     year: null,
     authors: [],
     party: null,
+    release: null,
     isRealtime: false,
     isFlickering: false,
     compo: null,
@@ -23,12 +30,13 @@ describe('pictureGalleryMapper', () => {
     userVote: null,
     denyVoting: false,
     commentsAmount: 0,
+    views: 0,
   };
 
-  it('uses imageUrl for both thumb and large', () => {
+  it('maps the thumbnail and large image URLs', () => {
     const item = mapPictureToGalleryItem(basePicture);
 
     expect(item.thumbUrl).toBe('/thumb.png');
-    expect(item.largeUrl).toBe('/thumb.png');
+    expect(item.largeUrl).toBe('/large.png');
   });
 });

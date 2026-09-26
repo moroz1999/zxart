@@ -62,7 +62,7 @@ export class ParsedFileComponent {
 
 
     public showReleases() {
-        let dialogRef = this.dialog.open(ParsedReleasesComponent, {
+        this.dialog.open(ParsedReleasesComponent, {
             width: '500px',
             panelClass: 'zx-dialog',
             backdropClass: 'zx-dialog-backdrop',

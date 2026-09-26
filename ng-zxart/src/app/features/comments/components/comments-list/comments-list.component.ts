@@ -67,7 +67,7 @@ export class CommentsListComponent {
     return of(this.comments);
   };
 
-  onCommentSaved(comment: CommentDto): void {
+  onCommentSaved(_comment: CommentDto): void {
     this.showForm.set(false);
     if (this.isRoot) {
       this.reloadSubject.next();

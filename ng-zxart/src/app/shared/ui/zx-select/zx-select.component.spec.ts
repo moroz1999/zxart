@@ -1,4 +1,5 @@
 import {ChangeDetectorRef} from '@angular/core';
+import {describe, expect, it, vi} from 'vitest';
 import {ZxSelectComponent, ZxSelectOption} from './zx-select.component';
 
 describe('ZxSelectComponent', () => {
@@ -13,7 +14,7 @@ describe('ZxSelectComponent', () => {
 
   it('does not emit a change when options are assigned before the control value', () => {
     const component = createComponent();
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn();
 
     component.options = options;
     component.registerOnChange(onChange);
@@ -25,20 +26,20 @@ describe('ZxSelectComponent', () => {
 
   it('preserves the control value when options arrive asynchronously', () => {
     const component = createComponent();
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn();
 
     component.registerOnChange(onChange);
     component.writeValue('1');
     component.options = options;
 
     expect(component.value).toBe('1');
-    expect(component.isSelected('1')).toBeTrue();
+    expect(component.isSelected('1')).toBe(true);
     expect(onChange).not.toHaveBeenCalled();
   });
 
   it('never adopts an option as the control value on its own', () => {
     const component = createComponent();
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn();
 
     component.registerOnChange(onChange);
     component.writeValue('');
@@ -54,11 +55,11 @@ describe('ZxSelectComponent', () => {
     component.options = options;
     component.writeValue('');
 
-    expect(component.blankOption).toBeTrue();
+    expect(component.blankOption).toBe(true);
 
     component.writeValue('1');
 
-    expect(component.blankOption).toBeFalse();
+    expect(component.blankOption).toBe(false);
   });
 
   it('leaves the empty state to the placeholder when there is one', () => {
@@ -67,12 +68,12 @@ describe('ZxSelectComponent', () => {
     component.options = options;
     component.writeValue('');
 
-    expect(component.blankOption).toBeFalse();
+    expect(component.blankOption).toBe(false);
   });
 
   it('emits only a user selection change', () => {
     const component = createComponent();
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn();
     component.registerOnChange(onChange);
     component.options = options;
     component.writeValue('0');
@@ -80,6 +81,7 @@ describe('ZxSelectComponent', () => {
     component.onSelectionChange({target: {value: '1'}} as unknown as Event);
 
     expect(component.value).toBe('1');
-    expect(onChange).toHaveBeenCalledOnceWith('1');
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith('1');
   });
 });

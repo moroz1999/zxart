@@ -20,7 +20,7 @@ export class TagsSearchService {
             query: tagText,
         };
         parameters.query = tagText;
-        const options: Object = {
+        const options: object = {
             'params': parameters,
         };
         return this.http

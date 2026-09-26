@@ -5,6 +5,9 @@
     "ng": "ng",
     "dev": "ng serve",
     "start": "ng serve",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "ng lint",
     "build": "ng build -c production && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
     "build:docker": "ng build -c production && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
     "build:stats": "ng build -c production --stats-json && node scripts/generate-manifest.js && mkdir -p ../htdocs/assets && cp -r src/assets/. ../htdocs/assets/",
@@ -37,17 +40,18 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^1.19.1",
+    "@analogjs/vitest-angular": "^1.19.1",
     "@angular-devkit/build-angular": "^19.2.19",
     "@angular/cli": "^19.2.19",
     "@angular/compiler-cli": "^19.2.18",
-    "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.2.0",
-    "karma": "~6.4.4",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.1",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
+    "angular-eslint": "^19.8.1",
+    "eslint": "^9.39.5",
+    "jsdom": "^26.1.0",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^7.0.4",
+    "vitest": "^3.2.4",
     "webpack-bundle-analyzer": "^5.3.1"
   }
 }

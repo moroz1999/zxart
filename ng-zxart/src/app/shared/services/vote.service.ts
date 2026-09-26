@@ -20,7 +20,7 @@ export class VoteService {
             value: vote,
         };
         return this.http
-            .get<JsonResponse<VoteElements<T>>>(this.apiUrl, {'params': parameters} as Object)
+            .get<JsonResponse<VoteElements<T>>>(this.apiUrl, {'params': parameters} as object)
             .pipe(
                 map(response => {
                     const element = response.responseData[type]?.[0];

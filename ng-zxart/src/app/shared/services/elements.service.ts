@@ -30,7 +30,7 @@ export class ElementsService {
             preset,
             ...(elementId > 0 ? {elementId} : structureType ? {structureType} : {elementId}),
         };
-        const options: Object = {
+        const options: object = {
             'params': allParameters,
         };
         return this.http

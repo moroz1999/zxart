@@ -1,4 +1,5 @@
 import {enumDefaultValue} from './enum-default';
+import {describe, expect, it} from 'vitest';
 
 describe('enumDefaultValue', () => {
   const pictureTypes = [

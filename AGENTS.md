@@ -18,12 +18,26 @@ You MUST read the MD files linked in this document which are relevant to the cur
 - Documentation additions in `docs` must be concise, clear, and only about the core points.
 - **Domain documentation (`docs/domain.md` and `docs/domain/*.md`) describes WHAT the site does and WHY, never HOW it is built.** It is written for someone who needs to understand the subject area, not the codebase. Forbidden there: class, service, enum, trait, method, component and file names; namespaces and paths; endpoint URLs, query parameters and response field lists; SQL, table and column names; framework and library names. Name the entities, their fields as the user meets them, the rules they obey and the behaviour visitors see. Implementation belongs in `php.md`, `angular.md`, `cms.md` or a feature document — and the domain document does not link to the code, because code moves and the domain does not.
 - ALWAYS add newly created files to GIT immediately after creation.
+- Commit directly to `master`; do not create feature branches. Commit only the files of your own task (explicit pathspecs) — the working tree may hold unrelated uncommitted work.
 - When the IDE is in 'Ask' (readonly) mode, it is STRICTLY FORBIDDEN to do anything except answering the user's question. No file modifications or tool calls that change state are allowed.
 - ALWAYS use MCP tools (JetBrains IDE) when available for code search, file reading, navigation, and locating files, methods, and classes instead of Grep/Glob/Read/Bash.
 - When checking file problems via IDE (`get_file_problems`), ALWAYS request ALL severity levels (`errorsOnly: false`). Never use `errorsOnly: true` or rely on the default — weak warnings (unused imports, unused parameters, etc.) must be caught too.
 - Do not scan the whole project by file extension. Use targeted paths or direct file reads instead.
 - Do not run naive recursive searches over the entire repository. Pick the specific directories from the documented project structure that match the task.
 - Do not use `em` for icon sizes when fixed pixel size is possible. Use `px` via component/theme CSS variables.
+
+### Mandatory Task Workflow
+Every task follows these stages in order. Do not merge stages or continue past an approval gate without explicit user approval.
+
+1. The user provides a task.
+2. Research the relevant code without changing project files. Briefly describe the essence of the proposed fix as clear implementation steps, then wait for approval.
+3. After approval, add or update tests for the requested behavior and run only those tests. Confirm that they fail for the expected reason, then wait for approval of the tests. If no meaningful automated test can be written, explain why and wait for explicit approval to proceed without one.
+4. After test approval, implement the change and run only the relevant linters. Do not run tests, builds, Psalm, or other validation commands at this stage.
+5. The user tests and reviews the implementation. Apply their feedback within the same implementation stage and run only the relevant linters after each code update.
+6. After the user explicitly approves the implementation, run the relevant test suites, Psalm, required builds, and any other checks mandated by the task-specific documentation.
+7. When all final checks pass, commit only the files belonging to the task with a short commit message describing the completed change.
+
+An approval advances only the next pending gate. Requirements elsewhere in this file and the linked documentation still apply; their validation commands are deferred to the final validation stage when this workflow requires it.
 
 ## DOCUMENTATION TREE
 
@@ -59,6 +73,10 @@ composer psalm
 
 # Angular build (required after any changes to ng-zxart/ — see docs/angular.md)
 composer build
+
+# Angular tests and lint
+cd ng-zxart && npm test
+cd ng-zxart && npm run lint
 
 # Check the running site (always from inside the container — see docs/local-http.md)
 docker compose exec -T app curl -s http://zxart.loc/prod/589898
