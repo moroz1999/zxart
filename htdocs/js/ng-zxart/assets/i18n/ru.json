@@ -852,7 +852,7 @@
       "digitalbeeper": "Цифровой Beeper",
       "beeperdigitalbeeper": "Beeper + Digital Beeper",
       "aycovox": "AY+Covox",
-      "fm": "FM (3 канала YM2203)"
+      "fm": "TurboSound FM (6 каналов YM2203)"
     },
     "list": {
       "hint": "через запятую"
@@ -1471,6 +1471,9 @@
     "import-sc-screenshots": "Скачать картинки с SC",
     "import-sc-screenshots-done": "Скриншоты со Spectrum Computing добавлены в галерею.",
     "import-sc-screenshots-failed": "Новых скриншотов на Spectrum Computing не найдено.",
+    "import-itchio-releases": "Скопировать релизы с itch.io",
+    "import-itchio-releases-done": "Релизы с itch.io добавлены к продукту.",
+    "import-itchio-releases-failed": "Новых файлов релизов на itch.io не найдено.",
     "screenshots": "Скриншоты",
     "releases": "Релизы",
     "readArticle": "Читать статью",
@@ -1623,6 +1626,7 @@
     "restart": "Перезапустить",
     "status": {
       "downloading": "Скачивание релиза…",
+      "downloading-core": "Загрузка эмулятора… {{percent}}%",
       "staging": "Запись SD-карты…",
       "starting": "Запуск {{name}}…"
     },

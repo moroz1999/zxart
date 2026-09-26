@@ -10,23 +10,16 @@ before the machine starts.
 
 ## Runtime
 
-`htdocs/libs/mamenextsam/` holds the MAME core (`mame.js`, `mame.wasm`), the
-Emularity loader, `roms/tbblue.zip` and `next/nextzxos.zip` — the NextZXOS
-system tree the card is built around. Its `README.md` carries the MAME version,
-the build command, the pinned NextZXOS distribution and the licensing terms;
-read it before changing anything in there.
+The Next's own files in `htdocs/libs/mame/` are `roms/tbblue.zip` and
+`next/nextzxos.zip` — the NextZXOS system tree the card is built around. The
+core it shares with every other machine here is described in
+[mame-machines.md](mame-machines.md), and the directory's `README.md` carries
+the pinned NextZXOS distribution and the licensing terms; read it before
+changing anything in there.
 
-The same directory serves the SAM Coupé, which mounts a file MAME opens directly
-and needs no card; it runs at 576x550 and shares `mame-canvas.ts` and
-`mame-memory-fs.ts` with the Next. TSConf has a core of its own in
-`htdocs/libs/mame/` — see [tsconf-emulator.md](tsconf-emulator.md).
-
-`.wasm` is in the `mod_deflate` list in `htdocs/.htaccess` — the core is 30 MB
-raw and about 8 MB compressed — and that rule covers every core the site serves.
-
-The Next runs at 720x576, nudged back into shape by `mame-canvas.ts`; why that
-is needed is in
-[tsconf-emulator.md](tsconf-emulator.md#the-size-in-the-dialog).
+The machine is pinned to boot ROM **3.01.00** (`-bios v30100`), the one that
+distribution goes with, and launched at 720x576 with `-aspect 2:1` — the Next's
+picture is 360x288 at its widest, so that is whole pixels of it.
 
 ## Building the card
 
@@ -59,13 +52,10 @@ real one, so an invented name can never take the one a file has a right to.
 Nothing about the card is stored or generated on the server: the system tree is
 one cacheable download, and the release is written into a fresh copy per play.
 
-That last part has to be said to the loader, in `mame-memory-fs.ts`, for this
-engine and TSConf alike: Emularity mirrors every file it mounts into IndexedDB
-and then **refuses to overwrite one it already has**, so the first card ever
-written would be the one every later release booted from — and a card is 64 MB a
-play that nothing reads back, so the store grows until the browser refuses
-writes and a start hangs with the card half-written. Telling the loader that the
-IndexedDB backend is unavailable keeps the whole filesystem in memory.
+The card is handed to the loader as a `blob:` URL, which it mounts and does not
+cache — see [mame-machines.md](mame-machines.md#handing-the-machine-a-file). A
+card is 64 MB a play that nothing ever reads back, so caching one would fill the
+store a release at a time.
 
 ## Staging a release
 
@@ -118,13 +108,10 @@ menu, where the Browser starts it with the OS's own rules.
 
 ## Checking it outside the app
 
-`htdocs/libs/mamenextsam/next.html` boots the Next from a ready-made card
+`htdocs/libs/mame/next.html` boots the Next from a ready-made card
 (`software/next.img`, written by `build/make-nextzxos-assets.sh` with the
-releases in `build/releases.txt`) with nothing of the site around it.
-`next-bench.html` runs the same machine with video, sound and throttling off and
-prints the average speed MAME measures for itself. NextZXOS holds the machine at
-28 MHz even at its own menu, so that cost belongs to the platform rather than to
-any one release.
+releases in `build/releases.txt`) with nothing of the site around it. It is one
+of the reference pages described in [mame-machines.md](mame-machines.md).
 
 ## Limits
 
@@ -136,5 +123,4 @@ any one release.
 - **The card is rebuilt per play**, so nothing a release writes survives the
   dialog being closed. Closing it reloads the page, which is the only thing that
   unloads an Emscripten emulator; see `EmulatorModalService`.
-- Screenshot capture (F2) and the dialog's restart button are not wired for this
-  engine; MAME resets on its own F3.
+- Screenshot capture (F2) is not wired for this engine.

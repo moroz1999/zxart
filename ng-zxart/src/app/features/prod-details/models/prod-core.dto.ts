@@ -109,6 +109,8 @@ export interface ProdCoreDto {
   canAddRelease: boolean;
   /** Linked to at least one Spectrum Computing (ZxDB) entry. */
   hasZxdbEntry: boolean;
+  /** The external link points to a game on itch.io. */
+  hasItchIoGame: boolean;
   /** Downloads summed over the prod's releases. */
   downloadsCount: number;
   /** Online plays summed over the prod's releases. */

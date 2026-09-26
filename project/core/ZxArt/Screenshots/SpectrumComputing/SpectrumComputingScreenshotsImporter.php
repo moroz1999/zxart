@@ -13,7 +13,7 @@ use ZxArt\Import\Services\ZxdbEntryIdsProvider;
 use zxProdElement;
 
 /**
- * Copies the loading and running screens of the prod's Spectrum Computing
+ * Copies the loading, opening and running screens of the prod's Spectrum Computing
  * entries into its screenshot gallery. Screens the gallery already holds are
  * skipped, so running it again only adds what appeared since.
  */

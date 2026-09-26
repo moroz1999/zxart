@@ -34,6 +34,7 @@ readonly class ProdCoreDto
         public string $dateCreated,
         public bool $canAddRelease,
         public bool $hasZxdbEntry,
+        public bool $hasItchIoGame,
         public int $downloadsCount,
         public int $playsCount,
         public array $categoriesPaths,

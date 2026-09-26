@@ -30,7 +30,7 @@ class EmulatorResolverServiceTest extends TestCase
         $catalog->method('getCategoryOf')->willReturnCallback(
             static fn(string $code): ?HardwareGroup => match (true) {
                 in_array($code, ['ay', 'beeper', 'gs', 'ngs', 'ts'], true) => HardwareGroup::SOUND,
-                in_array($code, ['zx48', 'zx128', 'pentagon2666', 'timex2048', 'timex2068', 'samcoupe', 'tsconf', 'zx811', 'atm', 'atm2', 'baseconf'], true) => HardwareGroup::COMPUTERS,
+                in_array($code, ['zx48', 'zx128', 'pentagon128', 'pentagon2666', 'timex2048', 'timex2068', 'samcoupe', 'tsconf', 'zx811', 'atm', 'atm2', 'baseconf', 'scorpion', 'profi', 'sprinter'], true) => HardwareGroup::COMPUTERS,
                 in_array($code, ['tape'], true) => HardwareGroup::STORAGE,
                 default => null,
             },
@@ -60,14 +60,72 @@ class EmulatorResolverServiceTest extends TestCase
     }
 
     /**
-     * General Sound is the one thing the online emulators cannot produce, so a
-     * release that has no other way to be heard is not offered at all.
+     * General Sound plays on the machines carrying a NeoGS and nowhere else, so
+     * a release resolving to one of the others and having no second way to be
+     * heard is not offered at all.
      */
     public function testAReleaseWhoseOnlySoundIsUnsupportedIsNotPlayable(): void
     {
         $this->assertSame('usp', $this->service->resolveEmulator([], ['tap']));
+        // A tape reaches no machine here that has a NeoGS, so there is nowhere
+        // for the track to be heard.
         $this->assertNull($this->service->resolveEmulator(['gs'], ['tap']));
-        $this->assertNull($this->service->resolveEmulator(['gs', 'pentagon2666'], ['tap', 'scl']));
+    }
+
+    /**
+     * The machines MAME runs carry a NeoGS, so a General Sound track is the
+     * reason to play them rather than a reason to hide them.
+     */
+    public function testAGeneralSoundReleaseIsPlayableOnAMachineCarryingANeoGs(): void
+    {
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['scorpion', 'gs'], ['trd']));
+        $this->assertSame('tsconf', $this->service->resolveEmulator(['tsconf', 'gs'], ['spg']));
+        $this->assertSame('profi', $this->service->resolveEmulator(['profi', 'ngs'], ['scl']));
+    }
+
+    /**
+     * A General Sound disk that named no machine of its own, or named a plain
+     * Spectrum clone, is Spectrum software with a sound card — so it goes to
+     * the Scorpion GMX rather than to the fallback, which has no General Sound.
+     */
+    public function testAGeneralSoundDiskWithoutAMachineGoesToTheScorpion(): void
+    {
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['gs'], ['trd']));
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['ngs'], ['scl']));
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['pentagon128', 'gs'], ['trd']));
+    }
+
+    /**
+     * A TurboSound disk goes the same way: the Spectrum fallback has no second
+     * AY, and a machine that can be fitted with one plays the whole track.
+     */
+    public function testATurboSoundDiskWithoutAMachineGoesToTheScorpion(): void
+    {
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['ts'], ['trd']));
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['pentagon128', 'ay', 'ts'], ['scl']));
+        // A machine of its own still wins, and takes a second AY there.
+        $this->assertSame('atm', $this->service->resolveEmulator(['atm2', 'ts'], ['trd']));
+        // A snapshot the snapshot device runs on its own, so that reaches MAME too.
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['ts'], ['z80']));
+        // A tape MAME cannot start unattended, so the fallback keeps it.
+        $this->assertSame('usp', $this->service->resolveEmulator(['ts'], ['tap']));
+    }
+
+    /**
+     * A machine of its own still wins, and what happens next is the machine's
+     * own doing: the ZX Evolution carries a NeoGS and plays the track, while
+     * the ATM Turbo has no ZX Bus to put one on — so a release whose only
+     * sound is General Sound would run mute there and is not offered, exactly
+     * as the sound rule has always said.
+     */
+    public function testAMachineOfItsOwnWinsOverTheGeneralSoundFallback(): void
+    {
+        $this->assertSame('pentevo', $this->service->resolveEmulator(['baseconf', 'gs'], ['scl']));
+        // The ATM has no ZX Bus, so an ATM release that wants a General Sound
+        // runs on the compatible ZX Evolution, which has one.
+        $this->assertSame('pentevo', $this->service->resolveEmulator(['atm2', 'gs'], ['trd']));
+        $this->assertSame('pentevo', $this->service->resolveEmulator(['atm2', 'ay', 'gs'], ['trd']));
+        $this->assertSame('atm', $this->service->resolveEmulator(['atm2', 'ay'], ['trd']));
     }
 
     /**
@@ -78,35 +136,52 @@ class EmulatorResolverServiceTest extends TestCase
      */
     public function testUnsupportedSoundAlongsideOtherSoundKeepsTheReleasePlayable(): void
     {
-        $this->assertSame('usp', $this->service->resolveEmulator(['ay', 'gs', 'pentagon2666'], ['tap', 'scl']));
+        // On a disk it does better than stay playable: the Scorpion GMX plays
+        // the AY and the General Sound both.
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['ay', 'gs', 'pentagon128'], ['tap', 'scl']));
         $this->assertSame(
             'timex2048',
-            $this->service->resolveEmulator(['timex2048', 'timex2068', 'pentagon2666', 'tape', 'ay', 'gs', 'ngs'], ['tap']),
+            $this->service->resolveEmulator(['timex2048', 'timex2068', 'pentagon128', 'tape', 'ay', 'gs', 'ngs'], ['tap']),
         );
     }
 
     /**
-     * The ATM family is what nothing here emulates, and its releases are TR-DOS
-     * disks — so without a rule of its own the Spectrum fallback would offer one
-     * on a machine it is not.
+     * A TR-DOS disk is a Spectrum release by format, so the Spectrum fallback
+     * would swallow it — only the machine says the memory, video and disk
+     * system of that machine have to be emulated.
      */
-    public function testAReleaseOnlyForAnUnsupportedMachineIsNotPlayable(): void
+    public function testAMachineOfItsOwnWinsOverTheSpectrumFallbackForADisk(): void
     {
-        $this->assertNull($this->service->resolveEmulator(['baseconf'], ['trd']));
-        $this->assertNull($this->service->resolveEmulator(['atm'], ['trd']));
-        $this->assertNull($this->service->resolveEmulator(['atm2'], ['scl']));
-        $this->assertNull($this->service->resolveEmulator(['baseconf', 'betadisk', 'ay'], ['scl', 'trd']));
+        $this->assertSame('pentevo', $this->service->resolveEmulator(['baseconf'], ['trd']));
+        $this->assertSame('atm', $this->service->resolveEmulator(['atm'], ['trd']));
+        $this->assertSame('atm', $this->service->resolveEmulator(['atm2'], ['scl']));
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['scorpion'], ['scl']));
+        $this->assertSame('sprinter', $this->service->resolveEmulator(['sprinter'], ['trd']));
     }
 
     /**
-     * Any other computer in the set is a machine the release also runs on, so
-     * the unsupported one costs only its own version.
+     * These machines start a disk or a snapshot by themselves. A tape they
+     * cannot: MAME would come up at BASIC with it in the deck, so the release
+     * goes to the Spectrum fallback, which loads it.
      */
-    public function testAnUnsupportedMachineAlongsideASupportedOneStaysPlayable(): void
+    public function testAMachineOfItsOwnTakesADiskOrASnapshotButNotATape(): void
     {
-        $this->assertSame('usp', $this->service->resolveEmulator(['baseconf', 'zx128'], ['trd']));
-        $this->assertSame('usp', $this->service->resolveEmulator(['atm', 'atm2', 'pentagon2666'], ['scl']));
-        $this->assertSame('tsconf', $this->service->resolveEmulator(['baseconf', 'tsconf'], ['spg']));
+        $this->assertSame('scorpion', $this->service->resolveEmulator(['scorpion'], ['z80']));
+        $this->assertSame('atm', $this->service->resolveEmulator(['atm'], ['sna']));
+        $this->assertSame('usp', $this->service->resolveEmulator(['atm'], ['tap']));
+    }
+
+    /**
+     * The Pentagon 2.666 is what nothing here emulates, so a release that runs
+     * only there is not offered — and where it also names a machine that can
+     * be emulated, only the 2.666 version is out of reach.
+     */
+    public function testAReleaseOnlyForAnUnsupportedMachineIsNotPlayable(): void
+    {
+        $this->assertNull($this->service->resolveEmulator(['pentagon2666'], ['trd']));
+        $this->assertNull($this->service->resolveEmulator(['pentagon2666', 'ay'], ['tap', 'scl']));
+        $this->assertSame('usp', $this->service->resolveEmulator(['pentagon2666', 'zx128'], ['tap']));
+        $this->assertSame('tsconf', $this->service->resolveEmulator(['pentagon2666', 'tsconf'], ['spg']));
     }
 
     /**

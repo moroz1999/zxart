@@ -36,6 +36,7 @@ readonly class ProdCoreRestDto
         public string $dateCreated,
         public bool $canAddRelease,
         public bool $hasZxdbEntry,
+        public bool $hasItchIoGame,
         public int $downloadsCount,
         public int $playsCount,
         #[Map(transform: MapCollection::class)]

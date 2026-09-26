@@ -39,6 +39,17 @@ final class ArchiveFileResolverService
     /** @var string[] */
     private const array CONTAINER_FILE_TYPES = ['zip', 'rar', '7z', 'tar'];
 
+    /**
+     * Every type any machine is released in, for picking release files where the
+     * machine is not known yet.
+     *
+     * @return list<string>
+     */
+    public function getAllReleaseFileTypes(): array
+    {
+        return array_values(array_unique(array_merge(...array_values(self::ARCHIVE_FILE_TYPES))));
+    }
+
     private function getArchiveFileTypesForHardware(array $hardwareCodes): array
     {
         $result = [];

@@ -101,6 +101,9 @@ emulated:
 - **ZX81**: TZX, P, O, on ZX81 hardware
 - **ZX80**: on ZX80 hardware
 - **TSConf**: SPG, IMG, TRD, SCL, on TSConf hardware
+- **Scorpion, ATM Turbo, Profi, ZX Evolution (BaseConf), Sprinter**: TRD, SCL,
+  on that machine's hardware. A disk is what these machines boot; in any other
+  format the release is an ordinary Spectrum release and is played as one.
 - **Multiboard**: TAR, on Multiboard hardware
 - **ZX Spectrum Next**: on Next hardware, whatever the file type
 - **Timex**: TAP, TZX, Z80, SNA, SZX, on Timex TC2048 or TC2068 hardware. A
@@ -126,15 +129,16 @@ program is chosen over a loader in its source tree. Entries inside a tape or a
 disk belong to that medium and are never chosen. A release holding nothing the
 machine can start is not offered for playing.
 
-Hardware the emulators cannot reproduce — General Sound — makes a release
-unplayable only when it is the only sound the release has. Where the release also
-names another sound chip it can still be heard, so it stays playable and only the
-General Sound track is missing.
+A machine none of the emulators can be — today the Pentagon 2.666 — makes a
+release unplayable when it is the only machine it runs on. Where the release
+also names a machine that can be emulated, only that version is out of reach.
 
-The same holds for a machine none of the emulators can be, today the ATM Turbo
-family — ATM, ATM2, BaseConf: a release that runs only there is not offered for
-playing, and where it also names a machine that can be emulated only the ATM
-version is out of reach.
+General Sound plays on the machines that carry it — TSConf, Scorpion, Profi,
+ZX Evolution and Sprinter — and nowhere else. A release whose General Sound
+track is its only sound, on any other machine, would run mute and is not
+offered for playing. Where the release also names another sound chip it can
+still be heard, so it stays playable and only the General Sound track is
+missing.
 
 The emulator window names the emulator it runs and links to its home page.
 

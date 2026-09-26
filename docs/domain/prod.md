@@ -86,6 +86,14 @@ screen both as a native Spectrum screen and as a picture, the native one is take
 The concrete published versions. A production can be marked as showing only its
 releases, when the production itself is nothing more than their common heading.
 
+A production whose website is its itch.io page can take its releases from there:
+an editor asks for them from the production's add menu, and every file the page
+offers that is a release for some machine becomes an original release of the
+production's year, named by the creator's label. Games asking for a donation are
+handled as a visitor who declines it. Builds for PCs, Macs or phones are never
+taken, nor an archive holding only maps, manuals or artwork, and a file one of
+the production's releases already holds is not added twice.
+
 ### Voting and Comments
 - **votes**, **votesAmount** — average rating and how many people voted
 - **denyVoting** — voting is closed for this production

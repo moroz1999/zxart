@@ -43,6 +43,7 @@ components:
         - dateCreated
         - canAddRelease
         - hasZxdbEntry
+        - hasItchIoGame
         - downloadsCount
         - playsCount
         - categoriesPaths
@@ -90,6 +91,9 @@ components:
         hasZxdbEntry:
           type: boolean
           description: The prod is linked to at least one Spectrum Computing (ZxDB) entry.
+        hasItchIoGame:
+          type: boolean
+          description: The prod's external link points to a game on itch.io.
         downloadsCount:
           type: integer
           description: Total downloads summed over the prod's releases.

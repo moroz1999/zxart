@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>ScorpionGMX :: SMUC :: NeoGS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="mame-loader.js"></script>
+    <script type="text/javascript" src="theme-simple.js"></script>
+    <script type="text/javascript">
+      MAMEThemeSimple.mount(document.getElementById("app"), {
+        driver:  "scorpiongmx",
+        files: [
+          { url: "nvram/scorpiongmx/zxbus_1_smuc_eeprom",  path: "nvram/scorpiongmx/zxbus_1_smuc_eeprom" },
+          { url: "nvram/scorpiongmx/zxbus_1_smuc_rtc",     path: "nvram/scorpiongmx/zxbus_1_smuc_rtc" },
+          { url: "roms/scorpiongmx.zip",                   path: "roms/scorpiongmx.zip" },
+          { url: "roms/zxbus_neogs.zip",                   path: "roms/zxbus_neogs.zip" },
+          { url: "roms/betadisk.zip",                      path: "roms/betadisk.zip" },
+          { url: "software/EGGMX.TRD",                     path: "EGGMX.TRD" },
+        ],
+        args: [
+          "-window", "-nounevenstretch", "-video", "bgfx", "-bgfx_screen_chains", "unfiltered",
+          "-resolution", "704x592",
+          "-zxbus:1", "smuc", "-zxbus:2", "neogs",
+          "-flop1", "EGGMX.TRD"
+        ],
+        nmi: true,
+      });
+    </script>
+  </body>
+</html>

@@ -852,7 +852,7 @@
       "digitalbeeper": "Digital Beeper",
       "beeperdigitalbeeper": "Beeper + Digital Beeper",
       "aycovox": "AY+Covox",
-      "fm": "FM (3 channel YM2203)"
+      "fm": "TurboSound FM (6 channel YM2203)"
     },
     "list": {
       "hint": "Comma-separated"
@@ -1471,6 +1471,9 @@
     "import-sc-screenshots": "Download screenshots from SC",
     "import-sc-screenshots-done": "Screenshots from Spectrum Computing have been added to the gallery.",
     "import-sc-screenshots-failed": "No new screenshots were found on Spectrum Computing.",
+    "import-itchio-releases": "Copy releases from itch.io",
+    "import-itchio-releases-done": "Releases from itch.io have been added to the production.",
+    "import-itchio-releases-failed": "No new release files were found on itch.io.",
     "screenshots": "Screenshots",
     "releases": "Releases",
     "readArticle": "Read article",
@@ -1625,6 +1628,7 @@
     "restart": "Restart",
     "status": {
       "downloading": "Downloading the release…",
+      "downloading-core": "Loading the emulator… {{percent}}%",
       "staging": "Writing the SD card…",
       "starting": "Starting {{name}}…"
     },

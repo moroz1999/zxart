@@ -25,6 +25,7 @@ import {Zx81Engine} from '../../engines/zx81.engine';
 import {TsconfEngine} from '../../engines/tsconf.engine';
 import {SamcoupeEngine} from '../../engines/samcoupe.engine';
 import {ZxNextEngine} from '../../engines/zxnext.engine';
+import {BetaDiskEngine} from '../../engines/beta-disk.engine';
 import {JsSpeccyEngine} from '../../engines/jsspeccy.engine';
 import {EMULATOR_HOMEPAGES, EmulatorHomepage} from '../../models/emulator-homepage';
 import {EmulatorScreenshotService, UspScreenSelection} from '../../services/emulator-screenshot.service';
@@ -35,6 +36,8 @@ export interface EmulatorDialogData {
   fileUrl: string;
   /** Path inside the release file of the program to start, for emulators that mount the whole release. */
   launchFilePath?: string;
+  /** The hardware the release needs, which decides the sound cards a machine is fitted with. */
+  hardware?: string[];
   /** Prod or release element the captured screenshot is attached to. */
   uploadElementId?: number;
   canScreenshot?: boolean;
@@ -105,6 +108,7 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
     this.engine
       .start(this.canvasRef.nativeElement, this.data.fileUrl, this.canvasWrapRef.nativeElement, {
         launchFilePath: this.data.launchFilePath,
+        hardware: this.data.hardware,
         onStatus: (key, params) => {
           this.statusKey = key;
           this.statusParams = params;
@@ -191,6 +195,11 @@ export class ZxEmulatorDialogComponent implements OnInit, OnDestroy {
       case 'tsconf': return new TsconfEngine();
       case 'samcoupe': return new SamcoupeEngine();
       case 'zxnext': return new ZxNextEngine();
+      case 'scorpion':
+      case 'atm':
+      case 'profi':
+      case 'pentevo':
+      case 'sprinter': return new BetaDiskEngine(type);
       case 'timex2048':
       case 'timex2068': return new JsSpeccyEngine(type);
     }

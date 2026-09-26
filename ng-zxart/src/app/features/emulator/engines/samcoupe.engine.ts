@@ -1,90 +1,57 @@
-import {EmulatorEngine, EmulatorType} from './emulator-engine';
-import {MameEmulatorInstance, MameGlobals} from './mame-globals';
-import {loadScriptOnce} from './load-script';
-import {settleCanvasSize} from './mame-canvas';
-import {useInMemoryFileSystem} from './mame-memory-fs';
-
-const BROWSERFS_URL = '/libs/mamenextsam/browserfs.min.js';
-const LOADER_URL = '/libs/mamenextsam/loader.js';
-const LIB_BASE = '/libs/mamenextsam';
+import {EmulatorError} from './emulator-error';
+import {EmulatorStartOptions, EmulatorType} from './emulator-engine';
+import {MameBoot, MameEngine} from './mame.engine';
+import {MameMachine, SAMCOUPE_MACHINE} from './mame-machine';
+import {extensionOf} from './release-files';
 
 /**
- * The size the SAM runs at in the dialog, and the machine's own: it is what
- * MAME is launched with and what the canvas is nudged back to, so no other
- * emulator's resolution reaches this one.
+ * The SAM Coupé mounts a file MAME opens directly and needs no card: SAMDOS
+ * boots off the disk, which is what the machine's autoboot keystrokes say.
+ *
+ * The disk is mounted under a name carrying its format and nothing else —
+ * every floppy format here is picked from the extension, and a published name
+ * may hold spaces, brackets or a second dot.
  */
-const NATIVE_WIDTH = 576;
-const NATIVE_HEIGHT = 550;
-
-export class SamcoupeEngine implements EmulatorEngine {
+export class SamcoupeEngine extends MameEngine {
   readonly type: EmulatorType = 'samcoupe';
+  protected readonly machine: MameMachine = SAMCOUPE_MACHINE;
 
-  private emulator: MameEmulatorInstance | null = null;
   private canvas: HTMLCanvasElement | null = null;
   private readonly pointerLockHandler = () => {
     void this.canvas?.requestPointerLock();
   };
-  private readonly visibilityHandler = () => {
-    if (document.hidden) {
-      this.emulator?.mute();
-      window.Module?.pauseMainLoop?.();
-    } else {
-      window.Module?.resumeMainLoop?.();
-      this.emulator?.unmute();
-    }
-  };
-  private readonly browserFsState = {injected: false};
-  private readonly scriptState = {injected: false};
 
-  async start(canvas: HTMLCanvasElement, fileUrl: string): Promise<void> {
-    await loadScriptOnce(this.browserFsState, BROWSERFS_URL);
-    await loadScriptOnce(this.scriptState, LOADER_URL);
-    await useInMemoryFileSystem();
+  override async start(
+    canvas: HTMLCanvasElement,
+    fileUrl: string,
+    container: HTMLElement,
+    options: EmulatorStartOptions = {},
+  ): Promise<void> {
     this.canvas = canvas;
+    // The SAM's own mouse is driven by the pointer, which the browser only
+    // hands over on a click inside the picture.
     canvas.addEventListener('click', this.pointerLockHandler);
-    document.addEventListener('visibilitychange', this.visibilityHandler);
-    this.emulator = this.bootEmulator(canvas, fileUrl);
+    await super.start(canvas, fileUrl, container, options);
   }
 
-  setFullscreen(): void {
-    this.emulator?.requestFullScreen();
-  }
-
-  destroy(): void {
-    document.removeEventListener('visibilitychange', this.visibilityHandler);
+  override destroy(): void {
     this.canvas?.removeEventListener('click', this.pointerLockHandler);
     this.canvas = null;
-    window.Module?.pauseMainLoop?.();
-    this.emulator?.mute();
-    this.emulator = null;
+    super.destroy();
   }
 
-  private bootEmulator(canvas: HTMLCanvasElement, fileUrl: string): MameEmulatorInstance {
-    const globals = window as unknown as MameGlobals;
-    if (!globals.MAMELoader || !globals.Emulator) {
-      throw new Error('MAME globals (MAMELoader / Emulator) are not available');
+  protected async prepare(fileUrl: string, options: EmulatorStartOptions): Promise<MameBoot> {
+    options.onStatus?.('emulator.status.downloading');
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      throw new EmulatorError('emulator.error.download', {status: response.status});
     }
-    const {MAMELoader, Emulator} = globals;
-    const filename = new URL(fileUrl, window.location.origin).pathname.split('/').pop() ?? '';
+    const name = decodeURIComponent(new URL(fileUrl, window.location.origin).pathname.split('/').pop() ?? '');
+    const disk = `release.${extensionOf(name)}`;
 
-    const loader = new MAMELoader(
-      MAMELoader.driver('samcoupe'),
-      MAMELoader.nativeResolution(NATIVE_WIDTH, NATIVE_HEIGHT),
-      MAMELoader.emulatorJS(`${LIB_BASE}/mame.js`),
-      MAMELoader.emulatorWASM(`${LIB_BASE}/mame.wasm`),
-      MAMELoader.mountFile('samcoupe.zip', MAMELoader.fetchFile('Bios', `${LIB_BASE}/roms/samcoupe.zip`)),
-      MAMELoader.mountFile(filename, MAMELoader.fetchFile('Disk', fileUrl)),
-      MAMELoader.peripheral('flop1', filename),
-      MAMELoader.extraArgs([
-        '-mouseport', 'mouse',
-        '-uimodekey', 'DEL',
-        '-ab', '........................boot\\n',
-      ]),
-    );
-
-    const emulator = new Emulator(canvas, null, loader);
-    emulator.start({waitAfterDownloading: false});
-    settleCanvasSize(NATIVE_WIDTH, NATIVE_HEIGHT, () => this.emulator !== null);
-    return emulator;
+    return {
+      mounted: [{path: disk, data: new Uint8Array(await response.arrayBuffer())}],
+      args: ['-flop1', disk],
+    };
   }
 }

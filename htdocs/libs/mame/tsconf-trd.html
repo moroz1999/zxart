@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>TSConf :: TR-DOS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="mame-loader.js"></script>
+    <script type="text/javascript" src="theme-simple.js"></script>
+    <script type="text/javascript">
+      MAMEThemeSimple.mount(document.getElementById("app"), {
+        driver:  "tsconf2",
+        files: [
+          { url: "cfg/tsconf2.cfg",                path: "cfg/tsconf2.cfg" },
+          { url: "nvram/tsconf2/glukrs_trd",       path: "nvramtrd/tsconf2/glukrs" },
+          { url: "roms/tsconf.zip",                path: "roms/tsconf.zip" },
+          { url: "roms/kb_ms_natural.zip",         path: "roms/kb_ms_natural.zip" },
+          { url: "roms/zxbus_neogs.zip",           path: "roms/zxbus_neogs.zip" },
+          { url: "software/zxbattlecity_1_4.trd",  path: "zxbattlecity_1_4.trd" },
+        ],
+        args: [
+          "-window", "-nounevenstretch", "-video", "bgfx", "-bgfx_screen_chains", "unfiltered",
+          "-resolution", "720x576",
+          "-zxbus1", "neogs",
+          "-ay_slot", "ay_turbosound",
+          "-flop1", "zxbattlecity_1_4.trd"
+        ],
+        cfgDir: "cfg",
+        nvramDir: "nvramtrd",
+      });
+    </script>
+  </body>
+</html>

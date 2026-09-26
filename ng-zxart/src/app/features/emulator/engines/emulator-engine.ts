@@ -1,4 +1,33 @@
-export type EmulatorType = 'usp' | 'zx81' | 'tsconf' | 'samcoupe' | 'zxnext' | 'timex2048' | 'timex2068';
+export type EmulatorType =
+  | 'usp'
+  | 'zx81'
+  | 'tsconf'
+  | 'samcoupe'
+  | 'zxnext'
+  | 'scorpion'
+  | 'atm'
+  | 'profi'
+  | 'pentevo'
+  | 'sprinter'
+  | 'timex2048'
+  | 'timex2068';
+
+/**
+ * The emulator ids the frontend can actually start. The backend resolves an
+ * emulator per release and the answer travels as a plain string, so this is
+ * where it is checked against what is built in — one list, because a machine
+ * that is added has to become playable everywhere at once.
+ */
+export const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = [
+  'usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext',
+  'scorpion', 'atm', 'profi', 'pentevo', 'sprinter',
+  'timex2048', 'timex2068',
+];
+
+/** Narrows what the backend said to an emulator this build can start. */
+export function toSupportedEmulatorType(type: string | null | undefined): EmulatorType | null {
+  return type && SUPPORTED_EMULATOR_TYPES.includes(type as EmulatorType) ? (type as EmulatorType) : null;
+}
 
 export type ScreenshotFormat = 'standard' | 'gigascreen';
 
@@ -9,6 +38,13 @@ export interface EmulatorStartOptions {
    * mount the whole release rather than loading one file out of it.
    */
   launchFilePath?: string;
+
+  /**
+   * The hardware codes the release needs — its own set gap-filled from its
+   * production. A MAME machine takes its sound cards from this: the second AY
+   * and the NeoGS are fitted for the release that asks for them.
+   */
+  hardware?: string[];
 
   /**
    * Progress of a start that takes a while, as a translation key and its

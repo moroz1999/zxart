@@ -29,3 +29,4 @@ $moduleActions[] = 'submitTags';
 $moduleActions[] = 'showAiForm';
 $moduleActions[] = 'receiveAiForm';
 $moduleActions[] = 'importScScreenshots';
+$moduleActions[] = 'importItchIoReleases';

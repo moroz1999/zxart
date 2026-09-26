@@ -1,10 +1,8 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EmulatorModalService} from '../../../features/emulator/services/emulator-modal.service';
-import {EmulatorType} from '../../../features/emulator/engines/emulator-engine';
+import {EmulatorType, toSupportedEmulatorType} from '../../../features/emulator/engines/emulator-engine';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
-
-const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext', 'timex2048', 'timex2068'];
 
 @Component({
   selector: 'zx-emulator-play-button',
@@ -28,6 +26,7 @@ export class ZxEmulatorPlayButtonComponent {
   @Input({required: true}) playUrl!: string | null;
   @Input({required: true}) emulatorType!: string | null;
   @Input() launchFilePath: string | null = null;
+  @Input() hardware: string[] | null = null;
   @Input() canUploadScreenshot = false;
   @Input() screenshotUploadElementId: number | null = null;
   @Input() size: 'xs' | 'sm' | 'md' = 'md';
@@ -37,11 +36,7 @@ export class ZxEmulatorPlayButtonComponent {
   constructor(private readonly emulator: EmulatorModalService) {}
 
   get supportedEmulatorType(): EmulatorType | null {
-    const type = this.emulatorType;
-    if (!type) {
-      return null;
-    }
-    return SUPPORTED_EMULATOR_TYPES.includes(type as EmulatorType) ? (type as EmulatorType) : null;
+    return toSupportedEmulatorType(this.emulatorType);
   }
 
   get canPlay(): boolean {
@@ -60,6 +55,7 @@ export class ZxEmulatorPlayButtonComponent {
       emulatorType: type,
       fileUrl: this.playUrl,
       launchFilePath: this.launchFilePath ?? undefined,
+      hardware: this.hardware ?? undefined,
       uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });

@@ -10,23 +10,43 @@ use ZxArt\Hardware\HardwareGroup;
 final class EmulatorResolverService
 {
     /**
-     * Hardware the online emulators cannot emulate (General Sound). It is a sound
-     * extension, so it only decides playability when it is the only sound there
-     * is — see {@see isSilencedByUnsupportedHardware()}.
+     * Hardware only some of the emulators can be. The NeoGS card covers both
+     * General Sound codes. It is a sound extension, so it only decides
+     * playability when it is the only sound there is — see
+     * {@see isSilencedByUnsupportedHardware()}.
      */
-    private const array UNSUPPORTED_HARDWARE = ['gs'];
+    private const array UNSUPPORTED_HARDWARE = ['gs', 'ngs'];
 
     /**
-     * Machines none of the cores here can be. Without this a release needing one
-     * falls through to the Spectrum fallback on its format alone and is offered
-     * as a machine it is not — the ATM Turbo, and BaseConf as the ZX Evolution
-     * configuration of that family, all have memory and video of their own that
-     * nothing here emulates.
+     * The emulators carrying a NeoGS, which is what a General Sound soundtrack
+     * plays on. Every one of them is a MAME machine with a ZX Bus to plug the
+     * card into; the ATM Turbo has no such bus, and the Spectrum, ZX81, SAM and
+     * Next emulators have no General Sound at all.
+     */
+    private const array GENERAL_SOUND_EMULATORS = ['tsconf', 'scorpion', 'profi', 'pentevo', 'sprinter'];
+
+    /**
+     * Sound only the MAME machines here can produce: the NeoGS, and the second
+     * AY of a TurboSound. The Spectrum fallback has neither, so a release
+     * wanting one is better off on a machine that can be fitted with it — see
+     * {@see matchEmulator()}.
+     */
+    private const array MAME_SOUND_HARDWARE = ['gs', 'ngs', 'ts'];
+
+    /**
+     * Machines none of the cores here can be. Without this a release needing
+     * one falls through to the Spectrum fallback on its format alone and is
+     * offered as a machine it is not: the Pentagon 2.666 has memory, video and
+     * a turbo of its own that neither MAME nor Unreal Speccy Portable
+     * emulates.
      *
-     * Like General Sound they only decide playability when no other machine is
+     * Like General Sound it only decides playability when no other machine is
      * in the set — see {@see runsOnlyOnUnsupportedMachine()}.
      */
-    private const array UNSUPPORTED_MACHINES = ['atm', 'atm2', 'baseconf'];
+    private const array UNSUPPORTED_MACHINES = ['pentagon2666'];
+
+    /** What a TR-DOS machine here starts by itself: a disk, or a snapshot. */
+    private const array TRDOS_MACHINE_EXTENSIONS = ['trd', 'scl', 'z80', 'sna'];
 
     /** Snapshots and tapes JSSpeccy loads; it has no cartridge (dck) support. */
     private const array JSSPECCY_EXTENSIONS = ['tap', 'tzx', 'z80', 'sna', 'szx'];
@@ -43,6 +63,32 @@ final class EmulatorResolverService
         'tsconf' => [
             'hardware' => ['tsconf'],
             'extensions' => ['spg', 'img', 'trd', 'scl'],
+        ],
+        // The TR-DOS machines MAME runs. A disk is what they boot; a snapshot
+        // the snapshot device loads into memory and runs on its own. A tape is
+        // absent on purpose: MAME would come up at BASIC with the tape in the
+        // deck and nothing to press play, so such a release is better off on
+        // the Spectrum fallback, which loads it.
+        'scorpion' => [
+            'hardware' => ['scorpion', 'scorpion1024'],
+            'extensions' => self::TRDOS_MACHINE_EXTENSIONS,
+        ],
+        'atm' => [
+            'hardware' => ['atm', 'atm2'],
+            'extensions' => self::TRDOS_MACHINE_EXTENSIONS,
+        ],
+        'profi' => [
+            'hardware' => ['profi'],
+            'extensions' => self::TRDOS_MACHINE_EXTENSIONS,
+        ],
+        // BaseConf is the ZX Evolution configuration MAME runs as `pentevo`
+        'pentevo' => [
+            'hardware' => ['baseconf', 'zxevolution'],
+            'extensions' => self::TRDOS_MACHINE_EXTENSIONS,
+        ],
+        'sprinter' => [
+            'hardware' => ['sprinter'],
+            'extensions' => self::TRDOS_MACHINE_EXTENSIONS,
         ],
         'samcoupe' => [
             'hardware' => ['samcoupe'],
@@ -84,12 +130,36 @@ final class EmulatorResolverService
      */
     public function resolveEmulator(array $hardwareRequired, array $releaseFormats): ?string
     {
-        if ($this->isSilencedByUnsupportedHardware($hardwareRequired)) {
-            return null;
-        }
         if ($this->runsOnlyOnUnsupportedMachine($hardwareRequired)) {
             return null;
         }
+        $emulator = $this->matchEmulator($hardwareRequired, $releaseFormats);
+        if ($emulator === null) {
+            return null;
+        }
+        // Which machine the release resolved to is what decides whether its
+        // General Sound track can be heard, so the check comes after the
+        // match and not before it.
+        if (
+            !in_array($emulator, self::GENERAL_SOUND_EMULATORS, true)
+            && $this->isSilencedByUnsupportedHardware($hardwareRequired)
+        ) {
+            return null;
+        }
+
+        return $emulator;
+    }
+
+    /**
+     * The machine the release runs on, by what it needs and what it is packed
+     * as. The order is the priority: a machine naming itself wins over the
+     * Spectrum fallback that any Spectrum format would also match.
+     *
+     * @param string[] $hardwareRequired
+     * @param string[] $releaseFormats
+     */
+    private function matchEmulator(array $hardwareRequired, array $releaseFormats): ?string
+    {
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'zx80')) {
             return 'zx80';
         }
@@ -101,6 +171,24 @@ final class EmulatorResolverService
         }
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'samcoupe')) {
             return 'samcoupe';
+        }
+        // An ATM release with a General Sound track runs on the ZX Evolution
+        // instead: the two are compatible, and the ATM Turbo is the one
+        // machine here with no ZX Bus to put a NeoGS on.
+        if (
+            $this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'atm')
+            && array_intersect($hardwareRequired, self::UNSUPPORTED_HARDWARE)
+        ) {
+            return 'pentevo';
+        }
+        // The TR-DOS machines, each on its own disk. They come before the
+        // Spectrum fallback for the same reason Timex does: their releases are
+        // Spectrum releases by format, and only the machine says the memory,
+        // video and disk system of that machine have to be emulated.
+        foreach (['scorpion', 'atm', 'profi', 'pentevo', 'sprinter'] as $machine) {
+            if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, $machine)) {
+                return $machine;
+            }
         }
         // Hardware alone, like TSConf: the Next boots NextZXOS off an SD card
         // and the whole release is mounted on it, so a release is playable
@@ -117,6 +205,17 @@ final class EmulatorResolverService
         }
         if ($this->matchHardwareAndFormat($hardwareRequired, $releaseFormats, 'timex2068')) {
             return 'timex2068';
+        }
+        // A release that named no machine of its own but wants a sound card
+        // the fallback has not is Spectrum software with an extension, and the
+        // Scorpion GMX is the machine here that takes both cards and runs that
+        // software. Last of the machines, so a release that did name one keeps
+        // it — an ATM release stays on the ATM and is fitted there instead.
+        if (
+            array_intersect($hardwareRequired, self::MAME_SOUND_HARDWARE)
+            && $this->matchFormat($releaseFormats, 'scorpion')
+        ) {
+            return 'scorpion';
         }
         if ($this->matchFormat($releaseFormats, 'usp')) {
             return 'usp';
@@ -142,10 +241,13 @@ final class EmulatorResolverService
     }
 
     /**
-     * A release whose only sound is one the emulators cannot produce would run
-     * mute, which is not worth offering. Any other sound hardware in the set is a
-     * way for it to be heard, so General Sound alongside an AY only costs the GS
-     * track and the release stays playable.
+     * A release whose only sound is one the chosen emulator cannot produce
+     * would run mute, which is not worth offering. Any other sound hardware in
+     * the set is a way for it to be heard, so General Sound alongside an AY
+     * only costs the GS track and the release stays playable.
+     *
+     * Only asked of an emulator without a NeoGS — see
+     * {@see GENERAL_SOUND_EMULATORS}.
      *
      * @param string[] $hardwareRequired
      */
@@ -169,9 +271,9 @@ final class EmulatorResolverService
 
     /**
      * A release that names no machine any emulator here can be has nothing to
-     * run on. Any other computer in the set is one it also runs on, so an ATM
-     * beside a Spectrum costs only the ATM version and the release stays
-     * playable — the same shape as the General Sound rule above.
+     * run on. Any other computer in the set is one it also runs on, so a
+     * Pentagon 2.666 beside a plain Pentagon costs only the 2.666 version and
+     * the release stays playable — the same shape as the sound rule above.
      *
      * @param string[] $hardwareRequired
      */

@@ -41,6 +41,20 @@ const IMPORT_SC_SCREENSHOTS_ACTION: ZxEditingControlAction = {
   },
 };
 
+/** Offered only for prods whose external link is an itch.io game. */
+const IMPORT_ITCH_IO_RELEASES_ACTION: ZxEditingControlAction = {
+  action: 'importItchIoReleases',
+  privilege: 'importItchIoReleases',
+  labelKey: 'prod-details.import-itchio-releases',
+  color: 'secondary',
+  run: {
+    action: 'importItchIoReleases',
+    successKey: 'prod-details.import-itchio-releases-done',
+    failureKey: 'prod-details.import-itchio-releases-failed',
+    reloadOnSuccess: true,
+  },
+};
+
 @Component({
   selector: 'zx-prod-editing-controls',
   standalone: true,
@@ -52,12 +66,17 @@ const IMPORT_SC_SCREENSHOTS_ACTION: ZxEditingControlAction = {
 export class ZxProdEditingControlsComponent implements OnChanges {
   @Input({required: true}) elementId!: number;
   @Input() hasZxdbEntry = false;
+  @Input() hasItchIoGame = false;
 
   readonly editActions = PROD_EDIT_ACTIONS;
   addActions: readonly ZxEditingControlAction[] = PROD_ADD_ACTIONS;
 
   ngOnChanges(): void {
-    this.addActions = this.hasZxdbEntry ? [...PROD_ADD_ACTIONS, IMPORT_SC_SCREENSHOTS_ACTION] : PROD_ADD_ACTIONS;
+    this.addActions = [
+      ...PROD_ADD_ACTIONS,
+      ...(this.hasZxdbEntry ? [IMPORT_SC_SCREENSHOTS_ACTION] : []),
+      ...(this.hasItchIoGame ? [IMPORT_ITCH_IO_RELEASES_ACTION] : []),
+    ];
   }
 
   readonly buildActionUrl = (action: string, elementId: number): string => {

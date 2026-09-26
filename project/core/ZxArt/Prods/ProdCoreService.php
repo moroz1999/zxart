@@ -23,6 +23,7 @@ use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
 use ZxArt\Prods\Repositories\ProdTabsRepository;
+use ZxArt\Releases\ItchIo\ItchIoGameUrl;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Urls\EntityUrlResolver;
@@ -72,6 +73,7 @@ readonly class ProdCoreService
                 StructureType::ZxRelease->value,
             ) === true,
             hasZxdbEntry: $this->zxdbEntryIdsProvider->hasEntry($element->getId()),
+            hasItchIoGame: ItchIoGameUrl::tryFrom($element->externalLink) !== null,
             downloadsCount: $this->sumReleaseDownloads($element),
             playsCount: $this->sumReleasePlays($element),
             categoriesPaths: $this->buildCategoriesPaths($element),

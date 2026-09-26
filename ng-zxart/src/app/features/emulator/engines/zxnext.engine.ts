@@ -1,26 +1,20 @@
-import {EmulatorEngine, EmulatorStartOptions, EmulatorType} from './emulator-engine';
-import {MameEmulatorInstance, MameGlobals} from './mame-globals';
-import {loadScriptOnce} from './load-script';
+import {EmulatorStartOptions, EmulatorType} from './emulator-engine';
+import {MameBoot, MameEngine} from './mame.engine';
+import {MameMachine, ZXNEXT_MACHINE} from './mame-machine';
+import {MAME_LIB_BASE} from './mame-loader';
 import {buildFatCard, CardFile} from './fat-card';
-import {settleCanvasSize} from './mame-canvas';
-import {useInMemoryFileSystem} from './mame-memory-fs';
 import {extensionOf, fetchReleaseFiles} from './release-files';
 import {ArchiveFile, readZipArchive} from './zip-archive';
 
-const BROWSERFS_URL = '/libs/mamenextsam/browserfs.min.js';
-const LOADER_URL = '/libs/mamenextsam/loader.js';
-const LIB_BASE = '/libs/mamenextsam';
 /** The NextZXOS system tree the card is built around, downloaded once and cached. */
-const SYSTEM_ZIP_URL = `${LIB_BASE}/next/nextzxos.zip`;
-
-/** The Next's screen is 360x288 at its widest; MAME is given whole pixels of it. */
-const NATIVE_WIDTH = 720;
-const NATIVE_HEIGHT = 576;
+const SYSTEM_ZIP_URL = `${MAME_LIB_BASE}/next/nextzxos.zip`;
 
 /** The card-root folder the release is staged into. */
 const RELEASE_FOLDER = 'zxart';
 /** NextZXOS runs this NextBASIC program at the end of its boot. */
 const AUTOEXEC_PATH = 'nextzxos/autoexec.bas';
+/** What the card is mounted as: the Next boots NextZXOS off it. */
+const CARD_NAME = 'next.img';
 /** The BASIC keywords the launch lines need, as the interpreter stores them. */
 const TOKEN_SPECTRUM = 0xa3;
 const TOKEN_LOAD = 0xef;
@@ -39,34 +33,12 @@ const AUTOSTART_COMMANDS: Record<string, (name: string) => number[]> = {
   // LOAD "name" — a NextBASIC program saved with LINE runs itself
   bas: name => [TOKEN_LOAD, ...ascii(`"${name}"`)],
 };
-/** The IndexedDB store the loader would mirror this emulator's mounted files into. */
-const FILE_SYSTEM_KEY = 'zxart-zxnext';
 
-export class ZxNextEngine implements EmulatorEngine {
+export class ZxNextEngine extends MameEngine {
   readonly type: EmulatorType = 'zxnext';
+  protected readonly machine: MameMachine = ZXNEXT_MACHINE;
 
-  private emulator: MameEmulatorInstance | null = null;
-  private readonly visibilityHandler = () => {
-    if (document.hidden) {
-      this.emulator?.mute();
-      window.Module?.pauseMainLoop?.();
-    } else {
-      window.Module?.resumeMainLoop?.();
-      this.emulator?.unmute();
-    }
-  };
-  private readonly browserFsState = {injected: false};
-  private readonly scriptState = {injected: false};
-
-  async start(
-    canvas: HTMLCanvasElement,
-    fileUrl: string,
-    _container: HTMLElement,
-    options: EmulatorStartOptions = {},
-  ): Promise<void> {
-    await loadScriptOnce(this.browserFsState, BROWSERFS_URL);
-    await loadScriptOnce(this.scriptState, LOADER_URL);
-
+  protected async prepare(fileUrl: string, options: EmulatorStartOptions): Promise<MameBoot> {
     options.onStatus?.('emulator.status.downloading');
     const [system, release] = await Promise.all([
       this.fetchSystemTree(),
@@ -78,20 +50,10 @@ export class ZxNextEngine implements EmulatorEngine {
     const card = buildFatCard([...system, ...staged.files, ...this.autoexecFor(staged.launchName)]);
 
     options.onStatus?.('emulator.status.starting', {name: staged.launchName ?? 'NextZXOS'});
-    await useInMemoryFileSystem([FILE_SYSTEM_KEY]);
-    document.addEventListener('visibilitychange', this.visibilityHandler);
-    this.emulator = this.bootEmulator(canvas, card);
-  }
-
-  setFullscreen(): void {
-    this.emulator?.requestFullScreen();
-  }
-
-  destroy(): void {
-    document.removeEventListener('visibilitychange', this.visibilityHandler);
-    window.Module?.pauseMainLoop?.();
-    this.emulator?.mute();
-    this.emulator = null;
+    return {
+      mounted: [{path: CARD_NAME, data: card}],
+      args: ['-hard1', CARD_NAME],
+    };
   }
 
   /** The stock NextZXOS tree, exactly as the pinned distribution holds it. */
@@ -165,30 +127,6 @@ export class ZxNextEngine implements EmulatorEngine {
     ];
   }
 
-  private bootEmulator(canvas: HTMLCanvasElement, card: Uint8Array): MameEmulatorInstance {
-    const globals = window as unknown as MameGlobals;
-    if (!globals.MAMELoader || !globals.Emulator) {
-      throw new Error('MAME globals (MAMELoader / Emulator) are not available');
-    }
-    const {MAMELoader, Emulator} = globals;
-
-    const loader = new MAMELoader(
-      MAMELoader.driver('tbblue'),
-      MAMELoader.fileSystemKey(FILE_SYSTEM_KEY),
-      MAMELoader.nativeResolution(NATIVE_WIDTH, NATIVE_HEIGHT),
-      MAMELoader.emulatorJS(`${LIB_BASE}/mame.js`),
-      MAMELoader.emulatorWASM(`${LIB_BASE}/mame.wasm`),
-      MAMELoader.mountFile('tbblue.zip', MAMELoader.fetchFile('Bios', `${LIB_BASE}/roms/tbblue.zip`)),
-      MAMELoader.mountFile('next.img', MAMELoader.localFile('SD card', card)),
-      MAMELoader.peripheral('hard1', 'next.img'),
-      MAMELoader.extraArgs(['-uimodekey', 'DEL']),
-    );
-
-    const emulator = new Emulator(canvas, null, loader);
-    emulator.start({waitAfterDownloading: false});
-    settleCanvasSize(NATIVE_WIDTH, NATIVE_HEIGHT, () => this.emulator !== null);
-    return emulator;
-  }
 }
 
 /** A line's plain characters, which is how a dot command and a file name are stored. */

@@ -13,7 +13,7 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {EmulatorModalService} from '../../features/emulator/services/emulator-modal.service';
-import {EmulatorType} from '../../features/emulator/engines/emulator-engine';
+import {toSupportedEmulatorType} from '../../features/emulator/engines/emulator-engine';
 import {ProdReleaseDto} from '../../features/prod-details/models/prod-release.dto';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxProdLanguageLinksComponent} from '../../features/prod-details/components/zx-prod-language-links/zx-prod-language-links.component';
@@ -32,8 +32,6 @@ import {FadeInOut} from '../../shared/animations/fade-in-out';
 import {SlideInOut} from '../../shared/animations/slide-in-out';
 import {RouterLink} from '@angular/router';
 import {ReleaseFormatLabelPipe} from '../../shared/pipes/release-format-label.pipe';
-
-const SUPPORTED_EMULATOR_TYPES: ReadonlyArray<EmulatorType> = ['usp', 'zx81', 'tsconf', 'samcoupe', 'zxnext', 'timex2048', 'timex2068'];
 
 @Component({
   selector: 'zx-prod-release-card',
@@ -150,16 +148,14 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
   }
 
   get canPlay(): boolean {
-    const type = this.release.emulatorType;
     return this.release.isPlayable
       && this.release.isDownloadable
       && this.release.playUrl !== null
-      && type !== null
-      && SUPPORTED_EMULATOR_TYPES.includes(type as EmulatorType);
+      && toSupportedEmulatorType(this.release.emulatorType) !== null;
   }
 
   onPlay(): void {
-    const type = this.release.emulatorType as EmulatorType | null;
+    const type = toSupportedEmulatorType(this.release.emulatorType);
     if (!type || !this.release.playUrl) {
       return;
     }
@@ -167,6 +163,7 @@ export class ZxProdReleaseCardComponent implements OnChanges, OnInit {
       emulatorType: type,
       fileUrl: this.release.playUrl,
       launchFilePath: this.release.launchFilePath ?? undefined,
+      hardware: this.release.hardwareRequired,
       uploadElementId: this.screenshotUploadElementId ?? undefined,
       canScreenshot: this.canUploadScreenshot,
     });
