@@ -67,7 +67,9 @@
     "delete-release": "Delete release",
     "delete-tune": "Delete tune",
     "delete-confirm-message": "Delete this entry permanently? This cannot be undone.",
-    "delete-failed": "The entry could not be deleted."
+    "delete-failed": "The entry could not be deleted.",
+    "member-remove-failed": "The author could not be removed. Reload the page to see the current members.",
+    "file-remove-failed": "The file could not be deleted. Reload the page to see the current files."
   },
   "form-page-title": {
     "edit-author": "Editing author \"{{title}}\"",

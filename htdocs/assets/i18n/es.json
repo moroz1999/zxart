@@ -67,7 +67,9 @@
     "delete-release": "Eliminar lanzamiento",
     "delete-tune": "Eliminar melodía",
     "delete-confirm-message": "¿Eliminar esta entrada de forma permanente? No se puede deshacer.",
-    "delete-failed": "No se pudo eliminar la entrada."
+    "delete-failed": "No se pudo eliminar la entrada.",
+    "member-remove-failed": "No se pudo quitar al autor. Recarga la página para ver los miembros actuales.",
+    "file-remove-failed": "No se pudo eliminar el archivo. Recarga la página para ver los archivos actuales."
   },
   "form-page-title": {
     "edit-author": "Edición del autor «{{title}}»",
