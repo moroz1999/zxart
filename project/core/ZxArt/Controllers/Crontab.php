@@ -70,6 +70,10 @@ class Crontab extends controllerApplication
 
     public function __construct(
         controller $controller,
+        // Must stay first after the controller: resolving the admin structure
+        // manager makes it the container default, so every service below that
+        // takes the default structureManager is built on the admin root too.
+        structureManager $structureManager,
         QueueService $queueService,
         Connection $db,
         ProdQueryService $prodQueryService,
@@ -86,7 +90,6 @@ class Crontab extends controllerApplication
         CacheCleanupService $cacheCleanupService,
         Cache $cache,
         CurrentUserService $currentUserService,
-        structureManager $structureManager,
         mp3ConversionManager $mp3ConversionManager,
         CommentTranslationService $commentTranslationService,
     ) {
@@ -141,7 +144,7 @@ class Crontab extends controllerApplication
 
 
         //start this before ending output buffering
-        $currentLanguageCode = $this->languagesManager->getCurrentLanguageCode();
+        $this->languagesManager->getCurrentLanguageCode();
 
         $this->cache->enable(false, false, true);
 
@@ -154,7 +157,6 @@ class Crontab extends controllerApplication
         if ($userId = $user->checkUser('crontab', null, true)) {
             $user->switchUser($userId);
 
-            $this->structureManager->setRequestedPath([$currentLanguageCode]);
             $this->structureManager->setPrivilegeChecking(false);
 
             $minutes = (int)date('i');

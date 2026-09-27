@@ -34,6 +34,8 @@ if ($this->mode === 'admin') {
 }
 ```
 
+- **Crontab** runs on the admin SM (bound in `di-definitions.php`): cron jobs create catalogue elements (authors, groups, prods) that live under the admin root. Its `structureManager` constructor parameter must stay first after `controller` — resolving `'adminStructureManager'` makes it the container default, so only services resolved after it get the admin SM.
+
 **Named SM keys:**
 - `structureManager::class` / `'structureManager'` — public SM (default)
 - `'publicStructureManager'` — explicit independent public SM factory

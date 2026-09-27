@@ -24,6 +24,7 @@ use ZxArt\Authors\Services\AuthorAliasFormService;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Comments\CommentsService;
+use ZxArt\Controllers\Crontab;
 use ZxArt\Controllers\Pouet;
 use ZxArt\Controllers\Rss;
 use ZxArt\Controllers\Sam;
@@ -92,6 +93,8 @@ return [
         ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
     Zxdb::class => autowire()
         ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
+    Crontab::class => autowire()
+        ->constructorParameter('structureManager', DI\get('adminStructureManager')),
 
     Socialpost::class => autowire()
         ->constructorParameter('logger', DI\get('social_posts_logger')),
