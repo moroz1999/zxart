@@ -10,6 +10,8 @@ paths:
         The action is selected by `action`. Each one checks the privilege of the
         matching legacy action on the production and is recorded in the actions log.
         - `delete` removes the production; needs `publicDelete`. Answers the deleted id.
+        - `deleteMember` removes the author `authorId` from the members (authorship of this entity type only); needs `deleteAuthor`. Answers `404` when the author was not a member.
+        - `deleteFile` deletes the file `fileId` of one of the multi-file selectors; the file itself needs `delete`. Answers `404` for a file of another element.
       parameters:
         - in: query
           name: id
@@ -22,7 +24,19 @@ paths:
           required: true
           schema:
             type: string
-            enum: [delete]
+            enum: [delete, deleteMember, deleteFile]
+        - in: query
+          name: authorId
+          required: false
+          schema:
+            type: integer
+          description: Author to remove; required for `deleteMember`.
+        - in: query
+          name: fileId
+          required: false
+          schema:
+            type: integer
+          description: File to delete; required for `deleteFile`.
       responses:
         '200':
           description: The change is done
@@ -31,7 +45,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChangeResult'
         '400':
-          description: Missing id or unknown action
+          description: Missing id or action parameter, or unknown action
           content:
             application/json:
               schema:
@@ -43,7 +57,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: No production with this id
+          description: No production with this id, or no such member or file
           content:
             application/json:
               schema:

@@ -23,4 +23,14 @@ describe('GroupDataApiService', () => {
     expect(http.post).toHaveBeenCalledWith('/group-data/', null, {params: {id: 42, action: 'convertToAuthor'}});
     expect(result).toEqual({id: 900});
   });
+
+  it('deleteMember posts the id, the author and the `deleteMember` action to /group-data/', async () => {
+    const http = {post: vi.fn().mockReturnValue(of({id: 42}))};
+    const service = new GroupDataApiService(http as unknown as HttpClient);
+
+    const result = await firstValueFrom(service.deleteMember(42, 7));
+
+    expect(http.post).toHaveBeenCalledWith('/group-data/', null, {params: {id: 42, action: 'deleteMember', authorId: 7}});
+    expect(result).toEqual({id: 42});
+  });
 });

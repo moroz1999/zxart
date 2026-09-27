@@ -208,7 +208,9 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
   }
 
   onRemoveMember(authorId: number): void {
-    this.subscriptions.add(this.formSave.deleteMember(this.elementId, authorId).subscribe());
+    this.subscriptions.add(this.groupDataApi.deleteMember(this.elementId, authorId).subscribe({
+      error: () => this.showError('form.member-remove-failed'),
+    }));
   }
 
   onSubmit(): void {
@@ -261,5 +263,10 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  private showError(messageKey: string): void {
+    this.errorMessage = messageKey;
+    this.cdr.markForCheck();
   }
 }

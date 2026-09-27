@@ -294,7 +294,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     if (this.batchUpload) {
       return;
     }
-    this.subscriptions.add(this.formSave.deleteMember(this.elementId, authorId).subscribe());
+    this.subscriptions.add(this.prodDataApi.deleteMember(this.elementId, authorId).subscribe({
+      error: () => this.showError('form.member-remove-failed'),
+    }));
   }
 
   /**
@@ -333,7 +335,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSelectorRemove(fileId: number): void {
-    this.subscriptions.add(this.formSave.deleteFileElement(fileId).subscribe());
+    this.subscriptions.add(this.prodDataApi.deleteFile(this.elementId, fileId).subscribe({
+      error: () => this.showError('form.file-remove-failed'),
+    }));
   }
 
   /** Live-reorder the prod screenshots (connectedFile) via the move endpoint. */
@@ -438,5 +442,10 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  private showError(messageKey: string): void {
+    this.errorMessage = messageKey;
+    this.cdr.markForCheck();
   }
 }

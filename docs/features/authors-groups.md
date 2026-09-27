@@ -117,6 +117,7 @@ Authors can be members of groups:
 - Group can have multiple members
 - Edit forms can queue multiple new authors before saving; authorship roles and membership dates are submitted per author ID.
 - Both sides of the membership are editable with the same member/role editor. The group form edits the roster of one group and submits `addAuthorRole`/`addAuthorStartDate`/`addAuthorEndDate` per author ID; the author form edits the groups of one author and submits `addGroupRole`/`addGroupStartDate`/`addGroupEndDate` per group ID. Either side deletes the memberships its form no longer carries; the author form leaves the memberships of the author's aliases alone.
+- Removing a member in the group, prod or release form takes effect at once, not on save: `deleteMember` of that entity's data endpoint (`/group-data/`, `/prod-data/`, `/release-data/`) deletes the authorship of that entity type only. It needs the `deleteAuthor` privilege and answers `404` when the author was not a member; the form reports a failure.
 - The author form loads its memberships from the `groups` list of the form-data response and the roles it may pick from `groupRoles`. Membership roles are one fixed list (`ZxArt\Groups\GroupMemberRoles`), narrower than the authorship roles of works.
 - Group roster data is loaded through a separate endpoint after the group core response.
 - Group connections exclude group members and their author aliases from collaborator people.

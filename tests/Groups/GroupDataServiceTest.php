@@ -11,9 +11,11 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
+use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 
 final class GroupDataServiceTest extends TestCase
@@ -108,11 +110,81 @@ final class GroupDataServiceTest extends TestCase
         $this->assertStatus(500, fn() => $service->convertToAuthor(42));
     }
 
+    public function testDeleteMemberRemovesOnlyThisGroupAuthorshipAndReturnsItsId(): void
+    {
+        $element = $this->createStub(groupElement::class);
+        $privilegesManager = $this->createMock(privilegesManager::class);
+        $privilegesManager->expects($this->once())
+            ->method('checkPrivilegesForAction')
+            ->with(42, 'deleteAuthor', 'group')
+            ->willReturn(true);
+        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship->expects($this->once())
+            ->method('deleteAuthorship')
+            ->with(42, 7, EntityType::Group)
+            ->willReturn(true);
+        $actionsLog = $this->createMock(ActionsLogService::class);
+        $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'deleteAuthor');
+
+        $result = $this->createService(
+            $element,
+            $privilegesManager,
+            actionsLog: $actionsLog,
+            authorshipRepository: $authorship,
+        )->deleteMember(42, 7);
+
+        self::assertSame(42, $result->id);
+    }
+
+    public function testDeleteMemberWithoutAuthorIdIsBadRequest(): void
+    {
+        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship->expects($this->never())->method('deleteAuthorship');
+        $service = $this->createService(
+            $this->createStub(groupElement::class),
+            $this->privileges(true),
+            authorshipRepository: $authorship,
+        );
+
+        $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
+    }
+
+    public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
+    {
+        // /ajax/ answered success for a removal that changed nothing
+        $authorship = $this->createStub(AuthorshipRepository::class);
+        $authorship->method('deleteAuthorship')->willReturn(false);
+        $actionsLog = $this->createMock(ActionsLogService::class);
+        $actionsLog->expects($this->never())->method('log');
+        $service = $this->createService(
+            $this->createStub(groupElement::class),
+            $this->privileges(true),
+            actionsLog: $actionsLog,
+            authorshipRepository: $authorship,
+        );
+
+        $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
+    }
+
+    public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
+    {
+        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship->expects($this->never())->method('deleteAuthorship');
+        $service = $this->createService(
+            $this->createStub(groupElement::class),
+            $this->privileges(false),
+            authorshipRepository: $authorship,
+        );
+
+        $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
+    }
+
     private function createService(
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
         ?AuthorsService $authorsService = null,
+        ?AuthorshipRepository $authorshipRepository = null,
     ): GroupDataService {
         $structureManager = $this->createStub(structureManager::class);
         $structureManager->method('getElementById')->willReturn($element);
@@ -122,6 +194,7 @@ final class GroupDataServiceTest extends TestCase
             $privilegesManager,
             $actionsLog ?? $this->createStub(ActionsLogService::class),
             $authorsService ?? $this->createStub(AuthorsService::class),
+            $authorshipRepository ?? $this->createStub(AuthorshipRepository::class),
         );
     }
 

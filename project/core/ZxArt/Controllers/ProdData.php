@@ -16,7 +16,7 @@ use ZxArt\Prods\Services\ProdDataService;
 
 /**
  * Changes to one production: POST `/prod-data/?id=&action=` with the action one of
- * `delete`. Answers the id of the element the change produced.
+ * `delete`, `deleteMember`, `deleteFile`. Answers the id of the element the change produced.
  *
  * @psalm-api
  */
@@ -50,6 +50,8 @@ final class ProdData extends LoggedControllerApplication
             $prodId = (int)$this->getParameter('id');
             $result = match ((string)$this->getParameter('action')) {
                 'delete' => $this->prodDataService->delete($prodId),
+                'deleteMember' => $this->prodDataService->deleteMember($prodId, (int)$this->getParameter('authorId')),
+                'deleteFile' => $this->prodDataService->deleteFile($prodId, (int)$this->getParameter('fileId')),
                 default => throw new ProdDataException('Unsupported production action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, ProdDataResultRestDto::class));

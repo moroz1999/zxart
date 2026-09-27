@@ -251,7 +251,9 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   }
 
   onRemoveMember(authorId: number): void {
-    this.subscriptions.add(this.formSave.deleteMember(this.elementId, authorId).subscribe());
+    this.subscriptions.add(this.releaseDataApi.deleteMember(this.elementId, authorId).subscribe({
+      error: () => this.showError('form.member-remove-failed'),
+    }));
   }
 
   onSelectorFiles(prop: string, files: File[]): void {
@@ -259,7 +261,9 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   }
 
   onSelectorRemove(fileId: number): void {
-    this.subscriptions.add(this.formSave.deleteFileElement(fileId).subscribe());
+    this.subscriptions.add(this.releaseDataApi.deleteFile(this.elementId, fileId).subscribe({
+      error: () => this.showError('form.file-remove-failed'),
+    }));
   }
 
   onFileChanged(field: string, change: FileUploadChange): void {
@@ -332,5 +336,10 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  private showError(messageKey: string): void {
+    this.errorMessage = messageKey;
+    this.cdr.markForCheck();
   }
 }

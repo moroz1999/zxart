@@ -16,7 +16,7 @@ use ZxArt\Releases\Services\ReleaseDataService;
 
 /**
  * Changes to one release: POST `/release-data/?id=&action=` with the action one of
- * `delete`. Answers the id of the element the change produced.
+ * `delete`, `deleteMember`, `deleteFile`. Answers the id of the element the change produced.
  *
  * @psalm-api
  */
@@ -50,6 +50,8 @@ final class ReleaseData extends LoggedControllerApplication
             $releaseId = (int)$this->getParameter('id');
             $result = match ((string)$this->getParameter('action')) {
                 'delete' => $this->releaseDataService->delete($releaseId),
+                'deleteMember' => $this->releaseDataService->deleteMember($releaseId, (int)$this->getParameter('authorId')),
+                'deleteFile' => $this->releaseDataService->deleteFile($releaseId, (int)$this->getParameter('fileId')),
                 default => throw new ReleaseDataException('Unsupported release action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, ReleaseDataResultRestDto::class));

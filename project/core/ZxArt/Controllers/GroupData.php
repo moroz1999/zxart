@@ -16,7 +16,7 @@ use ZxArt\Groups\Services\GroupDataService;
 
 /**
  * Changes to one group: POST `/group-data/?id=&action=` with the action one of
- * `delete`, `convertToAuthor`. Answers the id of the element the change produced.
+ * `delete`, `convertToAuthor`, `deleteMember`. Answers the id of the element the change produced.
  *
  * @psalm-api
  */
@@ -50,6 +50,7 @@ final class GroupData extends LoggedControllerApplication
             $groupId = (int)$this->getParameter('id');
             $result = match ((string)$this->getParameter('action')) {
                 'delete' => $this->groupDataService->delete($groupId),
+                'deleteMember' => $this->groupDataService->deleteMember($groupId, (int)$this->getParameter('authorId')),
                 'convertToAuthor' => $this->groupDataService->convertToAuthor($groupId),
                 default => throw new GroupDataException('Unsupported group action', 400),
             };

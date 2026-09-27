@@ -17,7 +17,21 @@ export class ReleaseDataApiService {
     return this.run(id, 'delete');
   }
 
-  private run(id: number, action: string): Observable<EntityChangeResult> {
-    return this.http.post<EntityChangeResult>(ENDPOINT, null, {params: {id, action}});
+  /** Removes the author from the members. */
+  deleteMember(id: number, authorId: number): Observable<EntityChangeResult> {
+    return this.run(id, 'deleteMember', {authorId});
+  }
+
+  /** Deletes one file of a multi-file selector. */
+  deleteFile(id: number, fileId: number): Observable<EntityChangeResult> {
+    return this.run(id, 'deleteFile', {fileId});
+  }
+
+  private run(
+    id: number,
+    action: string,
+    params: Readonly<Record<string, number>> = {},
+  ): Observable<EntityChangeResult> {
+    return this.http.post<EntityChangeResult>(ENDPOINT, null, {params: {id, action, ...params}});
   }
 }

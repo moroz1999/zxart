@@ -22,7 +22,16 @@ export class GroupDataApiService {
     return this.run(id, 'convertToAuthor');
   }
 
-  private run(id: number, action: string): Observable<EntityChangeResult> {
-    return this.http.post<EntityChangeResult>(ENDPOINT, null, {params: {id, action}});
+  /** Removes the author from the members. */
+  deleteMember(id: number, authorId: number): Observable<EntityChangeResult> {
+    return this.run(id, 'deleteMember', {authorId});
+  }
+
+  private run(
+    id: number,
+    action: string,
+    params: Readonly<Record<string, number>> = {},
+  ): Observable<EntityChangeResult> {
+    return this.http.post<EntityChangeResult>(ENDPOINT, null, {params: {id, action, ...params}});
   }
 }

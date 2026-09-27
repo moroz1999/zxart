@@ -105,21 +105,6 @@ export class FormSaveApiService {
     }
   }
 
-  /** Removes a member (authorship) live via the legacy `deleteAuthor` action. */
-  deleteMember(id: number, authorId: number): Observable<unknown> {
-    const params = new HttpParams()
-      .set('id', String(id))
-      .set('action', 'deleteAuthor')
-      .set('authorId', String(authorId));
-    return this.http.get('/ajax/', {params, responseType: 'text'}).pipe(catchError(() => of(null)));
-  }
-
-  /** Deletes one file element of a multi-file selector live (shared `delete` action). */
-  deleteFileElement(fileId: number): Observable<unknown> {
-    const params = new HttpParams().set('id', String(fileId)).set('action', 'delete');
-    return this.http.get('/ajax/', {params, responseType: 'text'}).pipe(catchError(() => of(null)));
-  }
-
   private deleteFile(id: number, field: string): Observable<unknown> {
     const params = new HttpParams()
       .set('id', String(id))

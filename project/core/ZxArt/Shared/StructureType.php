@@ -22,6 +22,7 @@ enum StructureType: string
     case ZxMusic = 'zxMusic';
     case ZxPicture = 'zxPicture';
     case PressArticle = 'pressArticle';
+    case File = 'file';
     case Author = 'author';
     case AuthorAlias = 'authorAlias';
     case Group = 'group';

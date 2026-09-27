@@ -18,15 +18,9 @@ looks like a success.
 
 Each call goes through the entity's `<Entity>DataApiService` (`shared/api/`) instead of the generic `FormSaveApiService`.
 
+A field whose file is removed in the form (author/group/party `image`; picture `image`, `inspired`, `inspired2`, `sequence`, `exeFile`; tune `file`, `trackerFile`; release `file`) is cleared by a second `/ajax/` request (`deleteFile`) after the save, whose answer is never checked. Clear it within the save request itself.
+
 Somewhat protected: `publicReceive` must answer `{id}` (`respondFormSaved`), so an empty response is treated as an error.
-
-## 2. Live removals on edit forms — `FormSaveApiService` (GET, errors swallowed)
-
-- `deleteMember` → `deleteAuthor` — removes an author from a prod, release or group
-- `deleteFileElement` → `delete` — removes one file of a multi-file selector (prod, release)
-- `deleteFile` → `deleteFile` — clears a single-file field after save
-
-The response is never checked, so a failure goes unnoticed.
 
 ## 3. Editing-control actions — `zx-editing-controls` with `run: {action}`
 
