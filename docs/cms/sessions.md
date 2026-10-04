@@ -61,6 +61,13 @@ The session is not a cache. Schema and configuration caches belong in `Cache`
 (Redis in production); interface preferences belong to the Angular frontend
 (`UserPreferencesService`), not to the server.
 
+## One CurrentUser per request
+
+`CurrentUserService` creates and initializes the only `CurrentUser`; inject the
+service, never `CurrentUser` itself. The container throws when asked for
+`CurrentUser`. An instance that skipped `initialize()` never writes the session
+— otherwise its empty storage would sign the visitor out.
+
 ## Authentication does not depend on the session alone
 
 `readUserId()` resolves the user from `storage['currentUserId']` first, then from

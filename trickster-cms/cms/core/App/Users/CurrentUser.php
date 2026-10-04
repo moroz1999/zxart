@@ -11,7 +11,7 @@ use ServerSessionManager;
 /**
  * Do not use this class as a PHP-DI dependency. It reads session storage during construction
  * and must be initialized only after the controller starts the session. Use CurrentUserService
- * as the injectable dependency.
+ * as the injectable dependency; the container throws when asked for this class.
  */
 class CurrentUser
 {
@@ -39,6 +39,7 @@ class CurrentUser
     public $volunteer;
     protected $groupsIdList;
     protected $userDataObject;
+    private bool $initialized = false;
 
     public function __construct(
         private privilegesManager    $privilegesManager,
@@ -53,6 +54,7 @@ class CurrentUser
     public function initialize(): void
     {
         $this->readStorage();
+        $this->initialized = true;
         $userId = $this->readUserId();
 
         $usersCollection = persistableCollection::getInstance($this->userResourceName);
@@ -176,6 +178,11 @@ class CurrentUser
 
     protected function writeStorage(): void
     {
+        // An instance that never read the session would write back empty
+        // storage and sign the visitor out of the session it shares.
+        if (!$this->initialized) {
+            return;
+        }
         if ($this->storage) {
             $this->serverSessionManager->set('storage', $this->storage);
         } else {

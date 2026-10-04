@@ -2,7 +2,7 @@
 
 namespace App\Logging;
 
-use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use DependencyInjectionContextInterface;
 use DependencyInjectionContextTrait;
 use errorLogger;
@@ -25,7 +25,7 @@ class EventsLog extends errorLogger implements DependencyInjectionContextInterfa
         protected MySqlConnection $statsDb,
         protected VisitorsManager $visitorsManager,
         protected ServerSessionManager $serverSessionManager,
-        protected CurrentUser $user
+        protected CurrentUserService $currentUserService
     )
     {
     }
@@ -127,7 +127,7 @@ class EventsLog extends errorLogger implements DependencyInjectionContextInterfa
     public function logEvent($elementId, $type, $userId = null, $targetId = false, $uri = false)
     {
         if ($userId === null) {
-            $user = $this->user;
+            $user = $this->currentUserService->getCurrentUser();
             if ($user->userName !== 'anonymous') {
                 $userId = $user->id;
             } else {

@@ -5,6 +5,8 @@ use App\Logging\EventsLog;
 use App\Logging\RedisRequestLogger;
 use App\Paths\PathsManager;
 use App\Structure\ActionFactory;
+use App\Users\CurrentUser;
+use App\Users\CurrentUserService;
 use DI\Container;
 use Illuminate\Database\Connection;
 use function DI\autowire;
@@ -187,6 +189,12 @@ return [
     EventsLog::class => autowire()
         ->constructorParameter('statsDb', DI\get('statsDb'))
         ->constructorParameter('db', DI\get(Connection::class)),
+
+    // An autowired CurrentUser is never initialized and erases the signed-in
+    // user from the session when destroyed. CurrentUserService owns the instance.
+    CurrentUser::class => factory(static fn() => throw new LogicException(
+        'Inject ' . CurrentUserService::class . ' instead of ' . CurrentUser::class
+    )),
 
     RedisRequestLogger::class => factory(
         fn(
