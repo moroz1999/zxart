@@ -18,6 +18,7 @@ use ZxArt\Ai\Service\PromptSender;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentTranslationAiService;
+use ZxArt\Comments\CommentTranslationService;
 use ZxArt\AuthorList\AuthorListService;
 use ZxArt\Authors\Repositories\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorAliasFormService;
@@ -94,6 +95,8 @@ return [
     Zxdb::class => autowire()
         ->constructorParameter('adminStructureManager', DI\get('adminStructureManager')),
     Crontab::class => autowire()
+        ->constructorParameter('structureManager', DI\get('adminStructureManager')),
+    CommentTranslationService::class => autowire()
         ->constructorParameter('structureManager', DI\get('adminStructureManager')),
 
     Socialpost::class => autowire()

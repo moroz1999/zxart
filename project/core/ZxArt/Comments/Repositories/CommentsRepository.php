@@ -97,6 +97,35 @@ readonly final class CommentsRepository extends AbstractRepository
             ]);
     }
 
+    /**
+     * Counts the whole discussion of an element: its comments and replies at every depth.
+     */
+    public function countThread(int $targetId): int
+    {
+        $count = 0;
+        $visited = [$targetId => true];
+        $parentIds = [$targetId];
+        while ($parentIds !== []) {
+            /** @var array<int|string> $childIds */
+            $childIds = $this->db->table($this->tableName(DatabaseTable::StructureLinks))
+                ->whereIn('parentStructureId', $parentIds)
+                ->where('type', '=', LinkTypes::COMMENT_TARGET->value)
+                ->pluck('childStructureId');
+
+            $parentIds = [];
+            foreach ($childIds as $childId) {
+                $childId = (int)$childId;
+                if (!isset($visited[$childId])) {
+                    $visited[$childId] = true;
+                    $parentIds[] = $childId;
+                }
+            }
+            $count += count($parentIds);
+        }
+
+        return $count;
+    }
+
     public function countByAuthorId(int $authorId): int
     {
         $authorIds = $this->getAuthorAndAliasIds($authorId);

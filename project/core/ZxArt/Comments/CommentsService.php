@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace ZxArt\Comments;
 
 use App\Users\CurrentUserService;
-use Cache;
 use commentElement;
 use CommentsHolderInterface;
-use LanguagesManager;
 use privilegesManager;
 use structureManager;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
@@ -23,13 +21,13 @@ use ZxArt\LinkTypes;
 readonly class CommentsService
 {
     public const int COMMENTS_PER_PAGE = 50;
+    public const int LATEST_COMMENTS_LIMIT = 10;
 
     public function __construct(
         private structureManager    $structureManager,
         private CurrentUserService  $currentUserService,
-        private LanguagesManager    $languagesManager,
         private privilegesManager   $privilegesManager,
-        private Cache                $cache,
+        private LatestCommentsCache  $latestCommentsCache,
         private CommentsTransformer  $transformer,
         private CommentsRepository   $commentsRepository,
         private CommentContentPurifier $contentPurifier,
@@ -260,6 +258,11 @@ readonly class CommentsService
             $user->refreshPrivileges();
         }
 
+        $initialTarget = $targetElement instanceof commentElement ? $targetElement->getInitialTarget() : $targetElement;
+        if ($initialTarget instanceof CommentsHolderInterface) {
+            $initialTarget->recalculateComments();
+        }
+
         $this->clearCommentsCache();
 
         return $this->transformer->transformToDto($commentElement);
@@ -321,7 +324,11 @@ readonly class CommentsService
         $hasPrivilege = $this->privilegesManager->checkPrivilegesForAction($commentId, 'delete', 'comment');
 
         if ($hasPrivilege === true || ($isAuthor === true && $commentElement->isEditable() === true)) {
+            $initialTarget = $commentElement->getInitialTarget();
             $commentElement->deleteElementData();
+            if ($initialTarget instanceof CommentsHolderInterface) {
+                $initialTarget->recalculateComments();
+            }
             $this->clearCommentsCache();
             return true;
         }
@@ -330,34 +337,45 @@ readonly class CommentsService
     }
 
     /**
-     * Returns the latest comments sorted by date descending.
+     * Returns the latest comments sorted by date descending, read-only.
+     * The widget-sized list is shared by all visitors and cached per language.
      *
      * @param int $limit Maximum number of comments to return
      * @return CommentDto[]
-     * @throws CommentOperationException
      */
-    public function getLatestComments(int $limit = 10, ?string $languageCode = null): array
+    public function getLatestComments(int $limit = self::LATEST_COMMENTS_LIMIT, ?string $languageCode = null): array
     {
+        $cacheable = $limit === self::LATEST_COMMENTS_LIMIT && $languageCode !== null;
+        if ($cacheable) {
+            $cached = $this->latestCommentsCache->get($languageCode);
+            if ($cached !== null) {
+                return $cached;
+            }
+        }
+
         $ids = $this->commentsRepository->getLatestIds($limit);
 
         $comments = [];
         foreach ($ids as $id) {
             $comment = $this->structureManager->getElementById($id);
             if ($comment instanceof commentElement) {
-                $comments[] = $this->transformer->transformToDto($comment, [], $languageCode);
+                $comments[] = $this->transformer->transformToReadOnlyDto($comment, $languageCode);
             }
+        }
+
+        if ($cacheable) {
+            $this->latestCommentsCache->set($languageCode, $comments);
         }
 
         return $comments;
     }
 
     /**
-     * Clears the comments cache.
+     * Clears the cached latest-comments list in every language.
      */
     public function clearCommentsCache(): void
     {
-        $currentLanguageId = $this->languagesManager->getCurrentLanguageId();
-        $this->cache->delete($currentLanguageId . ':lc');
+        $this->latestCommentsCache->clear();
     }
 
     private function resetTranslationFields(commentElement $commentElement): void

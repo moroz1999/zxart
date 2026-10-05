@@ -31,6 +31,11 @@ failed translation is retried and never blocks the rest.
 
 ## Where comments are read
 Comments appear on the entity they belong to, and the whole site's comments are
-also listed on one page, newest first, page by page.
+also listed on one page, newest first, page by page. The newest comments are also
+shown beside every page; a new, edited, deleted or freshly translated comment
+shows up there at once.
+
+A work's comment count covers its whole discussion, replies included, and follows
+every comment posted or deleted on it.
 
 How it is built: [../features/comments.md](../features/comments.md)

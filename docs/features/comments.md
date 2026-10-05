@@ -30,6 +30,13 @@ Domain rules: [../domain/comments.md](../domain/comments.md).
         - `CommentTranslationAiService` throws `JsonException` (unparseable response) or `UnexpectedValueException` (response is valid JSON but missing required fields). Both are retried up to `MAX_ATTEMPTS` times.
         - `CommentTranslationService::translateNextBatch()` catches only `JsonException | UnexpectedValueException` per comment — these are expected AI response failures and must not stop the batch. Any other `Throwable` (DB error, network error, etc.) propagates up.
         - `Crontab::translateComments()` catches the broad `Throwable`, logs it via Monolog (`logger->error`) and the cron log, then returns — so one broken batch does not abort the whole cron run.
+    - `CommentsRepository::saveTranslation()` writes the columns directly, past the element, so `CommentTranslationService` calls `structureManager::clearElementCache()` for every translated comment (the cached `<id>:e` element would keep the empty translations) and clears `LatestCommentsCache` once per batch that translated anything. It runs on `adminStructureManager`, like `Crontab`.
+- **Caching**:
+    - A comment is cached as a structureManager element (`<id>:e`). `persistElementData()` and `deleteElementData()` clear it together with the parent's cache.
+    - `LatestCommentsCache` holds the latest-comments widget list (`CommentsService::LATEST_COMMENTS_LIMIT` items) for 5 minutes under `latest_comments_<iso6393>`; only public language codes are cached. Other limits bypass it.
+    - The list is shared by all visitors, so it is built with `CommentsTransformer::transformToReadOnlyDto()`: `canEdit`/`canDelete` are always `false` and no privileges are checked.
+    - `CommentsService::clearCommentsCache()` clears it in every language. It is called on add, update and delete (service and legacy `comment` actions) and by the translation batch.
+- **Comment count**: `ZxArtItem::recalculateComments()` stores `CommentsRepository::countThread()` in `commentsAmount` — every comment reachable from the work through `commentTarget` links, replies included. `CommentsService::addComment()`/`deleteComment()` and the legacy `comment` actions call it on the initial target (the work, also for replies).
 
 ## Technical Structure
 - **Linking**:

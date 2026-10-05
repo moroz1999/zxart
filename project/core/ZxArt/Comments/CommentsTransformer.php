@@ -30,6 +30,40 @@ readonly class CommentsTransformer
      */
     public function transformToDto(commentElement $comment, array $children = [], ?string $languageCode = null): CommentDto
     {
+        $hasEditPrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'publicReceive', 'comment');
+        $isEditable = $comment->isEditable();
+
+        $canEdit = $isEditable && $hasEditPrivilege;
+
+        $hasDeletePrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'delete', 'comment');
+        $currentUserId = (int)$this->currentUserService->getCurrentUser()->id;
+        $commentUserId = (int)$comment->userId;
+        $isOwnComment = $currentUserId > 0 && $currentUserId === $commentUserId;
+        $canDelete = $hasDeletePrivilege && ($isOwnComment ? $isEditable : true);
+
+        return $this->buildDto($comment, $children, $languageCode, $canEdit, $canDelete);
+    }
+
+    /**
+     * Transforms a comment for a list shared by all visitors: no actions are granted
+     * and no privileges are checked, so the result does not depend on the current user.
+     */
+    public function transformToReadOnlyDto(commentElement $comment, ?string $languageCode = null): CommentDto
+    {
+        return $this->buildDto($comment, [], $languageCode, false, false);
+    }
+
+    /**
+     * @param CommentDto[] $children
+     */
+    private function buildDto(
+        commentElement $comment,
+        array $children,
+        ?string $languageCode,
+        bool $canEdit,
+        bool $canDelete,
+    ): CommentDto
+    {
         $authorUser = $comment->getUserElement();
 
         $badges = [];
@@ -52,17 +86,6 @@ readonly class CommentsTransformer
                 badges: $badges,
             )
             : null;
-
-        $hasEditPrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'publicReceive', 'comment');
-        $isEditable = $comment->isEditable();
-
-        $canEdit = $isEditable && $hasEditPrivilege;
-
-        $hasDeletePrivilege = $this->privilegesManager->checkPrivilegesForAction((int)$comment->id, 'delete', 'comment');
-        $currentUserId = (int)$this->currentUserService->getCurrentUser()->id;
-        $commentUserId = (int)$comment->userId;
-        $isOwnComment = $currentUserId > 0 && $currentUserId === $commentUserId;
-        $canDelete = $hasDeletePrivilege && ($isOwnComment ? $isEditable : true);
 
         $targetDto = null;
         $target = $comment->getInitialTarget();

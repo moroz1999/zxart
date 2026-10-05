@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ZxArt\Comments;
 
 use JsonException;
+use structureManager;
 use UnexpectedValueException;
 use ZxArt\Comments\Repositories\CommentsRepository;
 
@@ -17,6 +18,8 @@ final readonly class CommentTranslationService
     public function __construct(
         private CommentsRepository $commentsRepository,
         private CommentTranslationAiService $aiService,
+        private structureManager $structureManager,
+        private LatestCommentsCache $latestCommentsCache,
     ) {
     }
 
@@ -34,6 +37,8 @@ final readonly class CommentTranslationService
             try {
                 $translation = $this->aiService->translate($comment->id, $comment->text);
                 $this->commentsRepository->saveTranslation($comment->id, $translation);
+                // The translation is written past the element, so its cached copy is stale.
+                $this->structureManager->clearElementCache($comment->id);
                 $processed++;
                 $attempts[] = new CommentTranslationAttemptDto(
                     commentId: $comment->id,
@@ -50,6 +55,10 @@ final readonly class CommentTranslationService
                     error: $e->getMessage(),
                 );
             }
+        }
+
+        if ($processed > 0) {
+            $this->latestCommentsCache->clear();
         }
 
         return [

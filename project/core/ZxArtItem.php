@@ -1,6 +1,7 @@
 <?php
 
 use App\Logging\EventsLog;
+use ZxArt\Comments\Repositories\CommentsRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
 use ZxArt\Voting\VotingService;
@@ -406,7 +407,7 @@ abstract class ZxArtItem extends structureElement implements
      */
     public function recalculateComments()
     {
-        $this->commentsAmount = $this->getCommentsAmount();
+        $this->commentsAmount = $this->getService(CommentsRepository::class)->countThread($this->getPersistedId());
         $this->getService('db')
             ->table($this->dataResourceName)
             ->where('id', '=', $this->getPersistedId())

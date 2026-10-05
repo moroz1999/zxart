@@ -8,6 +8,7 @@ use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use commentElement;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use structureElement;
@@ -19,7 +20,7 @@ use ZxArt\Urls\EntityUrlResolver;
 class CommentsTransformerTest extends TestCase
 {
     private CommentsTransformer $transformer;
-    private privilegesManager $privilegesManager;
+    private privilegesManager&MockObject $privilegesManager;
 
     protected function setUp(): void
     {
@@ -90,5 +91,25 @@ class CommentsTransformerTest extends TestCase
         $this->assertSame('Test user', $dto->author->name);
         $this->assertSame('/author/42', $dto->author->url);
         $this->assertSame(['vip'], $dto->author->badges);
+    }
+
+    public function testReadOnlyDtoGrantsNoActionsWithoutCheckingPrivileges(): void
+    {
+        $comment = $this->createMock(commentElement::class);
+        $comment->method('getUserElement')->willReturn(false);
+        $comment->method('getAuthorName')->willReturn('Guest');
+        $comment->method('getDecoratedContent')->willReturn('<p>content</p>');
+        $comment->method('getValue')->with('content')->willReturn('<p>content</p>');
+        $comment->method('isEditable')->willReturn(true);
+        $comment->method('getInitialTarget')->willReturn(null);
+        $comment->method('getParentElement')->willReturn(null);
+
+        $this->privilegesManager->expects($this->never())->method('checkPrivilegesForAction');
+
+        $dto = $this->transformer->transformToReadOnlyDto($comment, 'eng');
+
+        $this->assertFalse($dto->canEdit);
+        $this->assertFalse($dto->canDelete);
+        $this->assertSame('<p>content</p>', $dto->content);
     }
 }

@@ -170,7 +170,7 @@ class commentElement extends structureElement implements MetadataProviderInterfa
         return !controller::getInstance()->getConfigManager()->get('voting.allowed.comment');
     }
 
-    public function getInitialTarget()
+    public function getInitialTarget(): ?structureElement
     {
         $targetElement = $this->getTarget();
         if ($targetElement && $targetElement->structureType === 'comment') {
