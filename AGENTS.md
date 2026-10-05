@@ -32,8 +32,8 @@ Every task follows these stages in order. Do not merge stages or continue past a
 1. The user provides a task.
 2. Research the relevant code without changing project files. Briefly describe the essence of the proposed fix as clear implementation steps, then wait for approval.
 3. After approval, add or update tests for the requested behavior and run only those tests. Confirm that they fail for the expected reason, then wait for approval of the tests. If no meaningful automated test can be written, explain why and wait for explicit approval to proceed without one.
-4. After test approval, implement the change and run only the relevant linters. Do not run tests, builds, Psalm, or other validation commands at this stage.
-5. The user tests and reviews the implementation. Apply their feedback within the same implementation stage and run only the relevant linters after each code update.
+4. After test approval, implement the change and run only the relevant linters. Do not run tests, Psalm, or other validation commands at this stage. If the change touches the Angular app, build it (see the build command in `docs/angular.md`) before handing it to the user — the user checks the built bundle in the browser, not the sources.
+5. The user tests and reviews the implementation. Apply their feedback within the same implementation stage and run only the relevant linters after each code update, rebuilding the Angular app before each hand-off when it changed.
 6. After the user explicitly approves the implementation, run the relevant test suites, Psalm, required builds, and any other checks mandated by the task-specific documentation.
 7. When all final checks pass, commit only the files belonging to the task with a short commit message describing the completed change.
 
