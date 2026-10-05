@@ -13,7 +13,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
-import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../environments/environment';
 import {TextDirective} from '../typography/directives/text.directive';
 import {ZxButtonComponent} from '../zx-button/zx-button.component';
@@ -38,7 +38,6 @@ export interface ZxFilterPickerItem {
     TextDirective,
     ZxCheckboxFieldComponent,
     ZxInputComponent,
-    SvgIconComponent,
   ],
   templateUrl: './zx-filter-picker.component.html',
   styleUrl: './zx-filter-picker.component.scss',

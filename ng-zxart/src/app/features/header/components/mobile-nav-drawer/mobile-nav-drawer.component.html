@@ -29,7 +29,7 @@
   </zx-button>
 </div>
 
-<div class="mn-items">
+<div class="mn-items" (click)="close()">
   @for (item of items; track item.url) {
     <zx-popover-menu-item [href]="item.url" [queryParams]="item.queryParams ?? null" [active]="isActive(item)">
       {{ item.labelKey ? (item.labelKey | translate) : item.label }}
