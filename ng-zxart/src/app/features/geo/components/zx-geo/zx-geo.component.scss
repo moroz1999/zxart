@@ -193,6 +193,10 @@
   border-bottom: 0;
 }
 
+:host ::ng-deep .zx-geo__tiles {
+  filter: var(--zx-geo-tiles-filter);
+}
+
 :host ::ng-deep .zx-geo-marker-shell {
   display: flex;
   align-items: center;

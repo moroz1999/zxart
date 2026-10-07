@@ -31,8 +31,6 @@ import {
   GeoBounds,
 } from '../../models/geo.models';
 import {GeoService} from '../../services/geo.service';
-import {ThemeService} from '../../../settings/services/theme.service';
-import {Theme} from '../../../settings/models/preference.dto';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink} from '@angular/router';
 type GeoListItem = GeoAuthorItem | GeoGroupItem | GeoPartyItem;
 
@@ -91,21 +89,18 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
   private readonly listRequests$ = new Subject<Observable<GeoListResponse<GeoListItem>>>();
   private map?: L.Map;
   private markerLayer = L.layerGroup();
-  private tileLayer?: L.TileLayer;
   private pendingPlace: PendingPlace | null = null;
 
   constructor(
     private readonly geoService: GeoService,
     private readonly changeDetector: ChangeDetectorRef,
     private readonly translate: TranslateService,
-    private readonly themeService: ThemeService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
   ) {}
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.subscription.add(this.themeService.theme$.subscribe(theme => this.applyBasemap(theme)));
     this.subscription.add(this.translate.stream(['geo.sort.title', 'geo.sort.latest']).subscribe(labels => {
       this.sortOptions = [
         {value: 'title,asc', label: labels['geo.sort.title']},
@@ -425,30 +420,17 @@ export class ZxGeoComponent implements AfterViewInit, OnDestroy {
     }
 
     this.map = L.map(this.mapContainer.nativeElement, {minZoom: 2, worldCopyJump: true}).setView([45, 15], 3);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: 'OpenStreetMap',
+      className: 'zx-geo__tiles',
+    }).addTo(this.map);
     this.markerLayer.addTo(this.map);
     this.map.on('moveend zoomend', () => {
       this.refreshMap();
       this.refreshPanel();
       this.changeDetector.markForCheck();
     });
-  }
-
-  private applyBasemap(theme: Theme): void {
-    if (!this.map) {
-      return;
-    }
-
-    this.tileLayer?.remove();
-    const dark = theme === 'dark';
-    this.tileLayer = L.tileLayer(
-      dark
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 18,
-        attribution: dark ? 'OpenStreetMap, CARTO' : 'OpenStreetMap',
-      },
-    ).addTo(this.map);
   }
 
   private refreshMap(): void {

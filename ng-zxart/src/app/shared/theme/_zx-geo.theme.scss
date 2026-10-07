@@ -85,6 +85,13 @@
   --zx-geo-title-size: var(--zx-font-size-lg);
   /* Geo caption font size. */
   --zx-geo-caption-size: var(--zx-font-size-xs);
+  /* Geo map tiles filter; the light theme shows the tiles as served. */
+  --zx-geo-tiles-filter: none;
+}
+
+.dark-mode {
+  /* Geo map tiles filter turning the light basemap into a dark one. */
+  --zx-geo-tiles-filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
 }
 
 @include bp.media-breakpoint-down(md) {

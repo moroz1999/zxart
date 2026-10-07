@@ -50,25 +50,17 @@ abstract class ElementsManager extends errorLogger
                 }
                 if (isset($this->columnRelations[$property])) {
                     foreach ($this->columnRelations[$property] as $criteria => $orderDirection) {
+                        $direction = match ($orderDirection) {
+                            true => $order,
+                            false => $order === 'desc' ? 'asc' : 'desc',
+                            default => $orderDirection,
+                        };
                         if ($criteria === 'dateCreated') {
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
-                            $query->orderBy("structure_elements.dateCreated", $orderDirection);
+                            $query->orderBy('structure_elements.dateCreated', $direction);
                         } else {
                             $orderColumn = $criteria === 'title' ? "LOWER($criteria)" : "$criteria";
-
-                            if ($orderDirection === true) {
-                                $query->orderByRaw("$orderColumn $order");
-                            } else {
-                                if ($orderDirection === false) {
-                                    if ($order === 'desc') {
-                                        $query->orderByRaw("$orderColumn asc");
-                                    } else {
-                                        $query->orderByRaw("$orderColumn desc");
-                                    }
-                                } else {
-                                    $query->orderByRaw("$orderColumn $orderDirection");
-                                }
-                            }
+                            $query->orderByRaw("$orderColumn $direction");
                         }
                     }
                 }

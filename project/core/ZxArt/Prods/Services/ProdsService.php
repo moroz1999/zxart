@@ -132,6 +132,7 @@ class ProdsService extends ElementsManager
         $this->releaseColumnRelations = [
             'title' => ['title' => true],
             'date' => ['dateCreated' => true, 'id' => true],
+            'year' => ['year' => true, 'id' => true],
         ];
     }
 
@@ -946,25 +947,17 @@ class ProdsService extends ElementsManager
                 if (isset($this->releaseColumnRelations[$property])) {
                     $srcTableName = $this->db->getTablePrefix() . $query->from;
                     foreach ($this->releaseColumnRelations[$property] as $criteria => $orderDirection) {
+                        $direction = match ($orderDirection) {
+                            true => $order,
+                            false => $order === 'desc' ? 'asc' : 'desc',
+                            default => $orderDirection,
+                        };
                         if ($criteria === 'dateCreated') {
                             $query->leftJoin('structure_elements', 'structure_elements.id', '=', $query->from . '.id');
-                            $query->orderBy("structure_elements.dateCreated", $orderDirection);
+                            $query->orderBy('structure_elements.dateCreated', $direction);
                         } else {
                             $orderColumn = $criteria === 'title' ? "LOWER($srcTableName.$criteria)" : "$srcTableName.$criteria";
-
-                            if ($orderDirection === true) {
-                                $query->orderByRaw("$orderColumn $order");
-                            } else {
-                                if ($orderDirection === false) {
-                                    if ($order === 'desc') {
-                                        $query->orderByRaw("$orderColumn asc");
-                                    } else {
-                                        $query->orderByRaw("$orderColumn desc");
-                                    }
-                                } else {
-                                    $query->orderByRaw("$orderColumn $orderDirection");
-                                }
-                            }
+                            $query->orderByRaw("$orderColumn $direction");
                         }
                     }
                 }
