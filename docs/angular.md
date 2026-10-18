@@ -188,6 +188,16 @@ Analytics and Google Ads scripts are not loaded by the public frontend.
 - Header and other panel-style CDK popovers use `PopoverAnimation`.
 - Search-result CDK dropdowns use the shorter `DropdownPopoverAnimation`.
 
+#### Hover Popovers on Touch Screens
+
+A popover that opens on hover must also work where nothing can hover. A tap fires
+`pointerenter`, `pointerleave` and `click` together, so a hover-driven submenu
+closes at once and its trigger link leaves the page. The component checks
+`matchMedia('(hover: hover)')`: without hover, pointer events are ignored, the
+first tap opens the popover, the trigger becomes a link only while its popover is
+open, and a tap outside (`overlayOutsideClick`, except on the trigger itself)
+closes it. The main menu (`MenuBlockComponent`) is the reference.
+
 #### Heavy Third-Party Libraries
 
 A large third-party library must never end up in a chunk that a page loads just

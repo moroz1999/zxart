@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace ZxArt\Tunes\Services;
 
+use controller;
 use structureManager;
 use tagElement;
 use translationsManager;
 use ZxArt\Prods\ProdInfoBuilder;
 use ZxArt\Shared\DescriptionFormatter;
 use ZxArt\Tunes\Dto\TuneDetailsDto;
-use ZxArt\Tunes\Dto\TuneDownloadDto;
 use ZxArt\Tunes\Dto\TunePartyContextDto;
 use ZxArt\Tunes\Dto\TuneSubmitterDto;
 use ZxArt\Tunes\Dto\TuneTagDto;
@@ -35,6 +35,8 @@ readonly class TuneDetailsService
         private ProdInfoBuilder $infoBuilder,
         private DescriptionFormatter $descriptionFormatter,
         private PageMetadataService $pageMetadataService,
+        private TuneDownloadsBuilder $downloadsBuilder,
+        private controller $controller,
     ) {
     }
 
@@ -100,7 +102,13 @@ readonly class TuneDetailsService
             converterVersion: $this->nullableString($element->converterVersion),
             dateCreated: $element->dateCreated ? (string)$element->dateCreated : null,
             submitter: $this->buildSubmitter($element),
-            downloads: $this->buildDownloads($element, $tune->originalFileUrl, $tune->trackerFileUrl, $tune->mp3Url),
+            downloads: $this->downloadsBuilder->build(
+                $element,
+                $this->controller->baseURL,
+                $tune->originalFileUrl,
+                $tune->trackerFileUrl,
+                $tune->mp3Url,
+            ),
             metadata: $this->pageMetadataService->getForPath('/tune/' . $tuneId),
         );
     }
@@ -152,54 +160,6 @@ readonly class TuneDetailsService
             userName: $this->infoBuilder->decodeText((string)$user->userName),
             url: $this->entityUrlResolver->urlForUser($user),
         );
-    }
-
-    /**
-     * @return TuneDownloadDto[]
-     */
-    private function buildDownloads(
-        zxMusicElement $element,
-        ?string $originalFileUrl,
-        ?string $trackerFileUrl,
-        ?string $mp3Url,
-    ): array {
-        $downloads = [];
-
-        if ($originalFileUrl !== null) {
-            $downloads[] = new TuneDownloadDto(
-                id: 'original',
-                ext: ltrim($element->getFileExtension('original'), '.') ?: 'bin',
-                label: (string)$this->translationsManager->getTranslationByName('zxmusic.originalfile'),
-                sub: $this->nullableString($element->getFileName('original', false, false)),
-                size: null,
-                url: $originalFileUrl,
-            );
-        }
-
-        if ($trackerFileUrl !== null) {
-            $downloads[] = new TuneDownloadDto(
-                id: 'tracker',
-                ext: ltrim($element->getFileExtension('tracker'), '.') ?: 'bin',
-                label: (string)$this->translationsManager->getTranslationByName('zxmusic.trackerfile'),
-                sub: $this->nullableString($element->getFileName('tracker', false, false)),
-                size: null,
-                url: $trackerFileUrl,
-            );
-        }
-
-        if ($mp3Url !== null) {
-            $extension = strtolower((string)pathinfo($mp3Url, PATHINFO_EXTENSION));
-            $downloads[] = new TuneDownloadDto(
-                id: 'ogg',
-                ext: $extension !== '' ? $extension : 'ogg',
-                label: (string)$this->translationsManager->getTranslationByName('zxmusic.oggfile'),
-                sub: null,
-                size: null,
-                url: $mp3Url,
-            );
-        }
-
-        return $downloads;
     }
 
     private function resolveLabel(string $translationName, ?string $fallback = null): ?string

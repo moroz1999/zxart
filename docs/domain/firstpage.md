@@ -12,7 +12,8 @@ anonymous visitor's stays in the browser.
   of release may reach, so the block stays about current work rather than about
   old work newly archived.
 - **Best new demos, best new games** — a changing pick of well-rated works from
-  this year and last.
+  the current year. In January, while the new year has barely started, last
+  year's works are included too, so the blocks are not left empty.
 - **Recent parties** — the demoparties that happened most recently.
 - **Best pictures of the month, best tunes of the month** — the best-rated work
   added lately.

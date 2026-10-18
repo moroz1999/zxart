@@ -46,9 +46,16 @@ The site converts a tune for playback, and records the channel order, chip,
 frequencies and converter version the converted copy was made with.
 
 #### Additional Files
-Besides the track itself a tune can carry the tracker source it was written in
-and an MP3 for listening in the browser; each is offered for download when it
-exists. A tune can also be embedded on another site.
+Besides the track itself — the file the site plays and converts — a tune can
+carry two more files, kept apart by what they are: the tracker source it was
+written in, and an executable, a runnable program (a tape, disk image or
+snapshot) that plays it on the machine. Each is offered for download under its
+own name when it exists, together with the recorded audio. A tune can also be
+embedded on another site.
+
+The recorded audio is normally made by the site's conversion of the track. An
+author may upload a recording of their own (MP3 or OGG) instead: the tune is
+then played from it, and the track is not sent to conversion.
 
 ### Relations with Other Entities
 
@@ -96,7 +103,7 @@ exists. A tune can also be embedded on another site.
 
 ### Top Music
 The top-music page ranks the whole collection by rating, highest first, and
-offers no other ordering.
+offers no other ordering. It shows a hundred works per page.
 
 A strip of chips above it narrows the top to one named subset, exactly as the
 top-graphics page does. The subset is part of the page address, so a narrowed

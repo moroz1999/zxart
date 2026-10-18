@@ -17,6 +17,6 @@ final class DescriptionFormatter
             );
         } while ($description !== $encodedDescription);
 
-        return preg_replace('#</?pre(?:\s[^>]*)?>#iu', '', $description) ?? $description;
+        return $description;
     }
 }

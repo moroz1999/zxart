@@ -51,10 +51,15 @@ ordinary pictures of the archive.
   release may be named instead, so both can be picked. Picture cards show the
   title of that production or release.
 - **inspired**, **inspired2** — the works that inspired the author
-- **sequence** — the next picture, for works published as a series
+- **sequence** — the recorded drawing stages: an animation of the picture being drawn
 
 #### Executable File
 - **exeFile**, **exeFileName** — the runnable program a picture is part of
+
+#### Downloads
+A picture page offers the original screen file, PC renders at several zooms and
+a print version. Its materials are offered next to them: the executable file and
+the drawing stages, each under its own file name.
 
 #### Press
 - **mentions** — the press articles that mention the picture
@@ -79,7 +84,7 @@ screen and "Game Graphics" marks graphics taken from a running program.
 
 ### Top Graphics
 The top-graphics page ranks the whole collection by rating, highest first, and
-offers no other ordering.
+offers no other ordering. It shows a hundred works per page.
 
 A strip of chips above it narrows the top to one named subset. The subset is
 part of the page address rather than a hidden setting, so a narrowed top can be
@@ -92,6 +97,16 @@ linked to and shared, and paging through it keeps the subset. The subsets are:
 - SAM Coupé, and ZX Spectrum Next — each machine's own screen formats
 
 Without a subset the page ranks the entire collection.
+
+### Fullscreen Gallery
+Any list of pictures opens its pictures in a fullscreen gallery. The picture is
+shown at a whole multiple of its own size, the largest that fits the screen with
+a small margin, so every pixel of the original stays a sharp square; a picture
+too large for the screen even at its own size is shrunk to fit. Beside the
+picture — below it on a phone — the gallery names it, its authors and its
+format, shows its rating, and lets the visitor vote and add it to favourites
+without leaving the gallery. Following the picture's or an author's link closes
+the gallery.
 
 ### Viewing Settings
 How a picture is rendered — the colour mode, whether the border is drawn, and

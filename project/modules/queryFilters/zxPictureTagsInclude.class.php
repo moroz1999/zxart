@@ -10,9 +10,10 @@ class zxPictureTagsIncludeQueryFilter extends QueryFilter
     public function getFilteredIdList($argument, $query)
     {
         $tagsManager = $this->getService(tagsManager::class);
-        if ($idList = $tagsManager->getConnectedElementIdsByNames($argument)) {
-            $query->whereIn($this->getTable() . '.id', $idList);
-        }
+        /** @var string[] $tagNames */
+        $tagNames = $argument;
+        // no tagged work leaves nothing to find
+        $query->whereIn($this->getTable() . '.id', $tagsManager->getConnectedElementIdsByNames($tagNames));
         return $query;
     }
 }

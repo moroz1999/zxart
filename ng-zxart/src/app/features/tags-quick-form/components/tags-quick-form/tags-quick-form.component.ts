@@ -17,7 +17,6 @@ import {
   TagsQuickFormEditorComponent
 } from '../../../../shared/lib/tags-quick-form-editor/tags-quick-form-editor.component';
 import {TagItem} from '../../../../shared/models/tag-item';
-import {Tag} from '../../../../shared/models/tag';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {TagsSearchService} from '../../../../shared/services/tags-search.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -28,6 +27,7 @@ import {
 import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
 import {TagsApiService} from '../../../../shared/lib/tags-list/tags-api.service';
 import {TagsPayloadDto} from '../../../../shared/lib/tags-list/tags-payload.dto';
+import {tagToItem} from '../../../../shared/utils/tag-item';
 
 @Component({
   selector: 'zx-tags-quick-form,zx-tags-quick-form-view',
@@ -88,7 +88,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
           this.cdr.markForCheck();
 
           return this.tagsSearchService.search(normalizedQuery).pipe(
-            map(tags => this.mapSearchTags(tags)),
+            map(tags => tags.map(tagToItem)),
             catchError(() => of([] as TagItem[])),
           );
         }),
@@ -204,14 +204,6 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
   private applyTagsPayload(payload: TagsPayloadDto): void {
     this.selectedTags = [...payload.tags];
     this.suggestedTags = [...payload.suggestedTags];
-  }
-
-  private mapSearchTags(tags: Tag[]): TagItem[] {
-    return tags.map(tag => ({
-      id: Number.isFinite(tag.id) ? tag.id : null,
-      title: tag.title,
-      description: tag.description || null,
-    }));
   }
 
   private filterSelectedTags(tags: TagItem[]): TagItem[] {

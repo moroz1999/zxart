@@ -85,7 +85,7 @@
 
     <zx-form-field>
       <zx-form-label for="picture-border">{{ 'picture-form.border' | translate }}</zx-form-label>
-      <zx-form-control><zx-select id="picture-border" formControlName="border" [options]="borderOptions"></zx-select></zx-form-control>
+      <zx-form-control><zx-select id="picture-border" formControlName="border" [options]="(borderOptions$ | async) ?? []"></zx-select></zx-form-control>
     </zx-form-field>
 
     <zx-form-field>

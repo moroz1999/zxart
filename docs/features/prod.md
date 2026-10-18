@@ -9,8 +9,8 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **title** - production title
 - **altTitle** - alternative title
 - **year** - year of creation
-- **description** - description (HTML)
-- **instructions** - instructions (HTML)
+- **description** - description, HTML or plain fixed-width text (`htmlDescription`)
+- **instructions** - instructions, HTML or plain fixed-width text (`htmlInstructions`)
 - **youtubeId** - YouTube video ID
 - **legalStatus** - legal distribution status:
   - `unknown` - unknown
@@ -124,6 +124,13 @@ category heading is still an SPA string (`hardware-group.<code>`).
   - The categories are the production's structural parents, so it can never be
     left without one: the Angular form requires at least one, and the backend
     falls back to `misc` when the submitted set is empty.
+  - `structureManager` resolves a production only through a `zxProdCategory`
+    link, and a release only through its production. Paged list queries require
+    that link in SQL (author and group lists, first-page selections) instead of
+    dropping unresolvable rows after `LIMIT`, which would shorten the page.
+  - An import sets categories through `ImportedProdCategoriesUpdater`: source
+    categories without a mapped site category are ignored, and when none maps
+    the production keeps the categories it has.
 
 #### Production Hierarchy
 - **compilationItems** - compilation items (link `compilation`, role parent)

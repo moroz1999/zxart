@@ -26,4 +26,8 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 })
 export class ZxTuneDownloadsPanelComponent {
   @Input({required: true}) downloads: TuneDownloadDto[] = [];
+
+  trackById(_index: number, item: TuneDownloadDto): string {
+    return item.id;
+  }
 }

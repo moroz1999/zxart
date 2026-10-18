@@ -58,6 +58,7 @@ import {
   PictureGalleryHostComponent
 } from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
+import {tagToItem} from '../../../../shared/utils/tag-item';
 
 const ELEMENTS_ON_PAGE = 60;
 const SEARCH_DEBOUNCE_MS = 250;
@@ -275,9 +276,6 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     this.filters.tagsInclude = this.tagsIncludeItems.map(item => item.title);
   }
 
-  onTagIncludeCustom(title: string): void {
-    this.onTagIncludeAdded(this.toTagItem(title));
-  }
 
   onTagIncludeRemoved(tag: TagItem): void {
     this.tagsIncludeItems = this.tagsIncludeItems.filter(item => item.title !== tag.title);
@@ -289,9 +287,6 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
     this.filters.tagsExclude = this.tagsExcludeItems.map(item => item.title);
   }
 
-  onTagExcludeCustom(title: string): void {
-    this.onTagExcludeAdded(this.toTagItem(title));
-  }
 
   onTagExcludeRemoved(tag: TagItem): void {
     this.tagsExcludeItems = this.tagsExcludeItems.filter(item => item.title !== tag.title);
@@ -442,7 +437,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
           markLoading();
           this.cdr.markForCheck();
           return this.tagsSearch.search(normalized).pipe(
-            map(tags => tags.map(tag => ({id: tag.id, title: tag.title, description: null} as TagItem))),
+            map(tags => tags.map(tagToItem)),
             catchError(() => of([] as TagItem[])),
           );
         }),

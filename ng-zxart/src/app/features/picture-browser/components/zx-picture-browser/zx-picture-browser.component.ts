@@ -38,7 +38,7 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZxPictureBrowserComponent extends BrowserBaseComponent {
-  protected override readonly itemsPerPage = 48;
+  override itemsPerPage = 48;
 
   pictures: ZxPictureDto[] = [];
   readonly galleryId = 'picture-browser';

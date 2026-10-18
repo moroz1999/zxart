@@ -36,6 +36,7 @@
                 <zx-form-label>{{ 'music-search.tags-include' | translate }}</zx-form-label>
                 <zx-form-control>
                   <zx-tags-input
+                    [allowCustomTags]="false"
                     [tags]="vm.tagsIncludeItems"
                     [searchResults]="vm.tagsIncludeSearch.results"
                     [searchLoading]="vm.tagsIncludeSearch.loading"
@@ -44,7 +45,6 @@
                     [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
                     (queryChanged)="onTagsIncludeQuery($event)"
                     (tagSelected)="onTagIncludeAdded($event)"
-                    (customTagAdded)="onTagIncludeCustom($event)"
                     (tagRemoved)="onTagIncludeRemoved($event)"
                   ></zx-tags-input>
                 </zx-form-control>
@@ -54,6 +54,7 @@
                 <zx-form-label>{{ 'music-search.tags-exclude' | translate }}</zx-form-label>
                 <zx-form-control>
                   <zx-tags-input
+                    [allowCustomTags]="false"
                     [tags]="vm.tagsExcludeItems"
                     [searchResults]="vm.tagsExcludeSearch.results"
                     [searchLoading]="vm.tagsExcludeSearch.loading"
@@ -62,7 +63,6 @@
                     [removeButtonAriaLabel]="'music-search.tag-remove' | translate"
                     (queryChanged)="onTagsExcludeQuery($event)"
                     (tagSelected)="onTagExcludeAdded($event)"
-                    (customTagAdded)="onTagExcludeCustom($event)"
                     (tagRemoved)="onTagExcludeRemoved($event)"
                   ></zx-tags-input>
                 </zx-form-control>

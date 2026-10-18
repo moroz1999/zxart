@@ -37,6 +37,7 @@
                 <zx-form-label>{{ 'picture-search.tags-include' | translate }}</zx-form-label>
                 <zx-form-control>
                   <zx-tags-input
+                    [allowCustomTags]="false"
                     [tags]="tagsIncludeItems"
                     [searchResults]="tagsIncludeResults"
                     [searchLoading]="tagsIncludeLoading"
@@ -45,7 +46,6 @@
                     [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
                     (queryChanged)="onTagsIncludeQuery($event)"
                     (tagSelected)="onTagIncludeAdded($event)"
-                    (customTagAdded)="onTagIncludeCustom($event)"
                     (tagRemoved)="onTagIncludeRemoved($event)"
                   ></zx-tags-input>
                 </zx-form-control>
@@ -55,6 +55,7 @@
                 <zx-form-label>{{ 'picture-search.tags-exclude' | translate }}</zx-form-label>
                 <zx-form-control>
                   <zx-tags-input
+                    [allowCustomTags]="false"
                     [tags]="tagsExcludeItems"
                     [searchResults]="tagsExcludeResults"
                     [searchLoading]="tagsExcludeLoading"
@@ -63,7 +64,6 @@
                     [removeButtonAriaLabel]="'picture-search.tag-remove' | translate"
                     (queryChanged)="onTagsExcludeQuery($event)"
                     (tagSelected)="onTagExcludeAdded($event)"
-                    (customTagAdded)="onTagExcludeCustom($event)"
                     (tagRemoved)="onTagExcludeRemoved($event)"
                   ></zx-tags-input>
                 </zx-form-control>

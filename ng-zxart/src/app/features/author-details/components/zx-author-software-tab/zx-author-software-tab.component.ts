@@ -21,7 +21,7 @@ import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-c
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 30;
 
 /**
  * One work ready to render. The card model and the role chips are built when the

@@ -19,11 +19,15 @@ export interface TuneSubmitterDto {
 }
 
 /** A single downloadable artifact (original module, tracker file, rendered audio). */
+/** What a downloadable file is; labelled through `tune-details.download-kind.<kind>`. */
+export type TuneDownloadKind = 'original' | 'tracker' | 'executable' | 'audio';
+
 export interface TuneDownloadDto {
   readonly id: string;
+  readonly kind: TuneDownloadKind;
   readonly ext: string;
-  readonly label: string;
-  readonly sub: string | null;
+  /** The uploaded file's own name. */
+  readonly fileName: string | null;
   readonly size: string | null;
   readonly url: string;
 }

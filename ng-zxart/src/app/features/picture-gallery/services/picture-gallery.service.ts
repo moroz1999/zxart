@@ -13,13 +13,16 @@ export class PictureGalleryService {
   readonly zoomEnabled = signal(false);
 
   private imageTemplate: TemplateRef<unknown> | null = null;
+  /** Gallery shown in the lightbox, which the slides' arrows turn. */
+  private openGalleryId: string | null = null;
 
   constructor(
     private gallery: Gallery,
     private lightbox: Lightbox,
     private analytics: AnalyticsService,
   ) {
-    this.lightbox.opened.subscribe(() => {
+    this.lightbox.opened.subscribe((galleryId: string) => {
+      this.openGalleryId = galleryId;
       this.analytics.reachGoal('viewimage');
     });
     this.lightbox.closed.subscribe(() => {
@@ -35,7 +38,7 @@ export class PictureGalleryService {
     if (!pictures.length) {
       return;
     }
-    this.applyConfig(galleryId);
+    this.applyConfig(galleryId, true);
     const items = pictures
       .map(mapPictureToGalleryItem)
       .map(mapGalleryItemToImageItem);
@@ -46,18 +49,35 @@ export class PictureGalleryService {
     if (!items.length) {
       return;
     }
-    this.applyConfig(galleryId);
+    this.applyConfig(galleryId, false);
     this.gallery.ref(galleryId).load(items.map(mapGalleryItemToImageItem));
+  }
+
+  showNext(): void {
+    if (this.openGalleryId !== null) {
+      this.gallery.ref(this.openGalleryId).next();
+    }
+  }
+
+  showPrevious(): void {
+    if (this.openGalleryId !== null) {
+      this.gallery.ref(this.openGalleryId).prev();
+    }
   }
 
   toggleZoom(): void {
     this.zoomEnabled.update(value => !value);
   }
 
-  private applyConfig(galleryId: string): void {
+  /**
+   * A picture slide draws its own arrows inside the picture block, so the info
+   * beside it is never covered; galleries of other images keep the stock ones.
+   */
+  private applyConfig(galleryId: string, pictureSlides: boolean): void {
     const config: GalleryConfig = {
       imageTemplate: this.imageTemplate ?? undefined,
       thumbPosition: 'right',
+      nav: !pictureSlides,
     };
     this.gallery.ref(galleryId).setConfig(config);
   }

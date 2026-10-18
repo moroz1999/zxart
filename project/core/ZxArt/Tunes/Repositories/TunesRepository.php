@@ -294,7 +294,11 @@ readonly final class TunesRepository extends AbstractRepository
     private function applyCriteria(Builder $query, RadioCriteriaDto $criteria): Builder
     {
         $query->select($this->tableColumn(DatabaseTable::ZxMusic, 'id'));
-        $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'mp3Name'), '!=', '');
+        // playable: converted by the server or uploaded as a recording
+        $query->where(function (Builder $playable): void {
+            $playable->where($this->tableColumn(DatabaseTable::ZxMusic, 'mp3Name'), '!=', '')
+                ->orWhere($this->tableColumn(DatabaseTable::ZxMusic, 'audioFile'), '!=', '');
+        });
 
         if ($criteria->minRating !== null) {
             $query->where($this->tableColumn(DatabaseTable::ZxMusic, 'votes'), '>=', $criteria->minRating);

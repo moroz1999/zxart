@@ -4,6 +4,7 @@ use App\Logging\EventsLog;
 use ZxArt\Comments\Repositories\CommentsRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
+use ZxArt\Ratings\Repositories\VotesHistoryRepository;
 use ZxArt\Voting\VotingService;
 
 /**
@@ -238,6 +239,20 @@ abstract class ZxArtItem extends structureElement implements
         return true;
     }
 
+
+    /**
+     * A deleted work takes its votes with it.
+     *
+     * @return void
+     */
+    #[Override]
+    public function deleteElementData()
+    {
+        if ($this->hasActualStructureInfo()) {
+            $this->getService(VotesHistoryRepository::class)->deleteByElementId($this->getId());
+        }
+        parent::deleteElementData();
+    }
 
     public function getVotesHistory()
     {

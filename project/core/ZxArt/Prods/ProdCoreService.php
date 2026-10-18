@@ -51,7 +51,7 @@ readonly class ProdCoreService
         $legalStatus = $element->getLegalStatus();
         $year = $element->year;
         $hasDescription = $element->getDescription() !== '';
-        $hasTextInstructions = $element->instructions !== '';
+        $hasTextInstructions = $element->getInstructions() !== '';
 
         return new ProdCoreDto(
             elementId: $element->getId(),

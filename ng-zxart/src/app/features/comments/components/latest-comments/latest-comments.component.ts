@@ -1,9 +1,11 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {TranslateModule} from '@ngx-translate/core';
 import {CommentsService} from '../../services/comments.service';
 import {CommentDto} from '../../models/comment.dto';
+import {CommentLink, commentLink} from '../../utils/comment-link';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {
   ZxTextSkeletonComponent
@@ -22,6 +24,7 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     TranslateModule,
     ZxStackComponent,
     ZxTextSkeletonComponent,
@@ -41,6 +44,16 @@ export class LatestCommentsComponent implements OnInit {
   comments = signal<CommentDto[]>([]);
   loading = signal(false);
   hasLoaded = signal(false);
+  /** Link to each comment that has a target, by comment id. */
+  readonly links = computed(() => {
+    const links = new Map<number, CommentLink>();
+    for (const comment of this.comments()) {
+      if (comment.target) {
+        links.set(comment.id, commentLink(comment.id, comment.target));
+      }
+    }
+    return links;
+  });
 
   constructor(
     private commentsService: CommentsService,
@@ -75,26 +88,5 @@ export class LatestCommentsComponent implements OnInit {
 
   displayContent(comment: CommentDto): string {
     return comment.translated.trim() !== '' ? comment.translated : comment.content;
-  }
-
-  getCommentUrl(comment: CommentDto): string {
-    if (!comment.target) {
-      return '';
-    }
-
-    const url = new URL(comment.target.url, window.location.origin);
-    if (comment.target.type === 'zxProd') {
-      url.pathname = this.replaceTabPath(url.pathname, 'discussion');
-    }
-    url.hash = `comment${comment.id}`;
-
-    return `${url.pathname}${url.search}${url.hash}`;
-  }
-
-  private replaceTabPath(path: string, tabId: string): string {
-    const cleanPath = path.replace(/\/tabs:[^/]+(?=\/|$)/, '');
-    const normalizedPath = cleanPath.endsWith('/') ? cleanPath : `${cleanPath}/`;
-
-    return `${normalizedPath}tabs:${encodeURIComponent(tabId)}/`;
   }
 }

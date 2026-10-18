@@ -127,29 +127,24 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
     }
 
     /**
-     * @param false $filterIdList
-     *
-     * @psalm-param list{mixed} $tagsIdList
-     *
-     * @psalm-return list<mixed>
+     * @param int[]|null $filterIdList narrows the result to these element ids
+     * @return int[]
      */
-    public function getConnectedElementIds(array $tagsIdList, bool $filterIdList = false): array
+    public function getConnectedElementIds(array $tagsIdList, ?array $filterIdList = null): array
     {
         $query = $this->getService('db')
             ->table('structure_links')
             ->whereIn('parentStructureId', $tagsIdList)
             ->where('type', '=', 'tagLink');
 
-
-        if (is_array($filterIdList)) {
+        if ($filterIdList !== null) {
             $query->whereIn('childStructureId', $filterIdList);
         }
-        $childIds = [];
-        if ($records = $query->get(['childStructureId'])) {
-            $childIds = array_column($records, 'childStructureId');
-        }
 
-        return $childIds;
+        /** @var list<array{childStructureId: int}> $records */
+        $records = $query->get(['childStructureId']);
+
+        return array_column($records, 'childStructureId');
     }
 
     public function getTagsIdList($elementId)
@@ -159,27 +154,30 @@ class tagsManager extends errorLogger implements DependencyInjectionContextInter
         return $result;
     }
 
-    public function getConnectedElementIdsByNames($names, bool $intersect = true)
+    /**
+     * Ids of the elements carrying the named tags: those carrying all of them when
+     * intersecting (a name that is no tag then matches nothing), those carrying any
+     * of them otherwise.
+     *
+     * @param string[] $names
+     * @return int[]
+     */
+    public function getConnectedElementIdsByNames(array $names, bool $intersect = true): array
     {
-        //can't be array, used in getConnectedElementIds
-        $result = false;
-        if ($tags = $this->getTagElementsByNames($names, false)) {
-            foreach ($tags as $tagElement) {
-                if ($intersect) {
-                    $result = $this->getConnectedElementIds([$tagElement->id], $result);
-                } else {
-                    if (!$result) {
-                        $result = [];
-                    }
-                    $result = array_merge($result, $this->getConnectedElementIds([$tagElement->id]));
-                }
-            }
-        }
-        if ($result) {
-            return $result;
-        } else {
+        $tags = $this->getTagElementsByNames($names, false);
+        if ($intersect && count($tags) < count($names)) {
             return [];
         }
+
+        $result = null;
+        foreach ($tags as $tagElement) {
+            $tagIds = [(int)$tagElement->id];
+            $result = $intersect
+                ? $this->getConnectedElementIds($tagIds, $result)
+                : [...($result ?? []), ...$this->getConnectedElementIds($tagIds)];
+        }
+
+        return $result ?? [];
     }
 
     /**

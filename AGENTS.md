@@ -35,7 +35,7 @@ Every task follows these stages in order. Do not merge stages or continue past a
 4. After test approval, implement the change and run only the relevant linters. Do not run tests, Psalm, or other validation commands at this stage. If the change touches the Angular app, build it (see the build command in `docs/angular.md`) before handing it to the user — the user checks the built bundle in the browser, not the sources.
 5. The user tests and reviews the implementation. Apply their feedback within the same implementation stage and run only the relevant linters after each code update, rebuilding the Angular app before each hand-off when it changed.
 6. After the user explicitly approves the implementation, run the relevant test suites, Psalm, required builds, and any other checks mandated by the task-specific documentation.
-7. When all final checks pass, commit only the files belonging to the task with a short commit message describing the completed change.
+7. When all final checks pass, report the result and wait for a separate, explicit approval to commit. Only then commit the files belonging to the task with a short commit message describing the completed change. No other approval implies this one — not an approval of the implementation, and not a request to work through several tasks unattended: such work stays as uncommitted changes until the user says to commit.
 
 An approval advances only the next pending gate. Requirements elsewhere in this file and the linked documentation still apply; their validation commands are deferred to the final validation stage when this workflow requires it.
 

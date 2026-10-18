@@ -15,8 +15,8 @@ The main page displays a configurable set of content modules. Each visitor can c
 | `newProds` | New Programs | Recent prods added in last 30 days, sorted by `dateAdded` desc |
 | `newPictures` | New Pictures | Recently added pictures |
 | `newTunes` | New Music | Recently added tunes |
-| `bestNewDemos` | Best New Demos | Random demos from current/previous year with high rating |
-| `bestNewGames` | Best New Games | Random games from current/previous year with high rating |
+| `bestNewDemos` | Best New Demos | Random highly rated demos from the current year (and the previous one in January, `BestNewProdsPeriod`) |
+| `bestNewGames` | Best New Games | Random highly rated games from the current year (and the previous one in January, `BestNewProdsPeriod`) |
 | `recentParties` | Recent Parties | Most recent demoparties |
 | `bestPicturesOfMonth` | Best Pictures of Month | Best-rated pictures of the current month |
 | `bestTunesOfMonth` | Best Tunes of Month | Best-rated tunes added during the last 30 days in the current year |

@@ -200,7 +200,10 @@
     "youtube-id": "YouTube id",
     "compilation-items": "Programas de la compilación",
     "series-prods": "Programas de la serie",
-    "html-description": "Descripción HTML",
+    "description-format": "Formato de la descripción",
+    "instructions-format": "Formato de las instrucciones",
+    "text-format-plain": "Texto plano",
+    "text-format-html": "HTML",
     "description": "Descripción",
     "instructions": "Instrucciones",
     "tags": "Etiquetas",
@@ -261,6 +264,9 @@
     "int-frequency": "Frecuencia de interrupción",
     "file": "Archivo reproducible",
     "tracker-file": "Archivo fuente/tracker",
+    "exe-file": "Archivo ejecutable",
+    "audio-file": "Grabación de audio (MP3 u OGG)",
+    "audio-file-hint": "Se reproduce en el sitio en lugar de la conversión automática.",
     "batch-files": "Archivos de música",
     "error-files-required": "Selecciona al menos un archivo de música",
     "error-authors-required": "Selecciona al menos un autor"
@@ -946,7 +952,13 @@
     "delete-confirm-message": "¿Seguro que quieres eliminar esta melodía?",
     "delete-confirm-yes": "Eliminar",
     "delete-confirm-cancel": "Cancelar",
-    "musician": "Músico"
+    "musician": "Músico",
+    "download-kind": {
+      "original": "Archivo original",
+      "tracker": "Archivo del tracker",
+      "executable": "Archivo ejecutable",
+      "audio": "Grabación de audio"
+    }
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -1000,7 +1012,14 @@
     "delete-confirm-message": "¿Seguro que quieres eliminar esta imagen?",
     "delete-confirm-yes": "Eliminar",
     "delete-confirm-cancel": "Cancelar",
-    "artist": "Artista"
+    "artist": "Artista",
+    "download-kind": {
+      "original": "Archivo original",
+      "pc": "Imagen para PC",
+      "print": "Para imprimir (A4, 300 ppp)",
+      "executable": "Archivo ejecutable",
+      "stages": "Etapas del dibujo"
+    }
   },
   "header": {
     "language-trigger": {
@@ -2241,5 +2260,19 @@
     "country": "País",
     "country-hint": "El país al que pertenece la ciudad. Cambiarlo la mueve.",
     "error-country-required": "Una ciudad necesita un país"
+  },
+  "spectrum-color": {
+    "0": "Negro",
+    "1": "Azul",
+    "2": "Rojo",
+    "3": "Magenta",
+    "4": "Verde",
+    "5": "Cian",
+    "6": "Amarillo",
+    "7": "Blanco"
+  },
+  "picture-gallery": {
+    "previous": "Imagen anterior",
+    "next": "Imagen siguiente"
   }
 }

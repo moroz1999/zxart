@@ -14,11 +14,15 @@ use ZxArt\Tags\TagsHolderInterface;
  * @property int $denyPlaying
  * @property string $commentsAmount @deprecated use {@see self::getCommentsAmount()} - DB column is text, magic-property returns string
  * @property string $title
- * @property string $mp3Name
+ * @property string|null $mp3Name
  * @property string $file
  * @property string $fileName
  * @property string $trackerFile
  * @property string $trackerFileName
+ * @property string|null $exeFile
+ * @property string|null $audioFile
+ * @property string|null $audioFileName
+ * @property string|null $exeFileName
  * @property string $votes @deprecated use {@see self::getVotes()} - magic-property returns DB string
  * @property string $votesAmount @deprecated use {@see self::getVotesAmount()} - DB column is text, magic-property returns string
  * @property string $plays @deprecated use {@see self::getPlaysCount()} - DB column is text, magic-property returns string
@@ -94,6 +98,10 @@ class zxMusicElement extends ZxArtItem implements
         $moduleStructure['converterVersion'] = 'text';
         $moduleStructure['trackerFile'] = 'file';
         $moduleStructure['trackerFileName'] = 'fileName';
+        $moduleStructure['exeFile'] = 'file';
+        $moduleStructure['exeFileName'] = 'fileName';
+        $moduleStructure['audioFile'] = 'file';
+        $moduleStructure['audioFileName'] = 'fileName';
         $moduleStructure['mentions'] = [
             'ConnectedElements',
             [
@@ -191,7 +199,11 @@ class zxMusicElement extends ZxArtItem implements
 
     public function checkIfReconversionNeeded(): bool
     {
-        if ($this->fileName && (!$this->mp3Name || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
+        // an uploaded recording is played as it is
+        if ($this->getAudioFileId() !== '') {
+            return false;
+        }
+        if ($this->fileName && ($this->getConvertedAudioName() === '' || ($this->getChannelsType() != $this->conversionChannelsType || $this->getChipType() != $this->conversionChipType || $this->getFrequency() != $this->conversionFrequency || $this->getIntFrequency() != $this->conversionIntFrequency) && $this->hasChipChannelsType())) {
             $linksManager = $this->getService(linksManager::class);
             if ($parentIds = $linksManager->getConnectedIdList($this->getId(), 'ayTrack', 'child')) {
                 $parentId = reset($parentIds);
@@ -228,18 +240,54 @@ class zxMusicElement extends ZxArtItem implements
 
     public function isPlayable(): bool
     {
-        return ($this->mp3Name && !$this->denyPlaying);
+        $hasAudio = $this->getAudioFileId() !== '' || $this->getConvertedAudioName() !== '';
+        return $hasAudio && !$this->isPlayingDenied();
     }
 
     /**
+     * The recording the tune is played from: the uploaded one when there is
+     * one, otherwise the conversion server's.
+     *
      * @return false|string
      */
     public function getMp3FilePath(): string|false
     {
-        if ($this->mp3Name) {
-            return self::MP3_STORAGE_PATH . $this->mp3Name;
+        $audioFileId = $this->getAudioFileId();
+        if ($audioFileId !== '') {
+            return $this->getSiteBaseUrl() . 'file/id:' . $audioFileId . '/filename:' . rawurlencode($this->getAudioFileName());
+        }
+        $convertedAudioName = $this->getConvertedAudioName();
+        if ($convertedAudioName !== '') {
+            return self::MP3_STORAGE_PATH . $convertedAudioName;
         }
         return false;
+    }
+
+    /** Id of the uploaded audio recording, or '' when there is none. */
+    public function getAudioFileId(): string
+    {
+        return (string)$this->audioFile;
+    }
+
+    public function getAudioFileName(): string
+    {
+        return (string)$this->audioFileName;
+    }
+
+    /** Name of the recording made by the conversion server, or '' before conversion. */
+    public function getConvertedAudioName(): string
+    {
+        return (string)$this->mp3Name;
+    }
+
+    public function isPlayingDenied(): bool
+    {
+        return (bool)$this->denyPlaying;
+    }
+
+    protected function getSiteBaseUrl(): string
+    {
+        return $this->getService(controller::class)->baseURL;
     }
 
     public function getFormat(): string
@@ -285,6 +333,12 @@ class zxMusicElement extends ZxArtItem implements
         return $fileId !== '' ? $fileId : null;
     }
 
+    /** Id of the uploaded executable file, or '' when there is none. */
+    public function getExeFileId(): string
+    {
+        return (string)$this->exeFile;
+    }
+
     public function getCompoName(): ?string
     {
         $compo = (string)$this->compo;
@@ -320,6 +374,11 @@ class zxMusicElement extends ZxArtItem implements
                     $extension = "." . strtolower($info['extension']);
                 }
             }
+        } elseif ($extensionType === 'exe') {
+            $exeExtension = pathinfo(html_entity_decode((string)$this->exeFileName, ENT_QUOTES), PATHINFO_EXTENSION);
+            if ($exeExtension !== '') {
+                $extension = '.' . strtolower($exeExtension);
+            }
         }
 
         return $extension;
@@ -338,6 +397,8 @@ class zxMusicElement extends ZxArtItem implements
             if ($this->trackerFileName) {
                 return true;
             }
+        } elseif ($extensionType === 'exe') {
+            return (string)$this->exeFileName !== '';
         }
 
         return false;

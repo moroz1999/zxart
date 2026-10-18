@@ -5,9 +5,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {of, Subject, Subscription} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
 import {TagItem} from '../../models/tag-item';
-import {Tag} from '../../models/tag';
 import {TagsSearchService} from '../../services/tags-search.service';
 import {ZxTagsInputComponent} from '../zx-tags-input/zx-tags-input.component';
+import {tagToItem} from '../../utils/tag-item';
 
 /**
  * Reactive-form tag editor: chips + type-to-search autocomplete + "create new
@@ -71,7 +71,7 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
           this.cdr.markForCheck();
         }),
         switchMap(query => this.tagsSearch.search(query).pipe(
-          map(tags => this.toTagItems(tags)),
+          map(tags => tags.map(tagToItem)),
           catchError(() => of([] as TagItem[])),
         )),
       ).subscribe(results => {
@@ -138,14 +138,6 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
   private emit(): void {
     this.onChange(this.tags.map(tag => tag.title));
     this.onTouched();
-  }
-
-  private toTagItems(tags: Tag[]): TagItem[] {
-    return tags.map(tag => ({
-      id: Number.isFinite(tag.id) ? tag.id : null,
-      title: tag.title,
-      description: tag.description || null,
-    }));
   }
 
   private excludeSelected(results: TagItem[]): TagItem[] {

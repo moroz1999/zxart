@@ -11,7 +11,6 @@ readonly class ProdDescriptionService
 {
     public function __construct(
         private ProdElementService $prodElementService,
-        private ProdInfoBuilder $infoBuilder,
         private DescriptionFormatter $descriptionFormatter,
     ) {
     }
@@ -23,7 +22,8 @@ readonly class ProdDescriptionService
         return new ProdDescriptionDto(
             description: $this->descriptionFormatter->decode($element->getDescription()),
             htmlDescription: $element->isHtmlDescription(),
-            instructions: $this->infoBuilder->decodeText($element->instructions),
+            htmlInstructions: $element->isHtmlInstructions(),
+            instructions: $this->descriptionFormatter->decode($element->getInstructions()),
         );
     }
 }

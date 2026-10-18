@@ -20,12 +20,18 @@ export interface PictureProdContextDto {
   readonly year: string | null;
 }
 
-/** A single downloadable artifact (original file, rendered PNG, print, EXE). */
+/** What a downloadable file is; labelled through `picture-details.download-kind.<kind>`. */
+export type PictureDownloadKind = 'original' | 'pc' | 'print' | 'executable' | 'stages';
+
+/** A single downloadable artifact (original file, rendered PNG, print, executable, drawing stages). */
 export interface PictureDownloadDto {
   readonly id: string;
+  readonly kind: PictureDownloadKind;
   readonly ext: string;
-  readonly label: string;
-  readonly sub: string | null;
+  /** Magnification of a PC render. */
+  readonly zoom: number | null;
+  /** The uploaded file's own name, for materials. */
+  readonly fileName: string | null;
   readonly size: string | null;
   readonly url: string;
 }

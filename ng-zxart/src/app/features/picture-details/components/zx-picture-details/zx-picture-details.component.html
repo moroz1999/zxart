@@ -43,7 +43,7 @@
           *ngIf="primaryDownload(details) as download"
           rel="nofollow"
           [href]="download.url"
-          [label]="download.label">
+          [label]="'picture-details.download-kind.' + download.kind | translate">
         </zx-download-button>
       </zx-button-controls>
     </zx-hero-bar>

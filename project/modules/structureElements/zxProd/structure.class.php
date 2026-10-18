@@ -29,7 +29,8 @@ use ZxArt\ZxProdCategories\CompilationCategoryIds;
  * @property string $youtubeId
  * @property string $description
  * @property bool $htmlDescription @deprecated use {@see self::isHtmlDescription()} — DB stores 0/1, magic-property returns string
- * @property string $instructions
+ * @property bool $htmlInstructions @deprecated use {@see self::isHtmlInstructions()} — DB stores 0/1, magic-property returns string
+ * @property string|null $instructions @deprecated use {@see self::getInstructions()} — magic-property returns null for a creation draft
  * @property string $legalStatus
  * @property string $compo
  * @property string[] $tags tag titles the form submitted; tags themselves live as links
@@ -125,6 +126,7 @@ class zxProdElement extends ZxArtItem implements
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'html';
         $moduleStructure['htmlDescription'] = 'checkbox';
+        $moduleStructure['htmlInstructions'] = 'checkbox';
         $moduleStructure['instructions'] = 'html';
         $moduleStructure['votes'] = 'floatNumber';
 
@@ -1235,6 +1237,16 @@ class zxProdElement extends ZxArtItem implements
     public function isHtmlDescription(): bool
     {
         return (bool)$this->htmlDescription;
+    }
+
+    public function isHtmlInstructions(): bool
+    {
+        return (bool)$this->htmlInstructions;
+    }
+
+    public function getInstructions(): string
+    {
+        return (string)$this->instructions;
     }
 
     public function getGeneratedDescription()

@@ -9,7 +9,6 @@ use structureManager;
 use tagElement;
 use translationsManager;
 use ZxArt\Pictures\Dto\PictureDetailsDto;
-use ZxArt\Pictures\Dto\PictureDownloadDto;
 use ZxArt\Pictures\Dto\PictureMaterialDto;
 use ZxArt\Pictures\Dto\PictureMentionDto;
 use ZxArt\Pictures\Dto\PicturePartyContextDto;
@@ -30,7 +29,6 @@ use zxPictureElement;
  */
 readonly class PictureDetailsService
 {
-    private const string TYPE_SCA = 'sca';
 
     public function __construct(
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
@@ -41,6 +39,7 @@ readonly class PictureDetailsService
         private ProdInfoBuilder $infoBuilder,
         private DescriptionFormatter $descriptionFormatter,
         private PageMetadataService $pageMetadataService,
+        private PictureDownloadsBuilder $downloadsBuilder,
     ) {
     }
 
@@ -95,11 +94,11 @@ readonly class PictureDetailsService
             views: (int)$element->views,
             submitter: $this->buildSubmitter($element),
             dateCreated: $element->dateCreated ? (string)$element->dateCreated : null,
-            downloads: $this->buildDownloads($element, $baseUrl),
+            downloads: $this->downloadsBuilder->build($element, $baseUrl),
             materials: $this->buildMaterials($element, $baseUrl),
             techInfo: [],
-            sequenceUrl: $element->sequenceName
-                ? $baseUrl . 'file/id:' . $element->sequence . '/filename:' . rawurlencode((string)$element->sequenceName)
+            sequenceUrl: $element->getSequenceFileName() !== ''
+                ? $baseUrl . 'file/id:' . $element->getSequenceFileId() . '/filename:' . rawurlencode($element->getSequenceFileName())
                 : null,
             mentions: $this->buildMentions($element),
             metadata: $this->pageMetadataService->getForPath('/picture/' . $pictureId),
@@ -181,62 +180,6 @@ readonly class PictureDetailsService
             userName: $this->infoBuilder->decodeText((string)$user->userName),
             url: $this->entityUrlResolver->urlForUser($user),
         );
-    }
-
-    /**
-     * @return PictureDownloadDto[]
-     */
-    private function buildDownloads(zxPictureElement $element, string $baseUrl): array
-    {
-        $downloads = [];
-
-        if ($element->getFileName('original', false)) {
-            $downloads[] = new PictureDownloadDto(
-                id: 'original',
-                ext: ltrim($element->getFileExtension('original'), '.') ?: 'scr',
-                label: (string)$this->translationsManager->getTranslationByName('field.originalfile'),
-                sub: null,
-                size: null,
-                url: $baseUrl . 'file/id:' . $element->getId() . '/filename:'
-                    . rawurlencode($element->getFileName('original', true, false)),
-            );
-
-            for ($zoom = 1; $zoom <= 4; $zoom++) {
-                $pcFormat = $element->type === self::TYPE_SCA ? 'gif' : 'png';
-                $downloads[] = new PictureDownloadDto(
-                    id: $pcFormat . '-' . $zoom,
-                    ext: $pcFormat,
-                    label: (string)$this->translationsManager->getTranslationByName('zxpicture.download_pc'),
-                    sub: $zoom . '×',
-                    size: null,
-                    url: $element->getDownloadUrl($zoom),
-                );
-            }
-
-            $downloads[] = new PictureDownloadDto(
-                id: 'print',
-                ext: 'png',
-                label: (string)$this->translationsManager->getTranslationByName('zxpicture.download_print'),
-                sub: null,
-                size: null,
-                url: $baseUrl . 'print/id:' . $element->image
-                    . '/fileName:' . rawurlencode($element->getFileName('image', true, false)) . '/',
-            );
-        }
-
-        if ($element->exeFile) {
-            $downloads[] = new PictureDownloadDto(
-                id: 'exe',
-                ext: ltrim($element->getFileExtension('exe'), '.') ?: 'exe',
-                label: (string)$element->getFileName('exe', false, false),
-                sub: null,
-                size: null,
-                url: $baseUrl . 'file/id:' . $element->exeFile . '/filename:'
-                    . rawurlencode($element->getFileName('exe', true, false)),
-            );
-        }
-
-        return $downloads;
     }
 
     /**

@@ -30,6 +30,7 @@ components:
       required:
         - description
         - htmlDescription
+        - htmlInstructions
         - instructions
       properties:
         description:
@@ -37,7 +38,10 @@ components:
           description: HTML-entity-decoded description content. It contains sanitized HTML only when htmlDescription is true; plain text has no presentation wrapper markup.
         htmlDescription:
           type: boolean
-          description: Whether the description field contains HTML markup
+          description: Whether the description contains HTML markup rather than plain fixed-width text
+        htmlInstructions:
+          type: boolean
+          description: Whether the instructions contain HTML markup rather than plain fixed-width text
         instructions:
           type: string
-          description: HTML-entity-decoded instructions text (always contains HTML)
+          description: HTML-entity-decoded instructions content. It contains sanitized HTML only when htmlInstructions is true.

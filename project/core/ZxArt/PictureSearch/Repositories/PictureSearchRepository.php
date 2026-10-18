@@ -100,16 +100,13 @@ readonly final class PictureSearchRepository
             $builder->where('prod', '!=', '0')->where('prod', '!=', '');
         }
         if ($query->tagsInclude !== []) {
-            /** @var int[] $ids */
             $ids = $this->tagsManager->getConnectedElementIdsByNames($query->tagsInclude);
-            if ($ids) {
-                $builder->whereIn('id', $ids);
-            }
+            // no tagged work leaves nothing to find
+            $builder->whereIn('id', $ids);
         }
         if ($query->tagsExclude !== []) {
-            /** @var int[] $ids */
             $ids = $this->tagsManager->getConnectedElementIdsByNames($query->tagsExclude, false);
-            if ($ids) {
+            if ($ids !== []) {
                 $builder->whereNotIn('id', $ids);
             }
         }

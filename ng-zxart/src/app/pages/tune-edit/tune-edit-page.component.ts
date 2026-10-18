@@ -13,6 +13,7 @@ import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx
 import {ZxFormControlComponent} from '../../shared/ui/zx-form/zx-form-control/zx-form-control.component';
 import {ZxFormFieldComponent} from '../../shared/ui/zx-form/zx-form-field/zx-form-field.component';
 import {ZxFormLabelComponent} from '../../shared/ui/zx-form/zx-form-label/zx-form-label.component';
+import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
 import {ZxFormMessageComponent} from '../../shared/ui/zx-form/zx-form-message/zx-form-message.component';
 import {ZxFormRowComponent} from '../../shared/ui/zx-form/zx-form-row/zx-form-row.component';
 import {ZxFormDirective} from '../../shared/ui/zx-form/zx-form.directive';
@@ -43,7 +44,7 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 
 /**
  * expectedFields preserved unchanged on save until they get dedicated UI.
- * `file`/`trackerFile` are file chunks: omitting them keeps the existing file,
+ * `file`/`trackerFile`/`exeFile`/`audioFile` are file chunks: omitting them keeps the existing file,
  * so they are not listed here.
  */
 const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
@@ -64,6 +65,7 @@ const PASSTHROUGH_FIELDS = ['inspired', 'embedCode'];
     ZxFormFieldComponent,
     ZxFormLabelComponent,
     ZxFormMessageComponent,
+    TextDirective,
     ZxFormRowComponent,
     ZxFormDirective,
     ZxInputComponent,

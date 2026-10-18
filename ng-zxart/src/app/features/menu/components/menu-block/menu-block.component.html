@@ -5,11 +5,12 @@
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
         [color]="isActive(item) ? 'outlined' : 'transparent'"
-        [routerLink]="isInternal(item.url) ? item.url : null"
-        [href]="isInternal(item.url) ? null : item.url"
+        [routerLink]="isLinked(item) && isInternal(item.url) ? item.url : null"
+        [href]="isLinked(item) && !isInternal(item.url) ? item.url : null"
         [attr.aria-expanded]="isPopoverOpen(item)"
-        (pointerenter)="openItem(item, trigger.elementRef.nativeElement)"
-        (pointerleave)="scheduleClose()"
+        (pointerenter)="onHoverEnter(item, trigger.elementRef.nativeElement)"
+        (pointerleave)="onHoverLeave()"
+        (click)="onTap(item, trigger.elementRef.nativeElement)"
       >{{ item.labelKey ? (item.labelKey | translate) : item.label }}</zx-button>
 
       <ng-template
@@ -19,12 +20,13 @@
         [cdkConnectedOverlayPositions]="positions"
         [cdkConnectedOverlayMinWidth]="activeTriggerWidth"
         [cdkConnectedOverlayHasBackdrop]="false"
+        (overlayOutsideClick)="onOutsideTap($event, trigger.elementRef.nativeElement)"
       >
         <zx-header-popover
           class="mb-popover"
           [class.mb-popover--two-col]="item.children.length > 10"
-          (pointerenter)="cancelClose()"
-          (pointerleave)="scheduleClose()"
+          (pointerenter)="onHoverStay()"
+          (pointerleave)="onHoverLeave()"
         >
           <zx-popover-menu-item *ngFor="let child of item.children" [href]="child.url" [queryParams]="child.queryParams ?? null">
             {{ child.labelKey ? (child.labelKey | translate) : child.label }}

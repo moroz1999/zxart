@@ -58,6 +58,7 @@ class publicReceiveZxProd extends structureElementAction
             'publishers',
             'groups',
             'htmlDescription',
+            'htmlInstructions',
             'description',
             'instructions',
             'tags',

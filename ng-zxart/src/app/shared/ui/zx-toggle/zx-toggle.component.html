@@ -1,9 +1,16 @@
-<div [class]="'zx-toggle zx-toggle--' + size">
+<div
+  role="group"
+  [class]="'zx-toggle zx-toggle--' + size"
+  [class.zx-toggle--disabled]="disabled"
+  [attr.aria-label]="ariaLabel || null"
+>
   <button
-    *ngFor="let option of options"
+    *ngFor="let option of options; trackBy: trackByValue"
     type="button"
     class="zx-toggle__item"
     [class.zx-toggle__item--active]="value === option.value"
+    [attr.aria-pressed]="value === option.value"
+    [disabled]="disabled"
     (click)="onValueChange(option.value)"
   >
     <svg-icon *ngIf="option.icon" [name]="option.icon"></svg-icon>

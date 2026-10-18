@@ -112,6 +112,25 @@
         <zx-file-upload [fileName]="fileNames['trackerFile'] || null" (changed)="onFileChanged('trackerFile', $event)"></zx-file-upload>
       </zx-form-control>
     </zx-form-field>
+
+    <zx-form-field *ngIf="!batchUpload">
+      <zx-form-label>{{ 'tune-form.exe-file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload [fileName]="fileNames['exeFile'] || null" (changed)="onFileChanged('exeFile', $event)"></zx-file-upload>
+      </zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field *ngIf="!batchUpload">
+      <zx-form-label>{{ 'tune-form.audio-file' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-file-upload
+          accept=".mp3,.ogg,audio/mpeg,audio/ogg"
+          [fileName]="fileNames['audioFile'] || null"
+          (changed)="onFileChanged('audioFile', $event)"
+        ></zx-file-upload>
+        <span appText="caption" tone="muted">{{ 'tune-form.audio-file-hint' | translate }}</span>
+      </zx-form-control>
+    </zx-form-field>
   </zx-form-section>
 
   <zx-form-section [title]="'form.description' | translate" icon="file">

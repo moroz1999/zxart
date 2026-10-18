@@ -11,10 +11,13 @@ import {isSpaUrl} from '../../../../shared/utils/spa-url';
 
 
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
-import {Subscription, filter} from 'rxjs';@Component({
+import {Subscription, filter} from 'rxjs';
+
+@Component({
   selector: 'zx-menu-block',
   standalone: true,
-  imports: [RouterLink, 
+  imports: [
+    RouterLink,
     CommonModule,
     TranslateModule,
     CdkConnectedOverlay,
@@ -33,6 +36,13 @@ export class MenuBlockComponent implements OnDestroy {
   activeItem: MenuEntry | null = null;
   activeTriggerWidth = 0;
 
+  /**
+   * A screen that can hover opens submenus on hover. A touch screen fires the
+   * pointer events of a tap together with its click, so there a submenu opens on
+   * the first tap of its trigger and the trigger becomes a link only while open.
+   */
+  private readonly canHover = window.matchMedia('(hover: hover)').matches;
+
   readonly positions: ConnectedPosition[] = [
     {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 0},
     {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: 0},
@@ -50,7 +60,10 @@ export class MenuBlockComponent implements OnDestroy {
     // navigation so the highlight follows client-side route changes.
     this.routerSub = router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => this.cdr.markForCheck());
+      .subscribe(() => {
+        this.activeItem = null;
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
@@ -64,7 +77,45 @@ export class MenuBlockComponent implements OnDestroy {
     return this.activeItem === item;
   }
 
-  openItem(item: MenuEntry, triggerEl: HTMLElement): void {
+  /** Whether the trigger of an item leads to its section rather than opening its submenu. */
+  isLinked(item: MenuEntry): boolean {
+    return this.canHover || this.isPopoverOpen(item);
+  }
+
+  onHoverEnter(item: MenuEntry, triggerEl: HTMLElement): void {
+    if (this.canHover) {
+      this.openItem(item, triggerEl);
+    }
+  }
+
+  onHoverStay(): void {
+    if (this.canHover) {
+      this.cancelClose();
+    }
+  }
+
+  onHoverLeave(): void {
+    if (this.canHover) {
+      this.scheduleClose();
+    }
+  }
+
+  onTap(item: MenuEntry, triggerEl: HTMLElement): void {
+    if (!this.canHover && !this.isPopoverOpen(item)) {
+      this.openItem(item, triggerEl);
+    }
+  }
+
+  /** A tap outside the open submenu closes it, unless it is the tap on its own trigger. */
+  onOutsideTap(event: MouseEvent, triggerEl: HTMLElement): void {
+    if (this.canHover || triggerEl.contains(event.target as Node)) {
+      return;
+    }
+    this.activeItem = null;
+    this.cdr.markForCheck();
+  }
+
+  private openItem(item: MenuEntry, triggerEl: HTMLElement): void {
     this.cancelClose();
     if (item.children.length > 0) {
       this.activeTriggerWidth = triggerEl.offsetWidth;
@@ -72,7 +123,7 @@ export class MenuBlockComponent implements OnDestroy {
     }
   }
 
-  scheduleClose(): void {
+  private scheduleClose(): void {
     this.closeTimer = setTimeout(() => {
       this.activeItem = null;
       this.closeTimer = null;
@@ -80,7 +131,7 @@ export class MenuBlockComponent implements OnDestroy {
     }, 120);
   }
 
-  cancelClose(): void {
+  private cancelClose(): void {
     if (this.closeTimer !== null) {
       clearTimeout(this.closeTimer);
       this.closeTimer = null;

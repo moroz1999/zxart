@@ -49,7 +49,7 @@ readonly final class ProdsRepository
     {
         $since = time() - ($daysAgo * 86400);
 
-        $query = $this->getSelectSql()
+        $query = $this->getReachableSql()
             ->where('dateAdded', '>=', $since)
             ->where('votes', '>=', $minRating);
 
@@ -68,19 +68,23 @@ readonly final class ProdsRepository
      */
     public function getLatestAddedIds(int $limit): array
     {
-        return $this->getSelectSql()
+        /** @var int[] $ids */
+        $ids = $this->getReachableSql()
             ->orderBy('dateAdded', 'desc')
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
      * @param int[] $categoryIds
      * @return int[]
      */
-    public function getBestNewByCategoryIds(array $categoryIds, int $limit, float $minRating, int $currentYear): array
+    public function getBestNewByCategoryIds(array $categoryIds, int $limit, float $minRating, int $firstYear): array
     {
-        return $this->getSelectSql()
+        /** @var int[] $ids */
+        $ids = $this->getSelectSql()
             ->whereIn(self::TABLE . '.id', function ($subQuery) use ($categoryIds) {
                 $subQuery->from('structure_links')
                     ->select('structure_links.childStructureId')
@@ -88,10 +92,12 @@ readonly final class ProdsRepository
                     ->whereIn('structure_links.parentStructureId', $categoryIds);
             })
             ->where('votes', '>=', $minRating)
-            ->where('year', '>=', $currentYear - 1)
+            ->where('year', '>=', $firstYear)
             ->inRandomOrder()
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -99,11 +105,14 @@ readonly final class ProdsRepository
      */
     public function getForSaleOrDonationIds(int $limit): array
     {
-        return $this->getSelectSql()
+        /** @var int[] $ids */
+        $ids = $this->getReachableSql()
             ->whereIn('legalStatus', ['insales', 'donationware'])
             ->inRandomOrder()
             ->limit($limit)
             ->pluck('id');
+
+        return $ids;
     }
 
     /**
@@ -146,6 +155,19 @@ readonly final class ProdsRepository
     private function getSelectSql(): Builder
     {
         return $this->db->table(self::TABLE);
+    }
+
+    /**
+     * Productions reachable on the site: a production has a page only through a category.
+     */
+    private function getReachableSql(): Builder
+    {
+        return $this->getSelectSql()
+            ->whereIn(self::TABLE . '.id', static function (Builder $subQuery): void {
+                $subQuery->from('structure_links')
+                    ->select('structure_links.childStructureId')
+                    ->where('structure_links.type', '=', LinkTypes::ZX_PROD_CATEGORY->value);
+            });
     }
 
 }

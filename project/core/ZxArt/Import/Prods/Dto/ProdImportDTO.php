@@ -18,6 +18,7 @@ final readonly class ProdImportDTO
          * @var bool|null - text description is html or plain
          */
         public ?bool        $htmlDescription = null,
+        public ?bool        $htmlInstructions = null,
         public ?string      $instructions = null,
         /** @var string[]|null */
         public ?array       $languages = null,
@@ -139,6 +140,7 @@ final readonly class ProdImportDTO
             altTitle: $this->altTitle,
             description: $this->description,
             htmlDescription: $this->htmlDescription,
+            htmlInstructions: $this->htmlInstructions,
             instructions: $this->instructions,
             languages: $this->languages,
             hardwareRequired: $this->hardwareRequired,

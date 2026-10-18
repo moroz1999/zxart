@@ -200,7 +200,10 @@
     "youtube-id": "YouTube id",
     "compilation-items": "Программы компиляции",
     "series-prods": "Программы серии",
-    "html-description": "HTML-описание",
+    "description-format": "Формат описания",
+    "instructions-format": "Формат инструкций",
+    "text-format-plain": "Обычный текст",
+    "text-format-html": "HTML",
     "description": "Описание",
     "instructions": "Инструкции",
     "tags": "Теги",
@@ -261,6 +264,9 @@
     "int-frequency": "Частота прерываний",
     "file": "Воспроизводимый файл",
     "tracker-file": "Исходник/трекер",
+    "exe-file": "Исполняемый файл",
+    "audio-file": "Аудиозапись (MP3 или OGG)",
+    "audio-file-hint": "Играется на сайте вместо автоматической конверсии.",
     "batch-files": "Файлы музыки",
     "error-files-required": "Выберите хотя бы один музыкальный файл",
     "error-authors-required": "Выберите хотя бы одного автора"
@@ -947,7 +953,13 @@
     "delete-confirm-message": "Вы уверены, что хотите удалить эту мелодию?",
     "delete-confirm-yes": "Удалить",
     "delete-confirm-cancel": "Отмена",
-    "musician": "Музыкант"
+    "musician": "Музыкант",
+    "download-kind": {
+      "original": "Оригинальный файл",
+      "tracker": "Трекерный файл",
+      "executable": "Исполняемый файл",
+      "audio": "Аудиозапись"
+    }
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -1001,7 +1013,14 @@
     "delete-confirm-message": "Вы уверены, что хотите удалить эту картинку?",
     "delete-confirm-yes": "Удалить",
     "delete-confirm-cancel": "Отмена",
-    "artist": "Художник"
+    "artist": "Художник",
+    "download-kind": {
+      "original": "Оригинальный файл",
+      "pc": "Картинка для PC",
+      "print": "Для печати (A4, 300 dpi)",
+      "executable": "Исполняемый файл",
+      "stages": "Этапы рисования"
+    }
   },
   "header": {
     "language-trigger": {
@@ -2242,5 +2261,19 @@
     "country": "Страна",
     "country-hint": "Страна, которой принадлежит город. Смена значения переносит город.",
     "error-country-required": "Для города нужна страна"
+  },
+  "spectrum-color": {
+    "0": "Чёрный",
+    "1": "Синий",
+    "2": "Красный",
+    "3": "Пурпурный",
+    "4": "Зелёный",
+    "5": "Голубой",
+    "6": "Жёлтый",
+    "7": "Белый"
+  },
+  "picture-gallery": {
+    "previous": "Предыдущая картинка",
+    "next": "Следующая картинка"
   }
 }

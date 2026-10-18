@@ -24,6 +24,7 @@ use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Parties\Services\PartiesService;
 use ProdsDownloader;
+use ZxArt\Prods\Services\ImportedProdCategoriesUpdater;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
 use ZxArt\FileParsing\ZxParsingManager;
@@ -104,6 +105,7 @@ class ProdsSortingTest extends TestCase
             $this->createStub(ProdResolver::class),
             $this->createStub(LabelTransformer::class),
             $this->createStub(ReleaseFileTypesGatherer::class),
+            new ImportedProdCategoriesUpdater($this->createStub(linksManager::class), $this->createStub(ImportIdOperator::class)),
             $this->createStub(ImportIdOperator::class),
         );
     }

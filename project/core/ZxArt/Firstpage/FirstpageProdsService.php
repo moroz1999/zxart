@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Firstpage;
 
+use DateTimeImmutable;
 use structureManager;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\ProdsTransformer;
@@ -49,7 +50,7 @@ readonly class FirstpageProdsService
             $this->prodCategoryTreeService->getTreeIds(CategoryIds::DEMOSCENE->value),
             $limit,
             $minRating,
-            (int)date('Y'),
+            BestNewProdsPeriod::firstYear(new DateTimeImmutable()),
         );
         return $this->loadAndTransform($ids);
     }
@@ -63,7 +64,7 @@ readonly class FirstpageProdsService
             $this->prodCategoryTreeService->getTreeIds(CategoryIds::GAMES->value),
             $limit,
             $minRating,
-            (int)date('Y'),
+            BestNewProdsPeriod::firstYear(new DateTimeImmutable()),
         );
         return $this->loadAndTransform($ids);
     }

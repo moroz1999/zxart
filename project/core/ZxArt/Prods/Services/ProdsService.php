@@ -118,6 +118,7 @@ class ProdsService extends ElementsManager
         protected ProdResolver                    $prodResolver,
         private readonly LabelTransformer         $labelTransformer,
         private readonly ReleaseFileTypesGatherer $releaseFileTypesGatherer,
+        private readonly ImportedProdCategoriesUpdater $importedProdCategoriesUpdater,
         private readonly ImportIdOperator         $importIdOperator,
 
     )
@@ -348,6 +349,10 @@ class ProdsService extends ElementsManager
             $element->htmlDescription = $dto->htmlDescription;
             $changed = true;
         }
+        if ($dto->htmlInstructions !== null) {
+            $element->htmlInstructions = $dto->htmlInstructions;
+            $changed = true;
+        }
         if ($dto->instructions !== null && ($element->instructions === '' || $element->instructions === null)) {
             $element->instructions = $dto->instructions;
             $changed = true;
@@ -510,18 +515,7 @@ class ProdsService extends ElementsManager
         }
 
         if (!empty($dto->categories) && (!$element->getConnectedCategoriesIds() || $this->forceUpdateCategories || $justCreated)) {
-            $linksIndex = $this->linksManager->getElementsLinksIndex($element->getId(), 'zxProdCategory', 'child');
-            foreach ($dto->categories as $importCategoryId) {
-                if ($categoryId = $this->importIdOperator->getElementIdByImportId($importCategoryId, $origin, EntityType::Category)) {
-                    if (!isset($linksIndex[$categoryId])) {
-                        $this->linksManager->linkElements($categoryId, $element->getId(), 'zxProdCategory');
-                    }
-                    unset($linksIndex[$categoryId]);
-                }
-            }
-            foreach ($linksIndex as $link) {
-                $link->delete();
-            }
+            $this->importedProdCategoriesUpdater->update($element->getId(), $dto->categories, $origin);
         }
 
         if (!empty($dto->images) && ($this->forceUpdateImages || $justCreated || !$element->getFilesList('connectedFile'))) {

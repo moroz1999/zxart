@@ -129,7 +129,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
             ->where("$linksTable.type", '=', $scope->linkType()->value)
             ->whereIn("$linksTable.parentStructureId", $groupIds)
             ->select([
-                "$itemTable.id",
+                "$itemTable.id as id",
                 "$itemTable.votes",
                 "$itemTable.year",
                 "$structureElementsTable.dateCreated",
@@ -138,7 +138,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
 
         if ($scope->isReleases()) {
             $this->applyReleaseFilters($query, $itemTable, $linksTable, $groupIds, $type);
-        } elseif ($categoryIds !== []) {
+        } else {
             $this->applyProdCategoryFilter($query, "$itemTable.id", $categoryIds);
         }
 
@@ -228,9 +228,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 "$structureElementsTable.dateCreated",
             ])
             ->distinct();
-        if ($categoryIds !== []) {
-            $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
-        }
+        $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
 
         /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
         $rows = $query->get();
@@ -353,9 +351,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 "$structureElementsTable.dateCreated",
             ])
             ->distinct();
-        if ($categoryIds !== []) {
-            $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
-        }
+        $this->applyProdCategoryFilter($query, "$prodTable.id", $categoryIds);
 
         /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
         $rows = $query->get();
@@ -397,9 +393,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 "$structureElementsTable.dateCreated",
             ])
             ->distinct();
-        if ($categoryIds !== []) {
-            $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", $categoryIds);
-        }
+        $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", $categoryIds);
 
         /** @var list<array{id: int|string, votes: float|string|null, year: int|string|null, dateCreated: int|string|null}> $rows */
         $rows = $query->get();
@@ -522,6 +516,9 @@ readonly final class GroupProdsRepository extends AbstractRepository
     }
 
     /**
+     * A production is reachable on the site only through a category, so the filter
+     * always requires one; an empty list accepts any category.
+     *
      * @param int[] $categoryIds
      */
     private function applyProdCategoryFilter(Builder $query, string $prodIdColumn, array $categoryIds): void
@@ -533,13 +530,18 @@ readonly final class GroupProdsRepository extends AbstractRepository
                 $categoryQuery
                     ->select('childStructureId')
                     ->from($linksTable)
-                    ->where('type', '=', LinkTypes::ZX_PROD_CATEGORY->value)
-                    ->whereIn('parentStructureId', $categoryIds);
+                    ->where('type', '=', LinkTypes::ZX_PROD_CATEGORY->value);
+                if ($categoryIds !== []) {
+                    $categoryQuery->whereIn('parentStructureId', $categoryIds);
+                }
             },
         );
     }
 
     /**
+     * A release is reachable only through its production, which needs a category;
+     * an empty list accepts any category.
+     *
      * @param int[] $categoryIds
      */
     private function applyReleaseParentCategoryFilter(Builder $query, string $releaseIdColumn, array $categoryIds): void
@@ -566,8 +568,10 @@ readonly final class GroupProdsRepository extends AbstractRepository
                         "$releaseParentLinksAlias.parentStructureId",
                     )
                     ->where("$releaseParentLinksAlias.type", '=', LinkTypes::STRUCTURE->value)
-                    ->where("$categoryLinksAlias.type", '=', LinkTypes::ZX_PROD_CATEGORY->value)
-                    ->whereIn("$categoryLinksAlias.parentStructureId", $categoryIds);
+                    ->where("$categoryLinksAlias.type", '=', LinkTypes::ZX_PROD_CATEGORY->value);
+                if ($categoryIds !== []) {
+                    $categoryQuery->whereIn("$categoryLinksAlias.parentStructureId", $categoryIds);
+                }
             },
         );
     }
@@ -588,6 +592,7 @@ readonly final class GroupProdsRepository extends AbstractRepository
         }
 
         $this->excludeReleasesFromGroupProds($query, $releaseTable, $linksTable, $groupIds);
+        $this->applyReleaseParentCategoryFilter($query, "$releaseTable.id", []);
     }
 
     /**

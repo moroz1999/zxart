@@ -57,4 +57,4 @@ Domain rules: [../domain/comments.md](../domain/comments.md).
 - The latest-comments widget stays subscribed to the interface language and reloads its server-localized content after every language switch.
 - The all-comments list is a standalone SPA route `/comments` (`pages/comments`), with the page number in the router query param.
 - REST responses expose `translated` for the requested `lang` query parameter. Angular displays `translated` when it is non-empty and falls back to `content`.
-- Links from latest comments to a product comment include the explicit `/tabs:discussion/` segment before the `#comment{id}` anchor.
+- Links from latest comments are router links built by `commentLink()` (`features/comments/utils/`): pages that keep comments on an in-page tab get that tab segment (`discussion` for productions, authors and groups, `activity` for parties), and every link carries the `comment{id}` fragment of the comment's anchor.

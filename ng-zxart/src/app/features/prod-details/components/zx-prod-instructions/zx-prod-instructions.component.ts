@@ -4,6 +4,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {ZxPreformattedComponent} from '../../../../shared/ui/zx-preformatted/zx-preformatted.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ProdDescriptionApiService} from '../../services/prod-description-api.service';
 import {ProdDescriptionDto} from '../../models/prod-description.dto';
@@ -11,7 +12,7 @@ import {ProdDescriptionDto} from '../../models/prod-description.dto';
 @Component({
   selector: 'zx-prod-instructions',
   standalone: true,
-  imports: [CommonModule, TranslateModule, HeadingDirective, TextDirective, ZxStackComponent],
+  imports: [CommonModule, TranslateModule, HeadingDirective, TextDirective, ZxPreformattedComponent, ZxStackComponent],
   templateUrl: './zx-prod-instructions.component.html',
   styleUrls: ['./zx-prod-instructions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

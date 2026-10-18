@@ -42,6 +42,16 @@ class publicReceiveZxMusic extends structureElementAction
                 $structureElement->trackerFile = $structureElement->getId() . '_tracker';
                 $structureElement->trackerFileName = $structureElement->getDataChunk("trackerFile")->originalName;
             }
+            $audioFileChunk = $structureElement->getDataChunk('audioFile');
+            if ($audioFileChunk instanceof fileDataChunk && $audioFileChunk->originalName !== null) {
+                $structureElement->audioFile = $structureElement->getId() . '_audio';
+                $structureElement->audioFileName = $audioFileChunk->originalName;
+            }
+            $exeFileChunk = $structureElement->getDataChunk('exeFile');
+            if ($exeFileChunk instanceof fileDataChunk && $exeFileChunk->originalName !== null) {
+                $structureElement->exeFile = $structureElement->getId() . '_exe';
+                $structureElement->exeFileName = $exeFileChunk->originalName;
+            }
 
             $structureElement->structureName = $structureElement->title;
 
@@ -82,6 +92,8 @@ class publicReceiveZxMusic extends structureElementAction
             'partyplace',
             'file',
             'trackerFile',
+            'exeFile',
+            'audioFile',
             'inspired',
             'tags',
             'description',

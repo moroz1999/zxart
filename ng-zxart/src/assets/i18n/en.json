@@ -200,7 +200,10 @@
     "youtube-id": "YouTube id",
     "compilation-items": "Compilation prods",
     "series-prods": "Series prods",
-    "html-description": "HTML description",
+    "description-format": "Description format",
+    "instructions-format": "Instructions format",
+    "text-format-plain": "Plain text",
+    "text-format-html": "HTML",
     "description": "Description",
     "instructions": "Instructions",
     "tags": "Tags",
@@ -261,6 +264,9 @@
     "int-frequency": "Interrupt frequency",
     "file": "Playable file",
     "tracker-file": "Source/tracker file",
+    "exe-file": "Executable file",
+    "audio-file": "Audio recording (MP3 or OGG)",
+    "audio-file-hint": "Played on the site instead of the automatic conversion.",
     "batch-files": "Music files",
     "error-files-required": "Select at least one music file",
     "error-authors-required": "Select at least one author"
@@ -947,7 +953,13 @@
     "delete-confirm-message": "Are you sure you want to delete this tune?",
     "delete-confirm-yes": "Delete",
     "delete-confirm-cancel": "Cancel",
-    "musician": "Musician"
+    "musician": "Musician",
+    "download-kind": {
+      "original": "Original file",
+      "tracker": "Tracker file",
+      "executable": "Executable file",
+      "audio": "Audio recording"
+    }
   },
   "picture-details": {
     "scale-1x": "1×",
@@ -1001,7 +1013,14 @@
     "delete-confirm-message": "Are you sure you want to delete this picture?",
     "delete-confirm-yes": "Delete",
     "delete-confirm-cancel": "Cancel",
-    "artist": "Artist"
+    "artist": "Artist",
+    "download-kind": {
+      "original": "Original file",
+      "pc": "Image for PC",
+      "print": "For print (A4, 300 dpi)",
+      "executable": "Executable file",
+      "stages": "Drawing stages"
+    }
   },
   "header": {
     "language-trigger": {
@@ -2244,5 +2263,19 @@
     "country": "Country",
     "country-hint": "The country the city belongs to. Changing it moves the city.",
     "error-country-required": "A city needs a country"
+  },
+  "spectrum-color": {
+    "0": "Black",
+    "1": "Blue",
+    "2": "Red",
+    "3": "Magenta",
+    "4": "Green",
+    "5": "Cyan",
+    "6": "Yellow",
+    "7": "White"
+  },
+  "picture-gallery": {
+    "previous": "Previous picture",
+    "next": "Next picture"
   }
 }

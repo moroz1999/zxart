@@ -57,6 +57,11 @@ The production's page shows the whole chain it is filed under, from the section
 down to the precise category, and each step of it browses the software section by
 that category.
 
+A production that has lost all its categories has no page, and neither do its
+releases. Every list of productions and releases — an author's, a group's, the
+first-page selections — leaves such items out, so a page of a list is always
+full and its total counts only what can be opened.
+
 #### Compilations and series
 A production may be a compilation, listing the works it collects, or be part of
 one. It may likewise be a series, listing its parts, or be part of one. A

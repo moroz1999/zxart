@@ -1,0 +1,21 @@
+<zx-stack spacing="md">
+  <zx-stack spacing="xs">
+    <a [routerLink]="info.detailsUrl" (click)="closeGallery()" appText="body" tone="link">{{ info.title }}</a>
+    <span *ngIf="info.authors.length" appText="caption" tone="muted">
+      <ng-container *ngFor="let author of info.authors; last as last; trackBy: trackByUrl">
+        <a [routerLink]="author.url" (click)="closeGallery()" appText="caption" tone="muted-link">{{ author.name }}</a><span *ngIf="!last">, </span>
+      </ng-container>
+    </span>
+  </zx-stack>
+  <zx-inline *ngIf="info.format" gap="sm">
+    <zx-badge variant="secondary">{{ 'picture-format-short.' + info.format | translate }}</zx-badge>
+  </zx-inline>
+  <zx-item-controls
+    [elementId]="info.pictureId"
+    type="zxPicture"
+    [votes]="info.votes"
+    [votesAmount]="info.votesAmount"
+    [userRating]="info.userVote"
+    [denyVoting]="info.denyVoting"
+  ></zx-item-controls>
+</zx-stack>

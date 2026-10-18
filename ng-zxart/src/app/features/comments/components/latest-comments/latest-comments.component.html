@@ -11,8 +11,8 @@
       <zx-stack spacing="md">
         @for (comment of comments(); track comment.id) {
           <div class="latest-comment">
-            @if (comment.target) {
-              <a [href]="getCommentUrl(comment)" class="latest-comment__link" appText="label" tone="muted-link">
+            @if (links().get(comment.id); as link) {
+              <a [routerLink]="link.path" [fragment]="link.fragment" class="latest-comment__link" appText="label" tone="muted-link">
                 @if (comment.author) {
                   <zx-user [user]="comment.author" [linkDisabled]="true" [namePrimary]="true" class="latest-comment__author"></zx-user>
                 }

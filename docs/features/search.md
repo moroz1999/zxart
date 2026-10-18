@@ -8,6 +8,8 @@ The routed Angular entrypoint is `/search`; its `phrase`, `types`, and `page` st
 Angular header quick search uses the same REST endpoint with `mode=quick`. Quick mode uses title-oriented instant search filters and does not search full content.
 
 The legacy `/ajaxSearch/` application is still used by admin and non-Angular autocomplete widgets, and by the Angular tag/country/city autocompletes (`types:tag|country|city`, `mode:public`).
+  A tag result's `title` is decorated for display (`Name, synonyms (description)`); the tag's own name is `value`. Every Angular tag picker turns results into items with `tagToItem()` (`shared/utils/tag-item.ts`), so forms save and searches filter by the real name. The search forms' tag pickers accept only existing tags (`allowCustomTags=false`).
+- Tag filters (`tagsManager::getConnectedElementIdsByNames()`): included tags are intersected, and a name that is no tag, or tags no work carries, match nothing — the filter is never dropped. Excluded tags are gathered together.
 
 ## Result ordering
 

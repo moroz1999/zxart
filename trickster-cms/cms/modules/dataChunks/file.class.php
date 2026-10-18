@@ -5,7 +5,9 @@ use App\Paths\PathsManager;
 class fileDataChunk extends DataChunk implements ElementHolderInterface, ElementStorageValueHolderInterface, ExtraDataHolderDataChunkInterface
 {
     use ElementStorageValueDataChunkTrait;
+    /** @var string|null */
     public $temporaryName;
+    /** @var string|null name the file was uploaded under */
     public $originalName;
     public $fileReceived = false;
     use ElementHolderDataChunkTrait;
@@ -25,7 +27,7 @@ class fileDataChunk extends DataChunk implements ElementHolderInterface, Element
                 $this->temporaryName = basename($value['tmp_name']);
             }
             if ($value['name'] != '') {
-                $this->originalName = $value['name'];
+                $this->originalName = (string)$value['name'];
             }
         }
     }
@@ -126,9 +128,7 @@ class fileDataChunk extends DataChunk implements ElementHolderInterface, Element
 
     public function getPersistedContents()
     {
-        $result = false;
-
-        return $result;
+        return false;
     }
 
     public function setExternalValue($value)
@@ -153,8 +153,7 @@ class fileDataChunk extends DataChunk implements ElementHolderInterface, Element
         if ($this->structureElement instanceof StructureElementUploadedFilesPathInterface) {
             return $this->structureElement->getUploadedFilesPath();
         }
-        $pathsManager = $this->getService(PathsManager::class);
-        return $pathsManager->getPath('uploads');
+        return $this->getService(PathsManager::class)->getPath('uploads');
     }
 }
 

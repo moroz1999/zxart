@@ -58,7 +58,7 @@
           *ngIf="primaryDownload(details) as download"
           rel="nofollow"
           [href]="download.url"
-          [label]="download.label">
+          [label]="'tune-details.download-kind.' + download.kind | translate">
         </zx-download-button>
       </zx-button-controls>
     </zx-hero-bar>

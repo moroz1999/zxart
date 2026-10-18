@@ -1,0 +1,13 @@
+// The gallery backdrop is black in both themes, so the info reads light on dark
+// without a panel of its own that would compete with the picture.
+:host {
+  display: block;
+  color: var(--zx-picture-gallery-on-dark-text);
+
+  --app-text-color-primary: var(--zx-picture-gallery-on-dark-text);
+  --app-text-color-link: var(--zx-picture-gallery-on-dark-text);
+  --app-text-color-muted: var(--zx-picture-gallery-on-dark-muted);
+  --app-text-color-muted-link: var(--zx-picture-gallery-on-dark-muted);
+  --date-color: var(--zx-picture-gallery-on-dark-muted);
+  --zx-playlist-button-icon-color: var(--zx-picture-gallery-on-dark-muted);
+}

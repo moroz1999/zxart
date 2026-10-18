@@ -13,6 +13,7 @@ readonly class ProdDescriptionDto
     public function __construct(
         public string $description,
         public bool $htmlDescription,
+        public bool $htmlInstructions,
         public string $instructions,
     ) {
     }

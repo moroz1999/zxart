@@ -48,3 +48,7 @@ confirmation dialog and owns the destination: collection routes for top-level en
 (`/pictures`, `/music`, `/prods`, `/authors`, `/groups`, `/parties`), the parent
 entity for nested ones (a release returns to its prod, an author alias to its
 author).
+
+A deleted picture, tune, production or release also drops its `votes_history`
+rows: `ZxArtItem::deleteElementData()` calls
+`VotesHistoryRepository::deleteByElementId()` before the CMS deletion.

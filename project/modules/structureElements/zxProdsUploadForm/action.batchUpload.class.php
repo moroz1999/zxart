@@ -61,6 +61,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
                     $zxProdElement->year = $structureElement->year;
                     $zxProdElement->description = $structureElement->description;
                     $zxProdElement->htmlDescription = $structureElement->htmlDescription;
+                    $zxProdElement->htmlInstructions = $structureElement->htmlInstructions;
                     $zxProdElement->instructions = $structureElement->instructions;
                     $zxProdElement->denyVoting = $structureElement->denyVoting;
                     $zxProdElement->denyComments = $structureElement->denyComments;
@@ -171,6 +172,7 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'year',
             'description',
             'htmlDescription',
+            'htmlInstructions',
             'instructions',
             'categories',
             'publishers',

@@ -26,4 +26,8 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 })
 export class ZxPictureDownloadsPanelComponent {
   @Input({required: true}) downloads: PictureDownloadDto[] = [];
+
+  trackById(_index: number, item: PictureDownloadDto): string {
+    return item.id;
+  }
 }

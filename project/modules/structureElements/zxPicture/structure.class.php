@@ -24,6 +24,9 @@ use ZxArt\ZxScreen\ZxPictureUrlHelper;
  * @property string $compo
  * @property string $image
  * @property string $originalName
+ * @property string|null $sequence
+ * @property string|null $sequenceName
+ * @property string|null $exeFile
  * @property string $palette
  * @property string $type
  * @property string $rotation
@@ -131,6 +134,23 @@ class zxPictureElement extends ZxArtItem implements
             controller::getInstance()->baseURL,
             $this->getZxPictureParameters($zoom, $border)
         );
+    }
+
+    /** Id of the uploaded executable file, or '' when there is none. */
+    public function getExeFileId(): string
+    {
+        return (string)$this->exeFile;
+    }
+
+    /** Id of the uploaded drawing-stages file, or '' when there is none. */
+    public function getSequenceFileId(): string
+    {
+        return (string)$this->sequence;
+    }
+
+    public function getSequenceFileName(): string
+    {
+        return (string)$this->sequenceName;
     }
 
     public function getDownloadUrl(int $zoom = 1): string

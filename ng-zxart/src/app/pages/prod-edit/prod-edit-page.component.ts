@@ -4,8 +4,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Observable, Subscription} from 'rxjs';
+import {map, Observable, Subscription} from 'rxjs';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
+import {ZxToggleComponent, ZxToggleOption} from '../../shared/ui/zx-toggle/zx-toggle.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
 import {ZxControlErrorsComponent} from '../../shared/ui/zx-form/zx-control-errors/zx-control-errors.component';
 import {ZxFormActionsComponent} from '../../shared/ui/zx-form/zx-form-actions/zx-form-actions.component';
@@ -69,6 +70,7 @@ const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: 
     TranslateModule,
     ZxButtonComponent,
     ZxCheckboxFieldComponent,
+    ZxToggleComponent,
     ZxControlErrorsComponent,
     ZxFormActionsComponent,
     ZxFormControlComponent,
@@ -120,7 +122,9 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     categories: this.fb.nonNullable.control<number[]>([], nonEmptyArray),
     /** Batch mode only: the uploaded software files, validated like any other required field. */
     batchFiles: this.fb.nonNullable.control<File[]>([]),
-    htmlDescription: this.fb.nonNullable.control(false),
+    /** `'1'` for HTML text, `''` for plain text, as the checkbox chunk stores it. */
+    htmlDescription: this.fb.nonNullable.control<string>(''),
+    htmlInstructions: this.fb.nonNullable.control<string>(''),
     description: this.fb.nonNullable.control(''),
     instructions: this.fb.nonNullable.control(''),
     tags: this.fb.nonNullable.control<string[]>([]),
@@ -128,6 +132,12 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     denyComments: this.fb.nonNullable.control(false),
   });
 
+  readonly textFormatOptions$: Observable<ZxToggleOption[]> = this.translate
+    .stream(['prod-form.text-format-plain', 'prod-form.text-format-html'])
+    .pipe(map((labels: Record<string, string>) => [
+      {value: '', label: labels['prod-form.text-format-plain']},
+      {value: '1', label: labels['prod-form.text-format-html']},
+    ]));
   readonly titleMessages = {required: 'prod-form.error-title-required'};
   readonly categoriesMessages = {required: 'prod-form.error-categories-required'};
   readonly batchFilesMessages = {required: 'prod-form.error-files-required'};
@@ -239,7 +249,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
             compilationItems: data.multiRefs['compilationItems'] ?? [],
             seriesProds: data.multiRefs['seriesProds'] ?? [],
             categories: data.categoriesTree.filter(node => node.selected).map(node => node.id),
-            htmlDescription: !!Number(data.fields['htmlDescription']),
+            htmlDescription: Number(data.fields['htmlDescription']) ? '1' : '',
+            htmlInstructions: Number(data.fields['htmlInstructions']) ? '1' : '',
             description: String(data.fields['description'] ?? ''),
             instructions: String(data.fields['instructions'] ?? ''),
             tags: data.tags,
@@ -395,7 +406,8 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
       tags: value.tags,
       denyVoting: value.denyVoting ? '1' : '',
       denyComments: value.denyComments ? '1' : '',
-      htmlDescription: value.htmlDescription ? '1' : '',
+      htmlDescription: value.htmlDescription,
+      htmlInstructions: value.htmlInstructions,
       addAuthorRole: this.memberFields.roles,
     };
     const save$ = this.batchUpload

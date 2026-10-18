@@ -3,8 +3,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
-import {Observable, Subscription} from 'rxjs';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {map, Observable, Subscription} from 'rxjs';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {ZxCheckboxFieldComponent} from '../../shared/ui/zx-checkbox-field/zx-checkbox-field.component';
@@ -50,17 +50,8 @@ import {FormSaveApiService} from '../../shared/services/form-save-api.service';
  */
 const PASSTHROUGH_FIELDS: string[] = [];
 
-/** Fixed border-colour enum (matches the legacy zxPicture.form.tpl dropdown). */
-const BORDER_OPTIONS: ZxSelectOption[] = [
-  {value: '0', label: 'Black'},
-  {value: '1', label: 'Blue'},
-  {value: '2', label: 'Red'},
-  {value: '3', label: 'Magenta'},
-  {value: '4', label: 'Green'},
-  {value: '5', label: 'Cyan'},
-  {value: '6', label: 'Yellow'},
-  {value: '7', label: 'White'},
-];
+/** Fixed border-colour enum (ZX Spectrum colour indexes), labelled by `spectrum-color.<index>`. */
+const BORDER_COLOR_INDEXES: readonly string[] = ['0', '1', '2', '3', '4', '5', '6', '7'];
 
 /** Fixed rotation enum (degrees). */
 const ROTATION_OPTIONS: ZxSelectOption[] = [
@@ -133,7 +124,12 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   readonly titleMessages = {required: 'picture-form.error-title-required'};
   readonly authorsMessages = {required: 'picture-form.error-authors-required'};
   readonly batchFilesMessages = {required: 'picture-form.error-files-required'};
-  readonly borderOptions = BORDER_OPTIONS;
+  readonly borderOptions$: Observable<ZxSelectOption[]> = this.translate
+    .stream(BORDER_COLOR_INDEXES.map(index => `spectrum-color.${index}`))
+    .pipe(map((labels: Record<string, string>) => BORDER_COLOR_INDEXES.map(index => ({
+      value: index,
+      label: labels[`spectrum-color.${index}`],
+    }))));
   readonly rotationOptions = ROTATION_OPTIONS;
 
   /** Image fields shown with zx-image-upload (all imageDataChunk on zxPicture). */
@@ -184,6 +180,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
     private readonly formData: FormDataApiService,
     private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
+    private readonly translate: TranslateService,
   ) {}
 
   ngOnInit(): void {

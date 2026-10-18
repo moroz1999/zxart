@@ -38,6 +38,21 @@ translation in all three i18n bundles.
 - `action=related&tuneId=…` — related tunes, with `kind` selecting the relation
   (`author`, `tags`, `tracker`).
 
+## Downloads
+
+A tune has four file chunks: `file` (played and converted), `trackerFile` (the
+tracker source), `exeFile` (the runnable program) and `audioFile` (an uploaded
+MP3/OGG recording). When `audioFile` is set, `getMp3FilePath()` serves it through
+`/file/`, `isPlayable()` counts it, and `checkIfReconversionNeeded()` never
+queues the tune; the playable SQL filters accept `mp3Name` or `audioFile`. MP3
+and OGG files kept in the tracker field moved to `audioFile` in a migration. `TuneDownloadsBuilder`
+builds the downloads of the details response; each row carries a `kind`
+(`TuneDownloadKind`: `original`, `tracker`, `executable`, `audio`) instead of a
+label, and the SPA names it through `tune-details.download-kind.<kind>`. The
+`exeFile` field was split off the tracker field by format (tapes, disk images,
+snapshots, Hobeta code) in a migration; archives and texts stayed in the tracker
+field.
+
 ## Format group
 
 `formatGroup` options come from `getFormatGroups()` on the element through the

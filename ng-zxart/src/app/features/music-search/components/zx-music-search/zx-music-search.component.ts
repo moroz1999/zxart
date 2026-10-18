@@ -66,6 +66,7 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
+import {tagToItem} from '../../../../shared/utils/tag-item';
 const ELEMENTS_ON_PAGE = 60;
 const SEARCH_DEBOUNCE_MS = 250;
 const PLAYLIST_ID = 'music-search';
@@ -245,10 +246,10 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
       countryItems$,
       cityItems$,
       this.createTagsSearchState(this.tagsIncludeQuery, query => this.tagsSearch.search(query).pipe(
-        map(tags => tags.map(tag => ({id: tag.id, title: tag.title, description: null} as TagItem))),
+        map(tags => tags.map(tagToItem)),
       )),
       this.createTagsSearchState(this.tagsExcludeQuery, query => this.tagsSearch.search(query).pipe(
-        map(tags => tags.map(tag => ({id: tag.id, title: tag.title, description: null} as TagItem))),
+        map(tags => tags.map(tagToItem)),
       )),
       this.createTagsSearchState(this.countryQuery, query => this.locationSearch.searchCountries(query).pipe(
         map(locations => this.locationsToTags(locations)),
@@ -379,9 +380,6 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
     this.filters.tagsInclude = items.map(item => item.title);
   }
 
-  onTagIncludeCustom(title: string): void {
-    this.onTagIncludeAdded(this.toTagItem(title));
-  }
 
   onTagIncludeRemoved(tag: TagItem): void {
     const items = this.tagsIncludeItemsStore.getValue().filter(item => item.title !== tag.title);
@@ -395,9 +393,6 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
     this.filters.tagsExclude = items.map(item => item.title);
   }
 
-  onTagExcludeCustom(title: string): void {
-    this.onTagExcludeAdded(this.toTagItem(title));
-  }
 
   onTagExcludeRemoved(tag: TagItem): void {
     const items = this.tagsExcludeItemsStore.getValue().filter(item => item.title !== tag.title);

@@ -15,8 +15,21 @@
   gap: var(--space-4);
   padding: 0 var(--space-12);
 
+  transition: background-color var(--zx-button-transition-time) ease-in-out,
+  color var(--zx-button-transition-time) ease-in-out;
+
   &:hover {
     background: var(--zx-button-secondary-hover-bg);
+  }
+
+  &:focus-visible {
+    position: relative;
+    outline: none;
+    box-shadow: inset 0 0 0 var(--border-width-thick) var(--border-focused);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 
   &--active {
@@ -27,6 +40,10 @@
       background: var(--zx-button-primary-hover-bg);
     }
   }
+}
+
+.zx-toggle--disabled {
+  opacity: var(--zx-button-disabled-opacity);
 }
 
 .zx-toggle--md .zx-toggle__item {
@@ -46,4 +63,15 @@
 .zx-toggle--sm .zx-toggle__item svg-icon {
   width: 16px;
   height: 16px;
+}
+
+.zx-toggle--xs .zx-toggle__item {
+  height: var(--zx-button-xs-height);
+  padding: var(--zx-button-xs-padding);
+  font-size: var(--zx-button-xs-font-size);
+}
+
+.zx-toggle--xs .zx-toggle__item svg-icon {
+  width: 14px;
+  height: 14px;
 }

@@ -164,12 +164,32 @@
 
   <zx-form-section [title]="'form.description' | translate" icon="file">
     <zx-form-field [fullWidth]="true">
-      <zx-checkbox-field formControlName="htmlDescription" [label]="'prod-form.html-description' | translate"></zx-checkbox-field>
+      <zx-form-label>{{ 'prod-form.description-format' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-toggle
+          formControlName="htmlDescription"
+          size="sm"
+          [options]="(textFormatOptions$ | async) ?? []"
+          [ariaLabel]="'prod-form.description-format' | translate"
+        ></zx-toggle>
+      </zx-form-control>
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">
       <zx-form-label for="prod-description">{{ 'prod-form.description' | translate }}</zx-form-label>
       <zx-form-control><zx-textarea id="prod-description" formControlName="description" [rows]="5"></zx-textarea></zx-form-control>
+    </zx-form-field>
+
+    <zx-form-field [fullWidth]="true">
+      <zx-form-label>{{ 'prod-form.instructions-format' | translate }}</zx-form-label>
+      <zx-form-control>
+        <zx-toggle
+          formControlName="htmlInstructions"
+          size="sm"
+          [options]="(textFormatOptions$ | async) ?? []"
+          [ariaLabel]="'prod-form.instructions-format' | translate"
+        ></zx-toggle>
+      </zx-form-control>
     </zx-form-field>
 
     <zx-form-field [fullWidth]="true">

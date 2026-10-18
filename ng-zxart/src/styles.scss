@@ -99,6 +99,13 @@ zx-header {
   image-rendering: pixelated !important;
 }
 
+.cdk-overlay-pane.g-overlay lightbox {
+  width: var(--zx-lightbox-width);
+  height: var(--zx-lightbox-height);
+  max-width: none;
+  max-height: none;
+}
+
 .g-backdrop {
   background: var(--black) !important;
   opacity: var(--zx-lightbox-backdrop-opacity) !important;

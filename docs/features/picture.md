@@ -46,6 +46,49 @@ The production the picture belongs to is the `prod` field, linked through
 `gameLink` by `ZxArtItem::updateProdLink()`. The link type keeps its historical
 name; the column does not.
 
+## Fullscreen gallery
+
+`PictureGalleryService.ensureGalleryLoaded()` loads a list's `ZxPictureDto`s into
+the ng-gallery lightbox. `mapPictureToGalleryItem()` attaches a
+`PictureGalleryInfo`, and `mapGalleryItemToImageItem()` keeps every picture an
+ordinary `ImageItem` whose data also carries the info and `zoomSrc`. The item
+must stay an image item: the gallery's own `gallery-image` loads it, and its
+loading state is what the slider relies on to keep the picture it opened at —
+a custom item type made the slider jump back to the first picture on opening.
+The host's image template renders `zx-picture-gallery-slide` for items with
+info (the zoom overlay alone otherwise); the slide's opaque background covers the
+`gallery-image` under it.
+
+The slider renders the neighbouring slides too, and the lightbox focuses its
+first focusable element on opening. A slide that is not the active one is
+therefore `inert`: focus landing in a neighbour would scroll the slider to it and
+switch the gallery away from the picture it was opened at.
+
+The slide lays out the picture block and, across a small gap,
+`zx-picture-gallery-info` (title, authors, format badge, `zx-item-controls`) —
+below the picture under `md`. The info has no panel of its own: it overrides the
+text tokens for the always-black backdrop (`--zx-picture-gallery-on-dark-*`).
+Picture galleries switch ng-gallery's own arrows off (`nav: false`); the slide
+draws prev/next in the side margins of the picture block and turns the open
+gallery through `PictureGalleryService.showNext()`/`showPrevious()`. The
+lightbox takes `--zx-lightbox-width` × `--zx-lightbox-height` of the viewport.
+
+The slide shows the zoom-1 render (`imageUrl`), so the loaded image's
+`naturalWidth`/`naturalHeight` are the native size. `integerFitScale()` picks the
+largest whole multiple that fits the picture block (less the arrow margins) less
+a 16 px margin, recomputed on load and on every resize, and the image is drawn
+`pixelated`; below 1× it shrinks to fit. The zoom lens magnifies the zoom-2
+render (`zoomSrc`). Galleries of other images (screenshots, maps, materials)
+keep the stock arrows and show no info.
+
+## Downloads
+
+`PictureDownloadsBuilder` builds the downloads of the details response. Each row
+carries a `kind` (`PictureDownloadKind`: `original`, `pc`, `print`, `executable`,
+`stages`) instead of a label; the SPA names it through
+`picture-details.download-kind.<kind>`. A PC render carries its `zoom`, a
+material its uploaded `fileName`.
+
 ## Rendered image URLs
 
 A native ZX screen is rendered on request by `ZxArt\Controllers\Zximages`, and

@@ -21,4 +21,6 @@ votes cast on one author's, group's or party's works, and the votes on a single
 work. A voter who has an author page of their own is linked to it; a voter who
 has none is shown as plain text.
 
+Deleting a work deletes its votes.
+
 How it is built: [../features/voting.md](../features/voting.md)

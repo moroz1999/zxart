@@ -554,6 +554,7 @@ final class WorldOfSamImport extends errorLogger
             altTitle: null,
             description: $description,
             htmlDescription: true,
+            htmlInstructions: true,
             instructions: $instructions ?: null,
             languages: ["en"],
             hardwareRequired: $prodHardwareRequired,

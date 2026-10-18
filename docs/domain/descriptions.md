@@ -10,8 +10,9 @@ breaks fall where the author put them. Such a description is shown exactly as it
 was written, and a line too long for the screen scrolls on its own rather than
 widening the page.
 
-Productions may instead carry a formatted description, chosen per production,
-which reads as ordinary flowing text. Release descriptions are always formatted.
+Productions may instead carry formatted text, which reads as ordinary flowing
+text. The description and the instructions of a production each have their own
+choice. Release descriptions are always formatted.
 
 Descriptions are never trusted markup: whatever the site accepts is limited to
 what it can safely show.

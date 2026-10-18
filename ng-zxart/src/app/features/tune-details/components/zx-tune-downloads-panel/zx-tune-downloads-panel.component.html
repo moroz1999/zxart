@@ -4,7 +4,7 @@
 >
   <zx-stack spacing="none">
     <a
-      *ngFor="let item of downloads"
+      *ngFor="let item of downloads; trackBy: trackById"
       class="tn-dl__row"
       rel="nofollow"
       [href]="item.url"
@@ -12,8 +12,8 @@
       <zx-inline align="center" spacing="md" [wrap]="false">
         <zx-badge variant="secondary">{{ item.ext | uppercase }}</zx-badge>
         <span class="tn-dl__body">
-          <span appText="body" tone="strong">{{ item.label }}</span>
-          <span *ngIf="item.sub" appText="caption" tone="muted">{{ item.sub }}</span>
+          <span appText="body" tone="strong">{{ 'tune-details.download-kind.' + item.kind | translate }}</span>
+          <span *ngIf="item.fileName" appText="caption" tone="muted">{{ item.fileName }}</span>
         </span>
         <span *ngIf="item.size" class="tn-dl__size" appText="caption" tone="muted">{{ item.size }}</span>
       </zx-inline>

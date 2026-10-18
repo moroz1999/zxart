@@ -25,12 +25,13 @@ final class DescriptionFormatterTest extends TestCase
         $this->assertSame("Author's & notes", $result);
     }
 
-    public function testDecodeRemovesPreTagsAndPreservesContent(): void
+    public function testDecodeKeepsPreformattedBlocksOfFormattedText(): void
     {
-        $description = "<pre class=\"legacy\">Line 1\nLine 2</pre>";
+        // a listing inside a formatted description is part of the content
+        $description = "<p>Issue 3</p>\n<pre>LINE 1\n  LINE 2</pre>";
 
         $result = $this->formatter->decode($description);
 
-        $this->assertSame("Line 1\nLine 2", $result);
+        $this->assertSame($description, $result);
     }
 }

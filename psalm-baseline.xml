@@ -9285,9 +9285,10 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$ext]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$kind]]></code>
       <code><![CDATA[$size]]></code>
-      <code><![CDATA[$sub]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$zoom]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -9735,9 +9736,10 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$ext]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$kind]]></code>
       <code><![CDATA[$size]]></code>
-      <code><![CDATA[$sub]]></code>
+      <code><![CDATA[$fileName]]></code>
+      <code><![CDATA[$zoom]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -10415,6 +10417,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$htmlDescription]]></code>
+      <code><![CDATA[$htmlInstructions]]></code>
       <code><![CDATA[$instructions]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -11191,6 +11194,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$description]]></code>
       <code><![CDATA[$htmlDescription]]></code>
+      <code><![CDATA[$htmlInstructions]]></code>
       <code><![CDATA[$instructions]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -13741,9 +13745,9 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$ext]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$kind]]></code>
       <code><![CDATA[$size]]></code>
-      <code><![CDATA[$sub]]></code>
+      <code><![CDATA[$fileName]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -13873,9 +13877,9 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$ext]]></code>
       <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
+      <code><![CDATA[$kind]]></code>
       <code><![CDATA[$size]]></code>
-      <code><![CDATA[$sub]]></code>
+      <code><![CDATA[$fileName]]></code>
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -28895,6 +28899,10 @@
       <code><![CDATA[$moduleStructure['conversionChipType']]]></code>
       <code><![CDATA[$moduleStructure['conversionFrequency']]]></code>
       <code><![CDATA[$moduleStructure['conversionIntFrequency']]]></code>
+      <code><![CDATA[$moduleStructure['exeFile']]]></code>
+      <code><![CDATA[$moduleStructure['exeFileName']]]></code>
+      <code><![CDATA[$moduleStructure['audioFile']]]></code>
+      <code><![CDATA[$moduleStructure['audioFileName']]]></code>
       <code><![CDATA[$moduleStructure['converterVersion']]]></code>
       <code><![CDATA[$moduleStructure['dateAdded']]]></code>
       <code><![CDATA[$moduleStructure['denyComments']]]></code>
@@ -29851,6 +29859,7 @@
       <code><![CDATA[$moduleStructure['groups']]]></code>
       <code><![CDATA[$moduleStructure['hardwareRequired']]]></code>
       <code><![CDATA[$moduleStructure['htmlDescription']]]></code>
+      <code><![CDATA[$moduleStructure['htmlInstructions']]]></code>
       <code><![CDATA[$moduleStructure['importOrigins']]]></code>
       <code><![CDATA[$moduleStructure['instructions']]]></code>
       <code><![CDATA[$moduleStructure['joinAndDelete']]]></code>
@@ -30039,6 +30048,7 @@
     </PropertyTypeCoercion>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(bool)$this->htmlDescription]]></code>
+      <code><![CDATA[(bool)$this->htmlInstructions]]></code>
     </RedundantCastGivenDocblockType>
     <RedundantCondition>
       <code><![CDATA[$element->items = 'zxProd']]></code>
@@ -30610,6 +30620,7 @@
       <code><![CDATA[$zxProdElement->groups]]></code>
       <code><![CDATA[$zxProdElement->hardwareRequired]]></code>
       <code><![CDATA[$zxProdElement->htmlDescription]]></code>
+      <code><![CDATA[$zxProdElement->htmlInstructions]]></code>
       <code><![CDATA[$zxProdElement->instructions]]></code>
       <code><![CDATA[$zxProdElement->language]]></code>
       <code><![CDATA[$zxProdElement->legalStatus]]></code>
@@ -30632,6 +30643,7 @@
       <code><![CDATA[$structureElement->connectedFile]]></code>
       <code><![CDATA[$structureElement->file]]></code>
       <code><![CDATA[$structureElement->htmlDescription]]></code>
+      <code><![CDATA[$structureElement->htmlInstructions]]></code>
       <code><![CDATA[$structureElement->mapFilesSelector]]></code>
     </UndefinedMagicPropertyFetch>
     <UndefinedMethod>
@@ -30718,6 +30730,7 @@
       <code><![CDATA[$moduleStructure['groups']]]></code>
       <code><![CDATA[$moduleStructure['hardwareRequired']]]></code>
       <code><![CDATA[$moduleStructure['htmlDescription']]]></code>
+      <code><![CDATA[$moduleStructure['htmlInstructions']]]></code>
       <code><![CDATA[$moduleStructure['instructions']]]></code>
       <code><![CDATA[$moduleStructure['language']]]></code>
       <code><![CDATA[$moduleStructure['legalStatus']]]></code>

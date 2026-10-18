@@ -59,6 +59,7 @@ class zxProdsUploadFormElement extends ZxArtItemUploadFormElement
         $moduleStructure['youtubeId'] = 'text';
         $moduleStructure['description'] = 'text';
         $moduleStructure['htmlDescription'] = 'checkbox';
+        $moduleStructure['htmlInstructions'] = 'checkbox';
         $moduleStructure['instructions'] = 'html';
 
         $moduleStructure['categories'] = 'array';

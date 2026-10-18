@@ -131,7 +131,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $prodQuery = $this->getProdQuery($authorIds, $role)
             ->join($structureElementsTable, "$structureElementsTable.id", '=', "$prodTable.id")
             ->select([
-                "$prodTable.id",
+                "$prodTable.id as id",
                 "$prodTable.votes",
                 "$prodTable.year",
                 "$structureElementsTable.dateCreated",
@@ -142,7 +142,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $releaseQuery = $this->getReleaseQuery($authorIds, $role)
             ->join($structureElementsTable, "$structureElementsTable.id", '=', "$releaseTable.id")
             ->select([
-                "$releaseTable.id",
+                "$releaseTable.id as id",
                 "$releaseTable.votes",
                 "$releaseTable.year",
                 "$structureElementsTable.dateCreated",
@@ -179,7 +179,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $includeAuthorship = $role !== self::PUBLISHER_ROLE;
         $includePublisher = $role === '' || $role === self::PUBLISHER_ROLE;
 
-        return $this->db->table($prodTable)
+        $query = $this->db->table($prodTable)
             ->where(function (Builder $query) use ($prodTable, $authorIds, $role, $includeAuthorship, $includePublisher): void {
                 if ($includeAuthorship) {
                     $query->orWhereExists(function (Builder $sub) use ($prodTable, $authorIds, $role): void {
@@ -201,6 +201,9 @@ readonly final class AuthorProdsRepository extends AbstractRepository
                     });
                 }
             });
+        $this->whereProdIsCategorized($query, "$prodTable.id");
+
+        return $query;
     }
 
     /**
@@ -211,10 +214,13 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
         $authTable = $this->tableName(DatabaseTable::Authorship);
 
-        return $this->db->table($prodTable)
+        $query = $this->db->table($prodTable)
             ->join($authTable, "$authTable.elementId", '=', "$prodTable.id")
             ->where("$authTable.type", '=', EntityType::Prod->value)
             ->whereIn("$authTable.authorId", $authorIds);
+        $this->whereProdIsCategorized($query, "$prodTable.id");
+
+        return $query;
     }
 
     /**
@@ -230,6 +236,7 @@ readonly final class AuthorProdsRepository extends AbstractRepository
             ->whereIn("$authTable.authorId", $authorIds);
 
         $this->excludeChildReleasesOfAuthorProds($query, $authorIds);
+        $this->whereParentProdIsCategorized($query, "$releaseTable.id");
 
         return $this->applyRoleFilter($query, $role);
     }
@@ -261,6 +268,44 @@ readonly final class AuthorProdsRepository extends AbstractRepository
         });
 
         return $query;
+    }
+
+    /**
+     * A production is reachable on the site only through a category, so one without
+     * a category has no page and is left out.
+     */
+    private function whereProdIsCategorized(Builder $query, string $prodIdColumn): void
+    {
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        $query->whereIn($prodIdColumn, static function (Builder $categoryLinksQuery) use ($linksTable): void {
+            $categoryLinksQuery->select("$linksTable.childStructureId")
+                ->from($linksTable)
+                ->where("$linksTable.type", '=', LinkTypes::ZX_PROD_CATEGORY->value);
+        });
+    }
+
+    /**
+     * A release is reachable only through its production, which needs a category.
+     */
+    private function whereParentProdIsCategorized(Builder $query, string $releaseIdColumn): void
+    {
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+        $parentLinksAlias = 'release_parent_links';
+        $categoryLinksAlias = 'category_links';
+
+        $query->whereIn($releaseIdColumn, static function (Builder $parentLinksQuery) use ($linksTable, $parentLinksAlias, $categoryLinksAlias): void {
+            $parentLinksQuery->select("$parentLinksAlias.childStructureId")
+                ->from("$linksTable as $parentLinksAlias")
+                ->join(
+                    "$linksTable as $categoryLinksAlias",
+                    "$categoryLinksAlias.childStructureId",
+                    '=',
+                    "$parentLinksAlias.parentStructureId",
+                )
+                ->where("$parentLinksAlias.type", '=', LinkTypes::STRUCTURE->value)
+                ->where("$categoryLinksAlias.type", '=', LinkTypes::ZX_PROD_CATEGORY->value);
+        });
     }
 
     /**

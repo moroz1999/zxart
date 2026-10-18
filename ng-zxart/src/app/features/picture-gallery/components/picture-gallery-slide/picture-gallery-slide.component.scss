@@ -1,0 +1,91 @@
+@use 'shared/breakpoints' as bp;
+
+// Fills the gallery item: the picture block takes the free space, the info block
+// stands beside it across a small gap, or below it on narrow screens.
+:host {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  gap: var(--zx-picture-gallery-info-gap);
+  box-sizing: border-box;
+  // covers the gallery's own image underneath, which still loads to drive the slider
+  background: var(--zx-picture-gallery-slide-bg);
+
+  @include bp.media-breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+// The picture block: its side margins hold the arrows, so they never cover the
+// picture or the info.
+.pgs-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  padding: 0 var(--zx-picture-gallery-nav-zone);
+  box-sizing: border-box;
+
+  --zx-button-transparent-text: var(--zx-picture-gallery-on-dark-text);
+  --zx-button-transparent-hover-bg: var(--zx-picture-gallery-nav-hover-bg);
+}
+
+.pgs-canvas {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pgs-picture {
+  position: relative;
+  flex: 0 0 auto;
+  // hidden until measured, so the native-size image never flashes in
+  visibility: hidden;
+
+  &--measured {
+    visibility: visible;
+  }
+}
+
+.pgs-image {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.pgs-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  &--prev {
+    left: 0;
+  }
+
+  &--next {
+    right: 0;
+  }
+}
+
+.pgs-nav-icon {
+  width: var(--zx-picture-gallery-nav-icon-size);
+  height: var(--zx-picture-gallery-nav-icon-size);
+}
+
+.pgs-info {
+  flex: 0 0 var(--zx-picture-gallery-info-width);
+  align-self: center;
+  max-height: 100%;
+  overflow-y: auto;
+
+  @include bp.media-breakpoint-down(md) {
+    flex: 0 0 auto;
+    align-self: stretch;
+    max-height: var(--zx-picture-gallery-info-mobile-max-height);
+  }
+}

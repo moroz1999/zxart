@@ -27,6 +27,8 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
    * filters by. Its value is in `childParam` when `onQueryParams` runs.
    */
   @Input() childParamName: string | null = null;
+  /** Page size; a browser may set its own default, a page may override it. */
+  @Input() itemsPerPage = 50;
 
   loading = true;
   error = false;
@@ -37,7 +39,6 @@ export abstract class BrowserBaseComponent implements OnInit, OnDestroy {
   sortingOptions: ZxSelectOption[] = [];
 
   protected readonly subscriptions = new Subscription();
-  protected readonly itemsPerPage: number = 50;
 
   /**
    * Filter query params owned by the concrete browser. Filled in
