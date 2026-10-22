@@ -10,9 +10,6 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
-import {
-  PictureGalleryHostComponent
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {AuthorPicturesService} from '../../services/author-pictures.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 
@@ -34,7 +31,6 @@ interface YearGroup {
     HeadingDirective,
     ZxStackComponent,
     ZxPicturesGridDirective,
-    PictureGalleryHostComponent,
   ],
   templateUrl: './author-pictures.component.html',
   styleUrls: ['./author-pictures.component.scss'],

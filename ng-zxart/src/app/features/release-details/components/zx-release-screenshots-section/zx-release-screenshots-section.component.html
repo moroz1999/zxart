@@ -4,8 +4,6 @@
     [count]="files.length">
   </zx-release-section-head>
 
-  <zx-picture-gallery-host></zx-picture-gallery-host>
-
   <div class="release-screenshots-section__grid">
     <figure
       *ngFor="let file of files; let i = index; trackBy: trackById"
@@ -18,8 +16,8 @@
           loading="lazy"
           [src]="file.imageUrl"
           [alt]="file.title"
-          [lightbox]="i"
-          [gallery]="galleryId"
+          [zxGalleryOpen]="i"
+          [zxGalleryId]="galleryId"
         />
         <div class="release-screenshots-section__controls">
           <ng-container *ngIf="canReorder">

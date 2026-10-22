@@ -94,27 +94,21 @@ zx-header {
   }
 }
 
-.cdk-overlay-pane.g-overlay lightbox .g-image-item,
-.cdk-overlay-pane.g-overlay lightbox gallery-image img {
-  image-rendering: pixelated !important;
+// The fullscreen picture gallery takes the whole viewport over a dark backdrop.
+.cdk-overlay-pane.zx-picture-gallery-panel {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none !important;
+
+  .cdk-dialog-container {
+    width: 100%;
+    height: 100%;
+    outline: none;
+  }
 }
 
-.cdk-overlay-pane.g-overlay lightbox {
-  width: var(--zx-lightbox-width);
-  height: var(--zx-lightbox-height);
-  max-width: none;
-  max-height: none;
-}
-
-.g-backdrop {
-  background: var(--black) !important;
-  opacity: var(--zx-lightbox-backdrop-opacity) !important;
-}
-
-.g-nav-prev svg,
-.g-nav-next svg {
-  width: 56px !important;
-  height: 56px !important;
+.zx-picture-gallery-backdrop {
+  background-color: var(--zx-picture-gallery-backdrop);
 }
 
 .zx-dialog-backdrop {

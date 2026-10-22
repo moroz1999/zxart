@@ -19,8 +19,6 @@
       >{{ 'prod-details.speccymaps' | translate }}</zx-button>
 
       <ng-container *ngIf="files.length > 0">
-        <zx-picture-gallery-host></zx-picture-gallery-host>
-
         <zx-inline spacing="lg" align="start" [wrap]="true">
           <zx-inlay-tile
             *ngFor="let file of files; let i = index; trackBy: trackById"

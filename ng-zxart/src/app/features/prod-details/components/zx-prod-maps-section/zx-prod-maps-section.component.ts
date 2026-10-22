@@ -1,15 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {Lightbox} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
   ZxPictureGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {
-  PictureGalleryHostComponent,
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
@@ -28,7 +24,6 @@ import {ZxInlayTileComponent} from '../../../../shared/ui/zx-inlay-tile/zx-inlay
     InViewportDirective,
     ZxPictureGridSkeletonComponent,
     ZxButtonComponent,
-    PictureGalleryHostComponent,
     HeadingDirective,
     ZxStackComponent,
     ZxInlineComponent,
@@ -50,7 +45,6 @@ export class ZxProdMapsSectionComponent {
   constructor(
     private readonly api: ProdMapsApiService,
     private readonly gallery: PictureGalleryService,
-    private readonly lightbox: Lightbox,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -82,7 +76,7 @@ export class ZxProdMapsSectionComponent {
   }
 
   openMap(index: number): void {
-    this.lightbox.open(index, this.galleryId);
+    void this.gallery.open(this.galleryId, index);
   }
 
   trackById(_: number, file: ProdFileDto): number {

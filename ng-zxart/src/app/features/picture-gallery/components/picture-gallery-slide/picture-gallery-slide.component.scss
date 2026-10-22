@@ -1,6 +1,6 @@
 @use 'shared/breakpoints' as bp;
 
-// Fills the gallery item: the picture block takes the free space, the info block
+// Fills the gallery: the picture block takes the free space, the info block
 // stands beside it across a small gap, or below it on narrow screens.
 :host {
   display: flex;
@@ -9,8 +9,6 @@
   min-height: 0;
   gap: var(--zx-picture-gallery-info-gap);
   box-sizing: border-box;
-  // covers the gallery's own image underneath, which still loads to drive the slider
-  background: var(--zx-picture-gallery-slide-bg);
 
   @include bp.media-breakpoint-down(md) {
     flex-direction: column;
@@ -40,22 +38,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.pgs-picture {
-  position: relative;
-  flex: 0 0 auto;
-  // hidden until measured, so the native-size image never flashes in
-  visibility: hidden;
-
-  &--measured {
-    visibility: visible;
-  }
-}
-
-.pgs-image {
-  display: block;
-  image-rendering: pixelated;
 }
 
 .pgs-nav {

@@ -9,8 +9,6 @@
     <zx-screenshot-grid-skeleton *ngIf="!loaded" [count]="3"></zx-screenshot-grid-skeleton>
 
     <ng-container *ngIf="loaded && files.length > 0">
-      <zx-picture-gallery-host></zx-picture-gallery-host>
-
       <div zxScreenshotsGrid>
         <figure
           *ngFor="let file of visibleFiles; let i = index; trackBy: trackByFileId"
@@ -29,8 +27,8 @@
               [attr.fetchpriority]="i === 0 ? 'high' : null"
               [src]="file.imageUrl"
               [alt]="file.title"
-              [lightbox]="i"
-              [gallery]="galleryId"
+              [zxGalleryOpen]="i"
+              [zxGalleryId]="galleryId"
             />
             <div class="prod-screenshots-section__controls">
               <ng-container *ngIf="canReorder">
@@ -83,8 +81,8 @@
               loading="lazy"
               [src]="file.imageUrl"
               [alt]="file.title"
-              [lightbox]="maxVisible + 1 + i"
-              [gallery]="galleryId"
+              [zxGalleryOpen]="maxVisible + 1 + i"
+              [zxGalleryId]="galleryId"
             />
             <div class="prod-screenshots-section__controls">
               <ng-container *ngIf="canReorder">

@@ -1,44 +1,36 @@
 <div class="pgs-stage">
   <div class="pgs-canvas" #canvas>
-    <div
-      class="pgs-picture"
-      [class.pgs-picture--measured]="displaySize !== null"
-      [style.width.px]="displaySize?.width"
-      [style.height.px]="displaySize?.height"
-    >
-      <img
-        #image
-        class="pgs-image"
-        [src]="slide.src"
+    @if (displaySize; as size) {
+      <zx-pixel-zoom
+        [image]="slide.src"
+        [fullImage]="slide.zoomSrc"
+        [width]="size.width"
+        [height]="size.height"
         [alt]="slide.alt"
-        [style.width.px]="displaySize?.width"
-        [style.height.px]="displaySize?.height"
-        (load)="onImageLoad()"
-      />
-      <zx-picture-gallery-zoom-overlay
-        [src]="slide.zoomSrc"
-        [thumb]="slide.src"
-        [active]="active"
-      ></zx-picture-gallery-zoom-overlay>
-    </div>
+      ></zx-pixel-zoom>
+    }
   </div>
-  <zx-button
-    *ngIf="!first"
-    class="pgs-nav pgs-nav--prev"
-    color="transparent"
-    [square]="true"
-    [round]="true"
-    [ariaLabel]="'picture-gallery.previous' | translate"
-    (click)="showPrevious()"
-  ><svg-icon name="chevron-left" class="pgs-nav-icon"></svg-icon></zx-button>
-  <zx-button
-    *ngIf="!last"
-    class="pgs-nav pgs-nav--next"
-    color="transparent"
-    [square]="true"
-    [round]="true"
-    [ariaLabel]="'picture-gallery.next' | translate"
-    (click)="showNext()"
-  ><svg-icon name="chevron-right" class="pgs-nav-icon"></svg-icon></zx-button>
+  @if (hasPrevious) {
+    <zx-button
+      class="pgs-nav pgs-nav--prev"
+      color="transparent"
+      [square]="true"
+      [round]="true"
+      [ariaLabel]="'picture-gallery.previous' | translate"
+      (click)="previous.emit()"
+    ><svg-icon name="chevron-left" class="pgs-nav-icon"></svg-icon></zx-button>
+  }
+  @if (hasNext) {
+    <zx-button
+      class="pgs-nav pgs-nav--next"
+      color="transparent"
+      [square]="true"
+      [round]="true"
+      [ariaLabel]="'picture-gallery.next' | translate"
+      (click)="next.emit()"
+    ><svg-icon name="chevron-right" class="pgs-nav-icon"></svg-icon></zx-button>
+  }
 </div>
-<zx-picture-gallery-info class="pgs-info" [info]="slide.info"></zx-picture-gallery-info>
+@if (slide.info; as info) {
+  <zx-picture-gallery-info class="pgs-info" [info]="info"></zx-picture-gallery-info>
+}

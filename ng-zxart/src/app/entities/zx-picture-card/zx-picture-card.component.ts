@@ -7,24 +7,25 @@ import {ZxPictureDto} from '../../shared/models/zx-picture-dto';
 import {ZxPanelComponent} from '../../shared/ui/zx-panel/zx-panel.component';
 import {ZxBadgeComponent} from '../../shared/ui/zx-badge/zx-badge.component';
 import {TextDirective} from '../../shared/ui/typography/directives/text.directive';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {ZxItemControlsComponent} from '../../shared/ui/zx-item-controls/zx-item-controls.component';
 import {PictureSettingsService} from '../../features/picture-settings/services/picture-settings.service';
 import {PictureUrlBuilderService} from '../../shared/services/picture-url-builder.service';
 import {ZxPartyPlaceComponent} from '../../shared/lib/zx-party-place/zx-party-place.component';
+import {ZxGalleryOpenDirective} from '../../shared/directives/zx-gallery-open.directive';
+import {RouterLink} from '@angular/router';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-picture-card',
   standalone: true,
-  imports: [RouterLink, 
+  imports: [
+    RouterLink,
+    ZxGalleryOpenDirective,
     CommonModule,
     AsyncPipe,
     TranslateModule,
     ZxPanelComponent,
     ZxBadgeComponent,
     TextDirective,
-    LightboxModule,
     ZxItemControlsComponent,
     ZxPartyPlaceComponent,
   ],

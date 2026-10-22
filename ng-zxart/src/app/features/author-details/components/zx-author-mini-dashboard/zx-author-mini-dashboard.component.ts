@@ -27,7 +27,6 @@ import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/
 import {ZxTuneTableSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-tune-table-skeleton/zx-tune-table-skeleton.component';
 import {ZxProdsListSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-prods-list-skeleton/zx-prods-list-skeleton.component';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxProdReleaseCardComponent} from '../../../../entities/zx-prod-release-card/zx-prod-release-card.component';
 
@@ -62,7 +61,6 @@ interface DashboardEntry {
     ZxTuneTableSkeletonComponent,
     ZxProdsListSkeletonComponent,
     InViewportDirective,
-    PictureGalleryHostComponent,
     ZxProdReleaseCardComponent,
   ],
   templateUrl: './zx-author-mini-dashboard.component.html',

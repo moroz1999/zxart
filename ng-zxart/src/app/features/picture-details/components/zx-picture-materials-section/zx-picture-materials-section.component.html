@@ -4,8 +4,6 @@
     <span appText="caption" tone="muted">({{ materials.length }})</span>
   </h2>
 
-  <zx-picture-gallery-host></zx-picture-gallery-host>
-
   <zx-grid [desktopColumns]="'3'" [tabletColumns]="'2'" [mobileColumns]="'1'" gap="md">
     <zx-panel *ngFor="let material of materials; let i = index" padding="none" radius="lg">
       <button type="button" class="pix-tile" (click)="openAt(i)">

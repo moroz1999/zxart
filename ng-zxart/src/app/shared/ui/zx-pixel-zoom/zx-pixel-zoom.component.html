@@ -1,0 +1,15 @@
+@for (key of instances; track key) {
+  <lib-ngx-image-zoom
+    class="zx-pixel-zoom__loupe"
+    [thumbImage]="image"
+    [fullImage]="fullImage || image"
+    zoomMode="hover"
+    [magnification]="magnification"
+    [maxZoomRatio]="magnification * 2"
+    [enableScrollZoom]="true"
+    [enableLens]="true"
+    [lensWidth]="lensWidth"
+    [lensHeight]="lensHeight"
+    [altText]="alt"
+  ></lib-ngx-image-zoom>
+}

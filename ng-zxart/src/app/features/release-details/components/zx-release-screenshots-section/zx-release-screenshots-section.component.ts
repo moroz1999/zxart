@@ -1,26 +1,24 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ProdFileDto} from '../../../prod-details/models/prod-file.dto';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxReleaseSectionHeadComponent} from '../zx-release-section-head/zx-release-section-head.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {environment} from '../../../../../environments/environment';
 import {ScreenshotMoveApiService} from '../../../prod-details/services/screenshot-move-api.service';
+import {ZxGalleryOpenDirective} from '../../../../shared/directives/zx-gallery-open.directive';
 
 @Component({
   selector: 'zx-release-screenshots-section',
   standalone: true,
   imports: [
+    ZxGalleryOpenDirective,
     CommonModule,
-    LightboxModule,
     TranslateModule,
     ZxButtonComponent,
     SvgIconComponent,
-    PictureGalleryHostComponent,
     ZxReleaseSectionHeadComponent,
   ],
   templateUrl: './zx-release-screenshots-section.component.html',

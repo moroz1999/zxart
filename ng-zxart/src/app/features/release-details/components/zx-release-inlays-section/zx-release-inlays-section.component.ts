@@ -1,27 +1,25 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {ProdCoverGroupDto, ProdReleaseInlayDto} from '../../../prod-details/models/prod-release-inlay.dto';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxReleaseSectionHeadComponent} from '../zx-release-section-head/zx-release-section-head.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {environment} from '../../../../../environments/environment';
+import {ZxGalleryOpenDirective} from '../../../../shared/directives/zx-gallery-open.directive';
 
 @Component({
   selector: 'zx-release-inlays-section',
   standalone: true,
   imports: [
+    ZxGalleryOpenDirective,
     CommonModule,
-    LightboxModule,
     TranslateModule,
     ZxButtonComponent,
     SvgIconComponent,
-    PictureGalleryHostComponent,
     ZxReleaseSectionHeadComponent,
     ZxStackComponent,
     ZxInlineComponent,

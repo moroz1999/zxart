@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  width: var(--zx-pixel-zoom-width);
+  height: var(--zx-pixel-zoom-height);
+  cursor: zoom-in;
+}
+
+/* The thumbnail is sized to the exact display px so the library measures the
+   real size (its zoom math reads the thumbnail width on load). */
+.zx-pixel-zoom__loupe {
+  display: block;
+}
+
+.zx-pixel-zoom__loupe ::ng-deep .ngxImageZoomThumbnail {
+  width: var(--zx-pixel-zoom-width) !important;
+  height: var(--zx-pixel-zoom-height) !important;
+  object-fit: contain;
+}
+
+.zx-pixel-zoom__loupe ::ng-deep img {
+  image-rendering: pixelated !important;
+}

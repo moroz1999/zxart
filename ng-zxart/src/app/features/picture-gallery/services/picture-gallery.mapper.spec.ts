@@ -1,13 +1,7 @@
-import {mapGalleryItemToImageItem, mapPictureToGalleryItem, PictureGallerySlideData} from './picture-gallery.mapper';
+import {describe, expect, it} from 'vitest';
+import {mapPictureToGalleryItem, toGallerySlide} from './picture-gallery.mapper';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
-import {ImageItem} from 'ng-gallery';
-import {describe, expect, it, vi} from 'vitest';
-
-vi.mock('ng-gallery', () => ({
-  ImageItem: class {
-    constructor(readonly data: unknown) {}
-  },
-}));
+import {PictureGalleryItem} from '../models/picture-gallery-item';
 
 describe('pictureGalleryMapper', () => {
   const basePicture: ZxPictureDto = {
@@ -66,15 +60,21 @@ describe('pictureGalleryMapper', () => {
     });
   });
 
-  it('keeps a picture an ordinary image item, loaded from its native-size image', () => {
-    // the gallery's own image item drives the slide lifecycle the slider relies on
-    const slide = mapGalleryItemToImageItem(mapPictureToGalleryItem(basePicture));
-    const data = slide.data as PictureGallerySlideData;
+  it('shows a picture from its native-size render and zooms into the larger one', () => {
+    const slide = toGallerySlide(mapPictureToGalleryItem(basePicture));
 
-    expect(slide).toBeInstanceOf(ImageItem);
+    expect(slide.src).toBe('/thumb.png');
+    expect(slide.zoomSrc).toBe('/large.png');
+    expect(slide.info?.pictureId).toBe(42);
+  });
 
-    expect(data.src).toBe('/thumb.png');
-    expect(data.zoomSrc).toBe('/large.png');
-    expect(data.info.pictureId).toBe(42);
+  it('shows another image, such as a screenshot, from its full image without info', () => {
+    const screenshot: PictureGalleryItem = {id: 1, title: 'Shot', thumbUrl: '/small.png', largeUrl: '/full.png', detailsUrl: ''};
+
+    const slide = toGallerySlide(screenshot);
+
+    expect(slide.src).toBe('/full.png');
+    expect(slide.zoomSrc).toBe('/full.png');
+    expect(slide.info).toBeNull();
   });
 });

@@ -15,7 +15,6 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxPictureGridSkeletonComponent} from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {scrollToElementIfHidden} from '../../scroll-to-tabs';
 import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
@@ -44,7 +43,6 @@ interface YearGroup {
     ZxStackComponent,
     ZxPictureGridSkeletonComponent,
     TextDirective,
-    PictureGalleryHostComponent,
     ZxLoadingStateDirective,
   ],
   templateUrl: './zx-author-graphics-tab.component.html',

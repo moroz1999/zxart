@@ -6,8 +6,8 @@
       [src]="imageUrl$ | async"
       [alt]="picture.title"
       loading="lazy"
-      [lightbox]="galleryIndex ?? 0"
-      [gallery]="galleryId || defaultGalleryId"
+      [zxGalleryOpen]="galleryIndex ?? 0"
+      [zxGalleryId]="galleryId || defaultGalleryId"
     />
     <div class="picture-badges">
       <zx-badge *ngIf="picture.isRealtime" variant="secondary">

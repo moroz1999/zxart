@@ -48,38 +48,34 @@ name; the column does not.
 
 ## Fullscreen gallery
 
-`PictureGalleryService.ensureGalleryLoaded()` loads a list's `ZxPictureDto`s into
-the ng-gallery lightbox. `mapPictureToGalleryItem()` attaches a
-`PictureGalleryInfo`, and `mapGalleryItemToImageItem()` keeps every picture an
-ordinary `ImageItem` whose data also carries the info and `zoomSrc`. The item
-must stay an image item: the gallery's own `gallery-image` loads it, and its
-loading state is what the slider relies on to keep the picture it opened at —
-a custom item type made the slider jump back to the first picture on opening.
-The host's image template renders `zx-picture-gallery-slide` for items with
-info (the zoom overlay alone otherwise); the slide's opaque background covers the
-`gallery-image` under it.
+The gallery is our own (`features/picture-gallery`), a CDK Dialog over the whole
+viewport (`zx-picture-gallery-panel`, a small inner padding) showing one image at
+a time.
 
-The slider renders the neighbouring slides too, and the lightbox focuses its
-first focusable element on opening. A slide that is not the active one is
-therefore `inert`: focus landing in a neighbour would scroll the slider to it and
-switch the gallery away from the picture it was opened at.
-
-The slide lays out the picture block and, across a small gap,
-`zx-picture-gallery-info` (title, authors, format badge, `zx-item-controls`) —
-below the picture under `md`. The info has no panel of its own: it overrides the
-text tokens for the always-black backdrop (`--zx-picture-gallery-on-dark-*`).
-Picture galleries switch ng-gallery's own arrows off (`nav: false`); the slide
-draws prev/next in the side margins of the picture block and turns the open
-gallery through `PictureGalleryService.showNext()`/`showPrevious()`. The
-lightbox takes `--zx-lightbox-width` × `--zx-lightbox-height` of the viewport.
-
-The slide shows the zoom-1 render (`imageUrl`), so the loaded image's
-`naturalWidth`/`naturalHeight` are the native size. `integerFitScale()` picks the
-largest whole multiple that fits the picture block (less the arrow margins) less
-a 16 px margin, recomputed on load and on every resize, and the image is drawn
-`pixelated`; below 1× it shrinks to fit. The zoom lens magnifies the zoom-2
-render (`zoomSrc`). Galleries of other images (screenshots, maps, materials)
-keep the stock arrows and show no info.
+- `PictureGalleryService` is a registry of galleries by id: lists register their
+  `ZxPictureDto`s with `ensureGalleryLoaded()` (`mapPictureToGalleryItem()` adds
+  a `PictureGalleryInfo`), sections their images with `loadItems()`. `open(id,
+  index)` lazy-loads `PictureGalleryDialogComponent` — and with it the loupe
+  library — and reaches the `viewimage` goal.
+- Entities cannot import a feature, so a click goes through the shared
+  `zxGalleryOpen`/`zxGalleryId` directive and the `GALLERY_OPENER` token, which
+  `app.config.ts` binds to the service. Sections that open from code call
+  `PictureGalleryService.open()` directly.
+- The dialog keeps the current index in a signal and turns it with the slide's
+  arrows, ←/→, a horizontal touch swipe or the thumbnail strip, preloading the
+  images either side.
+- `toGallerySlide()` decides what a slide shows: a picture is drawn from its
+  zoom-1 render (`imageUrl`) and magnified from the zoom-2 one, with its info;
+  other images (screenshots, maps, covers) from their full image, without info.
+- `zx-picture-gallery-slide` preloads the image to read its native size;
+  `integerFitScale()` picks the largest whole multiple that fits the picture
+  block (less the arrow margins) less a 16 px margin, recomputed on every resize;
+  below 1× the image shrinks to fit. The image is drawn by `zx-pixel-zoom`, the
+  same loupe as on the picture page. The info (`zx-picture-gallery-info`: title,
+  authors, format badge, `zx-item-controls`) stands beside the picture block,
+  below it under `md`, with no panel of its own: it overrides the text tokens
+  for the dark backdrop (`--zx-picture-gallery-on-dark-*`). Its links close the
+  dialog.
 
 ## Downloads
 

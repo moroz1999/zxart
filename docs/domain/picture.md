@@ -99,14 +99,18 @@ linked to and shared, and paging through it keeps the subset. The subsets are:
 Without a subset the page ranks the entire collection.
 
 ### Fullscreen Gallery
-Any list of pictures opens its pictures in a fullscreen gallery. The picture is
-shown at a whole multiple of its own size, the largest that fits the screen with
-a small margin, so every pixel of the original stays a sharp square; a picture
-too large for the screen even at its own size is shrunk to fit. Beside the
-picture — below it on a phone — the gallery names it, its authors and its
-format, shows its rating, and lets the visitor vote and add it to favourites
-without leaving the gallery. Following the picture's or an author's link closes
-the gallery.
+Any list of pictures opens its pictures in a fullscreen gallery over the whole
+screen. The picture is shown at a whole multiple of its own size, the largest
+that fits the screen with a small margin, so every pixel of the original stays a
+sharp square; a picture too large for the screen even at its own size is shrunk
+to fit. A loupe magnifies the region under the pointer, the wheel changes its
+magnification — the same as on the picture's own page. Beside the picture —
+below it on a phone — the gallery names it, its authors and its format, shows
+its rating, and lets the visitor vote and add it to favourites without leaving
+the gallery. Pictures are turned with the arrows, the arrow keys, a swipe or the
+thumbnails; following the picture's or an author's link closes the gallery.
+Screenshots, maps and covers of software open in the same gallery, without the
+info.
 
 ### Viewing Settings
 How a picture is rendered — the colour mode, whether the border is drawn, and

@@ -3,15 +3,11 @@ import {TestBed} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 import {provideRouter, RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Lightbox} from 'ng-gallery/lightbox';
+import {DialogRef} from '@angular/cdk/dialog';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {PictureGalleryInfoComponent} from './picture-gallery-info.component';
 import {PictureGalleryInfo} from '../../models/picture-gallery-info';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-
-vi.mock('ng-gallery/lightbox', () => ({
-  Lightbox: class {},
-}));
 
 const INFO: PictureGalleryInfo = {
   pictureId: 42,
@@ -26,10 +22,10 @@ const INFO: PictureGalleryInfo = {
 };
 
 function render(info: PictureGalleryInfo) {
-  const lightbox = {close: vi.fn()};
+  const dialogRef = {close: vi.fn()};
   TestBed.configureTestingModule({
     imports: [PictureGalleryInfoComponent, TranslateModule.forRoot()],
-    providers: [provideRouter([{path: '**', children: []}]), {provide: Lightbox, useValue: lightbox}],
+    providers: [provideRouter([{path: '**', children: []}]), {provide: DialogRef, useValue: dialogRef}],
   });
   // the vote controls talk to the backend; only their presence matters here
   TestBed.overrideComponent(PictureGalleryInfoComponent, {
@@ -38,7 +34,7 @@ function render(info: PictureGalleryInfo) {
   const fixture = TestBed.createComponent(PictureGalleryInfoComponent);
   fixture.componentRef.setInput('info', info);
   fixture.detectChanges();
-  return {element: fixture.nativeElement as HTMLElement, lightbox};
+  return {element: fixture.nativeElement as HTMLElement, dialogRef};
 }
 
 describe('PictureGalleryInfoComponent', () => {
@@ -60,10 +56,10 @@ describe('PictureGalleryInfoComponent', () => {
   });
 
   it('closes the gallery when a link leaves it', () => {
-    const {element, lightbox} = render(INFO);
+    const {element, dialogRef} = render(INFO);
 
     (element.querySelector('a') as HTMLAnchorElement).click();
 
-    expect(lightbox.close).toHaveBeenCalled();
+    expect(dialogRef.close).toHaveBeenCalled();
   });
 });

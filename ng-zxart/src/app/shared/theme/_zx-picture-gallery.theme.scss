@@ -1,17 +1,18 @@
 :root {
-  --zx-lightbox-backdrop-opacity: 0.92;
-  // the lightbox takes nearly the whole viewport: picture galleries lay out the
-  // picture and its info side by side
-  --zx-lightbox-width: 96vw;
-  --zx-lightbox-height: 92vh;
+  // the gallery takes the whole viewport, the backdrop is dark in both themes
+  --zx-picture-gallery-backdrop: color-mix(in srgb, var(--black) 94%, transparent);
+  --zx-picture-gallery-padding: var(--space-12);
+  --zx-picture-gallery-gap: var(--space-12);
 
   --zx-picture-gallery-info-width: 320px;
   --zx-picture-gallery-info-gap: var(--space-24);
   --zx-picture-gallery-info-mobile-max-height: 40vh;
   --zx-picture-gallery-nav-zone: 56px;
   --zx-picture-gallery-nav-icon-size: 40px;
-  // the backdrop is black in both themes
-  --zx-picture-gallery-slide-bg: var(--black);
+  --zx-picture-gallery-close-icon-size: 24px;
+  --zx-picture-gallery-thumb-height: 48px;
+  --zx-picture-gallery-thumb-opacity: 0.55;
+
   --zx-picture-gallery-on-dark-text: var(--white);
   --zx-picture-gallery-on-dark-muted: color-mix(in srgb, var(--white) 65%, transparent);
   --zx-picture-gallery-nav-hover-bg: color-mix(in srgb, var(--white) 12%, transparent);

@@ -1,5 +1,4 @@
 <ng-container *ngIf="type !== 'none' && pictures.length > 0">
-  <zx-picture-gallery-host></zx-picture-gallery-host>
   <h2>{{ (type === 'game' ? 'picture.morefromgame' : 'picture.morefromauthor') | translate }}</h2>
   <div zxPicturesGrid>
     <zx-picture-card

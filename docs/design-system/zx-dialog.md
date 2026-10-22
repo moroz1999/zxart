@@ -7,6 +7,10 @@ All dialogs use Angular CDK `Dialog` and the `zx-dialog` shell component. No Mat
 - **Always** pass `backdropClass: 'zx-dialog-backdrop'`.
 - **Always** pass `panelClass: 'zx-dialog'`.
 - Every dialog MUST use `<zx-dialog>` as the root element in its template.
+- The one exception is the fullscreen picture gallery: it is a viewer over the
+  whole viewport, not a panel with a header, and uses its own panel and
+  backdrop classes (`zx-picture-gallery-panel`, `zx-picture-gallery-backdrop`) —
+  see [features/picture.md](../features/picture.md#fullscreen-gallery).
 
 ## zx-dialog component
 

@@ -2,19 +2,14 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
+import {SvgIconRegistryService} from 'angular-svg-icon';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {PictureGallerySlideComponent} from './picture-gallery-slide.component';
-import {PictureGallerySlideData} from '../../services/picture-gallery.mapper';
-import {PictureGalleryService} from '../../services/picture-gallery.service';
-import {SvgIconRegistryService} from 'angular-svg-icon';
+import {PictureGallerySlide} from '../../models/picture-gallery-slide';
 
-vi.mock('ng-gallery', () => ({ImageItem: class {}, Gallery: class {}}));
-vi.mock('ng-gallery/lightbox', () => ({Lightbox: class {}}));
-
-const SLIDE: PictureGallerySlideData = {
+const SLIDE: PictureGallerySlide = {
   src: '/zximages/id=1;zoom=1',
   zoomSrc: '/zximages/id=1;zoom=2',
-  thumb: '/zximages/id=1;zoom=1',
   alt: 'Capri',
   info: {
     pictureId: 1,
@@ -29,39 +24,52 @@ const SLIDE: PictureGallerySlideData = {
   },
 };
 
-const galleryService = {showNext: vi.fn(), showPrevious: vi.fn()};
+/** Native size every preloaded image reports. */
+let nativeSize = {width: 256, height: 192};
+/** The slide's resize callback, run once the test has sized its canvas. */
+let resize: () => void = () => {};
 
-function render(first = false, last = false, active = true) {
+function render(slide: PictureGallerySlide = SLIDE, hasPrevious = true, hasNext = true) {
   TestBed.configureTestingModule({
     imports: [PictureGallerySlideComponent, TranslateModule.forRoot()],
-    providers: [
-      {provide: PictureGalleryService, useValue: galleryService},
-      {provide: SvgIconRegistryService, useValue: {loadSvg: vi.fn()}},
-    ],
+    providers: [{provide: SvgIconRegistryService, useValue: {loadSvg: vi.fn()}}],
   });
-  // the info block and the zoom overlay are separate units; only their placement matters here
+  // the info block and the magnifier are units of their own; only their placement and inputs matter here
   TestBed.overrideComponent(PictureGallerySlideComponent, {
     set: {imports: [CommonModule, TranslateModule], schemas: [CUSTOM_ELEMENTS_SCHEMA]},
   });
   const fixture = TestBed.createComponent(PictureGallerySlideComponent);
-  fixture.componentRef.setInput('slide', SLIDE);
-  fixture.componentRef.setInput('active', active);
-  fixture.componentRef.setInput('first', first);
-  fixture.componentRef.setInput('last', last);
+  fixture.componentRef.setInput('slide', slide);
+  fixture.componentRef.setInput('hasPrevious', hasPrevious);
+  fixture.componentRef.setInput('hasNext', hasNext);
+  fixture.detectChanges();
+  const canvas = fixture.nativeElement.querySelector('.pgs-canvas') as HTMLElement;
+  Object.defineProperty(canvas, 'clientWidth', {configurable: true, value: 1000});
+  Object.defineProperty(canvas, 'clientHeight', {configurable: true, value: 800});
+  resize();
   fixture.detectChanges();
   return fixture;
 }
 
-function setSize(element: Element, width: number, height: number): void {
-  Object.defineProperty(element, 'clientWidth', {configurable: true, value: width});
-  Object.defineProperty(element, 'clientHeight', {configurable: true, value: height});
-}
-
 describe('PictureGallerySlideComponent', () => {
   beforeEach(() => {
+    nativeSize = {width: 256, height: 192};
     vi.stubGlobal('ResizeObserver', class {
+      constructor(callback: () => void) {
+        resize = callback;
+      }
       observe(): void {}
       disconnect(): void {}
+    });
+    vi.stubGlobal('Image', class {
+      naturalWidth = 0;
+      naturalHeight = 0;
+      onload: (() => void) | null = null;
+      set src(_value: string) {
+        this.naturalWidth = nativeSize.width;
+        this.naturalHeight = nativeSize.height;
+        this.onload?.();
+      }
     });
   });
   afterEach(() => {
@@ -71,20 +79,13 @@ describe('PictureGallerySlideComponent', () => {
 
   it('shows the picture at the largest whole multiple of its native size that fits', () => {
     const fixture = render();
-    const element = fixture.nativeElement as HTMLElement;
-    setSize(element.querySelector('.pgs-canvas')!, 1000, 800);
-    const image = element.querySelector('img') as HTMLImageElement;
-    Object.defineProperty(image, 'naturalWidth', {value: 256});
-    Object.defineProperty(image, 'naturalHeight', {value: 192});
 
-    image.dispatchEvent(new Event('load'));
-    fixture.detectChanges();
-
-    expect(image.style.width).toBe('768px');
-    expect(image.style.height).toBe('576px');
+    const zoom = fixture.nativeElement.querySelector('zx-pixel-zoom');
+    expect(zoom.width).toBe(768);
+    expect(zoom.height).toBe(576);
   });
 
-  it('keeps the picture info in its own block beside the stage', () => {
+  it('keeps the picture info in its own block beside the picture', () => {
     const element = render().nativeElement as HTMLElement;
 
     const info = element.querySelector('zx-picture-gallery-info');
@@ -92,37 +93,31 @@ describe('PictureGallerySlideComponent', () => {
     expect(element.querySelector('.pgs-stage')!.contains(info)).toBe(false);
   });
 
-  it('keeps the arrows inside the picture block, clear of the info', () => {
-    const element = render().nativeElement as HTMLElement;
+  it('shows no info block for an image without info', () => {
+    const element = render({...SLIDE, info: null}).nativeElement as HTMLElement;
 
-    const stage = element.querySelector('.pgs-stage')!;
-    expect(stage.querySelector('.pgs-nav--prev')).not.toBeNull();
-    expect(stage.querySelector('.pgs-nav--next')).not.toBeNull();
+    expect(element.querySelector('zx-picture-gallery-info')).toBeNull();
   });
 
-  it('turns to the next and the previous picture', () => {
-    const element = render().nativeElement as HTMLElement;
+  it('keeps the arrows inside the picture block and reports them', () => {
+    const fixture = render();
+    const previous = vi.fn();
+    const next = vi.fn();
+    fixture.componentInstance.previous.subscribe(previous);
+    fixture.componentInstance.next.subscribe(next);
+    const stage = fixture.nativeElement.querySelector('.pgs-stage') as HTMLElement;
 
-    (element.querySelector('.pgs-nav--next') as HTMLElement).click();
-    (element.querySelector('.pgs-nav--prev') as HTMLElement).click();
+    (stage.querySelector('.pgs-nav--prev') as HTMLElement).click();
+    (stage.querySelector('.pgs-nav--next') as HTMLElement).click();
 
-    expect(galleryService.showNext).toHaveBeenCalled();
-    expect(galleryService.showPrevious).toHaveBeenCalled();
+    expect(previous).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
   });
 
   it('offers no way back from the first picture and none further from the last', () => {
-    const element = render(true, true).nativeElement as HTMLElement;
+    const element = render(SLIDE, false, false).nativeElement as HTMLElement;
 
     expect(element.querySelector('.pgs-nav--prev')).toBeNull();
     expect(element.querySelector('.pgs-nav--next')).toBeNull();
-  });
-
-  it('takes the slides around the shown one out of focus, so opening the gallery never scrolls to them', () => {
-    // the lightbox focuses its first focusable element on opening
-    expect((render(false, false, false).nativeElement as HTMLElement).hasAttribute('inert')).toBe(true);
-  });
-
-  it('keeps the shown slide focusable', () => {
-    expect((render().nativeElement as HTMLElement).hasAttribute('inert')).toBe(false);
   });
 });

@@ -9,7 +9,6 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {environment} from '../../../../../environments/environment';
 import {ZxReleaseTypeBadgeComponent} from '../../../../shared/ui/zx-release-type-badge/zx-release-type-badge.component';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
 import {
@@ -23,11 +22,15 @@ import {animate, style, transition, trigger} from '@angular/animations';
 
 import {RouterLink} from '@angular/router';
 import {ReleaseFormatLabelPipe} from '../../../../shared/pipes/release-format-label.pipe';
+import {ZxGalleryOpenDirective} from '../../../../shared/directives/zx-gallery-open.directive';
 
 @Component({
   selector: 'tr[zxProdReleaseRow]',
   standalone: true,
-  imports: [ReleaseFormatLabelPipe, RouterLink,
+  imports: [
+    ZxGalleryOpenDirective,
+    ReleaseFormatLabelPipe,
+    RouterLink,
     CommonModule,
     TranslateModule,
     SvgIconComponent,
@@ -36,7 +39,6 @@ import {ReleaseFormatLabelPipe} from '../../../../shared/pipes/release-format-la
     ZxInlineComponent,
     ZxStackComponent,
     ZxReleaseTypeBadgeComponent,
-    LightboxModule,
     ZxEmulatorPlayButtonComponent,
     TextDirective,
     ZxHardwareIconComponent,

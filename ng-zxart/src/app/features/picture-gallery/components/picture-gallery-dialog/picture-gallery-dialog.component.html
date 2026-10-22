@@ -1,0 +1,36 @@
+<zx-picture-gallery-slide
+  class="pgd-slide"
+  [slide]="slide()"
+  [hasPrevious]="hasPrevious()"
+  [hasNext]="hasNext()"
+  (previous)="showPrevious()"
+  (next)="showNext()"
+  (pointerdown)="onPointerDown($event)"
+  (pointerup)="onPointerUp($event)"
+></zx-picture-gallery-slide>
+
+@if (items.length > 1) {
+  <div class="pgd-thumbs" role="list">
+    @for (item of items; track $index; let i = $index) {
+      <button
+        #thumb
+        type="button"
+        role="listitem"
+        class="pgd-thumb"
+        [class.pgd-thumb--active]="i === index()"
+        [attr.aria-current]="i === index() ? 'true' : null"
+        [attr.aria-label]="item.title"
+        (click)="show(i)"
+      ><img class="pgd-thumb-image" [src]="item.thumbUrl" alt="" loading="lazy" /></button>
+    }
+  </div>
+}
+
+<zx-button
+  class="pgd-close"
+  color="transparent"
+  [square]="true"
+  [round]="true"
+  [ariaLabel]="'picture-gallery.close' | translate"
+  (click)="close()"
+><svg-icon name="close" class="pgd-close-icon"></svg-icon></zx-button>

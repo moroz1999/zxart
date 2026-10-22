@@ -16,9 +16,6 @@ import {
 import {ZxButtonComponent} from '../../shared/ui/zx-button/zx-button.component';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layout.component';
-import {
-  PictureGalleryHostComponent
-} from '../../features/picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 
 interface ModuleEntry {
   config: ModuleConfig;
@@ -35,7 +32,6 @@ interface ModuleEntry {
     TranslateModule,
     ZxButtonComponent,
     HeadingDirective,
-    PictureGalleryHostComponent,
     ZxPageLayoutComponent,
   ],
   templateUrl: './firstpage.component.html',

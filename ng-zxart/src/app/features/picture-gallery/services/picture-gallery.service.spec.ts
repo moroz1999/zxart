@@ -1,61 +1,50 @@
-import {Subject} from 'rxjs';
+import {Dialog} from '@angular/cdk/dialog';
 import {describe, expect, it, vi} from 'vitest';
-import {Gallery} from 'ng-gallery';
-import {Lightbox} from 'ng-gallery/lightbox';
 import {PictureGalleryService} from './picture-gallery.service';
 import {AnalyticsService} from '../../../shared/services/analytics.service';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
+import {PictureGalleryItem} from '../models/picture-gallery-item';
 
-vi.mock('ng-gallery', () => ({ImageItem: class {}, Gallery: class {}}));
-vi.mock('ng-gallery/lightbox', () => ({Lightbox: class {}}));
-
-function createRef() {
-  const ref = {
-    next: vi.fn(),
-    prev: vi.fn(),
-    setConfig: vi.fn(),
-    load: vi.fn(),
-  };
-  return ref;
-}
+vi.mock('../components/picture-gallery-dialog/picture-gallery-dialog.component', () => ({
+  PictureGalleryDialogComponent: class {},
+}));
 
 function createService() {
-  const refs = new Map<string, ReturnType<typeof createRef>>();
-  const gallery = {
-    ref: (id: string) => {
-      if (!refs.has(id)) {
-        refs.set(id, createRef());
-      }
-      return refs.get(id)!;
-    },
-  };
-  const opened = new Subject<string>();
-  const lightbox = {opened, closed: new Subject<string>()};
-  const service = new PictureGalleryService(
-    gallery as unknown as Gallery,
-    lightbox as unknown as Lightbox,
-    {reachGoal: vi.fn()} as unknown as AnalyticsService,
-  );
-  return {service, refs, opened};
+  const dialog = {open: vi.fn()};
+  const analytics = {reachGoal: vi.fn()};
+  const service = new PictureGalleryService(dialog as unknown as Dialog, analytics as unknown as AnalyticsService);
+  return {service, dialog, analytics};
 }
 
+const SCREENSHOT: PictureGalleryItem = {id: 1, title: 'Shot', thumbUrl: '/t.png', largeUrl: '/l.png', detailsUrl: ''};
+
 describe('PictureGalleryService', () => {
-  it('turns pages of the gallery that is open', () => {
-    const {service, refs, opened} = createService();
-    opened.next('pictures-1');
+  it('opens a registered gallery at the picture asked for', async () => {
+    const {service, dialog, analytics} = createService();
+    service.loadItems('shots', [SCREENSHOT, {...SCREENSHOT, id: 2}]);
 
-    service.showNext();
-    service.showPrevious();
+    await service.open('shots', 1);
 
-    expect(refs.get('pictures-1')!.next).toHaveBeenCalled();
-    expect(refs.get('pictures-1')!.prev).toHaveBeenCalled();
+    expect(dialog.open).toHaveBeenCalledTimes(1);
+    expect(dialog.open.mock.calls[0][1].data).toEqual({items: [SCREENSHOT, {...SCREENSHOT, id: 2}], startIndex: 1});
+    expect(analytics.reachGoal).toHaveBeenCalledWith('viewimage');
   });
 
-  it('leaves the arrows of a picture gallery to its slides', () => {
-    const {service, refs} = createService();
+  it('registers a list of pictures with their info', async () => {
+    const {service, dialog} = createService();
+    service.ensureGalleryLoaded('pictures', [{id: 7, title: 'Capri', url: '/picture/7', imageUrl: '/z1', largeImageUrl: '/z2', authors: [], type: 'standard', votes: 0, votesAmount: 0, userVote: null, denyVoting: false} as unknown as ZxPictureDto]);
 
-    service.ensureGalleryLoaded('pictures-1', [{id: 1} as ZxPictureDto]);
+    await service.open('pictures', 0);
 
-    expect(refs.get('pictures-1')!.setConfig).toHaveBeenCalledWith(expect.objectContaining({nav: false}));
+    const items = dialog.open.mock.calls[0][1].data.items as PictureGalleryItem[];
+    expect(items[0].info?.pictureId).toBe(7);
+  });
+
+  it('opens nothing for a gallery that was never loaded', async () => {
+    const {service, dialog} = createService();
+
+    await service.open('missing', 0);
+
+    expect(dialog.open).not.toHaveBeenCalled();
   });
 });

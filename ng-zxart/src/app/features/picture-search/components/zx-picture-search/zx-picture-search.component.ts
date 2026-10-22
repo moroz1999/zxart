@@ -54,9 +54,6 @@ import {
 } from '../../../../entities/zx-picture-card-skeleton/zx-picture-card-skeleton.component';
 import {ZxAuthorsTableComponent} from '../../../../entities/zx-authors-table/zx-authors-table.component';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
-import {
-  PictureGalleryHostComponent
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx-loading-state.directive';
 import {tagToItem} from '../../../../shared/utils/tag-item';
 
@@ -96,7 +93,6 @@ const SEARCH_DEBOUNCE_MS = 250;
     ZxPictureCardSkeletonComponent,
     ZxAuthorsTableComponent,
     ZxPicturesGridDirective,
-    PictureGalleryHostComponent,
     ZxLoadingStateDirective,
   ],
   templateUrl: './zx-picture-search.component.html',

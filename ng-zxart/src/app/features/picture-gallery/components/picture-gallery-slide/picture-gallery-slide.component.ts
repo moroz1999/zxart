@@ -4,70 +4,67 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostBinding,
+  EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
-import {PictureGalleryService} from '../../services/picture-gallery.service';
-import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
-import {PictureGallerySlideData} from '../../services/picture-gallery.mapper';
-import {integerFitScale} from '../../utils/integer-fit-scale';
+import {PictureGallerySlide} from '../../models/picture-gallery-slide';
+import {integerFitScale, PixelSize} from '../../utils/integer-fit-scale';
 import {PictureGalleryInfoComponent} from '../picture-gallery-info/picture-gallery-info.component';
-import {
-  PictureGalleryZoomOverlayComponent
-} from '../picture-gallery-zoom-overlay/picture-gallery-zoom-overlay.component';
+import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
+import {ZxPixelZoomComponent} from '../../../../shared/ui/zx-pixel-zoom/zx-pixel-zoom.component';
 
-/** Space kept free between the picture and the edges of its stage, in CSS pixels. */
+/** Space kept free between the picture and the edges of its area, in CSS pixels. */
 const STAGE_MARGIN = 16;
 
 /**
- * One picture in the fullscreen gallery: the picture on its stage, shown at a
- * whole multiple of its native size, and its info in a block of its own —
- * beside the stage on wide screens, below it on narrow ones.
+ * One image of the fullscreen gallery: the picture block, where the image is
+ * shown at a whole multiple of its native size with the loupe and the arrows
+ * beside it, and — for pictures — their info in a block of its own, beside the
+ * picture on wide screens and below it on narrow ones.
  */
 @Component({
   selector: 'zx-picture-gallery-slide',
   standalone: true,
-  imports: [CommonModule, TranslateModule, SvgIconComponent, ZxButtonComponent, PictureGalleryInfoComponent, PictureGalleryZoomOverlayComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    SvgIconComponent,
+    ZxButtonComponent,
+    ZxPixelZoomComponent,
+    PictureGalleryInfoComponent,
+  ],
   templateUrl: './picture-gallery-slide.component.html',
   styleUrls: ['./picture-gallery-slide.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PictureGallerySlideComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input({required: true}) slide!: PictureGallerySlideData;
-  @Input() active = false;
-  @Input() first = false;
-  @Input() last = false;
-
-  /**
-   * The slider renders the slides around the shown one too. Their links and
-   * buttons stay out of focus: the lightbox focuses its first focusable element
-   * on opening, and focus in a neighbouring slide would scroll the slider there
-   * and switch the gallery to that picture.
-   */
-  @HostBinding('attr.inert')
-  get inert(): '' | null {
-    return this.active ? null : '';
-  }
+export class PictureGallerySlideComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+  @Input({required: true}) slide!: PictureGallerySlide;
+  @Input() hasPrevious = false;
+  @Input() hasNext = false;
+  @Output() readonly previous = new EventEmitter<void>();
+  @Output() readonly next = new EventEmitter<void>();
 
   /** Area the picture is fitted into: the picture block less the arrows' margins. */
   @ViewChild('canvas', {static: true}) private canvas!: ElementRef<HTMLElement>;
-  @ViewChild('image', {static: true}) private image!: ElementRef<HTMLImageElement>;
 
-  /** Displayed size; null until the image has loaded and the stage is measured. */
-  displaySize: {width: number; height: number} | null = null;
+  /** Displayed size; null until the native size and the area are known. */
+  displaySize: PixelSize | null = null;
 
+  private nativeSize: PixelSize | null = null;
   private resizeObserver?: ResizeObserver;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly galleryService: PictureGalleryService,
     private readonly iconRegistry: SvgIconRegistryService,
   ) {}
 
@@ -76,12 +73,10 @@ export class PictureGallerySlideComponent implements OnInit, AfterViewInit, OnDe
     this.iconRegistry.loadSvg(`${environment.svgUrl}chevron-right.svg`, 'chevron-right')?.subscribe();
   }
 
-  showPrevious(): void {
-    this.galleryService.showPrevious();
-  }
-
-  showNext(): void {
-    this.galleryService.showNext();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['slide']) {
+      this.measureNativeSize(this.slide.src);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -96,18 +91,30 @@ export class PictureGallerySlideComponent implements OnInit, AfterViewInit, OnDe
     this.resizeObserver?.disconnect();
   }
 
-  onImageLoad(): void {
-    this.updateDisplaySize();
-    this.cdr.markForCheck();
+  private measureNativeSize(src: string): void {
+    this.nativeSize = null;
+    this.displaySize = null;
+    const image = new Image();
+    image.onload = () => {
+      // a newer slide may have arrived while this one loaded
+      if (this.slide.src !== src) {
+        return;
+      }
+      this.nativeSize = {width: image.naturalWidth, height: image.naturalHeight};
+      this.updateDisplaySize();
+      this.cdr.markForCheck();
+    };
+    image.src = src;
   }
 
   private updateDisplaySize(): void {
-    const image = this.image.nativeElement;
-    const native = {width: image.naturalWidth, height: image.naturalHeight};
-    const stage = {width: this.canvas.nativeElement.clientWidth, height: this.canvas.nativeElement.clientHeight};
-    const scale = integerFitScale(native, stage, STAGE_MARGIN);
+    if (this.nativeSize === null) {
+      return;
+    }
+    const canvas = this.canvas.nativeElement;
+    const scale = integerFitScale(this.nativeSize, {width: canvas.clientWidth, height: canvas.clientHeight}, STAGE_MARGIN);
     this.displaySize = scale > 0
-      ? {width: Math.floor(native.width * scale), height: Math.floor(native.height * scale)}
+      ? {width: Math.floor(this.nativeSize.width * scale), height: Math.floor(this.nativeSize.height * scale)}
       : null;
   }
 }

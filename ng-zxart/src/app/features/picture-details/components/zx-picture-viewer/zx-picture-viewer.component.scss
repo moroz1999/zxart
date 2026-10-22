@@ -31,24 +31,6 @@
   cursor: default;
 }
 
-/* Hover magnifier — reuses the project's ngx-image-zoom (as the fullscreen
-   gallery does). The thumbnail is sized to the exact display px so the library
-   measures the real size (its zoom math reads imageThumbnail.width on load);
-   the instance is recreated when the size changes. */
-.pix-stage__zoom {
-  display: block;
-}
-
-.pix-stage__zoom ::ng-deep .ngxImageZoomThumbnail {
-  width: var(--pix-zoom-w) !important;
-  height: var(--pix-zoom-h) !important;
-  object-fit: contain;
-}
-
-.pix-stage__zoom ::ng-deep img {
-  image-rendering: pixelated !important;
-}
-
 .pix-render__label {
   min-width: 96px;
 }

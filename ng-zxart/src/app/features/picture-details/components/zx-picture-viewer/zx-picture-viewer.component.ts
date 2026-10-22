@@ -13,14 +13,12 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgxImageZoomModule} from 'ngx-image-zoom';
-import {Lightbox} from 'ng-gallery/lightbox';
 import {Subscription} from 'rxjs';
 import {PictureDetailsDto} from '../../models/picture-details.dto';
 import {PictureSettingsService} from '../../../picture-settings/services/picture-settings.service';
 import {PictureUrlBuilderService} from '../../../../shared/services/picture-url-builder.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
+import {ZxPixelZoomComponent} from '../../../../shared/ui/zx-pixel-zoom/zx-pixel-zoom.component';
 import {PictureMode, PictureScale, PictureSettings} from '../../../picture-settings/models/picture-settings';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
@@ -51,8 +49,7 @@ const SCALES_BY_DEVICE: Record<Device, ReadonlyArray<PictureScale>> = {
   imports: [
     CommonModule,
     TranslateModule,
-    NgxImageZoomModule,
-    PictureGalleryHostComponent,
+    ZxPixelZoomComponent,
     ZxPanelComponent,
     ZxButtonComponent,
     ZxButtonControlsComponent,
@@ -95,7 +92,6 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     {value: 'interlace2', labelKey: 'picture-details.giga-interlace2'},
   ];
   readonly hiddenOptions = this.borderOptions;
-  readonly magnification = 3;
 
   scale: PictureScale = '3';
   device: Device = 'desktop';
@@ -111,8 +107,6 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
   /** Displayed size of the picture block, in CSS pixels. */
   displayWidth = 0;
   displayHeight = 0;
-  /** Identity used to recreate the zoom instance whenever the size changes. */
-  zoomKey = '';
 
   private globalSettings: PictureSettings | null = null;
   private subscription?: Subscription;
@@ -131,13 +125,12 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     private readonly pictureSettingsService: PictureSettingsService,
     private readonly pictureUrlBuilderService: PictureUrlBuilderService,
     private readonly pictureGalleryService: PictureGalleryService,
-    private readonly lightbox: Lightbox,
     private readonly zone: NgZone,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
   openLightbox(): void {
-    this.lightbox.open(0, this.galleryId);
+    void this.pictureGalleryService.open(this.galleryId, 0);
   }
 
   ngOnInit(): void {
@@ -167,7 +160,7 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
 
   ngAfterViewInit(): void {
     // In "wide" mode the block size follows the column width — track it so the
-    // zoom instance is rebuilt (and re-measured) whenever it changes.
+    // loupe is rebuilt (and re-measured) whenever it changes.
     this.resizeObserver = new ResizeObserver(() => {
       if (!this.scaled) {
         this.zone.run(() => {
@@ -248,15 +241,6 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     return SCALES_BY_DEVICE[this.device].includes(scale) ? scale : 'wide';
   }
 
-  /** One zoom instance, recreated when its size changes (empty until ready). */
-  get zoomInstances(): string[] {
-    return this.imageUrl && this.displayWidth ? [this.zoomKey] : [];
-  }
-
-  trackZoom(_index: number, key: string): string {
-    return key;
-  }
-
   setScale(value: PictureScale): void {
     this.pictureSettingsService.setScale(value);
   }
@@ -291,7 +275,6 @@ export class ZxPictureViewerComponent implements OnInit, AfterViewInit, OnDestro
     }
     this.displayWidth = width;
     this.displayHeight = height;
-    this.zoomKey = `${this.scale}-${width}x${height}`;
   }
 
   private rebuildUrl(): void {

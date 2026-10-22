@@ -8,9 +8,6 @@ import {
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
-import {
-  PictureGalleryHostComponent
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureListService} from '../../services/picture-list.service';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {Subscription} from 'rxjs';
@@ -25,7 +22,6 @@ import {Subscription} from 'rxjs';
     ZxPictureGridSkeletonComponent,
     TextDirective,
     ZxPicturesGridDirective,
-    PictureGalleryHostComponent,
   ],
   templateUrl: './zx-pictures-list.component.html',
   styleUrls: ['./zx-pictures-list.component.scss'],

@@ -1,6 +1,5 @@
-import {ImageItem, ImageItemData} from 'ng-gallery';
 import {PictureGalleryItem} from '../models/picture-gallery-item';
-import {PictureGalleryInfo} from '../models/picture-gallery-info';
+import {PictureGallerySlide} from '../models/picture-gallery-slide';
 import {ZxPictureDto} from '../../../shared/models/zx-picture-dto';
 
 export function mapPictureToGalleryItem(picture: ZxPictureDto): PictureGalleryItem {
@@ -25,32 +24,13 @@ export function mapPictureToGalleryItem(picture: ZxPictureDto): PictureGalleryIt
 }
 
 /**
- * Data of a picture slide. The picture stays an ordinary image item: the
- * gallery's own image loads `src`, which keeps the slide lifecycle the slider
- * relies on, and the image template draws the slide over it. `src` is the
- * native-size render the slide scales.
+ * A picture is shown from its native-size render (the thumbnail URL renders at
+ * zoom 1) and magnified from the larger one. Other images, such as screenshots,
+ * are shown from their full image.
  */
-export interface PictureGallerySlideData extends ImageItemData {
-  readonly src: string;
-  /** Larger render the zoom lens magnifies. */
-  readonly zoomSrc: string;
-  readonly info: PictureGalleryInfo;
-}
-
-export function mapGalleryItemToImageItem(item: PictureGalleryItem): ImageItem {
+export function toGallerySlide(item: PictureGalleryItem): PictureGallerySlide {
   if (item.info !== undefined) {
-    const data: PictureGallerySlideData = {
-      src: item.thumbUrl,
-      zoomSrc: item.largeUrl,
-      thumb: item.thumbUrl,
-      alt: item.title,
-      info: item.info,
-    };
-    return new ImageItem(data);
+    return {src: item.thumbUrl, zoomSrc: item.largeUrl, alt: item.title, info: item.info};
   }
-  return new ImageItem({
-    src: item.largeUrl,
-    thumb: item.thumbUrl,
-    alt: item.title,
-  });
+  return {src: item.largeUrl, zoomSrc: item.largeUrl, alt: item.title, info: null};
 }

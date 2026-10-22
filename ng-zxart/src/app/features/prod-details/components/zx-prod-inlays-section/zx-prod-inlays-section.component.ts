@@ -1,14 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {Lightbox} from 'ng-gallery/lightbox';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
 import {
   ZxPictureGridSkeletonComponent,
 } from '../../../../shared/ui/zx-skeleton/components/zx-picture-grid-skeleton/zx-picture-grid-skeleton.component';
-import {
-  PictureGalleryHostComponent,
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
@@ -26,7 +22,6 @@ import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.compo
     TranslateModule,
     InViewportDirective,
     ZxPictureGridSkeletonComponent,
-    PictureGalleryHostComponent,
     HeadingDirective,
     ZxStackComponent,
     ZxInlayTileComponent,
@@ -44,7 +39,7 @@ export class ZxProdInlaysSectionComponent {
   groups: ProdCoverGroupDto[] = [];
   galleryId = '';
 
-  // One lightbox spans every group, so a cover's position is its index in the flattened list.
+  // One gallery spans every group, so a cover's position is its index in the flattened list.
   private galleryPositions = new Map<number, number>();
 
   @HostBinding('style.display')
@@ -55,7 +50,6 @@ export class ZxProdInlaysSectionComponent {
   constructor(
     private readonly api: ProdInlaysApiService,
     private readonly gallery: PictureGalleryService,
-    private readonly lightbox: Lightbox,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -80,7 +74,7 @@ export class ZxProdInlaysSectionComponent {
   }
 
   openCover(cover: ProdReleaseInlayDto): void {
-    this.lightbox.open(this.galleryPositions.get(cover.id) ?? 0, this.galleryId);
+    void this.gallery.open(this.galleryId, this.galleryPositions.get(cover.id) ?? 0);
   }
 
   trackByKind(_: number, group: ProdCoverGroupDto): string {

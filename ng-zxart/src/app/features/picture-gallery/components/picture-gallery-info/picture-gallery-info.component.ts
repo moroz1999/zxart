@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
-import {Lightbox} from 'ng-gallery/lightbox';
+import {DialogRef} from '@angular/cdk/dialog';
 import {PictureGalleryInfo} from '../../models/picture-gallery-info';
 import {AuthorDto} from '../../../../shared/models/author-dto';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
@@ -32,11 +32,11 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 export class PictureGalleryInfoComponent {
   @Input({required: true}) info!: PictureGalleryInfo;
 
-  constructor(private readonly lightbox: Lightbox) {}
+  constructor(private readonly dialogRef: DialogRef) {}
 
   /** A link leaves the gallery, so it closes before the page changes under it. */
   closeGallery(): void {
-    this.lightbox.close();
+    this.dialogRef.close();
   }
 
   trackByUrl(_index: number, author: AuthorDto): string {

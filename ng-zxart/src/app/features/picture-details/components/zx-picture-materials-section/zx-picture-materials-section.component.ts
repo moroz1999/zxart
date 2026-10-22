@@ -1,14 +1,12 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {Lightbox} from 'ng-gallery/lightbox';
 import {PictureMaterialDto} from '../../models/picture-details.dto';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {ZxGridComponent} from '../../../../shared/ui/zx-grid/zx-grid.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
 
@@ -23,7 +21,6 @@ import {PictureGalleryItem} from '../../../picture-gallery/models/picture-galler
     ZxStackComponent,
     TextDirective,
     HeadingDirective,
-    PictureGalleryHostComponent,
   ],
   templateUrl: './zx-picture-materials-section.component.html',
   styleUrls: ['./zx-picture-materials-section.component.scss'],
@@ -36,7 +33,6 @@ export class ZxPictureMaterialsSectionComponent implements OnInit {
 
   constructor(
     private readonly gallery: PictureGalleryService,
-    private readonly lightbox: Lightbox,
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +42,7 @@ export class ZxPictureMaterialsSectionComponent implements OnInit {
   }
 
   openAt(index: number): void {
-    this.lightbox.open(index, this.galleryId);
+    void this.gallery.open(this.galleryId, index);
   }
 
   labelKey(material: PictureMaterialDto): string {

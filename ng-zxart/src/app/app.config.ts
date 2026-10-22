@@ -12,6 +12,8 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {APP_ROUTES} from './app.routes';
 import {languageInterceptor} from './features/settings/interceptors/language.interceptor';
+import {GALLERY_OPENER} from './shared/models/gallery-opener';
+import {PictureGalleryService} from './features/picture-gallery/services/picture-gallery.service';
 import {environment} from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -30,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 export const appConfig: ApplicationConfig = {
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
+    {provide: GALLERY_OPENER, useExisting: PictureGalleryService},
     provideRouter(APP_ROUTES, withDisabledInitialNavigation(), withComponentInputBinding()),
     provideHttpClient(withInterceptors([languageInterceptor])),
     // The animation engine is a tenth of the initial bundle and every animation

@@ -10,9 +10,6 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxPicturesGridDirective} from '../../../../shared/directives/pictures-grid.directive';
 import {ZxPaginationComponent} from '../../../../shared/ui/zx-pagination/zx-pagination.component';
 import {ZxSortSelectComponent} from '../../../../shared/ui/zx-sort-select/zx-sort-select.component';
-import {
-  PictureGalleryHostComponent
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureBrowserService} from '../../services/picture-browser.service';
 import {BrowserBaseComponent} from '../../../../shared/browser-base.component';
@@ -30,7 +27,6 @@ import {ZxLoadingStateDirective} from '../../../../shared/ui/zx-loading-state/zx
     ZxPicturesGridDirective,
     ZxPaginationComponent,
     ZxSortSelectComponent,
-    PictureGalleryHostComponent,
     ZxLoadingStateDirective,
   ],
   templateUrl: './zx-picture-browser.component.html',

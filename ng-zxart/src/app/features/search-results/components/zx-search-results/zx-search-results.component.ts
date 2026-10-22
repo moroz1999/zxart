@@ -42,7 +42,6 @@ import {ZxTuneRowComponent} from '../../../../shared/ui/zx-tune-row/zx-tune-row.
 import {ZxPartyCardComponent} from '../../../../entities/zx-party-card/zx-party-card.component';
 import {PlayerService} from '../../../player/services/player.service';
 import {ZxProdsListComponent} from '../../../../entities/zx-prods-list/zx-prods-list.component';
-import {PictureGalleryHostComponent} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ActivatedRoute, Params, Router} from '@angular/router';
@@ -104,7 +103,6 @@ const INITIAL_SKELETON_GROUPS: SkeletonGroup[] = [
     ZxPicturesGridDirective,
     ZxProdsListComponent,
     ZxPanelComponent,
-    PictureGalleryHostComponent,
     ZxTableComponent,
     ZxTuneRowComponent,
     ZxPartyCardComponent,

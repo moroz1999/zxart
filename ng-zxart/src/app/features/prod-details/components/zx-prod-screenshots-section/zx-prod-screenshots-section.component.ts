@@ -10,12 +10,8 @@ import {ZxScreenshotsGridDirective} from '../../../../shared/directives/screensh
 import {
   ZxScreenshotGridSkeletonComponent
 } from '../../../../shared/ui/zx-skeleton/components/zx-screenshot-grid-skeleton/zx-screenshot-grid-skeleton.component';
-import {
-  PictureGalleryHostComponent,
-} from '../../../picture-gallery/components/picture-gallery-host/picture-gallery-host.component';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureGalleryItem} from '../../../picture-gallery/models/picture-gallery-item';
-import {LightboxModule} from 'ng-gallery/lightbox';
 import {ProdScreenshotsApiService} from '../../services/prod-screenshots-api.service';
 import {ScreenshotMoveApiService} from '../../services/screenshot-move-api.service';
 import {ProdFileDto} from '../../models/prod-file.dto';
@@ -24,18 +20,18 @@ import {TextDirective} from '../../../../shared/ui/typography/directives/text.di
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ElementPrivilegesApiService} from '../../../../shared/services/element-privileges-api.service';
+import {ZxGalleryOpenDirective} from '../../../../shared/directives/zx-gallery-open.directive';
 
 @Component({
   selector: 'zx-prod-screenshots-section',
   standalone: true,
   imports: [
+    ZxGalleryOpenDirective,
     CommonModule,
     TranslateModule,
     InViewportDirective,
     ZxScreenshotsGridDirective,
     ZxScreenshotGridSkeletonComponent,
-    PictureGalleryHostComponent,
-    LightboxModule,
     TextDirective,
     HeadingDirective,
     ZxStackComponent,

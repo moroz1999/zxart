@@ -2276,6 +2276,7 @@
   },
   "picture-gallery": {
     "previous": "Previous picture",
-    "next": "Next picture"
+    "next": "Next picture",
+    "close": "Close"
   }
 }

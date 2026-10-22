@@ -1,0 +1,69 @@
+// The gallery takes the whole viewport, keeping only a small inner margin.
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zx-picture-gallery-gap);
+  width: 100%;
+  height: 100%;
+  padding: var(--zx-picture-gallery-padding);
+  box-sizing: border-box;
+
+  --zx-button-transparent-text: var(--zx-picture-gallery-on-dark-text);
+  --zx-button-transparent-hover-bg: var(--zx-picture-gallery-nav-hover-bg);
+}
+
+.pgd-slide {
+  flex: 1 1 auto;
+  min-height: 0;
+  touch-action: pan-y;
+}
+
+.pgd-thumbs {
+  flex: 0 0 auto;
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  justify-content: safe center;
+  scrollbar-width: thin;
+}
+
+// Thumbnails are image buttons: a zx-button frames text and icons, not a picture.
+.pgd-thumb {
+  flex: 0 0 auto;
+  padding: 0;
+  border: var(--border-width-thick) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  opacity: var(--zx-picture-gallery-thumb-opacity);
+  cursor: pointer;
+  transition: opacity var(--animation-xs), border-color var(--animation-xs);
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  &--active {
+    opacity: 1;
+    border-color: var(--zx-picture-gallery-on-dark-text);
+  }
+}
+
+.pgd-thumb-image {
+  display: block;
+  height: var(--zx-picture-gallery-thumb-height);
+  width: auto;
+  image-rendering: pixelated;
+}
+
+.pgd-close {
+  position: absolute;
+  top: var(--zx-picture-gallery-padding);
+  right: var(--zx-picture-gallery-padding);
+}
+
+.pgd-close-icon {
+  width: var(--zx-picture-gallery-close-icon-size);
+  height: var(--zx-picture-gallery-close-icon-size);
+}
