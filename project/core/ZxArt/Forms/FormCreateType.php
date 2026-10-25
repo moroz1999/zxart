@@ -29,16 +29,18 @@ enum FormCreateType: string
     }
 
     /**
-     * The element action that receives the submitted values. A press article is
-     * created and edited by the same action, so its privileges are held under
-     * that single name.
+     * The element action that receives the submitted values, or none for the
+     * types created through their data endpoints. A press article is created
+     * and edited by the same action, so its privileges are held under that
+     * single name.
      */
-    public function getSubmitAction(): string
+    public function getSubmitAction(): ?string
     {
         return match ($this) {
-            self::ProdBatch, self::PictureBatch, self::MusicBatch => 'batchUpload',
+            self::Author, self::Group, self::ProdBatch, self::Release => null,
+            self::PictureBatch, self::MusicBatch => 'batchUpload',
             self::PressArticle => 'publicReceive',
-            default => 'publicAdd',
+            self::Party => 'publicAdd',
         };
     }
 }

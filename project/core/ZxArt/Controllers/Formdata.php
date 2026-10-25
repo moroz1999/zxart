@@ -24,7 +24,6 @@ use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Import\ImportOriginsHolder;
-use ZxArt\Releases\Services\ReleaseBatchCreateService;
 use ZxArt\Shared\EntityType;
 use ZxArt\Tags\TagsHolderInterface;
 use zxPictureElement;
@@ -55,7 +54,6 @@ class Formdata extends LoggedControllerApplication
         private readonly ElementPrivilegesService $elementPrivilegesService,
         private readonly FormLanguagesProvider $formLanguagesProvider,
         private readonly FormCreateService $formCreateService,
-        private readonly ReleaseBatchCreateService $releaseBatchCreateService,
         private readonly translationsManager $translationsManager,
     ) {
         parent::__construct($controller, $logger);
@@ -140,21 +138,11 @@ class Formdata extends LoggedControllerApplication
     }
 
     /**
-     * A release form creates one release per uploaded file, so its response names
-     * every one of them and the SPA decides where to go. Every other form creates
-     * a single element and answers through the element action itself.
+     * The element action answers the submission itself.
      */
     private function submitCreateForm(FormCreateType $formType, ?int $year, ?int $parentId): void
     {
-        $fields = $this->getCreateFields();
-        if ($formType !== FormCreateType::Release) {
-            $this->formCreateService->submit($formType, $year, $this->controller, $fields, $parentId);
-            return;
-        }
-
-        $releases = $this->releaseBatchCreateService->create($this->controller, $fields, $parentId);
-        $ids = array_map(static fn(structureElement $release): int => $release->getId(), $releases);
-        $this->assignSuccess(['id' => $ids[0], 'ids' => $ids]);
+        $this->formCreateService->submit($formType, $year, $this->controller, $this->getCreateFields(), $parentId);
     }
 
     /**

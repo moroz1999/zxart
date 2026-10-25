@@ -9,15 +9,15 @@ use controller;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
-use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
-use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
-use ZxArt\Authors\Dto\AuthorAliasCreateDto;
 use ZxArt\Authors\Exception\AuthorAliasFormException;
-use ZxArt\Authors\Rest\AuthorAliasCreatedRestDto;
 use ZxArt\Authors\Rest\AuthorAliasFormRestDto;
 use ZxArt\Authors\Services\AuthorAliasFormService;
 
+/**
+ * The context of the form that adds an alias to an author (`/author-alias-form/`).
+ * The alias itself is created through its data endpoint.
+ */
 class AuthorAliasForm extends LoggedControllerApplication
 {
     public $rendererName = 'json';
@@ -27,7 +27,6 @@ class AuthorAliasForm extends LoggedControllerApplication
         Logger $logger,
         private readonly AuthorAliasFormService $authorAliasFormService,
         private readonly ObjectMapper $objectMapper,
-        private readonly SerializerInterface $serializer,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -43,11 +42,7 @@ class AuthorAliasForm extends LoggedControllerApplication
     public function execute($controller): void
     {
         try {
-            if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-                $this->createAlias($controller);
-            } else {
-                $this->getForm();
-            }
+            $this->getForm();
         } catch (AuthorAliasFormException $exception) {
             $this->logThrowable('AuthorAliasForm::execute', $exception);
             $this->assignError($exception->getMessage(), $exception->getStatusCode());
@@ -64,28 +59,6 @@ class AuthorAliasForm extends LoggedControllerApplication
         $authorId = (int)$this->getParameter('authorId');
         $form = $this->authorAliasFormService->getForm($authorId);
         $this->renderer->assign('body', $this->objectMapper->map($form, AuthorAliasFormRestDto::class));
-    }
-
-    private function createAlias(controller $controller): void
-    {
-        $request = $this->readCreateRequest();
-        $created = $this->authorAliasFormService->create($request, $controller);
-        CmsHttpResponse::getInstance()->setStatusCode('201');
-        $this->renderer->assign('body', $this->objectMapper->map($created, AuthorAliasCreatedRestDto::class));
-    }
-
-    private function readCreateRequest(): AuthorAliasCreateDto
-    {
-        $body = file_get_contents('php://input');
-        if (!is_string($body)) {
-            throw new AuthorAliasFormException('Invalid request body', 400);
-        }
-
-        try {
-            return $this->serializer->deserialize($body, AuthorAliasCreateDto::class, 'json');
-        } catch (SerializerException $exception) {
-            throw new AuthorAliasFormException($exception->getMessage(), 400, $exception);
-        }
     }
 
     private function assignError(string $message, int $statusCode): void

@@ -2404,16 +2404,6 @@
       <code><![CDATA[$url]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/Authors/Dto/AuthorAliasCreateDto.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="project/core/ZxArt/Authors/Dto/AuthorAliasCreatedDto.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="project/core/ZxArt/Authors/Dto/AuthorAliasDataResultDto.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$id]]></code>
@@ -2755,14 +2745,6 @@
     <UnusedFunctionCall>
       <code><![CDATA[array_filter]]></code>
     </UnusedFunctionCall>
-  </file>
-  <file src="project/core/ZxArt/Authors/Rest/AuthorAliasCreatedRestDto.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$id]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="project/core/ZxArt/Authors/Rest/AuthorAliasDataResultRestDto.php">
     <PossiblyUnusedMethod>
@@ -12663,11 +12645,6 @@
       <code><![CDATA[empty($dto->year)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="project/core/ZxArt/Releases/Services/ReleaseBatchCreateService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="project/core/ZxArt/Releases/Services/ReleaseByFilesFinder.php">
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$foundReleaseId]]></code>
@@ -21170,84 +21147,6 @@
       <code><![CDATA[joinAuthor]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/structureElements/author/action.publicAdd.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicAddAuthor]]></code>
-    </ClassMustBeFinal>
-    <DeprecatedMethod>
-      <code><![CDATA[prepareActualData]]></code>
-    </DeprecatedMethod>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$validators]]></code>
-    </PossiblyUnusedParam>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicAddAuthor]]></code>
-      <code><![CDATA[publicAddAuthor]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicAddAuthor]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/author/action.publicReceive.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicReceiveAuthor]]></code>
-    </ClassMustBeFinal>
-    <DeprecatedMethod>
-      <code><![CDATA[prepareActualData]]></code>
-    </DeprecatedMethod>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$validators]]></code>
-    </PossiblyUnusedParam>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicReceiveAuthor]]></code>
-      <code><![CDATA[publicReceiveAuthor]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicReceiveAuthor]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/structureElements/author/action.recalculate.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[recalculateAuthor]]></code>
@@ -23817,89 +23716,6 @@
       <code><![CDATA[joinGroup]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/structureElements/group/action.publicAdd.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicAddGroup]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$validators]]></code>
-    </PossiblyUnusedParam>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicAddGroup]]></code>
-      <code><![CDATA[publicAddGroup]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedMagicPropertyAssignment>
-      <code><![CDATA[$structureElement->image]]></code>
-      <code><![CDATA[$structureElement->originalName]]></code>
-    </UndefinedMagicPropertyAssignment>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicAddGroup]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/group/action.publicReceive.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicReceiveGroup]]></code>
-    </ClassMustBeFinal>
-    <DeprecatedMethod>
-      <code><![CDATA[prepareActualData]]></code>
-    </DeprecatedMethod>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$validators]]></code>
-    </PossiblyUnusedParam>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicReceiveGroup]]></code>
-      <code><![CDATA[publicReceiveGroup]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedMagicPropertyAssignment>
-      <code><![CDATA[$structureElement->image]]></code>
-      <code><![CDATA[$structureElement->originalName]]></code>
-    </UndefinedMagicPropertyAssignment>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("image")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicReceiveGroup]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/structureElements/group/action.receive.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[receiveGroup]]></code>
@@ -24234,54 +24050,6 @@
     </UndefinedMagicPropertyFetch>
     <UnusedClass>
       <code><![CDATA[joinGroupAlias]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/groupAlias/action.publicAdd.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicAddGroupAlias]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicAddGroupAlias]]></code>
-      <code><![CDATA[publicAddGroupAlias]]></code>
-    </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[publicAddGroupAlias]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/groupAlias/action.publicReceive.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicReceiveGroupAlias]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicReceiveGroupAlias]]></code>
-      <code><![CDATA[publicReceiveGroupAlias]]></code>
-    </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[publicReceiveGroupAlias]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/structureElements/groupAlias/action.receive.class.php">
@@ -29501,43 +29269,6 @@
       <code><![CDATA[joinZxProd]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/structureElements/zxProd/action.publicReceive.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicReceiveZxProd]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$oldCategoriesIds]]></code>
-      <code><![CDATA[$oldCategoriesIds]]></code>
-      <code><![CDATA[$structureElement->categories]]></code>
-      <code><![CDATA[$structureElement->categories]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$oldCategoriesIds]]></code>
-    </MixedAssignment>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$validators]]></code>
-    </PossiblyUnusedParam>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicReceiveZxProd]]></code>
-      <code><![CDATA[publicReceiveZxProd]]></code>
-    </PropertyNotSetInConstructor>
-    <UnusedClass>
-      <code><![CDATA[publicReceiveZxProd]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/structureElements/zxProd/action.receiveAiForm.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[receiveAiFormZxProd]]></code>
@@ -30623,101 +30354,6 @@
       <code><![CDATA[zxProdsElement]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/structureElements/zxProdsUploadForm/action.batchUpload.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
-    </ClassMustBeFinal>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$fileInfo['tmp_name']]]></code>
-      <code><![CDATA[$originalFileName]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$fileInfo['name']]]></code>
-      <code><![CDATA[$fileInfo['name']]]></code>
-      <code><![CDATA[$fileInfo['tmp_name']]]></code>
-      <code><![CDATA[$fileInfo['tmp_name']]]></code>
-      <code><![CDATA[$privilege[0]]]></code>
-      <code><![CDATA[$privilege[1]]]></code>
-      <code><![CDATA[$privilege[2]]]></code>
-    </MixedArrayAccess>
-    <MixedAssignment>
-      <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$fileInfo]]></code>
-      <code><![CDATA[$filesInfo]]></code>
-      <code><![CDATA[$originalFileName]]></code>
-      <code><![CDATA[$privilege]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$cachePath]]></code>
-      <code><![CDATA[$this->getService(PathsManager::class)->getPath('releases')]]></code>
-    </MixedOperand>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
-      <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedMagicPropertyAssignment>
-      <code><![CDATA[$zxProdElement->addAuthor]]></code>
-      <code><![CDATA[$zxProdElement->addAuthorRole]]></code>
-      <code><![CDATA[$zxProdElement->altTitle]]></code>
-      <code><![CDATA[$zxProdElement->categories]]></code>
-      <code><![CDATA[$zxProdElement->compo]]></code>
-      <code><![CDATA[$zxProdElement->connectedFile]]></code>
-      <code><![CDATA[$zxProdElement->dateAdded]]></code>
-      <code><![CDATA[$zxProdElement->denyComments]]></code>
-      <code><![CDATA[$zxProdElement->denyVoting]]></code>
-      <code><![CDATA[$zxProdElement->description]]></code>
-      <code><![CDATA[$zxProdElement->externalLink]]></code>
-      <code><![CDATA[$zxProdElement->groups]]></code>
-      <code><![CDATA[$zxProdElement->hardwareRequired]]></code>
-      <code><![CDATA[$zxProdElement->htmlDescription]]></code>
-      <code><![CDATA[$zxProdElement->htmlInstructions]]></code>
-      <code><![CDATA[$zxProdElement->instructions]]></code>
-      <code><![CDATA[$zxProdElement->language]]></code>
-      <code><![CDATA[$zxProdElement->legalStatus]]></code>
-      <code><![CDATA[$zxProdElement->mapFilesSelector]]></code>
-      <code><![CDATA[$zxProdElement->party]]></code>
-      <code><![CDATA[$zxProdElement->partyplace]]></code>
-      <code><![CDATA[$zxProdElement->publishers]]></code>
-      <code><![CDATA[$zxProdElement->tags]]></code>
-      <code><![CDATA[$zxProdElement->userId]]></code>
-      <code><![CDATA[$zxProdElement->year]]></code>
-      <code><![CDATA[$zxProdElement->youtubeId]]></code>
-      <code><![CDATA[$zxReleaseElement->dateAdded]]></code>
-      <code><![CDATA[$zxReleaseElement->file]]></code>
-      <code><![CDATA[$zxReleaseElement->fileName]]></code>
-      <code><![CDATA[$zxReleaseElement->userId]]></code>
-    </UndefinedMagicPropertyAssignment>
-    <UndefinedMagicPropertyFetch>
-      <code><![CDATA[$structureElement->addAuthor]]></code>
-      <code><![CDATA[$structureElement->addAuthorRole]]></code>
-      <code><![CDATA[$structureElement->connectedFile]]></code>
-      <code><![CDATA[$structureElement->file]]></code>
-      <code><![CDATA[$structureElement->htmlDescription]]></code>
-      <code><![CDATA[$structureElement->htmlInstructions]]></code>
-      <code><![CDATA[$structureElement->mapFilesSelector]]></code>
-    </UndefinedMagicPropertyFetch>
-    <UndefinedMethod>
-      <code><![CDATA[checkLinks]]></code>
-      <code><![CDATA[logCreation]]></code>
-      <code><![CDATA[persistAuthorship]]></code>
-      <code><![CDATA[renewPartyLink]]></code>
-      <code><![CDATA[updateFileStructure]]></code>
-      <code><![CDATA[updateTagsInfo]]></code>
-      <code><![CDATA[updateYear]]></code>
-    </UndefinedMethod>
-    <UnusedClass>
-      <code><![CDATA[batchUploadZxProdsUploadForm]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/structureElements/zxProdsUploadForm/action.batchUploadForm.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[batchUploadFormZxProdsUploadForm]]></code>
@@ -30870,87 +30506,6 @@
     </PropertyNotSetInConstructor>
     <UnusedClass>
       <code><![CDATA[moveScreenshotsZxRelease]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/zxRelease/action.publicAdd.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicAddZxRelease]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MixedArrayAccess>
-      <code><![CDATA[$validators['zxProd']]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$validators['zxProd']]]></code>
-    </MixedArrayAssignment>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$currentUserService->getCurrentUser()->id]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicAddZxRelease]]></code>
-      <code><![CDATA[publicAddZxRelease]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicAddZxRelease]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/structureElements/zxRelease/action.publicReceive.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[publicReceiveZxRelease]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$expectedFields]]></code>
-      <code><![CDATA[$validators]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$loggable]]></code>
-    </MissingPropertyType>
-    <MixedArrayAccess>
-      <code><![CDATA[$validators['zxProd']]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$validators['zxProd']]]></code>
-    </MixedArrayAssignment>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$structureElement]]></code>
-    </MoreSpecificImplementedParamType>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-    </PossiblyNullPropertyFetch>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[publicReceiveZxRelease]]></code>
-      <code><![CDATA[publicReceiveZxRelease]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-      <code><![CDATA[$structureElement->getDataChunk("file")->originalName]]></code>
-    </UndefinedPropertyFetch>
-    <UnusedClass>
-      <code><![CDATA[publicReceiveZxRelease]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/structureElements/zxRelease/action.show.class.php">

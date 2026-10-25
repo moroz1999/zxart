@@ -45,27 +45,21 @@ final readonly class FormCreateService
         ?int $parentId = null,
     ): structureElement
     {
+        $submitAction = $formType->getSubmitAction();
+        if ($submitAction === null) {
+            throw new FormCreateException(
+                sprintf('A new %s is created through its data endpoint', $formType->value),
+                405,
+            );
+        }
         $element = $this->createElement($formType, $year, $parentId);
         return $this->submitElement(
             $element,
-            $formType->getSubmitAction(),
+            $submitAction,
             $controller,
             $fields,
             !$formType->isBatchUpload(),
         );
-    }
-
-    /**
-     * @param array<array-key, mixed> $fields
-     */
-    public function submitAuthorAlias(
-        int $authorId,
-        controller $controller,
-        array $fields,
-    ): structureElement
-    {
-        $element = $this->createAuthorAliasDraft($authorId);
-        return $this->submitElement($element, 'publicAdd', $controller, $fields);
     }
 
     /**

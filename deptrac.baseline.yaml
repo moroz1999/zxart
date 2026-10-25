@@ -32,7 +32,6 @@ deptrac:
       - authorElement
     ZxArt\Authors\Services\AuthorAliasFormService:
       - authorElement
-      - controller
       - structureManager
     ZxArt\Authors\Services\AuthorCollaboratorsService:
       - authorAliasElement
@@ -2717,9 +2716,6 @@ deptrac:
       - zxReleaseElement
     ZxArt\Releases\ReleasesTransformer:
       - zxReleaseElement
-    ZxArt\Releases\Services\ReleaseBatchCreateService:
-      - controller
-      - structureElement
     ZxArt\Releases\Services\ReleaseCreator:
       - App\Users\CurrentUserService
       - structureManager

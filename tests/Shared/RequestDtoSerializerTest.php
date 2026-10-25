@@ -7,7 +7,6 @@ namespace ZxArt\Tests\Shared;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
 use Symfony\Component\Serializer\SerializerInterface;
-use ZxArt\Authors\Dto\AuthorAliasCreateDto;
 use ZxArt\Feedback\Dto\FeedbackRequestDto;
 use ZxArt\Playlists\Dto\PlaylistRenameRequestDto;
 use ZxArt\Radio\Dto\RadioNextTuneRequestDto;
@@ -44,17 +43,12 @@ final class RequestDtoSerializerTest extends TestCase
             '{"currentPassword":"old","password":"new","passwordRepeat":"new"}',
             PasswordChangeRequestDto::class,
         );
-        $alias = $this->deserialize(
-            '{"authorId":4,"title":"Alias","startDate":"1990","endDate":"2000","displayInMusic":true,"displayInGraphics":false}',
-            AuthorAliasCreateDto::class,
-        );
         $playlist = $this->deserialize('{"id":3,"title":"Favourites"}', PlaylistRenameRequestDto::class);
         $tunePlay = $this->deserialize('{"tuneId":8,"context":"radio"}', TunePlayRequestDto::class);
 
         self::assertTrue($login->remember);
         self::assertSame('user@example.com', $feedback->email);
         self::assertSame('new', $passwordChange->password);
-        self::assertSame(4, $alias->authorId);
         self::assertSame(3, $playlist->id);
         self::assertSame(8, $tunePlay->tuneId);
     }

@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace ZxArt\Authors\Services;
 
 use authorElement;
-use controller;
 use RuntimeException;
 use structureManager;
-use ZxArt\Authors\Dto\AuthorAliasCreateDto;
-use ZxArt\Authors\Dto\AuthorAliasCreatedDto;
 use ZxArt\Authors\Dto\AuthorAliasFormAuthorDto;
 use ZxArt\Authors\Dto\AuthorAliasFormDto;
 use ZxArt\Authors\Exception\AuthorAliasFormException;
@@ -38,34 +35,6 @@ final readonly class AuthorAliasFormService
                 title: $this->decode($author->getTitle()),
             ),
         );
-    }
-
-    public function create(AuthorAliasCreateDto $request, controller $controller): AuthorAliasCreatedDto
-    {
-        $this->getAuthor($request->authorId);
-        $title = trim($request->title);
-        if ($title === '') {
-            throw new AuthorAliasFormException('Alias title is required', 400);
-        }
-
-        try {
-            $alias = $this->formCreateService->submitAuthorAlias(
-                $request->authorId,
-                $controller,
-                [
-                    'title' => $title,
-                    'authorId' => (string)$request->authorId,
-                    'startDate' => $request->startDate,
-                    'endDate' => $request->endDate,
-                    'displayInMusic' => $request->displayInMusic ? '1' : '',
-                    'displayInGraphics' => $request->displayInGraphics ? '1' : '',
-                ],
-            );
-        } catch (RuntimeException $exception) {
-            throw new AuthorAliasFormException('Forbidden', 403, $exception);
-        }
-
-        return new AuthorAliasCreatedDto($alias->getId());
     }
 
     private function getAuthor(int $authorId): authorElement
