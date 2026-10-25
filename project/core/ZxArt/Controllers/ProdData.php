@@ -6,17 +6,32 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
+use InvalidArgumentException;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
+use ZxArt\Prods\Dto\ProdBatchUploadRequestDto;
+use ZxArt\Prods\Dto\ProdDataResultDto;
+use ZxArt\Prods\Dto\ProdFileUploadDto;
+use ZxArt\Prods\Dto\ProdSaveRequestDto;
 use ZxArt\Prods\Exception\ProdDataException;
+use ZxArt\Prods\ProdFileKind;
 use ZxArt\Prods\Rest\ProdDataResultRestDto;
 use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Shared\Dto\CreatedIdsDto;
+use ZxArt\Shared\Http\MultipartDataReader;
+use ZxArt\Shared\Http\UploadedFilesReader;
+use ZxArt\Shared\Rest\CreatedIdsRestDto;
 
 /**
- * Changes to one production: POST `/prod-data/?id=&action=` with the action one of
- * `delete`, `deleteMember`, `deleteFile`. Answers the id of the element the change produced.
+ * Changes to one production: POST `/prod-data/?id=&action=` with the action
+ * one of `update`, `batchUpload`, `delete`, `deleteMember`, `deleteFile`.
+ * Answers the id of the element the change produced. Answers `{ids}` for
+ * `batchUpload`. `update` and `batchUpload` take a multipart body: the JSON
+ * `data` part (`ProdSaveRequestDto`, `ProdBatchUploadRequestDto`), the
+ * software files under `releaseFiles[]` and the files of each list under
+ * `files[<kind>][]`.
  *
  * @psalm-api
  */
@@ -29,6 +44,8 @@ final class ProdData extends LoggedControllerApplication
         Logger $logger,
         private readonly ProdDataService $prodDataService,
         private readonly ObjectMapper $objectMapper,
+        private readonly MultipartDataReader $multipartDataReader,
+        private readonly UploadedFilesReader $uploadedFilesReader,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -49,12 +66,19 @@ final class ProdData extends LoggedControllerApplication
             }
             $prodId = (int)$this->getParameter('id');
             $result = match ((string)$this->getParameter('action')) {
+                'update' => $this->update($prodId),
+                'batchUpload' => $this->batchUpload(),
                 'delete' => $this->prodDataService->delete($prodId),
                 'deleteMember' => $this->prodDataService->deleteMember($prodId, (int)$this->getParameter('authorId')),
                 'deleteFile' => $this->prodDataService->deleteFile($prodId, (int)$this->getParameter('fileId')),
                 default => throw new ProdDataException('Unsupported production action', 400),
             };
-            $this->renderer->assign('body', $this->objectMapper->map($result, ProdDataResultRestDto::class));
+            $this->renderer->assign('body', $result instanceof CreatedIdsDto
+                ? $this->objectMapper->map($result, CreatedIdsRestDto::class)
+                : $this->objectMapper->map($result, ProdDataResultRestDto::class));
+        } catch (InvalidArgumentException $exception) {
+            $this->logThrowable('ProdData::execute', $exception);
+            $this->assignError($exception->getMessage(), 400);
         } catch (ProdDataException $exception) {
             $this->logThrowable('ProdData::execute', $exception);
             $this->assignError($exception->getMessage(), $exception->getStatusCode());
@@ -64,6 +88,50 @@ final class ProdData extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    /**
+     * @throws ProdDataException
+     * @throws InvalidArgumentException
+     */
+    private function update(int $prodId): ProdDataResultDto
+    {
+        $request = $this->multipartDataReader->read($_POST, ProdSaveRequestDto::class);
+
+        return $this->prodDataService->update($prodId, $request->fields, $request->authors, $request->importOrigins, $this->uploadedFiles());
+    }
+
+    /**
+     * @throws ProdDataException
+     * @throws InvalidArgumentException
+     */
+    private function batchUpload(): CreatedIdsDto
+    {
+        $request = $this->multipartDataReader->read($_POST, ProdBatchUploadRequestDto::class);
+
+        return $this->prodDataService->batchUpload(
+            $request->fields,
+            $this->uploadedFilesReader->many($_FILES, 'releaseFiles'),
+            $request->authors,
+            $this->uploadedFiles(),
+        );
+    }
+
+    /**
+     * @return list<ProdFileUploadDto>
+     * @throws InvalidArgumentException for a kind a production has no list of
+     */
+    private function uploadedFiles(): array
+    {
+        $uploads = [];
+        foreach ($this->uploadedFilesReader->byKind($_FILES, 'files') as $kindName => $files) {
+            $kind = ProdFileKind::tryFrom($kindName) ?? throw new InvalidArgumentException("A production has no $kindName files");
+            foreach ($files as $file) {
+                $uploads[] = new ProdFileUploadDto($kind, $file);
+            }
+        }
+
+        return $uploads;
     }
 
     private function assignError(string $message, int $statusCode): void

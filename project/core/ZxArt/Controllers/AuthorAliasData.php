@@ -6,17 +6,24 @@ namespace ZxArt\Controllers;
 
 use CmsHttpResponse;
 use controller;
+use InvalidArgumentException;
 use Monolog\Logger;
 use Override;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Throwable;
+use ZxArt\Authors\Dto\AuthorAliasDataResultDto;
+use ZxArt\Authors\Dto\AuthorAliasSaveRequestDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Rest\AuthorAliasDataResultRestDto;
 use ZxArt\Authors\Services\AuthorAliasDataService;
+use ZxArt\Shared\Http\MultipartDataReader;
+use ZxArt\Shared\Http\UploadedFilesReader;
 
 /**
- * Changes to one author alias: POST `/author-alias-data/?id=&action=` with the action one of
- * `delete`, `convertToAuthor`. Answers the id of the element the change produced.
+ * Changes to one author alias: POST `/author-alias-data/?id=&action=` with the
+ * action one of `create`, `update`, `delete`, `convertToAuthor`. Answers the
+ * id of the element the change produced. `create` and `update` take a
+ * multipart body with the JSON `data` part (`AuthorAliasSaveRequestDto`).
  *
  * @psalm-api
  */
@@ -29,6 +36,8 @@ final class AuthorAliasData extends LoggedControllerApplication
         Logger $logger,
         private readonly AuthorAliasDataService $authorAliasDataService,
         private readonly ObjectMapper $objectMapper,
+        private readonly MultipartDataReader $multipartDataReader,
+        private readonly UploadedFilesReader $uploadedFilesReader,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -49,11 +58,16 @@ final class AuthorAliasData extends LoggedControllerApplication
             }
             $aliasId = (int)$this->getParameter('id');
             $result = match ((string)$this->getParameter('action')) {
+                'create' => $this->create(),
+                'update' => $this->update($aliasId),
                 'delete' => $this->authorAliasDataService->delete($aliasId),
                 'convertToAuthor' => $this->authorAliasDataService->convertToAuthor($aliasId),
                 default => throw new AuthorAliasDataException('Unsupported author alias action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, AuthorAliasDataResultRestDto::class));
+        } catch (InvalidArgumentException $exception) {
+            $this->logThrowable('AuthorAliasData::execute', $exception);
+            $this->assignError($exception->getMessage(), 400);
         } catch (AuthorAliasDataException $exception) {
             $this->logThrowable('AuthorAliasData::execute', $exception);
             $this->assignError($exception->getMessage(), $exception->getStatusCode());
@@ -63,6 +77,28 @@ final class AuthorAliasData extends LoggedControllerApplication
         }
 
         $this->renderer->display();
+    }
+
+    /**
+     * @throws AuthorAliasDataException
+     * @throws InvalidArgumentException
+     */
+    private function create(): AuthorAliasDataResultDto
+    {
+        $request = $this->multipartDataReader->read($_POST, AuthorAliasSaveRequestDto::class);
+
+        return $this->authorAliasDataService->create($request->fields, $request->groups, $request->prods, $request->importOrigins);
+    }
+
+    /**
+     * @throws AuthorAliasDataException
+     * @throws InvalidArgumentException
+     */
+    private function update(int $aliasId): AuthorAliasDataResultDto
+    {
+        $request = $this->multipartDataReader->read($_POST, AuthorAliasSaveRequestDto::class);
+
+        return $this->authorAliasDataService->update($aliasId, $request->fields, $request->groups, $request->prods, $request->importOrigins);
     }
 
     private function assignError(string $message, int $statusCode): void
