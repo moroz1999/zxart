@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Groups\Dto;
 
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 
 /**
  * What a group search narrows by; every filter given must hold, a list when
@@ -22,7 +22,7 @@ final readonly class GroupSearchFilterDto
      * @param int[] $cityIds
      * @param string[] $types
      * @param int[] $memberIds authors (or their aliases) recorded as members
-     * @param int[] $prodIds made or published one of these productions, as `prodRole` narrows it
+     * @param int[] $prodIds made or published one of these productions, as `prodLink` narrows it
      */
     public function __construct(
         /** a part of the title, of the abbreviation or of an alias */
@@ -41,7 +41,7 @@ final readonly class GroupSearchFilterDto
         public array $memberIds = [],
         public array $prodIds = [],
         /** what the group did for the productions given or found; alone, groups that did it for any */
-        public ?GroupProdRole $prodRole = null,
+        public ?ProdLink $prodLink = null,
         /** made or published a production the nested search finds */
         public ?ProdSearchFilterDto $prods = null,
         /** a subgroup of this group */

@@ -9,7 +9,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 
 /**
  * Groups by a part of the title, of the abbreviation or of an alias, by
@@ -97,8 +97,8 @@ class GroupSearchDbalTest extends TestCase
         $this->link(self::CODE_BUSTERS, self::EXOLON, 'zxProdGroups');
 
         self::assertSame([self::SAGE, self::TRIUMPH], $this->search(new GroupSearchFilterDto(prodIds: [self::ELITE])));
-        self::assertSame([self::TRIUMPH], $this->search(new GroupSearchFilterDto(prodIds: [self::ELITE], prodRole: GroupProdRole::Developer)));
-        self::assertSame([self::SAGE], $this->search(new GroupSearchFilterDto(prodRole: GroupProdRole::Publisher)));
+        self::assertSame([self::TRIUMPH], $this->search(new GroupSearchFilterDto(prodIds: [self::ELITE], prodLink: ProdLink::Made)));
+        self::assertSame([self::SAGE], $this->search(new GroupSearchFilterDto(prodLink: ProdLink::Published)));
     }
 
     public function testTheActiveYearsAreTheYearsOfItsSoftware(): void
@@ -117,7 +117,7 @@ class GroupSearchDbalTest extends TestCase
         $found = $this->db->table('module_zxprod')->select('id')->where('year', '=', 1987);
 
         self::assertSame([self::SAGE], $this->dbal->findIds(new GroupSearchFilterDto(), $found, 0, 10));
-        self::assertSame([], $this->dbal->findIds(new GroupSearchFilterDto(prodRole: GroupProdRole::Developer), $found, 0, 10));
+        self::assertSame([], $this->dbal->findIds(new GroupSearchFilterDto(prodLink: ProdLink::Made), $found, 0, 10));
     }
 
     public function testTheSubgroupsOfAGroupAndTheGroupsAGroupBelongsTo(): void

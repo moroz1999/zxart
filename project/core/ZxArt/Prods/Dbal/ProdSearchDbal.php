@@ -10,15 +10,16 @@ use Illuminate\Database\Query\Builder;
 use ZxArt\Authors\Dbal\AuthorshipCredits;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
+use ZxArt\Shared\Dbal\PublishedBy;
 use ZxArt\Shared\EntityType;
 
 /**
  * Narrows the productions a catalogue query left (`$catalogueIds`, a query
  * of rows with an `id`) by the filters the catalogue does not hold: title,
- * dates, authors and groups, places, parties, series and compilations. Pages
+ * dates, authors, groups and publishers, places, parties, series and compilations. Pages
  * them by title.
  *
  * @psalm-api
@@ -87,7 +88,10 @@ final readonly class ProdSearchDbal extends AbstractDbal
         }
         AuthorshipCredits::apply($query, $prodTable . '.id', EntityType::Prod, $filter->authorIds, $filter->anyAuthor, $filter->authorRoles);
         if ($filter->groupIds !== []) {
-            $query->whereIn($prodTable . '.id', $this->prodsOfGroups($filter->groupIds, $filter->groupRole));
+            $query->whereIn($prodTable . '.id', $this->prodsOfGroups($filter->groupIds, $filter->groupLink));
+        }
+        if ($filter->publisherIds !== []) {
+            $query->whereIn($prodTable . '.id', PublishedBy::elements(LinkTypes::ZX_PROD_PUBLISHERS, $filter->publisherIds));
         }
         if ($filter->countryIds !== []) {
             $this->applyPlace($query, $prodTable, 'country', $filter->countryIds);
@@ -145,13 +149,13 @@ final readonly class ProdSearchDbal extends AbstractDbal
      *
      * @param int[] $groupIds
      */
-    private function prodsOfGroups(array $groupIds, ?GroupProdRole $role): Closure
+    private function prodsOfGroups(array $groupIds, ?ProdLink $role): Closure
     {
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $aliasTable = $this->tableName(DatabaseTable::GroupAlias);
         $linkTypes = match ($role) {
-            GroupProdRole::Developer => [LinkTypes::ZX_PROD_GROUPS->value],
-            GroupProdRole::Publisher => [LinkTypes::ZX_PROD_PUBLISHERS->value],
+            ProdLink::Made => [LinkTypes::ZX_PROD_GROUPS->value],
+            ProdLink::Published => [LinkTypes::ZX_PROD_PUBLISHERS->value],
             null => [LinkTypes::ZX_PROD_GROUPS->value, LinkTypes::ZX_PROD_PUBLISHERS->value],
         };
 

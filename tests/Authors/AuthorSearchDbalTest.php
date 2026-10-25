@@ -9,6 +9,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Authors\Dbal\AuthorSearchDbal;
 use ZxArt\Authors\Dto\AuthorSearchFilterDto;
+use ZxArt\Prods\ProdLink;
 
 /**
  * Authors by a part of the nickname, of the real name in any language or of an
@@ -45,6 +46,7 @@ class AuthorSearchDbalTest extends TestCase
         $pdo->exec('CREATE TABLE module_groupalias (id INTEGER, title TEXT, groupId INTEGER)');
         $pdo->exec('CREATE TABLE module_zxprod (id INTEGER, year INTEGER)');
         $pdo->exec('CREATE TABLE authorship (authorId INTEGER, elementId INTEGER, type TEXT, roles TEXT)');
+        $pdo->exec('CREATE TABLE structure_links (parentStructureId INTEGER, childStructureId INTEGER, type TEXT)');
         $this->addAuthor(self::ALEX, 'Alex', ['Alexander Ivanov', 'Александр Иванов'], self::ESTONIA, self::TALLINN);
         $this->addAuthor(self::BORIS, 'Boris', ['Boris Petrov', 'Борис Петров'], self::ESTONIA, self::TARTU);
         $this->addAuthor(self::CLAUDE, 'Claude', ['', ''], 0, 0);
@@ -120,6 +122,34 @@ class AuthorSearchDbalTest extends TestCase
         self::assertSame(1, $this->dbal->count(new AuthorSearchFilterDto(prodRoles: ['code']), $found));
     }
 
+    public function testAPublisherIsLinkedToTheSoftwareItPublished(): void
+    {
+        $this->credit(self::ALEX, self::ELITE, ['code']);
+        $this->publish(self::BORIS, self::ELITE);
+        $this->publish(self::GROUP, self::ELITE);
+        $this->publish(self::ALEX_ALIAS, self::EXOLON);
+        $this->credit(self::CLAUDE, self::EXOLON, ['music']);
+
+        self::assertSame([self::ALEX, self::BORIS], $this->search(new AuthorSearchFilterDto(prodIds: [self::ELITE])));
+        self::assertSame([self::ALEX], $this->search(new AuthorSearchFilterDto(prodIds: [self::ELITE], prodLink: ProdLink::Made)));
+        self::assertSame([self::BORIS], $this->search(new AuthorSearchFilterDto(prodIds: [self::ELITE], prodLink: ProdLink::Published)));
+        self::assertSame([self::ALEX, self::BORIS], $this->search(new AuthorSearchFilterDto(prodLink: ProdLink::Published)));
+        // a publisher holds no role
+        self::assertSame([self::CLAUDE], $this->search(new AuthorSearchFilterDto(prodIds: [self::EXOLON], prodRoles: ['music'])));
+    }
+
+    public function testThePublishedSoftwareCountsForTheNestedSearchAndTheActiveYears(): void
+    {
+        $this->publish(self::ALEX_ALIAS, self::EXOLON);
+        $this->credit(self::CLAUDE, self::EXOLON, ['music']);
+        $this->publish(self::BORIS, self::ELITE);
+        $found = $this->db->table('module_zxprod')->select('id')->where('year', '=', 1987);
+
+        self::assertSame([self::ALEX], $this->dbal->findIds(new AuthorSearchFilterDto(prodLink: ProdLink::Published), $found, 0, 10));
+        self::assertSame([self::ALEX, self::CLAUDE], $this->dbal->findIds(new AuthorSearchFilterDto(), $found, 0, 10));
+        self::assertSame([self::ALEX, self::CLAUDE], $this->search(new AuthorSearchFilterDto(activeFrom: 1986)));
+    }
+
     public function testACoAuthorFindsWhoSharedSoftwareWithIt(): void
     {
         $this->credit(self::ALEX_ALIAS, self::ELITE);
@@ -169,6 +199,11 @@ class AuthorSearchDbalTest extends TestCase
     /**
      * @param string[] $roles
      */
+    private function publish(int $publisherId, int $prodId): void
+    {
+        $this->db->table('structure_links')->insert(['parentStructureId' => $publisherId, 'childStructureId' => $prodId, 'type' => 'zxProdPublishers']);
+    }
+
     private function credit(int $authorId, int $prodId, array $roles = ['unknown']): void
     {
         $this->db->table('authorship')->insert([

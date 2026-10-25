@@ -13,6 +13,7 @@ use ZxArt\Releases\Dto\ReleaseSearchFilterDto;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
+use ZxArt\Shared\Dbal\PublishedBy;
 use ZxArt\Shared\EntityType;
 
 /**
@@ -99,7 +100,7 @@ final readonly class ReleaseSearchDbal extends AbstractDbal
             $query->whereIn($idColumn, $this->elementsWith(DatabaseTable::ZxItemLanguage, 'value', $filter->languages));
         }
         if ($filter->publisherIds !== []) {
-            $query->whereIn($idColumn, $this->publishedBy($filter->publisherIds));
+            $query->whereIn($idColumn, PublishedBy::elements(LinkTypes::ZX_RELEASE_PUBLISHERS, $filter->publisherIds));
         }
         AuthorshipCredits::apply($query, $idColumn, EntityType::Release, $filter->authorIds, $filter->anyAuthor, $filter->authorRoles);
 
@@ -158,33 +159,6 @@ final readonly class ReleaseSearchDbal extends AbstractDbal
                 ->from($requiredTable)
                 ->whereIn('hardwareId', static function (Builder $hardwareQuery) use ($hardwareTable, $hardwareCodes): void {
                     $hardwareQuery->select('id')->from($hardwareTable)->whereIn('code', $hardwareCodes);
-                });
-        };
-    }
-
-    /**
-     * Published by the authors or groups, or by their aliases.
-     *
-     * @param int[] $publisherIds
-     */
-    private function publishedBy(array $publisherIds): Closure
-    {
-        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
-        $authorAliasTable = $this->tableName(DatabaseTable::AuthorAlias);
-        $groupAliasTable = $this->tableName(DatabaseTable::GroupAlias);
-
-        return static function (Builder $linkQuery) use ($linksTable, $authorAliasTable, $groupAliasTable, $publisherIds): void {
-            $linkQuery->select('childStructureId')
-                ->from($linksTable)
-                ->where('type', '=', LinkTypes::ZX_RELEASE_PUBLISHERS->value)
-                ->where(static function (Builder $publisherQuery) use ($authorAliasTable, $groupAliasTable, $publisherIds): void {
-                    $publisherQuery->whereIn('parentStructureId', $publisherIds)
-                        ->orWhereIn('parentStructureId', static function (Builder $aliasQuery) use ($authorAliasTable, $publisherIds): void {
-                            $aliasQuery->select('id')->from($authorAliasTable)->whereIn('authorId', $publisherIds);
-                        })
-                        ->orWhereIn('parentStructureId', static function (Builder $aliasQuery) use ($groupAliasTable, $publisherIds): void {
-                            $aliasQuery->select('id')->from($groupAliasTable)->whereIn('groupId', $publisherIds);
-                        });
                 });
         };
     }

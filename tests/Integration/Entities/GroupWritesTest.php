@@ -23,7 +23,7 @@ use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Groups\Services\GroupFieldsReader;
 use groupElement;
@@ -420,9 +420,9 @@ final class GroupWritesTest extends EntityWriteTestCase
         $find = $this->finder();
 
         self::assertSame([$guildId, $labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
-        self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodRole: GroupProdRole::Developer, prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
+        self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodLink: ProdLink::Made, prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
         self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodIds: [$gameId])));
-        self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodRole: GroupProdRole::Publisher)));
+        self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodLink: ProdLink::Published)));
         self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', activeFrom: 1995)));
         self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', foundedFrom: $this->date('01.01.1995'))));
         self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', types: ['scene'], cityIds: [self::CITY_WARSAW])));

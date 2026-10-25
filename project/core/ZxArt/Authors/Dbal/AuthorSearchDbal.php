@@ -8,6 +8,8 @@ use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Authors\Dto\AuthorSearchFilterDto;
+use ZxArt\LinkTypes;
+use ZxArt\Prods\ProdLink;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
 use ZxArt\Shared\EntityType;
@@ -85,15 +87,15 @@ final readonly class AuthorSearchDbal extends AbstractDbal
             $this->whereRecorded($query, $this->memberships($filter->groupIds));
         }
         if ($filter->activeFrom !== null || $filter->activeTo !== null) {
-            $this->whereRecorded($query, $this->credits($this->prodsOfYears($filter->activeFrom, $filter->activeTo), []));
+            $this->whereLinked($query, $this->prodsOfYears($filter->activeFrom, $filter->activeTo), [], null);
         }
         if ($foundProdIds !== null) {
-            $this->whereRecorded($query, $this->credits((clone $foundProdIds)->select('id'), $filter->prodRoles));
+            $this->whereLinked($query, (clone $foundProdIds)->select('id'), $filter->prodRoles, $filter->prodLink);
         }
         if ($filter->prodIds !== []) {
-            $this->whereRecorded($query, $this->credits($filter->prodIds, $filter->prodRoles));
-        } elseif ($foundProdIds === null && $filter->prodRoles !== []) {
-            $this->whereRecorded($query, $this->credits(null, $filter->prodRoles));
+            $this->whereLinked($query, $filter->prodIds, $filter->prodRoles, $filter->prodLink);
+        } elseif ($foundProdIds === null && ($filter->prodRoles !== [] || $filter->prodLink !== null)) {
+            $this->whereLinked($query, null, $filter->prodRoles, $filter->prodLink);
         }
         if ($filter->coAuthorId !== null) {
             $this->whereRecorded($query, $this->credits($this->prodsOf($filter->coAuthorId), []));
@@ -104,11 +106,39 @@ final readonly class AuthorSearchDbal extends AbstractDbal
     }
 
     /**
+     * Credited on the productions (any when `null`) in one of the roles, or
+     * their publisher, as the link narrows it. Roles leave out the
+     * publishers: a publisher holds none.
+     *
+     * @param int[]|Builder|Closure|null $prodIds
+     * @param string[] $roles
+     */
+    private function whereLinked(Builder $query, array|Builder|Closure|null $prodIds, array $roles, ?ProdLink $link): void
+    {
+        $authorTable = $this->tableName(DatabaseTable::Author);
+        $made = $link !== ProdLink::Published;
+        $published = $link !== ProdLink::Made && $roles === [];
+        if ($made === false && $published === false) {
+            $query->whereIn($authorTable . '.id', []);
+            return;
+        }
+        $query->where(function (Builder $linkQuery) use ($prodIds, $roles, $made, $published): void {
+            if ($made === true) {
+                $this->whereRecorded($linkQuery, $this->credits($prodIds, $roles));
+            }
+            if ($published === true) {
+                $this->whereRecorded($linkQuery, $this->publishers($prodIds), 'or');
+            }
+        });
+    }
+
+    /**
      * The author is the one recorded, or the author of the alias recorded.
      *
-     * @param Closure $recordedIds a query of `authorId` rows
+     * @param Closure $recordedIds a query of author or alias ids
+     * @param 'and'|'or' $boolean how the condition joins the ones before it
      */
-    private function whereRecorded(Builder $query, Closure $recordedIds): void
+    private function whereRecorded(Builder $query, Closure $recordedIds, string $boolean = 'and'): void
     {
         $authorTable = $this->tableName(DatabaseTable::Author);
         $aliasTable = $this->tableName(DatabaseTable::AuthorAlias);
@@ -117,7 +147,7 @@ final readonly class AuthorSearchDbal extends AbstractDbal
                 ->orWhereIn($authorTable . '.id', static function (Builder $aliasQuery) use ($aliasTable, $recordedIds): void {
                     $aliasQuery->select('authorId')->from($aliasTable)->whereIn('id', $recordedIds);
                 });
-        });
+        }, boolean: $boolean);
     }
 
     /**
@@ -162,6 +192,25 @@ final readonly class AuthorSearchDbal extends AbstractDbal
                 $creditQuery->whereIn('elementId', $prodIds);
             }
             AuthorshipRoleCondition::apply($creditQuery, $roles);
+        };
+    }
+
+    /**
+     * Who published the productions (any when `null`).
+     *
+     * @param int[]|Builder|Closure|null $prodIds
+     */
+    private function publishers(array|Builder|Closure|null $prodIds): Closure
+    {
+        $linksTable = $this->tableName(DatabaseTable::StructureLinks);
+
+        return static function (Builder $linkQuery) use ($linksTable, $prodIds): void {
+            $linkQuery->select('parentStructureId')
+                ->from($linksTable)
+                ->where('type', '=', LinkTypes::ZX_PROD_PUBLISHERS->value);
+            if ($prodIds !== null) {
+                $linkQuery->whereIn('childStructureId', $prodIds);
+            }
         };
     }
 

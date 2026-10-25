@@ -9,7 +9,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Prods\Dbal\ProdSearchDbal;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 
 /**
  * Narrows the productions the catalogue filters left by title, dates, people,
@@ -151,12 +151,23 @@ class ProdSearchDbalTest extends TestCase
         $this->link(self::GROUP, self::EXOLON, 'tagLink');
 
         self::assertSame([self::ELITE, self::STAR_WARS], $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP])));
-        self::assertSame([self::ELITE], $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP], groupRole: GroupProdRole::Developer)));
-        self::assertSame([self::STAR_WARS], $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP], groupRole: GroupProdRole::Publisher)));
+        self::assertSame([self::ELITE], $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP], groupLink: ProdLink::Made)));
+        self::assertSame([self::STAR_WARS], $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP], groupLink: ProdLink::Published)));
         self::assertSame(
             [self::ELITE, self::EXOLON, self::STAR_WARS],
             $this->search(new ProdSearchFilterDto(groupIds: [self::GROUP, self::OTHER_GROUP])),
         );
+    }
+
+    public function testAPublisherIsAnAuthorOrAGroupWithTheirAliases(): void
+    {
+        $this->link(self::AUTHOR_ALIAS, self::ELITE, 'zxProdPublishers');
+        $this->link(self::GROUP, self::STAR_WARS, 'zxProdPublishers');
+        $this->link(self::OTHER_GROUP, self::EXOLON, 'zxProdGroups');
+
+        self::assertSame([self::ELITE], $this->search(new ProdSearchFilterDto(publisherIds: [self::AUTHOR])));
+        self::assertSame([self::ELITE, self::STAR_WARS], $this->search(new ProdSearchFilterDto(publisherIds: [self::AUTHOR, self::GROUP])));
+        self::assertSame([], $this->search(new ProdSearchFilterDto(publisherIds: [self::OTHER_GROUP])));
     }
 
     public function testThePlaceIsWhereAnAuthorOrADeveloperGroupComesFrom(): void

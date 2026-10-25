@@ -25,6 +25,8 @@ use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
+use ZxArt\Prods\ProdLink;
+use ZxArt\Prods\Services\ProdSearchService;
 use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Authors\Services\AuthorFieldsReader;
 use authorElement;
@@ -414,6 +416,21 @@ final class AuthorWritesTest extends EntityWriteTestCase
         self::assertSame([$coderId, $musicianId], $find(new AuthorSearchFilterDto(name: 'goldmaster', activeTo: 1992)));
         self::assertSame([$musicianId], $find(new AuthorSearchFilterDto(coAuthorId: $coderId)));
         self::assertSame([$coderId], $find(new AuthorSearchFilterDto(name: 'goldmaster', cityIds: [self::CITY_WARSAW])));
+    }
+
+    public function testAnAuthorWhoPublishedSoftwareIsLinkedToIt(): void
+    {
+        $this->signInAsRegisteredUser();
+        $publisherId = $this->authorDataService()->create(new AuthorFieldsDto(title: 'Goldmaster Publisher'))->id;
+        $gameId = $this->container->get(ProdDataService::class)
+            ->create(new ProdFieldsDto(title: 'Goldmaster Game', year: 1996, publisherIds: [$publisherId]))->id;
+        $find = $this->finder();
+
+        self::assertSame([$publisherId], $find(new AuthorSearchFilterDto(name: 'goldmaster', prodIds: [$gameId], prodLink: ProdLink::Published)));
+        self::assertSame([], $find(new AuthorSearchFilterDto(name: 'goldmaster', prodIds: [$gameId], prodLink: ProdLink::Made)));
+        self::assertSame([$publisherId], $find(new AuthorSearchFilterDto(name: 'goldmaster', activeFrom: 1996)));
+        self::assertSame([$gameId], $this->container->get(ProdSearchService::class)
+            ->search(new ProdSearchFilterDto(title: 'goldmaster', publisherIds: [$publisherId]), 0, 10)->ids);
     }
 
     public function testReadAnswersWhatCreateAndUpdateWrote(): void

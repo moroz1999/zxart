@@ -9,7 +9,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\LinkTypes;
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
 use ZxArt\Shared\EntityType;
@@ -94,12 +94,12 @@ final readonly class GroupSearchDbal extends AbstractDbal
             $this->whereRecorded($query, $this->groupsOfProds($this->prodsOfYears($filter->activeFrom, $filter->activeTo), null));
         }
         if ($foundProdIds !== null) {
-            $this->whereRecorded($query, $this->groupsOfProds((clone $foundProdIds)->select('id'), $filter->prodRole));
+            $this->whereRecorded($query, $this->groupsOfProds((clone $foundProdIds)->select('id'), $filter->prodLink));
         }
         if ($filter->prodIds !== []) {
-            $this->whereRecorded($query, $this->groupsOfProds($filter->prodIds, $filter->prodRole));
-        } elseif ($foundProdIds === null && $filter->prodRole !== null) {
-            $this->whereRecorded($query, $this->groupsOfProds(null, $filter->prodRole));
+            $this->whereRecorded($query, $this->groupsOfProds($filter->prodIds, $filter->prodLink));
+        } elseif ($foundProdIds === null && $filter->prodLink !== null) {
+            $this->whereRecorded($query, $this->groupsOfProds(null, $filter->prodLink));
         }
         if ($filter->parentGroupId !== null) {
             $query->whereIn($groupTable . '.id', $this->subgroupLinks('childStructureId', 'parentStructureId', $filter->parentGroupId));
@@ -171,12 +171,12 @@ final readonly class GroupSearchDbal extends AbstractDbal
      *
      * @param int[]|Builder|Closure|null $prodIds
      */
-    private function groupsOfProds(array|Builder|Closure|null $prodIds, ?GroupProdRole $role): Closure
+    private function groupsOfProds(array|Builder|Closure|null $prodIds, ?ProdLink $role): Closure
     {
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $linkTypes = match ($role) {
-            GroupProdRole::Developer => [LinkTypes::ZX_PROD_GROUPS->value],
-            GroupProdRole::Publisher => [LinkTypes::ZX_PROD_PUBLISHERS->value],
+            ProdLink::Made => [LinkTypes::ZX_PROD_GROUPS->value],
+            ProdLink::Published => [LinkTypes::ZX_PROD_PUBLISHERS->value],
             null => [LinkTypes::ZX_PROD_GROUPS->value, LinkTypes::ZX_PROD_PUBLISHERS->value],
         };
 

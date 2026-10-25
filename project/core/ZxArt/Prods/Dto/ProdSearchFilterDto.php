@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Dto;
 
-use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\ProdLink;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\ReleaseTypes;
 
@@ -27,7 +27,8 @@ final readonly class ProdSearchFilterDto
      * @param string[] $formats of any release
      * @param int[] $authorIds credited on the production itself
      * @param string[] $authorRoles the roles the authors, or anyone when no author is given, are credited with
-     * @param int[] $groupIds that made or published the production, as `groupRole` narrows it
+     * @param int[] $groupIds that made or published the production, as `groupLink` narrows it
+     * @param int[] $publisherIds authors or groups that published the production
      * @param int[] $countryIds of an author or a developer group of the production
      * @param int[] $cityIds of an author or a developer group of the production
      * @param int[] $partyIds where the production was released
@@ -51,7 +52,8 @@ final readonly class ProdSearchFilterDto
         public bool $anyAuthor = false,
         public array $authorRoles = [],
         public array $groupIds = [],
-        public ?GroupProdRole $groupRole = null,
+        public ?ProdLink $groupLink = null,
+        public array $publisherIds = [],
         public array $countryIds = [],
         public array $cityIds = [],
         public array $partyIds = [],

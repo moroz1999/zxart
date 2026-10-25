@@ -121,8 +121,9 @@ author or group, and an author or group is answered once, never its alias.
   - credited authors — all of `authorIds` by default, any of them with
     `anyAuthor` — and the roles they are credited in (`authorRoles` alone:
     anyone credited in those roles);
-  - groups that made or published it, `groupRole` (`GroupProdRole`) narrowing
-    to one of the two;
+  - groups that made or published it, `groupLink` (`ProdLink`: `made`,
+    `published`) narrowing to one of the two; publishers — authors or groups —
+    by `publisherIds`;
   - country or city of an author or of a developer group (a publisher does not
     place a production);
   - party, compo and the highest place;
@@ -133,16 +134,19 @@ author or group, and an author or group is answered once, never its alias.
   ids, which the author and group searches nest.
 - `ZxArt\Authors\Services\AuthorSearchService::search(AuthorSearchFilterDto)` —
   a part of the nickname, of the real name in any language or of an alias;
-  countries, cities; membership of groups; active years — the years of the
-  software they are credited on, nothing else; credits on given productions or
-  on the productions a nested `ProdSearchFilterDto` finds, `prodRoles`
-  narrowing the roles; co-authors of an author (the author itself left out).
+  countries, cities; membership of groups. An author is linked to the software
+  it is credited on (`made`) or published (`published`): active years are the
+  years of that software, nothing else; given productions or the ones a nested
+  `ProdSearchFilterDto` finds, `prodLink` narrowing to one of the two links and
+  `prodRoles` to the roles of the credit (roles leave out the publishers, who
+  hold none); co-authors of an author — credited on the same software, the
+  author itself left out.
 - `ZxArt\Groups\Services\GroupSearchService::search(GroupSearchFilterDto)` —
   a part of the title, of the abbreviation or of an alias; countries, cities,
   types; founding and ending dates (a group without the date does not match);
   members (authors or their aliases); active years from the software they made
   or published; given productions or the ones a nested `ProdSearchFilterDto`
-  finds, `prodRole` narrowing to developer or publisher (alone: groups that
+  finds, `prodLink` narrowing to made or published (alone: groups that
   had that role on any production); the subgroups of a group and the groups a
   group is a subgroup of.
 - `ZxArt\Releases\Services\ReleaseSearchService::search(ReleaseSearchFilterDto)` —
