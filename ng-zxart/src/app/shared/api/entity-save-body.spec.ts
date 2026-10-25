@@ -1,11 +1,12 @@
 import {describe, expect, it} from 'vitest';
 import {entitySaveBody} from './entity-save-body';
+import {readSaveBody} from './read-save-body.testing';
 
 describe('entitySaveBody', () => {
   it('carries the request as the JSON `data` part', async () => {
     const body = entitySaveBody({fields: {title: 'Goldmaster Writer'}, groups: []}, {});
 
-    expect(JSON.parse(await (body.get('data') as Blob).text())).toEqual({fields: {title: 'Goldmaster Writer'}, groups: []});
+    expect((await readSaveBody(body)).data).toEqual({fields: {title: 'Goldmaster Writer'}, groups: []});
     expect([...body.keys()]).toEqual(['data']);
   });
 

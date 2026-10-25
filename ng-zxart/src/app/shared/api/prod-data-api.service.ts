@@ -2,6 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {EntityChangeResult} from '../models/entity-change-result';
+import {CreatedIdsResult, ProdBatchUploadRequest, ProdBatchUploads, ProdSaveRequest, ProdUploads} from '../models/entity-save';
+import {entitySaveBody} from './entity-save-body';
 
 const ENDPOINT = '/prod-data/';
 
@@ -12,6 +14,16 @@ const ENDPOINT = '/prod-data/';
 @Injectable({providedIn: 'root'})
 export class ProdDataApiService {
   constructor(private readonly http: HttpClient) {}
+
+  /** Saves the fields and lists the request carries; what it leaves out keeps its value. */
+  update(id: number, request: ProdSaveRequest, uploads: ProdUploads = {}): Observable<EntityChangeResult> {
+    return this.http.post<EntityChangeResult>(ENDPOINT, entitySaveBody(request, {...uploads}), {params: {id, action: 'update'}});
+  }
+
+  /** Makes a production with a release of each release file; answers the production ids. */
+  batchUpload(request: ProdBatchUploadRequest, uploads: ProdBatchUploads): Observable<CreatedIdsResult> {
+    return this.http.post<CreatedIdsResult>(ENDPOINT, entitySaveBody(request, {...uploads}), {params: {action: 'batchUpload'}});
+  }
 
   delete(id: number): Observable<EntityChangeResult> {
     return this.run(id, 'delete');

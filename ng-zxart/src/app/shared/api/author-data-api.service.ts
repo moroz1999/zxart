@@ -2,6 +2,8 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {EntityChangeResult} from '../models/entity-change-result';
+import {AuthorSaveRequest, ImageUpload} from '../models/entity-save';
+import {entitySaveBody} from './entity-save-body';
 
 const ENDPOINT = '/author-data/';
 
@@ -12,6 +14,16 @@ const ENDPOINT = '/author-data/';
 @Injectable({providedIn: 'root'})
 export class AuthorDataApiService {
   constructor(private readonly http: HttpClient) {}
+
+  /** Creates the entity; answers its id. */
+  create(request: AuthorSaveRequest, uploads: ImageUpload = {}): Observable<EntityChangeResult> {
+    return this.http.post<EntityChangeResult>(ENDPOINT, entitySaveBody(request, {...uploads}), {params: {action: 'create'}});
+  }
+
+  /** Saves the fields and lists the request carries; what it leaves out keeps its value. */
+  update(id: number, request: AuthorSaveRequest, uploads: ImageUpload = {}): Observable<EntityChangeResult> {
+    return this.http.post<EntityChangeResult>(ENDPOINT, entitySaveBody(request, {...uploads}), {params: {id, action: 'update'}});
+  }
 
   delete(id: number): Observable<EntityChangeResult> {
     return this.run(id, 'delete');
