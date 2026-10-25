@@ -6,17 +6,11 @@ namespace ZxArt\Tests\Groups;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorAliasElement;
-use authorElement;
-use groupAliasElement;
-use groupElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Repositories\GroupAliasRepository;
@@ -32,9 +26,17 @@ use ZxArt\Groups\UseCases\DeleteGroupAliasMemberHandler;
 use ZxArt\Groups\UseCases\JoinGroupAliasesHandler;
 use ZxArt\Groups\UseCases\SetGroupAliasMemberHandler;
 use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
+use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
+use authorElement;
+use groupAliasElement;
+use groupElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 
 final class GroupAliasDataServiceTest extends TestCase
 {
@@ -431,8 +433,8 @@ final class GroupAliasDataServiceTest extends TestCase
         $privileges = new GroupAliasPrivileges($privilegesManager, $structureManager);
 
         return new GroupAliasDataService(
-            new CreateGroupAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupAliasCreator::class), $actionsLog, $currentUserService),
-            new UpdateGroupAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupAliasFieldsWriter::class), $actionsLog),
+            new CreateGroupAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupAliasCreator::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog, $currentUserService),
+            new UpdateGroupAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupAliasFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog),
             new DeleteGroupAliasHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertGroupAliasToGroupHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new JoinGroupAliasesHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),

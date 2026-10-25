@@ -35,14 +35,17 @@ final readonly class AuthorCreator
     ) {
     }
 
-    public function create(AuthorFieldsDto $fields): authorElement
+    /**
+     * @param array<int, string>|null $realNames language id => the real name in it
+     */
+    public function create(AuthorFieldsDto $fields, ?array $realNames = null): authorElement
     {
-        $name = $fields->title !== null && $fields->title !== '' ? $fields->title : ($fields->realName ?? '');
+        $name = $fields->title !== null && $fields->title !== '' ? $fields->title : ($fields->realName ?? (array_values($realNames ?? [])[0] ?? ''));
         if ($name === '') {
             throw new AuthorDataException('An author needs a name or a real name', 400);
         }
         $element = $this->authorRepository->create($name);
-        $this->completeCreation($element, $fields);
+        $this->completeCreation($element, $fields, $realNames);
 
         return $element;
     }
@@ -51,10 +54,13 @@ final readonly class AuthorCreator
      * Fills and grants an element that was created but not yet written — by
      * {@see create()}, or by the legacy form, which creates its own.
      */
-    public function completeCreation(authorElement $element, AuthorFieldsDto $fields): void
+    /**
+     * @param array<int, string>|null $realNames language id => the real name in it
+     */
+    public function completeCreation(authorElement $element, AuthorFieldsDto $fields, ?array $realNames = null): void
     {
         $elementId = $element->getPersistedId();
-        $this->authorFieldsWriter->apply($element, $fields);
+        $this->authorFieldsWriter->apply($element, $fields, $realNames);
         $this->creatorPrivilegesGranter->grant($elementId, self::CREATOR_PRIVILEGES);
     }
 }

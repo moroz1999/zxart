@@ -6,17 +6,13 @@ namespace ZxArt\Tests\Prods;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorAliasElement;
-use authorElement;
-use fileElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Services\ElementAuthorsWriter;
+use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\Repositories\ProdRepository;
@@ -26,6 +22,7 @@ use ZxArt\Prods\Services\ProdFieldsWriter;
 use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Prods\UseCases\AddProdFilesHandler;
+use ZxArt\Prods\UseCases\BatchUploadProdsHandler;
 use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Prods\UseCases\DeleteProdFileHandler;
 use ZxArt\Prods\UseCases\DeleteProdHandler;
@@ -37,6 +34,12 @@ use ZxArt\Releases\Services\ElementFileImporter;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
+use authorElement;
+use fileElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 use zxProdElement;
 
 final class ProdDataServiceTest extends TestCase
@@ -497,13 +500,14 @@ final class ProdDataServiceTest extends TestCase
                 $actionsLog,
                 $currentUserService,
             ),
-            new UpdateProdHandler($transactionRunner, $prodRepository, $prodPrivileges, $writer ?? $this->createStub(ProdFieldsWriter::class), $actionsLog),
+            new UpdateProdHandler($transactionRunner, $prodRepository, $prodPrivileges, $writer ?? $this->createStub(ProdFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementFileImporter::class), $actionsLog),
             new DeleteProdHandler($transactionRunner, $prodRepository, $prodPrivileges, $actionsLog),
             new SetProdMemberHandler($transactionRunner, $prodRepository, $prodPrivileges, $structureManager, $authorshipDbal, $actionsLog),
             new DeleteProdMemberHandler($transactionRunner, $prodRepository, $prodPrivileges, $authorshipDbal, $actionsLog),
             new AddProdFilesHandler($transactionRunner, $prodRepository, $prodPrivileges, $this->createStub(ElementFileImporter::class), $actionsLog),
             new DeleteProdFileHandler($transactionRunner, $prodRepository, $prodPrivileges, $actionsLog),
             new JoinProdsHandler($transactionRunner, $prodRepository, $prodPrivileges, $prodsService ?? $this->createStub(ProdsService::class), $actionsLog),
+            $this->createStub(BatchUploadProdsHandler::class),
         );
     }
 

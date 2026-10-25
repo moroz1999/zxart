@@ -10,11 +10,17 @@ use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Repositories\AuthorAliasRepository;
 use ZxArt\Authors\Services\AuthorAliasFieldsWriter;
 use ZxArt\Authors\Services\AuthorAliasPrivileges;
+use ZxArt\Authors\Services\AuthorMembershipsWriter;
+use ZxArt\Import\Services\ImportOriginsWriter;
+use ZxArt\Shared\EntityType;
+use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
 
 /**
- * Changes the fields the command carries and leaves the others as they are.
+ * Changes the fields the command carries and leaves the others as they are;
+ * replaces each list it carries (groups, productions, import origins). All in
+ * one transaction: a wrong reference, role changes nothing.
  *
  * @psalm-api
  */
@@ -27,6 +33,8 @@ final readonly class UpdateAuthorAliasHandler
         private AuthorAliasRepository $authorAliasRepository,
         private AuthorAliasPrivileges $authorAliasPrivileges,
         private AuthorAliasFieldsWriter $authorAliasFieldsWriter,
+        private AuthorMembershipsWriter $authorMembershipsWriter,
+        private ImportOriginsWriter $importOriginsWriter,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -40,7 +48,20 @@ final readonly class UpdateAuthorAliasHandler
         $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($alias, $command): void {
-            $this->authorAliasFieldsWriter->apply($alias, $command->fields);
+            try {
+                $this->authorAliasFieldsWriter->apply($alias, $command->fields);
+                if ($command->groups !== null) {
+                    $this->authorMembershipsWriter->replace($command->aliasId, EntityType::Group, $command->groups);
+                }
+                if ($command->prods !== null) {
+                    $this->authorMembershipsWriter->replace($command->aliasId, EntityType::Prod, $command->prods);
+                }
+                if ($command->importOrigins !== null) {
+                    $this->importOriginsWriter->replace($command->aliasId, EntityType::Author, $command->importOrigins);
+                }
+            } catch (InvalidReferenceException $exception) {
+                throw new AuthorAliasDataException($exception->getMessage(), 400, $exception);
+            }
             $this->actionsLogService->log($alias, StructureType::AuthorAlias, self::PRIVILEGE);
         });
 

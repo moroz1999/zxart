@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods\Services;
 
+use ZxArt\Authors\Dto\AuthorshipInputDto;
+use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Prods\Dto\ProdDataResultDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Prods\Dto\ProdFileUploadDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
 use ZxArt\Prods\UseCases\AddProdFilesCommand;
 use ZxArt\Prods\UseCases\AddProdFilesHandler;
+use ZxArt\Prods\UseCases\BatchUploadProdsCommand;
+use ZxArt\Prods\UseCases\BatchUploadProdsHandler;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Prods\UseCases\DeleteProdCommand;
@@ -25,6 +30,8 @@ use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Prods\UseCases\UpdateProdCommand;
 use ZxArt\Prods\UseCases\UpdateProdHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
+use ZxArt\Shared\Dto\CreatedIdsDto;
+use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
  * Changes to a production requested through `/prod-data/`, each one a use case
@@ -44,6 +51,7 @@ final readonly class ProdDataService
         private AddProdFilesHandler $addProdFilesHandler,
         private DeleteProdFileHandler $deleteProdFileHandler,
         private JoinProdsHandler $joinProdsHandler,
+        private BatchUploadProdsHandler $batchUploadProdsHandler,
     ) {
     }
 
@@ -56,13 +64,22 @@ final readonly class ProdDataService
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param list<AuthorshipInputDto>|null $authors
+     * @param list<ImportOriginDto>|null $importOrigins
+     * @param list<ProdFileUploadDto> $files added to the lists of their kinds
      * @throws ProdDataException
      */
-    public function update(int $prodId, ProdFieldsDto $fields): ProdDataResultDto
-    {
-        return $this->updateProdHandler->handle(new UpdateProdCommand($prodId, $fields));
+    public function update(
+        int $prodId,
+        ProdFieldsDto $fields,
+        ?array $authors = null,
+        ?array $importOrigins = null,
+        array $files = [],
+    ): ProdDataResultDto {
+        return $this->updateProdHandler->handle(new UpdateProdCommand($prodId, $fields, $authors, $importOrigins, $files));
     }
 
     /**
@@ -113,5 +130,19 @@ final readonly class ProdDataService
     public function join(int $prodId, int $joinedId, bool $releasesOnly = false): ProdDataResultDto
     {
         return $this->joinProdsHandler->handle(new JoinProdsCommand($prodId, $joinedId, $releasesOnly));
+    }
+
+    /**
+     * A production per uploaded software file, each with one release holding
+     * it and the values given once.
+     *
+     * @param list<UploadedFileDto> $releaseFiles
+     * @param list<AuthorshipInputDto> $authors
+     * @param list<ProdFileUploadDto> $files added to every production
+     * @throws ProdDataException
+     */
+    public function batchUpload(ProdFieldsDto $fields, array $releaseFiles, array $authors = [], array $files = []): CreatedIdsDto
+    {
+        return $this->batchUploadProdsHandler->handle(new BatchUploadProdsCommand($fields, $releaseFiles, $authors, $files));
     }
 }

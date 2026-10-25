@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Groups\Services;
 
+use ZxArt\Authors\Dto\AuthorshipInputDto;
 use ZxArt\Groups\Dto\GroupDataResultDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
@@ -21,6 +22,8 @@ use ZxArt\Groups\UseCases\SetGroupMemberCommand;
 use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Groups\UseCases\UpdateGroupCommand;
 use ZxArt\Groups\UseCases\UpdateGroupHandler;
+use ZxArt\Import\Dto\ImportOriginDto;
+use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
  * Changes to a group requested through its data endpoint, each one a use case
@@ -43,21 +46,38 @@ final readonly class GroupDataService
     }
 
     /**
+     * A list left `null` stores nothing.
+     *
+     * @param list<AuthorshipInputDto>|null $members
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws GroupDataException
      */
-    public function create(GroupFieldsDto $fields): GroupDataResultDto
-    {
-        return $this->createGroupHandler->handle(new CreateGroupCommand($fields));
+    public function create(
+        GroupFieldsDto $fields,
+        ?array $members = null,
+        ?array $importOrigins = null,
+        ?UploadedFileDto $image = null,
+    ): GroupDataResultDto {
+        return $this->createGroupHandler->handle(new CreateGroupCommand($fields, $members, $importOrigins, $image));
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param list<AuthorshipInputDto>|null $members
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws GroupDataException
      */
-    public function update(int $groupId, GroupFieldsDto $fields): GroupDataResultDto
-    {
-        return $this->updateGroupHandler->handle(new UpdateGroupCommand($groupId, $fields));
+    public function update(
+        int $groupId,
+        GroupFieldsDto $fields,
+        ?array $members = null,
+        ?array $importOrigins = null,
+        ?UploadedFileDto $image = null,
+        bool $removeImage = false,
+    ): GroupDataResultDto {
+        return $this->updateGroupHandler->handle(new UpdateGroupCommand($groupId, $fields, $members, $importOrigins, $image, $removeImage));
     }
 
     /**

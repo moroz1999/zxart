@@ -5,16 +5,22 @@ declare(strict_types=1);
 namespace ZxArt\Groups\UseCases;
 
 use ZxArt\ActionsLog\ActionsLogService;
+use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Repositories\GroupAliasRepository;
 use ZxArt\Groups\Services\GroupAliasFieldsWriter;
 use ZxArt\Groups\Services\GroupAliasPrivileges;
+use ZxArt\Import\Services\ImportOriginsWriter;
+use ZxArt\Shared\EntityType;
+use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
 
 /**
- * Changes the fields the command carries and leaves the others as they are.
+ * Changes the fields the command carries and leaves the others as they are;
+ * replaces each list it carries (members, import origins). All in one
+ * transaction: a wrong reference, role changes nothing.
  *
  * @psalm-api
  */
@@ -27,6 +33,8 @@ final readonly class UpdateGroupAliasHandler
         private GroupAliasRepository $groupAliasRepository,
         private GroupAliasPrivileges $groupAliasPrivileges,
         private GroupAliasFieldsWriter $groupAliasFieldsWriter,
+        private ElementAuthorsWriter $elementAuthorsWriter,
+        private ImportOriginsWriter $importOriginsWriter,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -40,7 +48,17 @@ final readonly class UpdateGroupAliasHandler
         $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($alias, $command): void {
-            $this->groupAliasFieldsWriter->apply($alias, $command->fields);
+            try {
+                $this->groupAliasFieldsWriter->apply($alias, $command->fields);
+                if ($command->members !== null) {
+                    $this->elementAuthorsWriter->replace($command->aliasId, EntityType::Group, $command->members);
+                }
+                if ($command->importOrigins !== null) {
+                    $this->importOriginsWriter->replace($command->aliasId, EntityType::Group, $command->importOrigins);
+                }
+            } catch (InvalidReferenceException $exception) {
+                throw new GroupAliasDataException($exception->getMessage(), 400, $exception);
+            }
             $this->actionsLogService->log($alias, StructureType::GroupAlias, self::PRIVILEGE);
         });
 

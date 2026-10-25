@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace ZxArt\Releases\Services;
 
+use ZxArt\Authors\Dto\AuthorshipInputDto;
+use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Releases\Dto\ReleaseDataResultDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
+use ZxArt\Releases\Dto\ReleaseFileUploadDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\ReleaseFileKind;
 use ZxArt\Releases\UseCases\AddReleaseFilesCommand;
@@ -14,6 +17,8 @@ use ZxArt\Releases\UseCases\CloneReleaseCommand;
 use ZxArt\Releases\UseCases\CloneReleaseHandler;
 use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesCommand;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
 use ZxArt\Releases\UseCases\DeleteReleaseCommand;
 use ZxArt\Releases\UseCases\DeleteReleaseFileCommand;
 use ZxArt\Releases\UseCases\DeleteReleaseFileHandler;
@@ -27,6 +32,8 @@ use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
 use ZxArt\Releases\UseCases\UpdateReleaseCommand;
 use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
+use ZxArt\Shared\Dto\CreatedIdsDto;
+use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
  * Changes to a release requested through `/release-data/`, each one a use case
@@ -47,6 +54,7 @@ final readonly class ReleaseDataService
         private AddReleaseFilesHandler $addReleaseFilesHandler,
         private SetReleaseFileHandler $setReleaseFileHandler,
         private DeleteReleaseFileHandler $deleteReleaseFileHandler,
+        private CreateReleasesFromFilesHandler $createReleasesFromFilesHandler,
     ) {
     }
 
@@ -59,13 +67,23 @@ final readonly class ReleaseDataService
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param list<AuthorshipInputDto>|null $authors
+     * @param list<ImportOriginDto>|null $importOrigins
+     * @param list<ReleaseFileUploadDto> $files added to the lists of their kinds
      * @throws ReleaseDataException
      */
-    public function update(int $releaseId, ReleaseFieldsDto $fields): ReleaseDataResultDto
-    {
-        return $this->updateReleaseHandler->handle(new UpdateReleaseCommand($releaseId, $fields));
+    public function update(
+        int $releaseId,
+        ReleaseFieldsDto $fields,
+        ?array $authors = null,
+        ?array $importOrigins = null,
+        array $files = [],
+        ?UploadedFileDto $file = null,
+    ): ReleaseDataResultDto {
+        return $this->updateReleaseHandler->handle(new UpdateReleaseCommand($releaseId, $fields, $authors, $importOrigins, $files, $file));
     }
 
     /**
@@ -124,5 +142,19 @@ final readonly class ReleaseDataService
     public function deleteFile(int $releaseId, int $fileId): ReleaseDataResultDto
     {
         return $this->deleteReleaseFileHandler->handle(new DeleteReleaseFileCommand($releaseId, $fileId));
+    }
+
+    /**
+     * A release of the production per uploaded file, all with the values given
+     * once; without a file, the one release described.
+     *
+     * @param list<UploadedFileDto> $releaseFiles
+     * @param list<AuthorshipInputDto> $authors
+     * @param list<ReleaseFileUploadDto> $files added to every release
+     * @throws ReleaseDataException
+     */
+    public function createFromFiles(ReleaseFieldsDto $fields, array $releaseFiles, array $authors = [], array $files = []): CreatedIdsDto
+    {
+        return $this->createReleasesFromFilesHandler->handle(new CreateReleasesFromFilesCommand($fields, $releaseFiles, $authors, $files));
     }
 }

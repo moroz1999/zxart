@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Groups\Services;
 
+use ZxArt\Authors\Dto\AuthorshipInputDto;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
@@ -21,6 +22,7 @@ use ZxArt\Groups\UseCases\SetGroupAliasMemberCommand;
 use ZxArt\Groups\UseCases\SetGroupAliasMemberHandler;
 use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
 use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
+use ZxArt\Import\Dto\ImportOriginDto;
 
 /**
  * Changes to a group alias requested through its data endpoint, each one a use case
@@ -43,21 +45,35 @@ final readonly class GroupAliasDataService
     }
 
     /**
+     * A list left `null` stores nothing.
+     *
+     * @param list<AuthorshipInputDto>|null $members
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws GroupAliasDataException
      */
-    public function create(GroupAliasFieldsDto $fields): GroupAliasDataResultDto
-    {
-        return $this->createGroupAliasHandler->handle(new CreateGroupAliasCommand($fields));
+    public function create(
+        GroupAliasFieldsDto $fields,
+        ?array $members = null,
+        ?array $importOrigins = null,
+    ): GroupAliasDataResultDto {
+        return $this->createGroupAliasHandler->handle(new CreateGroupAliasCommand($fields, $members, $importOrigins));
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param list<AuthorshipInputDto>|null $members
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws GroupAliasDataException
      */
-    public function update(int $aliasId, GroupAliasFieldsDto $fields): GroupAliasDataResultDto
-    {
-        return $this->updateGroupAliasHandler->handle(new UpdateGroupAliasCommand($aliasId, $fields));
+    public function update(
+        int $aliasId,
+        GroupAliasFieldsDto $fields,
+        ?array $members = null,
+        ?array $importOrigins = null,
+    ): GroupAliasDataResultDto {
+        return $this->updateGroupAliasHandler->handle(new UpdateGroupAliasCommand($aliasId, $fields, $members, $importOrigins));
     }
 
     /**

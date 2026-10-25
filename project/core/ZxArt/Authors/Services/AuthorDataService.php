@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Services;
 
 use ZxArt\Authors\Dto\AuthorDataResultDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
+use ZxArt\Authors\Dto\MembershipInputDto;
 use ZxArt\Authors\Exception\AuthorDataException;
 use ZxArt\Authors\UseCases\ConvertAuthorToGroupCommand;
 use ZxArt\Authors\UseCases\ConvertAuthorToGroupHandler;
@@ -17,6 +18,8 @@ use ZxArt\Authors\UseCases\JoinAuthorsCommand;
 use ZxArt\Authors\UseCases\JoinAuthorsHandler;
 use ZxArt\Authors\UseCases\UpdateAuthorCommand;
 use ZxArt\Authors\UseCases\UpdateAuthorHandler;
+use ZxArt\Import\Dto\ImportOriginDto;
+use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
  * Changes to an author requested through its data endpoint, each one a use case
@@ -37,21 +40,46 @@ final readonly class AuthorDataService
     }
 
     /**
+     * A list left `null` stores nothing.
+     *
+     * @param array<int, string>|null $realNames language id => the real name in it
+     * @param list<MembershipInputDto>|null $groups
+     * @param list<MembershipInputDto>|null $prods
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws AuthorDataException
      */
-    public function create(AuthorFieldsDto $fields): AuthorDataResultDto
-    {
-        return $this->createAuthorHandler->handle(new CreateAuthorCommand($fields));
+    public function create(
+        AuthorFieldsDto $fields,
+        ?array $realNames = null,
+        ?array $groups = null,
+        ?array $prods = null,
+        ?array $importOrigins = null,
+        ?UploadedFileDto $image = null,
+    ): AuthorDataResultDto {
+        return $this->createAuthorHandler->handle(new CreateAuthorCommand($fields, $realNames, $groups, $prods, $importOrigins, $image));
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param array<int, string>|null $realNames language id => the real name in it
+     * @param list<MembershipInputDto>|null $groups
+     * @param list<MembershipInputDto>|null $prods
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws AuthorDataException
      */
-    public function update(int $authorId, AuthorFieldsDto $fields): AuthorDataResultDto
-    {
-        return $this->updateAuthorHandler->handle(new UpdateAuthorCommand($authorId, $fields));
+    public function update(
+        int $authorId,
+        AuthorFieldsDto $fields,
+        ?array $realNames = null,
+        ?array $groups = null,
+        ?array $prods = null,
+        ?array $importOrigins = null,
+        ?UploadedFileDto $image = null,
+        bool $removeImage = false,
+    ): AuthorDataResultDto {
+        return $this->updateAuthorHandler->handle(new UpdateAuthorCommand($authorId, $fields, $realNames, $groups, $prods, $importOrigins, $image, $removeImage));
     }
 
     /**

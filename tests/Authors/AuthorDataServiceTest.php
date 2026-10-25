@@ -6,13 +6,8 @@ namespace ZxArt\Tests\Authors;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorElement;
-use groupElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Exception\AuthorDataException;
@@ -20,6 +15,7 @@ use ZxArt\Authors\Repositories\AuthorRepository;
 use ZxArt\Authors\Services\AuthorCreator;
 use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\AuthorFieldsWriter;
+use ZxArt\Authors\Services\AuthorMembershipsWriter;
 use ZxArt\Authors\Services\AuthorPrivileges;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Authors\UseCases\ConvertAuthorToGroupHandler;
@@ -28,8 +24,15 @@ use ZxArt\Authors\UseCases\DeleteAuthorHandler;
 use ZxArt\Authors\UseCases\JoinAuthorsHandler;
 use ZxArt\Authors\UseCases\UpdateAuthorHandler;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Import\Services\ImportOriginsWriter;
+use ZxArt\Shared\Elements\ElementImageWriter;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorElement;
+use groupElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 
 final class AuthorDataServiceTest extends TestCase
 {
@@ -306,8 +309,8 @@ final class AuthorDataServiceTest extends TestCase
         $privileges = new AuthorPrivileges($privilegesManager, $structureManager);
 
         return new AuthorDataService(
-            new CreateAuthorHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorCreator::class), $actionsLog, $currentUserService),
-            new UpdateAuthorHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorFieldsWriter::class), $actionsLog),
+            new CreateAuthorHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorCreator::class), $repository, $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog, $currentUserService),
+            new UpdateAuthorHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorFieldsWriter::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog),
             new DeleteAuthorHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertAuthorToGroupHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new JoinAuthorsHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),

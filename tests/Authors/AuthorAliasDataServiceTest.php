@@ -6,13 +6,8 @@ namespace ZxArt\Tests\Authors;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorAliasElement;
-use authorElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
@@ -21,14 +16,21 @@ use ZxArt\Authors\Services\AuthorAliasCreator;
 use ZxArt\Authors\Services\AuthorAliasDataService;
 use ZxArt\Authors\Services\AuthorAliasFieldsWriter;
 use ZxArt\Authors\Services\AuthorAliasPrivileges;
+use ZxArt\Authors\Services\AuthorMembershipsWriter;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorHandler;
 use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
 use ZxArt\Authors\UseCases\DeleteAuthorAliasHandler;
 use ZxArt\Authors\UseCases\JoinAuthorAliasesHandler;
 use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
+use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
+use authorElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 
 final class AuthorAliasDataServiceTest extends TestCase
 {
@@ -293,8 +295,8 @@ final class AuthorAliasDataServiceTest extends TestCase
         $privileges = new AuthorAliasPrivileges($privilegesManager, $structureManager);
 
         return new AuthorAliasDataService(
-            new CreateAuthorAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorAliasCreator::class), $actionsLog, $currentUserService),
-            new UpdateAuthorAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorAliasFieldsWriter::class), $actionsLog),
+            new CreateAuthorAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorAliasCreator::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog, $currentUserService),
+            new UpdateAuthorAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorAliasFieldsWriter::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog),
             new DeleteAuthorAliasHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertAuthorAliasToAuthorHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
             new JoinAuthorAliasesHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),

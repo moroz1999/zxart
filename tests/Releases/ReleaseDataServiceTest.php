@@ -6,17 +6,13 @@ namespace ZxArt\Tests\Releases;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorAliasElement;
-use authorElement;
-use fileElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Services\ElementAuthorsWriter;
+use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
@@ -29,6 +25,7 @@ use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
 use ZxArt\Releases\UseCases\CloneReleaseHandler;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
 use ZxArt\Releases\UseCases\DeleteReleaseFileHandler;
 use ZxArt\Releases\UseCases\DeleteReleaseHandler;
 use ZxArt\Releases\UseCases\DeleteReleaseMemberHandler;
@@ -38,6 +35,12 @@ use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
+use authorElement;
+use fileElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 use zxProdElement;
 use zxReleaseElement;
 
@@ -459,7 +462,7 @@ final class ReleaseDataServiceTest extends TestCase
 
         return new ReleaseDataService(
             new CreateReleaseHandler($transactionRunner, $releasePrivileges, $creator ?? $this->createStub(ReleaseCreator::class), $actionsLog, $currentUserService),
-            new UpdateReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $writer ?? $this->createStub(ReleaseFieldsWriter::class), $actionsLog),
+            new UpdateReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $writer ?? $this->createStub(ReleaseFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementFileImporter::class), $actionsLog),
             new DeleteReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),
             new CloneReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $cloner ?? $this->createStub(ReleaseCloner::class), $actionsLog, $currentUserService),
             new SetReleaseMemberHandler($transactionRunner, $releaseRepository, $releasePrivileges, $structureManager, $authorshipDbal, $actionsLog),
@@ -467,6 +470,7 @@ final class ReleaseDataServiceTest extends TestCase
             new AddReleaseFilesHandler($transactionRunner, $releaseRepository, $releasePrivileges, $fileImporter, $actionsLog),
             new SetReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $fileImporter, $actionsLog),
             new DeleteReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),
+            $this->createStub(CreateReleasesFromFilesHandler::class),
         );
     }
 

@@ -6,6 +6,7 @@ namespace ZxArt\Authors\Services;
 
 use ZxArt\Authors\Dto\AuthorAliasDataResultDto;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
+use ZxArt\Authors\Dto\MembershipInputDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorCommand;
 use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorHandler;
@@ -17,6 +18,7 @@ use ZxArt\Authors\UseCases\JoinAuthorAliasesCommand;
 use ZxArt\Authors\UseCases\JoinAuthorAliasesHandler;
 use ZxArt\Authors\UseCases\UpdateAuthorAliasCommand;
 use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
+use ZxArt\Import\Dto\ImportOriginDto;
 
 /**
  * Changes to an author alias requested through its data endpoint, each one a use case
@@ -37,21 +39,39 @@ final readonly class AuthorAliasDataService
     }
 
     /**
+     * A list left `null` stores nothing.
+     *
+     * @param list<MembershipInputDto>|null $groups
+     * @param list<MembershipInputDto>|null $prods
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws AuthorAliasDataException
      */
-    public function create(AuthorAliasFieldsDto $fields): AuthorAliasDataResultDto
-    {
-        return $this->createAuthorAliasHandler->handle(new CreateAuthorAliasCommand($fields));
+    public function create(
+        AuthorAliasFieldsDto $fields,
+        ?array $groups = null,
+        ?array $prods = null,
+        ?array $importOrigins = null,
+    ): AuthorAliasDataResultDto {
+        return $this->createAuthorAliasHandler->handle(new CreateAuthorAliasCommand($fields, $groups, $prods, $importOrigins));
     }
 
     /**
-     * Changes the fields the DTO carries and leaves the others as they are.
+     * Changes the fields the DTO carries and leaves the others as they are;
+     * replaces each list given, and keeps a list left `null`.
      *
+     * @param list<MembershipInputDto>|null $groups
+     * @param list<MembershipInputDto>|null $prods
+     * @param list<ImportOriginDto>|null $importOrigins
      * @throws AuthorAliasDataException
      */
-    public function update(int $aliasId, AuthorAliasFieldsDto $fields): AuthorAliasDataResultDto
-    {
-        return $this->updateAuthorAliasHandler->handle(new UpdateAuthorAliasCommand($aliasId, $fields));
+    public function update(
+        int $aliasId,
+        AuthorAliasFieldsDto $fields,
+        ?array $groups = null,
+        ?array $prods = null,
+        ?array $importOrigins = null,
+    ): AuthorAliasDataResultDto {
+        return $this->updateAuthorAliasHandler->handle(new UpdateAuthorAliasCommand($aliasId, $fields, $groups, $prods, $importOrigins));
     }
 
     /**

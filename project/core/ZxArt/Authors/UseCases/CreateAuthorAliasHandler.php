@@ -10,21 +10,31 @@ use ZxArt\Authors\Dto\AuthorAliasDataResultDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Services\AuthorAliasCreator;
 use ZxArt\Authors\Services\AuthorAliasPrivileges;
+use ZxArt\Authors\Services\AuthorMembershipsWriter;
+use ZxArt\Import\Services\ImportOriginsWriter;
+use ZxArt\Shared\EntityType;
+use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
 
 /**
+ * Creates the alias with its fields and the lists the command carries (groups,
+ * productions, import origins), all in one transaction: a wrong reference,
+ * role creates nothing.
+ *
  * @psalm-api
  */
 final readonly class CreateAuthorAliasHandler
 {
-    /** Held on the author: adding an alias to it. */
+    /** Held on the owner: adding an alias to it. */
     private const string PRIVILEGE = 'publicAdd';
 
     public function __construct(
         private TransactionRunner $transactionRunner,
         private AuthorAliasPrivileges $authorAliasPrivileges,
         private AuthorAliasCreator $authorAliasCreator,
+        private AuthorMembershipsWriter $authorMembershipsWriter,
+        private ImportOriginsWriter $importOriginsWriter,
         private ActionsLogService $actionsLogService,
         private CurrentUserService $currentUserService,
     ) {
@@ -42,9 +52,23 @@ final readonly class CreateAuthorAliasHandler
         $this->authorAliasPrivileges->assertMayAddTo($ownerId);
 
         $id = $this->transactionRunner->run(function () use ($command): int {
-            $element = $this->authorAliasCreator->create($command->fields);
+            try {
+                $element = $this->authorAliasCreator->create($command->fields);
+                $elementId = $element->getId();
+                if ($command->groups !== null) {
+                    $this->authorMembershipsWriter->replace($elementId, EntityType::Group, $command->groups);
+                }
+                if ($command->prods !== null) {
+                    $this->authorMembershipsWriter->replace($elementId, EntityType::Prod, $command->prods);
+                }
+                if ($command->importOrigins !== null) {
+                    $this->importOriginsWriter->replace($elementId, EntityType::Author, $command->importOrigins);
+                }
+            } catch (InvalidReferenceException $exception) {
+                throw new AuthorAliasDataException($exception->getMessage(), 400, $exception);
+            }
             $this->actionsLogService->log($element, StructureType::AuthorAlias, self::PRIVILEGE);
-            return $element->getId();
+            return $elementId;
         });
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 

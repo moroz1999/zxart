@@ -11,6 +11,7 @@ use structureManager;
 use ZxArt\Prods\Services\ReleaseDownloadException;
 use ZxArt\Releases\Exception\AttachedFileRefusedException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
+use ZxArt\Shared\Dto\UploadedFileDto;
 use ZxArt\Shared\Elements\AttachedFileKind;
 use ZxArt\Shared\Http\DownloadedFileDto;
 use ZxArt\Shared\Http\DownloadRefusedException;
@@ -19,8 +20,8 @@ use zxProdElement;
 use zxReleaseElement;
 
 /**
- * Stores files fetched from a URL as file elements of a production or a
- * release, and as a release's own file. The imports fetch through
+ * Stores files fetched from a URL or uploaded as file elements of a production
+ * or a release, and as a release's own file. The imports fetch through
  * `prodsDownloader`; URLs given by a user go through the guarded downloader.
  *
  * @psalm-api
@@ -142,6 +143,84 @@ final readonly class ElementFileImporter
         rename($filePath, $release->getFilePath());
         $this->releaseRepository->save($release);
         $release->updateFileStructure();
+    }
+
+    /**
+     * Refuses an uploaded file the list of that kind does not take: one too big
+     * or of another type.
+     *
+     * @throws AttachedFileRefusedException
+     */
+    public function checkUpload(AttachedFileKind $kind, UploadedFileDto $file): void
+    {
+        $this->checkSize($file, $kind->maxBytes());
+        $contentType = (string)mime_content_type($file->path);
+        if (!$kind->accepts($contentType)) {
+            throw new AttachedFileRefusedException("A file of type $contentType cannot be added to {$kind->propertyName()}: {$file->fileName}");
+        }
+    }
+
+    /**
+     * Stores a copy of the upload in the element's list of that kind; the
+     * upload itself stays, so several elements can take the same one.
+     *
+     * @return int the new file element
+     * @throws AttachedFileRefusedException
+     */
+    public function addUploadedFile(zxReleaseElement|zxProdElement $element, AttachedFileKind $kind, UploadedFileDto $file): int
+    {
+        $this->checkUpload($kind, $file);
+        $filePath = $this->temporaryPath();
+        copy($file->path, $filePath);
+        $fileElement = $this->storeFile($element, $file->fileName, $filePath, $file->fileName, null, $kind->propertyName());
+        if ($fileElement === null) {
+            throw new AttachedFileRefusedException('The file element could not be created');
+        }
+
+        return $fileElement->getPersistedId();
+    }
+
+    /**
+     * @throws AttachedFileRefusedException
+     */
+    public function checkMainFileUpload(UploadedFileDto $file): void
+    {
+        $this->checkSize($file, self::MAX_RELEASE_FILE_BYTES);
+    }
+
+    /**
+     * Makes a copy of the upload the release's file, under the name it was sent
+     * with, and reads its structure and formats.
+     *
+     * @throws AttachedFileRefusedException
+     */
+    public function setUploadedMainFile(zxReleaseElement $release, UploadedFileDto $file): void
+    {
+        $this->checkMainFileUpload($file);
+        $release->file = (string)$release->getPersistedId();
+        $release->fileName = basename($file->fileName);
+        $release->parsed = 0;
+        $directory = dirname($release->getFilePath());
+        $this->pathsManager->ensureDirectory($directory . '/');
+        if (!copy($file->path, $release->getFilePath())) {
+            throw new AttachedFileRefusedException("The file {$file->fileName} could not be stored");
+        }
+        $this->releaseRepository->save($release);
+        $release->updateFileStructure();
+    }
+
+    /**
+     * @throws AttachedFileRefusedException
+     */
+    private function checkSize(UploadedFileDto $file, int $maxBytes): void
+    {
+        $size = @filesize($file->path);
+        if ($size === false) {
+            throw new AttachedFileRefusedException("The upload {$file->fileName} is missing");
+        }
+        if ($size > $maxBytes) {
+            throw new AttachedFileRefusedException("{$file->fileName} is bigger than $maxBytes bytes");
+        }
     }
 
     /**

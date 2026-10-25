@@ -33,7 +33,12 @@ final readonly class AuthorFieldsWriter
     ) {
     }
 
-    public function apply(authorElement $author, AuthorFieldsDto $fields): void
+    /**
+     * @param array<int, string>|null $realNames language id => the real name in
+     *        it, for a real name that differs by language; it replaces
+     *        `realName` in the languages it names
+     */
+    public function apply(authorElement $author, AuthorFieldsDto $fields, ?array $realNames = null): void
     {
         $this->checkReferences($fields);
         $title = $fields->title === '' ? ($fields->realName ?? $author->realName) : $fields->title;
@@ -57,6 +62,9 @@ final readonly class AuthorFieldsWriter
             'palette' => $fields->palette,
             'zxTunesId' => $fields->zxTunesId,
         ]);
+        foreach ($realNames ?? [] as $languageId => $realName) {
+            $author->setValue('realName', $realName, $languageId);
+        }
         $this->authorRepository->save($author);
         if ($title !== null) {
             $author->checkParentLetter();

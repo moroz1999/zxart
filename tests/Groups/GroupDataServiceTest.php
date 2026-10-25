@@ -6,17 +6,12 @@ namespace ZxArt\Tests\Groups;
 
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
-use authorAliasElement;
-use authorElement;
-use groupElement;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
-use privilegesManager;
-use structureElement;
-use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Repositories\GroupRepository;
@@ -32,9 +27,17 @@ use ZxArt\Groups\UseCases\DeleteGroupMemberHandler;
 use ZxArt\Groups\UseCases\JoinGroupsHandler;
 use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Groups\UseCases\UpdateGroupHandler;
+use ZxArt\Import\Services\ImportOriginsWriter;
+use ZxArt\Shared\Elements\ElementImageWriter;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
+use authorElement;
+use groupElement;
+use privilegesManager;
+use structureElement;
+use structureManager;
 
 final class GroupDataServiceTest extends TestCase
 {
@@ -468,8 +471,8 @@ final class GroupDataServiceTest extends TestCase
         $privileges = new GroupPrivileges($privilegesManager, $structureManager);
 
         return new GroupDataService(
-            new CreateGroupHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupCreator::class), $actionsLog, $currentUserService),
-            new UpdateGroupHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupFieldsWriter::class), $actionsLog),
+            new CreateGroupHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupCreator::class), $repository, $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog, $currentUserService),
+            new UpdateGroupHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog),
             new DeleteGroupHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertGroupToAuthorHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
             new JoinGroupsHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
