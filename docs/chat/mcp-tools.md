@@ -64,7 +64,7 @@ Handled by the runner itself, not by the registry.
 | `search_prods` | any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `addedFrom`, `addedTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupRole` (`developer`, `publisher`), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tags[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
 | `search_authors` | any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of their software), `prodIds[]`, `prodRoles[]`, `prods` (a nested `search_prods` filter), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
 | `search_groups` | any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodRole` (`developer`, `publisher`), `prods` (a nested `search_prods` filter), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
-| `find_releases` | one of: `prodId`, `title`, `fileName`, `md5` | Releases with prod, year, type, format, file name |
+| `search_releases` | any of: `title`, `fileName`, `md5`, `prodIds[]`, `prods` (a nested `search_prods` filter), `yearFrom`, `yearTo`, `releaseTypes[]`, `formats[]`, `hardware[]`, `languages[]`, `publisherIds[]` (authors or groups), `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`; `limit`, `offset` | Releases with prod, year, type, format, file name; total count |
 | `find_locations` | `phrase` | Countries and cities with ids — the step behind "Alexander + Tallinn" |
 
 "Alexander + Tallinn" is `find_locations("Tallinn")` then
@@ -171,7 +171,7 @@ ids, tags as entities, parties, pictures, tunes, press.
 
 - [x] `ReadTool` / `WriteTool` interfaces, `ChangePreviewDto`, `ToolRegistry`, `ToolRequestBuilder` — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] JSON Schema generation from request DTOs (+ tests on representative DTOs)
-- [ ] Search tools on the services from [service-changes.md](service-changes.md) — `search` and `find_locations` done; `search_prods`, `search_authors`, `search_groups`, `find_releases` wait for the shape of their summaries
+- [ ] Search tools on the services from [service-changes.md](service-changes.md) — `search` and `find_locations` done; `search_prods`, `search_authors`, `search_groups`, `search_releases` wait for the shape of their summaries
 - [ ] `get_*` tools for the six entity types
 - [ ] Catalogue tools
 - [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`

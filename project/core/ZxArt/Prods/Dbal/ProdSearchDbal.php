@@ -7,7 +7,7 @@ namespace ZxArt\Prods\Dbal;
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use ZxArt\Authors\Dbal\AuthorshipRoleCondition;
+use ZxArt\Authors\Dbal\AuthorshipCredits;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\GroupProdRole;
@@ -80,12 +80,12 @@ final readonly class ProdSearchDbal extends AbstractDbal
                     ->orWhere($prodTable . '.altTitle', 'like', $pattern);
             });
         }
-        $this->applyRange($query, $prodTable . '.year', $filter->yearFrom, $filter->yearTo);
+        $this->applyYears($query, $prodTable . '.year', $filter->yearFrom, $filter->yearTo);
         $this->applyRange($query, $prodTable . '.dateAdded', $filter->addedFrom, $filter->addedTo);
         if ($filter->releaseYearFrom !== null || $filter->releaseYearTo !== null) {
             $query->whereIn($prodTable . '.id', $this->prodsWithReleaseYears($filter->releaseYearFrom, $filter->releaseYearTo));
         }
-        $this->applyAuthors($query, $prodTable, $filter);
+        AuthorshipCredits::apply($query, $prodTable . '.id', EntityType::Prod, $filter->authorIds, $filter->anyAuthor, $filter->authorRoles);
         if ($filter->groupIds !== []) {
             $query->whereIn($prodTable . '.id', $this->prodsOfGroups($filter->groupIds, $filter->groupRole));
         }
@@ -118,6 +118,18 @@ final readonly class ProdSearchDbal extends AbstractDbal
         return $query;
     }
 
+    /**
+     * A year of 0 is unknown and lies in no range.
+     */
+    private function applyYears(Builder $query, string $column, ?int $from, ?int $to): void
+    {
+        if ($from === null && $to === null) {
+            return;
+        }
+        $query->where($column, '>', 0);
+        $this->applyRange($query, $column, $from, $to);
+    }
+
     private function applyRange(Builder $query, string $column, ?int $from, ?int $to): void
     {
         if ($from !== null) {
@@ -126,56 +138,6 @@ final readonly class ProdSearchDbal extends AbstractDbal
         if ($to !== null) {
             $query->where($column, '<=', $to);
         }
-    }
-
-    /**
-     * Every author must be credited, each in one of the roles when roles are
-     * given; with `anyAuthor` one of them is enough. Roles alone find what
-     * anyone is credited with in them.
-     */
-    private function applyAuthors(Builder $query, string $prodTable, ProdSearchFilterDto $filter): void
-    {
-        if ($filter->authorIds === []) {
-            if ($filter->authorRoles !== []) {
-                $query->whereIn($prodTable . '.id', $this->credits(null, $filter->authorRoles));
-            }
-            return;
-        }
-        if ($filter->anyAuthor) {
-            $query->whereIn($prodTable . '.id', $this->credits($filter->authorIds, $filter->authorRoles));
-            return;
-        }
-        foreach ($filter->authorIds as $authorId) {
-            $query->whereIn($prodTable . '.id', $this->credits([$authorId], $filter->authorRoles));
-        }
-    }
-
-    /**
-     * The productions credited to the authors (or their aliases), or to
-     * anyone when no author is given, in one of the roles when any are given.
-     *
-     * @param int[]|null $authorIds
-     * @param string[] $roles
-     */
-    private function credits(?array $authorIds, array $roles): Closure
-    {
-        $authorshipTable = $this->tableName(DatabaseTable::Authorship);
-        $aliasTable = $this->tableName(DatabaseTable::AuthorAlias);
-
-        return static function (Builder $creditQuery) use ($authorshipTable, $aliasTable, $authorIds, $roles): void {
-            $creditQuery->select('elementId')
-                ->from($authorshipTable)
-                ->where('type', '=', EntityType::Prod->value);
-            if ($authorIds !== null) {
-                $creditQuery->where(static function (Builder $authorQuery) use ($aliasTable, $authorIds): void {
-                    $authorQuery->whereIn('authorId', $authorIds)
-                        ->orWhereIn('authorId', static function (Builder $aliasQuery) use ($aliasTable, $authorIds): void {
-                            $aliasQuery->select('id')->from($aliasTable)->whereIn('authorId', $authorIds);
-                        });
-                });
-            }
-            AuthorshipRoleCondition::apply($creditQuery, $roles);
-        };
     }
 
     /**
@@ -272,7 +234,7 @@ final readonly class ProdSearchDbal extends AbstractDbal
                 ->from($linksTable)
                 ->join($releaseTable, $releaseTable . '.id', '=', $linksTable . '.childStructureId')
                 ->where($linksTable . '.type', '=', LinkTypes::STRUCTURE->value);
-            $this->applyRange($prodQuery, $releaseTable . '.year', $from, $to);
+            $this->applyYears($prodQuery, $releaseTable . '.year', $from, $to);
         };
     }
 

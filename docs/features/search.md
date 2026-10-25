@@ -145,9 +145,13 @@ author or group, and an author or group is answered once, never its alias.
   finds, `prodRole` narrowing to developer or publisher (alone: groups that
   had that role on any production); the subgroups of a group and the groups a
   group is a subgroup of.
-- `ZxArt\Releases\Dbal\ReleasesDbal` — releases of a production, by a
-  part of the title or the file name, and by the md5 of the release file or of
-  any file inside it.
+- `ZxArt\Releases\Services\ReleaseSearchService::search(ReleaseSearchFilterDto)` —
+  a part of the title or of the file name; the md5 of the release file or of
+  any file inside it; given productions or the ones a nested
+  `ProdSearchFilterDto` finds; year, type, formats, required hardware,
+  languages; publishers — authors or groups, with their aliases; credited
+  authors and roles as in the production search. `ReleaseSearchDbal` answers
+  each release once, though it is stored in a row per language.
 - `ZxArt\Geo\PlaceSearchService::find()` — countries and cities by a part of
   their name in any language, named in the current one; a city with its
   country.

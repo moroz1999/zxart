@@ -6,6 +6,7 @@ namespace ZxArt\Tests\Integration\Entities;
 
 require_once __DIR__ . '/EntityWriteTestCase.php';
 
+use Closure;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
@@ -15,12 +16,15 @@ use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Releases\Dbal\ReleasesDbal;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
+use ZxArt\Releases\Dto\ReleaseSearchFilterDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseFieldsReader;
+use ZxArt\Releases\Services\ReleaseSearchService;
 use ZxArt\Releases\ReleaseTypes;
 use zxReleaseElement;
 
@@ -318,12 +322,38 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
         $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
-        $releases = $this->container->get(ReleasesDbal::class);
+        $find = $this->finder();
 
-        self::assertSame([$releaseId], $releases->findIdsByProdId($references['prodId']));
-        self::assertContains($releaseId, $releases->findIdsByTitle('GOLDMASTER TAP', 50));
+        self::assertSame([$releaseId], $this->container->get(ReleasesDbal::class)->findIdsByProdId($references['prodId']));
+        self::assertSame([$releaseId], $find(new ReleaseSearchFilterDto(prodIds: [$references['prodId']])));
+        self::assertContains($releaseId, $find(new ReleaseSearchFilterDto(title: 'GOLDMASTER TAP')));
         // a wildcard in the phrase is taken literally: unescaped, "_" would match the space
-        self::assertNotContains($releaseId, $releases->findIdsByTitle('Goldmaster_Tape', 50));
+        self::assertNotContains($releaseId, $find(new ReleaseSearchFilterDto(title: 'Goldmaster_Tape')));
+    }
+
+    public function testTheSearchFindsReleasesByTheirFieldsPublishersAuthorsAndProduction(): void
+    {
+        $this->signInAsEditor();
+        $references = $this->createReferences();
+        $tapeId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $diskId = $this->releaseDataService()->create(new ReleaseFieldsDto(
+            title: 'Goldmaster Disk',
+            year: 2003,
+            releaseType: ReleaseTypes::crack,
+            releaseFormats: ['trd'],
+            prodId: $references['otherProdId'],
+        ))->id;
+        $adapterId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Adapter'))->id;
+        $this->releaseDataService()->setMember($diskId, $adapterId, ['adaptation']);
+        $find = $this->finder();
+
+        self::assertSame([$diskId, $tapeId], $find(new ReleaseSearchFilterDto(title: 'goldmaster')));
+        self::assertSame([$tapeId], $find(new ReleaseSearchFilterDto(title: 'goldmaster', yearTo: 2000)));
+        self::assertSame([$diskId], $find(new ReleaseSearchFilterDto(title: 'goldmaster', releaseTypes: [ReleaseTypes::crack], formats: ['trd'])));
+        self::assertSame([$tapeId], $find(new ReleaseSearchFilterDto(title: 'goldmaster', languages: ['ru'])));
+        self::assertSame([$tapeId], $find(new ReleaseSearchFilterDto(publisherIds: [$references['publisherId']])));
+        self::assertSame([$diskId], $find(new ReleaseSearchFilterDto(authorIds: [$adapterId], authorRoles: ['adaptation'])));
+        self::assertSame([$diskId], $find(new ReleaseSearchFilterDto(prods: new ProdSearchFilterDto(title: 'goldmaster intro'))));
     }
 
     public function testReadAnswersWhatCreateAndUpdateWrote(): void
@@ -391,6 +421,16 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $cloneId = (int)$newReleaseIds[0];
         self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $cloneId, self::COLUMNS));
         self::assertSame($this->everyLinkStored($references), $this->storedLinks($cloneId));
+    }
+
+    /**
+     * @return Closure(ReleaseSearchFilterDto): list<int>
+     */
+    private function finder(): Closure
+    {
+        $search = $this->container->get(ReleaseSearchService::class);
+
+        return static fn(ReleaseSearchFilterDto $filter): array => $search->search($filter, 0, 50)->ids;
     }
 
     private function signInAsRegisteredUser(): void

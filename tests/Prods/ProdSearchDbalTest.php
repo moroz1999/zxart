@@ -20,6 +20,7 @@ class ProdSearchDbalTest extends TestCase
     private const int ELITE = 1;
     private const int EXOLON = 2;
     private const int STAR_WARS = 3;
+    private const int UNDATED = 4;
     private const int AUTHOR = 10;
     private const int AUTHOR_ALIAS = 11;
     private const int OTHER_AUTHOR = 12;
@@ -28,6 +29,7 @@ class ProdSearchDbalTest extends TestCase
     private const int OTHER_GROUP = 22;
     private const int RELEASE_OF_ELITE = 30;
     private const int RELEASE_OF_EXOLON = 31;
+    private const int RELEASE_OF_UNDATED = 32;
     private const int PARTY = 40;
     private const int ESTONIA = 50;
     private const int TALLINN = 51;
@@ -83,6 +85,16 @@ class ProdSearchDbalTest extends TestCase
     {
         self::assertSame([self::EXOLON, self::STAR_WARS], $this->search(new ProdSearchFilterDto(yearFrom: 1986)));
         self::assertSame([self::ELITE], $this->search(new ProdSearchFilterDto(yearTo: 1986)));
+    }
+
+    public function testTheYearsLeaveOutAnUnknownYear(): void
+    {
+        $this->db->table('module_zxprod')->insert($this->prod(self::UNDATED, 'Undated', '', 0, dateAdded: 4_000_000));
+        $this->db->table('module_zxrelease')->insert(['id' => self::RELEASE_OF_UNDATED, 'year' => 0]);
+        $this->link(self::UNDATED, self::RELEASE_OF_UNDATED, 'structure');
+
+        self::assertSame([self::ELITE], $this->search(new ProdSearchFilterDto(yearTo: 1986)));
+        self::assertSame([self::EXOLON], $this->search(new ProdSearchFilterDto(releaseYearTo: 1987)));
     }
 
     public function testTheReleaseYearsHoldForAnyReleaseOfTheProduction(): void

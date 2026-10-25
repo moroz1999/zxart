@@ -30,5 +30,7 @@ enum DatabaseTable: string
     case ZxProdCategory = 'module_zxprodcategory';
     case ZxProdHardware = 'module_zxprod_hw_required';
     case ZxRelease = 'module_zxrelease';
+    case ZxReleaseFormat = 'module_zxrelease_format';
     case ZxReleaseHardware = 'module_zxrelease_hw_required';
+    case ZxItemLanguage = 'zxitem_language';
 }
