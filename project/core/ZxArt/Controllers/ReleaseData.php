@@ -106,6 +106,7 @@ final class ReleaseData extends LoggedControllerApplication
             $request->importOrigins,
             $this->uploadedFiles(),
             $this->uploadedFilesReader->one($_FILES, 'file'),
+            $request->removeFile,
         );
     }
 

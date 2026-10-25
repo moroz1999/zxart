@@ -146,6 +146,21 @@ final readonly class ElementFileImporter
     }
 
     /**
+     * Deletes the release's own file and forgets it, with the formats read
+     * from it.
+     */
+    public function removeMainFile(zxReleaseElement $release): void
+    {
+        if ($release->file !== '' && is_file($release->getFilePath())) {
+            unlink($release->getFilePath());
+        }
+        $release->file = '';
+        $release->fileName = '';
+        $this->releaseRepository->save($release);
+        $release->updateFileStructure();
+    }
+
+    /**
      * Refuses an uploaded file the list of that kind does not take: one too big
      * or of another type.
      *

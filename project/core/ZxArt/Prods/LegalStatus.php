@@ -3,30 +3,19 @@ declare(strict_types=1);
 
 namespace ZxArt\Prods;
 
-enum LegalStatus
+/**
+ * The legal status of a production, stored and sent under its case name.
+ */
+enum LegalStatus: string
 {
-    case insales;
-    case forbidden;
-    case unknown;
-    case mia;
-    case unreleased;
-    case recovered;
-    case forbiddenzxart;
-    case allowedzxart;
-    case allowed;
-    case donationware;
-
-    /**
-     * The status a production stores under its case name.
-     */
-    public static function tryFromName(string $name): ?self
-    {
-        foreach (self::cases() as $status) {
-            if ($status->name === $name) {
-                return $status;
-            }
-        }
-
-        return null;
-    }
+    case insales = 'insales';
+    case forbidden = 'forbidden';
+    case unknown = 'unknown';
+    case mia = 'mia';
+    case unreleased = 'unreleased';
+    case recovered = 'recovered';
+    case forbiddenzxart = 'forbiddenzxart';
+    case allowedzxart = 'allowedzxart';
+    case allowed = 'allowed';
+    case donationware = 'donationware';
 }

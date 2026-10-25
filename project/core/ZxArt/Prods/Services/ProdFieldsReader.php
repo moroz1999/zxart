@@ -28,7 +28,7 @@ final readonly class ProdFieldsReader
             htmlDescription: $prod->isHtmlDescription(),
             instructions: ElementFields::text($prod, 'instructions'),
             htmlInstructions: $prod->isHtmlInstructions(),
-            legalStatus: LegalStatus::tryFromName(ElementFields::text($prod, 'legalStatus')),
+            legalStatus: LegalStatus::tryFrom(ElementFields::text($prod, 'legalStatus')),
             externalLink: ElementFields::text($prod, 'externalLink'),
             youtubeId: ElementFields::text($prod, 'youtubeId'),
             partyId: ElementFields::number($prod, 'party'),

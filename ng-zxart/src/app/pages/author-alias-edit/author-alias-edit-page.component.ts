@@ -32,8 +32,9 @@ import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-bu
 import {AuthorAliasDataApiService} from '../../shared/api/author-alias-data-api.service';
 import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
-import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
+import {AuthorAliasSaveRequest} from '../../shared/models/entity-save';
+import {dateToTimestamp, importOriginInputs, membershipInputs} from '../../shared/utils/entity-save-inputs';
 import {AuthorAliasFormApiService} from '../../features/author-details/services/author-alias-form-api.service';
 
 const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
@@ -114,7 +115,6 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
-    private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
     private readonly authorAliasFormApi: AuthorAliasFormApiService,
   ) {}
@@ -216,40 +216,25 @@ export class AuthorAliasEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    const fields = {
-      authorId: value.author ? Number(value.author.id) : 0,
-      title: value.title,
-      startDate: value.startDate,
-      endDate: value.endDate,
-      displayInMusic: value.displayInMusic,
-      displayInGraphics: value.displayInGraphics,
+    const request: AuthorAliasSaveRequest = {
+      fields: {
+        title: value.title,
+        authorId: value.author?.id ?? 0,
+        startDate: dateToTimestamp(value.startDate),
+        endDate: dateToTimestamp(value.endDate),
+        displayInMusic: value.displayInMusic,
+        displayInGraphics: value.displayInGraphics,
+      },
+      groups: membershipInputs(this.groupFields),
+      prods: membershipInputs(this.prodFields),
+      importOrigins: importOriginInputs(this.importOriginFields),
     };
     const save$ = this.creating
-      ? this.authorAliasFormApi.create(fields)
-      : this.formSave.save(this.elementId, {
-        fields: {
-          title: fields.title,
-          authorId: String(fields.authorId),
-          startDate: fields.startDate,
-          endDate: fields.endDate,
-          displayInMusic: fields.displayInMusic ? '1' : '',
-          displayInGraphics: fields.displayInGraphics ? '1' : '',
-          addGroupRole: this.groupFields.roles,
-          addGroupStartDate: this.groupFields.startDates,
-          addGroupEndDate: this.groupFields.endDates,
-          addProdRole: this.prodFields.roles,
-          importOrigins: this.importOriginFields,
-        },
-      });
+      ? this.authorAliasDataApi.create(request)
+      : this.authorAliasDataApi.update(this.elementId, request);
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
-          if (result.id <= 0) {
-            this.submitting = false;
-            this.errorMessage = result.errorMessage ?? 'author-alias-form.error-save';
-            this.cdr.markForCheck();
-            return;
-          }
           this.router.navigateByUrl(`/author/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

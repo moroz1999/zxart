@@ -153,6 +153,21 @@ final class EntityUploadsTest extends EntityWriteTestCase
         self::assertSame(['manual.txt'], $this->fileNames($this->linkedChildren($releaseId, 'infoFilesSelector')));
     }
 
+    public function testUpdateRemovesTheReleaseFile(): void
+    {
+        $this->signInAsReleaseEditor();
+        $releaseId = $this->createRelease();
+        $this->releases()->update($releaseId, new ReleaseFieldsDto(), file: $this->upload('alpha.tap'));
+
+        $this->releases()->update($releaseId, new ReleaseFieldsDto(), removeFile: true);
+
+        self::assertSame(
+            ['file' => '', 'fileName' => '', 'parsed' => 1],
+            $this->storedRow('module_zxrelease', $releaseId, ['file', 'fileName', 'parsed']),
+        );
+        self::assertFileDoesNotExist($this->releasesPath() . $releaseId);
+    }
+
     public function testBatchUploadMakesAProductionWithAReleasePerFile(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);

@@ -39,7 +39,7 @@ final readonly class ProdFieldsDtoFactory
             htmlDescription: $values->flag('htmlDescription'),
             instructions: $values->text('instructions'),
             htmlInstructions: $values->flag('htmlInstructions'),
-            legalStatus: $legalStatus !== null ? LegalStatus::tryFromName($legalStatus) : null,
+            legalStatus: $legalStatus !== null ? LegalStatus::tryFrom($legalStatus) : null,
             externalLink: $values->text('externalLink'),
             youtubeId: $values->text('youtubeId'),
             partyId: $values->number('party'),

@@ -36,11 +36,10 @@ import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {ZxTabsComponent} from '../../shared/ui/zx-tabs/zx-tabs.component';
 import {ZxTabComponent} from '../../shared/ui/zx-tabs/zx-tab.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
-import {FormSaveApiService} from '../../shared/services/form-save-api.service';
 import {PageMetadataService} from '../../shared/services/page-metadata.service';
+import {AuthorSaveRequest} from '../../shared/models/entity-save';
+import {importOriginInputs, membershipInputs} from '../../shared/utils/entity-save-inputs';
 
-/** Tech fields shown nowhere in the UI but preserved on save (passthrough). */
-const PASSTHROUGH_FIELDS = ['chipType', 'channelsType', 'frequency', 'intFrequency', 'palette'];
 const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `author/:id/edit`. */
@@ -121,7 +120,6 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
   private returnUrl = '/authors';
   private imageFile: File | null = null;
   private removeImage = false;
-  private passthrough: Record<string, string> = {};
   private groupFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private prodFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private importOriginFields: ImportOriginFields = {};
@@ -134,7 +132,6 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
-    private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
   ) {}
 
@@ -184,9 +181,6 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
           // matches what the editor emits on mount, so the tab count is settled
           // before the tab bar is first checked
           this.prodsCount = data.prods.length;
-          for (const field of PASSTHROUGH_FIELDS) {
-            this.passthrough[field] = String(data.fields[field] ?? '');
-          }
           this.loading = false;
           this.cdr.markForCheck();
         },
@@ -234,40 +228,32 @@ export class AuthorEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    const payload = {
-        fields: {
-          ...this.passthrough,
-          title: value.title,
-          country: value.country ? String(value.country.id) : '',
-          city: value.city ? String(value.city.id) : '',
-          wikiLink: value.wikiLink,
-          zxTunesId: value.zxTunesId,
-          denyVoting: value.denyVoting ? '1' : '',
-          denyComments: value.denyComments ? '1' : '',
-          deny3a: value.deny3a ? '1' : '',
-          displayInMusic: value.displayInMusic ? '1' : '',
-          displayInGraphics: value.displayInGraphics ? '1' : '',
-          addGroupRole: this.groupFields.roles,
-          addGroupStartDate: this.groupFields.startDates,
-          addGroupEndDate: this.groupFields.endDates,
-          addProdRole: this.prodFields.roles,
-          importOrigins: this.importOriginFields,
-        },
-        multilang: {realName: value.realName},
-        image: {field: 'image', file: this.imageFile, remove: this.removeImage},
-      };
+    const request: AuthorSaveRequest = {
+      fields: {
+        title: value.title,
+        countryId: value.country?.id ?? 0,
+        cityId: value.city?.id ?? 0,
+        wikiLink: value.wikiLink,
+        zxTunesId: Number(value.zxTunesId) || 0,
+        denyVoting: value.denyVoting,
+        denyComments: value.denyComments,
+        deny3a: value.deny3a,
+        displayInMusic: value.displayInMusic,
+        displayInGraphics: value.displayInGraphics,
+      },
+      realNames: value.realName,
+      groups: membershipInputs(this.groupFields),
+      prods: membershipInputs(this.prodFields),
+      importOrigins: importOriginInputs(this.importOriginFields),
+      removeImage: this.removeImage,
+    };
+    const uploads = {image: this.imageFile};
     const save$ = this.creating
-      ? this.formSave.create('author', payload)
-      : this.formSave.save(this.elementId, payload);
+      ? this.authorDataApi.create(request, uploads)
+      : this.authorDataApi.update(this.elementId, request, uploads);
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
-          if (result.id <= 0) {
-            this.submitting = false;
-            this.errorMessage = result.errorMessage ?? 'author-form.error-save';
-            this.cdr.markForCheck();
-            return;
-          }
           this.router.navigateByUrl(`/author/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {

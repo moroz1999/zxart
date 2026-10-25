@@ -35,7 +35,8 @@ import {GroupDataApiService} from '../../shared/api/group-data-api.service';
 import {GroupAliasDataApiService} from '../../shared/api/group-alias-data-api.service';
 import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
-import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {EntityFields, GroupSaveRequest} from '../../shared/models/entity-save';
+import {authorshipInputs, dateToTimestamp, importOriginInputs} from '../../shared/utils/entity-save-inputs';
 
 const GROUP_TYPES = ['company', 'studio', 'scene', 'store', 'education'];
 const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
@@ -129,7 +130,6 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
-    private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
   ) {}
 
@@ -222,38 +222,35 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    const payload = {
-      fields: {
-        title: value.title,
-        type: value.type,
-        country: value.country ? String(value.country.id) : '',
-        city: value.city ? String(value.city.id) : '',
-        wikiLink: value.wikiLink,
-        website: value.website,
-        abbreviation: value.abbreviation,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        slogan: value.slogan,
-        addAuthorRole: this.memberFields.roles,
-        addAuthorStartDate: this.memberFields.startDates,
-        addAuthorEndDate: this.memberFields.endDates,
-        subGroupsSelector: value.subgroups.map((ref: EntityRef) => String(ref.id)),
-        importOrigins: this.importOriginFields,
-      },
-      image: {field: 'image', file: this.imageFile, remove: this.removeImage},
+    const lists = {
+      members: authorshipInputs(this.memberFields),
+      importOrigins: importOriginInputs(this.importOriginFields),
     };
-    const save$ = this.creating
-      ? this.formSave.create('group', payload)
-      : this.formSave.save(this.elementId, payload);
+    const dates: EntityFields = {
+      title: value.title,
+      startDate: dateToTimestamp(value.startDate),
+      endDate: dateToTimestamp(value.endDate),
+    };
+    const save$ = this.isAlias
+      ? this.groupAliasDataApi.update(this.elementId, {fields: dates, ...lists})
+      : this.saveGroup({
+        fields: {
+          ...dates,
+          type: value.type,
+          countryId: value.country?.id ?? 0,
+          cityId: value.city?.id ?? 0,
+          wikiLink: value.wikiLink,
+          website: value.website,
+          abbreviation: value.abbreviation,
+          slogan: value.slogan,
+          subGroupIds: value.subgroups.map((ref: EntityRef) => ref.id),
+        },
+        ...lists,
+        removeImage: this.removeImage,
+      });
     this.subscriptions.add(
       save$.subscribe({
         next: result => {
-          if (result.id <= 0) {
-            this.submitting = false;
-            this.errorMessage = result.errorMessage ?? 'group-form.error-save';
-            this.cdr.markForCheck();
-            return;
-          }
           this.router.navigateByUrl(`/group/${result.id}`);
         },
         error: (err: HttpErrorResponse) => {
@@ -263,6 +260,13 @@ export class GroupEditPageComponent implements OnInit, OnDestroy {
         },
       }),
     );
+  }
+
+  private saveGroup(request: GroupSaveRequest): Observable<EntityChangeResult> {
+    const uploads = {image: this.imageFile};
+    return this.creating
+      ? this.groupDataApi.create(request, uploads)
+      : this.groupDataApi.update(this.elementId, request, uploads);
   }
 
   private showError(messageKey: string): void {

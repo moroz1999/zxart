@@ -46,9 +46,9 @@ import {ProdDataApiService} from '../../shared/api/prod-data-api.service';
 import {EntityChangeResult} from '../../shared/models/entity-change-result';
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
-import {FormFieldValue} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
-import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {EntityFields, FilesByKind} from '../../shared/models/entity-save';
+import {authorshipInputs, importOriginInputs} from '../../shared/utils/entity-save-inputs';
 
 /** Fixed legalStatus enum (matches the legacy zxProd.form.tpl dropdown). */
 const LEGAL_STATUSES = [
@@ -56,8 +56,13 @@ const LEGAL_STATUSES = [
   'insales', 'mia', 'unreleased', 'recovered', 'donationware',
 ] as const;
 
-/** expectedFields preserved unchanged on save until they get dedicated UI. */
-const PASSTHROUGH_FIELDS: string[] = [];
+/** The file list each selector feeds, by the selector's property. */
+const FILE_KINDS: Readonly<Record<string, string>> = {
+  connectedFile: 'screenshots',
+  inlayFilesSelector: 'inlays',
+  mapFilesSelector: 'maps',
+  rzx: 'rzx',
+};
 const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `prod/:id/edit`. */
@@ -185,7 +190,6 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
   private returnUrl = '/prods';
   private memberFields: MemberFields = EMPTY_MEMBER_FIELDS;
   private importOriginFields: ImportOriginFields = {};
-  private passthrough: Record<string, FormFieldValue> = {};
   private selectorFiles: Record<string, File[]> = {};
   private readonly subscriptions = new Subscription();
 
@@ -197,7 +201,6 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly translate: TranslateService,
     private readonly formData: FormDataApiService,
-    private readonly formSave: FormSaveApiService,
     private readonly screenshotMove: ScreenshotMoveApiService,
     private readonly pageMetadata: PageMetadataService,
   ) {}
@@ -266,9 +269,6 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
           this.languageOptions = this.buildLanguageOptions(data.enums['language']);
           this.hardwareGroups = buildHardwareGroups(data.enums['hardwareRequired'] ?? [], this.translate);
           this.fileSelectors = data.fileSelectors;
-          for (const field of PASSTHROUGH_FIELDS) {
-            this.passthrough[field] = data.fields[field] ?? '';
-          }
           this.loading = false;
           this.cdr.markForCheck();
         },
@@ -386,74 +386,78 @@ export class ProdEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    const commonFields = {
+    const fields: EntityFields = {
+      title: value.title,
+      altTitle: value.altTitle,
       externalLink: value.externalLink,
       legalStatus: value.legalStatus,
-      party: value.party ? String(value.party.id) : '',
-      partyplace: value.partyplace,
+      partyId: value.party?.id ?? 0,
+      partyPlace: Number(value.partyplace) || 0,
       compo: value.compo,
-      language: value.language,
-      // always sent, empty included: a field listed in expectedFields but absent
-      // from the request would wipe what is stored
-      hardwareRequired: value.hardwareRequired,
-      year: value.year,
+      languages: value.language,
+      hardware: value.hardwareRequired,
+      year: Number(value.year) || 0,
       youtubeId: value.youtubeId,
-      groups: value.groups.map((ref: EntityRef) => String(ref.id)),
-      publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
-      categories: value.categories.map((id: number) => String(id)),
+      groupIds: value.groups.map((ref: EntityRef) => ref.id),
+      publisherIds: value.publishers.map((ref: EntityRef) => ref.id),
+      categoryIds: value.categories,
       description: value.description,
       instructions: value.instructions,
       tags: value.tags,
-      denyVoting: value.denyVoting ? '1' : '',
-      denyComments: value.denyComments ? '1' : '',
-      htmlDescription: value.htmlDescription,
-      htmlInstructions: value.htmlInstructions,
-      addAuthorRole: this.memberFields.roles,
+      denyVoting: value.denyVoting,
+      denyComments: value.denyComments,
+      htmlDescription: value.htmlDescription === '1',
+      htmlInstructions: value.htmlInstructions === '1',
     };
-    const save$ = this.batchUpload
-      ? this.formSave.create(
-        'prodBatch',
-        {
-          fileSelectors: this.selectorFiles,
-          fields: {
-            ...commonFields,
-            prodTitle: value.title,
-            prodAltTitle: value.altTitle,
+    const authors = authorshipInputs(this.memberFields);
+    if (this.batchUpload) {
+      this.subscriptions.add(
+        this.prodDataApi.batchUpload(
+          {fields, authors},
+          {releaseFiles: this.selectorFiles['file'] ?? [], files: this.filesByKind()},
+        ).subscribe({
+          next: result => {
+            this.router.navigateByUrl(result.ids.length === 1 ? `/prod/${result.ids[0]}` : this.returnUrl);
           },
-        },
-        undefined,
-        this.parentId || undefined,
-      )
-      : this.formSave.save(this.elementId, {
-        fileSelectors: this.selectorFiles,
-        fields: {
-          ...this.passthrough,
-          ...commonFields,
-          title: value.title,
-          altTitle: value.altTitle,
-          compilationItems: value.compilationItems.map((ref: EntityRef) => String(ref.id)),
-          seriesProds: value.seriesProds.map((ref: EntityRef) => String(ref.id)),
-          importOrigins: this.importOriginFields,
-        },
-      });
+          error: (err: HttpErrorResponse) => this.saveFailed(err),
+        }),
+      );
+      return;
+    }
     this.subscriptions.add(
-      save$.subscribe({
+      this.prodDataApi.update(
+        this.elementId,
+        {
+          fields: {
+            ...fields,
+            compilationItemIds: value.compilationItems.map((ref: EntityRef) => ref.id),
+            seriesProdIds: value.seriesProds.map((ref: EntityRef) => ref.id),
+          },
+          authors,
+          importOrigins: importOriginInputs(this.importOriginFields),
+        },
+        {files: this.filesByKind()},
+      ).subscribe({
         next: result => {
-          if (result.id <= 0) {
-            this.submitting = false;
-            this.errorMessage = result.errorMessage ?? 'prod-form.error-save';
-            this.cdr.markForCheck();
-            return;
-          }
           this.router.navigateByUrl(`/prod/${result.id}`);
         },
-        error: (err: HttpErrorResponse) => {
-          this.submitting = false;
-          this.errorMessage = err.error?.errorMessage ?? 'prod-form.error-save';
-          this.cdr.markForCheck();
-        },
+        error: (err: HttpErrorResponse) => this.saveFailed(err),
       }),
     );
+  }
+
+  private filesByKind(): FilesByKind {
+    const files: FilesByKind = {};
+    for (const [prop, kind] of Object.entries(FILE_KINDS)) {
+      files[kind] = this.selectorFiles[prop] ?? [];
+    }
+    return files;
+  }
+
+  private saveFailed(err: HttpErrorResponse): void {
+    this.submitting = false;
+    this.errorMessage = err.error?.errorMessage ?? 'prod-form.error-save';
+    this.cdr.markForCheck();
   }
 
   private showError(messageKey: string): void {

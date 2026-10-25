@@ -74,6 +74,8 @@ export interface ReleaseSaveRequest {
   fields: EntityFields;
   authors?: AuthorshipInput[];
   importOrigins?: ImportOriginInput[];
+  /** Takes the release's own file away unless a new one is uploaded. */
+  removeFile?: boolean;
 }
 
 /** The values every release made from the uploaded files shares. */

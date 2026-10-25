@@ -13,7 +13,7 @@ use ZxArt\Shared\Dto\UploadedFileDto;
 /**
  * A list left `null` keeps what the release holds; an empty list clears it.
  * The uploaded files are added to the lists of their kinds; `file` replaces
- * the release's own file.
+ * the release's own file; `removeFile` takes it away when no file is given.
  */
 final readonly class UpdateReleaseCommand
 {
@@ -29,6 +29,7 @@ final readonly class UpdateReleaseCommand
         public ?array $importOrigins = null,
         public array $files = [],
         public ?UploadedFileDto $file = null,
+        public bool $removeFile = false,
     ) {
     }
 }

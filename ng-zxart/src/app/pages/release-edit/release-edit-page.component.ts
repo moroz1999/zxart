@@ -41,11 +41,18 @@ import {ZxPageLayoutComponent} from '../../shared/ui/zx-page-layout/zx-page-layo
 import {ZxDeleteEntityButtonComponent} from '../../shared/ui/zx-delete-entity-button/zx-delete-entity-button.component';
 import {ReleaseDataApiService} from '../../shared/api/release-data-api.service';
 import {EntityChangeResult} from '../../shared/models/entity-change-result';
-import {FileUploadField} from '../../shared/models/form-save';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
-import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {EntityFields, FilesByKind} from '../../shared/models/entity-save';
+import {authorshipInputs, importOriginInputs} from '../../shared/utils/entity-save-inputs';
 import {enumDefaultValue} from '../../shared/utils/enum-default';
 
+/** The file list each selector feeds, by the selector's property. */
+const FILE_KINDS: Readonly<Record<string, string>> = {
+  screenshotsSelector: 'screenshots',
+  inlayFilesSelector: 'inlays',
+  infoFilesSelector: 'info',
+  adFilesSelector: 'ads',
+};
 const EMPTY_MEMBER_FIELDS: MemberFields = {roles: {}, startDates: {}, endDates: {}};
 
 /** Routed page for `release/:id/edit`. */
@@ -155,7 +162,6 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private readonly formData: FormDataApiService,
-    private readonly formSave: FormSaveApiService,
     private readonly pageMetadata: PageMetadataService,
     private readonly translate: TranslateService,
   ) {}
@@ -283,59 +289,69 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     this.submitting = true;
     this.errorMessage = '';
     const value = this.form.getRawValue();
-    const files: FileUploadField[] = Object.entries(this.fileChanges).map(([field, change]) => ({
-      field,
-      file: change.file,
-      remove: change.removed,
-    }));
-    const payload = {
-      // creating: the picked files go as `file[]`, and the backend creates one
-      // release per file out of the values below
-      fileSelectors: this.creating
-        ? {...this.selectorFiles, file: this.newReleaseFiles}
-        : this.selectorFiles,
-      files,
-      fields: {
-        title: value.title,
-        zxProd: value.prod ? String(value.prod.id) : String(this.prodId || ''),
-        version: value.version,
-        year: value.year,
-        releaseType: value.releaseType,
-        releaseFormat: value.releaseFormat,
-        language: value.language,
-        hardwareRequired: value.hardwareRequired,
-        publishers: value.publishers.map((ref: EntityRef) => String(ref.id)),
-        description: value.description,
-        denyVoting: value.denyVoting ? '1' : '',
-        denyComments: value.denyComments ? '1' : '',
-        addAuthorRole: this.memberFields.roles,
-        importOrigins: this.importOriginFields,
-      },
+    const fields: EntityFields = {
+      title: value.title,
+      prodId: value.prod?.id ?? this.prodId,
+      version: value.version,
+      year: Number(value.year) || 0,
+      releaseType: value.releaseType,
+      releaseFormats: value.releaseFormat,
+      languages: value.language,
+      hardware: value.hardwareRequired,
+      publisherIds: value.publishers.map((ref: EntityRef) => ref.id),
+      description: value.description,
+      denyVoting: value.denyVoting,
+      denyComments: value.denyComments,
     };
-    const save$ = this.creating
-      ? this.formSave.create('release', payload, undefined, this.prodId)
-      : this.formSave.save(this.elementId, payload);
+    const authors = authorshipInputs(this.memberFields);
+    if (this.creating) {
+      this.subscriptions.add(
+        this.releaseDataApi.createFromFiles(
+          {fields, authors},
+          {releaseFiles: this.newReleaseFiles, files: this.filesByKind()},
+        ).subscribe({
+          next: result => {
+            // several releases at once have no single page to land on; their
+            // production lists them all
+            this.router.navigateByUrl(result.ids.length === 1 ? `/release/${result.ids[0]}` : this.returnUrl);
+          },
+          error: (err: HttpErrorResponse) => this.saveFailed(err),
+        }),
+      );
+      return;
+    }
+    const fileChange = this.fileChanges['file'];
     this.subscriptions.add(
-      save$.subscribe({
+      this.releaseDataApi.update(
+        this.elementId,
+        {
+          fields,
+          authors,
+          importOrigins: importOriginInputs(this.importOriginFields),
+          removeFile: fileChange?.removed ?? false,
+        },
+        {file: fileChange?.file ?? null, files: this.filesByKind()},
+      ).subscribe({
         next: result => {
-          if (result.id <= 0) {
-            this.submitting = false;
-            this.errorMessage = result.errorMessage ?? 'release-form.error-save';
-            this.cdr.markForCheck();
-            return;
-          }
-          // several releases at once have no single page to land on; their
-          // production lists them all
-          const createdSeveral = (result.ids?.length ?? 1) > 1;
-          this.router.navigateByUrl(createdSeveral ? this.returnUrl : `/release/${result.id}`);
+          this.router.navigateByUrl(`/release/${result.id}`);
         },
-        error: (err: HttpErrorResponse) => {
-          this.submitting = false;
-          this.errorMessage = err.error?.errorMessage ?? 'release-form.error-save';
-          this.cdr.markForCheck();
-        },
+        error: (err: HttpErrorResponse) => this.saveFailed(err),
       }),
     );
+  }
+
+  private filesByKind(): FilesByKind {
+    const files: FilesByKind = {};
+    for (const [prop, kind] of Object.entries(FILE_KINDS)) {
+      files[kind] = this.selectorFiles[prop] ?? [];
+    }
+    return files;
+  }
+
+  private saveFailed(err: HttpErrorResponse): void {
+    this.submitting = false;
+    this.errorMessage = err.error?.errorMessage ?? 'release-form.error-save';
+    this.cdr.markForCheck();
   }
 
   private showError(messageKey: string): void {

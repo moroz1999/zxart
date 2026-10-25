@@ -82,8 +82,11 @@ final readonly class ReleaseDataService
         ?array $importOrigins = null,
         array $files = [],
         ?UploadedFileDto $file = null,
+        bool $removeFile = false,
     ): ReleaseDataResultDto {
-        return $this->updateReleaseHandler->handle(new UpdateReleaseCommand($releaseId, $fields, $authors, $importOrigins, $files, $file));
+        return $this->updateReleaseHandler->handle(
+            new UpdateReleaseCommand($releaseId, $fields, $authors, $importOrigins, $files, $file, $removeFile),
+        );
     }
 
     /**

@@ -9,7 +9,8 @@ use ZxArt\Import\Dto\ImportOriginDto;
 
 /**
  * The JSON part of a release update request. A list left out keeps what the
- * release holds; an empty list clears it.
+ * release holds; an empty list clears it. `removeFile` takes the release's own
+ * file away unless a new one is uploaded.
  */
 final readonly class ReleaseSaveRequestDto
 {
@@ -21,6 +22,7 @@ final readonly class ReleaseSaveRequestDto
         public ReleaseFieldsDto $fields = new ReleaseFieldsDto(),
         public ?array $authors = null,
         public ?array $importOrigins = null,
+        public bool $removeFile = false,
     ) {
     }
 }

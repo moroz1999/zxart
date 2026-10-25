@@ -22,6 +22,7 @@ use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdBatchUploadRequestDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSaveRequestDto;
+use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\Dto\ReleaseCreateFromFilesRequestDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Dto\ReleaseSaveRequestDto;
@@ -135,12 +136,12 @@ final class EntitySaveRequestDtoTest extends TestCase
 
         self::assertEquals(
             new ProdSaveRequestDto(
-                fields: new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [92159]),
+                fields: new ProdFieldsDto(title: 'Goldmaster Demo', legalStatus: LegalStatus::allowed, categoryIds: [92159]),
                 authors: [new AuthorshipInputDto(4, ['code'])],
                 importOrigins: [new ImportOriginDto(ImportOrigin::Vtrdos, 'gm-demo')],
             ),
             $this->deserialize(ProdSaveRequestDto::class, [
-                'fields' => ['title' => 'Goldmaster Demo', 'categoryIds' => [92159]],
+                'fields' => ['title' => 'Goldmaster Demo', 'legalStatus' => 'allowed', 'categoryIds' => [92159]],
                 'authors' => $authors,
                 'importOrigins' => [['origin' => 'vt', 'importId' => 'gm-demo']],
             ]),
@@ -159,12 +160,14 @@ final class EntitySaveRequestDtoTest extends TestCase
         $request = $this->deserialize(ReleaseSaveRequestDto::class, [
             'fields' => ['title' => 'Goldmaster Tape', 'prodId' => 7, 'version' => '1.0'],
             'authors' => [['authorId' => 4, 'roles' => ['release']]],
+            'removeFile' => true,
         ]);
 
         self::assertEquals(
             new ReleaseSaveRequestDto(
                 fields: new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: 7, version: '1.0'),
                 authors: [new AuthorshipInputDto(4, ['release'])],
+                removeFile: true,
             ),
             $request,
         );

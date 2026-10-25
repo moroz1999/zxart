@@ -23,7 +23,8 @@ use ZxArt\Shared\UseCases\TransactionRunner;
  * Changes the fields the command carries, replaces the authors and portal ids
  * it carries, adds the uploaded files to their lists and replaces the
  * release's own file, all in one transaction: a wrong reference, role or file
- * changes nothing. Moving the release to another production needs the right
+ * changes nothing. The release's own file is replaced by an uploaded one, or
+ * taken away when the command asks for it. Moving the release to another production needs the right
  * to add releases there.
  *
  * @psalm-api
@@ -76,6 +77,8 @@ final readonly class UpdateReleaseHandler
                 }
                 if ($command->file !== null) {
                     $this->elementFileImporter->setUploadedMainFile($release, $command->file);
+                } elseif ($command->removeFile) {
+                    $this->elementFileImporter->removeMainFile($release);
                 }
             } catch (InvalidReferenceException|AttachedFileRefusedException $exception) {
                 throw new ReleaseDataException($exception->getMessage(), 400, $exception);
