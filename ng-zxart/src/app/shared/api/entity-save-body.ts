@@ -8,7 +8,8 @@ export type SaveBodyFiles = Record<string, File | File[] | Partial<Record<string
  */
 export function entitySaveBody(request: object, files: SaveBodyFiles): FormData {
   const body = new FormData();
-  body.append('data', new Blob([JSON.stringify(request)], {type: 'application/json'}));
+  // a text field: PHP reads a part sent as a file (a Blob is one) into $_FILES, not $_POST
+  body.append('data', JSON.stringify(request));
   for (const [name, value] of Object.entries(files)) {
     if (value instanceof File) {
       body.append(name, value, value.name);

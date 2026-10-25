@@ -10,6 +10,12 @@ describe('entitySaveBody', () => {
     expect([...body.keys()]).toEqual(['data']);
   });
 
+  it('sends `data` as a text field, which PHP reads into `$_POST`, not as a file part', () => {
+    const body = entitySaveBody({fields: {title: 'Goldmaster Writer'}}, {});
+
+    expect(body.get('data')).toBe('{"fields":{"title":"Goldmaster Writer"}}');
+  });
+
   it('adds a single file under its name and skips the ones not given', () => {
     const image = new File(['png'], 'logo.png');
 
