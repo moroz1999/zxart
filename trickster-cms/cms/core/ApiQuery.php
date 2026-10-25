@@ -24,6 +24,7 @@ class ApiQuery extends errorLogger implements DependencyInjectionContextInterfac
     protected $order;
     protected $start;
     protected $optimized = true;
+    protected bool $temporaryTables = true;
 
     /**
      * @param boolean $optimized
@@ -31,6 +32,17 @@ class ApiQuery extends errorLogger implements DependencyInjectionContextInterfac
     public function setOptimized($optimized)
     {
         $this->optimized = $optimized;
+    }
+
+    /**
+     * Without temporary tables the filtered queries read the live rows each
+     * time: a temporary table is made once per set of parameters and kept for
+     * the request, so it misses what is written after.
+     */
+    public function setTemporaryTables(bool $temporaryTables): ApiQuery
+    {
+        $this->temporaryTables = $temporaryTables;
+        return $this;
     }
 
     public function setOrder($order)
@@ -90,7 +102,8 @@ class ApiQuery extends errorLogger implements DependencyInjectionContextInterfac
         $this->filterQueries = $queryFiltersManager->getFilterQueries(
             $this->filtrationParameters,
             $this->resultTypes,
-            $this->optimized
+            $this->optimized,
+            $this->temporaryTables
         );
 
         return $this->filterQueries;

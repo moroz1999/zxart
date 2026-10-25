@@ -26,7 +26,7 @@ emailed to the form's configured recipient and are not stored.
 
 ## Email validation (shared with registration)
 
-`ZxArt\Email\EmailValidationService` + `ZxArt\Email\DomainBanRepository` decide whether an address is
+`ZxArt\Email\EmailValidationService` + `ZxArt\Email\Dbal\DomainBanRepository` decide whether an address is
 acceptable. `isAllowed()` applies: local-part heuristics (`+`, more than 2 dots) → cached domain ban list
 (`domains` table) → external services (`VerifaliaAdapter`, `VerifyMailAdapter`). A domain is blocked only
 when an external service explicitly rejects it; the decision is cached in `domains`. The

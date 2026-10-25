@@ -66,6 +66,33 @@ class privilegesManager implements DependencyInjectionContextInterface
             }
             $privilegesRelation->persist();
         }
+        $this->applyToCompiledPrivileges($userId, $elementId, $module, $action, $type);
+    }
+
+    /**
+     * A privilege of the current user set on an element whose privileges are
+     * already worked out takes effect at once: otherwise the element keeps the
+     * privileges it was loaded with until the next request. An inherited one is
+     * left as it is, since what it inherits is not known here.
+     */
+    private function applyToCompiledPrivileges($userId, $elementId, $module, $action, $type): void
+    {
+        if (!isset($this->privileges[$elementId])) {
+            return;
+        }
+        $currentUserId = $this->getService(CurrentUserService::class)->getCurrentUser()->id;
+        if ((int)$currentUserId !== (int)$userId) {
+            return;
+        }
+        if ($type == 'allow' || $type == '1') {
+            $this->privileges[$elementId][$module][$action] = true;
+        } elseif ($type != 'inherit') {
+            unset($this->privileges[$elementId][$module][$action]);
+            // as compileElementPrivileges(): a type without actions is no allowed type
+            if (empty($this->privileges[$elementId][$module])) {
+                unset($this->privileges[$elementId][$module]);
+            }
+        }
     }
 
     public function deletePrivilege($userId, $elementId = null, $module = null, $action = null, $type = null)

@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Releases\Services\ReleaseCreator;
+use ZxArt\Releases\Services\ReleaseFieldsDtoFactory;
 use ZxArt\Shared\EntityType;
 
 class publicAddZxRelease extends structureElementAction
@@ -21,27 +23,16 @@ class publicAddZxRelease extends structureElementAction
                 $info = pathinfo($structureElement->fileName);
                 $structureElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
             }
-            if (!$structureElement->structureName) {
-                $structureElement->structureName = $structureElement->title;
-            }
-            $structureElement->dateAdded = time();
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $structureElement->userId = $currentUserService->getCurrentUser()->id;
-            $structureElement->persistElementData();
+            $fields = $this->getService(ReleaseFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(ReleaseCreator::class)->completeCreation($structureElement, $fields);
 
             $structureElement->persistAuthorship(EntityType::Release);
             $structureElement->persistImportOrigins();
 
             $structureElement->executeAction('receiveFiles');
 
-            $privilegesManager = $this->getService(privilegesManager::class);
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $user = $currentUserService->getCurrentUser();
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'deleteFile', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'zxRelease', 'clone', 'allow');
+            $user = $this->getService(CurrentUserService::class)->getCurrentUser();
             $user->refreshPrivileges();
 
             $structureElement->updateFileStructure();

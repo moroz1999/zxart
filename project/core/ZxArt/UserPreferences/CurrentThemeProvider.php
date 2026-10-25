@@ -7,8 +7,8 @@ namespace ZxArt\UserPreferences;
 use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Domain\ThemeValue;
-use ZxArt\UserPreferences\Repositories\PreferencesRepository;
-use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesRepository;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
 
 final readonly class CurrentThemeProvider
 {

@@ -29,7 +29,9 @@ final readonly class ProdImportDTO
         public ?string      $externalLink = null,
         public ?string      $compo = null,
         public ?int         $year = null,
+        /** @var array<string, int|string>|null origin => the production's id in that source */
         public ?array       $ids = null,
+        /** @var array<string, int|string>|null origin => the production's id in that source */
         public ?array       $importIds = null,
         /** @var Label[]|null */
         public ?array       $labels = null,

@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Connection;
 use Override;
 use RuntimeException;
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\PartyRefDTO;
@@ -357,7 +357,7 @@ class PouetImport extends errorLogger
     public function __construct(
         Connection     $db,
         ProdsService   $prodsService,
-        AuthorsService $authorsManager,
+        AuthorImportService $authorImportService,
         QueueService   $queueService
     )
     {
@@ -377,8 +377,8 @@ class PouetImport extends errorLogger
             ],
         ]);
 
-        $authorsManager->setForceUpdateCountry(false);
-        $authorsManager->setForceUpdateCity(false);
+        $authorImportService->setForceUpdateCountry(false);
+        $authorImportService->setForceUpdateCity(false);
 
         $this->prodsService->setForceUpdateCategories(false);
         $this->prodsService->setForceUpdateYoutube(true);
@@ -689,12 +689,11 @@ class PouetImport extends errorLogger
             origin: $this->origin,
         );
 
-        if ($prodElement = $this->prodsService->importProd($prodDto, $this->origin)) {
-            $this->queueService->updateStatus($prodElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+        $prodElement = $this->prodsService->importProd($prodDto, $this->origin);
+        $this->queueService->updateStatus($prodElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
 
-            $this->updateReport($id, 'success');
-            $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . ($prodDto->title ?? '') . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
-        }
+        $this->updateReport($id, 'success');
+        $this->markProgress('prod ' . $id . ' imported ' . $this->counter . ' ' . ($prodDto->title ?? '') . ' ' . $prodElement->id . ' ' . $prodElement->getUrl());
     }
 
     /**

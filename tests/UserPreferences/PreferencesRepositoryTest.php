@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\Preference;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
-use ZxArt\UserPreferences\Repositories\PreferencesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesRepository;
 
 #[AllowMockObjectsWithoutExpectations]
 class PreferencesRepositoryTest extends TestCase

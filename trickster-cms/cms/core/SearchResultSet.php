@@ -2,10 +2,12 @@
 
 class SearchResultSet
 {
+    /** @var string */
     public $type = '';
     public $template = false;
     public $partial = false;
     protected $totalCount = 0;
+    /** @var structureElement[] */
     public $elements = [];
 
     /**
@@ -36,7 +38,9 @@ class SearchResultSet
             'prodsAmount' => count($this->elements)
         ];
         foreach ($this->elements as $element) {
-            $data['prods'][] = $element->getElementData('list');
+            if ($element instanceof JsonDataProvider) {
+                $data['prods'][] = $element->getElementData('list');
+            }
         }
         return json_encode($data);
     }

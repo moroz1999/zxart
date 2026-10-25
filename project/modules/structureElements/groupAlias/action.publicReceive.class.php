@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Groups\Services\GroupAliasFieldsDtoFactory;
+use ZxArt\Groups\Services\GroupAliasFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveGroupAlias extends structureElementAction
@@ -12,8 +14,9 @@ class publicReceiveGroupAlias extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            $structureElement->structureName = $structureElement->title;
-            $structureElement->persistElementData();
+            $fields = $this->getService(GroupAliasFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(GroupAliasFieldsWriter::class)->apply($structureElement, $fields);
             $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->persistImportOrigins();
 

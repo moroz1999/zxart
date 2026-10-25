@@ -15,7 +15,7 @@ class receiveAuthor extends structureElementAction
             $structureElement->prepareActualData();
 
             if ($structureElement->title == '') {
-                $structureElement->title = $structureElement->realName;
+                $structureElement->title = $structureElement->getRealName();
             }
             $structureElement->structureName = $structureElement->title;
 
@@ -51,7 +51,6 @@ class receiveAuthor extends structureElementAction
             'image',
             'denyVoting',
             'denyComments',
-            'artCityId',
             'displayInMusic',
             'displayInGraphics',
             'chipType',

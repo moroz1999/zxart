@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorFieldsDtoFactory;
+use ZxArt\Authors\Services\AuthorFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveAuthor extends structureElementAction
@@ -13,29 +15,22 @@ class publicReceiveAuthor extends structureElementAction
     {
         if ($this->validated) {
             $structureElement->prepareActualData();
-
-            if ($structureElement->title == '') {
-                $structureElement->title = $structureElement->realName;
-            }
-            $structureElement->structureName = $structureElement->title;
-
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
+            $fields = $this->getService(AuthorFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(AuthorFieldsWriter::class)->apply($structureElement, $fields);
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
             $structureElement->persistImportOrigins();
 
-            $structureElement->recalculate();
-            $structureElement->reconvertMusic();
-
             $this->respondFormSaved($controller, $structureElement);
             return;
         }
+
         $structureElement->setViewName('form');
     }
 
@@ -51,7 +46,6 @@ class publicReceiveAuthor extends structureElementAction
             'denyVoting',
             'denyComments',
             'deny3a',
-            'artCityId',
             'displayInMusic',
             'displayInGraphics',
             'chipType',

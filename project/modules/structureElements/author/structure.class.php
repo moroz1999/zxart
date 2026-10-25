@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Authors\Entities\Author;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
@@ -12,7 +12,7 @@ use ZxArt\Users\ClaimedAuthorService;
  * Class authorElement
  *
  * @property string $title
- * @property string $realName
+ * @property string|null $realName @deprecated use {@see self::getRealName()}: null when not set in the current language
  * @property int $displayInMusic
  * @property int $displayInGraphics
  * @property int $city
@@ -25,7 +25,6 @@ use ZxArt\Users\ClaimedAuthorService;
  * @property int $tunesQuantity
  * @property int $joinAsAlias
  * @property int $joinAndDelete
- * @property int $artCityId
  * @property int $zxTunesId
  * @property int $image
  * @property string $originalName
@@ -83,7 +82,6 @@ class authorElement extends structureElement implements
         $moduleStructure['realName'] = 'text';
         $moduleStructure['country'] = 'text';
         $moduleStructure['city'] = 'text';
-        $moduleStructure['artCityId'] = 'text';
         $moduleStructure['zxTunesId'] = 'text';
         $moduleStructure['wikiLink'] = 'text';
         $moduleStructure['email'] = 'text';
@@ -151,8 +149,9 @@ class authorElement extends structureElement implements
         if ($this->title !== '') {
             $authorNames[] = $this->title;
         }
-        if ($this->realName !== '') {
-            $authorNames[] = $this->realName;
+        $realName = $this->getRealName();
+        if ($realName !== '') {
+            $authorNames[] = $realName;
         }
         return $authorNames;
     }
@@ -424,6 +423,14 @@ class authorElement extends structureElement implements
     }
 
     /**
+     * The real name in the current language, empty when it is not set there.
+     */
+    public function getRealName(): string
+    {
+        return (string)$this->realName;
+    }
+
+    /**
      * @return string
      */
     public function getTitle()
@@ -432,10 +439,7 @@ class authorElement extends structureElement implements
             return $this->title;
         }
 
-        if ($this->realName) {
-            return $this->realName;
-        }
-        return '';
+        return $this->getRealName();
     }
 
     /**
@@ -473,8 +477,9 @@ class authorElement extends structureElement implements
     {
         $searchTitle = $this->title;
         $additional = '';
-        if ($this->realName && $this->realName !== $this->title) {
-            $additional .= $this->realName;
+        $realName = $this->getRealName();
+        if ($realName !== '' && $realName !== $this->title) {
+            $additional .= $realName;
         }
         if ($country = $this->getCountryTitle()) {
             if ($additional) {

@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Groups\Services\GroupAliasCreator;
+use ZxArt\Groups\Services\GroupAliasFieldsDtoFactory;
 use ZxArt\Shared\EntityType;
 
 class publicAddGroupAlias extends structureElementAction
@@ -13,38 +15,12 @@ class publicAddGroupAlias extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            $privilegesManager = $this->getService(privilegesManager::class);
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $user = $currentUserService->getCurrentUser();
-
-            $structureElement->structureName = $structureElement->title;
-
-            $structureElement->persistElementData();
+            $fields = $this->getService(GroupAliasFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(GroupAliasCreator::class)->completeCreation($structureElement, $fields);
             $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->persistImportOrigins();
-
-            $privilegesManager->setPrivilege(
-                $user->id,
-                $structureElement->getPersistedId(),
-                'groupAlias',
-                'showPublicForm',
-                'allow'
-            );
-            $privilegesManager->setPrivilege(
-                $user->id,
-                $structureElement->getPersistedId(),
-                'groupAlias',
-                'publicReceive',
-                'allow'
-            );
-            $privilegesManager->setPrivilege(
-                $user->id,
-                $structureElement->getPersistedId(),
-                'groupAlias',
-                'publicDelete',
-                'allow'
-            );
-            $user->refreshPrivileges();
+            $this->getService(CurrentUserService::class)->getCurrentUser()->refreshPrivileges();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }

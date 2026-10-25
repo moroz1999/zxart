@@ -1,7 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
-use ZxArt\Press\Repositories\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleRepository;
 use ZxArt\Shared\StructureType;
 
 class publicReceivePressArticle extends structureElementAction

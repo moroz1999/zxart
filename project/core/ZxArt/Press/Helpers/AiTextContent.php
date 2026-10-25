@@ -7,7 +7,7 @@ namespace ZxArt\Press\Helpers;
 use LanguagesManager;
 use pressArticleElement;
 use ZxArt\Helpers\HtmlTagsStripper;
-use ZxArt\Press\Repositories\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleRepository;
 use ZxArt\Strings\LanguageDetector;
 
 final class AiTextContent

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ZxArt\Queue;
 
+use ZxArt\Queue\Dbal\QueueRepository;
+
 readonly class QueueService
 {
     public function __construct(

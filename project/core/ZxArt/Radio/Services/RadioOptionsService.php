@@ -7,7 +7,7 @@ namespace ZxArt\Radio\Services;
 use Cache;
 use countryElement;
 use structureManager;
-use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdCategoryElement;
 

@@ -237,6 +237,8 @@ class groupElement extends structureElement implements
          * @var linksManager $linksManager
          */
         $linksManager = $this->getService(linksManager::class);
+        // read again: the cached list may predate an earlier change in this process
+        $this->subGroupIds = null;
         if ($subGroupIds = $this->getSubGroupIds()) {
             foreach ($subGroupIds as $subGroupId) {
                 if (!in_array($subGroupId, $this->subGroupsSelector)) {
@@ -247,6 +249,8 @@ class groupElement extends structureElement implements
         foreach ($this->subGroupsSelector as $id) {
             $linksManager->linkElements($this->getId(), $id, LinkTypes::GROUP_SUBGROUP->value);
         }
+        $this->subGroupIds = null;
+        $this->subGroups = null;
     }
 
     public function getGroupProds(): array

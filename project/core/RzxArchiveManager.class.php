@@ -138,11 +138,8 @@ class RzxArchiveManager extends errorLogger
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 $this->counter++;
-                if ($prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin)) {
-                    $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo2['id']);
-                }
+                $prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin);
+                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
 //                if ($this->counter >= 10){
 //                    exit;
 //                }

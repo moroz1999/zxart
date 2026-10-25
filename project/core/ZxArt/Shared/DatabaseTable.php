@@ -13,6 +13,7 @@ enum DatabaseTable: string
     case City = 'module_city';
     case Comment = 'module_comment';
     case Country = 'module_country';
+    case FilesRegistry = 'files_registry';
     case Hardware = 'hardware';
     case HardwareName = 'hardware_name';
     case ImportOrigin = 'import_origin';

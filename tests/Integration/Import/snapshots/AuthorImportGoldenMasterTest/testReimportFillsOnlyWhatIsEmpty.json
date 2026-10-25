@@ -1,0 +1,128 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-a1",
+                "importOrigin": "zxdb",
+                "type": "author"
+            }
+        ],
+        "module_author": [
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E1",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 2105,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Paint Master",
+                "title": "Goldmaster Painter",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E1",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 84102,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Paint Master",
+                "title": "Goldmaster Painter",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E1",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 930,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Paint Master",
+                "title": "Goldmaster Painter",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-painter",
+                "structureRole": "content",
+                "structureType": "author"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 2218,
+                "position": "+10",
+                "type": "structure"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": [],
+        "uploadsCache": []
+    }
+}

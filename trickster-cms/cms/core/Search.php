@@ -79,7 +79,7 @@ class Search implements DependencyInjectionContextInterface
         $this->relevanceOrdering = $enabled;
     }
 
-    public function getResult()
+    public function getResult(): SearchResult
     {
         $result = new SearchResult();
         $this->types = array_unique($this->types);
@@ -195,7 +195,8 @@ class Search implements DependencyInjectionContextInterface
                             $i = $searchResult->count;
                             foreach ($idList as $elementId) {
                                 if (++$i > $this->offset) {
-                                    if ($element = $structureManager->getElementById($elementId)) {
+                                    $element = $structureManager->getElementById($elementId);
+                                    if ($element instanceof structureElement) {
                                         $set->elements[] = $element;
                                         $searchResult->elements[] = $element;
                                     }

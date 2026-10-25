@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Authors;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Authors\Repositories\AuthorProdsRepository;
+use ZxArt\Authors\Dbal\AuthorProdsRepository;
 
 /**
  * A production is reachable on the site only through a category; one without a

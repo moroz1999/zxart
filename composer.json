@@ -53,10 +53,13 @@
   "require-dev": {
     "vimeo/psalm": "^6.16",
     "phpunit/phpunit": "^12",
-    "dg/bypass-finals": "^1.4"
+    "dg/bypass-finals": "^1.4",
+    "deptrac/deptrac": "^4.7"
   },
   "scripts": {
+    "deptrac": "vendor/bin/deptrac analyse --no-cache",
     "test": "vendor/bin/phpunit -c phpunit.xml.dist",
+    "test:integration": "vendor/bin/phpunit -c phpunit-integration.xml.dist",
     "psalm": "vendor/bin/psalm --memory-limit=2G --use-baseline=psalm-baseline.xml --no-cache --force-jit",
     "psalm-baseline": "vendor/bin/psalm --memory-limit=2G --set-baseline=psalm-baseline.xml --no-cache",
     "build": "cd ./ng-zxart && npm run build"

@@ -7,6 +7,8 @@
     <testsuites>
         <testsuite name="ZX-Art Test Suite">
             <directory>tests</directory>
+            <!-- runs against the local database: composer test:integration -->
+            <exclude>tests/Integration</exclude>
         </testsuite>
     </testsuites>
     <source>

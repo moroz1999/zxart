@@ -9,7 +9,7 @@ use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\Import\ImportOriginsHolderTrait;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
@@ -960,6 +960,9 @@ class zxProdElement extends ZxArtItem implements
         return $publishersInfo;
     }
 
+    /**
+     * @return list<array{id: int, structureType: string, title: string}>
+     */
     public function getGroupsInfo(): array
     {
         $groupsInfo = [];
@@ -1327,6 +1330,8 @@ class zxProdElement extends ZxArtItem implements
         }
         $this->categories = $checkedCategories;
         $this->checkLinks('categories', 'zxProdCategory');
+        // read before the links changed, they would answer the old categories
+        $this->connectedCategoriesIds = null;
     }
 
     public function getCategoriesCatalogue(): ?zxProdCategoriesCatalogueElement

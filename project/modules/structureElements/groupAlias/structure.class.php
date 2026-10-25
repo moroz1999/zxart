@@ -35,7 +35,7 @@ class groupAliasElement extends structureElement implements
     public $role = 'content';
     protected $groupProds;
     /**
-     * @var groupElement
+     * @var groupElement|null
      */
     protected $groupElement;
 
@@ -72,15 +72,14 @@ class groupAliasElement extends structureElement implements
         ];
     }
 
-    public function getGroupElement()
+    public function getGroupElement(): ?groupElement
     {
         if ($this->groupElement === null) {
             if ($groupId = $this->getGroupId()) {
                 $structureManager = $this->getService('structureManager');
-                if ($groupElement = $structureManager->getElementById($groupId)) {
-                    if ($groupElement->structureType === 'group') {
-                        $this->groupElement = $groupElement;
-                    }
+                $groupElement = $structureManager->getElementById($groupId);
+                if ($groupElement instanceof groupElement) {
+                    $this->groupElement = $groupElement;
                 }
             }
         }

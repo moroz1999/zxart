@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Groups\Services\GroupFieldsDtoFactory;
+use ZxArt\Groups\Services\GroupFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveGroup extends structureElementAction
@@ -13,19 +15,16 @@ class publicReceiveGroup extends structureElementAction
     {
         if ($this->validated) {
             $structureElement->prepareActualData();
-
-            $structureElement->structureName = $structureElement->title;
-
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
                 $structureElement->image = $structureElement->getPersistedId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
-            $structureElement->persistSubGroupConnections();
+
+            $fields = $this->getService(GroupFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(GroupFieldsWriter::class)->apply($structureElement, $fields);
             $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->persistImportOrigins();
-            $structureElement->recalculate();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }

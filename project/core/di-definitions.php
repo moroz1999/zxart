@@ -9,8 +9,15 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use ZxArt\Shared\Http\DnsHostResolver;
+use ZxArt\Shared\Http\HostResolver;
+use ZxArt\Shared\Http\PublicAddressGuard;
+use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Shared\Serializer\RequestDenormalizerFactory;
 use ZxArt\Ai\ChunkProcessor;
+use ZxArt\Assistant\Tools\Search\FindLocationsTool;
+use ZxArt\Assistant\Tools\Search\SearchTool;
+use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\ProdQueryService;
@@ -20,9 +27,10 @@ use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\Comments\CommentTranslationService;
 use ZxArt\AuthorList\AuthorListService;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorAliasFormService;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Controllers\Crontab;
@@ -192,18 +200,27 @@ return [
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
     TslabsManager::class => autowire()
         ->method('setProdsService', DI\get(ProdsService::class))
-        ->method('setAuthorsManager', DI\get(AuthorsService::class))
+        ->method('setAuthorsManager', DI\get(AuthorImportService::class))
         ->method('setGroupsService', DI\get(GroupsService::class))
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
     ZxaaaManager::class => autowire()
         ->method('setProdsService', DI\get(ProdsService::class))
-        ->method('setAuthorsManager', DI\get(AuthorsService::class))
+        ->method('setAuthorsManager', DI\get(AuthorImportService::class))
         ->method('setGroupsService', DI\get(GroupsService::class))
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
 
     // Turns JSON request bodies into typed request DTOs; see the factory for why
     // it is configured the way it is.
     SerializerInterface::class => factory(static fn(): SerializerInterface => RequestDenormalizerFactory::create()),
+
+    // the assistant's tools; a tool is listed here to be callable
+    ToolRegistry::class => autowire()->constructor([
+        DI\get(SearchTool::class),
+        DI\get(FindLocationsTool::class),
+    ]),
+
+    HostResolver::class => autowire(DnsHostResolver::class),
+    UrlGuard::class => autowire(PublicAddressGuard::class),
 
     // DependencyInjectionContextTrait users — need explicit setContainer
     votesManager::class => autowire()->method('setContainer', DI\get(Container::class)),

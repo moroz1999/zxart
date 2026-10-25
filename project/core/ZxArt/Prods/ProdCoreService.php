@@ -22,7 +22,7 @@ use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
-use ZxArt\Prods\Repositories\ProdTabsRepository;
+use ZxArt\Prods\Dbal\ProdTabsRepository;
 use ZxArt\Releases\ItchIo\ItchIoGameUrl;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;

@@ -8,7 +8,8 @@ use DI\Container;
 use DI\ContainerBuilder;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
+use ZxArt\Authors\UseCases\ImportAuthorHandler;
 use ZxArt\Controllers\Crontab;
 use ZxArt\Import\Press\DataUpdater\ArticleParsedDataUpdater;
 
@@ -36,9 +37,11 @@ class CrontabStructureManagerTest extends TestCase
 
         $pressDataUpdater = $this->readProperty($crontab, 'pressDataUpdater');
         $this->assertInstanceOf(ArticleParsedDataUpdater::class, $pressDataUpdater);
-        $authorsService = $this->readProperty($pressDataUpdater, 'authorsService');
-        $this->assertInstanceOf(AuthorsService::class, $authorsService);
-        $structureManager = $this->readProperty($authorsService, 'structureManager');
+        $authorImportService = $this->readProperty($pressDataUpdater, 'authorImportService');
+        $this->assertInstanceOf(AuthorImportService::class, $authorImportService);
+        $importAuthorHandler = $this->readProperty($authorImportService, 'importAuthorHandler');
+        $this->assertInstanceOf(ImportAuthorHandler::class, $importAuthorHandler);
+        $structureManager = $this->readProperty($importAuthorHandler, 'structureManager');
 
         $this->assertSame('admin_root', $structureManager->getRootElementMarker());
     }

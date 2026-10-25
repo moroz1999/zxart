@@ -108,7 +108,7 @@ readonly class GroupRosterService
                 id: $authorId,
                 title: $this->decode((string)$authorElement->getTitle()),
                 url: $this->entityUrlResolver->urlFor($authorElement),
-                realName: $authorElement instanceof authorElement ? $this->decode($authorElement->realName) : '',
+                realName: $authorElement instanceof authorElement ? $this->decode($authorElement->getRealName()) : '',
                 roles: $roles,
                 years: $this->joinYears(
                     $this->yearFromDateString($record['startDate']),

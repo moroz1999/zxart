@@ -4,77 +4,77 @@ declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
-use authorElement;
-use privilegesManager;
-use structureManager;
-use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorDataResultDto;
+use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Exception\AuthorDataException;
-use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Shared\StructureType;
+use ZxArt\Authors\UseCases\ConvertAuthorToGroupCommand;
+use ZxArt\Authors\UseCases\ConvertAuthorToGroupHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorCommand;
+use ZxArt\Authors\UseCases\DeleteAuthorHandler;
+use ZxArt\Authors\UseCases\JoinAuthorsCommand;
+use ZxArt\Authors\UseCases\JoinAuthorsHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorCommand;
+use ZxArt\Authors\UseCases\UpdateAuthorHandler;
 
 /**
- * Changes to an author requested through `/author-data/`. Each change checks the
- * privilege of the matching legacy action and is recorded in the actions log.
+ * Changes to an author requested through its data endpoint, each one a use case
+ * in `ZxArt\Authors\UseCases`: it checks the privilege of the matching legacy action, runs in
+ * one transaction and is recorded in the actions log.
  *
  * @psalm-api
  */
 final readonly class AuthorDataService
 {
-    private const string DELETE_PRIVILEGE = 'publicDelete';
-    private const string CONVERT_TO_GROUP_PRIVILEGE = 'convertToGroup';
-
     public function __construct(
-        private structureManager $structureManager,
-        private privilegesManager $privilegesManager,
-        private ActionsLogService $actionsLogService,
-        private GroupsService $groupsService,
+        private CreateAuthorHandler $createAuthorHandler,
+        private UpdateAuthorHandler $updateAuthorHandler,
+        private DeleteAuthorHandler $deleteAuthorHandler,
+        private ConvertAuthorToGroupHandler $convertAuthorToGroupHandler,
+        private JoinAuthorsHandler $joinAuthorsHandler,
     ) {
     }
 
-    public function delete(int $authorId): AuthorDataResultDto
+    /**
+     * @throws AuthorDataException
+     */
+    public function create(AuthorFieldsDto $fields): AuthorDataResultDto
     {
-        $author = $this->getAuthor($authorId, self::DELETE_PRIVILEGE);
-        // logged first: the element data is gone after the deletion
-        $this->actionsLogService->log($author, StructureType::Author, self::DELETE_PRIVILEGE);
-        $author->deleteElementData();
-
-        return new AuthorDataResultDto(id: $authorId);
+        return $this->createAuthorHandler->handle(new CreateAuthorCommand($fields));
     }
 
     /**
-     * Turns the author into a new group; the author itself is deleted.
+     * Changes the fields the DTO carries and leaves the others as they are.
+     *
+     * @throws AuthorDataException
+     */
+    public function update(int $authorId, AuthorFieldsDto $fields): AuthorDataResultDto
+    {
+        return $this->updateAuthorHandler->handle(new UpdateAuthorCommand($authorId, $fields));
+    }
+
+    /**
+     * @throws AuthorDataException
+     */
+    public function delete(int $authorId): AuthorDataResultDto
+    {
+        return $this->deleteAuthorHandler->handle(new DeleteAuthorCommand($authorId));
+    }
+
+    /**
+     * @throws AuthorDataException
      */
     public function convertToGroup(int $authorId): AuthorDataResultDto
     {
-        $author = $this->getAuthor($authorId, self::CONVERT_TO_GROUP_PRIVILEGE);
-        $group = $this->groupsService->convertAuthorToGroup($author);
-        if ($group === null) {
-            throw new AuthorDataException('The group could not be created', 500);
-        }
-        $this->actionsLogService->log($author, StructureType::Author, self::CONVERT_TO_GROUP_PRIVILEGE);
-
-        return new AuthorDataResultDto(id: $group->getId());
+        return $this->convertAuthorToGroupHandler->handle(new ConvertAuthorToGroupCommand($authorId));
     }
 
-    private function getAuthor(int $authorId, string $privilege): authorElement
+    /**
+     * @throws AuthorDataException
+     */
+    public function join(int $authorId, int $joinedId, bool $asAlias = false): AuthorDataResultDto
     {
-        if ($authorId <= 0) {
-            throw new AuthorDataException('Missing required author id', 400);
-        }
-        $author = $this->structureManager->getElementById($authorId);
-        if (!$author instanceof authorElement) {
-            throw new AuthorDataException('Author not found', 404);
-        }
-        $isAllowed = $this->privilegesManager->checkPrivilegesForAction(
-            $authorId,
-            $privilege,
-            StructureType::Author->value,
-        ) === true;
-        if (!$isAllowed) {
-            throw new AuthorDataException('This author change is forbidden', 403);
-        }
-
-        return $author;
+        return $this->joinAuthorsHandler->handle(new JoinAuthorsCommand($authorId, $joinedId, $asAlias));
     }
 }

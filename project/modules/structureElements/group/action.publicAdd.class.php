@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Groups\Services\GroupCreator;
+use ZxArt\Groups\Services\GroupFieldsDtoFactory;
 use ZxArt\Shared\EntityType;
 
 class publicAddGroup extends structureElementAction
@@ -13,29 +15,17 @@ class publicAddGroup extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            $structureElement->structureName = $structureElement->title;
-
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
                 $structureElement->image = $structureElement->getPersistedId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
-            $structureElement->persistSubGroupConnections();
+            $fields = $this->getService(GroupFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(GroupCreator::class)->completeCreation($structureElement, $fields);
             $structureElement->persistAuthorship(EntityType::Group);
             $structureElement->persistImportOrigins();
-            $structureElement->recalculate();
-
-            $privilegesManager = $this->getService(privilegesManager::class);
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $user = $currentUserService->getCurrentUser();
-            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'deleteFile', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getPersistedId(), 'group', 'deleteAuthor', 'allow');
-            $user->refreshPrivileges();
+            $this->getService(CurrentUserService::class)->getCurrentUser()->refreshPrivileges();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }

@@ -10,7 +10,7 @@ use authorElement;
 use structureManager;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
-use ZxArt\AuthorList\Repositories\AuthorListRepository;
+use ZxArt\AuthorList\Dbal\AuthorListRepository;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 

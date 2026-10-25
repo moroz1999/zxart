@@ -9,7 +9,7 @@ use authorElement;
 use structureManager;
 use zxProdElement;
 use zxReleaseElement;
-use ZxArt\Authors\Repositories\AuthorProdsRepository;
+use ZxArt\Authors\Dbal\AuthorProdsRepository;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Exception\ProdDetailsException;

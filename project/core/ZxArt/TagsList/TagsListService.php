@@ -9,7 +9,7 @@ use structureManager;
 use tagElement;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\TagsList\Dto\TagListItemDto;
-use ZxArt\TagsList\Repositories\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListRepository;
 
 /**
  * Builds the tag cloud for a collection section. The section's tag ids come from

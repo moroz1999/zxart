@@ -1,7 +1,7 @@
 <?php
 
 
-use ZxArt\Press\Repositories\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleRepository;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;

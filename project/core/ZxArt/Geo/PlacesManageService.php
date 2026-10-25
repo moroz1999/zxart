@@ -15,7 +15,7 @@ use ZxArt\Geo\Dto\CountrySaveDto;
 use ZxArt\Geo\Dto\ManageCityDto;
 use ZxArt\Geo\Dto\ManageCountryDto;
 use ZxArt\Geo\Exception\GeoException;
-use ZxArt\Geo\Repositories\GeoManageRepository;
+use ZxArt\Geo\Dbal\GeoManageRepository;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\StructureType;
 

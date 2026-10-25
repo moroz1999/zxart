@@ -1,0 +1,1412 @@
+{
+    "database": {
+        "authorship": [
+            {
+                "authorId": "#E14",
+                "elementId": "#E13",
+                "endDate": 0,
+                "roles": "[\"release\"]",
+                "startDate": 0,
+                "type": "release"
+            },
+            {
+                "authorId": "#E21",
+                "elementId": "#E13",
+                "endDate": 0,
+                "roles": "[\"music\"]",
+                "startDate": 0,
+                "type": "release"
+            },
+            {
+                "authorId": "#E21",
+                "elementId": "#E2",
+                "endDate": 0,
+                "roles": "[\"music\"]",
+                "startDate": 0,
+                "type": "prod"
+            },
+            {
+                "authorId": "#E3",
+                "elementId": "#E13",
+                "endDate": 0,
+                "roles": "[\"release\"]",
+                "startDate": 0,
+                "type": "release"
+            },
+            {
+                "authorId": "#E3",
+                "elementId": "#E2",
+                "endDate": 0,
+                "roles": "[\"support\"]",
+                "startDate": 0,
+                "type": "prod"
+            },
+            {
+                "authorId": "#E5",
+                "elementId": "#E2",
+                "endDate": 0,
+                "roles": "[\"graphics\",\"music\"]",
+                "startDate": 0,
+                "type": "prod"
+            },
+            {
+                "authorId": "#E6",
+                "elementId": "#E13",
+                "endDate": 0,
+                "roles": "[\"adaptation\"]",
+                "startDate": 0,
+                "type": "release"
+            },
+            {
+                "authorId": "#E6",
+                "elementId": "#E2",
+                "endDate": 0,
+                "roles": "[\"code\",\"design\"]",
+                "startDate": 0,
+                "type": "prod"
+            }
+        ],
+        "import_origin": [
+            {
+                "elementId": "#E13",
+                "importId": "gm-full-r1",
+                "importOrigin": "pouet",
+                "type": "release"
+            },
+            {
+                "elementId": "#E14",
+                "importId": "gm-cracker",
+                "importOrigin": "pouet",
+                "type": "author"
+            },
+            {
+                "elementId": "#E19",
+                "importId": "gm-full-r2",
+                "importOrigin": "pouet",
+                "type": "release"
+            },
+            {
+                "elementId": "#E2",
+                "importId": "gm-dzoo-full",
+                "importOrigin": "dzoo",
+                "type": "prod"
+            },
+            {
+                "elementId": "#E2",
+                "importId": "gm-full",
+                "importOrigin": "pouet",
+                "type": "prod"
+            },
+            {
+                "elementId": "#E20",
+                "importId": "gm-group-2",
+                "importOrigin": "pouet",
+                "type": "group"
+            },
+            {
+                "elementId": "#E21",
+                "importId": "gm-musician",
+                "importOrigin": "pouet",
+                "type": "author"
+            },
+            {
+                "elementId": "#E28",
+                "importId": "gm-full-r3",
+                "importOrigin": "pouet",
+                "type": "release"
+            },
+            {
+                "elementId": "#E3",
+                "importId": "gm-label",
+                "importOrigin": "pouet",
+                "type": "author"
+            },
+            {
+                "elementId": "#E4",
+                "importId": "gm-group",
+                "importOrigin": "pouet",
+                "type": "group"
+            },
+            {
+                "elementId": "#E5",
+                "importId": "gm-coder-alias",
+                "importOrigin": "pouet",
+                "type": "author"
+            },
+            {
+                "elementId": "#E6",
+                "importId": "gm-coder",
+                "importOrigin": "pouet",
+                "type": "author"
+            },
+            {
+                "elementId": 92159,
+                "importId": "gm-cat-demo",
+                "importOrigin": "pouet",
+                "type": "category"
+            },
+            {
+                "elementId": 92160,
+                "importId": "gm-cat-mega",
+                "importOrigin": "pouet",
+                "type": "category"
+            },
+            {
+                "elementId": 92177,
+                "importId": "gm-cat-game",
+                "importOrigin": "pouet",
+                "type": "category"
+            }
+        ],
+        "module_author": [
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E14",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 2105,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Cracker",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E14",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 84102,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Cracker",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E14",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 930,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Cracker",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E21",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 2105,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Musician",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E21",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 84102,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Musician",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 0,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E21",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 930,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Musician",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E6",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 2105,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Gold Master",
+                "title": "Goldmaster Coder",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E6",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 84102,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Gold Master",
+                "title": "Goldmaster Coder",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 0,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E6",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 930,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "Gold Master",
+                "title": "Goldmaster Coder",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E3",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 2105,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Label",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E3",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 84102,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Label",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            },
+            {
+                "channelsType": "",
+                "chipType": "",
+                "city": 47452,
+                "country": 47450,
+                "deny3a": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "email": "",
+                "frequency": 0,
+                "graphicsRating": 0,
+                "group": "",
+                "icq": "",
+                "id": "#E3",
+                "image": "",
+                "intFrequency": "",
+                "languageId": 930,
+                "musicRating": 0,
+                "originalName": "",
+                "palette": "",
+                "picturesQuantity": 0,
+                "realName": "",
+                "title": "Goldmaster Label",
+                "tunesQuantity": 0,
+                "website": "",
+                "wikiLink": "",
+                "zxTunesId": 0
+            }
+        ],
+        "module_authoralias": [
+            {
+                "authorId": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "endDate": 0,
+                "id": "#E5",
+                "languageId": 0,
+                "startDate": 0,
+                "title": "Gm Coder Alias"
+            }
+        ],
+        "module_file": [
+            {
+                "author": "",
+                "file": "#E11",
+                "fileName": "inlay.jpg",
+                "id": "#E11",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Inlay"
+            },
+            {
+                "author": "",
+                "file": "#E15",
+                "fileName": "release-screen.png",
+                "id": "#E15",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Release-screen"
+            },
+            {
+                "author": "",
+                "file": "#E16",
+                "fileName": "release-inlay.jpg",
+                "id": "#E16",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Release-inlay"
+            },
+            {
+                "author": "",
+                "file": "#E17",
+                "fileName": "manual.txt",
+                "id": "#E17",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Manual"
+            },
+            {
+                "author": "",
+                "file": "#E18",
+                "fileName": "advert.jpg",
+                "id": "#E18",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Advert"
+            },
+            {
+                "author": "",
+                "file": "#E23",
+                "fileName": "map.png",
+                "id": "#E23",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Map"
+            },
+            {
+                "author": "",
+                "file": "#E24",
+                "fileName": "screen-1.png",
+                "id": "#E24",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Screen-1"
+            },
+            {
+                "author": "",
+                "file": "#E25",
+                "fileName": "advert.jpg",
+                "id": "#E25",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Advert"
+            },
+            {
+                "author": "",
+                "file": "#E26",
+                "fileName": "screen-1.png",
+                "id": "#E26",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Screen-1"
+            },
+            {
+                "author": "",
+                "file": "#E27",
+                "fileName": "inlay.jpg",
+                "id": "#E27",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Inlay"
+            },
+            {
+                "author": "",
+                "file": "#E8",
+                "fileName": "screen-1.png",
+                "id": "#E8",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Screen-1"
+            },
+            {
+                "author": "",
+                "file": "#E9",
+                "fileName": "screen-2.png",
+                "id": "#E9",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Screen-2"
+            },
+            {
+                "author": "Map Maker",
+                "file": "#E10",
+                "fileName": "map.png",
+                "id": "#E10",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Map"
+            },
+            {
+                "author": "Player",
+                "file": "#E12",
+                "fileName": "playthrough.rzx",
+                "id": "#E12",
+                "image": "",
+                "imageFileName": "",
+                "languageId": 0,
+                "title": "Playthrough"
+            }
+        ],
+        "module_group": [
+            {
+                "abbreviation": "",
+                "city": 0,
+                "country": 0,
+                "endDate": 0,
+                "id": "#E20",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "Goldmaster Second Crew",
+                "type": "unknown",
+                "website": "",
+                "wikiLink": ""
+            },
+            {
+                "abbreviation": "GMC",
+                "city": 0,
+                "country": 47450,
+                "endDate": 0,
+                "id": "#E4",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "Goldmaster Crew",
+                "type": "unknown",
+                "website": "https://crew.invalid/",
+                "wikiLink": ""
+            }
+        ],
+        "module_party": [
+            {
+                "abbreviation": "",
+                "city": 0,
+                "country": 0,
+                "displayInGraphics": 0,
+                "displayInMusic": 0,
+                "id": "#E1",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "picturesQuantity": 0,
+                "title": "Golden Master Party",
+                "tunesQuantity": 0,
+                "website": "https://party.invalid/"
+            }
+        ],
+        "module_pressarticle": [
+            {
+                "allowComments": 0,
+                "content": "<p>Review text</p>",
+                "externalLink": "https://press.invalid/review",
+                "h1": "",
+                "id": "#E7",
+                "introduction": "Intro",
+                "languageId": 2105,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Review"
+            },
+            {
+                "allowComments": 0,
+                "content": "<p>Review text</p>",
+                "externalLink": "https://press.invalid/review",
+                "h1": "",
+                "id": "#E7",
+                "introduction": "Intro",
+                "languageId": 84102,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Review"
+            },
+            {
+                "allowComments": 0,
+                "content": "<p>Review text</p>",
+                "externalLink": "https://press.invalid/review",
+                "h1": "",
+                "id": "#E7",
+                "introduction": "Intro",
+                "languageId": 930,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Review"
+            },
+            {
+                "allowComments": 0,
+                "content": "Second",
+                "externalLink": "",
+                "h1": "",
+                "id": "#E22",
+                "introduction": "",
+                "languageId": 2105,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Second Review"
+            },
+            {
+                "allowComments": 0,
+                "content": "Second",
+                "externalLink": "",
+                "h1": "",
+                "id": "#E22",
+                "introduction": "",
+                "languageId": 84102,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Second Review"
+            },
+            {
+                "allowComments": 0,
+                "content": "Second",
+                "externalLink": "",
+                "h1": "",
+                "id": "#E22",
+                "introduction": "",
+                "languageId": 930,
+                "metaDescription": "",
+                "metaTitle": "",
+                "title": "Goldmaster Second Review"
+            }
+        ],
+        "module_zxprod": [
+            {
+                "altTitle": "Goldmaster Alt 2",
+                "commentsAmount": 0,
+                "compo": "wild",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "A demo made for the golden master.",
+                "externalLink": "https://example.invalid/goldmaster-2",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E2",
+                "instructions": "Press SPACE.",
+                "languageId": 0,
+                "legalStatus": "allowed",
+                "party": "#E1",
+                "partyplace": 3,
+                "tagsAmount": 0,
+                "title": "Goldmaster Demo Final",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 2001,
+                "youtubeId": "gm-youtube-2"
+            }
+        ],
+        "module_zxprod_hw_required": [
+            {
+                "elementId": "#E2",
+                "hardwareId": 12
+            }
+        ],
+        "module_zxrelease": [
+            {
+                "commentsAmount": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "downloads": 0,
+                "file": "#E19",
+                "fileName": "goldmaster128.tap",
+                "id": "#E19",
+                "languageId": 0,
+                "parsed": 0,
+                "plays": 0,
+                "releaseType": "mod",
+                "title": "Goldmaster Demo 128",
+                "userId": 0,
+                "version": "",
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 2000
+            },
+            {
+                "commentsAmount": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "downloads": 0,
+                "file": "#E28",
+                "fileName": "beta.tap",
+                "id": "#E28",
+                "languageId": 0,
+                "parsed": 0,
+                "plays": 0,
+                "releaseType": "corrupted",
+                "title": "Goldmaster Demo Fixed",
+                "userId": 0,
+                "version": "",
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 2002
+            },
+            {
+                "commentsAmount": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "The party version.",
+                "downloads": 0,
+                "file": "#E13",
+                "fileName": "beta.tap",
+                "id": "#E13",
+                "languageId": 0,
+                "parsed": 0,
+                "plays": 0,
+                "releaseType": "original",
+                "title": "Goldmaster Demo Final",
+                "userId": 0,
+                "version": "1.0",
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 2001
+            }
+        ],
+        "module_zxrelease_hw_required": [
+            {
+                "elementId": "#E13",
+                "hardwareId": 12
+            }
+        ],
+        "queue": [
+            {
+                "elementId": "#E13",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E19",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E28",
+                "status": 0,
+                "type": "social_post"
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "golden-master-party",
+                "structureRole": "content",
+                "structureType": "party"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E10",
+                "marker": "",
+                "structureName": "map",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E11",
+                "marker": "",
+                "structureName": "inlay",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E12",
+                "marker": "",
+                "structureName": "playthrough",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E13",
+                "marker": "",
+                "structureName": "goldmaster-demo-final",
+                "structureRole": "content",
+                "structureType": "zxRelease"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E14",
+                "marker": "",
+                "structureName": "goldmaster-cracker",
+                "structureRole": "content",
+                "structureType": "author"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E15",
+                "marker": "",
+                "structureName": "release-screen",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E16",
+                "marker": "",
+                "structureName": "release-inlay",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E17",
+                "marker": "",
+                "structureName": "manual",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E18",
+                "marker": "",
+                "structureName": "advert",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E19",
+                "marker": "",
+                "structureName": "goldmaster-demo-128",
+                "structureRole": "content",
+                "structureType": "zxRelease"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E2",
+                "marker": "",
+                "structureName": "goldmaster-demo-final",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E20",
+                "marker": "",
+                "structureName": "goldmaster-second-crew",
+                "structureRole": "content",
+                "structureType": "group"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E21",
+                "marker": "",
+                "structureName": "goldmaster-musician",
+                "structureRole": "content",
+                "structureType": "author"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E22",
+                "marker": "",
+                "structureName": "goldmaster-second-review",
+                "structureRole": "content",
+                "structureType": "pressArticle"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E23",
+                "marker": "",
+                "structureName": "map1",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E24",
+                "marker": "",
+                "structureName": "screen-11",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E25",
+                "marker": "",
+                "structureName": "advert",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E26",
+                "marker": "",
+                "structureName": "screen-1",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E27",
+                "marker": "",
+                "structureName": "inlay",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E28",
+                "marker": "",
+                "structureName": "goldmaster-demo-fixed",
+                "structureRole": "content",
+                "structureType": "zxRelease"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E3",
+                "marker": "",
+                "structureName": "goldmaster-label",
+                "structureRole": "content",
+                "structureType": "author"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E4",
+                "marker": "",
+                "structureName": "goldmaster-crew",
+                "structureRole": "content",
+                "structureType": "group"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E5",
+                "marker": "",
+                "structureName": "gm-coder-alias",
+                "structureRole": "content",
+                "structureType": "authorAlias"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E6",
+                "marker": "",
+                "structureName": "goldmaster-coder",
+                "structureRole": "content",
+                "structureType": "author"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E7",
+                "marker": "",
+                "structureName": "goldmaster-review",
+                "structureRole": "content",
+                "structureType": "pressArticle"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E8",
+                "marker": "",
+                "structureName": "screen-1",
+                "structureRole": "content",
+                "structureType": "file"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E9",
+                "marker": "",
+                "structureName": "screen-2",
+                "structureRole": "content",
+                "structureType": "file"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 2250,
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E10",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "mapFilesSelector"
+            },
+            {
+                "childStructureId": "#E11",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "inlayFilesSelector"
+            },
+            {
+                "childStructureId": "#E12",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "rzx"
+            },
+            {
+                "childStructureId": "#E13",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E13",
+                "parentStructureId": "#E4",
+                "position": "+10",
+                "type": "zxReleasePublishers"
+            },
+            {
+                "childStructureId": "#E14",
+                "parentStructureId": 2218,
+                "position": "+40",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E15",
+                "parentStructureId": "#E13",
+                "position": "+10",
+                "type": "screenshotsSelector"
+            },
+            {
+                "childStructureId": "#E16",
+                "parentStructureId": "#E13",
+                "position": "+10",
+                "type": "inlayFilesSelector"
+            },
+            {
+                "childStructureId": "#E17",
+                "parentStructureId": "#E13",
+                "position": "+10",
+                "type": "infoFilesSelector"
+            },
+            {
+                "childStructureId": "#E18",
+                "parentStructureId": "#E13",
+                "position": "+10",
+                "type": "adFilesSelector"
+            },
+            {
+                "childStructureId": "#E19",
+                "parentStructureId": "#E2",
+                "position": "+20",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E1",
+                "position": "+10",
+                "type": "partyProd"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E20",
+                "position": "+10",
+                "type": "zxProdGroups"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E20",
+                "position": "+10",
+                "type": "zxProdPublishers"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": 92177,
+                "position": "+10",
+                "type": "zxProdCategory"
+            },
+            {
+                "childStructureId": "#E20",
+                "parentStructureId": 87052,
+                "position": "+20",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E21",
+                "parentStructureId": 2218,
+                "position": "+50",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E22",
+                "parentStructureId": "#E2",
+                "position": "+20",
+                "type": "prodArticle"
+            },
+            {
+                "childStructureId": "#E23",
+                "parentStructureId": "#E2",
+                "position": "+30",
+                "type": "connectedFile"
+            },
+            {
+                "childStructureId": "#E24",
+                "parentStructureId": "#E2",
+                "position": "+20",
+                "type": "mapFilesSelector"
+            },
+            {
+                "childStructureId": "#E25",
+                "parentStructureId": "#E2",
+                "position": "+20",
+                "type": "inlayFilesSelector"
+            },
+            {
+                "childStructureId": "#E26",
+                "parentStructureId": "#E13",
+                "position": "+20",
+                "type": "screenshotsSelector"
+            },
+            {
+                "childStructureId": "#E27",
+                "parentStructureId": "#E13",
+                "position": "+20",
+                "type": "inlayFilesSelector"
+            },
+            {
+                "childStructureId": "#E28",
+                "parentStructureId": "#E2",
+                "position": "+30",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E3",
+                "parentStructureId": 2218,
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E4",
+                "parentStructureId": 87052,
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E5",
+                "parentStructureId": 2218,
+                "position": "+20",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E6",
+                "parentStructureId": 2218,
+                "position": "+30",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E8",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "connectedFile"
+            },
+            {
+                "childStructureId": "#E9",
+                "parentStructureId": "#E2",
+                "position": "+20",
+                "type": "connectedFile"
+            }
+        ],
+        "zxitem_language": [
+            {
+                "elementId": "#E13",
+                "value": "de"
+            },
+            {
+                "elementId": "#E2",
+                "value": "de"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": {
+            "#E10": "98 8cbd61d7544de9583d5fb0ab6a67d579",
+            "#E11": "694 3aabeec51e2e1f0a56c3abd0fea77fdb",
+            "#E12": "22 8aaced8f6abc391fb40171bd1c88e885",
+            "#E13": "73 ccdb7a9c03eca60fab2393d5a031afb4",
+            "#E15": "97 3fe23ac15a23393b2ba05c04d1c9b174",
+            "#E16": "693 b29b69bd645635f228806fc21d693ab7",
+            "#E17": "36 9628fece8ce3f78a44683af739725136",
+            "#E18": "694 c5132b111b20c40a275603a5471cc353",
+            "#E19": "121 a56fd793b33272fdeaaac3f084c1c1e0",
+            "#E23": "98 8cbd61d7544de9583d5fb0ab6a67d579",
+            "#E24": "96 01d40f3b65645cababad059faa962285",
+            "#E25": "694 c5132b111b20c40a275603a5471cc353",
+            "#E26": "96 01d40f3b65645cababad059faa962285",
+            "#E27": "694 3aabeec51e2e1f0a56c3abd0fea77fdb",
+            "#E28": "73 ccdb7a9c03eca60fab2393d5a031afb4",
+            "#E8": "96 01d40f3b65645cababad059faa962285",
+            "#E9": "97 7a3f8f3fca745c15aa1444109c92c4de"
+        },
+        "uploadsCache": []
+    }
+}

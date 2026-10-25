@@ -1,0 +1,277 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-item-1",
+                "importOrigin": "zxdb",
+                "type": "prod"
+            },
+            {
+                "elementId": "#E2",
+                "importId": "gm-item-2",
+                "importOrigin": "zxdb",
+                "type": "prod"
+            },
+            {
+                "elementId": "#E3",
+                "importId": "gm-item-2-r1",
+                "importOrigin": "zxdb",
+                "type": "release"
+            },
+            {
+                "elementId": "#E4",
+                "importId": "gm-compilation",
+                "importOrigin": "zxdb",
+                "type": "prod"
+            }
+        ],
+        "module_zxprod": [
+            {
+                "altTitle": "",
+                "commentsAmount": 0,
+                "compo": "",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "externalLink": "",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E1",
+                "instructions": "",
+                "languageId": 0,
+                "legalStatus": "unknown",
+                "party": 0,
+                "partyplace": 0,
+                "tagsAmount": 0,
+                "title": "Goldmaster Item One",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1992,
+                "youtubeId": ""
+            },
+            {
+                "altTitle": "",
+                "commentsAmount": 0,
+                "compo": "",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "externalLink": "",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E2",
+                "instructions": "",
+                "languageId": 0,
+                "legalStatus": "unknown",
+                "party": 0,
+                "partyplace": 0,
+                "tagsAmount": 0,
+                "title": "Goldmaster Item Two",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1992,
+                "youtubeId": ""
+            },
+            {
+                "altTitle": "",
+                "commentsAmount": 0,
+                "compo": "",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "externalLink": "",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E4",
+                "instructions": "",
+                "languageId": 0,
+                "legalStatus": "unknown",
+                "party": 0,
+                "partyplace": 0,
+                "tagsAmount": 0,
+                "title": "Goldmaster Compilation",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1993,
+                "youtubeId": ""
+            }
+        ],
+        "module_zxrelease": [
+            {
+                "commentsAmount": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "downloads": 0,
+                "file": "",
+                "fileName": "",
+                "id": "#E3",
+                "languageId": 0,
+                "parsed": 0,
+                "plays": 0,
+                "releaseType": "unknown",
+                "title": "Goldmaster Item Two",
+                "userId": 0,
+                "version": "",
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1992
+            }
+        ],
+        "queue": [
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E3",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E4",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E4",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E4",
+                "status": 0,
+                "type": "social_post"
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-item-one",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E2",
+                "marker": "",
+                "structureName": "goldmaster-item-two",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E3",
+                "marker": "",
+                "structureName": "goldmaster-item-two",
+                "structureRole": "content",
+                "structureType": "zxRelease"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E4",
+                "marker": "",
+                "structureName": "goldmaster-compilation",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": "#E4",
+                "position": "+10",
+                "type": "compilation"
+            },
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": "#E4",
+                "position": "+10",
+                "type": "series"
+            },
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 92188,
+                "position": "+10",
+                "type": "zxProdCategory"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E4",
+                "position": "+20",
+                "type": "series"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": 92188,
+                "position": "+20",
+                "type": "zxProdCategory"
+            },
+            {
+                "childStructureId": "#E3",
+                "parentStructureId": "#E2",
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E3",
+                "parentStructureId": "#E4",
+                "position": "+20",
+                "type": "compilation"
+            },
+            {
+                "childStructureId": "#E4",
+                "parentStructureId": 202590,
+                "position": "+10",
+                "type": "zxProdCategory"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": [],
+        "uploadsCache": []
+    }
+}

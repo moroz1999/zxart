@@ -19,7 +19,7 @@ use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentOperationException;
 use ZxArt\Comments\LatestCommentsCache;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 use zxPictureElement;
 
 #[AllowMockObjectsWithoutExpectations]

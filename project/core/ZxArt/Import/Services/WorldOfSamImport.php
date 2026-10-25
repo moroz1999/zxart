@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use RuntimeException;
 use Throwable;
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\Label;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -100,7 +100,7 @@ final class WorldOfSamImport extends errorLogger
 
     public function __construct(
         ProdsService            $prodsService,
-        AuthorsService          $authorsService,
+        AuthorImportService     $authorImportService,
         QueueService            $queueService,
         WorldOfSamLinksRewriter $worldOfSamLinksRewriter,
         array                   $config = []
@@ -123,8 +123,8 @@ final class WorldOfSamImport extends errorLogger
         ]);
 
         // Force update settings consistent with PouetImport
-        $authorsService->setForceUpdateCountry(false);
-        $authorsService->setForceUpdateCity(false);
+        $authorImportService->setForceUpdateCountry(false);
+        $authorImportService->setForceUpdateCity(false);
         $this->prodsService->setForceUpdateCategories(false);
         $this->prodsService->setForceUpdateYoutube(true);
         $this->prodsService->setForceUpdateGroups(true);
@@ -585,12 +585,11 @@ final class WorldOfSamImport extends errorLogger
         );
 
         // Persist via prodsService
-        if ($prod = $this->prodsService->importProd($prodDto, $this->origin)) {
-            $prod->executeAction('resize');
-            // Skip AI categories tagging in queue
-            $this->queueService->updateStatus($prod->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
-            $this->markProgress('Product ' . $slug . ' imported');
-        }
+        $prod = $this->prodsService->importProd($prodDto, $this->origin);
+        $prod->executeAction('resize');
+        // Skip AI categories tagging in queue
+        $this->queueService->updateStatus($prod->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
+        $this->markProgress('Product ' . $slug . ' imported');
 
         return $prodDto->id;
     }

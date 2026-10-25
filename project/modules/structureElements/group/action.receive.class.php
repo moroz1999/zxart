@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Shared\EntityType;
 
 class receiveGroup extends structureElementAction

@@ -26,7 +26,7 @@ use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\Stats\Dto\StatsTopUsersDto;
 use ZxArt\Stats\Dto\StatsUsersSectionDto;
 use ZxArt\Stats\Dto\StatsYearSeriesDto;
-use ZxArt\Stats\Repositories\StatsRepository;
+use ZxArt\Stats\Dbal\StatsRepository;
 use ZxArt\Stats\StatsDistributionColumn;
 
 readonly class StatsService

@@ -95,6 +95,7 @@ Concrete release (version) of software production. Contains files specific to th
 - Release details expose `inlayFilesSelector` and `adFilesSelector` together as `covers`, grouped by kind exactly like a prod's covers (`{kind, items}` per `ProdCoverKind`, empty kinds omitted); the page renders one headed section per group and `tabs.hasCovers` follows both selectors.
 - Release cover images share a 200px display height, while each tile derives its width from the thumbnail's aspect ratio.
 - Release details permits users with `publicReceive` privilege to reorder screenshots stored in `screenshotsSelector` through the shared screenshot move API.
+- Files can also be fetched from a URL into a selector (`ReleaseDataService::addFiles()`, `ProdDataService::addFiles()`), and a download can become the release's own file (`ReleaseDataService::setFile()`, parsed as an upload is); the URLs pass the address guard and the size and type limits of [../chat/service-changes.md](../chat/service-changes.md#4-files-from-a-url).
 - Removing a file from a selector in the release or prod form deletes it at once through `deleteFile` of the entity's data endpoint (`/release-data/`, `/prod-data/`). Only a file of that entity's own selectors is accepted (`404` otherwise); the file element itself must grant `delete`. The form reports a failure.
 - The parsed structure is built by `ZxArt\FileParsing\ZxParsingManager` on top of `moroz1999/zx-files`. One `ZxParsingItemContainer` covers every container the library reads — TRD, SCL, TAP, TZX, DSK, FDI, UDI, OPD, MGT, IMG, D40/D80 and TAR — while ZIP and RAR keep items of their own; `ZxParsingManager::createItem()` is the single place that maps a type to an item, used by the top-level parse, by the archive items and when rebuilding the tree from the registry.
 - The file extension decides whether a file is opened as a container at all (`ContainerFormat::fromExtension()`, which also knows `opu`, `edsk` and `d40`, the last read as a `d80`). It is then handed to the library as a hint, and the library picks the parser that actually recognises the bytes, so a mislabelled file still parses. The registry row's `type` stays the declared format, and every value it can take must exist in the `engine_files_registry.type` enum.
@@ -157,10 +158,14 @@ last release has, whether the batch finished or failed — see
 return to the production. Editing an existing release keeps the single-file
 field.
 
+Each release, from the form or from the production batch upload, is filled and
+granted by `ReleaseCreator` and edited through `ReleaseFieldsWriter` — see
+[../php/entity-writes.md](../php/entity-writes.md).
+
 ### Special Operations
 - The release page offers editing only with the `publicReceive` privilege, the
   same privilege that guards and saves the edit form.
-- **clone** - creates a copy of the release under the same parent prod, carries over hardware, language, publishers and authorship, resets usage counters, and records the cloning user and the current time as who added it and when. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone.
+- **clone** - `ReleaseCloner` creates a new release of the same prod through `ReleaseCreator` from the source's editable fields (`ReleaseFieldsReader`), copies its authorship, and points it at the source's stored file, whose structure and formats are read again for the clone. Votes and usage counters start fresh, the cloning user and the current time are recorded as who added it and when, and the user gets the creator's actions on the clone. Screenshots, inlays and the other file lists stay with the source. Gated by the `clone` privilege, which `publicAdd` grants to the release author. The release details editing controls run it through `/ajax/` behind a confirmation dialog and navigate to the clone; `ReleaseDataService::cloneRelease()` does the same outside the form.
 
 ### Emulator Launch Capability
 Determined by combination of:

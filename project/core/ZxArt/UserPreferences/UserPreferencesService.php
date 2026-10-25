@@ -8,8 +8,8 @@ use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Domain\Exception\PreferenceNotConfiguredException;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
-use ZxArt\UserPreferences\Repositories\PreferencesRepository;
-use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesRepository;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
 
 final readonly class UserPreferencesService
 {

@@ -1,0 +1,60 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-pouet-g",
+                "importOrigin": "pouet",
+                "type": "group"
+            },
+            {
+                "elementId": "#E1",
+                "importId": "gm-zxdb-g",
+                "importOrigin": "zxdb",
+                "type": "group"
+            }
+        ],
+        "module_group": [
+            {
+                "abbreviation": "",
+                "city": 0,
+                "country": 47450,
+                "endDate": 0,
+                "id": "#E1",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "Goldmaster Wanderers",
+                "type": "unknown",
+                "website": "https://wanderers.invalid/",
+                "wikiLink": ""
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-wanderers",
+                "structureRole": "content",
+                "structureType": "group"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 87052,
+                "position": "+10",
+                "type": "structure"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": [],
+        "uploadsCache": []
+    }
+}

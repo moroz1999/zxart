@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use structureManager;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\ProdsTransformer;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxProdElement;

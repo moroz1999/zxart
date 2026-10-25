@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\LinkTypes;
-use ZxArt\Press\Repositories\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleRepository;
 use ZxArt\Queue\QueueStatusProvider;
 
 /**

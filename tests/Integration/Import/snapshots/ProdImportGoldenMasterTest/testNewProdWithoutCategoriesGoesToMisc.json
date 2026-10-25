@@ -1,0 +1,81 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-bare",
+                "importOrigin": "pouet",
+                "type": "prod"
+            }
+        ],
+        "module_zxprod": [
+            {
+                "altTitle": "",
+                "commentsAmount": 0,
+                "compo": "",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "externalLink": "",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E1",
+                "instructions": "",
+                "languageId": 0,
+                "legalStatus": "unknown",
+                "party": 0,
+                "partyplace": 0,
+                "tagsAmount": 0,
+                "title": "Goldmaster Bare Intro Thing",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1993,
+                "youtubeId": ""
+            }
+        ],
+        "queue": [
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "social_post"
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-bare-intro-thing",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 92188,
+                "position": "+10",
+                "type": "zxProdCategory"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": [],
+        "uploadsCache": []
+    }
+}

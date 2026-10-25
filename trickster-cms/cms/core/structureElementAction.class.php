@@ -9,6 +9,7 @@ abstract class structureElementAction extends errorLogger implements DependencyI
     protected $loggable = false;
     public $actionName = false;
     protected $validated = true;
+    /** @var string[] */
     public $expectedFields = [];
     public $validators = [];
     /**

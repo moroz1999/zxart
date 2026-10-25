@@ -1,9 +1,8 @@
 <?php
 
 use ZxArt\Forms\StagedUploadsCleaner;
-use ZxArt\Queue\QueueService;
-use ZxArt\Queue\QueueStatus;
-use ZxArt\Queue\QueueType;
+use ZxArt\Prods\Services\ProdFieldsDtoFactory;
+use ZxArt\Prods\Services\ProdFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveZxProd extends structureElementAction
@@ -16,26 +15,16 @@ class publicReceiveZxProd extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            $structureElement->structureName = $structureElement->title;
             $structureElement->dateAdded = $structureElement->getCreatedTimestamp();
 
-            $oldCategoriesIds = $structureElement->getConnectedCategoriesIds();
-
-            $structureElement->renewPartyLink();
-            $structureElement->updateTagsInfo();
-            $structureElement->updateYear();
-
-            $structureElement->persistElementData();
-            $structureElement->checkAndPersistCategories();
+            $fields = $this->getService(ProdFieldsDtoFactory::class)->fromSubmittedForm(
+                $structureElement,
+                $this->expectedFields,
+                (string)$structureElement->getValue('title'),
+            );
+            $this->getService(ProdFieldsWriter::class)->apply($structureElement, $fields);
             $structureElement->persistAuthorship(EntityType::Prod);
             $structureElement->persistImportOrigins();
-
-            $queueService = $this->getService(QueueService::class);
-            $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
-            if (array_diff($oldCategoriesIds, $structureElement->categories) || array_diff($structureElement->categories, $oldCategoriesIds)) {
-                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_SEO, QueueStatus::STATUS_TODO);
-                $queueService->updateStatus($structureElement->getPersistedId(), QueueType::AI_INTRO, QueueStatus::STATUS_TODO);
-            }
 
             $structureElement->executeAction('receiveFiles');
             $this->getService(StagedUploadsCleaner::class)->clearElementUploads($structureElement);

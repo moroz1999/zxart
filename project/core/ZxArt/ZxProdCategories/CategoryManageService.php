@@ -13,7 +13,7 @@ use ZxArt\Shared\StructureType;
 use ZxArt\ZxProdCategories\Dto\CategoryNodeDto;
 use ZxArt\ZxProdCategories\Dto\CategorySaveDto;
 use ZxArt\ZxProdCategories\Exception\CategoryException;
-use ZxArt\ZxProdCategories\Repositories\CategoryManageRepository;
+use ZxArt\ZxProdCategories\Dbal\CategoryManageRepository;
 use zxProdCategoriesCatalogueElement;
 use zxProdCategoryElement;
 

@@ -11,7 +11,7 @@ use privilegesManager;
 use structureManager;
 use ZxArt\Playlists\Exception\PlaylistException;
 use ZxArt\Playlists\PlaylistService;
-use ZxArt\Playlists\Repositories\PlaylistContentsRepository;
+use ZxArt\Playlists\Dbal\PlaylistContentsRepository;
 
 final class PlaylistServiceTest extends TestCase
 {

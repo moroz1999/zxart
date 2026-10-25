@@ -1170,11 +1170,8 @@ class VtrdosImport extends errorLogger
             }
             $dto = $prodInfo;
             $title = $dto->title ?? '';
-            if ($this->prodsService->importProd($dto, $this->origin)) {
-                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $title);
-            } else {
-                $this->markProgress('prod failed ' . $title);
-            }
+            $this->prodsService->importProd($dto, $this->origin);
+            $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $title);
         }
     }
 }

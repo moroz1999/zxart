@@ -12,12 +12,12 @@ use PHPUnit\Framework\TestCase;
 use tagsManager;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\MusicSearchSort;
-use ZxArt\MusicSearch\Repositories\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchSort;
-use ZxArt\PictureSearch\Repositories\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
 
 #[AllowMockObjectsWithoutExpectations]
 class SearchAuthorLocalizationTest extends TestCase

@@ -23,8 +23,8 @@ use ZxArt\Authors\Dto\AuthorLocationItemDto;
 use ZxArt\Authors\Dto\AuthorRatingsDto;
 use ZxArt\Authors\Dto\AuthorTabsDto;
 use ZxArt\Authors\Dto\AuthorTechDto;
-use ZxArt\Authors\Repositories\AuthorProdsRepository;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorProdsRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\LinkTypes;
 use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -63,7 +63,7 @@ readonly class AuthorDetailsService
         $aliases = $this->buildAliases($profileAuthor);
         $links = $this->buildLinks($profileAuthor);
         $badges = $this->buildBadges($userElement);
-        $counters = $this->buildCounters($author);
+        $counters = $this->getCounters($author);
         $roles = $this->buildRoles($author, $counters);
         $tech = $this->buildTech($profileAuthor);
         $ratings = $this->buildRatings($profileAuthor);
@@ -296,7 +296,10 @@ readonly class AuthorDetailsService
         );
     }
 
-    private function buildCounters(authorElement|authorAliasElement $author): AuthorCountersDto
+    /**
+     * The counts the page shows.
+     */
+    public function getCounters(authorElement|authorAliasElement $author): AuthorCountersDto
     {
         if ($author instanceof authorElement) {
             return new AuthorCountersDto(

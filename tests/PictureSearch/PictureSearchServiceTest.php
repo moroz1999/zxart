@@ -20,7 +20,7 @@ use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchService;
 use ZxArt\PictureSearch\PictureSearchSort;
-use ZxArt\PictureSearch\Repositories\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Services\PicturesManager;
 use ZxArt\Shared\EntityType;

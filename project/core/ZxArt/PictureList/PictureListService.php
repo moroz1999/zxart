@@ -9,7 +9,7 @@ use ZxArt\LinkTypes;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PictureCollectionFilter;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Repositories\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesRepository;
 use ZxArt\Shared\SortingParams;
 use zxPictureElement;
 use zxReleaseElement;

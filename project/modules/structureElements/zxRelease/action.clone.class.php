@@ -1,7 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
-use ZxArt\Prods\Services\ProdsService;
+use ZxArt\Releases\Services\ReleaseCloner;
 
 class cloneZxRelease extends structureElementAction
 {
@@ -9,40 +9,12 @@ class cloneZxRelease extends structureElementAction
 
     /**
      * @param zxReleaseElement $structureElement
-     * @throws Exception
      */
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
-        $parentElement = $structureElement->getFirstParentElement();
-        if ($parentElement === null) {
-            throw new Exception('Parent element is null for cloning ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
-        }
-        $clonedElements = $structureManager->copyElements([$structureElement->getId()], $parentElement->getId());
-        if ($clonedElements === []) {
-            throw new Exception('Release cloning failed for ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
-        }
-        $clonedElementId = reset($clonedElements);
-        $clonedElement = $structureManager->getElementById($clonedElementId);
-        if ($clonedElement === null) {
-            throw new Exception('Release cloning failed for ' . $structureElement->getId() . ' ' . $structureElement->getTitle());
-        }
-        /**
-         * @var zxReleaseElement $clonedElement
-         */
-        $clonedElement->hardwareRequired = $structureElement->hardwareRequired;
-        $clonedElement->language = $structureElement->language;
-        $clonedElement->publishers = $structureElement->publishers;
-        $clonedElement->downloads = 0;
-        $clonedElement->plays = 0;
-        $clonedElement->dateAdded = time();
-        $clonedElement->userId = $this->getService(CurrentUserService::class)->getCurrentUser()->id;
-        $clonedElement->persistElementData();
-
-        $prodsService = $this->getService(ProdsService::class);
-        $prodsService->copyAuthorship($structureElement, $clonedElement);
+        $clonedElement = $this->getService(ReleaseCloner::class)->clone($structureElement);
+        $this->getService(CurrentUserService::class)->getCurrentUser()->refreshPrivileges();
 
         $this->respondFormSaved($controller, $clonedElement);
     }
 }
-
-

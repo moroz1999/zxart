@@ -11,7 +11,7 @@ use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Dto\TuneDto;
-use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;

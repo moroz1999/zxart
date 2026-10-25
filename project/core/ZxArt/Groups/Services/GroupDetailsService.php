@@ -17,7 +17,7 @@ use ZxArt\Groups\Dto\GroupLocationItemDto;
 use ZxArt\Groups\Dto\GroupRefDto;
 use ZxArt\Groups\Dto\GroupTabsDto;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Repositories\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\PressArticlePreviewFactory;
 use ZxArt\Releases\ReleaseTypes;
@@ -48,7 +48,7 @@ readonly class GroupDetailsService
         }
 
         $profileGroup = $this->resolveProfileGroup($group);
-        $counters = $this->buildCounters($group);
+        $counters = $this->getCounters($group);
 
         return new GroupCoreDto(
             id: (int)$group->getId(),
@@ -199,7 +199,10 @@ readonly class GroupDetailsService
         return $this->pressArticlePreviewFactory->createList($group->getPressMentions());
     }
 
-    private function buildCounters(groupElement|groupAliasElement $group): GroupCountersDto
+    /**
+     * The counts the page shows.
+     */
+    public function getCounters(groupElement|groupAliasElement $group): GroupCountersDto
     {
         return new GroupCountersDto(
             members: $this->groupRosterService->countMembers($group),

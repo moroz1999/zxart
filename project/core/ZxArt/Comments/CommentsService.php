@@ -11,7 +11,7 @@ use structureManager;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentNotFoundException;
 use ZxArt\Comments\Exception\CommentOperationException;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 use ZxArt\LinkTypes;
 
 /**

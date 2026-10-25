@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Import;
 
-use ZxArt\Import\Repositories\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsRepository;
 
 /**
  * Reading and saving of the portal ids of one element. The form submits the

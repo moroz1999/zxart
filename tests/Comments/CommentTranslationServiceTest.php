@@ -14,7 +14,7 @@ use ZxArt\Comments\CommentTranslationCandidateDto;
 use ZxArt\Comments\CommentTranslationDto;
 use ZxArt\Comments\CommentTranslationService;
 use ZxArt\Comments\LatestCommentsCache;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 
 #[AllowMockObjectsWithoutExpectations]
 class CommentTranslationServiceTest extends TestCase

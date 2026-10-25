@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Import\Services;
 
 use ZxArt\Import\ImportOrigin;
-use ZxArt\Import\Repositories\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsRepository;
 
 /**
  * ZxDB entries a production is linked to. ZxDB ids of series and compilations

@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Prods\Repositories\ProdTabsRepository;
+use ZxArt\Prods\Dbal\ProdTabsRepository;
 
 /**
  * Each flag in ProdTabsDto corresponds to a specific DB query (or pair of queries for inlays/instructions).

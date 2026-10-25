@@ -10,7 +10,7 @@ use ZxArt\Hardware\Dto\HardwareNameDto;
 use ZxArt\Hardware\Dto\HardwareNameInputDto;
 use ZxArt\Hardware\Dto\HardwareSaveDto;
 use ZxArt\Hardware\Exception\HardwareException;
-use ZxArt\Hardware\Repositories\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareRepository;
 use ZxArt\Shared\InterfaceLanguage;
 
 /**

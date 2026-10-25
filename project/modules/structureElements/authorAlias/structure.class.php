@@ -2,7 +2,7 @@
 
 use ZxArt\Authors\Constants;
 use ZxArt\Authors\Entities\Author;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Import\ImportOriginsHolder;

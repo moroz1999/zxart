@@ -16,7 +16,7 @@ use ZxArt\Geo\Dto\CitySaveDto;
 use ZxArt\Geo\Dto\CountrySaveDto;
 use ZxArt\Geo\Exception\GeoException;
 use ZxArt\Geo\PlacesManageService;
-use ZxArt\Geo\Repositories\GeoManageRepository;
+use ZxArt\Geo\Dbal\GeoManageRepository;
 
 /**
  * The two lists the management screen is built from, and the guards that keep a

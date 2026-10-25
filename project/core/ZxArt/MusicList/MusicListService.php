@@ -8,7 +8,7 @@ use structureManager;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\MusicCollectionFilter;
-use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesRepository;
 use ZxArt\Tunes\TunesTransformer;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;

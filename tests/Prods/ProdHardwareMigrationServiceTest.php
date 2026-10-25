@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Prods\Repositories\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareRepository;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Releases\ReleaseTypes;

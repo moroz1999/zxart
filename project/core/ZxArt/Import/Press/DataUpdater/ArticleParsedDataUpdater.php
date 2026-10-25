@@ -8,9 +8,10 @@ use authorElement;
 use groupElement;
 use partyElement;
 use pressArticleElement;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
-use ZxArt\Authors\Services\AuthorsService;
-use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Services\AuthorImportService;
+use ZxArt\Groups\UseCases\ImportGroupCommand;
+use ZxArt\Groups\UseCases\ImportGroupHandler;
 use ZxArt\Hardware\Services\HardwareService;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
 use ZxArt\Import\ImportOrigin;
@@ -107,8 +108,8 @@ final class ArticleParsedDataUpdater
 
     public function __construct(
         private readonly AuthorshipRepository     $authorshipRepository,
-        private readonly AuthorsService           $authorsService,
-        private readonly GroupsService            $groupsService,
+        private readonly AuthorImportService      $authorImportService,
+        private readonly ImportGroupHandler       $importGroupHandler,
         private readonly ProdsService             $prodsService,
         private readonly PartyResolver            $partyResolver,
         private readonly AuthorSufficiencyChecker $authorSufficiencyChecker,
@@ -117,7 +118,7 @@ final class ArticleParsedDataUpdater
         private readonly HardwareService          $hardwareService,
     )
     {
-        $this->authorsService->setForceUpdateGroups(true);
+        $this->authorImportService->setForceUpdateGroups(true);
         $this->prodsService->setMatchProdsWithoutYear(true);
         $this->prodsService->setUpdateExistingProds(true);
 
@@ -395,7 +396,7 @@ final class ArticleParsedDataUpdater
         $this->groupsMap = [];
         $groupLabels = $this->makeGroupLabels($sortedGroups);
         foreach ($groupLabels as $label) {
-            $element = $this->groupsService->importGroup($label, self::ORIGIN);
+            $element = $this->importGroupHandler->handle(new ImportGroupCommand($label, self::ORIGIN));
             if ($element !== null) {
                 $this->groupsMap[$label->id] = $element;
             }
@@ -481,7 +482,7 @@ final class ArticleParsedDataUpdater
             )) {
                 continue;
             }
-            $element = $this->authorsService->importAuthor($label, self::ORIGIN);
+            $element = $this->authorImportService->importAuthor($label, self::ORIGIN);
             if ($element !== null) {
                 $this->authorsMap[$label->id] = $element;
             }
@@ -497,11 +498,7 @@ final class ArticleParsedDataUpdater
         $elements = [];
         foreach ($parsedProds as $parsedProd) {
             $prod = $this->transformToProd($parsedProd);
-            $element = $this->prodsService->importProd($prod, self::ORIGIN);
-
-            if ($element !== null) {
-                $elements[] = $element;
-            }
+            $elements[] = $this->prodsService->importProd($prod, self::ORIGIN);
         }
         return $elements;
     }

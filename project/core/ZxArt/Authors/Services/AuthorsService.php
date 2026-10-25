@@ -5,27 +5,18 @@ namespace ZxArt\Authors\Services;
 
 use authorAliasElement;
 use authorElement;
-use authorsElement;
 use ConfigManager;
-use CountriesManager;
 use ElementsManager;
 use fluxbb\cache\Exception;
 use groupElement;
 use Illuminate\Database\Connection;
 use LanguagesManager;
-use letterElement;
 use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
-use RuntimeException;
 use structureManager;
-use TranslitHelper;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Import\ImportOrigin;
-use ZxArt\Import\Labels\LabelResolver;
-use ZxArt\Import\Labels\PersonLabel;
-use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\EntityType;
 use ZxArt\Users\ClaimedAuthorService;
@@ -35,26 +26,17 @@ class AuthorsService extends ElementsManager
     use LettersElementsListProviderTrait;
 
     protected const string TABLE = 'module_author';
-    protected bool $forceUpdateRealName = false;
-    protected bool $forceUpdateCountry = false;
-    protected bool $forceUpdateCity = false;
-    protected bool $forceUpdateGroups = false;
     protected array $columnRelations = [];
-    protected array $importedAuthors = [];
-    protected array $importedAuthorAliases = [];
 
     public function __construct(
         protected readonly linksManager         $linksManager,
         protected LanguagesManager              $languagesManager,
         protected readonly ConfigManager        $configManager,
-        protected readonly CountriesManager     $countriesManager,
         protected readonly privilegesManager    $privilegesManager,
         protected Connection                    $db,
         protected structureManager              $structureManager,
         protected readonly GroupsService        $groupsService,
         protected readonly AuthorshipRepository $authorshipRepository,
-        private readonly LabelResolver          $labelResolver,
-        private readonly ImportIdOperator       $importIdOperator,
         private readonly ClaimedAuthorService   $claimedAuthorService,
     )
     {
@@ -64,259 +46,6 @@ class AuthorsService extends ElementsManager
             'graphicsRating' => ['graphicsRating' => true, 'title' => false],
             'musicRating' => ['musicRating' => true, 'title' => false],
         ];
-    }
-
-    public function setForceUpdateRealName(bool $forceUpdateRealName): void
-    {
-        $this->forceUpdateRealName = $forceUpdateRealName;
-    }
-
-    public function setForceUpdateGroups(bool $forceUpdateGroups): void
-    {
-        $this->forceUpdateGroups = $forceUpdateGroups;
-    }
-
-    public function setForceUpdateCountry(bool $forceUpdateCountry): void
-    {
-        $this->forceUpdateCountry = $forceUpdateCountry;
-    }
-
-    public function setForceUpdateCity(bool $forceUpdateCity): void
-    {
-        $this->forceUpdateCity = $forceUpdateCity;
-    }
-
-    public function importAuthor(PersonLabel $label, ImportOrigin $origin, bool $createNew = true): ?authorElement
-    {
-        $authorId = $label->id;
-        if ($authorId === null) {
-            return null;
-        }
-
-        $element = $this->getAuthorByLabel($label, $origin);
-
-        if ($element === null) {
-            if ($resolved = $this->labelResolver->resolve($label)) {
-                $element = $resolved;
-                $this->importIdOperator->saveImportId($element->getId(), $authorId, $origin, EntityType::Author);
-                $this->updateAuthor($element, $label, $origin);
-            } elseif ($createNew) {
-                $this->createAuthor($label, $origin);
-            }
-        } else {
-            $this->updateAuthor($element, $label, $origin);
-        }
-
-        $this->importedAuthors[$origin->value][$authorId] = $element;
-        return $element;
-    }
-
-    public function importLabel(PersonLabel $label, ImportOrigin $origin): authorElement|authorAliasElement|null
-    {
-        $authorId = $label->id;
-        if ($authorId === null) {
-            return null;
-        }
-
-        $element = $this->getAuthorByLabel($label, $origin);
-
-        if ($element === null) {
-            $element = $this->getAuthorAliasByLabel($label, $origin);
-        }
-        if ($element === null) {
-            $resolved = $this->labelResolver->resolve($label);
-            if ($resolved && $resolved->structureType === 'author') {
-                $this->updateAuthor($resolved, $label, $origin);
-                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
-                return $resolved;
-            }
-            if ($resolved && $resolved->structureType === 'authorAlias') {
-                $this->updateAuthorAlias($resolved, $label, $origin);
-                $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
-                return $resolved;
-            }
-        }
-        return $this->importAuthor($label, $origin);
-    }
-
-    public function createAuthor(PersonLabel $dto, ImportOrigin $origin): ?authorElement
-    {
-        $title = trim($dto->name ?? '');
-        $realName = trim($dto->realName ?? '');
-
-        if ($title === '' && $realName !== '') {
-            $title = $realName;
-        }
-
-        if ($title === '') {
-            return null;
-        }
-
-        $firstLetter = mb_strtolower(mb_substr($title, 0, 1));
-        $firstLetter = mb_substr(TranslitHelper::convert($firstLetter), 0, 1);
-        if (!preg_match('/[a-zA-Z]/', $firstLetter)) {
-            $firstLetter = '#';
-        }
-
-        /** @var authorsElement|null $authorsElement */
-        $authorsElement = $this->structureManager->getElementByMarker('authors');
-        if (!$authorsElement) {
-            throw new RuntimeException(
-                sprintf('Authors section is not available, author "%s" cannot be created', $title)
-            );
-        }
-
-        $authorLetterElement = null;
-        /** @var letterElement[] $letters */
-        $letters = $this->structureManager->getElementsChildren($authorsElement->getId());
-        foreach ($letters as $letterElement) {
-            if (mb_strtolower($letterElement->title) === $firstLetter) {
-                $authorLetterElement = $letterElement;
-                break;
-            }
-        }
-
-        if (!$authorLetterElement) {
-            throw new RuntimeException(
-                sprintf('Authors section has no "%s" letter, author "%s" cannot be created', $firstLetter, $title)
-            );
-        }
-
-        /** @var authorElement|null $element */
-        $element = $this->structureManager->createElement('author', 'show', $authorLetterElement->getId());
-        if (!$element) {
-            throw new RuntimeException(
-                sprintf(
-                    'Author "%s" (%s import id %s) could not be created under letter element %d',
-                    $title,
-                    $origin->value,
-                    $dto->id ?? '',
-                    $authorLetterElement->getId()
-                )
-            );
-        }
-
-        $this->updateAuthor($element, $dto, $origin);
-
-        if ($dto->id !== null) {
-            $this->importIdOperator->saveImportId($element->getId(), (string)$dto->id, $origin, EntityType::Author);
-        }
-        return $element;
-    }
-
-    protected function updateAuthor(authorElement $element, PersonLabel $label, ImportOrigin $origin): void
-    {
-        $changed = false;
-
-        $title = $label->name ?? null;
-        if ($title !== null && $title !== '' && $element->title !== $title && !$element->title) {
-            $element->title = $title;
-            $element->structureName = $title;
-            $changed = true;
-        }
-
-        if (($this->forceUpdateRealName || !$element->realName) && !empty($label->realName) && $element->realName !== $label->realName) {
-            $element->realName = $label->realName;
-            $changed = true;
-        }
-
-        if (!empty($label->locationName)) {
-            $locationElement = $this->countriesManager->getLocationByName($label->locationName);
-            if ($locationElement) {
-                if ($locationElement->structureType === 'country') {
-                    if (!$element->country || $this->forceUpdateCountry) {
-                        if ($element->country !== $locationElement->getId()) {
-                            $element->country = $locationElement->getId();
-                            $changed = true;
-                        }
-                    }
-                } elseif ($locationElement->structureType === 'city') {
-                    if (!$element->city || $this->forceUpdateCity) {
-                        if ($element->city !== $locationElement->getId()) {
-                            $element->city = $locationElement->getId();
-                            if ($countryId = $locationElement->getCountryId()) {
-                                $element->country = $countryId;
-                            }
-                            $changed = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!empty($label->countryName)) {
-            $locationElement = $this->countriesManager->getLocationByName($label->countryName);
-            if ($locationElement && $locationElement->structureType === 'country') {
-                if (($this->forceUpdateCountry || !$element->country) && $element->country !== $locationElement->getId()) {
-                    $element->country = $locationElement->getId();
-                    $changed = true;
-                }
-            }
-        }
-        if (!empty($label->cityName)) {
-            $locationElement = $this->countriesManager->getLocationByName($label->cityName);
-            if ($locationElement) {
-                if ($locationElement->structureType === 'city') {
-                    if (($this->forceUpdateCity || !$element->city) && $element->city !== $locationElement->getId()) {
-                        $element->city = $locationElement->getId();
-                        $changed = true;
-                    }
-                }
-            }
-        }
-
-        if ($this->forceUpdateCountry && $label->countryId !== null) {
-            $countryElement = $this->importIdOperator->getElementByImportId((string)$label->countryId, $origin, EntityType::Country);
-            if ($countryElement && $element->country !== $countryElement->getId()) {
-                $element->country = $countryElement->getId();
-                $changed = true;
-            }
-        }
-        if ($this->forceUpdateCity && $label->cityId !== null) {
-            $cityElement = $this->importIdOperator->getElementByImportId((string)$label->cityId, $origin, EntityType::City);
-            if ($cityElement && $element->city !== $cityElement->getId()) {
-                $element->city = $cityElement->getId();
-                $changed = true;
-            }
-        }
-
-        if ($changed) {
-            $element->checkCountry();
-            $element->persistElementData();
-        }
-
-        if ($this->forceUpdateGroups && is_array($label->groupIds) && $label->groupIds !== []) {
-            $roles = $label->groupRoles ?? [];
-            foreach ($label->groupIds as $groupImportId) {
-                if ($groupImportId === null || $groupImportId === '') {
-                    continue;
-                }
-                if ($groupElement = $this->importIdOperator->getElementByImportId($groupImportId, $origin, EntityType::Group)) {
-                    $this->authorshipRepository->addAuthorship($groupElement->getId(), $element->getPersistedId(), EntityType::Group, $roles);
-                }
-            }
-        }
-    }
-
-    public function importAuthorAlias(PersonLabel $personLabel, ImportOrigin $origin, bool $createNew = true)
-    {
-        $importId = $personLabel->id;
-        $element = $this->getAuthorAliasByLabel($personLabel, $origin);
-        if (!$element) {
-            if ($element = $this->labelResolver->resolve($personLabel)) {
-                $this->importIdOperator->saveImportId($element->getId(), $importId, $origin, EntityType::Author);
-                if ($element->structureType === 'authorAlias') {
-                    $this->updateAuthorAlias($element, $personLabel, $origin);
-                }
-            } elseif ($createNew) {
-                $element = $this->createAuthorAlias($personLabel, $origin);
-            }
-        } elseif ($element->structureType === 'authorAlias') {
-            $this->updateAuthorAlias($element, $personLabel, $origin);
-        }
-
-        $this->importedAuthorAliases[$origin->value][$importId] = $element;
-        return $this->importedAuthorAliases[$origin->value][$importId];
     }
 
     /**
@@ -329,29 +58,7 @@ class AuthorsService extends ElementsManager
 //        return $this->importAuthor($dto, $origin, $createNew);
     }
 
-    protected function createAuthorAlias(PersonLabel $authorAlias, ImportOrigin $origin): ?authorAliasElement
-    {
-        $title = trim($authorAlias->name ?? '');
-        if ($title === '') {
-            return null;
-        }
-
-        /** @var authorAliasElement|null $element */
-        $element = $this->manufactureAliasElement($title);
-        if (!$element) {
-            return null;
-        }
-
-        $this->updateAuthorAlias($element, $authorAlias, $origin);
-
-        if ($authorAlias->id !== null) {
-            $this->importIdOperator->saveImportId($element->getId(), (string)$authorAlias->id, $origin, EntityType::Author);
-        }
-
-        return $element;
-    }
-
-    protected function manufactureAliasElement(string $title = ''): ?authorAliasElement
+    public function manufactureAliasElement(string $title = ''): ?authorAliasElement
     {
         $letterId = $this->getLetterId($title);
         if ($letterId) {
@@ -383,31 +90,6 @@ class AuthorsService extends ElementsManager
             }
         }
         return null;
-    }
-
-    protected function updateAuthorAlias(authorAliasElement $element, PersonLabel $label, ImportOrigin $origin): void
-    {
-        $changed = false;
-
-        $title = trim($label->name ?? '');
-        if ($title !== '' && !$element->title) {
-            $element->title = $title;
-            $element->structureName = $title;
-            $changed = true;
-        }
-
-        if ($label->authorId !== null && !$element->authorId) {
-            if ($authorElement = $this->importIdOperator->getElementByImportId((string)$label->authorId, $origin, EntityType::AuthorAlias)) {
-                if ($authorElement->getId() !== $element->authorId) {
-                    $element->authorId = $authorElement->getId();
-                    $changed = true;
-                }
-            }
-        }
-
-        if ($changed) {
-            $element->persistElementData();
-        }
     }
 
     public function joinDeleteAuthor(int $mainAuthorId, int $joinedAuthorId): void
@@ -448,6 +130,9 @@ class AuthorsService extends ElementsManager
                 }
 
                 if ($targetAuthorElement) {
+                    if ($joinedAuthor instanceof authorElement) {
+                        $joinedAuthor->resetAliasElements();
+                    }
                     if ($aliasElements = $joinedAuthor->getAliasElements()) {
                         /**
                          * @var authorAliasElement $aliasElement
@@ -486,9 +171,6 @@ class AuthorsService extends ElementsManager
                         }
                         if (!$mainAuthor->city) {
                             $mainAuthor->city = $joinedAuthor->city;
-                        }
-                        if (!$mainAuthor->artCityId) {
-                            $mainAuthor->artCityId = $joinedAuthor->artCityId;
                         }
                         if (empty($mainAuthor->zxTunesId) && !empty($joinedAuthor->zxTunesId)) {
                             $mainAuthor->zxTunesId = $joinedAuthor->zxTunesId;
@@ -582,19 +264,6 @@ class AuthorsService extends ElementsManager
         return $newAuthorElement;
     }
 
-    public function getAuthorByLabel(PersonLabel $label, ImportOrigin $origin): authorElement|null
-    {
-        $authorId = $label->id;
-        if (isset($this->importedAuthors[$origin->value][$authorId])) {
-            return $this->importedAuthors[$origin->value][$authorId];
-        }
-        $author = $this->importIdOperator->getElementByImportId($authorId, $origin, EntityType::Author);
-        if ($author?->structureType === 'author') {
-            return $author;
-        }
-        return null;
-    }
-
     /**
      * @psalm-param 'admin'|'public' $type
      *
@@ -656,20 +325,9 @@ class AuthorsService extends ElementsManager
                     }
                 }
 
-
                 $groupElement->deleteElementData();
             }
         }
         return $authorElement;
-    }
-
-    public function getAuthorAliasByLabel(PersonLabel $personLabel, ImportOrigin $origin): authorAliasElement|null
-    {
-        $importId = (string)$personLabel->id;
-        if (isset($this->importedAuthorAliases[$origin->value][$importId])) {
-            return $this->importedAuthorAliases[$origin->value][$importId];
-        }
-
-        return $this->importIdOperator->getElementByImportId($importId, $origin, EntityType::AuthorAlias);
     }
 }

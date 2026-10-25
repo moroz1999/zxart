@@ -473,11 +473,8 @@ class S4eManager extends errorLogger
             if ($this->counter > $this->maxCounter) {
                 return;
             }
-            if ($this->prodsService->importProdOld($prodInfo, $this->origin)) {
-                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
-            } else {
-                $this->markProgress('prod failed ' . $prodInfo['title']);
-            }
+            $this->prodsService->importProdOld($prodInfo, $this->origin);
+            $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo['title']);
         }
     }
 }

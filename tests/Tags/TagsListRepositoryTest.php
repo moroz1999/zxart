@@ -8,7 +8,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Shared\DatabaseTable;
-use ZxArt\TagsList\Repositories\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListRepository;
 
 final class TagsListRepositoryTest extends TestCase
 {

@@ -11,7 +11,7 @@ use zxProdCategoryElement;
 use zxProdElement;
 use zxReleaseElement;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Repositories\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsRepository;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Exception\ProdDetailsException;

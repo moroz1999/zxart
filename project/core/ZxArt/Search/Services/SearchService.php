@@ -7,14 +7,10 @@ namespace ZxArt\Search\Services;
 use authorAliasElement;
 use authorElement;
 use ConfigManager;
-use DI\Container;
 use groupAliasElement;
 use groupElement;
 use partyElement;
 use pressArticleElement;
-use Search;
-use SearchResult;
-use SearchResultSet;
 use structureElement;
 use ZxArtItem;
 use ZxArt\AuthorList\AuthorListTransformer;
@@ -23,10 +19,13 @@ use ZxArt\Parties\PartiesTransformer;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Press\Dto\PressArticleDto;
 use ZxArt\Prods\ProdsTransformer;
+use ZxArt\Search\Dto\PhraseSearchQueryDto;
+use ZxArt\Search\Dto\PhraseSearchResultDto;
 use ZxArt\Search\Dto\SearchResultPreviewDto;
 use ZxArt\Search\Dto\SearchResultsDto;
 use ZxArt\Search\Dto\SearchResultSetDto;
 use ZxArt\Tunes\TunesTransformer;
+use ZxArt\Urls\EntityUrlResolver;
 use zxMusicElement;
 use zxPictureElement;
 use zxProdElement;
@@ -36,18 +35,9 @@ readonly class SearchService
     public const int DEFAULT_PAGE_SIZE = 50;
     private const int SNIPPET_CUT_LENGTH = 120;
 
-    /**
-     * Public type → list of internal types it expands to.
-     * Aliases are hidden from the public API and merged into the parent type.
-     */
-    private const array PUBLIC_TYPE_EXPANSION = [
-        'author' => ['author', 'authorAlias'],
-        'group' => ['group', 'groupAlias'],
-    ];
-
     public function __construct(
-        private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
-        private Container $container,
+        private EntityUrlResolver $entityUrlResolver,
+        private PhraseSearchEngine $phraseSearchEngine,
         private ConfigManager $configManager,
         private AuthorListTransformer $authorTransformer,
         private GroupListTransformer $groupTransformer,
@@ -65,37 +55,26 @@ readonly class SearchService
     {
         $page = max(1, $page);
         $pageSize = self::DEFAULT_PAGE_SIZE;
-        $availableTypes = $this->getAvailableTypes();
-        $effectivePublicTypes = $this->filterPublicTypes($requestedTypes, $availableTypes);
-
+        $result = $this->phraseSearchEngine->find(new PhraseSearchQueryDto(
+            phrase: $phrase,
+            types: $this->filterPublicTypes($requestedTypes, $this->getAvailableTypes()),
+            limit: $pageSize,
+            mode: PhraseSearchMode::Paged,
+            offset: ($page - 1) * $pageSize,
+            contentMatching: true,
+            aliases: AliasHandling::MergeIntoOwner,
+        ));
         $phrase = trim($phrase);
-        if ($phrase === '' || $effectivePublicTypes === []) {
-            return new SearchResultsDto(
-                phrase: $phrase,
-                page: $page,
-                pageSize: $pageSize,
-                total: 0,
-                sets: [],
-            );
-        }
-
-        $internalTypes = $this->expandToInternalTypes($effectivePublicTypes);
-        $offset = ($page - 1) * $pageSize;
-
-        $search = new Search($this->container);
-        $search->setInput($phrase);
-        $search->setLimit($pageSize);
-        $search->setOffset($offset);
-        $search->setContentMatching();
-        $search->setTypes($internalTypes);
-        $result = $search->getResult();
 
         return new SearchResultsDto(
             phrase: $phrase,
             page: $page,
             pageSize: $pageSize,
-            total: (int)$result->count,
-            sets: $this->buildSetDtos($result, $phrase),
+            total: $result->total,
+            sets: $this->buildSetDtos(
+                $result,
+                fn(structureElement $element): ?object => $this->buildItem($element, $phrase),
+            ),
         );
     }
 
@@ -105,64 +84,37 @@ readonly class SearchService
     public function quickSearch(string $phrase, array $requestedTypes, int $pageSize, int $languageId): SearchResultsDto
     {
         $pageSize = min(max(1, $pageSize), 100);
-        $availableTypes = $this->getAvailableTypes();
-        $effectivePublicTypes = $this->filterPublicTypes($requestedTypes, $availableTypes);
-
-        $phrase = trim($phrase);
-        if ($phrase === '' || $effectivePublicTypes === []) {
-            return new SearchResultsDto(
-                phrase: $phrase,
-                page: 1,
-                pageSize: $pageSize,
-                total: 0,
-                sets: [],
-            );
-        }
-
-        $search = new Search($this->container);
-        $search->setLanguageId($languageId);
-        $search->setInput(htmlspecialchars($phrase, ENT_QUOTES, 'UTF-8'));
-        $search->setLimit($pageSize);
-        $search->setTypes($this->expandToInternalTypes($effectivePublicTypes));
-        $search->setPartialMatching(false);
-        $search->setContentMatching(false);
-        $search->setFilters([]);
-        $search->setSinglePageCombining(true);
-        $search->setRelevanceOrdering();
-        $result = $search->getResult();
+        $result = $this->phraseSearchEngine->find(new PhraseSearchQueryDto(
+            phrase: $phrase,
+            types: $this->filterPublicTypes($requestedTypes, $this->getAvailableTypes()),
+            limit: $pageSize,
+            mode: PhraseSearchMode::SinglePage,
+            aliases: AliasHandling::MergeIntoOwner,
+            languageId: $languageId,
+        ));
 
         return new SearchResultsDto(
-            phrase: $phrase,
+            phrase: trim($phrase),
             page: 1,
             pageSize: $pageSize,
-            total: $result->getSearchTotal(),
-            sets: $this->buildQuickSetDtos($result),
+            total: $result->total,
+            sets: $this->buildSetDtos($result, $this->buildQuickItem(...)),
         );
     }
 
     /**
+     * The configured types, an alias type counted as its owner's: aliases are
+     * hidden from the public API.
+     *
      * @return string[]
      */
     private function getAvailableTypes(): array
     {
+        /** @var string[] $types the structure types listed in `searchtypes-public.php` */
         $types = $this->configManager->getMerged('searchtypes-public.search');
-        if (!is_array($types)) {
-            return [];
-        }
-        $internalTypes = array_values(array_unique(array_map('strval', $types)));
-        return $this->collapseToPublicTypes($internalTypes);
-    }
-
-    /**
-     * @param string[] $internalTypes
-     * @return string[]
-     */
-    private function collapseToPublicTypes(array $internalTypes): array
-    {
-        $aliasToParent = $this->buildAliasToParentMap();
         $public = [];
-        foreach ($internalTypes as $type) {
-            $publicType = $aliasToParent[$type] ?? $type;
+        foreach ($types as $type) {
+            $publicType = PhraseSearchEngine::ALIAS_OWNERS[$type] ?? $type;
             if (!in_array($publicType, $public, true)) {
                 $public[] = $publicType;
             }
@@ -184,125 +136,28 @@ readonly class SearchService
     }
 
     /**
-     * @param string[] $publicTypes
-     * @return string[]
-     */
-    private function expandToInternalTypes(array $publicTypes): array
-    {
-        $result = [];
-        foreach ($publicTypes as $publicType) {
-            $expansion = self::PUBLIC_TYPE_EXPANSION[$publicType] ?? [$publicType];
-            foreach ($expansion as $internalType) {
-                if (!in_array($internalType, $result, true)) {
-                    $result[] = $internalType;
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function buildAliasToParentMap(): array
-    {
-        $map = [];
-        foreach (self::PUBLIC_TYPE_EXPANSION as $publicType => $internalTypes) {
-            foreach ($internalTypes as $internalType) {
-                $map[$internalType] = $publicType;
-            }
-        }
-        return $map;
-    }
-
-    /**
+     * Groups the hits by type, in the order the types first come.
+     *
+     * @param callable(structureElement): ?object $buildItem
      * @return SearchResultSetDto[]
      */
-    private function buildSetDtos(SearchResult $result, string $phrase): array
+    private function buildSetDtos(PhraseSearchResultDto $result, callable $buildItem): array
     {
-        $aliasToParent = $this->buildAliasToParentMap();
-        $bucketsOrder = [];
-        /** @var array<string, array{type: string, items: object[]}> $buckets */
-        $buckets = [];
-
-        foreach ($result->sets as $set) {
-            if (!$set instanceof SearchResultSet) {
-                continue;
-            }
-            $publicType = $aliasToParent[(string)$set->type] ?? (string)$set->type;
-            if (!isset($buckets[$publicType])) {
-                $buckets[$publicType] = [
-                    'type' => $publicType,
-                    'items' => [],
-                ];
-                $bucketsOrder[] = $publicType;
-            }
-            foreach ($set->elements as $element) {
-                if (!$element instanceof structureElement) {
-                    continue;
-                }
-                $item = $this->buildItem($element, $phrase);
-                if ($item !== null) {
-                    $buckets[$publicType]['items'][] = $item;
-                }
+        /** @var array<string, object[]> $itemsByType */
+        $itemsByType = [];
+        foreach ($result->hits as $hit) {
+            $item = $buildItem($hit->element);
+            if ($item !== null) {
+                $itemsByType[$hit->type][] = $item;
             }
         }
 
         $dtos = [];
-        foreach ($bucketsOrder as $publicType) {
-            $bucket = $buckets[$publicType];
-            if ($bucket['items'] === []) {
-                continue;
-            }
+        foreach ($itemsByType as $type => $items) {
             $dtos[] = new SearchResultSetDto(
-                type: $bucket['type'],
-                totalCount: count($bucket['items']),
-                items: $bucket['items'],
-            );
-        }
-        return $dtos;
-    }
-
-    /**
-     * @return SearchResultSetDto[]
-     */
-    private function buildQuickSetDtos(SearchResult $result): array
-    {
-        $aliasToParent = $this->buildAliasToParentMap();
-        $bucketsOrder = [];
-        /** @var array<string, array{type: string, items: SearchResultPreviewDto[]}> $buckets */
-        $buckets = [];
-
-        foreach ($result->sets as $set) {
-            if (!$set instanceof SearchResultSet) {
-                continue;
-            }
-            $publicType = $aliasToParent[(string)$set->type] ?? (string)$set->type;
-            if (!isset($buckets[$publicType])) {
-                $buckets[$publicType] = [
-                    'type' => $publicType,
-                    'items' => [],
-                ];
-                $bucketsOrder[] = $publicType;
-            }
-            foreach ($set->elements as $element) {
-                if (!$element instanceof structureElement) {
-                    continue;
-                }
-                $buckets[$publicType]['items'][] = $this->buildQuickItem($element);
-            }
-        }
-
-        $dtos = [];
-        foreach ($bucketsOrder as $publicType) {
-            $bucket = $buckets[$publicType];
-            if ($bucket['items'] === []) {
-                continue;
-            }
-            $dtos[] = new SearchResultSetDto(
-                type: $bucket['type'],
-                totalCount: count($bucket['items']),
-                items: $bucket['items'],
+                type: $type,
+                totalCount: count($items),
+                items: $items,
             );
         }
         return $dtos;

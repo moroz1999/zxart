@@ -6,7 +6,7 @@ namespace ZxArt\Import\Pictures;
 
 use structureManager;
 use ZxArt\Import\Resolver;
-use ZxArt\Pictures\Repositories\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesRepository;
 use zxPictureElement;
 
 readonly final class PictureResolver

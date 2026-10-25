@@ -27,7 +27,7 @@ readonly class AuthorListTransformer
             url: $this->entityUrlResolver->urlFor($element),
             entityType: EntityType::Author,
             title: html_entity_decode($element->title, ENT_QUOTES),
-            realName: html_entity_decode($element->realName, ENT_QUOTES),
+            realName: html_entity_decode($element->getRealName(), ENT_QUOTES),
             realNameId: null,
             realNameUrl: null,
             groups: $this->buildGroupsInfo($element->getGroupsList()),

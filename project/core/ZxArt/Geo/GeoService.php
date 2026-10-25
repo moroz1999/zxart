@@ -13,7 +13,7 @@ use ZxArt\Geo\Dto\GeoCountersDto;
 use ZxArt\Geo\Dto\GeoCountryDto;
 use ZxArt\Geo\Dto\GeoMapDto;
 use ZxArt\Geo\Dto\GeoPartyListItemDto;
-use ZxArt\Geo\Repositories\GeoRepository;
+use ZxArt\Geo\Dbal\GeoRepository;
 use ZxArt\Shared\SortDirection;
 use ZxArt\Urls\EntityUrlResolver;
 

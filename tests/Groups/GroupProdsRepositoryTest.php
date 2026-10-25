@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Repositories\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsRepository;
 
 /**
  * A production is reachable on the site only through a category; one without a

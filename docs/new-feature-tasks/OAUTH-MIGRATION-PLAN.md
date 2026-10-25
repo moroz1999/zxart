@@ -232,9 +232,9 @@ readonly class AccessTokenService
 
 `readonly class AccessTokenClaims { int $userId; string $familyId; int $expiresAt; }`
 
-### 3.3 `Repositories/RefreshTokenRepository.php`
+### 3.3 `Dbal/RefreshTokenRepository.php`
 
-`final readonly class`, **extends `ZxArt\Shared\Repositories\AbstractRepository`**
+`final readonly class`, **extends `ZxArt\Shared\Dbal\AbstractRepository`**
 (`docs/php/repositories.md:8`), table name from `DatabaseTable`.
 
 ```
@@ -252,7 +252,7 @@ deleteExpired(int $threshold): int
 
 Query Builder only, no raw SQL (`docs/php/repositories.md:21`).
 
-### 3.4 `Repositories/LoginAttemptRepository.php`
+### 3.4 `Dbal/LoginAttemptRepository.php`
 
 Same conventions. `registerFailure(string $scope, string $subject, int $now, int $windowSeconds): int`,
 `countFailures(...)`, `reset(string $scope, string $subject)`, `deleteStale(int $threshold)`.

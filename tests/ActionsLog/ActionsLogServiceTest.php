@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use zxProdElement;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\ActionsLog\Dto\ActionsLogRecordDto;
-use ZxArt\ActionsLog\Repositories\ActionsLogRepository;
+use ZxArt\ActionsLog\Dbal\ActionsLogRepository;
 use ZxArt\Shared\StructureType;
 
 final class ActionsLogServiceTest extends TestCase

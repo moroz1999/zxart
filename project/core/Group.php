@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\ImportOriginsHolderTrait;

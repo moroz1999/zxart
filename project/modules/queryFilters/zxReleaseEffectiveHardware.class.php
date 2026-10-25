@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Hardware\HardwareCatalogService;
-use ZxArt\Prods\Repositories\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareRepository;
 
 /**
  * Releases running on the given hardware — their own codes **or** the ones they

@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Authors\Services\AuthorAliasFieldsDtoFactory;
+use ZxArt\Authors\Services\AuthorAliasFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveAuthorAlias extends structureElementAction
@@ -14,9 +16,9 @@ class publicReceiveAuthorAlias extends structureElementAction
         if ($this->validated) {
             $structureElement->prepareActualData();
 
-            $structureElement->structureName = $structureElement->title;
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
+            $fields = $this->getService(AuthorAliasFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(AuthorAliasFieldsWriter::class)->apply($structureElement, $fields);
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
             $structureElement->persistImportOrigins();

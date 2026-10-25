@@ -12,7 +12,7 @@ use Illuminate\Database\Connection;
 use PDO;
 use RuntimeException;
 use Throwable;
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\ZxdbRoleType;
@@ -231,7 +231,7 @@ class ZxdbImport extends errorLogger
 
     public function __construct(
         private readonly ProdsService     $prodsService,
-        private readonly AuthorsService   $authorsService,
+        AuthorImportService               $authorImportService,
         private readonly CountriesManager $countriesManager,
         private readonly ConfigManager    $configManager,
     )
@@ -254,9 +254,9 @@ class ZxdbImport extends errorLogger
         $this->prodsService->setForceUpdateImages(false);
         $this->prodsService->setAddImages(false);
 
-        $this->authorsService->setForceUpdateCountry(false);
-        $this->authorsService->setForceUpdateCity(false);
-        $this->authorsService->setForceUpdateGroups(false);
+        $authorImportService->setForceUpdateCountry(false);
+        $authorImportService->setForceUpdateCity(false);
+        $authorImportService->setForceUpdateGroups(false);
 
         $this->wosFilesPath = PUBLIC_PATH . 'wosfiles/';
         $this->releaseTypes = [
@@ -485,16 +485,12 @@ class ZxdbImport extends errorLogger
                     ' ' . $prodInfo['id'] . ' ' . $prodInfo['title'];
                 $this->markProgress($seriesLabel . ' importing');
                 try {
-                    $importedSeries = $this->prodsService->importProd($dto, $this->origin);
+                    $this->prodsService->importProd($dto, $this->origin);
                 } catch (Throwable $exception) {
                     $this->reportProdFailure($seriesLabel, $exception);
                     return;
                 }
-                if ($importedSeries === null) {
-                    $this->markProgress($seriesLabel . ' not imported');
-                } else {
-                    $this->counter++;
-                }
+                $this->counter++;
             }
         }
     }
@@ -772,13 +768,10 @@ class ZxdbImport extends errorLogger
                 // Printed before the import, so a crash names the entry it died on
                 $this->markProgress($prodLabel . ' importing');
                 try {
-                    $importedProd = $this->prodsService->importProd($dto, $this->origin);
+                    $this->prodsService->importProd($dto, $this->origin);
                 } catch (Throwable $exception) {
                     $this->reportProdFailure($prodLabel, $exception);
                     return false;
-                }
-                if ($importedProd === null) {
-                    $this->markProgress($prodLabel . ' not imported');
                 }
 
                 file_put_contents($this->getStatusPath(), $this->counter);

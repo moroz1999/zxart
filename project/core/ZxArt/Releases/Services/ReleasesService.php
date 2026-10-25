@@ -7,7 +7,7 @@ namespace ZxArt\Releases\Services;
 use structureManager;
 use ZxArt\Releases\Dto\ReleaseDto;
 use ZxArt\Releases\ReleasesTransformer;
-use ZxArt\Releases\Repositories\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesRepository;
 use zxReleaseElement;
 
 readonly class ReleasesService

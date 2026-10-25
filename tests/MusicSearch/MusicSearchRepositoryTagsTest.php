@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use tagsManager;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\MusicSearchSort;
-use ZxArt\MusicSearch\Repositories\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 

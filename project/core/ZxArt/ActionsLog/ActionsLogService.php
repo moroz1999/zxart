@@ -7,7 +7,7 @@ namespace ZxArt\ActionsLog;
 use App\Users\CurrentUserService;
 use structureElement;
 use ZxArt\ActionsLog\Dto\ActionsLogRecordDto;
-use ZxArt\ActionsLog\Repositories\ActionsLogRepository;
+use ZxArt\ActionsLog\Dbal\ActionsLogRepository;
 use ZxArt\Shared\StructureType;
 
 /**

@@ -2,6 +2,7 @@
 
 class SearchResult
 {
+    /** @var int */
     public $count = 0;
     /**
      * @var SearchResultSet[]

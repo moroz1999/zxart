@@ -11,7 +11,7 @@ use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
-use ZxArt\Releases\Repositories\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesRepository;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use ZxArt\Shared\DescriptionFormatter;

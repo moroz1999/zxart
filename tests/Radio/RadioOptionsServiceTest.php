@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Radio\Services\RadioOptionsService;
-use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesRepository;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdCategoryElement;
 

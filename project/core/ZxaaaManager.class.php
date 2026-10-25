@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
@@ -94,7 +94,7 @@ class ZxaaaManager extends errorLogger
      */
     protected $prodsService;
     /**
-     * @var AuthorsService
+     * @var AuthorImportService
      */
     protected $authorsManager;
     /**
@@ -116,7 +116,7 @@ class ZxaaaManager extends errorLogger
     }
 
     /**
-     * @param AuthorsService $authorsManager
+     * @param AuthorImportService $authorsManager
      */
     public function setAuthorsManager($authorsManager): void
     {
@@ -363,11 +363,8 @@ class ZxaaaManager extends errorLogger
                     exit;
                 }
 
-                if ($this->prodsService->importProdOld($prodInfo2, $this->origin)) {
-                    $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo2['title']);
-                }
+                $this->prodsService->importProdOld($prodInfo2, $this->origin);
+                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
             }
             $this->markProgress('end of prods index');
         }

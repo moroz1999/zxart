@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\UserPreferenceValue;
-use ZxArt\UserPreferences\Repositories\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
 
 #[AllowMockObjectsWithoutExpectations]
 class UserPreferenceValuesRepositoryTest extends TestCase

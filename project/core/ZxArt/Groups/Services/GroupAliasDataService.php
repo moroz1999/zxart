@@ -4,76 +4,100 @@ declare(strict_types=1);
 
 namespace ZxArt\Groups\Services;
 
-use groupAliasElement;
-use privilegesManager;
-use structureManager;
-use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
+use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
-use ZxArt\Shared\StructureType;
+use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupCommand;
+use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupHandler;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasCommand;
+use ZxArt\Groups\UseCases\DeleteGroupAliasHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasMemberCommand;
+use ZxArt\Groups\UseCases\DeleteGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\JoinGroupAliasesCommand;
+use ZxArt\Groups\UseCases\JoinGroupAliasesHandler;
+use ZxArt\Groups\UseCases\SetGroupAliasMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
+use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
 
 /**
- * Changes to a group alias requested through `/group-alias-data/`. Each change checks the
- * privilege of the matching legacy action and is recorded in the actions log.
+ * Changes to a group alias requested through its data endpoint, each one a use case
+ * in `ZxArt\Groups\UseCases`: it checks the privilege of the matching legacy action, runs in
+ * one transaction and is recorded in the actions log.
  *
  * @psalm-api
  */
 final readonly class GroupAliasDataService
 {
-    private const string DELETE_PRIVILEGE = 'publicDelete';
-    private const string CONVERT_TO_GROUP_PRIVILEGE = 'convertToGroup';
-
     public function __construct(
-        private structureManager $structureManager,
-        private privilegesManager $privilegesManager,
-        private ActionsLogService $actionsLogService,
-        private GroupsService $groupsService,
+        private CreateGroupAliasHandler $createGroupAliasHandler,
+        private UpdateGroupAliasHandler $updateGroupAliasHandler,
+        private DeleteGroupAliasHandler $deleteGroupAliasHandler,
+        private ConvertGroupAliasToGroupHandler $convertGroupAliasToGroupHandler,
+        private JoinGroupAliasesHandler $joinGroupAliasesHandler,
+        private SetGroupAliasMemberHandler $setGroupAliasMemberHandler,
+        private DeleteGroupAliasMemberHandler $deleteGroupAliasMemberHandler,
     ) {
     }
 
-    public function delete(int $aliasId): GroupAliasDataResultDto
+    /**
+     * @throws GroupAliasDataException
+     */
+    public function create(GroupAliasFieldsDto $fields): GroupAliasDataResultDto
     {
-        $alias = $this->getAlias($aliasId, self::DELETE_PRIVILEGE);
-        // logged first: the element data is gone after the deletion
-        $this->actionsLogService->log($alias, StructureType::GroupAlias, self::DELETE_PRIVILEGE);
-        $alias->deleteElementData();
-
-        return new GroupAliasDataResultDto(id: $aliasId);
+        return $this->createGroupAliasHandler->handle(new CreateGroupAliasCommand($fields));
     }
 
     /**
-     * Turns the group alias into a new group; the group alias itself is deleted.
+     * Changes the fields the DTO carries and leaves the others as they are.
+     *
+     * @throws GroupAliasDataException
+     */
+    public function update(int $aliasId, GroupAliasFieldsDto $fields): GroupAliasDataResultDto
+    {
+        return $this->updateGroupAliasHandler->handle(new UpdateGroupAliasCommand($aliasId, $fields));
+    }
+
+    /**
+     * @throws GroupAliasDataException
+     */
+    public function delete(int $aliasId): GroupAliasDataResultDto
+    {
+        return $this->deleteGroupAliasHandler->handle(new DeleteGroupAliasCommand($aliasId));
+    }
+
+    /**
+     * @throws GroupAliasDataException
      */
     public function convertToGroup(int $aliasId): GroupAliasDataResultDto
     {
-        $alias = $this->getAlias($aliasId, self::CONVERT_TO_GROUP_PRIVILEGE);
-        $group = $this->groupsService->convertGroupAliasToGroup($alias);
-        if ($group === null) {
-            throw new GroupAliasDataException('The group could not be created', 500);
-        }
-        $this->actionsLogService->log($alias, StructureType::GroupAlias, self::CONVERT_TO_GROUP_PRIVILEGE);
-
-        return new GroupAliasDataResultDto(id: $group->getId());
+        return $this->convertGroupAliasToGroupHandler->handle(new ConvertGroupAliasToGroupCommand($aliasId));
     }
 
-    private function getAlias(int $aliasId, string $privilege): groupAliasElement
+    /**
+     * @throws GroupAliasDataException
+     */
+    public function join(int $aliasId, int $joinedId): GroupAliasDataResultDto
     {
-        if ($aliasId <= 0) {
-            throw new GroupAliasDataException('Missing required group alias id', 400);
-        }
-        $alias = $this->structureManager->getElementById($aliasId);
-        if (!$alias instanceof groupAliasElement) {
-            throw new GroupAliasDataException('Group alias not found', 404);
-        }
-        $isAllowed = $this->privilegesManager->checkPrivilegesForAction(
-            $aliasId,
-            $privilege,
-            StructureType::GroupAlias->value,
-        ) === true;
-        if (!$isAllowed) {
-            throw new GroupAliasDataException('This group alias change is forbidden', 403);
-        }
+        return $this->joinGroupAliasesHandler->handle(new JoinGroupAliasesCommand($aliasId, $joinedId));
+    }
 
-        return $alias;
+    /**
+     * @param list<string> $roles none stands for an unknown role
+     * @throws GroupAliasDataException
+     */
+    public function setMember(int $aliasId, int $authorId, array $roles, ?int $startDate = null, ?int $endDate = null): GroupAliasDataResultDto
+    {
+        return $this->setGroupAliasMemberHandler->handle(new SetGroupAliasMemberCommand($aliasId, $authorId, $roles, $startDate, $endDate));
+    }
+
+    /**
+     * @throws GroupAliasDataException
+     */
+    public function deleteMember(int $aliasId, int $authorId): GroupAliasDataResultDto
+    {
+        return $this->deleteGroupAliasMemberHandler->handle(new DeleteGroupAliasMemberCommand($aliasId, $authorId));
     }
 }

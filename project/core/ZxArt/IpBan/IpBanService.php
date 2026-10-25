@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\IpBan;
 
 use Cache;
+use ZxArt\IpBan\Dbal\IpBanRepository;
 
 /**
  * Permanent IP ban service with Redis-backed cache (your Cache class).

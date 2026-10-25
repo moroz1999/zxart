@@ -271,6 +271,15 @@ abstract class structureElement implements DependencyInjectionContextInterface
     }
 
     /**
+     * Stores a new modification time, for a change kept outside the element's
+     * own data such as its authorship.
+     */
+    public function persistModificationTime(): void
+    {
+        $this->persistStructureData();
+    }
+
+    /**
      * Save all structure data into database and update id with generated information
      * Also generates a date of element creation and a date of last update
      */

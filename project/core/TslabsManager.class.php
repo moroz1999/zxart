@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Services\ProdsService;
@@ -38,7 +38,7 @@ class TslabsManager extends errorLogger
      */
     protected $prodsService;
     /**
-     * @var AuthorsService
+     * @var AuthorImportService
      */
     protected $authorsManager;
     /**
@@ -53,7 +53,7 @@ class TslabsManager extends errorLogger
     protected $rootUrl = 'https://prods.tslabs.info/';
 
     /**
-     * @param AuthorsService $authorsManager
+     * @param AuthorImportService $authorsManager
      */
     public function setAuthorsManager($authorsManager): void
     {
@@ -239,11 +239,8 @@ class TslabsManager extends errorLogger
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
                 $this->counter++;
-                if ($this->prodsService->importProdOld($prodInfo2, $this->origin)) {
-                    $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo2['title']);
-                }
+                $this->prodsService->importProdOld($prodInfo2, $this->origin);
+                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodInfo2['title']);
 //                if ($this->counter > 500) {
 //                    exit;
 //                }

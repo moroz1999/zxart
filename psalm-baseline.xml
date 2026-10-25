@@ -2345,7 +2345,7 @@
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/AuthorList/Repositories/AuthorListRepository.php">
+  <file src="project/core/ZxArt/AuthorList/Dbal/AuthorListRepository.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$authorsQuery->pluck('city')]]></code>
       <code><![CDATA[$authorsQuery->pluck('country')]]></code>
@@ -2596,12 +2596,12 @@
       <code><![CDATA[gatherAuthorNames]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Repositories/AuthorAliasesRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorAliasesRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Repositories/AuthorCollaboratorsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorCollaboratorsRepository.php">
     <InvalidArrayOffset>
       <code><![CDATA[$row['prods']]]></code>
     </InvalidArrayOffset>
@@ -2627,17 +2627,17 @@
       <code><![CDATA[$stats]]></code>
     </ReferenceConstraintViolation>
   </file>
-  <file src="project/core/ZxArt/Authors/Repositories/AuthorProdsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorProdsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Repositories/AuthorsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Repositories/AuthorshipRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorshipRepository.php">
     <MissingParamType>
       <code><![CDATA[$authorId]]></code>
     </MissingParamType>
@@ -3086,26 +3086,13 @@
     <ClassMustBeFinal>
       <code><![CDATA[AuthorsService]]></code>
     </ClassMustBeFinal>
-    <InvalidReturnStatement>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$resolved]]></code>
-      <code><![CDATA[$resolved]]></code>
-    </InvalidReturnStatement>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$author]]></code>
-      <code><![CDATA[$this->importIdOperator->getElementByImportId($importId, $origin, EntityType::AuthorAlias)]]></code>
-    </LessSpecificReturnStatement>
     <MissingOverrideAttribute>
       <code><![CDATA[protected function getLettersListMarker(string $type): string]]></code>
     </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[importAuthorAlias]]></code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$joinedAuthor->articles]]></code>
       <code><![CDATA[$mainAuthor->articles]]></code>
       <code><![CDATA[$zxProd->id]]></code>
-      <code><![CDATA[TranslitHelper::convert($firstLetter)]]></code>
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$record['elementId']]]></code>
@@ -3113,13 +3100,8 @@
       <code><![CDATA[$record['importId']]]></code>
       <code><![CDATA[$record['importOrigin']]]></code>
     </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$this->importedAuthorAliases[$origin->value][$importId]]]></code>
-      <code><![CDATA[$this->importedAuthors[$origin->value][$authorId]]]></code>
-    </MixedArrayAssignment>
     <MixedAssignment>
       <code><![CDATA[$aliasElements]]></code>
-      <code><![CDATA[$countryId]]></code>
       <code><![CDATA[$existingElements[]]]></code>
       <code><![CDATA[$joinedValue]]></code>
       <code><![CDATA[$record]]></code>
@@ -3131,10 +3113,6 @@
       <code><![CDATA[$zxProd->id]]></code>
       <code><![CDATA[$zxProd->id]]></code>
     </MixedPropertyFetch>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->importedAuthorAliases[$origin->value][$importId]]]></code>
-      <code><![CDATA[$this->importedAuthors[$origin->value][$authorId]]]></code>
-    </MixedReturnStatement>
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$type]]></code>
     </MoreSpecificImplementedParamType>
@@ -3143,44 +3121,24 @@
       <code><![CDATA[null]]></code>
     </NullArgument>
     <PossiblyInvalidArgument>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$resolved]]></code>
-      <code><![CDATA[$resolved]]></code>
       <code><![CDATA[$zxRelease->id]]></code>
     </PossiblyInvalidArgument>
     <PossiblyNullArgument>
-      <code><![CDATA[$authorId]]></code>
-      <code><![CDATA[$importId]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullArrayOffset>
-      <code><![CDATA[$this->importedAuthorAliases[$origin->value]]]></code>
-      <code><![CDATA[$this->importedAuthors[$origin->value]]]></code>
-    </PossiblyNullArrayOffset>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[getCountryId]]></code>
-    </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
-      <code><![CDATA[setForceUpdateRealName]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$columnRelations]]></code>
       <code><![CDATA[$groupsService]]></code>
     </PossiblyUnusedProperty>
     <PossiblyUnusedReturnValue>
-      <code><![CDATA[?authorElement]]></code>
-      <code><![CDATA[authorElement|authorAliasElement|null]]></code>
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
-    <RedundantCast>
-      <code><![CDATA[(string)$authorAlias->id]]></code>
-      <code><![CDATA[(string)$dto->id]]></code>
-    </RedundantCast>
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[$element]]></code>
     </RedundantConditionGivenDocblockType>
@@ -3188,10 +3146,6 @@
       <code><![CDATA[$letterId]]></code>
       <code><![CDATA[$letterId]]></code>
       <code><![CDATA[empty($joinedAuthor->zxTunesId)]]></code>
-      <code><![CDATA[empty($label->cityName)]]></code>
-      <code><![CDATA[empty($label->countryName)]]></code>
-      <code><![CDATA[empty($label->locationName)]]></code>
-      <code><![CDATA[empty($label->realName)]]></code>
       <code><![CDATA[empty($mainAuthor->zxTunesId)]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedMagicMethod>
@@ -3200,7 +3154,6 @@
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyAssignment>
-      <code><![CDATA[$mainAuthor->artCityId]]></code>
       <code><![CDATA[$mainAuthor->articles]]></code>
       <code><![CDATA[$mainAuthor->city]]></code>
       <code><![CDATA[$mainAuthor->country]]></code>
@@ -3210,14 +3163,12 @@
       <code><![CDATA[$mainAuthor->zxTunesId]]></code>
     </UndefinedMagicPropertyAssignment>
     <UndefinedMagicPropertyFetch>
-      <code><![CDATA[$joinedAuthor->artCityId]]></code>
       <code><![CDATA[$joinedAuthor->articles]]></code>
       <code><![CDATA[$joinedAuthor->city]]></code>
       <code><![CDATA[$joinedAuthor->country]]></code>
       <code><![CDATA[$joinedAuthor->email]]></code>
       <code><![CDATA[$joinedAuthor->site]]></code>
       <code><![CDATA[$joinedAuthor->wikiLink]]></code>
-      <code><![CDATA[$mainAuthor->artCityId]]></code>
       <code><![CDATA[$mainAuthor->articles]]></code>
       <code><![CDATA[$mainAuthor->city]]></code>
       <code><![CDATA[$mainAuthor->country]]></code>
@@ -3228,14 +3179,121 @@
     <UndefinedMethod>
       <code><![CDATA[getAliasElements]]></code>
     </UndefinedMethod>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[authorAliasElement|null]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="project/core/ZxArt/Authors/Services/ClaimApprovalService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Authors/Services/ImportedAuthorMerger.php">
+    <MixedAssignment>
+      <code><![CDATA[$countryId]]></code>
+    </MixedAssignment>
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[getCountryId]]></code>
+    </PossiblyUndefinedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($label->cityName)]]></code>
+      <code><![CDATA[empty($label->countryName)]]></code>
+      <code><![CDATA[empty($label->locationName)]]></code>
+      <code><![CDATA[empty($label->realName)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="project/core/ZxArt/Authors/Services/ImportedAuthorsFinder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$author]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementByImportId($importId, $origin, EntityType::AuthorAlias)]]></code>
+    </LessSpecificReturnStatement>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->aliases[$origin->value][$importId]]]></code>
+      <code><![CDATA[$this->authors[$origin->value][$authorId]]]></code>
+    </MixedReturnStatement>
+    <PossiblyNullArgument>
+      <code><![CDATA[$authorId]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullArrayOffset>
+      <code><![CDATA[$this->authors[$origin->value]]]></code>
+    </PossiblyNullArrayOffset>
+  </file>
+  <file src="project/core/ZxArt/Authors/UseCases/ImportAuthorAliasHandler.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$element]]></code>
+    </PossiblyInvalidArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$importId]]></code>
+    </PossiblyNullArgument>
+    <RedundantCast>
+      <code><![CDATA[(string)$authorAlias->id]]></code>
+    </RedundantCast>
+    <UnnecessaryVarAnnotation>
+      <code><![CDATA[authorAliasElement|null]]></code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="project/core/ZxArt/Authors/UseCases/ImportAuthorHandler.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->transactionRunner->run(function () use ($command, $label, $origin, $policy, $authorId) {
+            $element = $this->importedAuthorsFinder->getAuthorByLabel($label, $origin);
+
+            if ($element === null) {
+                if ($resolved = $this->labelResolver->resolve($label)) {
+                    $element = $resolved;
+                    $this->importIdOperator->saveImportId($element->getId(), $authorId, $origin, EntityType::Author);
+                    $this->importedAuthorMerger->merge($element, $label, $origin, $policy);
+                } elseif ($command->createNew) {
+                    $this->createAuthor($label, $origin, $policy);
+                }
+            } else {
+                $this->importedAuthorMerger->merge($element, $label, $origin, $policy);
+            }
+
+            $this->importedAuthorsFinder->rememberAuthor($origin, $authorId, $element);
+            return $element;
+        })]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[?authorElement]]></code>
+    </InvalidReturnType>
+    <MixedArgument>
+      <code><![CDATA[TranslitHelper::convert($firstLetter)]]></code>
+    </MixedArgument>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$element]]></code>
+    </PossiblyInvalidArgument>
+    <RedundantCast>
+      <code><![CDATA[(string)$dto->id]]></code>
+    </RedundantCast>
+  </file>
+  <file src="project/core/ZxArt/Authors/UseCases/ImportAuthorLabelHandler.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->transactionRunner->run(function () use ($label, $origin, $policy, $authorId) {
+            $element = $this->importedAuthorsFinder->getAuthorByLabel($label, $origin);
+
+            if ($element === null) {
+                $element = $this->importedAuthorsFinder->getAuthorAliasByLabel($label, $origin);
+            }
+            if ($element === null) {
+                $resolved = $this->labelResolver->resolve($label);
+                if ($resolved && $resolved->structureType === 'author') {
+                    $this->importedAuthorMerger->merge($resolved, $label, $origin, $policy);
+                    $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
+                    return $resolved;
+                }
+                if ($resolved && $resolved->structureType === 'authorAlias') {
+                    $this->importedAuthorAliasMerger->merge($resolved, $label, $origin);
+                    $this->importIdOperator->saveImportId($resolved->getId(), $authorId, $origin, EntityType::Author);
+                    return $resolved;
+                }
+            }
+            return $this->importAuthorHandler->handle(new ImportAuthorCommand($label, $origin, $policy));
+        })]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[authorElement|authorAliasElement|null]]></code>
+    </InvalidReturnType>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$resolved]]></code>
+      <code><![CDATA[$resolved]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="project/core/ZxArt/Cache/Services/CacheCleanupService.php">
     <ClassMustBeFinal>
@@ -3405,7 +3463,7 @@
       <code><![CDATA[CommentOperationException]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/Comments/Repositories/CommentsRepository.php">
+  <file src="project/core/ZxArt/Comments/Dbal/CommentsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -5534,7 +5592,7 @@
       <code><![CDATA[(string)$element->structureType]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Email/DomainBanRepository.php">
+  <file src="project/core/ZxArt/Email/Dbal/DomainBanRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -5928,12 +5986,12 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Geo/Repositories/GeoManageRepository.php">
+  <file src="project/core/ZxArt/Geo/Dbal/GeoManageRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Geo/Repositories/GeoRepository.php">
+  <file src="project/core/ZxArt/Geo/Dbal/GeoRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6104,7 +6162,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/GroupList/Repositories/GroupListRepository.php">
+  <file src="project/core/ZxArt/GroupList/Dbal/GroupListRepository.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$groupsQuery->pluck('city')]]></code>
       <code><![CDATA[$groupsQuery->pluck('country')]]></code>
@@ -6333,7 +6391,7 @@
       <code><![CDATA[getGroupTypes]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Repositories/GroupActivityRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupActivityRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6341,22 +6399,22 @@
       <code><![CDATA[(int)$row['commentId']]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Groups/Repositories/GroupAliasesRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupAliasesRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Repositories/GroupCollaboratorsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupCollaboratorsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Repositories/GroupProdsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupProdsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Repositories/GroupsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6648,11 +6706,6 @@
     <ClassMustBeFinal>
       <code><![CDATA[GroupsService]]></code>
     </ClassMustBeFinal>
-    <InvalidScalarArgument>
-      <code><![CDATA[$element->id]]></code>
-      <code><![CDATA[$element->id]]></code>
-      <code><![CDATA[$element->id]]></code>
-    </InvalidScalarArgument>
     <LessSpecificReturnStatement>
       <code><![CDATA[$element]]></code>
       <code><![CDATA[$element]]></code>
@@ -6681,9 +6734,7 @@
     </MixedArrayAccess>
     <MixedAssignment>
       <code><![CDATA[$aliasElements]]></code>
-      <code><![CDATA[$countryId]]></code>
       <code><![CDATA[$existingAuthorIds[]]]></code>
-      <code><![CDATA[$groupId]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
@@ -6729,16 +6780,7 @@
     <NullArgument>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <PossiblyInvalidPropertyAssignmentValue>
-      <code><![CDATA[$locationElement->id]]></code>
-      <code><![CDATA[$locationElement->id]]></code>
-      <code><![CDATA[$locationElement->id]]></code>
-      <code><![CDATA[$locationElement->id]]></code>
-      <code><![CDATA[$locationElement->id]]></code>
-    </PossiblyInvalidPropertyAssignmentValue>
     <PossiblyNullArgument>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$label->id]]></code>
       <code><![CDATA[$label->id]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
@@ -6748,9 +6790,6 @@
       <code><![CDATA[$targetElement]]></code>
       <code><![CDATA[$targetElement]]></code>
     </PossiblyNullPropertyAssignment>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[getCountryId]]></code>
-    </PossiblyUndefinedMethod>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6760,13 +6799,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$parentGroups]]></code>
-    </PropertyTypeCoercion>
-    <RedundantCast>
-      <code><![CDATA[(string)$dto->id]]></code>
-      <code><![CDATA[(string)$dto->id]]></code>
-    </RedundantCast>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$letterId = $this->getLetterId($title)]]></code>
       <code><![CDATA[$letterId = $this->getLetterId($title)]]></code>
@@ -6779,11 +6811,9 @@
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyAssignment>
       <code><![CDATA[$aliasElement->groupId]]></code>
-      <code><![CDATA[$element->groupId]]></code>
       <code><![CDATA[$targetElement->groupId]]></code>
     </UndefinedMagicPropertyAssignment>
     <UndefinedMagicPropertyFetch>
-      <code><![CDATA[$element->groupId]]></code>
       <code><![CDATA[$groupAliasElement->city]]></code>
       <code><![CDATA[$groupAliasElement->country]]></code>
       <code><![CDATA[$joinedElement->city]]></code>
@@ -6807,6 +6837,48 @@
       <code><![CDATA[getAliasElements]]></code>
       <code><![CDATA[getGroupElement]]></code>
     </UndefinedMethod>
+  </file>
+  <file src="project/core/ZxArt/Groups/Services/ImportedGroupAliasMerger.php">
+    <UndefinedMagicPropertyAssignment>
+      <code><![CDATA[$element->groupId]]></code>
+    </UndefinedMagicPropertyAssignment>
+    <UndefinedMagicPropertyFetch>
+      <code><![CDATA[$element->groupId]]></code>
+    </UndefinedMagicPropertyFetch>
+  </file>
+  <file src="project/core/ZxArt/Groups/Services/ImportedGroupMerger.php">
+    <MixedAssignment>
+      <code><![CDATA[$countryId]]></code>
+      <code><![CDATA[$groupId]]></code>
+    </MixedAssignment>
+    <PossiblyInvalidPropertyAssignmentValue>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+      <code><![CDATA[$locationElement->id]]></code>
+    </PossiblyInvalidPropertyAssignmentValue>
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[getCountryId]]></code>
+    </PossiblyUndefinedMethod>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$parentGroups]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="project/core/ZxArt/Groups/UseCases/ImportGroupHandler.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+      <code><![CDATA[$element->id]]></code>
+    </InvalidScalarArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$element]]></code>
+      <code><![CDATA[$label->id]]></code>
+    </PossiblyNullArgument>
+    <RedundantCast>
+      <code><![CDATA[(string)$dto->id]]></code>
+      <code><![CDATA[(string)$dto->id]]></code>
+    </RedundantCast>
   </file>
   <file src="project/core/ZxArt/Hardware/Dto/HardwareDeleteDto.php">
     <ClassMustBeFinal>
@@ -6876,7 +6948,7 @@
       <code><![CDATA[itemsToGroups]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Hardware/Repositories/HardwareRepository.php">
+  <file src="project/core/ZxArt/Hardware/Dbal/HardwareRepository.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[array_map(
             static fn(array $row): array => [
@@ -6927,7 +6999,7 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/Hardware/Repositories/StorageRepository.php">
+  <file src="project/core/ZxArt/Hardware/Dbal/StorageRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -7016,6 +7088,16 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->id]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="project/core/ZxArt/Import/Labels/ImportedLabelsImporter.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$label->id]]></code>
+      <code><![CDATA[$label->id]]></code>
+    </PossiblyNullArgument>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Import/Labels/Label.php">
     <InvalidArgument>
@@ -7457,7 +7539,9 @@
       <code><![CDATA[isset($a['categories']) ? array_values((array)$a['categories']) : null]]></code>
       <code><![CDATA[isset($a['compilationItems']) ? array_values((array)$a['compilationItems']) : null]]></code>
       <code><![CDATA[isset($a['groups']) ? array_values((array)$a['groups']) : null]]></code>
+      <code><![CDATA[isset($a['ids']) ? (array)$a['ids'] : null]]></code>
       <code><![CDATA[isset($a['images']) ? array_values((array)$a['images']) : null]]></code>
+      <code><![CDATA[isset($a['importIds']) ? (array)$a['importIds'] : null]]></code>
       <code><![CDATA[isset($a['inlayImages']) ? array_values((array)$a['inlayImages']) : null]]></code>
       <code><![CDATA[isset($a['language']) ? (array)$a['language'] : null]]></code>
       <code><![CDATA[isset($a['publishers']) ? array_values((array)$a['publishers']) : null]]></code>
@@ -7512,7 +7596,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Import/Repositories/ImportOriginsRepository.php">
+  <file src="project/core/ZxArt/Import/Dbal/ImportOriginsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8491,7 +8575,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/IpBan/IpBanRepository.php">
+  <file src="project/core/ZxArt/IpBan/Dbal/IpBanRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8595,7 +8679,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/MusicSearch/Repositories/MusicSearchRepository.php">
+  <file src="project/core/ZxArt/MusicSearch/Dbal/MusicSearchRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8777,7 +8861,7 @@
       <code><![CDATA[(string)$element->title]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Parties/Repositories/PartiesRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartiesRepository.php">
     <InvalidArgument>
       <code><![CDATA[static function ($join) use ($year) {
                     $join->on('structure_links.childStructureId', '=', 'module_generic.id')
@@ -8862,7 +8946,7 @@
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/Parties/Repositories/PartyActivityRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartyActivityRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8870,7 +8954,7 @@
       <code><![CDATA[(int)$row['commentId']]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Parties/Repositories/PartyAuthorsRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartyAuthorsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -9209,7 +9293,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/PictureSearch/Repositories/PictureSearchRepository.php">
+  <file src="project/core/ZxArt/PictureSearch/Dbal/PictureSearchRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -9395,7 +9479,7 @@
       <code><![CDATA[$element->views]]></code>
     </UndefinedMagicPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Pictures/Repositories/PicturesRepository.php">
+  <file src="project/core/ZxArt/Pictures/Dbal/PicturesRepository.php">
     <InvalidArgument>
       <code><![CDATA[fn($join) => $join
                     ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
@@ -9974,7 +10058,7 @@
       <code><![CDATA[$playlist->userId]]></code>
     </UndefinedMagicPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Playlists/Repositories/PlaylistContentsRepository.php">
+  <file src="project/core/ZxArt/Playlists/Dbal/PlaylistContentsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -10142,7 +10226,7 @@
       <code><![CDATA[$press2->title]]></code>
     </MixedPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Press/Repositories/PressArticleRepository.php">
+  <file src="project/core/ZxArt/Press/Dbal/PressArticleRepository.php">
     <MixedAssignment>
       <code><![CDATA[$content]]></code>
     </MixedAssignment>
@@ -10901,7 +10985,7 @@
       <code><![CDATA[$userVote !== null && $userVote !== false]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Prods/Repositories/ProdHardwareRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdHardwareRepository.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[array_map(static fn(mixed $code): string => (string)$code, $codes)]]></code>
       <code><![CDATA[array_map(static fn(mixed $code): string => (string)$code, $codes)]]></code>
@@ -10914,12 +10998,12 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Prods/Repositories/ProdTabsRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdTabsRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Prods/Repositories/ProdsRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdsRepository.php">
     <InvalidArgument>
       <code><![CDATA[fn($join) => $join
                     ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
@@ -11610,6 +11694,77 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Prods/Services/ImportedProdMerger.php">
+    <DocblockTypeContradiction>
+      <code><![CDATA[$element->partyplace !== $dto->party->place]]></code>
+      <code><![CDATA[$importItemId === null]]></code>
+    </DocblockTypeContradiction>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$dto->party->place]]></code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidScalarArgument>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$id]]></code>
+    </InvalidScalarArgument>
+    <MixedAssignment>
+      <code><![CDATA[$authorsInfo]]></code>
+    </MixedAssignment>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[array_unique($dto->hardwareRequired)]]></code>
+    </MixedPropertyTypeCoercion>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string)$importOrigin]]></code>
+    </RedundantCastGivenDocblockType>
+    <RedundantCondition>
+      <code><![CDATA[$dto->party->title]]></code>
+    </RedundantCondition>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$this->importIdOperator->getElementIdByImportId($id, $knownOrigin, EntityType::Prod)]]></code>
+      <code><![CDATA[$groupId = $this->importIdOperator->getElementIdByImportId($importGroupId, $origin, EntityType::Group)]]></code>
+      <code><![CDATA[$partyTitle]]></code>
+      <code><![CDATA[$partyYear]]></code>
+      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)]]></code>
+      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)]]></code>
+      <code><![CDATA[$publisherId]]></code>
+      <code><![CDATA[$releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Release)]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)]]></code>
+      <code><![CDATA[empty($dto->altTitle)]]></code>
+      <code><![CDATA[empty($dto->articles)]]></code>
+      <code><![CDATA[empty($dto->categories)]]></code>
+      <code><![CDATA[empty($dto->compilationItems)]]></code>
+      <code><![CDATA[empty($dto->compo)]]></code>
+      <code><![CDATA[empty($dto->description)]]></code>
+      <code><![CDATA[empty($dto->directCategories)]]></code>
+      <code><![CDATA[empty($dto->externalLink)]]></code>
+      <code><![CDATA[empty($dto->groups)]]></code>
+      <code><![CDATA[empty($dto->hardwareRequired)]]></code>
+      <code><![CDATA[empty($dto->images)]]></code>
+      <code><![CDATA[empty($dto->importIds)]]></code>
+      <code><![CDATA[empty($dto->inlayImages)]]></code>
+      <code><![CDATA[empty($dto->labels)]]></code>
+      <code><![CDATA[empty($dto->languages)]]></code>
+      <code><![CDATA[empty($dto->maps)]]></code>
+      <code><![CDATA[empty($dto->party->place)]]></code>
+      <code><![CDATA[empty($dto->party->place)]]></code>
+      <code><![CDATA[empty($dto->publishers)]]></code>
+      <code><![CDATA[empty($dto->rzx)]]></code>
+      <code><![CDATA[empty($dto->seriesProdIds)]]></code>
+      <code><![CDATA[empty($dto->undetermined)]]></code>
+      <code><![CDATA[empty($dto->year)]]></code>
+      <code><![CDATA[empty($dto->youtubeId)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <TypeDoesNotContainType>
+      <code><![CDATA[null]]></code>
+    </TypeDoesNotContainType>
+    <UndefinedMagicPropertyAssignment>
+      <code><![CDATA[$articleElement->content]]></code>
+      <code><![CDATA[$articleElement->externalLink]]></code>
+      <code><![CDATA[$articleElement->introduction]]></code>
+    </UndefinedMagicPropertyAssignment>
+  </file>
   <file src="project/core/ZxArt/Prods/Services/ProdHardwareMigrationService.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[array_values($shared ?? [])]]></code>
@@ -11634,99 +11789,41 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="project/core/ZxArt/Prods/Services/ProdsService.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$fileElement]]></code>
-      <code><![CDATA[$fileElement]]></code>
-    </ArgumentTypeCoercion>
     <ClassMustBeFinal>
       <code><![CDATA[ProdsService]]></code>
     </ClassMustBeFinal>
     <DeprecatedMethod>
       <code><![CDATA[ProdImportDTO::fromArray($prodInfo)]]></code>
     </DeprecatedMethod>
-    <DocblockTypeContradiction>
-      <code><![CDATA[$element->instructions === null]]></code>
-      <code><![CDATA[$element->instructions === null]]></code>
-      <code><![CDATA[$element->partyplace !== $dto->party->place]]></code>
-      <code><![CDATA[$importItemId === null]]></code>
-    </DocblockTypeContradiction>
     <InvalidNullableReturnType>
       <code><![CDATA[bool|structureElement]]></code>
     </InvalidNullableReturnType>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$dto->party->place]]></code>
-      <code><![CDATA[$element->getPersistedId()]]></code>
-      <code><![CDATA[$element->getPersistedId()]]></code>
-    </InvalidPropertyAssignmentValue>
     <InvalidScalarArgument>
       <code><![CDATA[$mainZxProd->id]]></code>
     </InvalidScalarArgument>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$foundReleaseId ? $this->structureManager->getElementById($foundReleaseId) : null]]></code>
-    </LessSpecificReturnStatement>
     <MixedArgument>
       <code><![CDATA[$data['authors']]]></code>
-      <code><![CDATA[$existingFile->fileName]]></code>
-      <code><![CDATA[$fileUrl]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$orderDirection]]></code>
-      <code><![CDATA[$path]]></code>
-      <code><![CDATA[$path]]></code>
-      <code><![CDATA[$path]]></code>
-      <code><![CDATA[$record['authorId']]]></code>
-      <code><![CDATA[$record['roles']]]></code>
-      <code><![CDATA[$record['type']]]></code>
       <code><![CDATA[$string]]></code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion>
-      <code><![CDATA[$foundReleaseId]]></code>
-    </MixedArgumentTypeCoercion>
     <MixedArrayAccess>
       <code><![CDATA[$record['authorId']]]></code>
-      <code><![CDATA[$record['authorId']]]></code>
-      <code><![CDATA[$record['elementId']]]></code>
       <code><![CDATA[$record['id']]]></code>
-      <code><![CDATA[$record['md5']]]></code>
-      <code><![CDATA[$record['roles']]]></code>
-      <code><![CDATA[$record['type']]]></code>
     </MixedArrayAccess>
-    <MixedArrayOffset>
-      <code><![CDATA[$index[$record['elementId']]]]></code>
-      <code><![CDATA[$index[$record['elementId']][$record['md5']]]]></code>
-    </MixedArrayOffset>
     <MixedAssignment>
-      <code><![CDATA[$authorsInfo]]></code>
       <code><![CDATA[$categoriesIds]]></code>
       <code><![CDATA[$categoryId]]></code>
       <code><![CDATA[$criteria]]></code>
-      <code><![CDATA[$destinationFolder]]></code>
-      <code><![CDATA[$destinationFolder]]></code>
       <code><![CDATA[$existingAuthorIds[]]]></code>
-      <code><![CDATA[$existingFile]]></code>
-      <code><![CDATA[$fileUrl]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$order]]></code>
       <code><![CDATA[$orderDirection]]></code>
-      <code><![CDATA[$path]]></code>
       <code><![CDATA[$property]]></code>
       <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
       <code><![CDATA[$string]]></code>
-      <code><![CDATA[$uploadsPath]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -11734,49 +11831,19 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getFilePath]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$destinationFolder]]></code>
-      <code><![CDATA[$destinationFolder]]></code>
-      <code><![CDATA[$uploadsPath]]></code>
-    </MixedOperand>
-    <MixedPropertyFetch>
-      <code><![CDATA[$existingFile->fileName]]></code>
-    </MixedPropertyFetch>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[array_unique($dto->hardwareRequired)]]></code>
-    </MixedPropertyTypeCoercion>
-    <MoreSpecificReturnType>
-      <code><![CDATA[?zxProdElement]]></code>
-      <code><![CDATA[?zxReleaseElement]]></code>
-      <code><![CDATA[bool|zxReleaseElement]]></code>
-      <code><![CDATA[bool|zxReleaseElement]]></code>
-    </MoreSpecificReturnType>
     <NullArgument>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullArgument>
     <NullableReturnStatement>
-      <code><![CDATA[$element]]></code>
       <code><![CDATA[$newProdElement]]></code>
     </NullableReturnStatement>
     <PossiblyNullArgument>
-      <code><![CDATA[$label->id]]></code>
-      <code><![CDATA[$label->id]]></code>
-      <code><![CDATA[$label->id]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
       <code><![CDATA[$link->type]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullOperand>
-      <code><![CDATA[$info['extension']]]></code>
-    </PossiblyNullOperand>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$info['extension']]]></code>
-    </PossiblyUndefinedArrayOffset>
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
       <code><![CDATA[setForceUpdatePublishers]]></code>
@@ -11784,7 +11851,6 @@
       <code><![CDATA[setForceUpdateReleaseFiles]]></code>
       <code><![CDATA[setForceUpdateTitles]]></code>
       <code><![CDATA[setForceUpdateYear]]></code>
-      <code><![CDATA[setPathsManager]]></code>
       <code><![CDATA[setResizeImages]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
@@ -11794,87 +11860,12 @@
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
     <RedundantCondition>
-      <code><![CDATA[$dto->party->title]]></code>
       <code><![CDATA[$mainZxProd]]></code>
-      <code><![CDATA[$path]]></code>
     </RedundantCondition>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[!$category]]></code>
-      <code><![CDATA[!$dto->fileUrl]]></code>
-      <code><![CDATA[!$element->description]]></code>
-      <code><![CDATA[!$path]]></code>
-      <code><![CDATA[!$path]]></code>
-      <code><![CDATA[!$this->importIdOperator->getElementIdByImportId($id, $knownOrigin, EntityType::Prod)]]></code>
-      <code><![CDATA[$categoryId = $this->importIdOperator->getElementIdByImportId($importCategoryId, $origin, EntityType::Category)]]></code>
-      <code><![CDATA[$foundReleaseId]]></code>
-      <code><![CDATA[$groupId = $this->importIdOperator->getElementIdByImportId($importGroupId, $origin, EntityType::Group)]]></code>
-      <code><![CDATA[$mimeType = mime_content_type($filePath)]]></code>
-      <code><![CDATA[$partyTitle]]></code>
-      <code><![CDATA[$partyYear]]></code>
-      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)]]></code>
-      <code><![CDATA[$prodId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Prod)]]></code>
-      <code><![CDATA[$publisherId]]></code>
-      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Author)]]></code>
-      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)]]></code>
-      <code><![CDATA[$releaseId = $this->importIdOperator->getElementIdByImportId($importItemId, $origin, EntityType::Release)]]></code>
-      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)]]></code>
-      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Author)]]></code>
-      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Group)]]></code>
-      <code><![CDATA[empty($dto->altTitle)]]></code>
-      <code><![CDATA[empty($dto->articles)]]></code>
-      <code><![CDATA[empty($dto->categories)]]></code>
-      <code><![CDATA[empty($dto->compilationItems)]]></code>
-      <code><![CDATA[empty($dto->compo)]]></code>
-      <code><![CDATA[empty($dto->description)]]></code>
-      <code><![CDATA[empty($dto->description)]]></code>
-      <code><![CDATA[empty($dto->directCategories)]]></code>
-      <code><![CDATA[empty($dto->directCategories)]]></code>
-      <code><![CDATA[empty($dto->externalLink)]]></code>
-      <code><![CDATA[empty($dto->fileName)]]></code>
-      <code><![CDATA[empty($dto->filePath)]]></code>
-      <code><![CDATA[empty($dto->fileUrl)]]></code>
-      <code><![CDATA[empty($dto->groups)]]></code>
-      <code><![CDATA[empty($dto->hardwareRequired)]]></code>
-      <code><![CDATA[empty($dto->hardwareRequired)]]></code>
-      <code><![CDATA[empty($dto->images)]]></code>
-      <code><![CDATA[empty($dto->importIds)]]></code>
-      <code><![CDATA[empty($dto->inlayImages)]]></code>
-      <code><![CDATA[empty($dto->labels)]]></code>
-      <code><![CDATA[empty($dto->labels)]]></code>
-      <code><![CDATA[empty($dto->languages)]]></code>
-      <code><![CDATA[empty($dto->languages)]]></code>
-      <code><![CDATA[empty($dto->maps)]]></code>
-      <code><![CDATA[empty($dto->md5)]]></code>
-      <code><![CDATA[empty($dto->party->place)]]></code>
-      <code><![CDATA[empty($dto->party->place)]]></code>
-      <code><![CDATA[empty($dto->publishers)]]></code>
-      <code><![CDATA[empty($dto->releaseType)]]></code>
-      <code><![CDATA[empty($dto->rzx)]]></code>
-      <code><![CDATA[empty($dto->seriesProdIds)]]></code>
-      <code><![CDATA[empty($dto->undetermined)]]></code>
-      <code><![CDATA[empty($dto->undetermined)]]></code>
-      <code><![CDATA[empty($dto->version)]]></code>
-      <code><![CDATA[empty($dto->year)]]></code>
-      <code><![CDATA[empty($dto->year)]]></code>
-      <code><![CDATA[empty($dto->youtubeId)]]></code>
-      <code><![CDATA[empty($info['extension'])]]></code>
-      <code><![CDATA[empty($prod->releases)]]></code>
-    </RiskyTruthyFalsyComparison>
-    <TypeDoesNotContainType>
-      <code><![CDATA[null]]></code>
-    </TypeDoesNotContainType>
     <UndefinedMagicMethod>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
     <UndefinedMagicPropertyAssignment>
-      <code><![CDATA[$articleElement->content]]></code>
-      <code><![CDATA[$articleElement->externalLink]]></code>
-      <code><![CDATA[$articleElement->introduction]]></code>
-      <code><![CDATA[$fileElement->author]]></code>
-      <code><![CDATA[$fileElement->file]]></code>
-      <code><![CDATA[$fileElement->fileName]]></code>
       <code><![CDATA[$mainZxProd->compo]]></code>
       <code><![CDATA[$mainZxProd->denyComments]]></code>
       <code><![CDATA[$mainZxProd->denyVoting]]></code>
@@ -11917,7 +11908,6 @@
       <code><![CDATA[recalculate]]></code>
     </UndefinedMethod>
     <UnusedForeachValue>
-      <code><![CDATA[$md5Index]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
@@ -11925,11 +11915,8 @@
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </UnusedForeachValue>
-    <UnusedReturnValue>
-      <code><![CDATA[bool|zxReleaseElement]]></code>
-    </UnusedReturnValue>
   </file>
-  <file src="project/core/ZxArt/Queue/QueueRepository.php">
+  <file src="project/core/ZxArt/Queue/Dbal/QueueRepository.php">
     <ClassMustBeFinal>
       <code><![CDATA[QueueRepository]]></code>
     </ClassMustBeFinal>
@@ -12440,7 +12427,7 @@
       <code><![CDATA[(float)$element->votes]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Releases/Repositories/ReleasesRepository.php">
+  <file src="project/core/ZxArt/Releases/Dbal/ReleasesRepository.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$this->db->table(self::TABLE . ' AS releases')
             ->select('releases.id')
@@ -12637,10 +12624,82 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
+  <file src="project/core/ZxArt/Releases/Services/ImportedReleaseMerger.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$element->getPersistedId()]]></code>
+      <code><![CDATA[$element->getPersistedId()]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MixedAssignment>
+      <code><![CDATA[$destinationFolder]]></code>
+    </MixedAssignment>
+    <MixedOperand>
+      <code><![CDATA[$destinationFolder]]></code>
+    </MixedOperand>
+    <PossiblyNullOperand>
+      <code><![CDATA[$info['extension']]]></code>
+    </PossiblyNullOperand>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$info['extension']]]></code>
+    </PossiblyUndefinedArrayOffset>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$element->description]]></code>
+      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Author)]]></code>
+      <code><![CDATA[$publisherId = $this->importIdOperator->getElementIdByImportId($importPublisherId, $origin, EntityType::Group)]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Author)]]></code>
+      <code><![CDATA[$this->importIdOperator->getElementIdByImportId($undeterminedId, $origin, EntityType::Group)]]></code>
+      <code><![CDATA[empty($dto->description)]]></code>
+      <code><![CDATA[empty($dto->fileName)]]></code>
+      <code><![CDATA[empty($dto->filePath)]]></code>
+      <code><![CDATA[empty($dto->fileUrl)]]></code>
+      <code><![CDATA[empty($dto->hardwareRequired)]]></code>
+      <code><![CDATA[empty($dto->labels)]]></code>
+      <code><![CDATA[empty($dto->languages)]]></code>
+      <code><![CDATA[empty($dto->releaseType)]]></code>
+      <code><![CDATA[empty($dto->undetermined)]]></code>
+      <code><![CDATA[empty($dto->version)]]></code>
+      <code><![CDATA[empty($dto->year)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
   <file src="project/core/ZxArt/Releases/Services/ReleaseBatchCreateService.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
+  </file>
+  <file src="project/core/ZxArt/Releases/Services/ReleaseByFilesFinder.php">
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$foundReleaseId]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess>
+      <code><![CDATA[$record['elementId']]]></code>
+      <code><![CDATA[$record['md5']]]></code>
+    </MixedArrayAccess>
+    <MixedArrayOffset>
+      <code><![CDATA[$index[$record['elementId']]]]></code>
+      <code><![CDATA[$index[$record['elementId']][$record['md5']]]]></code>
+    </MixedArrayOffset>
+    <MixedAssignment>
+      <code><![CDATA[$record]]></code>
+    </MixedAssignment>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$dto->fileUrl]]></code>
+      <code><![CDATA[!$path]]></code>
+      <code><![CDATA[!$path]]></code>
+      <code><![CDATA[$foundReleaseId]]></code>
+      <code><![CDATA[empty($dto->md5)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UndefinedMagicMethod>
+      <code><![CDATA[$record]]></code>
+      <code><![CDATA[$record]]></code>
+    </UndefinedMagicMethod>
+    <UnusedForeachValue>
+      <code><![CDATA[$md5Index]]></code>
+    </UnusedForeachValue>
   </file>
   <file src="project/core/ZxArt/Releases/Services/ReleaseDetailsService.php">
     <ClassMustBeFinal>
@@ -13243,7 +13302,7 @@
       <code><![CDATA[$years]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/Stats/Repositories/StatsRepository.php">
+  <file src="project/core/ZxArt/Stats/Dbal/StatsRepository.php">
     <ImplicitToStringCast>
       <code><![CDATA[$this->db->raw($votesHistoryTable . ' FORCE INDEX (' . self::VOTES_HISTORY_USER_INDEX . ')')]]></code>
     </ImplicitToStringCast>
@@ -13641,7 +13700,7 @@
       <code><![CDATA[TagListItemDto]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/TagsList/Repositories/TagsListRepository.php">
+  <file src="project/core/ZxArt/TagsList/Dbal/TagsListRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -13798,7 +13857,7 @@
       <code><![CDATA[TuneDetailsException]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/Tunes/Repositories/TunesRepository.php">
+  <file src="project/core/ZxArt/Tunes/Dbal/TunesRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -14076,7 +14135,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/UserPreferences/Repositories/PreferencesRepository.php">
+  <file src="project/core/ZxArt/UserPreferences/Dbal/PreferencesRepository.php">
     <MixedArgument>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
@@ -14098,7 +14157,7 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/UserPreferences/Repositories/UserPreferenceValuesRepository.php">
+  <file src="project/core/ZxArt/UserPreferences/Dbal/UserPreferenceValuesRepository.php">
     <InvalidArgument>
       <code><![CDATA[$preferenceId]]></code>
       <code><![CDATA[$userId]]></code>
@@ -14414,7 +14473,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/ZxProdCategories/Repositories/CategoryManageRepository.php">
+  <file src="project/core/ZxArt/ZxProdCategories/Dbal/CategoryManageRepository.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -40280,6 +40339,7 @@
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$action]]></code>
+      <code><![CDATA[$action]]></code>
       <code><![CDATA[$actionName]]></code>
       <code><![CDATA[$elementID]]></code>
       <code><![CDATA[$elementId]]></code>
@@ -40288,7 +40348,9 @@
       <code><![CDATA[$elementId]]></code>
       <code><![CDATA[$elementId]]></code>
       <code><![CDATA[$elementId]]></code>
+      <code><![CDATA[$elementId]]></code>
       <code><![CDATA[$idList]]></code>
+      <code><![CDATA[$module]]></code>
       <code><![CDATA[$module]]></code>
       <code><![CDATA[$module]]></code>
       <code><![CDATA[$module]]></code>
@@ -40301,6 +40363,8 @@
       <code><![CDATA[$targetId]]></code>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$userId]]></code>
       <code><![CDATA[$userId]]></code>
       <code><![CDATA[$userId]]></code>
     </MissingParamType>
@@ -40346,7 +40410,14 @@
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module][$action]]]></code>
       <code><![CDATA[$this->privileges[$oldId]]]></code>
       <code><![CDATA[$this->privileges[$parentID]]]></code>
       <code><![CDATA[$userPrivileges[$elementId]]]></code>
@@ -40356,8 +40427,11 @@
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType][$actionName]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module][$action]]]></code>
       <code><![CDATA[$this->privileges[$newId]]]></code>
     </MixedArrayAssignment>
     <MixedArrayOffset>
@@ -40380,12 +40454,24 @@
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
+      <code><![CDATA[$this->privileges[$elementId]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType][$actionName]]]></code>
       <code><![CDATA[$this->privileges[$elementId][$elementType][$actionName]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module][$action]]]></code>
+      <code><![CDATA[$this->privileges[$elementId][$module][$action]]]></code>
       <code><![CDATA[$this->privileges[$newId]]]></code>
       <code><![CDATA[$this->privileges[$oldId]]]></code>
       <code><![CDATA[$this->privileges[$oldId]]]></code>

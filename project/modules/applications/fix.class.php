@@ -7,7 +7,7 @@ use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueStatus;

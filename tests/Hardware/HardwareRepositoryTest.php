@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Hardware\Repositories\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareRepository;
 
 /**
  * The repository's job is to hand the service typed rows.

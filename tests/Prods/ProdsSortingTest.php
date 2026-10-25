@@ -11,23 +11,14 @@ use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Illuminate\Database\Query\Processors\MySqlProcessor;
 use LanguagesManager;
 use linksManager;
-use App\Paths\PathsManager;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use structureManager;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
-use ZxArt\Authors\Services\AuthorsService;
-use ZxArt\Groups\Services\GroupsService;
-use ZxArt\Import\Labels\LabelTransformer;
-use ZxArt\Import\Prods\ProdResolver;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Import\Services\ImportIdOperator;
-use ZxArt\Parties\Services\PartiesService;
-use ProdsDownloader;
-use ZxArt\Prods\Services\ImportedProdCategoriesUpdater;
 use ZxArt\Prods\Services\ProdsService;
-use ZxArt\Releases\Services\ReleaseFileTypesGatherer;
-use ZxArt\FileParsing\ZxParsingManager;
+use ZxArt\Prods\UseCases\ImportProdHandler;
 
 /**
  * The catalogue sorting selector offers every column in both directions,
@@ -91,22 +82,13 @@ class ProdsSortingTest extends TestCase
 
         return new ProdsService(
             $this->createStub(structureManager::class),
-            $this->createStub(PartiesService::class),
-            $this->createStub(GroupsService::class),
-            $this->createStub(ZxParsingManager::class),
-            $this->createStub(AuthorsService::class),
             $this->createStub(linksManager::class),
-            $this->createStub(ProdsDownloader::class),
             $this->createStub(privilegesManager::class),
-            $this->createStub(PathsManager::class),
             $this->createStub(AuthorshipRepository::class),
             $db,
             $this->createStub(LanguagesManager::class),
-            $this->createStub(ProdResolver::class),
-            $this->createStub(LabelTransformer::class),
-            $this->createStub(ReleaseFileTypesGatherer::class),
-            new ImportedProdCategoriesUpdater($this->createStub(linksManager::class), $this->createStub(ImportIdOperator::class)),
             $this->createStub(ImportIdOperator::class),
+            $this->createStub(ImportProdHandler::class),
         );
     }
 }

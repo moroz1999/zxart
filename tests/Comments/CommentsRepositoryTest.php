@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Comments;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 
 final class CommentsRepositoryTest extends TestCase
 {

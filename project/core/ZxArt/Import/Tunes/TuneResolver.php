@@ -6,7 +6,7 @@ namespace ZxArt\Import\Tunes;
 
 use structureManager;
 use ZxArt\Import\Resolver;
-use ZxArt\Tunes\Repositories\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesRepository;
 use zxMusicElement;
 
 readonly final class TuneResolver

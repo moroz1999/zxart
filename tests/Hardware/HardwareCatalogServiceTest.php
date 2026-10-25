@@ -14,7 +14,7 @@ use ZxArt\Hardware\Dto\HardwareSaveDto;
 use ZxArt\Hardware\Exception\HardwareException;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Hardware\Repositories\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareRepository;
 use ZxArt\Shared\InterfaceLanguage;
 
 #[AllowMockObjectsWithoutExpectations]

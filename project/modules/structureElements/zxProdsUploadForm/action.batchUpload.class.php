@@ -3,11 +3,11 @@
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
 use ZxArt\Forms\StagedUploadsCleaner;
-use ZxArt\Queue\QueueService;
-use ZxArt\Queue\QueueStatus;
-use ZxArt\Queue\QueueType;
+use ZxArt\Prods\Services\ProdCreator;
+use ZxArt\Prods\Services\ProdFieldsDtoFactory;
+use ZxArt\Releases\Dto\ReleaseFieldsDto;
+use ZxArt\Releases\Services\ReleaseCreator;
 use ZxArt\Shared\EntityType;
-use ZxArt\ZxProdCategories\CategoryIds;
 
 class batchUploadZxProdsUploadForm extends structureElementAction
 {
@@ -21,130 +21,56 @@ class batchUploadZxProdsUploadForm extends structureElementAction
     {
         $firstProd = null;
         if ($filesInfo = $structureElement->file) {
-            $privilegesManager = $this->getService(privilegesManager::class);
             $linksManager = $this->getService(linksManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
-            $queueService = $this->getService(QueueService::class);
+            $prodCreator = $this->getService(ProdCreator::class);
+            $prodFieldsDtoFactory = $this->getService(ProdFieldsDtoFactory::class);
+            $releaseCreator = $this->getService(ReleaseCreator::class);
             $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
-            if (!$structureElement->categories) {
-                $structureElement->categories = [CategoryIds::MISC->value];
-            }
-            $firstCategoryId = $structureElement->categories[0];
 
             foreach ($filesInfo as $fileInfo) {
-                /**
-                 * @var zxProdElement $zxProdElement
-                 */
-                if ($zxProdElement = $structureManager->createElement('zxProd', 'show', $firstCategoryId)) {
-                    if (!$firstProd) {
-                        $firstProd = $zxProdElement;
-                    }
-                    $originalFileName = $fileInfo['name'];
-                    $info = pathinfo($originalFileName);
+                $originalFileName = $fileInfo['name'];
+                $info = pathinfo($originalFileName);
+                $prodTitle = (string)$structureElement->getValue('prodTitle');
+                if ($prodTitle === '') {
+                    $prodTitle = str_replace('_', ' ', ucfirst($info['filename']));
+                }
+                $fields = $prodFieldsDtoFactory->fromSubmittedForm(
+                    $structureElement,
+                    $this->expectedFields,
+                    $prodTitle,
+                    altTitleField: 'prodAltTitle',
+                );
+                $zxProdElement = $prodCreator->create($fields);
+                if (!$firstProd) {
+                    $firstProd = $zxProdElement;
+                }
 
-                    if ($structureElement->prodTitle) {
-                        $zxProdElement->title = $structureElement->prodTitle;
-                    } else {
-                        $zxProdElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
-                    }
+                $zxProdElement->addAuthor = $structureElement->addAuthor;
+                $zxProdElement->addAuthorRole = $structureElement->addAuthorRole;
+                $zxProdElement->connectedFile = $structureElement->connectedFile;
+                $zxProdElement->mapFilesSelector = $structureElement->mapFilesSelector;
+                $zxProdElement->persistAuthorship(EntityType::Prod);
+                $zxProdElement->executeAction('receiveFiles');
 
-                    $zxProdElement->altTitle = $structureElement->prodAltTitle;
-                    $zxProdElement->structureName = $zxProdElement->title;
-                    $zxProdElement->externalLink = $structureElement->externalLink;
-                    $zxProdElement->party = $structureElement->party;
-                    $zxProdElement->compo = $structureElement->compo;
-                    $zxProdElement->partyplace = $structureElement->partyplace;
-                    $zxProdElement->groups = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->groups);
-                    $zxProdElement->categories = $structureElement->categories;
-                    $zxProdElement->publishers = array_map(static fn($id) => $structureManager->getElementById($id), $structureElement->publishers);
-                    $zxProdElement->year = $structureElement->year;
-                    $zxProdElement->description = $structureElement->description;
-                    $zxProdElement->htmlDescription = $structureElement->htmlDescription;
-                    $zxProdElement->htmlInstructions = $structureElement->htmlInstructions;
-                    $zxProdElement->instructions = $structureElement->instructions;
-                    $zxProdElement->denyVoting = $structureElement->denyVoting;
-                    $zxProdElement->denyComments = $structureElement->denyComments;
-                    $zxProdElement->legalStatus = $structureElement->legalStatus;
-                    $zxProdElement->language = $structureElement->language;
-                    // hardware is a property of the production; the releases created below
-                    // get only what their own file format implies
-                    $zxProdElement->hardwareRequired = $structureElement->hardwareRequired;
-                    $zxProdElement->youtubeId = $structureElement->youtubeId;
-                    $zxProdElement->tags = $structureElement->tags;
-                    $zxProdElement->addAuthor = $structureElement->addAuthor;
-                    $zxProdElement->addAuthorRole = $structureElement->addAuthorRole;
-                    $zxProdElement->connectedFile = $structureElement->connectedFile;
-                    $zxProdElement->mapFilesSelector = $structureElement->mapFilesSelector;
+                $linksManager->unLinkElements($structureElement->id, $zxProdElement->getPersistedId(), 'structure');
 
-                    $zxProdElement->dateAdded = $zxProdElement->getCreatedTimestamp();
-                    $currentUserService = $this->getService(CurrentUserService::class);
-                    $zxProdElement->userId = $currentUserService->getCurrentUser()->id;
+                if ($fileInfo['tmp_name']) {
+                    $zxReleaseElement = $releaseCreator->create(
+                        new ReleaseFieldsDto(title: $prodTitle, prodId: $zxProdElement->getPersistedId()),
+                    );
+                    $zxReleaseElement->file = (string)$zxReleaseElement->getPersistedId();
+                    $zxReleaseElement->fileName = $fileInfo['name'];
+                    $temporaryFile = $cachePath . basename($fileInfo['tmp_name']);
+                    copy(
+                        $temporaryFile,
+                        $this->getService(PathsManager::class)->getPath('releases') . $zxReleaseElement->file
+                    );
+                    unlink($temporaryFile);
 
-                    $zxProdElement->checkLinks('categories', 'zxProdCategory');
-
-                    $zxProdElement->renewPartyLink();
-                    $zxProdElement->updateTagsInfo();
-                    $zxProdElement->updateYear();
-                    $zxProdElement->persistAuthorship(EntityType::Prod);
-
-                    $zxProdElement->executeAction('receiveFiles');
-
-                    // the categories and tags come from the upload form, so the created
-                    // production needs no AI pass over them
-                    $queueService->updateStatus($zxProdElement->getPersistedId(), QueueType::AI_CATEGORIES_TAGS, QueueStatus::STATUS_SKIP);
-
-
-                    $zxProdElement->persistElementData();
-                    $zxProdElement->logCreation();
-
-                    $linksManager->unLinkElements($structureElement->id, $zxProdElement->getPersistedId(), 'structure');
-
-                    foreach ($this->getPrivileges() as $privilege) {
-                        $privilegesManager->setPrivilege(
-                            $user->id,
-                            $zxProdElement->getPersistedId(),
-                            $privilege[0],
-                            $privilege[1],
-                            $privilege[2]
-                        );
-                    }
-                    if ($fileInfo['tmp_name']) {
-                        /**
-                         * @var zxReleaseElement $zxReleaseElement
-                         */
-                        if ($zxReleaseElement = $structureManager->createElement(
-                            'zxRelease',
-                            'show',
-                            $zxProdElement->getPersistedId()
-                        )) {
-                            if ($zxProdElement->title) {
-                                $zxReleaseElement->title = $zxProdElement->title;
-                            } else {
-                                $zxReleaseElement->title = str_replace('_', ' ', ucfirst(ucfirst($info['filename'])));
-                            }
-
-                            $zxReleaseElement->structureName = $zxReleaseElement->title;
-                            $zxReleaseElement->file = $zxReleaseElement->getPersistedId();
-                            $zxReleaseElement->dateAdded = $zxReleaseElement->getCreatedTimestamp();
-                            $currentUserService = $this->getService(CurrentUserService::class);
-                            $zxReleaseElement->userId = $currentUserService->getCurrentUser()->id;
-
-                            $zxReleaseElement->persistElementData();
-
-                            if ($temporaryFile = $cachePath . basename($fileInfo['tmp_name'])) {
-                                $zxReleaseElement->fileName = $fileInfo['name'];
-                                copy(
-                                    $temporaryFile,
-                                    $this->getService(PathsManager::class)->getPath('releases') . $zxReleaseElement->file
-                                );
-                                unlink($temporaryFile);
-                            }
-
-                            $zxReleaseElement->persistElementData();
-                            $zxReleaseElement->updateFileStructure();
-                        }
-                    }
+                    $zxReleaseElement->persistElementData();
+                    $zxReleaseElement->updateFileStructure();
                 }
             }
             // the productions all read the same staged screenshots and maps, so
@@ -190,28 +116,6 @@ class batchUploadZxProdsUploadForm extends structureElementAction
             'addAuthorRole',
             'connectedFile',
             'mapFilesSelector',
-        ];
-    }
-
-    private function getPrivileges(): array
-    {
-        return [
-            ['zxProd', 'showPublicForm', 'allow'],
-            ['zxProd', 'publicReceive', 'allow'],
-            ['zxProd', 'publicDelete', 'allow'],
-            ['zxProd', 'deleteFile', 'allow'],
-            ['zxProd', 'deleteAuthor', 'allow'],
-            ['zxProd', 'submitTags', 'allow'],
-            ['zxProd', 'receiveFiles', 'allow'],
-            ['zxRelease', 'showPublicForm', 'allow'],
-            ['zxRelease', 'publicReceive', 'allow'],
-            ['zxRelease', 'publicDelete', 'allow'],
-            ['zxRelease', 'deleteFile', 'allow'],
-            ['zxRelease', 'deleteAuthor', 'allow'],
-            ['zxRelease', 'submitTags', 'allow'],
-            ['zxRelease', 'clone', 'allow'],
-            ['file', 'delete', 'allow'],
-            ['file', 'receive', 'allow'],
         ];
     }
 }

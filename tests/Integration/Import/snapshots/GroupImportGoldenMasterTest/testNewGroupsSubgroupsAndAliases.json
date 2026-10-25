@@ -1,0 +1,200 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-g1",
+                "importOrigin": "zxdb",
+                "type": "group"
+            },
+            {
+                "elementId": "#E2",
+                "importId": "gm-g2",
+                "importOrigin": "zxdb",
+                "type": "group"
+            },
+            {
+                "elementId": "#E3",
+                "importId": "gm-g3",
+                "importOrigin": "zxdb",
+                "type": "group"
+            },
+            {
+                "elementId": "#E4",
+                "importId": "gm-g1-alias",
+                "importOrigin": "zxdb",
+                "type": "group"
+            },
+            {
+                "elementId": "#E5",
+                "importId": "gm-alias-alone",
+                "importOrigin": "zxdb",
+                "type": "group"
+            },
+            {
+                "elementId": 47542,
+                "importId": "9900005",
+                "importOrigin": "zxdb",
+                "type": "country"
+            }
+        ],
+        "module_group": [
+            {
+                "abbreviation": "",
+                "city": 0,
+                "country": 47542,
+                "endDate": 0,
+                "id": "#E3",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "9 Goldmaster Numbers",
+                "type": "unknown",
+                "website": "",
+                "wikiLink": ""
+            },
+            {
+                "abbreviation": "",
+                "city": 47452,
+                "country": 47450,
+                "endDate": 0,
+                "id": "#E2",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "Goldmaster Division",
+                "type": "",
+                "website": "",
+                "wikiLink": ""
+            },
+            {
+                "abbreviation": "GMF",
+                "city": 47543,
+                "country": 47542,
+                "endDate": 0,
+                "id": "#E1",
+                "image": "",
+                "languageId": 0,
+                "originalName": "",
+                "slogan": "",
+                "startDate": 0,
+                "title": "Goldmaster Federation",
+                "type": "",
+                "website": "https://federation.invalid/",
+                "wikiLink": ""
+            }
+        ],
+        "module_groupalias": [
+            {
+                "endDate": 0,
+                "groupId": "#E1",
+                "id": "#E4",
+                "languageId": 0,
+                "startDate": 0,
+                "title": "Gm Federation Alias"
+            },
+            {
+                "endDate": 0,
+                "groupId": 0,
+                "id": "#E5",
+                "languageId": 0,
+                "startDate": 0,
+                "title": "Goldmaster Lone Group Alias"
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-federation",
+                "structureRole": "content",
+                "structureType": "group"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E2",
+                "marker": "",
+                "structureName": "goldmaster-division",
+                "structureRole": "content",
+                "structureType": "group"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E3",
+                "marker": "",
+                "structureName": "9-goldmaster-numbers",
+                "structureRole": "content",
+                "structureType": "group"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E4",
+                "marker": "",
+                "structureName": "gm-federation-alias",
+                "structureRole": "content",
+                "structureType": "groupAlias"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E5",
+                "marker": "",
+                "structureName": "goldmaster-lone-group-alias",
+                "structureRole": "content",
+                "structureType": "groupAlias"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 87052,
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E1",
+                "position": "+10",
+                "type": "groupSub"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": 87052,
+                "position": "+20",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E3",
+                "parentStructureId": 87074,
+                "position": "+10",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E4",
+                "parentStructureId": 87052,
+                "position": "+30",
+                "type": "structure"
+            },
+            {
+                "childStructureId": "#E5",
+                "parentStructureId": 87052,
+                "position": "+40",
+                "type": "structure"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": [],
+        "uploadsCache": []
+    }
+}

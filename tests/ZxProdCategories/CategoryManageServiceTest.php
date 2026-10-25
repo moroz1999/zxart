@@ -14,7 +14,7 @@ use structureManager;
 use ZxArt\ZxProdCategories\CategoryManageService;
 use ZxArt\ZxProdCategories\Dto\CategorySaveDto;
 use ZxArt\ZxProdCategories\Exception\CategoryException;
-use ZxArt\ZxProdCategories\Repositories\CategoryManageRepository;
+use ZxArt\ZxProdCategories\Dbal\CategoryManageRepository;
 use zxProdCategoryElement;
 
 /**

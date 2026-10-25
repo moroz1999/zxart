@@ -11,7 +11,7 @@ use structureElement;
 use structureManager;
 use ZxArt\Playlists\Dto\PlaylistDto;
 use ZxArt\Playlists\Exception\PlaylistException;
-use ZxArt\Playlists\Repositories\PlaylistContentsRepository;
+use ZxArt\Playlists\Dbal\PlaylistContentsRepository;
 use ZxArt\Shared\StructureType;
 
 readonly class PlaylistService

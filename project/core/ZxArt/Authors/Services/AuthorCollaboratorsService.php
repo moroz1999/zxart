@@ -11,7 +11,7 @@ use groupElement;
 use structureManager;
 use ZxArt\Authors\Dto\AuthorCollaboratorGroupDto;
 use ZxArt\Authors\Dto\AuthorCollaboratorPersonDto;
-use ZxArt\Authors\Repositories\AuthorCollaboratorsRepository;
+use ZxArt\Authors\Dbal\AuthorCollaboratorsRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Urls\EntityUrlResolver;
 

@@ -4,76 +4,77 @@ declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
-use authorAliasElement;
-use privilegesManager;
-use structureManager;
-use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorAliasDataResultDto;
+use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
-use ZxArt\Shared\StructureType;
+use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorCommand;
+use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorHandler;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorAliasCommand;
+use ZxArt\Authors\UseCases\DeleteAuthorAliasHandler;
+use ZxArt\Authors\UseCases\JoinAuthorAliasesCommand;
+use ZxArt\Authors\UseCases\JoinAuthorAliasesHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
 
 /**
- * Changes to an author alias requested through `/author-alias-data/`. Each change checks the
- * privilege of the matching legacy action and is recorded in the actions log.
+ * Changes to an author alias requested through its data endpoint, each one a use case
+ * in `ZxArt\Authors\UseCases`: it checks the privilege of the matching legacy action, runs in
+ * one transaction and is recorded in the actions log.
  *
  * @psalm-api
  */
 final readonly class AuthorAliasDataService
 {
-    private const string DELETE_PRIVILEGE = 'publicDelete';
-    private const string CONVERT_TO_AUTHOR_PRIVILEGE = 'convertToAuthor';
-
     public function __construct(
-        private structureManager $structureManager,
-        private privilegesManager $privilegesManager,
-        private ActionsLogService $actionsLogService,
-        private AuthorsService $authorsService,
+        private CreateAuthorAliasHandler $createAuthorAliasHandler,
+        private UpdateAuthorAliasHandler $updateAuthorAliasHandler,
+        private DeleteAuthorAliasHandler $deleteAuthorAliasHandler,
+        private ConvertAuthorAliasToAuthorHandler $convertAuthorAliasToAuthorHandler,
+        private JoinAuthorAliasesHandler $joinAuthorAliasesHandler,
     ) {
     }
 
-    public function delete(int $aliasId): AuthorAliasDataResultDto
+    /**
+     * @throws AuthorAliasDataException
+     */
+    public function create(AuthorAliasFieldsDto $fields): AuthorAliasDataResultDto
     {
-        $alias = $this->getAlias($aliasId, self::DELETE_PRIVILEGE);
-        // logged first: the element data is gone after the deletion
-        $this->actionsLogService->log($alias, StructureType::AuthorAlias, self::DELETE_PRIVILEGE);
-        $alias->deleteElementData();
-
-        return new AuthorAliasDataResultDto(id: $aliasId);
+        return $this->createAuthorAliasHandler->handle(new CreateAuthorAliasCommand($fields));
     }
 
     /**
-     * Turns the author alias into a new author; the author alias itself is deleted.
+     * Changes the fields the DTO carries and leaves the others as they are.
+     *
+     * @throws AuthorAliasDataException
+     */
+    public function update(int $aliasId, AuthorAliasFieldsDto $fields): AuthorAliasDataResultDto
+    {
+        return $this->updateAuthorAliasHandler->handle(new UpdateAuthorAliasCommand($aliasId, $fields));
+    }
+
+    /**
+     * @throws AuthorAliasDataException
+     */
+    public function delete(int $aliasId): AuthorAliasDataResultDto
+    {
+        return $this->deleteAuthorAliasHandler->handle(new DeleteAuthorAliasCommand($aliasId));
+    }
+
+    /**
+     * @throws AuthorAliasDataException
      */
     public function convertToAuthor(int $aliasId): AuthorAliasDataResultDto
     {
-        $alias = $this->getAlias($aliasId, self::CONVERT_TO_AUTHOR_PRIVILEGE);
-        $author = $this->authorsService->convertAliasToAuthor($alias);
-        if ($author === null) {
-            throw new AuthorAliasDataException('The author could not be created', 500);
-        }
-        $this->actionsLogService->log($alias, StructureType::AuthorAlias, self::CONVERT_TO_AUTHOR_PRIVILEGE);
-
-        return new AuthorAliasDataResultDto(id: $author->getId());
+        return $this->convertAuthorAliasToAuthorHandler->handle(new ConvertAuthorAliasToAuthorCommand($aliasId));
     }
 
-    private function getAlias(int $aliasId, string $privilege): authorAliasElement
+    /**
+     * @throws AuthorAliasDataException
+     */
+    public function join(int $aliasId, int $joinedId): AuthorAliasDataResultDto
     {
-        if ($aliasId <= 0) {
-            throw new AuthorAliasDataException('Missing required author alias id', 400);
-        }
-        $alias = $this->structureManager->getElementById($aliasId);
-        if (!$alias instanceof authorAliasElement) {
-            throw new AuthorAliasDataException('Author alias not found', 404);
-        }
-        $isAllowed = $this->privilegesManager->checkPrivilegesForAction(
-            $aliasId,
-            $privilege,
-            StructureType::AuthorAlias->value,
-        ) === true;
-        if (!$isAllowed) {
-            throw new AuthorAliasDataException('This author alias change is forbidden', 403);
-        }
-
-        return $alias;
+        return $this->joinAuthorAliasesHandler->handle(new JoinAuthorAliasesCommand($aliasId, $joinedId));
     }
 }

@@ -29,13 +29,14 @@ Software production for ZX Spectrum - games, demos, utilities and other software
 - **compo** - competition name (compo)
 - **language** - interface languages (array)
   - The codes a prod or release can carry are the `engine_zxitem_language.value`
-    enum and `LanguageCodesProviderTrait::getLanguageCodes()`; adding one means
-    a migration extending the enum, an entry in the trait, and the
+    enum and `ZxArt\Shared\LanguageCodes::ALL` (served to elements by
+    `LanguageCodesProviderTrait::getLanguageCodes()`); adding one means
+    a migration extending the enum, an entry in `LanguageCodes`, and the
     `language.<code>` translation in all three i18n bundles. The names are SPA
     translations and are never sent from the backend.
   - The migration **appends** to the enum: appending is an in-place change,
     while inserting in the middle rebuilds the whole table. Enum order carries
-    no meaning — the selector is ordered by the trait.
+    no meaning — the selector is ordered by `LanguageCodes`.
 
 ### Catalogue Route
 
@@ -174,11 +175,22 @@ category heading is still an SPA string (`hardware-group.<code>`).
 - **userId** - ID of user who added the element
 
 ### Special Operations
-- **joinAndDelete** - merge and delete products
+- **joinAndDelete** - merge and delete products; `ProdDataService::join()` does the same outside the form (see [php/entity-writes.md](../php/entity-writes.md#joins))
 - **splitData** - data for splitting product
 - **aiRestartSeo** - restart AI for SEO
 - **aiRestartIntro** - restart AI for intro
 - **aiRestartCategories** - restart AI for categories
+
+### Writing the Fields
+
+Every write of a production's own fields goes through `ProdFieldsWriter`, the
+same path for the edit form, the batch upload and `ProdDataService` — see
+[../php/entity-writes.md](../php/entity-writes.md). Beyond the fields it renews
+the party link, the tags and a missing year, checks the categories (*misc* when
+none is left), and keeps the AI queue in step: categories or tags given → the AI
+categories pass is skipped; changed categories → SEO and intro are queued again.
+The batch upload creates each production with `ProdCreator` and its release with
+`ReleaseCreator`.
 
 ### Split Form
 

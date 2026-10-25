@@ -8,7 +8,7 @@ use App\Users\CurrentUserService;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Repositories\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesRepository;
 use zxPictureElement;
 
 readonly class PicturesService

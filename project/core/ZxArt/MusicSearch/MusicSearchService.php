@@ -13,7 +13,7 @@ use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\Dto\MusicSearchResult;
-use ZxArt\MusicSearch\Repositories\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\Tunes\Services\TunesManager;

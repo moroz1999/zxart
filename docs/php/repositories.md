@@ -3,9 +3,9 @@
 ## Repository Pattern
 - All database queries (`Connection`, Query Builder) MUST live in repository classes, NEVER in services.
 - Services orchestrate business logic; repositories handle data access.
-- Repository location: `project/core/ZxArt/{Domain}/Repositories/`.
+- Repository location: `project/core/ZxArt/{Domain}/Dbal/`.
 - Repositories are `readonly final class` with `Connection` injected via constructor.
-- Repositories MUST extend `ZxArt\Shared\Repositories\AbstractRepository` for shared table-name helpers.
+- Repositories MUST extend `ZxArt\Shared\Dbal\AbstractRepository` for shared table-name helpers.
 - Repository methods return primitive types (IDs, counts, arrays), not domain objects or DTOs.
 - Services use repository results (e.g. IDs) and load domain objects via `structureManager`.
 - Filtering, sorting, counting, and pagination of database-backed lists MUST be performed by repository queries in the database, not by loading all rows into a service and slicing arrays in PHP.
@@ -33,6 +33,10 @@ $this->db->table($this->db->raw('(SELECT id FROM engine_' . DatabaseTable::ZxMus
 $topIds = $this->getSelectSql()->orderBy('votes', 'desc')->limit($topN)->pluck('id');
 $this->getSelectSql()->whereIn('id', $topIds)->inRandomOrder()->limit($limit)->pluck('id');
 ```
+
+## Matching a Phrase
+- A `like` on a user's phrase escapes the wildcards: `'%' . addcslashes($phrase, '\\%_') . '%'`. MariaDB's escape character is the backslash.
+- SQLite has no default escape character, so the SQLite unit tests cannot show the escaping; an integration test on MariaDB does (`tests/Integration/Geo/PlaceSearchTest.php`).
 
 ## Database Query Results
 

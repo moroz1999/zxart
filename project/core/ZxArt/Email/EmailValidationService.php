@@ -7,6 +7,7 @@ namespace ZxArt\Email;
 use SpamCheckAdapter;
 use VerifaliaAdapter;
 use VerifyMailAdapter;
+use ZxArt\Email\Dbal\DomainBanRepository;
 
 /**
  * Validates an email address against local heuristics, a cached domain ban list

@@ -11,7 +11,7 @@ use groupElement;
 use structureManager;
 use ZxArt\Groups\Dto\GroupCollaboratorGroupDto;
 use ZxArt\Groups\Dto\GroupCollaboratorPersonDto;
-use ZxArt\Groups\Repositories\GroupCollaboratorsRepository;
+use ZxArt\Groups\Dbal\GroupCollaboratorsRepository;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Exception\ProdDetailsException;
 

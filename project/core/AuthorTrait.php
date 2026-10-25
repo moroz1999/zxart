@@ -202,15 +202,6 @@ trait AuthorTrait
                     'id' => $this->zxTunesId,
                 ];
             }
-            if ($this->artCityId) {
-                $this->linksInfo[] = [
-                    'type' => 'ac',
-                    'image' => 'icon_ac.png',
-                    'name' => $translationsManager->getTranslationByName('links.link_ac'),
-                    'url' => 'https://artcity.bitfellas.org/index.php?a=artist&id=' . $this->artCityId,
-                    'id' => $this->artCityId,
-                ];
-            }
         }
         if ($this->structureType === 'author') {
             if ($aliasElements = $this->getAliasElements()) {

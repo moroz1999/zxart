@@ -4,7 +4,6 @@ namespace ZxArt\Groups\Services;
 
 use authorElement;
 use ConfigManager;
-use CountriesManager;
 use ElementsManager;
 use groupAliasElement;
 use groupElement;
@@ -14,7 +13,7 @@ use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
 use structureManager;
-use ZxArt\Authors\Repositories\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipRepository;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
@@ -34,7 +33,6 @@ class GroupsService extends ElementsManager
         protected LabelResolver           $labelResolver,
         protected linksManager            $linksManager,
         protected structureManager        $structureManager,
-        protected CountriesManager        $countriesManager,
         protected ConfigManager           $configManager,
         protected privilegesManager       $privilegesManager,
         protected AuthorshipRepository    $authorshipRepository,
@@ -50,43 +48,7 @@ class GroupsService extends ElementsManager
         ];
     }
 
-
-    public function importGroup(GroupLabel $label, ImportOrigin $origin): groupAliasElement|groupElement|null
-    {
-        $element = $this->getGroupByLabel($label, $origin);
-        if ($element !== null) {
-            $this->importIdOperator->saveImportId($element->id, $label->id, $origin, EntityType::Group);
-        }
-
-        if ($element === null) {
-            if ($label->isAlias) {
-                $element = $this->createGroupAlias($label, $origin);
-            } else {
-                $element = $this->createGroup($label, $origin);
-            }
-        }
-
-        if ($element instanceof groupAliasElement) {
-            $this->updateGroupAlias($element, $label, $origin);
-        } else {
-            $this->updateGroup($element, $label, $origin);
-        }
-
-        return $element;
-    }
-
-    private function createGroup(GroupLabel $dto, ImportOrigin $origin): ?groupElement
-    {
-        if ($element = $this->manufactureGroupElement($dto->name ?? '')) {
-            $this->updateGroup($element, $dto, $origin);
-            if ($dto->id !== null) {
-                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, EntityType::Group);
-            }
-        }
-        return $element ?? null;
-    }
-
-    private function manufactureGroupElement(string $title): ?groupElement
+    public function manufactureGroupElement(string $title): ?groupElement
     {
         if ($letterId = $this->getLetterId($title)) {
             if ($letterElement = $this->structureManager->getElementById($letterId)) {
@@ -101,113 +63,7 @@ class GroupsService extends ElementsManager
         return null;
     }
 
-    private function updateGroup(groupElement $element, GroupLabel $dto, ImportOrigin $origin): void
-    {
-        $changed = false;
-
-        if (($dto->name !== '' && $dto->name !== null) && $element->title !== $dto->name && !$element->title) {
-            $changed = true;
-            $element->title = $dto->name;
-            $element->structureName = $dto->name;
-        }
-
-        if (($dto->type !== '' && $dto->type !== null) && $element->type !== $dto->type) {
-            if (!$element->type || $element->type === 'unknown') {
-                $changed = true;
-                $element->type = $dto->type;
-            }
-        }
-
-        if (($dto->abbreviation !== '' && $dto->abbreviation !== null) && $element->abbreviation !== $dto->abbreviation && !$element->abbreviation) {
-            $changed = true;
-            $element->abbreviation = $dto->abbreviation;
-        }
-
-        if (($dto->website !== '' && $dto->website !== null) && $element->website !== $dto->website && !$element->website) {
-            $changed = true;
-            $element->website = $dto->website;
-        }
-
-        if ($dto->locationName !== '' && $dto->locationName !== null) {
-            if ($locationElement = $this->countriesManager->getLocationByName($dto->locationName)) {
-                if ($locationElement->structureType === 'country') {
-                    if ($element->country != $locationElement->id) {
-                        $changed = true;
-                        $element->country = $locationElement->id;
-                    }
-                } elseif ($locationElement->structureType === 'city') {
-                    if ($element->city != $locationElement->id) {
-                        $changed = true;
-                        $element->city = $locationElement->id;
-                        if ($countryId = $locationElement->getCountryId()) {
-                            $element->country = $countryId;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($dto->countryName !== '' && $dto->countryName !== null) {
-            if ($locationElement = $this->countriesManager->getLocationByName($dto->countryName)) {
-                if ($locationElement->structureType === 'country') {
-                    if ($element->country !== $locationElement->id) {
-                        $changed = true;
-                        $element->country = $locationElement->id;
-                    }
-                }
-            }
-        }
-
-        if ($dto->cityName !== '' && $dto->cityName !== null) {
-            if ($locationElement = $this->countriesManager->getLocationByName($dto->cityName)) {
-                if ($locationElement->structureType === 'city') {
-                    if ($element->city !== $locationElement->id) {
-                        $changed = true;
-                        $element->city = $locationElement->id;
-                    }
-                }
-            }
-        }
-
-        if ($dto->countryId !== 0 && $dto->countryId !== null) {
-            $locationElement = $this->importIdOperator->getElementByImportId((string)$dto->countryId, $origin, EntityType::Country);
-            if ($locationElement && $element->country !== $locationElement->id) {
-                $changed = true;
-                $element->country = $locationElement->id;
-            }
-        }
-
-        if (is_array($dto->parentGroupIds)) {
-            $parentGroups = $element->parentGroups;
-            foreach ($dto->parentGroupIds as $groupId) {
-                $groupElement = $this->importIdOperator->getElementByImportId((string)$groupId, $origin, EntityType::Group);
-                if ($groupElement !== null && !in_array($groupElement, $parentGroups, true)) {
-                    $parentGroups[] = $groupElement;
-                }
-            }
-            $changed = true;
-            $element->parentGroups = $parentGroups;
-        }
-
-
-        if ($changed) {
-            $element->checkCountry();
-            $element->persistElementData();
-        }
-    }
-
-    private function createGroupAlias(GroupLabel $dto, ImportOrigin $origin): ?groupAliasElement
-    {
-        if ($element = $this->manufactureAliasElement($dto->name ?? '')) {
-            $this->updateGroupAlias($element, $dto, $origin);
-            if ($dto->id !== null) {
-                $this->importIdOperator->saveImportId($element->id, (string)$dto->id, $origin, EntityType::Group);
-            }
-        }
-        return $element ?? null;
-    }
-
-    private function manufactureAliasElement(string $title = ''): ?groupAliasElement
+    public function manufactureAliasElement(string $title = ''): ?groupAliasElement
     {
         /**
          * @var groupAliasElement $element
@@ -219,29 +75,6 @@ class GroupsService extends ElementsManager
             return $element;
         }
         return null;
-    }
-
-    private function updateGroupAlias(groupAliasElement $element, GroupLabel $groupAlias, ImportOrigin $origin): void
-    {
-        $changed = false;
-
-        if (($groupAlias->name !== null && $groupAlias->name !== '') && $element->title !== $groupAlias->name) {
-            if (!$element->title) {
-                $changed = true;
-                $element->title = $groupAlias->name;
-                $element->structureName = $groupAlias->name;
-            }
-        }
-
-        if (($groupAlias->aliasParentGroupId !== null) && !$element->groupId) {
-            if ($groupElement = $this->importIdOperator->getElementByImportId($groupAlias->aliasParentGroupId, $origin, EntityType::Group)) {
-                $changed = true;
-                $element->groupId = $groupElement->getPersistedId();
-            }
-        }
-        if ($changed) {
-            $element->persistElementData();
-        }
     }
 
     public function convertAuthorToGroup(authorElement $authorElement): ?groupElement
@@ -300,7 +133,6 @@ class GroupsService extends ElementsManager
                     }
                 }
 
-
                 $authorElement->deleteElementData();
             }
         }
@@ -332,7 +164,6 @@ class GroupsService extends ElementsManager
                 $this->db->table('import_origin')
                     ->where('elementId', '=', $groupAliasElement->id)
                     ->update(['elementId' => $groupElement->id]);
-
 
                 $groupAliasElement->deleteElementData();
             }
@@ -428,6 +259,9 @@ class GroupsService extends ElementsManager
                 }
                 $targetElement->persistElementData();
 
+                if ($joinedElement instanceof groupElement) {
+                    $joinedElement->resetAliasElements();
+                }
                 if ($aliasElements = $joinedElement->getAliasElements()) {
                     /**
                      * @var groupAliasElement $aliasElement
@@ -446,7 +280,6 @@ class GroupsService extends ElementsManager
                         $this->linksManager->linkElements($targetElement->id, $link->childStructureId, $link->type);
                     }
                 }
-
 
                 //disabled groupship moving to new group
                 //check if group already has groupship in same elements. we dont need duplicates

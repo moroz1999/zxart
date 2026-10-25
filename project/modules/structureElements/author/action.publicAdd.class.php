@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Authors\Services\AuthorCreator;
+use ZxArt\Authors\Services\AuthorFieldsDtoFactory;
 use ZxArt\Shared\EntityType;
 
 class publicAddAuthor extends structureElementAction
@@ -14,38 +16,25 @@ class publicAddAuthor extends structureElementAction
     {
         if ($this->validated) {
             $structureElement->prepareActualData();
-
-            if ($structureElement->title == '') {
-                $structureElement->title = $structureElement->realName;
-            }
-            $structureElement->structureName = $structureElement->title;
-
             if (!is_null($structureElement->getDataChunk("image")->originalName)) {
                 $structureElement->image = $structureElement->getId();
                 $structureElement->originalName = $structureElement->getDataChunk("image")->originalName;
             }
 
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
+            $fields = $this->getService(AuthorFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(AuthorCreator::class)->completeCreation($structureElement, $fields);
             $structureElement->persistMemberships(EntityType::Group);
             $structureElement->persistMemberships(EntityType::Prod);
             $structureElement->persistImportOrigins();
 
             $structureElement->recalculatePicturesData();
             $structureElement->recalculateMusicData();
-            $structureElement->recalculate();
-
-            $privilegesManager = $this->getService(privilegesManager::class);
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $user = $currentUserService->getCurrentUser();
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'showPublicForm', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'publicDelete', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'author', 'deleteFile', 'allow');
-            $user->refreshPrivileges();
+            $this->getService(CurrentUserService::class)->getCurrentUser()->refreshPrivileges();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }
+
         $structureElement->setViewName('form');
     }
 
@@ -61,7 +50,6 @@ class publicAddAuthor extends structureElementAction
             'denyVoting',
             'denyComments',
             'deny3a',
-            'artCityId',
             'displayInMusic',
             'displayInGraphics',
             'chipType',

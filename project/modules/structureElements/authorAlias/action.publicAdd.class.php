@@ -1,6 +1,8 @@
 <?php
 
 use App\Users\CurrentUserService;
+use ZxArt\Authors\Services\AuthorAliasCreator;
+use ZxArt\Authors\Services\AuthorAliasFieldsDtoFactory;
 
 class publicAddAuthorAlias extends structureElementAction
 {
@@ -12,28 +14,13 @@ class publicAddAuthorAlias extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            $privilegesManager = $this->getService(privilegesManager::class);
-            $currentUserService = $this->getService(CurrentUserService::class);
-            $user = $currentUserService->getCurrentUser();
-
             $structureElement->prepareActualData();
 
-            $structureElement->structureName = $structureElement->title;
-
-            $structureElement->persistElementData();
-            $structureElement->checkParentLetter();
+            $fields = $this->getService(AuthorAliasFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(AuthorAliasCreator::class)->completeCreation($structureElement, $fields);
             $structureElement->persistImportOrigins();
-
-            $privilegesManager->setPrivilege(
-                $user->id,
-                $structureElement->getId(),
-                'authorAlias',
-                'showPublicForm',
-                'allow'
-            );
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'authorAlias', 'publicReceive', 'allow');
-            $privilegesManager->setPrivilege($user->id, $structureElement->getId(), 'authorAlias', 'publicDelete', 'allow');
-            $user->refreshPrivileges();
+            $this->getService(CurrentUserService::class)->getCurrentUser()->refreshPrivileges();
 
             $this->respondFormSaved($controller, $structureElement); return;
         }

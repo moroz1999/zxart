@@ -6,7 +6,7 @@ namespace ZxArt\Comments;
 use JsonException;
 use structureManager;
 use UnexpectedValueException;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 
 /**
  * @psalm-api

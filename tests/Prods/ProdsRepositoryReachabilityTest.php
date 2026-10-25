@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Helpers\AlphanumericColumnSearch;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 
 /**
  * A production is reachable on the site only through a category. The first-page

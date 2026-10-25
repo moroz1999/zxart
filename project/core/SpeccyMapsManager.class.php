@@ -80,11 +80,8 @@ class SpeccyMapsManager extends errorLogger
                 }
             }
             foreach ($this->prodsIndex as $key => $prodInfo2) {
-                if ($prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin)) {
-                    $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
-                } else {
-                    $this->markProgress('prod failed ' . $prodInfo2['id']);
-                }
+                $prodElement = $this->prodsService->importProdOld($prodInfo2, $this->origin);
+                $this->markProgress('prod ' . $this->counter . '/' . $key . ' imported ' . $prodElement->title);
             }
             $this->markProgress('end of prods index');
         }

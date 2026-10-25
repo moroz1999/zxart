@@ -159,6 +159,12 @@ Privileges are managed through `privilegesManager`.
 - In Smarty templates, global privileges are available in the `$privileges.{module}.{action}` array.
 - For specific elements (like comments), privileges should be fetched via `$element->getPrivileges()`. Note that this returns the privileges array filtered for the element's structure type (e.g., `$privileges.actionName` instead of `$privileges.moduleName.actionName`).
 - Example of programmatic privilege granting: `$privilegesManager->setPrivilege($userId, $elementId, 'module', 'action', 1)`. After programmatic changes, it is necessary to call `$user->refreshPrivileges()` (where `$user` is an instance of the `user` class) to clear session-cached privileges and internal `privilegesManager` caches. Using `$privilegesManager->resetPrivileges()` only clears the manager's cache but not the user session cache.
+- The privileges of an element are worked out once, from its parent's and the user's, when the structure manager loads it. `setPrivilege()` for the current user on an element already worked out updates it at once (an `inherit` is left as it was); elements loaded below it before the change keep what they had until the next request. A script that grants a user privileges grants them before it loads the structure.
+
+### API queries
+- `ApiQuery` (from `ApiQueriesManager::getQuery()`) runs the query filters of `project/modules/queryFilters/` for an export type; filters of another type reach it through the `queryFilterConverters/`.
+- By default each filtered query is stored in a temporary table, made once per set of parameters and kept for the request, so a repeated query does not see rows written after the first. `setTemporaryTables(false)` reads the live rows each time.
+- `structureElement::persistModificationTime()` stores a new modification time for a change kept outside the element's own data.
 
 ### View System (Templates)
 - Smarty template engine is used. This is considered a **legacy view system**.

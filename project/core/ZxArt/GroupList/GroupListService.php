@@ -9,7 +9,7 @@ use groupElement;
 use structureManager;
 use ZxArt\GroupList\Dto\FilterOptionDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
-use ZxArt\GroupList\Repositories\GroupListRepository;
+use ZxArt\GroupList\Dbal\GroupListRepository;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 

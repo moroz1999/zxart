@@ -1,0 +1,131 @@
+{
+    "database": {
+        "import_origin": [
+            {
+                "elementId": "#E1",
+                "importId": "gm-local",
+                "importOrigin": "vt",
+                "type": "prod"
+            },
+            {
+                "elementId": "#E2",
+                "importId": "gm-local-r1",
+                "importOrigin": "vt",
+                "type": "release"
+            }
+        ],
+        "module_zxprod": [
+            {
+                "altTitle": "",
+                "commentsAmount": 0,
+                "compo": "",
+                "dateAdded": "#now",
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "externalLink": "",
+                "hasAiData": 0,
+                "htmlDescription": 1,
+                "htmlInstructions": 1,
+                "id": "#E1",
+                "instructions": "",
+                "languageId": 0,
+                "legalStatus": "unknown",
+                "party": 0,
+                "partyplace": 0,
+                "tagsAmount": 0,
+                "title": "Goldmaster Local Copy",
+                "userId": 0,
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 1991,
+                "youtubeId": ""
+            }
+        ],
+        "module_zxrelease": [
+            {
+                "commentsAmount": 0,
+                "denyComments": 0,
+                "denyVoting": 0,
+                "description": "",
+                "downloads": 0,
+                "file": "#E2",
+                "fileName": "beta.tap",
+                "id": "#E2",
+                "languageId": 0,
+                "parsed": 0,
+                "plays": 0,
+                "releaseType": "unknown",
+                "title": "Goldmaster Local Copy",
+                "userId": 0,
+                "version": "",
+                "votes": 0,
+                "votesAmount": 0,
+                "year": 0
+            }
+        ],
+        "queue": [
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_intro"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "ai_seo"
+            },
+            {
+                "elementId": "#E1",
+                "status": 0,
+                "type": "social_post"
+            },
+            {
+                "elementId": "#E2",
+                "status": 0,
+                "type": "social_post"
+            }
+        ],
+        "structure_elements": [
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E1",
+                "marker": "",
+                "structureName": "goldmaster-local-copy",
+                "structureRole": "content",
+                "structureType": "zxProd"
+            },
+            {
+                "dateCreated": "#now",
+                "dateModified": "#now",
+                "id": "#E2",
+                "marker": "",
+                "structureName": "goldmaster-local-copy",
+                "structureRole": "content",
+                "structureType": "zxRelease"
+            }
+        ],
+        "structure_links": [
+            {
+                "childStructureId": "#E1",
+                "parentStructureId": 92177,
+                "position": "+10",
+                "type": "zxProdCategory"
+            },
+            {
+                "childStructureId": "#E2",
+                "parentStructureId": "#E1",
+                "position": "+10",
+                "type": "structure"
+            }
+        ]
+    },
+    "files": {
+        "uploads": [],
+        "releases": {
+            "#E2": "73 ccdb7a9c03eca60fab2393d5a031afb4"
+        },
+        "uploadsCache": []
+    }
+}

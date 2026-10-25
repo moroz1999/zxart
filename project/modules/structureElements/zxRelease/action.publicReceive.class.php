@@ -1,6 +1,8 @@
 <?php
 
 use ZxArt\Forms\StagedUploadsCleaner;
+use ZxArt\Releases\Services\ReleaseFieldsDtoFactory;
+use ZxArt\Releases\Services\ReleaseFieldsWriter;
 use ZxArt\Shared\EntityType;
 
 class publicReceiveZxRelease extends structureElementAction
@@ -13,10 +15,6 @@ class publicReceiveZxRelease extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
-            if ($structureElement->title != '') {
-                $structureElement->structureName = $structureElement->title;
-            }
-
             if (!is_null($structureElement->getDataChunk("file")->originalName)) {
                 $structureElement->file = (string)$structureElement->getPersistedId();
                 $structureElement->fileName = $structureElement->getDataChunk("file")->originalName;
@@ -24,7 +22,9 @@ class publicReceiveZxRelease extends structureElementAction
                 $structureElement->parsed = 0;
             }
 
-            $structureElement->persistElementData();
+            $fields = $this->getService(ReleaseFieldsDtoFactory::class)
+                ->fromSubmittedForm($structureElement, $this->expectedFields);
+            $this->getService(ReleaseFieldsWriter::class)->apply($structureElement, $fields);
 
             $structureElement->persistAuthorship(EntityType::Release);
             $structureElement->persistImportOrigins();

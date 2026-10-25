@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Import\ImportOrigin;
-use ZxArt\Import\Repositories\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsRepository;
 use ZxArt\Shared\EntityType;
 
 #[AllowMockObjectsWithoutExpectations]

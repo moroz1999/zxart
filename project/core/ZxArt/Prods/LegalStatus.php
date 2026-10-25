@@ -15,4 +15,18 @@ enum LegalStatus
     case allowedzxart;
     case allowed;
     case donationware;
+
+    /**
+     * The status a production stores under its case name.
+     */
+    public static function tryFromName(string $name): ?self
+    {
+        foreach (self::cases() as $status) {
+            if ($status->name === $name) {
+                return $status;
+            }
+        }
+
+        return null;
+    }
 }

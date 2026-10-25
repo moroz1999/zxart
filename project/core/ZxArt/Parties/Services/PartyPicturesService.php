@@ -8,7 +8,7 @@ use partyElement;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Repositories\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use zxPictureElement;
 

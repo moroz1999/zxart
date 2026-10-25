@@ -6,7 +6,7 @@ namespace ZxArt\Prods\Services;
 
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Prods\Repositories\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareRepository;
 
 /**
  * Resolves hardware across the prod/release boundary.

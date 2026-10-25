@@ -48,7 +48,6 @@ readonly class GroupListTransformer
 
     public function aliasToDto(groupAliasElement $alias): GroupListItemDto
     {
-        /** @var groupElement|null $parentGroup */
         $parentGroup = $alias->getGroupElement();
 
         $countryElement = $parentGroup?->getCountryElement();

@@ -9,7 +9,7 @@ use partyElement;
 use structureManager;
 use ZxArt\Parties\Dto\PartyDto;
 use ZxArt\Parties\PartiesTransformer;
-use ZxArt\Parties\Repositories\PartiesRepository;
+use ZxArt\Parties\Dbal\PartiesRepository;
 
 class PartiesService extends ElementsManager
 {

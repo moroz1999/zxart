@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Ratings;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Ratings\Repositories\VotesHistoryRepository;
+use ZxArt\Ratings\Dbal\VotesHistoryRepository;
 
 /**
  * A deleted work takes its votes with it.

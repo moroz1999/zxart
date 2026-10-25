@@ -12,7 +12,7 @@ use ZxArt\Comments\CommentAuthorDto;
 use ZxArt\Comments\CommentsListDto;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\CommentsTransformer;
-use ZxArt\Parties\Repositories\PartyActivityRepository;
+use ZxArt\Parties\Dbal\PartyActivityRepository;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Ratings\Dto\AuthorRatingsListDto;
 use ZxArt\Ratings\Dto\RecentRatingDto;

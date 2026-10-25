@@ -6,7 +6,7 @@ namespace ZxArt\Hardware\Services;
 
 use JsonException;
 use ZxArt\Hardware\Dto\HardwareDto;
-use ZxArt\Hardware\Repositories\StorageRepository;
+use ZxArt\Hardware\Dbal\StorageRepository;
 
 final class HardwareService
 {

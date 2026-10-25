@@ -1,10 +1,10 @@
 <?php
 
 use App\Logging\EventsLog;
-use ZxArt\Comments\Repositories\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsRepository;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
-use ZxArt\Ratings\Repositories\VotesHistoryRepository;
+use ZxArt\Ratings\Dbal\VotesHistoryRepository;
 use ZxArt\Voting\VotingService;
 
 /**

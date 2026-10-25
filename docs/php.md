@@ -11,6 +11,12 @@
 - Place constants and variables at the beginning of the class, before any methods.
 - The project is available at http://zxart.loc/
 
+## Architecture Dependencies
+
+- PHP classes in `project/core/ZxArt/` are non-legacy code.
+- Non-legacy code must not depend on legacy project code. Existing dependencies are recorded in `deptrac.baseline.yaml`; do not add new baseline entries for new code.
+- Run `composer deptrac` to validate the boundary. Removing an existing dependency also requires removing its obsolete baseline entry.
+
 ## Immutability and Type Safety
 - DTOs must be 100% immutable. Use `readonly class` and constructor property promotion.
 - Services and other stateless classes should be marked as `readonly class` if all their properties are immutable (e.g., dependencies injected via constructor). When a class is `readonly`, individual `readonly` modifiers on properties are redundant and should be omitted.
@@ -91,3 +97,4 @@ For specific topics, see:
 - [Repositories and Database](php/repositories.md) - Database table names, Query Builder, avoiding raw SQL
 - [REST API and DTOs](php/rest-api.md) - REST API pattern, ObjectMapper usage, API verification and documentation
 - [Error Handling](php/error-handling.md) - Never swallowing exceptions silently, logging utilities
+- [Entity Writes](php/entity-writes.md) - Creating and editing prods, releases, authors, groups and aliases: one path per entity

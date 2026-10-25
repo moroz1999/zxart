@@ -13,7 +13,7 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Import\Resolver;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 use zxProdElement;
 
 #[AllowMockObjectsWithoutExpectations]

@@ -13,7 +13,7 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\Dto\PictureSearchResult;
-use ZxArt\PictureSearch\Repositories\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Services\PicturesManager;
 use zxPictureElement;

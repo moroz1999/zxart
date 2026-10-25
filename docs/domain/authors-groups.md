@@ -11,7 +11,6 @@ have at least one of them.
 - **realName** — the person's real name
 - **nickname** — the name they are known by in the scene
 - **wikiLink** — their page on SpeccyWiki
-- **artCityId** — their identity on Artcity
 - **deny3a** — hides the external links the author does not want shown
 
 Names are recorded per interface language, so an author written in Cyrillic can

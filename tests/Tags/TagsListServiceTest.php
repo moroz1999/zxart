@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\TagsList\Dto\TagListItemDto;
-use ZxArt\TagsList\Repositories\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListRepository;
 use ZxArt\TagsList\TagsListService;
 use ZxArt\Tests\Doubles\Elements\TagElementStub;
 

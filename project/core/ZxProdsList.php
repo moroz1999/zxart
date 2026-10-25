@@ -3,8 +3,8 @@
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Repositories\ProdHardwareRepository;
-use ZxArt\Prods\Repositories\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdsRepository;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Shared\DatabaseTable;

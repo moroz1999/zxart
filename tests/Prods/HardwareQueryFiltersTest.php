@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Hardware\HardwareCatalogService;
-use ZxArt\Prods\Repositories\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareRepository;
 use zxProdHardwareQueryFilter;
 use zxReleaseEffectiveHardwareQueryFilter;
 use zxReleaseHardwareQueryFilter;
