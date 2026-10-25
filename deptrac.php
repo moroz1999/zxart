@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Deptrac\Deptrac\Contract\Config\Collector\BoolConfig;
 use Deptrac\Deptrac\Contract\Config\Collector\ClassNameRegexConfig;
 use Deptrac\Deptrac\Contract\Config\Collector\DirectoryConfig;
+use Deptrac\Deptrac\Contract\Config\Collector\InheritsConfig;
 use Deptrac\Deptrac\Contract\Config\DeptracConfig;
 use Deptrac\Deptrac\Contract\Config\Layer;
 use Deptrac\Deptrac\Contract\Config\Ruleset;
@@ -18,13 +19,18 @@ use Deptrac\Deptrac\Contract\Config\Ruleset;
  * - MisnamedRepository: a `*Repository` anywhere else, the Dbal layer included.
  *   Nothing may use one, so any use of one is a violation.
  * - NonLegacy: the rest of `ZxArt\`.
- * - Legacy: the CMS and the legacy project code.
+ * - Entities: the CMS structure elements (`structureElement` and every class
+ *   inheriting it). They are the entities for now, so the modern layers may
+ *   use them.
+ * - Legacy: the rest of the CMS and the legacy project code.
  */
 return static function (DeptracConfig $config): void {
     $nonLegacyDirectory = DirectoryConfig::create('project/core/ZxArt/.*');
     $dbalDirectory = DirectoryConfig::create('project/core/ZxArt/.*/Dbal/.*');
     $repositoriesDirectory = DirectoryConfig::create('project/core/ZxArt/.*/Repositories/.*');
     $repositoryName = ClassNameRegexConfig::create('/Repository$/');
+    $entityClass = InheritsConfig::create('structureElement');
+    $entityBase = ClassNameRegexConfig::create('/^structureElement$/');
     $misnamedRepository = BoolConfig::create()
         ->must($nonLegacyDirectory)
         ->must($repositoryName)
@@ -54,17 +60,24 @@ return static function (DeptracConfig $config): void {
             $misnamed = Layer::withName('MisnamedRepository')->collectors(
                 $misnamedRepository,
             ),
+            $entities = Layer::withName('Entities')->collectors(
+                BoolConfig::create()->must($entityClass)->mustNot($nonLegacyDirectory),
+                BoolConfig::create()->must($entityBase),
+            ),
             $legacy = Layer::withName('Legacy')->collectors(
                 BoolConfig::create()
                     ->must(DirectoryConfig::create('(project|trickster-cms)/.*'))
-                    ->mustNot($nonLegacyDirectory),
+                    ->mustNot($nonLegacyDirectory)
+                    ->mustNot($entityClass)
+                    ->mustNot($entityBase),
             ),
         )
         ->rulesets(
-            Ruleset::forLayer($nonLegacy)->accesses($dbal, $repositories),
-            Ruleset::forLayer($dbal)->accesses($nonLegacy),
-            Ruleset::forLayer($repositories)->accesses($nonLegacy, $dbal),
+            Ruleset::forLayer($nonLegacy)->accesses($dbal, $repositories, $entities),
+            Ruleset::forLayer($dbal)->accesses($nonLegacy, $entities),
+            Ruleset::forLayer($repositories)->accesses($nonLegacy, $dbal, $entities),
             Ruleset::forLayer($misnamed),
-            Ruleset::forLayer($legacy)->accesses($nonLegacy, $dbal, $repositories),
+            Ruleset::forLayer($entities)->accesses($nonLegacy, $dbal, $repositories, $legacy),
+            Ruleset::forLayer($legacy)->accesses($nonLegacy, $dbal, $repositories, $entities),
         );
 };

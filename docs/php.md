@@ -14,7 +14,8 @@
 ## Architecture Dependencies
 
 - PHP classes in `project/core/ZxArt/` are non-legacy code.
-- Non-legacy code must not depend on legacy project code. Existing dependencies are recorded in `deptrac.baseline.yaml`; do not add new baseline entries for new code.
+- The CMS structure elements (`structureElement` and the `*Element` classes inheriting it) are the entities for now: non-legacy code may use them, and deptrac puts them in their own `Entities` layer.
+- Non-legacy code must not depend on the rest of the legacy code (CMS services, managers, legacy project classes). Existing dependencies are recorded in `deptrac.baseline.yaml`; do not add new baseline entries for new code.
 - Inside `ZxArt\`, deptrac also keeps the Dbal layer from using repositories and refuses any use of a `*Repository` outside `<Domain>/Repositories/` ([php/repositories.md](php/repositories.md)).
 - Run `composer deptrac` to validate the boundary. Removing an existing dependency also requires removing its obsolete baseline entry.
 
