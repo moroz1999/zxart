@@ -94,7 +94,7 @@ Handled by the runner itself, not by the registry.
 
 | Tool | Input | Returns |
 |---|---|---|
-| `fetch_url` | `url` | Final URL after redirects, status, page title, the main text as Markdown, links (text + absolute URL), images (alt + absolute URL). Truncated at a size limit with a note |
+| `fetch_url` | `url` | Final URL after redirects, status, content type, and the response body as it came, unchanged (HTML stays HTML), so the model reads the page's own structure. Truncated at a size limit with a note |
 | `view_image` | `url`, or `fileId` of a file on the site | The image itself, passed to the model as image input |
 
 `fetch_url` rules: `http`/`https` only; the resolved address must not be
@@ -172,6 +172,6 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [ ] Search tools on the services from [service-changes.md](service-changes.md) — `search` and `find_locations` done; `search_prods`, `search_authors`, `search_groups`, `find_releases` wait for the shape of their summaries
 - [ ] `get_*` tools for the six entity types
 - [ ] Catalogue tools
-- [ ] `fetch_url` with address guard, limits, HTML → Markdown; `view_image`
+- [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`
 - [ ] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
 - [ ] Tests per tool: request mapping, preview rows, refused privilege
