@@ -36,7 +36,29 @@ Read tools so far:
 |---|---|---|
 | `search` | `Search\SearchTool` | `EntitySearchService` (see [search.md](search.md#entity-phrase-search)); `types` is `SearchableType`, exactly the six types |
 | `find_locations` | `Search\FindLocationsTool` | `PlaceSearchService` |
+| `search_prods` | `Search\SearchProdsTool` | `ProdSearchService`, then `FoundProdsReader` |
+| `search_releases` | `Search\SearchReleasesTool` | `ReleaseSearchService`, then `FoundReleasesReader` |
+| `search_authors` | `Search\SearchAuthorsTool` | `AuthorSearchService`, then `FoundAuthorsReader` |
+| `search_groups` | `Search\SearchGroupsTool` | `GroupSearchService`, then `FoundGroupsReader` |
+
+The four typed searches take `{filter, limit, offset}`: `filter` is the
+service's own filter DTO (see [search.md](search.md#typed-searches)), so the
+schema the model sees is the one the search reads; `limit` is kept between 1
+and 100. They answer the total and one page of summaries, in the order the
+search found them. A summary (`Found<Entity>Dto`, read by
+`Found<Entities>Reader` in the entity's module) names related entities as
+`Shared\References\EntityRefDto` (type, id, title, from `EntityRefs::of()`)
+and credits as `Shared\Dto\CreditDto` (the author or alias ref and the
+roles, from `CreditsReader`):
+
+- production: year, authors with roles, groups that made it, publishers,
+  categories;
+- release: production, year, type, formats, file name, authors with roles,
+  publishers;
+- author: real name, country, city, aliases, groups;
+- group: abbreviation, type, country, city, aliases.
 
 Tests: `tests/Assistant/Tools/` (schema, request building, registry, each tool
-with its service mocked) and `tests/Integration/Assistant/ToolCallTest.php` (a
-call resolved from the container and built from JSON).
+with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
+call resolved from the container and built from JSON, a nested filter among
+them) and `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries).

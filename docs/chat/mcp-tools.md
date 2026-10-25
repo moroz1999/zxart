@@ -61,17 +61,17 @@ Handled by the runner itself, not by the registry.
 | Tool | Input | Returns |
 |---|---|---|
 | `search` | `phrase`, optional `types[]` (`prod`, `release`, `author`, `authorAlias`, `group`, `groupAlias`), `limit` | Matches across types, closest first: type, id, title, year, a short qualifier (author's real name and country, prod's year and groups, release's prod) |
-| `search_prods` | any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `addedFrom`, `addedTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupLink` (`made`, `published`), `publisherIds[]` (authors or groups), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tags[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
-| `search_authors` | any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of the software they made or published), `prodIds[]`, `prodRoles[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
-| `search_groups` | any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
-| `search_releases` | any of: `title`, `fileName`, `md5`, `prodIds[]`, `prods` (a nested `search_prods` filter), `yearFrom`, `yearTo`, `releaseTypes[]`, `formats[]`, `hardware[]`, `languages[]`, `publisherIds[]` (authors or groups), `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`; `limit`, `offset` | Releases with prod, year, type, format, file name; total count |
+| `search_prods` | `filter` with any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `addedFrom`, `addedTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupLink` (`made`, `published`), `publisherIds[]` (authors or groups), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tagIds[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
+| `search_authors` | `filter` with any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of the software they made or published), `prodIds[]`, `prodRoles[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
+| `search_groups` | `filter` with any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
+| `search_releases` | `filter` with any of: `title`, `fileName`, `md5`, `prodIds[]`, `prods` (a nested `search_prods` filter), `yearFrom`, `yearTo`, `releaseTypes[]`, `formats[]`, `hardware[]`, `languages[]`, `publisherIds[]` (authors or groups), `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`; `limit`, `offset` | Releases with prod, year, type, format, file name; total count |
 | `find_locations` | `phrase` | Countries and cities with ids — the step behind "Alexander + Tallinn" |
 
 "Alexander + Tallinn" is `find_locations("Tallinn")` then
-`search_authors(name: "Alexander", cityIds: […])`. "Game, Star Wars, 1983–1986" is
-`search_prods(title: "Star Wars", categoryIds: [games], yearFrom: 1983, yearTo: 1986)`.
+`search_authors(filter: {name: "Alexander", cityIds: […]})`. "Game, Star Wars, 1983–1986" is
+`search_prods(filter: {title: "Star Wars", categoryIds: [games], yearFrom: 1983, yearTo: 1986})`.
 "Who wrote music for Voronezh games of 1987" is
-`search_authors(prodRoles: ["music"], prods: {categoryIds: [games], yearFrom: 1987, yearTo: 1987, cityIds: […]})`.
+`search_authors(filter: {prodRoles: ["music"], prods: {categoryIds: [games], yearFrom: 1987, yearTo: 1987, cityIds: […]}})`.
 
 ### Entities
 
@@ -171,7 +171,7 @@ ids, tags as entities, parties, pictures, tunes, press.
 
 - [x] `ReadTool` / `WriteTool` interfaces, `ChangePreviewDto`, `ToolRegistry`, `ToolRequestBuilder` — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] JSON Schema generation from request DTOs (+ tests on representative DTOs)
-- [ ] Search tools on the services from [service-changes.md](service-changes.md) — `search` and `find_locations` done; `search_prods`, `search_authors`, `search_groups`, `search_releases` wait for the shape of their summaries
+- [x] Search tools on the services from [service-changes.md](service-changes.md) — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [ ] `get_*` tools for the six entity types
 - [ ] Catalogue tools
 - [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`

@@ -16,6 +16,10 @@ use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Shared\Serializer\RequestDenormalizerFactory;
 use ZxArt\Ai\ChunkProcessor;
 use ZxArt\Assistant\Tools\Search\FindLocationsTool;
+use ZxArt\Assistant\Tools\Search\SearchAuthorsTool;
+use ZxArt\Assistant\Tools\Search\SearchGroupsTool;
+use ZxArt\Assistant\Tools\Search\SearchProdsTool;
+use ZxArt\Assistant\Tools\Search\SearchReleasesTool;
 use ZxArt\Assistant\Tools\Search\SearchTool;
 use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Ai\Service\PressArticleParser;
@@ -217,6 +221,10 @@ return [
     ToolRegistry::class => autowire()->constructor([
         DI\get(SearchTool::class),
         DI\get(FindLocationsTool::class),
+        DI\get(SearchProdsTool::class),
+        DI\get(SearchReleasesTool::class),
+        DI\get(SearchAuthorsTool::class),
+        DI\get(SearchGroupsTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),
