@@ -61,15 +61,17 @@ Handled by the runner itself, not by the registry.
 | Tool | Input | Returns |
 |---|---|---|
 | `search` | `phrase`, optional `types[]` (`prod`, `release`, `author`, `authorAlias`, `group`, `groupAlias`), `limit` | Matches across types, closest first: type, id, title, year, a short qualifier (author's real name and country, prod's year and groups, release's prod) |
-| `search_prods` | any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorId`, `groupId`, `countryIds[]`, `tags[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
-| `search_authors` | any of: `name` (nickname, real name or alias), `countryId`, `cityId`, `groupId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
-| `search_groups` | any of: `name` (title, abbreviation or alias), `countryId`, `cityId`, `type`; `limit`, `offset` | Groups with location, type, aliases; total count |
+| `search_prods` | any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `addedFrom`, `addedTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupRole` (`developer`, `publisher`), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tags[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
+| `search_authors` | any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of their software), `prodIds[]`, `prodRoles[]`, `prods` (a nested `search_prods` filter), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
+| `search_groups` | any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodRole` (`developer`, `publisher`), `prods` (a nested `search_prods` filter), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
 | `find_releases` | one of: `prodId`, `title`, `fileName`, `md5` | Releases with prod, year, type, format, file name |
 | `find_locations` | `phrase` | Countries and cities with ids — the step behind "Alexander + Tallinn" |
 
 "Alexander + Tallinn" is `find_locations("Tallinn")` then
-`search_authors(name: "Alexander", cityId: …)`. "Game, Star Wars, 1983–1986" is
+`search_authors(name: "Alexander", cityIds: […])`. "Game, Star Wars, 1983–1986" is
 `search_prods(title: "Star Wars", categoryIds: [games], yearFrom: 1983, yearTo: 1986)`.
+"Who wrote music for Voronezh games of 1987" is
+`search_authors(prodRoles: ["music"], prods: {categoryIds: [games], yearFrom: 1987, yearTo: 1987, cityIds: […]})`.
 
 ### Entities
 

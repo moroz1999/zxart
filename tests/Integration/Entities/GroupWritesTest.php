@@ -6,19 +6,25 @@ namespace ZxArt\Tests\Integration\Entities;
 
 require_once __DIR__ . '/EntityWriteTestCase.php';
 
+use Closure;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
+use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Services\GroupAliasDataService;
 use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\Services\GroupSearchService;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
+use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Prods\Dto\ProdSearchFilterDto;
+use ZxArt\Prods\GroupProdRole;
+use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Groups\Services\GroupFieldsReader;
 use groupElement;
 
@@ -386,10 +392,43 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild', abbreviation: 'GMGLD'))->id;
         $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldmaster Union', groupId: $groupId));
-        $search = $this->container->get(GroupSearchDbal::class);
+        $find = $this->finder();
 
-        self::assertContains($groupId, $search->findIds('gmgld', null, null, null, 0, 50));
-        self::assertContains($groupId, $search->findIds('GOLDMASTER UNION', null, null, null, 0, 50));
+        self::assertContains($groupId, $find(new GroupSearchFilterDto(name: 'gmgld')));
+        self::assertContains($groupId, $find(new GroupSearchFilterDto(name: 'GOLDMASTER UNION')));
+    }
+
+    public function testSearchFindsTheGroupsByPlaceDatesMembersSubgroupsAndTheirSoftware(): void
+    {
+        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['group', 'publicReceive']]);
+        $divisionId = $this->createGroup('Goldmaster Division');
+        $guildId = $this->groupDataService()->create(new GroupFieldsDto(
+            title: 'Goldmaster Guild',
+            type: 'scene',
+            countryId: self::COUNTRY_POLAND,
+            cityId: self::CITY_WARSAW,
+            startDate: $this->date('15.03.1995'),
+            subGroupIds: [$divisionId],
+        ))->id;
+        $crewId = $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $guildId))->id;
+        $labelId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Label', type: 'studio'))->id;
+        $authorId = $this->createAuthor('Goldmaster Coder');
+        $this->groupDataService()->setMember($divisionId, $authorId, ['coder']);
+        $prodDataService = $this->container->get(ProdDataService::class);
+        $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1990, groupIds: [$crewId], publisherIds: [$labelId]));
+        $gameId = $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Game', year: 1997, groupIds: [$labelId]))->id;
+        $find = $this->finder();
+
+        self::assertSame([$guildId, $labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
+        self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodRole: GroupProdRole::Developer, prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
+        self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodIds: [$gameId])));
+        self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prodRole: GroupProdRole::Publisher)));
+        self::assertSame([$labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', activeFrom: 1995)));
+        self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', foundedFrom: $this->date('01.01.1995'))));
+        self::assertSame([$guildId], $find(new GroupSearchFilterDto(name: 'goldmaster', types: ['scene'], cityIds: [self::CITY_WARSAW])));
+        self::assertSame([$divisionId], $find(new GroupSearchFilterDto(memberIds: [$authorId])));
+        self::assertSame([$divisionId], $find(new GroupSearchFilterDto(parentGroupId: $guildId)));
+        self::assertSame([$guildId], $find(new GroupSearchFilterDto(subGroupId: $divisionId)));
     }
 
     public function testReadAnswersWhatCreateAndUpdateWrote(): void
@@ -407,6 +446,16 @@ final class GroupWritesTest extends EntityWriteTestCase
             new GroupFieldsDto(...array_replace(get_object_vars($this->everyField($subGroupIds)), ['type' => 'studio', 'startDate' => 0, 'subGroupIds' => [$subGroupIds[1]]])),
             $reader->read($this->element($groupId)),
         );
+    }
+
+    /**
+     * @return Closure(GroupSearchFilterDto): list<int>
+     */
+    private function finder(): Closure
+    {
+        $search = $this->container->get(GroupSearchService::class);
+
+        return static fn(GroupSearchFilterDto $filter): array => $search->search($filter, 0, 50)->ids;
     }
 
     private function signInAsRegisteredUser(): void

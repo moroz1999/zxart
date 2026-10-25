@@ -108,20 +108,43 @@ Searches by typed filters, for callers that know what they look for rather
 than a phrase. Each answers one page of ids by title and the total
 (`ZxArt\Shared\Dto\IdPageDto`):
 
-- `ZxArt\Prods\Services\ProdSearchService::search(ProdSearchFilterDto)` — the
-  catalogue's own query filters for categories (with subcategories), hardware,
-  languages, legal statuses, release types and formats of any release,
-  countries of an author or group, and tag ids; then `ProdSearchDbal`
-  narrows by title or alternative title, year range, an author (or its aliases)
-  credited on the production, and a group (or its aliases) that made or
-  published it. It runs its `ApiQuery` without temporary tables, so a search
-  repeated after a write sees it.
+Every filter given must hold; a list holds when any of its values does. What
+an alias is credited with, made, published or holds as members counts for its
+author or group, and an author or group is answered once, never its alias.
+
+- `ZxArt\Prods\Services\ProdSearchService::search(ProdSearchFilterDto)` —
+  the catalogue's own query filters for categories (with subcategories),
+  hardware, languages, legal statuses, release types and formats of any
+  release, and tag ids; then `ProdSearchDbal` narrows by:
+  - title or alternative title; year, the year of any release, and the date
+    added;
+  - credited authors — all of `authorIds` by default, any of them with
+    `anyAuthor` — and the roles they are credited in (`authorRoles` alone:
+    anyone credited in those roles);
+  - groups that made or published it, `groupRole` (`GroupProdRole`) narrowing
+    to one of the two;
+  - country or city of an author or of a developer group (a publisher does not
+    place a production);
+  - party, compo and the highest place;
+  - series, compilation, and the production a compilation includes.
+
+  It runs its `ApiQuery` without temporary tables, so a search repeated after a
+  write sees it. `idsQuery()` answers the same search as a query of the found
+  ids, which the author and group searches nest.
 - `ZxArt\Authors\Services\AuthorSearchService::search(AuthorSearchFilterDto)` —
-  a part of the nickname, of the real name in any language or of an alias
-  (answering the author), country, city, and membership of a group, either side
-  through its aliases.
-- `ZxArt\Groups\Services\GroupSearchService::search(GroupSearchFilterDto)` — a
-  part of the title, of the abbreviation or of an alias, country, city, type.
+  a part of the nickname, of the real name in any language or of an alias;
+  countries, cities; membership of groups; active years — the years of the
+  software they are credited on, nothing else; credits on given productions or
+  on the productions a nested `ProdSearchFilterDto` finds, `prodRoles`
+  narrowing the roles; co-authors of an author (the author itself left out).
+- `ZxArt\Groups\Services\GroupSearchService::search(GroupSearchFilterDto)` —
+  a part of the title, of the abbreviation or of an alias; countries, cities,
+  types; founding and ending dates (a group without the date does not match);
+  members (authors or their aliases); active years from the software they made
+  or published; given productions or the ones a nested `ProdSearchFilterDto`
+  finds, `prodRole` narrowing to developer or publisher (alone: groups that
+  had that role on any production); the subgroups of a group and the groups a
+  group is a subgroup of.
 - `ZxArt\Releases\Dbal\ReleasesDbal` — releases of a production, by a
   part of the title or the file name, and by the md5 of the release file or of
   any file inside it.

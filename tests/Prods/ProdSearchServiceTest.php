@@ -16,7 +16,7 @@ use ZxArt\Releases\ReleaseTypes;
 
 class ProdSearchServiceTest extends TestCase
 {
-    public function testTheCatalogueFiltersGoToTheApiQueryAndTheRestToTheRepository(): void
+    public function testTheCatalogueFiltersGoToTheApiQueryAndTheFilterToTheDbal(): void
     {
         $catalogue = $this->createStub(Builder::class);
         $apiQuery = $this->createMock(ApiQuery::class);
@@ -28,32 +28,28 @@ class ProdSearchServiceTest extends TestCase
             'zxProdStatus' => ['allowed'],
             'zxReleaseReleaseType' => ['original'],
             'zxReleaseFormat' => ['tap'],
-            'zxProdCountryId' => [47450],
             'zxProdTagsInclude' => [7],
         ]);
         $apiQuery->expects($this->once())->method('setTemporaryTables')->with(false);
         $apiQuery->method('getExportFilteredQuery')->willReturn($catalogue);
-        $repository = $this->createMock(ProdSearchDbal::class);
-        $repository->expects($this->once())->method('count')
-            ->with($catalogue, 'Star', 1983, 1986, 5, 6)->willReturn(12);
-        $repository->expects($this->once())->method('findIds')
-            ->with($catalogue, 'Star', 1983, 1986, 5, 6, 10, 5)->willReturn([3, 4]);
-
-        $result = $this->service($apiQuery, $repository)->search(new ProdSearchFilterDto(
-            title: ' Star ',
+        $filter = new ProdSearchFilterDto(
+            title: 'Star',
             categoryIds: [92159],
             yearFrom: 1983,
-            yearTo: 1986,
             hardware: ['zx48'],
             languages: ['en'],
             legalStatuses: [LegalStatus::allowed],
             releaseTypes: [ReleaseTypes::original],
             formats: ['tap'],
-            authorId: 5,
-            groupId: 6,
+            authorIds: [5],
             countryIds: [47450],
             tagIds: [7],
-        ), 10, 5);
+        );
+        $dbal = $this->createMock(ProdSearchDbal::class);
+        $dbal->expects($this->once())->method('count')->with($catalogue, $filter)->willReturn(12);
+        $dbal->expects($this->once())->method('findIds')->with($catalogue, $filter, 10, 5)->willReturn([3, 4]);
+
+        $result = $this->service($apiQuery, $dbal)->search($filter, 10, 5);
 
         self::assertSame(12, $result->total);
         self::assertSame([3, 4], $result->ids);
@@ -64,17 +60,44 @@ class ProdSearchServiceTest extends TestCase
         $apiQuery = $this->createMock(ApiQuery::class);
         $apiQuery->expects($this->once())->method('setFiltrationParameters')->with(['zxProdAll' => true]);
         $apiQuery->method('getExportFilteredQuery')->willReturn($this->createStub(Builder::class));
-        $repository = $this->createStub(ProdSearchDbal::class);
-        $repository->method('findIds')->willReturn([]);
+        $dbal = $this->createStub(ProdSearchDbal::class);
+        $dbal->method('findIds')->willReturn([]);
 
-        $this->service($apiQuery, $repository)->search(new ProdSearchFilterDto(title: 'Elite'), 0, 10);
+        $this->service($apiQuery, $dbal)->search(new ProdSearchFilterDto(title: 'Elite'), 0, 10);
     }
 
-    private function service(ApiQuery $apiQuery, ProdSearchDbal $repository): ProdSearchService
+    public function testTheIdsQueryIsWhatAnotherSearchNarrowsBy(): void
+    {
+        $catalogue = $this->createStub(Builder::class);
+        $idsQuery = $this->createStub(Builder::class);
+        $apiQuery = $this->createStub(ApiQuery::class);
+        $apiQuery->method('getExportFilteredQuery')->willReturn($catalogue);
+        $filter = new ProdSearchFilterDto(yearFrom: 1985);
+        $dbal = $this->createMock(ProdSearchDbal::class);
+        $dbal->expects($this->once())->method('idsQuery')->with($catalogue, $filter)->willReturn($idsQuery);
+
+        self::assertSame($idsQuery, $this->service($apiQuery, $dbal)->idsQuery($filter));
+    }
+
+    public function testACatalogueThatMatchesNothingFindsNothing(): void
+    {
+        $apiQuery = $this->createStub(ApiQuery::class);
+        $apiQuery->method('getExportFilteredQuery')->willReturn(null);
+        $dbal = $this->createMock(ProdSearchDbal::class);
+        $dbal->expects($this->never())->method('findIds');
+
+        $result = $this->service($apiQuery, $dbal)->search(new ProdSearchFilterDto(categoryIds: [1]), 0, 10);
+
+        self::assertSame(0, $result->total);
+        self::assertSame([], $result->ids);
+        self::assertNull($this->service($apiQuery, $dbal)->idsQuery(new ProdSearchFilterDto(categoryIds: [1])));
+    }
+
+    private function service(ApiQuery $apiQuery, ProdSearchDbal $dbal): ProdSearchService
     {
         $apiQueriesManager = $this->createStub(ApiQueriesManager::class);
         $apiQueriesManager->method('getQuery')->willReturn($apiQuery);
 
-        return new ProdSearchService($apiQueriesManager, $repository);
+        return new ProdSearchService($apiQueriesManager, $dbal);
     }
 }

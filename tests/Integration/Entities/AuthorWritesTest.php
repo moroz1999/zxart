@@ -6,14 +6,16 @@ namespace ZxArt\Tests\Integration\Entities;
 
 require_once __DIR__ . '/EntityWriteTestCase.php';
 
+use Closure;
 use LanguagesManager;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use ZxArt\Authors\Dbal\AuthorSearchDbal;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
+use ZxArt\Authors\Dto\AuthorSearchFilterDto;
 use ZxArt\Authors\Exception\AuthorDataException;
 use ZxArt\Authors\Services\AuthorAliasDataService;
 use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\Services\AuthorSearchService;
 use ZxArt\Authors\Dto\MembershipInputDto;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
@@ -22,6 +24,7 @@ use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Authors\Services\AuthorFieldsReader;
 use authorElement;
@@ -381,12 +384,36 @@ final class AuthorWritesTest extends EntityWriteTestCase
         $this->container->get(AuthorAliasDataService::class)->create(new AuthorAliasFieldsDto(title: 'Goldmaster Ghost', authorId: $authorId));
         $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
         $this->container->get(GroupDataService::class)->setMember($groupId, $authorId, ['coder']);
-        $search = $this->container->get(AuthorSearchDbal::class);
+        $find = $this->finder();
 
-        self::assertContains($authorId, $search->findIds('johann goldm', null, null, null, 0, 50));
-        self::assertContains($authorId, $search->findIds('GOLDMASTER GHOST', null, null, null, 0, 50));
-        self::assertSame([$authorId], $search->findIds(null, null, null, $groupId, 0, 50));
-        self::assertNotContains($authorId, $search->findIds('Goldmaster_Ghost', null, null, null, 0, 50));
+        self::assertContains($authorId, $find(new AuthorSearchFilterDto(name: 'johann goldm')));
+        self::assertContains($authorId, $find(new AuthorSearchFilterDto(name: 'GOLDMASTER GHOST')));
+        self::assertSame([$authorId], $find(new AuthorSearchFilterDto(groupIds: [$groupId])));
+        self::assertNotContains($authorId, $find(new AuthorSearchFilterDto(name: 'Goldmaster_Ghost')));
+    }
+
+    public function testSearchFindsTheAuthorsByTheirSoftwareItsYearsTheirRolesAndCoAuthors(): void
+    {
+        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
+        $coderId = $this->authorDataService()->create(new AuthorFieldsDto(title: 'Goldmaster Coder', cityId: self::CITY_WARSAW))->id;
+        $musicianId = $this->authorDataService()->create(new AuthorFieldsDto(title: 'Goldmaster Musician'))->id;
+        $tunesId = $this->container->get(AuthorAliasDataService::class)
+            ->create(new AuthorAliasFieldsDto(title: 'Goldmaster Tunes', authorId: $musicianId))->id;
+        $prodDataService = $this->container->get(ProdDataService::class);
+        $demoId = $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1990))->id;
+        $gameId = $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Game', year: 1996))->id;
+        $prodDataService->setMember($demoId, $coderId, ['code']);
+        $prodDataService->setMember($demoId, $tunesId, ['music']);
+        $prodDataService->setMember($gameId, $musicianId, ['music']);
+        $find = $this->finder();
+
+        self::assertSame([$coderId, $musicianId], $find(new AuthorSearchFilterDto(name: 'goldmaster', prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
+        self::assertSame([$coderId], $find(new AuthorSearchFilterDto(name: 'goldmaster', prodRoles: ['code'], prods: new ProdSearchFilterDto(title: 'goldmaster'))));
+        self::assertSame([$musicianId], $find(new AuthorSearchFilterDto(name: 'goldmaster', prodIds: [$gameId])));
+        self::assertSame([$musicianId], $find(new AuthorSearchFilterDto(name: 'goldmaster', activeFrom: 1995)));
+        self::assertSame([$coderId, $musicianId], $find(new AuthorSearchFilterDto(name: 'goldmaster', activeTo: 1992)));
+        self::assertSame([$musicianId], $find(new AuthorSearchFilterDto(coAuthorId: $coderId)));
+        self::assertSame([$coderId], $find(new AuthorSearchFilterDto(name: 'goldmaster', cityIds: [self::CITY_WARSAW])));
     }
 
     public function testReadAnswersWhatCreateAndUpdateWrote(): void
@@ -403,6 +430,16 @@ final class AuthorWritesTest extends EntityWriteTestCase
             new AuthorFieldsDto(...array_replace(get_object_vars($this->everyField()), ['title' => 'Goldmaster Painter', 'countryId' => 0, 'cityId' => 0, 'chipType' => 'ay'])),
             $reader->read($this->element($authorId)),
         );
+    }
+
+    /**
+     * @return Closure(AuthorSearchFilterDto): list<int>
+     */
+    private function finder(): Closure
+    {
+        $search = $this->container->get(AuthorSearchService::class);
+
+        return static fn(AuthorSearchFilterDto $filter): array => $search->search($filter, 0, 50)->ids;
     }
 
     private function signInAsRegisteredUser(): void

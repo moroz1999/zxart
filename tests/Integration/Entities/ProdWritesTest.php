@@ -42,6 +42,7 @@ final class ProdWritesTest extends EntityWriteTestCase
     private const int CATEGORY_DEMO = 92159;
     private const int CATEGORY_INTRO = 92163;
     private const int COUNTRY_POLAND = 47450;
+    private const int CITY_VORONEZH = 47233;
     /** Chaos Constructions 1999. */
     private const int PARTY = 2564;
     private const int PARTY_YEAR = 1999;
@@ -475,10 +476,30 @@ final class ProdWritesTest extends EntityWriteTestCase
         self::assertSame([$demoId], $search->search(new ProdSearchFilterDto(title: 'goldmaster', categoryIds: [self::CATEGORY_DEMO]), 0, 10)->ids);
         self::assertSame([$introId], $search->search(new ProdSearchFilterDto(title: 'goldmaster', yearFrom: 1991), 0, 10)->ids);
         self::assertSame([$introId], $search->search(new ProdSearchFilterDto(title: 'goldmaster', formats: ['tap'], releaseTypes: [ReleaseTypes::original]), 0, 10)->ids);
-        self::assertSame([$demoId], $search->search(new ProdSearchFilterDto(legalStatuses: [LegalStatus::allowed], groupId: $groupId), 0, 10)->ids);
+        self::assertSame([$demoId], $search->search(new ProdSearchFilterDto(legalStatuses: [LegalStatus::allowed], groupIds: [$groupId]), 0, 10)->ids);
         $page = $search->search(new ProdSearchFilterDto(title: 'goldmaster'), 1, 1);
         self::assertSame(2, $page->total);
         self::assertSame([$introId], $page->ids);
+    }
+
+    public function testTheSearchFindsByCoAuthorsTheirRolesAndTheirCity(): void
+    {
+        $this->signInAsEditor();
+        $coderId = $this->container->get(AuthorDataService::class)
+            ->create(new AuthorFieldsDto(title: 'Goldmaster Coder', cityId: self::CITY_VORONEZH))->id;
+        $musicianId = $this->createAuthor('Goldmaster Musician');
+        $demoId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $introId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Intro', categoryIds: [self::CATEGORY_INTRO]))->id;
+        $this->prodDataService()->setMember($demoId, $coderId, ['code']);
+        $this->prodDataService()->setMember($demoId, $musicianId, ['music']);
+        $this->prodDataService()->setMember($introId, $musicianId, ['music', 'graphics']);
+        $search = $this->container->get(ProdSearchService::class);
+        $find = static fn(ProdSearchFilterDto $filter): array => $search->search($filter, 0, 10)->ids;
+
+        self::assertSame([$demoId], $find(new ProdSearchFilterDto(title: 'goldmaster', authorIds: [$coderId, $musicianId])));
+        self::assertSame([$demoId, $introId], $find(new ProdSearchFilterDto(title: 'goldmaster', authorIds: [$coderId, $musicianId], anyAuthor: true)));
+        self::assertSame([$introId], $find(new ProdSearchFilterDto(title: 'goldmaster', authorRoles: ['graphics'])));
+        self::assertSame([$demoId], $find(new ProdSearchFilterDto(title: 'goldmaster', cityIds: [self::CITY_VORONEZH])));
     }
 
     public function testASearchRepeatedAfterACreateSeesTheNewProduction(): void
