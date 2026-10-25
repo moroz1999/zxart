@@ -12,19 +12,22 @@ paths:
         - `delete` removes the release; needs `publicDelete`. Answers the deleted id.
         - `deleteMember` removes the author `authorId` from the members (authorship of this entity type only); needs `deleteAuthor`. Answers `404` when the author was not a member.
         - `deleteFile` deletes the file `fileId` of one of the multi-file selectors; the file itself needs `delete`. Answers `404` for a file of another element.
+        - `update` changes the release `id` from the multipart body, replaces its own file with `file` (or takes it away with `removeFile`) and adds the files of `files[<kind>][]` to their lists; needs `publicReceive`, and moving it to another production needs `publicAdd` there. Answers the id.
+        - `createFromFiles` makes one release of the production `fields.prodId` per file of `releaseFiles[]`, or one release without a file when none is sent; a release without a title is named after its file. Needs `publicAdd` on the production. Answers the ids of the releases.
+        A list left out of the body keeps what the element holds; an empty list clears it. A field left out keeps its value.
       parameters:
         - in: query
           name: id
-          required: true
+          required: false
           schema:
             type: integer
-          description: Id of the release.
+          description: Id of the release; not sent by the actions that create.
         - in: query
           name: action
           required: true
           schema:
             type: string
-            enum: [delete, deleteMember, deleteFile]
+            enum: [delete, deleteMember, deleteFile, update, createFromFiles]
         - in: query
           name: authorId
           required: false
@@ -37,13 +40,61 @@ paths:
           schema:
             type: integer
           description: File to delete; required for `deleteFile`.
+      requestBody:
+        required: false
+        description: Sent by the actions that create or update.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: object
+                  description: The request as JSON.
+                  required: [fields]
+                  properties:
+                    fields:
+                      $ref: '#/components/schemas/Fields'
+                    authors:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Authorship'
+                    importOrigins:
+                      description: Not taken by `createFromFiles`; an upload through the site has no portal ids.
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ImportOrigin'
+                    removeFile:
+                      type: boolean
+                file:
+                  type: string
+                  format: binary
+                  description: '`update` only: the release file itself.'
+                'files[screenshots][]':
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 'Added to the list of that kind: screenshots, inlays, info, ads.'
+                'releaseFiles[]':
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: '`createFromFiles` only: one release per file.'
+            encoding:
+              data:
+                contentType: application/json
       responses:
         '200':
           description: The change is done
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChangeResult'
+                oneOf:
+                  - $ref: '#/components/schemas/ChangeResult'
+                  - $ref: '#/components/schemas/CreatedIds'
         '400':
           description: Missing id or action parameter, or unknown action
           content:
@@ -76,6 +127,77 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    Fields:
+      type: object
+      description: The editable fields; one left out keeps its value, 0 clears a reference.
+      properties:
+        title:
+          type: string
+        year:
+          type: integer
+        version:
+          type: string
+        description:
+          type: string
+        releaseType:
+          type: string
+        releaseFormats:
+          type: array
+          items:
+            type: string
+        languages:
+          type: array
+          items:
+            type: string
+        hardware:
+          type: array
+          items:
+            type: string
+        publisherIds:
+          type: array
+          items:
+            type: integer
+        prodId:
+          type: integer
+        denyVoting:
+          type: boolean
+        denyComments:
+          type: boolean
+    Authorship:
+      type: object
+      required: [authorId]
+      properties:
+        authorId:
+          type: integer
+          description: An author or an author alias.
+        roles:
+          type: array
+          items:
+            type: string
+          description: None stands for an unknown role.
+        startDate:
+          type: integer
+          description: Unix timestamp, 0 for none.
+        endDate:
+          type: integer
+          description: Unix timestamp, 0 for none.
+    ImportOrigin:
+      type: object
+      required: [origin, importId]
+      properties:
+        origin:
+          type: string
+          description: Portal code.
+        importId:
+          type: string
+    CreatedIds:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
     ChangeResult:
       type: object
       required: [id]

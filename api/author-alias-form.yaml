@@ -3,6 +3,7 @@ paths:
   /author-alias-form/:
     get:
       summary: Load the author alias creation form
+      description: The alias itself is created through `/author-alias-data/` (`create`).
       parameters:
         - in: query
           name: authorId
@@ -24,54 +25,6 @@ paths:
                     $ref: '#/components/schemas/EntityRef'
         '400':
           description: Missing author identifier
-        '403':
-          description: Alias creation is forbidden
-        '404':
-          description: Author not found
-        '500':
-          description: Internal server error
-    post:
-      summary: Create an author alias
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - authorId
-                - title
-                - startDate
-                - endDate
-                - displayInMusic
-                - displayInGraphics
-              properties:
-                authorId:
-                  type: integer
-                title:
-                  type: string
-                startDate:
-                  type: string
-                endDate:
-                  type: string
-                displayInMusic:
-                  type: boolean
-                displayInGraphics:
-                  type: boolean
-      responses:
-        '201':
-          description: Created alias identifier
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - id
-                properties:
-                  id:
-                    type: integer
-        '400':
-          description: Invalid request
         '403':
           description: Alias creation is forbidden
         '404':

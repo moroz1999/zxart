@@ -81,21 +81,12 @@ it, and it is copied from there to where the element keeps its files — by
 `persistExtraData` for a single-file field, by the `receiveFiles` action for a
 multi-file selector.
 
-**A multi-file selector's staged upload is read, never consumed.** `receiveFiles`
-leaves the cached file in place, because one submitted form may create several
-elements that all read the same upload — the release form creates one release per
-uploaded file, each with the same screenshots and inlays. Anything that needs a
-staged file more than once just reads it again; nothing has to copy it into the
-cache itself.
-
-**Whoever received the form deletes the staged uploads when it is done with
-them**, through `ZxArt\Forms\StagedUploadsCleaner` — `clearElementUploads()` for
-an element implementing `FilesElementInterface`, `clear()` for the raw submitted
-file infos. Nothing sweeps the directory later, so every caller of `receiveFiles`
-has to clear up after itself: the prod and release `publicReceive` actions do it
-right after receiving, the two batch creators once every element has read the
-uploads (`ReleaseBatchCreateService` in a `finally`, so a batch that gave up half
-way leaves nothing behind).
+**A multi-file selector's staged upload is read, never consumed.**
+`receiveFiles` leaves the cached file in place, so anything that needs a staged
+file more than once just reads it again. Nothing deletes staged uploads and
+nothing sweeps the directory. Productions, releases, authors and groups do not
+stage theirs: their data endpoints copy each upload straight from PHP's upload
+([php/entity-writes.md](php/entity-writes.md#lists-and-uploads)).
 
 A single-file field is the element's own: `persistExtraData` still takes its
 upload with it.

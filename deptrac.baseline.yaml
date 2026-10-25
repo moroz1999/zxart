@@ -55,8 +55,6 @@ deptrac:
       - structureElement
       - structureManager
       - userElement
-    ZxArt\Authors\Services\AuthorFieldsDtoFactory:
-      - structureElement
     ZxArt\Authors\Services\AuthorFieldsWriter:
       - authorElement
       - cityElement
@@ -2297,9 +2295,6 @@ deptrac:
       - structureManager
     ZxArt\Forms\FormLanguagesProvider:
       - LanguagesManager
-    ZxArt\Forms\StagedUploadsCleaner:
-      - App\Paths\PathsManager
-      - FilesElementInterface
     ZxArt\Forms\SubmittedFormValues:
       - structureElement
     ZxArt\Geo\GeoService:
@@ -2341,8 +2336,6 @@ deptrac:
       - groupAliasElement
       - privilegesManager
       - structureManager
-    ZxArt\Groups\Services\GroupAliasFieldsDtoFactory:
-      - structureElement
     ZxArt\Groups\Services\GroupAliasFieldsWriter:
       - groupAliasElement
       - groupElement
@@ -2364,8 +2357,6 @@ deptrac:
       - groupElement
       - structureElement
       - structureManager
-    ZxArt\Groups\Services\GroupFieldsDtoFactory:
-      - structureElement
     ZxArt\Groups\Services\GroupFieldsWriter:
       - cityElement
       - countryElement
@@ -2649,8 +2640,6 @@ deptrac:
       - privilegesManager
       - structureManager
       - zxProdElement
-    ZxArt\Prods\Services\ProdFieldsDtoFactory:
-      - structureElement
     ZxArt\Prods\Services\ProdFieldsWriter:
       - partyElement
       - structureElement
@@ -2736,8 +2725,6 @@ deptrac:
       - zxProdCategoryElement
       - zxProdElement
       - zxReleaseElement
-    ZxArt\Releases\Services\ReleaseFieldsDtoFactory:
-      - structureElement
     ZxArt\Releases\Services\ReleaseFieldsWriter:
       - structureElement
       - zxProdElement

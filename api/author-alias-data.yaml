@@ -11,19 +11,53 @@ paths:
         matching legacy action on the author alias and is recorded in the actions log.
         - `delete` removes the author alias; needs `publicDelete`. Answers the deleted id.
         - `convertToAuthor` turns the alias into a standalone author with the alias privileges, and deletes the alias; needs `convertToAuthor`. Answers the created entity's id.
+        - `create` adds an alias to the author `fields.authorId` from the multipart body; needs `publicAdd` for aliases on that author. Answers the new id.
+        - `update` changes the alias `id` from the multipart body; needs `publicReceive`. Answers the id.
+        A list left out of the body keeps what the element holds; an empty list clears it. A field left out keeps its value.
       parameters:
         - in: query
           name: id
-          required: true
+          required: false
           schema:
             type: integer
-          description: Id of the author alias.
+          description: Id of the author alias; not sent by the actions that create.
         - in: query
           name: action
           required: true
           schema:
             type: string
-            enum: [delete, convertToAuthor]
+            enum: [delete, convertToAuthor, create, update]
+      requestBody:
+        required: false
+        description: Sent by the actions that create or update.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: object
+                  description: The request as JSON.
+                  required: [fields]
+                  properties:
+                    fields:
+                      $ref: '#/components/schemas/Fields'
+                    groups:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Membership'
+                    prods:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Membership'
+                    importOrigins:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ImportOrigin'
+            encoding:
+              data:
+                contentType: application/json
       responses:
         '200':
           description: The change is done
@@ -32,7 +66,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChangeResult'
         '400':
-          description: Missing id or unknown action
+          description: Missing id, unknown action, a malformed body, a wrong reference or role, or a refused file; nothing is changed
           content:
             application/json:
               schema:
@@ -63,6 +97,48 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    Fields:
+      type: object
+      description: The editable fields; one left out keeps its value, 0 clears a reference.
+      properties:
+        title:
+          type: string
+        authorId:
+          type: integer
+        startDate:
+          type: integer
+        endDate:
+          type: integer
+        displayInMusic:
+          type: boolean
+        displayInGraphics:
+          type: boolean
+    Membership:
+      type: object
+      required: [elementId]
+      properties:
+        elementId:
+          type: integer
+        roles:
+          type: array
+          items:
+            type: string
+          description: None stands for an unknown role.
+        startDate:
+          type: integer
+          description: Unix timestamp, 0 for none.
+        endDate:
+          type: integer
+          description: Unix timestamp, 0 for none.
+    ImportOrigin:
+      type: object
+      required: [origin, importId]
+      properties:
+        origin:
+          type: string
+          description: Portal code.
+        importId:
+          type: string
     ChangeResult:
       type: object
       required: [id]

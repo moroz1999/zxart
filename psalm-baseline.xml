@@ -5814,11 +5814,6 @@
       <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/Forms/StagedUploadsCleaner.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="project/core/ZxArt/Forms/SubmittedFormFields.php">
     <DocblockTypeContradiction>
       <code><![CDATA[is_array($fieldValues)]]></code>

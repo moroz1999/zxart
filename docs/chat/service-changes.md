@@ -2,14 +2,12 @@
 
 Overview: [README.md](README.md). The tools these serve: [mcp-tools.md](mcp-tools.md).
 
-The tools are thin adapters; the work is in domain services. Today most writes
-of the six entity types live **inside legacy element actions** (`publicReceive`,
-`publicAdd`, `join`) that read a submitted form. The assistant cannot submit
-forms, so that logic has to be callable as services. The rule for every item
-below: extend the existing `<Entity>DataService` and the existing repositories
-where they are good, move the logic out of the action into the service, and
-make the legacy action call the service — **one code path** for the SPA, the
-Smarty panel and the assistant.
+The tools are thin adapters; the work is in domain services. The writes of the
+six entity types are use cases behind `<Entity>DataService`, which the SPA (over
+the data endpoints), the assistant and the imports all call — **one code path**.
+The rule for every item below: extend the existing `<Entity>DataService` and the
+existing repositories where they are good, and delete a legacy action once
+nothing calls it.
 
 The `<Entity>DataService` contract stays as it is
 ([rest-api.md](../php/rest-api.md)): it loads its own element class, checks the
@@ -18,23 +16,17 @@ the actions log.
 
 ## 1. Create and update as services
 
-| Entity | Logic to move out | Into |
-|---|---|---|
-| prod | `publicReceiveZxProd`: structure name, party link, tags, year, `persistElementData`, categories, authorship, import origins, AI queue statuses, files | `ProdDataService::create()` / `update()` |
-| release | `publicReceiveZxRelease`, `publicAddZxRelease`; hardware autofill from the file (`ReleaseHardwareAutofillService`) | `ReleaseDataService::create()` / `update()` |
-| author | `publicReceiveAuthor`, `publicAddAuthor`: location, group membership fields | `AuthorDataService::create()` / `update()` |
-| author alias | `publicReceiveAuthorAlias` and friends | `AuthorAliasDataService::create()` / `update()` |
-| group | `publicReceiveGroup`, `publicAddGroup`: members, subgroups, parent groups | `GroupDataService::create()` / `update()` |
-| group alias | its actions | `GroupAliasDataService::create()` / `update()` |
+Done, see [php/entity-writes.md](../php/entity-writes.md):
+`<Entity>DataService::create()` / `update()` of the six types take the fields
+DTO (every field optional, only the given ones change), the entity's lists
+(authors or members, memberships, import origins; `null` keeps, the given list
+replaces) and its uploads, and run as one transaction. The SPA edit pages call
+them through `/<entity>-data/` (`create`, `update`, and `batchUpload` /
+`createFromFiles` for the flows that make one element per file); the public
+form actions they replaced are deleted. Only the author alias actions the admin
+form posts remain.
 
-- Input is a typed patch DTO per entity: every field optional, only the given
-  ones change. The legacy action builds the DTO from the validated form and
-  passes every field, which keeps its current "the form is the whole state"
-  behaviour.
-- Link-backed fields (categories, authors, groups, publishers) are read through
-  their links, not from `getFormData()` — the known trap where they come back
-  empty and a passthrough wipes them.
-- Create places the element where the legacy action does (the author letter
+- Create places the element where the legacy action did (the author letter
   folder, the prod category, the release under its prod) and returns its id.
 - Privileges: `publicAdd` for create under the parent, `publicReceive` for
   update — the same actions the SPA's buttons check.
@@ -224,8 +216,9 @@ action and `ReleaseDataService::cloneRelease()` both use it — see
 
 ## Checklist
 
-- [x] prod: `ProdFieldsDto`, `ProdFieldsWriter`, `ProdCreator`, `ProdDataService::create()` / `update()`; `publicReceive` and `batchUpload` use them (see [features/prod.md](../features/prod.md#writing-the-fields))
-- [x] release, author, author alias, group, group alias: the same pieces; legacy add and edit actions use them — see [php/entity-writes.md](../php/entity-writes.md)
+- [x] prod: `ProdFieldsDto`, `ProdFieldsWriter`, `ProdCreator`, `ProdDataService::create()` / `update()` / `batchUpload()` (see [features/prod.md](../features/prod.md#writing-the-fields))
+- [x] release, author, author alias, group, group alias: the same pieces — see [php/entity-writes.md](../php/entity-writes.md)
+- [x] SPA edit pages save through the data endpoints with lists and uploads; the public form actions of five types, the production batch upload action and the release batch create service are deleted
 - [x] `join()` with privilege and log in five data services; move counts for previews
 - [x] Authorship and membership set-with-roles; modification time bumped
 - [x] `ElementFileImporter` extracted from `ProdsService`; imports use it — only once the import golden master is in place
@@ -236,7 +229,7 @@ action and `ReleaseDataService::cloneRelease()` both use it — see
 - [x] Complete state reads for the six types with modification time, files and import origins
 - [x] Batch title/URL lookup for entity refs
 - [ ] Tests first for every new service method; update `docs/features/*.md` for each changed entity
-- [x] Integration suite (`tests/Integration/`, separate testsuite) for the six data services and the legacy add/edit actions
+- [x] Integration suite (`tests/Integration/`, separate testsuite) for the six data services, their lists and uploads
 - [x] Golden-master suite for the imports; snapshots stored before any import code changes
 - [x] Imports and writers as use cases over the same repositories, each in one transaction (section 11)
 - [x] Release cloning through `ReleaseCreator`

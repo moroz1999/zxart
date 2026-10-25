@@ -390,8 +390,8 @@ class Formdata extends LoggedControllerApplication
 
     /**
      * Existing files of each multi-file selector (screenshots, inlays, …) for
-     * the file-selector manager. Uploads go back through `publicReceive` →
-     * `receiveFiles`; deletes hit the shared `delete` action per file element.
+     * the file-selector manager. Uploads and deletes go through the entity's
+     * data endpoint.
      *
      * Thumbnails use the `prodImage` preset: selector files belong to prods and
      * releases and are therefore stored in the `releases` folder, which is where

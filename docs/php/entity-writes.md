@@ -2,9 +2,10 @@
 
 Creating and editing productions, releases, authors, author aliases, groups and
 group aliases goes through one path per entity type, whoever asks for it: the
-legacy edit and add forms, the batch upload, and the entity's
-`<Entity>DataService`. New writes of these entities use it; nothing writes their
-fields on the element directly.
+SPA edit pages through the entity's data endpoint (`/<entity>-data/`), the
+assistant, and the imports, all through the entity's `<Entity>DataService`.
+Nothing writes their fields on the element directly; the one exception left is
+the admin alias form (see [What stays in the legacy actions](#what-stays-in-the-legacy-actions)).
 
 ## Use cases
 
@@ -35,8 +36,8 @@ returns what the handler returns. `<Entity>Repository` lives in
 
 | Entity | Repository | Use cases |
 |---|---|---|
-| prod | `ProdRepository` | Create, Update, Delete, SetProdMember, DeleteProdMember, AddProdFiles, DeleteProdFile, JoinProds, ImportProd |
-| release | `ReleaseRepository` | Create, Update, Delete, Clone, SetReleaseMember, DeleteReleaseMember, AddReleaseFiles, SetReleaseFile, DeleteReleaseFile, ImportRelease |
+| prod | `ProdRepository` | Create, Update, BatchUploadProds, Delete, SetProdMember, DeleteProdMember, AddProdFiles, DeleteProdFile, JoinProds, ImportProd |
+| release | `ReleaseRepository` | Create, Update, CreateReleasesFromFiles, Delete, Clone, SetReleaseMember, DeleteReleaseMember, AddReleaseFiles, SetReleaseFile, DeleteReleaseFile, ImportRelease |
 | author | `AuthorRepository` | Create, Update, Delete, ConvertAuthorToGroup, JoinAuthors, ImportAuthor, ImportAuthorLabel |
 | author alias | `AuthorAliasRepository` | Create, Update, Delete, ConvertAuthorAliasToAuthor, JoinAuthorAliases, ImportAuthorAlias |
 | group | `GroupRepository` | Create, Update, Delete, ConvertGroupToAuthor, JoinGroups, SetGroupMember, DeleteGroupMember, ImportGroup |
@@ -51,9 +52,8 @@ The imports keep their own merge rules (`Imported<Entity>Merger`); see
 |---|---|
 | `<Entity>FieldsDto` | The editable fields. `null` leaves a field untouched; an empty string or list clears it; 0 clears a reference or a date (dates are timestamps). |
 | `<Entity>FieldsWriter::apply()` | Checks every reference, then writes the given fields and what follows from them, and saves through `<Entity>Repository::save()`. Checks no privilege and logs nothing. A wrong reference is a `400` of the entity's `<Entity>DataException`, thrown before anything is written. |
-| `<Entity>Creator` | `create()` makes the element where it belongs (`<Entity>Repository::create()`; `500` when it cannot be made) and calls `completeCreation()`, which runs the writer and grants the creator the actions on it. A legacy add form creates its own element and calls `completeCreation()` itself. The caller refreshes the user's privileges once done creating. |
-| `<Entity>FieldsDtoFactory::fromSubmittedForm()` | Turns a validated legacy form into the DTO. |
-| `Create<Entity>Handler` / `Update<Entity>Handler` | Privilege check, title rules, one transaction, actions log. Reached through `<Entity>DataService::create()` / `update()`, the only entry point for anything other than the legacy forms. |
+| `<Entity>Creator` | `create()` makes the element where it belongs (`<Entity>Repository::create()`; `500` when it cannot be made) and calls `completeCreation()`, which runs the writer and grants the creator the actions on it. The admin alias add form creates its own element and calls `completeCreation()` itself. The caller refreshes the user's privileges once done creating. |
+| `Create<Entity>Handler` / `Update<Entity>Handler` | Privilege check, title rules, the lists and uploads of the request, one transaction, actions log. Reached through `<Entity>DataService::create()` / `update()`. |
 
 What follows from the fields, per type:
 
@@ -79,6 +79,62 @@ another production `zxRelease.publicAdd` there. The CMS works an element's
 privileges out as it loads it, so each check follows a load of that element —
 the root, the author, the group or the production — which also rejects with a
 `400` an id of another type.
+
+## Lists and uploads
+
+A create or an update carries, besides the fields, the lists the entity holds;
+a list left `null` keeps what is stored, an empty one clears it, and the given
+one replaces it:
+
+- authors of a production or a release and members of a group or a group alias
+  (`AuthorshipInputDto`: an author or an author alias, roles, dates) —
+  `ElementAuthorsWriter::replace()`;
+- groups and productions of an author or an author alias
+  (`MembershipInputDto`) — `AuthorMembershipsWriter::replace()`;
+- import origins (`ImportOriginDto`) — `ImportOriginsWriter::replace()`. A
+  production batch upload and releases made from files take none: an upload
+  through the site has no portal ids;
+- the author's real name per language (`realNames`).
+
+Roles follow the rules of [Authors and members](#authors-and-members); an author
+listed together with one of its aliases is credited as the alias with the
+author's roles, and of several aliases of one author only the first is kept.
+
+Uploads arrive as `ZxArt\Shared\Dto\UploadedFileDto` (PHP's temporary path and
+the client's file name). Every upload is checked before anything is written, so
+a refused file (`AttachedFileRefusedException`, a `400`) changes nothing:
+
+- an author's or a group's image — `ElementImageWriter` checks it is a picture
+  within the size limit, stores it as the element's `image` and `originalName`;
+  `removeImage` takes it away;
+- the file lists of a production or a release, by kind (`ProdFileKind`,
+  `ReleaseFileKind`) — `ElementFileImporter::checkUpload()` /
+  `addUploadedFile()`, added to the list of that kind;
+- a release's own file — `ElementFileImporter::setUploadedMainFile()` replaces
+  it and reads its structure again; `removeFile` deletes it, and with it the
+  formats read from it (`removeMainFile()`).
+
+Two flows create one element per uploaded file, each a use case of its own:
+
+- `BatchUploadProdsHandler` (`/prod-data/` `batchUpload`, privilege
+  `zxProdsUploadForm.batchUpload` on the root) makes a production with one
+  release holding the file; each is named after its file unless a title is
+  given;
+- `CreateReleasesFromFilesHandler` (`/release-data/` `createFromFiles`,
+  `zxRelease.publicAdd` on the production) makes a release of the production per
+  file, or one release when no file is sent.
+
+Both answer the created ids (`CreatedIdsDto`); the file lists sent beside go to
+every element created, and a wrong author, role or file creates nothing.
+
+Over HTTP the request is a multipart body: the JSON request
+(`<Entity>SaveRequestDto`, `ProdBatchUploadRequestDto`,
+`ReleaseCreateFromFilesRequestDto`) in the `data` part, read by
+`ZxArt\Shared\Http\MultipartDataReader`, and the files under `image`, `file`,
+`releaseFiles[]` and `files[<kind>][]`, read by `UploadedFilesReader`. A
+malformed body or a failed upload is a `400`. The specs are in `api/`
+(`<entity>-data.yaml`); the SPA builds the body with `entitySaveBody()` in
+`shared/api/`.
 
 ## Authors and members
 
@@ -184,16 +240,18 @@ for what the stale value-set display does to an import.
 - `ZxArt\Forms\SubmittedFormValues` reads a validated legacy form's storage in
   the field's type: a field the action expects is read even when empty (the
   form is the whole state of its fields), a field it does not expect is `null`.
-  A per-language field (the author's real name) is not read through it: the
-  form has already put each language's value on the element, and the factory
-  leaves it `null`.
+  Only the admin alias form uses it (`AuthorAliasFieldsDtoFactory`).
 - `ZxArt\Shared\LanguageCodes::ALL` is the list of language codes.
 
 ## What stays in the legacy actions
 
-Only what is the form's own: authorship and memberships from the `add*` fields,
-import origins, uploaded images and files, staged uploads, and the batch
-upload's releases from the uploaded files.
+The admin alias form posts the author alias `publicReceive` and `publicAdd`
+actions. They turn the validated form into the fields DTO
+(`AuthorAliasFieldsDtoFactory::fromSubmittedForm()`), run the writer, and keep
+what is the form's own: memberships from the `add*` fields and import origins.
+The public form actions of the other five types are gone, and `/formdata/`
+refuses to create authors, groups, productions and releases (`405`); it still
+loads their forms.
 
 ## Tests
 

@@ -50,16 +50,17 @@ side, one column per ten values. A phone is too narrow for that, so below the
 `md` breakpoint every group takes the full width and lists one value per row —
 hardware, the longest of them, would otherwise run off the screen.
 Authenticated users can open the Angular batch upload form from the catalogue
-page heading. It submits through the backend `zxProdsUploadForm` batch pipeline.
-The batch page reuses the Angular prod form with batch-specific file fields; it
-loads and submits its transient form through `/formdata/`.
+page heading. The batch page reuses the Angular prod form with batch-specific
+file fields; it loads its transient form through `/formdata/` and saves through
+`/prod-data/` (`batchUpload`): one production per uploaded file, each with one
+release holding that file, all with the values of the form.
 Each production the batch creates carries the categories and tags the form
 supplied, so its AI categories-and-tags pass is marked skipped.
 
 The same form is reachable from an author, group or party page
 (`/author/:id/prods/add`, `/group/:id/prods/add`, `/party/:id/prods/add`). The
-entity id is passed to `/formdata/` as `parentId`, the upload form is created
-under that element, and the uploaded productions are attached to it. Pictures and
+entity id is passed to `/formdata/` as `parentId` and the form prefills the
+field that element belongs in, so the uploaded productions are attached to it. Pictures and
 music have the same routes (`…/pictures/add`, `…/music/add`) backed by the
 `picturesUploadForm` and `musicUploadForm` pipelines, and a production's releases
 are added at `/prod/:id/releases/add`.

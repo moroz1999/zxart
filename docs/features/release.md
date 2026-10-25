@@ -6,8 +6,8 @@ Domain rules: [../domain/release.md](../domain/release.md).
 Concrete release (version) of software production. Contains files specific to this version. Always linked to parent zxProd.
 
 ### Main Fields
-- **title** - release title. Optional: `publicAdd` names a new release after the
-  file it was uploaded with, and `persistElementData()` falls back to the parent
+- **title** - release title. Optional: a release created from an uploaded file
+  is named after the file, and `persistElementData()` falls back to the parent
   production's title, so a release always carries a name and the public pages
   need no fallback of their own.
 - **version** - release version
@@ -138,25 +138,18 @@ Concrete release (version) of software production. Contains files specific to th
 - **parsed** - flag that file was parsed
 
 ### Creating releases
-The creation form takes **several files at once** and posts them in one request
-as `fields[file][]`. `ZxArt\Releases\Services\ReleaseBatchCreateService` is what
-splits it: PHP hands a single upload over as its own properties and several as a
-list of those, which is what tells the two apart, and each file is submitted
-through `FormCreateService` with the rest of the form beside it. So a production
-gains as many releases as files were picked, all sharing the values that were
-typed once, and a submit with no file still creates the one release the form
-describes.
+The creation form takes **several files at once** and sends them in one request
+to `/release-data/` (`createFromFiles`) as `releaseFiles[]`. The production
+gains one release per file, all sharing the values typed once and named after
+their file when no title is given; a request with no file creates the one
+release the form describes. The screenshots, inlays and other files sent beside
+them (`files[<kind>][]`) go to **every** release. A wrong author, role or file
+creates nothing.
 
-The screenshots, inlays and other files beside them go to **every** release, as
-the very same staged upload: receiving one copies it out of the upload cache and
-leaves it there for the next release to read. The service deletes them once the
-last release has, whether the batch finished or failed — see
-[../cms.md](../cms.md#staged-uploads).
-
-`/formdata/` answers with `ids` — every release created, in upload order — and
-`id`, the first of them. One created release lands on its own page, several
-return to the production. Editing an existing release keeps the single-file
-field.
+The answer lists the ids of the releases, in upload order. One created release
+lands on its own page, several return to the production. Editing an existing
+release (`update`) replaces its single file with `file` or takes it away with
+`removeFile`.
 
 Each release, from the form or from the production batch upload, is filled and
 granted by `ReleaseCreator` and edited through `ReleaseFieldsWriter` — see

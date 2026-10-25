@@ -48,9 +48,8 @@ Variation of author's nickname. One author can have multiple aliases.
 
 The add-alias control on an author page opens
 `/author/:id/aliases/add`. The creation form loads its main-author context from
-`GET /author-alias-form/` and creates the alias through
-`POST /author-alias-form/`. The endpoint delegates creation to
-`AuthorAliasFormService` and returns typed REST DTOs.
+`GET /author-alias-form/` (`AuthorAliasFormService`) and creates the alias
+through `/author-alias-data/` (`create`).
 Alias activity bounds are entered and returned as four-digit years. They remain
 stored as timestamps through the CMS date fields.
 
@@ -225,8 +224,8 @@ When work is created by group:
 The `/authors` root and its letter routes expose the Angular author creation form
 from the page heading for authenticated users.
 Author creation and editing share the same Angular form component. Creation
-loads a transient form through `GET /formdata/` and submits it through
-`POST /formdata/`.
+loads a transient form through `GET /formdata/` and saves through
+`/author-data/` (`create`), editing through `update`.
 
 Creating an entity needs the `showPublicForm` privilege of its type, which
 regular accounts hold through their registration group. A refused creation is
@@ -275,9 +274,9 @@ under a `group-browser.recent` heading, reading its letter from the route.
 The `/groups` root and its letter routes expose the Angular group creation form
 from the page heading for authenticated users. Group creation and editing share
 the same Angular form component; creation loads a transient form through
-`GET /formdata/` and submits it through `POST /formdata/` with
-`entityType=group`. Members and subgroups are picked in the same form and are
-persisted together with the new group.
+`GET /formdata/` and saves through `/group-data/` (`create`), editing through
+`update` (a group alias through `/group-alias-data/`). Members and subgroups are
+picked in the same form and are saved in the same request.
 
 Author-list responses contain identifiers and display data. Angular builds
 author, group, country-filter, and city-filter links from those identifiers.

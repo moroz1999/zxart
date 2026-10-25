@@ -75,12 +75,11 @@ rows the database then holds (`EntityWriteTestCase`):
   groups and gets the given actions on the public root, then the public root is
   loaded as a request's path loads it — privileges are worked out per element
   as it loads, so nothing may be loaded before;
-- the add form goes through the service its endpoint calls
-  (`FormCreateService::submit()` for `/formdata/`, `AuthorAliasFormService`,
-  `ReleaseBatchCreateService`), the edit form through `setElementFormData()`
-  and `executeAction()` as `/ajax/` does; the json renderer makes them answer
-  instead of redirect. The production batch upload needs uploaded files and
-  the group alias add form has no entry point left, so neither is covered;
+- creates and updates go through the entity's data service, as its data
+  endpoint calls it; uploads are fixture files copied to a temporary path,
+  the way PHP hands them over. A legacy action still reached from the SPA
+  (`clone`) goes through `setElementFormData()` and `executeAction()` as
+  `/ajax/` does; the json renderer makes it answer instead of redirect;
 - joins are covered through the data services: what moves, what is deleted,
   and the refused privilege;
 - reads are checked in the process that wrote: each `*WritesTest` reads back

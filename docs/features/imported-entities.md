@@ -33,9 +33,11 @@ written under.
 
 Each of these elements declares an `importOrigins` array field in its
 `$moduleStructure`. It holds nothing in the database — it only carries the
-submitted rows to `persistImportOrigins()`, which the `publicReceive` and
-`publicAdd` actions call after `persistElementData()` and which lists it in
-`setExpectedFields()`.
+submitted rows to `persistImportOrigins()`, which the author alias
+`publicReceive` and `publicAdd` actions (the admin alias form) call after
+`persistElementData()` and which lists it in `setExpectedFields()`. Every other
+write of the list goes through `ImportOriginsWriter`
+([../php/entity-writes.md](../php/entity-writes.md#lists-and-uploads)).
 
 `persistImportOrigins()` treats the submission as the whole list: rows that are
 new are saved, stored rows the form no longer carries are deleted, and a row

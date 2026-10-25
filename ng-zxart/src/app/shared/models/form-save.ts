@@ -17,10 +17,5 @@ export interface FormSavePayload {
 
 export interface FormSaveResult {
   id: number;
-  /**
-   * Every element the submit created, when a form creates more than one — the
-   * release form creates one release per uploaded file. `id` is the first of them.
-   */
-  ids?: number[];
   errorMessage?: string;
 }
