@@ -10,7 +10,7 @@ The `join()` method in Illuminate 5.2's Query Builder accepts a Closure as the f
 (for building complex ON clauses), but the type hint only declares `string`. The Closure form
 is fully supported at runtime; the warning is a false positive.
 
-**Files affected:** any repository that uses `->join($table, function($join) { ... })`.
+**Files affected:** any Dbal class that uses `->join($table, function($join) { ... })`.
 
 ## structureElement / legacy CMS classes
 

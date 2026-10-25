@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Groups;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Groups\Dbal\GroupSearchRepository;
+use ZxArt\Groups\Dbal\GroupSearchDbal;
 
 /**
  * Groups by a part of the title, of the abbreviation or of an alias, by
@@ -22,7 +22,7 @@ class GroupSearchRepositoryTest extends TestCase
     private const int TALLINN = 100;
 
     private SQLiteConnection $db;
-    private GroupSearchRepository $repository;
+    private GroupSearchDbal $repository;
 
     protected function setUp(): void
     {
@@ -38,7 +38,7 @@ class GroupSearchRepositoryTest extends TestCase
             ['id' => self::CODE_BUSTERS, 'title' => 'Code Busters', 'abbreviation' => 'CBS', 'country' => 0, 'city' => 0, 'type' => 'demogroup'],
         ]);
         $this->db->table('module_groupalias')->insert(['id' => 11, 'title' => 'Triumph Brothers', 'groupId' => self::TRIUMPH]);
-        $this->repository = new GroupSearchRepository($this->db);
+        $this->repository = new GroupSearchDbal($this->db);
     }
 
     public function testANameMatchesTheTitleTheAbbreviationOrAnAlias(): void

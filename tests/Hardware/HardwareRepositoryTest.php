@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Hardware\Dbal\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareDbal;
 
 /**
  * The repository's job is to hand the service typed rows.
@@ -86,7 +86,7 @@ class HardwareRepositoryTest extends TestCase
     /**
      * @param array<string, list<array<string, string>>> $rowsByTable
      */
-    private function createRepository(array $rowsByTable, mixed $singleValue = null): HardwareRepository
+    private function createRepository(array $rowsByTable, mixed $singleValue = null): HardwareDbal
     {
         $connection = $this->createMock(Connection::class);
         $connection->method('table')->willReturnCallback(
@@ -104,6 +104,6 @@ class HardwareRepositoryTest extends TestCase
             },
         );
 
-        return new HardwareRepository($connection);
+        return new HardwareDbal($connection);
     }
 }

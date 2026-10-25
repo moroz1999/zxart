@@ -9,7 +9,7 @@ use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\Import\ImportOriginsHolderTrait;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatusProvider;
@@ -91,7 +91,7 @@ class zxProdElement extends ZxArtItem implements
     use JsonDataProviderElement;
     use ZxSoft;
 
-    public $dataResourceName = ProdsRepository::TABLE;
+    public $dataResourceName = ProdsDbal::TABLE;
     public $allowedTypes = [];
     public $defaultActionName = 'show';
     public $role = 'content';

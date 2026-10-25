@@ -7,7 +7,7 @@ namespace ZxArt\ProdList;
 use structureManager;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\ProdsTransformer;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Shared\SortingParams;
 use zxProdElement;
 
@@ -21,7 +21,7 @@ readonly class ProdListService
     public function __construct(
         private structureManager $structureManager,
         private ProdsTransformer $prodsTransformer,
-        private ProdsRepository $prodsRepository,
+        private ProdsDbal $prodsDbal,
     ) {
     }
 
@@ -37,8 +37,8 @@ readonly class ProdListService
         int $start,
         int $limit,
     ): array {
-        $total = $this->prodsRepository->countByLinkedElement($elementId, $linkType);
-        $ids = $this->prodsRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
+        $total = $this->prodsDbal->countByLinkedElement($elementId, $linkType);
+        $ids = $this->prodsDbal->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit);
 
         $items = [];
         foreach ($ids as $id) {
@@ -60,7 +60,7 @@ readonly class ProdListService
      */
     public function getAllByLinkedElement(int $elementId, string $linkType, SortingParams $sorting): array
     {
-        $total = $this->prodsRepository->countByLinkedElement($elementId, $linkType);
+        $total = $this->prodsDbal->countByLinkedElement($elementId, $linkType);
         if ($total === 0) {
             return ['total' => 0, 'items' => []];
         }

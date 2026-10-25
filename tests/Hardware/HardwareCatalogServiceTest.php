@@ -14,13 +14,13 @@ use ZxArt\Hardware\Dto\HardwareSaveDto;
 use ZxArt\Hardware\Exception\HardwareException;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Hardware\Dbal\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareDbal;
 use ZxArt\Shared\InterfaceLanguage;
 
 #[AllowMockObjectsWithoutExpectations]
 class HardwareCatalogServiceTest extends TestCase
 {
-    private HardwareRepository&MockObject $repository;
+    private HardwareDbal&MockObject $repository;
     private LanguagesManager&MockObject $languagesManager;
     private HardwareCatalogService $service;
     /** @var list<array{id: int, code: string, category: string, position: int}> */
@@ -28,7 +28,7 @@ class HardwareCatalogServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(HardwareRepository::class);
+        $this->repository = $this->createMock(HardwareDbal::class);
         $this->languagesManager = $this->createMock(LanguagesManager::class);
         $this->languagesManager->method('getLanguagesList')->willReturn([
             $this->language('en'),

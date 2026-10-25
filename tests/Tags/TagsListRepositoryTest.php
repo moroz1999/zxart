@@ -8,7 +8,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Shared\DatabaseTable;
-use ZxArt\TagsList\Dbal\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListDbal;
 
 final class TagsListRepositoryTest extends TestCase
 {
@@ -40,7 +40,7 @@ final class TagsListRepositoryTest extends TestCase
             ->with('structure_links as links')
             ->willReturn($builder);
 
-        $repository = new TagsListRepository($connection);
+        $repository = new TagsListDbal($connection);
 
         self::assertSame([12449 => 10, 77 => 14], $repository->getSectionTagAmounts(DatabaseTable::ZxMusic, 10));
     }

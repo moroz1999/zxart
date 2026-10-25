@@ -9,7 +9,7 @@ use groupElement;
 use structureManager;
 use ZxArt\GroupList\Dto\FilterOptionDto;
 use ZxArt\GroupList\Dto\GroupListItemDto;
-use ZxArt\GroupList\Dbal\GroupListRepository;
+use ZxArt\GroupList\Dbal\GroupListDbal;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
@@ -17,7 +17,7 @@ readonly class GroupListService
 {
     public function __construct(
         private structureManager $structureManager,
-        private GroupListRepository $repository,
+        private GroupListDbal $repository,
         private GroupListTransformer $transformer,
     ) {
     }

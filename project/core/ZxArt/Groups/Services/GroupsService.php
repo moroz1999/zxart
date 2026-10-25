@@ -13,7 +13,7 @@ use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
@@ -35,7 +35,7 @@ class GroupsService extends ElementsManager
         protected structureManager        $structureManager,
         protected ConfigManager           $configManager,
         protected privilegesManager       $privilegesManager,
-        protected AuthorshipRepository    $authorshipRepository,
+        protected AuthorshipDbal    $authorshipDbal,
         protected languagesManager        $languagesManager,
         protected Connection              $db,
         private readonly ImportIdOperator $importIdOperator,
@@ -284,7 +284,7 @@ class GroupsService extends ElementsManager
                 //disabled groupship moving to new group
                 //check if group already has groupship in same elements. we dont need duplicates
                 $existingAuthorIds = [];
-                if ($existingGroupShipRecords = $this->authorshipRepository->getAuthorsInfo($targetElement->id, EntityType::Group)) {
+                if ($existingGroupShipRecords = $this->authorshipDbal->getAuthorsInfo($targetElement->id, EntityType::Group)) {
                     foreach ($existingGroupShipRecords as $record) {
                         $existingAuthorIds[] = $record['authorId'];
                     }

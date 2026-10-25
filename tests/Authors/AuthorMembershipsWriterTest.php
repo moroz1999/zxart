@@ -14,7 +14,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use structureElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Dto\MembershipInputDto;
 use ZxArt\Authors\Services\AuthorMembershipsWriter;
 use ZxArt\Hardware\HardwareCatalogService;
@@ -115,7 +115,7 @@ final class AuthorMembershipsWriterTest extends TestCase
         );
 
         return new AuthorMembershipsWriter(
-            new AuthorshipRepository($this->db, $structureManager),
+            new AuthorshipDbal($this->db, $structureManager),
             new EntityReferenceResolver($structureManager, $this->createStub(HardwareCatalogService::class)),
         );
     }

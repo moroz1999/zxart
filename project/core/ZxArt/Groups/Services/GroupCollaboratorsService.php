@@ -11,7 +11,7 @@ use groupElement;
 use structureManager;
 use ZxArt\Groups\Dto\GroupCollaboratorGroupDto;
 use ZxArt\Groups\Dto\GroupCollaboratorPersonDto;
-use ZxArt\Groups\Dbal\GroupCollaboratorsRepository;
+use ZxArt\Groups\Dbal\GroupCollaboratorsDbal;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Exception\ProdDetailsException;
 
@@ -20,7 +20,7 @@ readonly final class GroupCollaboratorsService
     public function __construct(
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
-        private GroupCollaboratorsRepository $collaboratorsRepository,
+        private GroupCollaboratorsDbal $collaboratorsRepository,
     ) {
     }
 

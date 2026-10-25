@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Prods\Services;
 
 use ApiQueriesManager;
-use ZxArt\Prods\Dbal\ProdSearchRepository;
+use ZxArt\Prods\Dbal\ProdSearchDbal;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Releases\ReleaseTypes;
@@ -23,7 +23,7 @@ final readonly class ProdSearchService
 {
     public function __construct(
         private ApiQueriesManager $apiQueriesManager,
-        private ProdSearchRepository $prodSearchRepository,
+        private ProdSearchDbal $prodSearchDbal,
     ) {
     }
 
@@ -41,7 +41,7 @@ final readonly class ProdSearchService
         $title = $filter->title !== null ? trim($filter->title) : null;
 
         return new IdPageDto(
-            total: $this->prodSearchRepository->count(
+            total: $this->prodSearchDbal->count(
                 $catalogueIds,
                 $title,
                 $filter->yearFrom,
@@ -49,7 +49,7 @@ final readonly class ProdSearchService
                 $filter->authorId,
                 $filter->groupId,
             ),
-            ids: $this->prodSearchRepository->findIds(
+            ids: $this->prodSearchDbal->findIds(
                 $catalogueIds,
                 $title,
                 $filter->yearFrom,

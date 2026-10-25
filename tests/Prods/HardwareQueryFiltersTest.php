@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Hardware\HardwareCatalogService;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 use zxProdHardwareQueryFilter;
 use zxReleaseEffectiveHardwareQueryFilter;
 use zxReleaseHardwareQueryFilter;
@@ -39,7 +39,7 @@ class HardwareQueryFiltersTest extends TestCase
 
     public function testProdFilterResolvesCodesAndTargetsTheProdColumn(): void
     {
-        $repository = $this->createMock(ProdHardwareRepository::class);
+        $repository = $this->createMock(ProdHardwareDbal::class);
         $query = $this->createMock(Builder::class);
 
         $repository->expects($this->once())
@@ -56,7 +56,7 @@ class HardwareQueryFiltersTest extends TestCase
 
     public function testEffectiveReleaseFilterResolvesCodesAndTargetsTheReleaseColumn(): void
     {
-        $repository = $this->createMock(ProdHardwareRepository::class);
+        $repository = $this->createMock(ProdHardwareDbal::class);
         $query = $this->createMock(Builder::class);
 
         $repository->expects($this->once())
@@ -73,7 +73,7 @@ class HardwareQueryFiltersTest extends TestCase
 
     public function testUnknownCodesResolveToNoIdsRatherThanBeingPassedThrough(): void
     {
-        $repository = $this->createMock(ProdHardwareRepository::class);
+        $repository = $this->createMock(ProdHardwareDbal::class);
         $query = $this->createMock(Builder::class);
 
         $repository->expects($this->once())
@@ -93,7 +93,7 @@ class HardwareQueryFiltersTest extends TestCase
      */
     public function testTheApiReleaseFilterStaysOwnCodesOnly(): void
     {
-        $repository = $this->createMock(ProdHardwareRepository::class);
+        $repository = $this->createMock(ProdHardwareDbal::class);
         $repository->expects($this->never())->method('addReleaseHardwareFilter');
 
         $query = $this->createMock(Builder::class);
@@ -106,7 +106,7 @@ class HardwareQueryFiltersTest extends TestCase
         $this->assertSame($query, $filter->getFilteredIdList(['zx48'], $query));
     }
 
-    private function makeContainer(ProdHardwareRepository&MockObject $repository): Container&MockObject
+    private function makeContainer(ProdHardwareDbal&MockObject $repository): Container&MockObject
     {
         $catalog = $this->createMock(HardwareCatalogService::class);
         $catalog->method('getIdsByCodes')->willReturnCallback(
@@ -120,7 +120,7 @@ class HardwareQueryFiltersTest extends TestCase
         $container->method('get')->willReturnCallback(
             static fn(string $id): object => match ($id) {
                 HardwareCatalogService::class => $catalog,
-                ProdHardwareRepository::class => $repository,
+                ProdHardwareDbal::class => $repository,
                 default => throw new \RuntimeException('unexpected service ' . $id),
             },
         );

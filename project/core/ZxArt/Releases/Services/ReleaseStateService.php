@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Releases\Services;
 
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\Services\ImportOriginsReader;
 use ZxArt\Releases\Dto\ReleaseStateDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
@@ -27,7 +27,7 @@ final readonly class ReleaseStateService
     public function __construct(
         private structureManager $structureManager,
         private ReleaseFieldsReader $releaseFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private AttachedFilesReader $attachedFilesReader,
         private ImportOriginsReader $importOriginsReader,
     ) {
@@ -44,7 +44,7 @@ final readonly class ReleaseStateService
             id: $releaseId,
             modifiedAt: $release->getModifiedTimestamp(),
             fields: $this->releaseFieldsReader->read($release),
-            authors: $this->authorshipRepository->findByElement($releaseId, EntityType::Release),
+            authors: $this->authorshipDbal->findByElement($releaseId, EntityType::Release),
             fileName: ElementFields::text($release, 'fileName'),
             fileSize: $this->fileSize($release),
             files: $this->readFiles($release),

@@ -6,7 +6,7 @@ namespace ZxArt\Authors\Services;
 
 use authorElement;
 use CountriesManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Repositories\AuthorRepository;
 use ZxArt\Import\Authors\AuthorImportPolicy;
 use ZxArt\Import\ImportOrigin;
@@ -26,7 +26,7 @@ final readonly class ImportedAuthorMerger
     public function __construct(
         private CountriesManager $countriesManager,
         private ImportIdOperator $importIdOperator,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private AuthorRepository $authorRepository,
     ) {
     }
@@ -119,7 +119,7 @@ final readonly class ImportedAuthorMerger
                     continue;
                 }
                 if ($groupElement = $this->importIdOperator->getElementByImportId($groupImportId, $origin, EntityType::Group)) {
-                    $this->authorshipRepository->addAuthorship($groupElement->getId(), $element->getPersistedId(), EntityType::Group, $roles);
+                    $this->authorshipDbal->addAuthorship($groupElement->getId(), $element->getPersistedId(), EntityType::Group, $roles);
                 }
             }
         }

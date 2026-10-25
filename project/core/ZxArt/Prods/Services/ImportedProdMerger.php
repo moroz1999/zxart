@@ -8,7 +8,7 @@ namespace ZxArt\Prods\Services;
 use linksManager;
 use pressArticleElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\ImportedLabelsImporter;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
@@ -39,7 +39,7 @@ final readonly class ImportedProdMerger
         private ImportedFilesAttacher $importedFilesAttacher,
         private ImportedTitleSanitizer $importedTitleSanitizer,
         private ImportedProdCategoriesUpdater $importedProdCategoriesUpdater,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private linksManager $linksManager,
         private structureManager $structureManager,
     ) {
@@ -154,7 +154,7 @@ final readonly class ImportedProdMerger
                 if ($existingElementId === null) {
                     $authorId = $this->importedAuthorIdResolver->resolve($undeterminedId, $origin, $element);
                     if ($authorId !== null) {
-                        $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
+                        $this->authorshipDbal->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                     }
                 } else {
                     $this->linksManager->linkElements($existingElementId, $element->getId(), 'zxProdGroups');
@@ -168,7 +168,7 @@ final readonly class ImportedProdMerger
             foreach ($authorRoles as $importAuthorId => $roles) {
                 $authorId = $this->importedAuthorIdResolver->resolve($importAuthorId, $origin, $element);
                 if ($authorId !== null) {
-                    $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
+                    $this->authorshipDbal->addAuthorship($element->getId(), $authorId, EntityType::Prod, $roles);
                 }
             }
         }

@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Import;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Services\ImportOriginsWriter;
@@ -29,7 +29,7 @@ final class ImportOriginsWriterTest extends TestCase
         $this->db = new SQLiteConnection(new PDO('sqlite::memory:'));
         $this->db->setFetchMode(PDO::FETCH_ASSOC);
         $this->db->getPdo()->exec('CREATE TABLE import_origin (id INTEGER PRIMARY KEY, elementId INTEGER, importOrigin TEXT, importId TEXT, type TEXT)');
-        $this->writer = new ImportOriginsWriter(new ImportOriginsRepository($this->db));
+        $this->writer = new ImportOriginsWriter(new ImportOriginsDbal($this->db));
     }
 
     public function testNewIdsAreAddedAndThoseLeftOutRemoved(): void

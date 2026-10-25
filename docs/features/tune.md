@@ -5,14 +5,14 @@ Domain rules: [../domain/tune.md](../domain/tune.md).
 ## Collection filters
 
 `ZxArt\Tunes\MusicCollectionFilter` maps a top-music URL segment to one of three
-criteria, resolved in `TunesRepository::applyCollectionFilter()`:
+criteria, resolved in `TunesDbal::applyCollectionFilter()`:
 
 - a tag element id to require (`cover`) or to exclude (`original`)
 - a set of `module_zxmusic.formatGroup` values (the sound types)
 - a `CategoryIds` case whose whole subtree the tune's production must be filed
   under (`games`, `demos`, `press`)
 
-The subtree is expanded by `ProdCategoryTreeService` before the repository sees
+The subtree is expanded by `ProdCategoryTreeService` before the Dbal query sees
 it, so the filter matches every category beneath the section — a megademo's
 soundtrack counts as demoscene. The roots are the three top-level sections
 (`CategoryIds::GAMES`, `DEMOSCENE`, `PRESS`), the same ids the software menu

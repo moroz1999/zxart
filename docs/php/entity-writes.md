@@ -93,7 +93,7 @@ stored as `unknown`. They check `publicReceive` on the element, reject with a
 `ZxArt\Groups\GroupMemberRoles::LIST` (groups and their aliases), and log
 `publicReceive`. `deleteMember()` removes one; it checks `deleteAuthor`.
 
-The records live in `authorship` (`AuthorshipRepository::setAuthorship()`), not
+The records live in `authorship` (`AuthorshipDbal::setAuthorship()`), not
 on the element, so `setMember()` and `deleteMember()` store a new modification
 time on the element itself (`structureElement::persistModificationTime()`).
 
@@ -121,11 +121,11 @@ element, then calls the method the legacy `join` action calls:
 The joined element's aliases are read afresh (`resetAliasElements()`): an alias
 added in the same request is otherwise missed.
 
-What a join moves can be counted beforehand: `ReleasesRepository::countByProdId()`,
-`AuthorProdsRepository::countByAuthorId()`, `PicturesRepository` and
-`TunesRepository::countByAuthorId()`,
-`AuthorCollaboratorsRepository::countGroupMemberships()`,
-`GroupCollaboratorsRepository::countMembers()` and `GroupProdsRepository::count()`.
+What a join moves can be counted beforehand: `ReleasesDbal::countByProdId()`,
+`AuthorProdsDbal::countByAuthorId()`, `PicturesDbal` and
+`TunesDbal::countByAuthorId()`,
+`AuthorCollaboratorsDbal::countGroupMemberships()`,
+`GroupCollaboratorsDbal::countMembers()` and `GroupProdsDbal::count()`.
 
 ## Reads
 
@@ -156,7 +156,7 @@ the ids are read from the links, since the element's own list holds only what
 it loaded or was given since. A release's file size is `null` when it has no
 file or the file is not stored on this server.
 
-`AuthorshipRepository::findByElement()` / `findByAuthor()` read the authorship
+`AuthorshipDbal::findByElement()` / `findByAuthor()` read the authorship
 records of one type as stored: roles decoded (an empty column is `[]`), dates
 as timestamps.
 

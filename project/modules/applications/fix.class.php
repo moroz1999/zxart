@@ -7,7 +7,7 @@ use ZxArt\FileParsing\ZxParsingItem;
 use ZxArt\FileParsing\ZxParsingManager;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Queue\QueueStatus;
@@ -103,7 +103,7 @@ class fixApplication extends controllerApplication
 
         $migrationService = $this->getService(ProdHardwareMigrationService::class);
 
-        $ids = $this->db->table(ProdsRepository::TABLE)
+        $ids = $this->db->table(ProdsDbal::TABLE)
             ->orderBy('id')
             ->offset($offset)
             ->limit($limit)
@@ -663,7 +663,7 @@ class fixApplication extends controllerApplication
         $linksManager = $this->getService(linksManager::class);
         $name = 'Nicron';
         $replacement = 'Nicron issue';
-        $result = $this->db->table(ProdsRepository::TABLE)
+        $result = $this->db->table(ProdsDbal::TABLE)
             ->where('title', 'like', $name . ' #%')
             ->orderBy('id')
             ->get(['id']);
@@ -678,7 +678,7 @@ class fixApplication extends controllerApplication
             }
             $split = explode('#', $prod->title);
 
-            $result = $this->db->table(ProdsRepository::TABLE)
+            $result = $this->db->table(ProdsDbal::TABLE)
                 ->where('title', 'like', $name . ' ' . $split[1])
                 ->orWhere('title', 'like', $name . ' ' . (int)$split[1])
                 ->orWhere('title', 'like', $name . ' #' . (int)$split[1])
@@ -749,7 +749,7 @@ class fixApplication extends controllerApplication
     {
         $linksManager = $this->getService(linksManager::class);
         $name = 'Outlet issue';
-        $result = $this->db->table(ProdsRepository::TABLE)
+        $result = $this->db->table(ProdsDbal::TABLE)
             ->where('title', 'like', $name . '%')
             ->orderBy('id')
             ->get(['id']);
@@ -801,7 +801,7 @@ class fixApplication extends controllerApplication
     private function deleteProds(): void
     {
         $linksManager = $this->getService(linksManager::class);
-        $result = $this->db->table(ProdsRepository::TABLE)
+        $result = $this->db->table(ProdsDbal::TABLE)
             ->where('id', '>=', 453563)
             ->orderBy('id')
             ->get(['id']);
@@ -828,7 +828,7 @@ class fixApplication extends controllerApplication
      */
     private function loadIds(string $term): array
     {
-        $result = $this->db->table(ProdsRepository::TABLE)
+        $result = $this->db->table(ProdsDbal::TABLE)
             ->orderBy('id')
             ->where('title', 'like', '%' . $term . '%')
             ->get(['id']);

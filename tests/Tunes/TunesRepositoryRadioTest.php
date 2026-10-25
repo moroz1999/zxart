@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Helpers\AlphanumericColumnSearch;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 
 #[AllowMockObjectsWithoutExpectations]
 class TunesRepositoryRadioTest extends TestCase
@@ -21,7 +21,7 @@ class TunesRepositoryRadioTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new TunesRepository($db, $this->createMock(AlphanumericColumnSearch::class));
+        $repository = new TunesDbal($db, $this->createMock(AlphanumericColumnSearch::class));
         $criteria = $this->makeCriteria(bestVotesLimit: 10);
 
         $this->assertNull($repository->findRandomIdByCriteria($criteria));
@@ -34,7 +34,7 @@ class TunesRepositoryRadioTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturnOnConsecutiveCalls($topBuilder, $randomBuilder);
 
-        $repository = new TunesRepository($db, $this->createMock(AlphanumericColumnSearch::class));
+        $repository = new TunesDbal($db, $this->createMock(AlphanumericColumnSearch::class));
         $criteria = $this->makeCriteria(bestVotesLimit: 10);
 
         $this->assertSame(11, $repository->findRandomIdByCriteria($criteria));

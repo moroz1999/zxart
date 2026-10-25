@@ -1,24 +1,45 @@
-# Repositories and Database
+# Repositories and Dbal
 
-## Repository Pattern
-- All database queries (`Connection`, Query Builder) MUST live in repository classes, NEVER in services.
-- Services orchestrate business logic; repositories handle data access.
-- Repository location: `project/core/ZxArt/{Domain}/Dbal/`.
-- Repositories are `readonly final class` with `Connection` injected via constructor.
-- Repositories MUST extend `ZxArt\Shared\Dbal\AbstractRepository` for shared table-name helpers.
-- Repository methods return primitive types (IDs, counts, arrays), not domain objects or DTOs.
-- Services use repository results (e.g. IDs) and load domain objects via `structureManager`.
-- Filtering, sorting, counting, and pagination of database-backed lists MUST be performed by repository queries in the database, not by loading all rows into a service and slicing arrays in PHP.
+There is no ORM. Tables are read and written by hand, in the Dbal layer;
+entities are supplied and stored by repositories. The two are different
+things and never share a name.
+
+## Repositories
+- A service that supplies, saves, edits or deletes an entity and holds no
+  business logic is a repository — whatever it is called today, it becomes
+  `<Entity>Repository`.
+- Location: `project/core/ZxArt/{Domain}/Repositories/<Entity>Repository.php`.
+  A class named `*Repository` lives there and nowhere else.
+- A repository hands out the entity (a legacy element) and stores it: `get()`,
+  `create()`, `save()`, `touch()`, `delete()`. Rules about what a change means —
+  validation, follow-up writes, privileges, logging — belong to writers and
+  use cases ([entity-writes.md](entity-writes.md)), not to the repository.
+- A repository may use Dbal classes; Dbal never uses a repository.
+
+## Dbal
+- All database queries (`Connection`, Query Builder) MUST live in Dbal classes, NEVER in services or repositories.
+- Location: `project/core/ZxArt/{Domain}/Dbal/`, named `<Subject>Dbal` (`AuthorshipDbal`, `ProdSearchDbal`). No class in `Dbal/` is called a repository.
+- Dbal classes are `readonly final class` with `Connection` injected via constructor.
+- Dbal classes MUST extend `ZxArt\Shared\Dbal\AbstractDbal` for shared table-name helpers.
+- Dbal methods return primitive types (IDs, counts, arrays) or plain row DTOs, not domain objects.
+- Services use Dbal results (e.g. IDs) and load domain objects via `structureManager` or a repository.
+- Filtering, sorting, counting, and pagination of database-backed lists MUST be performed by Dbal queries in the database, not by loading all rows into a service and slicing arrays in PHP.
+
+## Checked by deptrac
+`deptrac.php` keeps the layers apart: the Dbal layer may not use the
+Repositories layer, and a `*Repository` outside `<Domain>/Repositories/` —
+in `Dbal/` or anywhere else — falls into a layer nothing may use, so every use
+of it is a violation. Run `composer deptrac`.
 
 ## Database Table Names
 - `Illuminate\Database\Connection` automatically adds `engine_` prefix to table names.
-- In repositories, use `ZxArt\Shared\DatabaseTable` for shared table names instead of local string constants.
+- In Dbal classes, use `ZxArt\Shared\DatabaseTable` for shared table names instead of local string constants.
 - `DatabaseTable` values are table names for Query Builder WITHOUT the `engine_` prefix, e.g. `module_author`, `module_zxmusic`, `structure_links`.
-- Do NOT strip or add the `module_` prefix in repositories. `module_` is part of the table name.
+- Do NOT strip or add the `module_` prefix in Dbal classes. `module_` is part of the table name.
 - Add the `engine_` database prefix manually only in rare places where Query Builder cannot apply it automatically.
 
-## No Raw SQL in Repositories
-- NEVER use `$this->db->raw()` or string-concatenated SQL in repositories.
+## No Raw SQL in Dbal Classes
+- NEVER use `$this->db->raw()` or string-concatenated SQL in Dbal classes.
 - Raw SQL bypasses Illuminate's table prefix handling and is a security risk (SQL injection).
 - Always use the Query Builder methods (`->table()`, `->whereIn()`, `->orderBy()`, etc.).
 - If a query requires a subquery with `LIMIT` (e.g., "top N by votes"), split into two queries:

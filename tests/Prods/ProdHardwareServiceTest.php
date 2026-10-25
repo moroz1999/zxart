@@ -9,7 +9,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 use ZxArt\Prods\Services\ProdHardwareService;
 
 /**
@@ -22,12 +22,12 @@ use ZxArt\Prods\Services\ProdHardwareService;
 #[AllowMockObjectsWithoutExpectations]
 class ProdHardwareServiceTest extends TestCase
 {
-    private ProdHardwareRepository&MockObject $repository;
+    private ProdHardwareDbal&MockObject $repository;
     private ProdHardwareService $service;
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(ProdHardwareRepository::class);
+        $this->repository = $this->createMock(ProdHardwareDbal::class);
 
         $catalog = $this->createMock(HardwareCatalogService::class);
         $catalog->method('getCategoryOf')->willReturnCallback(

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Radio\Services\RadioOptionsService;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdCategoryElement;
 
@@ -52,7 +52,7 @@ class RadioOptionsServiceTest extends TestCase
                 return null;
             });
 
-        $repository = $this->createMock(TunesRepository::class);
+        $repository = $this->createMock(TunesDbal::class);
         $repository->method('getYearRange')->willReturn(['min' => 1986, 'max' => 1995]);
         $repository->method('getAvailableFormatGroups')->willReturn(['ay']);
         $repository->method('getAvailableFormats')->willReturn(['pt3']);

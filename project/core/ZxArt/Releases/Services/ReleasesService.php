@@ -7,14 +7,14 @@ namespace ZxArt\Releases\Services;
 use structureManager;
 use ZxArt\Releases\Dto\ReleaseDto;
 use ZxArt\Releases\ReleasesTransformer;
-use ZxArt\Releases\Dbal\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesDbal;
 use zxReleaseElement;
 
 readonly class ReleasesService
 {
     public function __construct(
         private structureManager $structureManager,
-        private ReleasesRepository $releasesRepository,
+        private ReleasesDbal $releasesDbal,
         private ReleasesTransformer $releasesTransformer,
     ) {
     }
@@ -24,7 +24,7 @@ readonly class ReleasesService
      */
     public function getLatestAdded(int $limit): array
     {
-        $ids = $this->releasesRepository->getLatestAddedIds($limit);
+        $ids = $this->releasesDbal->getLatestAddedIds($limit);
         return $this->loadAndTransform($ids);
     }
 

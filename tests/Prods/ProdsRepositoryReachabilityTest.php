@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Helpers\AlphanumericColumnSearch;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 
 /**
  * A production is reachable on the site only through a category. The first-page
@@ -20,7 +20,7 @@ class ProdsRepositoryReachabilityTest extends TestCase
     private const int CATEGORY_ID = 900;
 
     private SQLiteConnection $db;
-    private ProdsRepository $repository;
+    private ProdsDbal $repository;
 
     protected function setUp(): void
     {
@@ -30,7 +30,7 @@ class ProdsRepositoryReachabilityTest extends TestCase
         $pdo = $this->db->getPdo();
         $pdo->exec('CREATE TABLE module_zxprod (id INTEGER PRIMARY KEY, votes REAL, year INTEGER, dateAdded INTEGER, legalStatus TEXT)');
         $pdo->exec('CREATE TABLE structure_links (parentStructureId INTEGER, childStructureId INTEGER, type TEXT)');
-        $this->repository = new ProdsRepository($this->db, new AlphanumericColumnSearch());
+        $this->repository = new ProdsDbal($this->db, new AlphanumericColumnSearch());
     }
 
     public function testLatestAddedLeavesOutProdWithoutCategory(): void

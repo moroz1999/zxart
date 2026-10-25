@@ -13,7 +13,7 @@ use PDO;
 use PHPUnit\Framework\TestCase;
 use structureElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
 use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Hardware\HardwareCatalogService;
@@ -146,7 +146,7 @@ final class ElementAuthorsWriterTest extends TestCase
         );
 
         return new ElementAuthorsWriter(
-            new AuthorshipRepository($this->db, $structureManager),
+            new AuthorshipDbal($this->db, $structureManager),
             new EntityReferenceResolver($structureManager, $this->createStub(HardwareCatalogService::class)),
         );
     }

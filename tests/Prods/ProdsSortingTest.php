@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use privilegesManager;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\Services\ImportIdOperator;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Prods\UseCases\ImportProdHandler;
@@ -84,7 +84,7 @@ class ProdsSortingTest extends TestCase
             $this->createStub(structureManager::class),
             $this->createStub(linksManager::class),
             $this->createStub(privilegesManager::class),
-            $this->createStub(AuthorshipRepository::class),
+            $this->createStub(AuthorshipDbal::class),
             $db,
             $this->createStub(LanguagesManager::class),
             $this->createStub(ImportIdOperator::class),

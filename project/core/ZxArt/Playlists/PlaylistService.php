@@ -11,7 +11,7 @@ use structureElement;
 use structureManager;
 use ZxArt\Playlists\Dto\PlaylistDto;
 use ZxArt\Playlists\Exception\PlaylistException;
-use ZxArt\Playlists\Dbal\PlaylistContentsRepository;
+use ZxArt\Playlists\Dbal\PlaylistContentsDbal;
 use ZxArt\Shared\StructureType;
 
 readonly class PlaylistService
@@ -19,7 +19,7 @@ readonly class PlaylistService
     public function __construct(
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
-        private PlaylistContentsRepository $contentsRepository,
+        private PlaylistContentsDbal $contentsRepository,
         private linksManager $linksManager,
         private privilegesManager $privilegesManager,
     ) {

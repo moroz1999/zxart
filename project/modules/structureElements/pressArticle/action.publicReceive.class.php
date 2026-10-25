@@ -1,7 +1,7 @@
 <?php
 
 use App\Users\CurrentUserService;
-use ZxArt\Press\Dbal\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleDbal;
 use ZxArt\Shared\StructureType;
 
 class publicReceivePressArticle extends structureElementAction
@@ -29,8 +29,8 @@ class publicReceivePressArticle extends structureElementAction
                 $this->grantAuthorPrivileges($structureElement);
             }
             if ($submittedOriginalContent !== null) {
-                $pressArticleRepository = $this->getService(PressArticleRepository::class);
-                $pressArticleRepository->saveOriginalContent($structureElement->getId(), $submittedOriginalContent);
+                $pressArticleDbal = $this->getService(PressArticleDbal::class);
+                $pressArticleDbal->saveOriginalContent($structureElement->getId(), $submittedOriginalContent);
             }
 
             if ($parentElement = $structureElement->getFirstParentElement()) {

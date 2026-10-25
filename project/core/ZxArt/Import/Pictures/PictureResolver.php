@@ -6,13 +6,13 @@ namespace ZxArt\Import\Pictures;
 
 use structureManager;
 use ZxArt\Import\Resolver;
-use ZxArt\Pictures\Dbal\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesDbal;
 use zxPictureElement;
 
 readonly final class PictureResolver
 {
     public function __construct(
-        private PicturesRepository $picturesRepository,
+        private PicturesDbal $picturesDbal,
         private structureManager   $structureManager,
         private Resolver           $resolver,
     )
@@ -26,7 +26,7 @@ readonly final class PictureResolver
             return null;
         }
 
-        $entityIds = $this->picturesRepository->findPicturesByTitle($pictureLabel->title);
+        $entityIds = $this->picturesDbal->findPicturesByTitle($pictureLabel->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
         $candidates = [];

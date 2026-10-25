@@ -13,7 +13,7 @@ use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\Dto\PictureSearchResult;
-use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchDbal;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Services\PicturesManager;
 use zxPictureElement;
@@ -26,7 +26,7 @@ readonly class PictureSearchService
     private const string AUTHORS_EXPORT_TYPE = 'author';
 
     public function __construct(
-        private PictureSearchRepository $pictureSearchRepository,
+        private PictureSearchDbal $pictureSearchDbal,
         private PicturesManager $picturesManager,
         private AuthorsService $authorsService,
         private PicturesTransformer $picturesTransformer,
@@ -42,14 +42,14 @@ readonly class PictureSearchService
         $order = [$query->sortParameter->value => $query->sortOrder->value];
 
         if ($query->resultsType === PictureSearchResultsType::Authors) {
-            $authorsQuery = $this->pictureSearchRepository->buildAuthorsQuery($query);
+            $authorsQuery = $this->pictureSearchDbal->buildAuthorsQuery($query);
             $totalAmount = (clone $authorsQuery)->count();
             /** @var \structureElement[] $authorElements */
             $authorElements = $this->authorsService->getElementsByQuery($authorsQuery, $order, $query->start, $query->limit);
             $pictures = [];
             $authors = $this->transformAuthors($authorElements);
         } else {
-            $picturesQuery = $this->pictureSearchRepository->buildPicturesQuery($query);
+            $picturesQuery = $this->pictureSearchDbal->buildPicturesQuery($query);
             $totalAmount = (clone $picturesQuery)->count();
             /** @var \structureElement[] $pictureElements */
             $pictureElements = $this->picturesManager->getElementsByQuery($picturesQuery, $order, $query->start, $query->limit);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\IpBan;
 
 use Cache;
-use ZxArt\IpBan\Dbal\IpBanRepository;
+use ZxArt\IpBan\Dbal\IpBanDbal;
 
 /**
  * Permanent IP ban service with Redis-backed cache (your Cache class).
@@ -17,7 +17,7 @@ final readonly class IpBanService
     private int $ttl;
 
     public function __construct(
-        private IpBanRepository $repository,
+        private IpBanDbal $repository,
         private Cache           $cache
     )
     {

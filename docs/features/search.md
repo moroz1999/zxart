@@ -73,7 +73,7 @@ The graphics and music branches of the legacy `detailedSearch` element are repla
 
 - Standalone SPA entrypoint: `/pictures/search` (`pages/picture-search`), mounting `zx-picture-search` with `manageUrl=false`.
 - REST: `GET /picture-search/` (`ZxArt\Controllers\PictureSearch` → `ZxArt\PictureSearch\PictureSearchService`). Spec: `api/picture-search.yaml`.
-- `PictureSearchService` builds the query in `ZxArt\PictureSearch\Dbal\PictureSearchRepository` — SQL directly against `module_zxpicture`, `module_author` and `structure_links` (author-location via the `authorPicture` link, tags via `tagsManager`) — and applies ordering, pagination and element loading through `PicturesManager` (`resultsType=author` runs the authors query through `AuthorsService`, narrowed to `displayInGraphics` authors of matching pictures).
+- `PictureSearchService` builds the query in `ZxArt\PictureSearch\Dbal\PictureSearchDbal` — SQL directly against `module_zxpicture`, `module_author` and `structure_links` (author-location via the `authorPicture` link, tags via `tagsManager`) — and applies ordering, pagination and element loading through `PicturesManager` (`resultsType=author` runs the authors query through `AuthorsService`, narrowed to `displayInGraphics` authors of matching pictures).
 - The response includes legacy-compatible `apiUrl` (`/api/...`) and `zipUrl` (`/zipItems/...`) links built from the request filters.
 - **SPA URL scheme**: filters live in the router query params (`titleWord`, `startYear`, `endYear`, `rating`, `partyPlace`, `pictureType`, `realtime`, `inspiration`, `stages`, `fromGame`, `tagsInclude`, `tagsExclude`, `authorCountry`, `authorCity`, `resultsType`, `sortParameter`, `sortOrder`, `page`); only non-default values are emitted (`models/picture-search-query-params.ts`). `fromGame=1` restricts to pictures that belong to a game (`module_zxpicture.prod`); the graphics "games" menu links here. When embedded in a legacy page (`manageUrl=true`) the component still parses/pushes the legacy `name:value/` path segments (`models/picture-search-url.ts`).
 - `action=locations&ids=...` resolves country/city element titles for restoring filter chips from URL ids.
@@ -81,7 +81,7 @@ The graphics and music branches of the legacy `detailedSearch` element are repla
 - Author-result queries use only the current-language `module_author` row, so totals and pagination count each logical author once.
 - Result skeletons are shown only during the initial request; subsequent pagination keeps the current results visible while pagination is locked.
 
-Music search uses the same principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService` → `ZxArt\MusicSearch\Dbal\MusicSearchRepository`). Standalone entrypoint `/music/search` (`pages/music-search`). Spec: `api/music-search.yaml`.
+Music search uses the same principles via `GET /music-search/` (`ZxArt\Controllers\MusicSearch` → `ZxArt\MusicSearch\MusicSearchService` → `ZxArt\MusicSearch\Dbal\MusicSearchDbal`). Standalone entrypoint `/music/search` (`pages/music-search`). Spec: `api/music-search.yaml`.
 
 - Music-only filters: `formatGroup`, `format`, `realtime`; title search also matches `internalTitle`.
 - Music search runs against `module_zxmusic` and loads elements through `TunesManager`; author location uses the `authorMusic` link and `displayInMusic`.
@@ -111,7 +111,7 @@ than a phrase. Each answers one page of ids by title and the total
 - `ZxArt\Prods\Services\ProdSearchService::search(ProdSearchFilterDto)` — the
   catalogue's own query filters for categories (with subcategories), hardware,
   languages, legal statuses, release types and formats of any release,
-  countries of an author or group, and tag ids; then `ProdSearchRepository`
+  countries of an author or group, and tag ids; then `ProdSearchDbal`
   narrows by title or alternative title, year range, an author (or its aliases)
   credited on the production, and a group (or its aliases) that made or
   published it. It runs its `ApiQuery` without temporary tables, so a search
@@ -122,7 +122,7 @@ than a phrase. Each answers one page of ids by title and the total
   through its aliases.
 - `ZxArt\Groups\Services\GroupSearchService::search(GroupSearchFilterDto)` — a
   part of the title, of the abbreviation or of an alias, country, city, type.
-- `ZxArt\Releases\Dbal\ReleasesRepository` — releases of a production, by a
+- `ZxArt\Releases\Dbal\ReleasesDbal` — releases of a production, by a
   part of the title or the file name, and by the md5 of the release file or of
   any file inside it.
 - `ZxArt\Geo\PlaceSearchService::find()` — countries and cities by a part of

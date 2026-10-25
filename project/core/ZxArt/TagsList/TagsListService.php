@@ -9,7 +9,7 @@ use structureManager;
 use tagElement;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\TagsList\Dto\TagListItemDto;
-use ZxArt\TagsList\Dbal\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListDbal;
 
 /**
  * Builds the tag cloud for a collection section. The section's tag ids come from
@@ -22,7 +22,7 @@ readonly class TagsListService
     public const int DEFAULT_MINIMUM_AMOUNT = 3;
 
     public function __construct(
-        private TagsListRepository $tagsListRepository,
+        private TagsListDbal $tagsListDbal,
         private structureManager $structureManager,
         private LanguagesManager $languagesManager,
     ) {
@@ -43,7 +43,7 @@ readonly class TagsListService
             return [];
         }
 
-        $amounts = $this->tagsListRepository->getSectionTagAmounts($table, $minimumAmount);
+        $amounts = $this->tagsListDbal->getSectionTagAmounts($table, $minimumAmount);
         if ($amounts === []) {
             return [];
         }

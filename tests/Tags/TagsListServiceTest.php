@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use structureManager;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\TagsList\Dto\TagListItemDto;
-use ZxArt\TagsList\Dbal\TagsListRepository;
+use ZxArt\TagsList\Dbal\TagsListDbal;
 use ZxArt\TagsList\TagsListService;
 use ZxArt\Tests\Doubles\Elements\TagElementStub;
 
@@ -56,7 +56,7 @@ final class TagsListServiceTest extends TestCase
 
     public function testSoftwareSectionUsesTheProdsTable(): void
     {
-        $repository = $this->createMock(TagsListRepository::class);
+        $repository = $this->createMock(TagsListDbal::class);
         $repository->expects(self::once())
             ->method('getSectionTagAmounts')
             ->with(DatabaseTable::ZxProd, TagsListService::DEFAULT_MINIMUM_AMOUNT)
@@ -77,7 +77,7 @@ final class TagsListServiceTest extends TestCase
      */
     private function createService(array $elements, array $amounts): TagsListService
     {
-        $repository = $this->createMock(TagsListRepository::class);
+        $repository = $this->createMock(TagsListDbal::class);
         $repository->method('getSectionTagAmounts')->willReturn($amounts);
 
         $structureManager = $this->createMock(structureManager::class);

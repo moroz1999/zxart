@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Releases\UseCases;
 
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Releases\Dto\ReleaseDataResultDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
@@ -25,7 +25,7 @@ final readonly class DeleteReleaseMemberHandler
         private TransactionRunner $transactionRunner,
         private ReleaseRepository $releaseRepository,
         private ReleasePrivileges $releasePrivileges,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -42,7 +42,7 @@ final readonly class DeleteReleaseMemberHandler
         }
 
         $isDeleted = $this->transactionRunner->run(function () use ($release, $command): bool {
-            $isDeleted = $this->authorshipRepository->deleteAuthorship($command->releaseId, $command->authorId, EntityType::Release);
+            $isDeleted = $this->authorshipDbal->deleteAuthorship($command->releaseId, $command->authorId, EntityType::Release);
             if ($isDeleted) {
                 $this->releaseRepository->touch($release);
                 $this->actionsLogService->log($release, StructureType::ZxRelease, self::PRIVILEGE);

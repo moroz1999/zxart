@@ -7,7 +7,7 @@ namespace ZxArt\ActionsLog;
 use App\Users\CurrentUserService;
 use structureElement;
 use ZxArt\ActionsLog\Dto\ActionsLogRecordDto;
-use ZxArt\ActionsLog\Dbal\ActionsLogRepository;
+use ZxArt\ActionsLog\Dbal\ActionsLogDbal;
 use ZxArt\Shared\StructureType;
 
 /**
@@ -20,7 +20,7 @@ use ZxArt\Shared\StructureType;
 final readonly class ActionsLogService
 {
     public function __construct(
-        private ActionsLogRepository $actionsLogRepository,
+        private ActionsLogDbal $actionsLogDbal,
         private CurrentUserService $currentUserService,
     ) {
     }
@@ -28,7 +28,7 @@ final readonly class ActionsLogService
     public function log(structureElement $element, StructureType $structureType, string $action): void
     {
         $user = $this->currentUserService->getCurrentUser();
-        $this->actionsLogRepository->add(new ActionsLogRecordDto(
+        $this->actionsLogDbal->add(new ActionsLogRecordDto(
             elementId: $element->getId(),
             elementType: $structureType->value,
             elementName: $element->getStructureName(),

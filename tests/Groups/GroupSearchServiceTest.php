@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Groups;
 
 use PHPUnit\Framework\TestCase;
-use ZxArt\Groups\Dbal\GroupSearchRepository;
+use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\Groups\Services\GroupSearchService;
 
@@ -13,7 +13,7 @@ class GroupSearchServiceTest extends TestCase
 {
     public function testSearchPassesTheTrimmedNameAndTheFiltersOn(): void
     {
-        $repository = $this->createMock(GroupSearchRepository::class);
+        $repository = $this->createMock(GroupSearchDbal::class);
         $repository->expects($this->once())->method('count')->with('Triumph', 1, 2, 'demogroup')->willReturn(7);
         $repository->expects($this->once())->method('findIds')->with('Triumph', 1, 2, 'demogroup', 20, 10)->willReturn([4, 5]);
 

@@ -14,7 +14,7 @@ use structureManager;
 use ZxArt\ZxProdCategories\CategoryManageService;
 use ZxArt\ZxProdCategories\Dto\CategorySaveDto;
 use ZxArt\ZxProdCategories\Exception\CategoryException;
-use ZxArt\ZxProdCategories\Dbal\CategoryManageRepository;
+use ZxArt\ZxProdCategories\Dbal\CategoryManageDbal;
 use zxProdCategoryElement;
 
 /**
@@ -31,7 +31,7 @@ class CategoryManageServiceTest extends TestCase
     /** The ids the fixture tree is built from. */
     private const array CATEGORY_IDS = [10 => true, 11 => true, 12 => true, 20 => true];
 
-    private CategoryManageRepository&MockObject $repository;
+    private CategoryManageDbal&MockObject $repository;
     private structureManager&MockObject $structureManager;
     private linksManager&MockObject $linksManager;
     private CategoryManageService $service;
@@ -40,7 +40,7 @@ class CategoryManageServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(CategoryManageRepository::class);
+        $this->repository = $this->createMock(CategoryManageDbal::class);
         $this->structureManager = $this->createMock(structureManager::class);
         $this->linksManager = $this->createMock(linksManager::class);
 
@@ -121,7 +121,7 @@ class CategoryManageServiceTest extends TestCase
 
     public function testABranchTotalAddsUpThroughEveryLevel(): void
     {
-        $repository = $this->createMock(CategoryManageRepository::class);
+        $repository = $this->createMock(CategoryManageDbal::class);
         $repository->method('getTitles')->willReturn([
             10 => [self::ENGLISH => 'Games'],
             11 => [self::ENGLISH => 'Arcade'],

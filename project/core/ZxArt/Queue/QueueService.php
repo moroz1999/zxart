@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace ZxArt\Queue;
 
-use ZxArt\Queue\Dbal\QueueRepository;
+use ZxArt\Queue\Dbal\QueueDbal;
 
 readonly class QueueService
 {
     public function __construct(
-        private QueueRepository $queueRepository,
+        private QueueDbal $queueDbal,
     )
     {
 
@@ -16,22 +16,22 @@ readonly class QueueService
 
     public function getNextElementId(QueueType $type): ?int
     {
-        return $this->queueRepository->getNextElementId($type);
+        return $this->queueDbal->getNextElementId($type);
     }
 
     public function updateStatus(int $elementId, QueueType $type, QueueStatus $status): void
     {
-        $records = $this->queueRepository->load($elementId, [$type]);
+        $records = $this->queueDbal->load($elementId, [$type]);
         if ($records) {
-            $this->queueRepository->updateStatus($elementId, $type, $status);
+            $this->queueDbal->updateStatus($elementId, $type, $status);
         } else {
-            $this->queueRepository->insertStatus($elementId, $type, $status);
+            $this->queueDbal->insertStatus($elementId, $type, $status);
         }
     }
 
     public function checkElementInQueue(int $elementId, array $types)
     {
-        $records = $this->queueRepository->load($elementId, $types);
+        $records = $this->queueDbal->load($elementId, $types);
 
         $existingTypes = array_reduce($records, static function ($result, $record) {
             $result[] = $record['type'];
@@ -46,12 +46,12 @@ readonly class QueueService
         if (count($missingTypes) === 0) {
             return;
         }
-        $this->queueRepository->addElementRecords($elementId, $missingTypes, QueueStatus::STATUS_TODO);
+        $this->queueDbal->addElementRecords($elementId, $missingTypes, QueueStatus::STATUS_TODO);
     }
 
     public function getStatus(int $elementId, QueueType $type): ?QueueStatus
     {
-        return $this->queueRepository->loadStatus($elementId, $type);
+        return $this->queueDbal->loadStatus($elementId, $type);
     }
 
     /**
@@ -59,11 +59,11 @@ readonly class QueueService
      */
     public function getUpcomingElementIds(QueueType $type, int $limit): array
     {
-        return $this->queueRepository->getUpcomingElementIds($type, $limit);
+        return $this->queueDbal->getUpcomingElementIds($type, $limit);
     }
 
     public function removeElementFromQueue(int $elementId, array $types)
     {
-        $this->queueRepository->deleteElementRecords($elementId, $types);
+        $this->queueDbal->deleteElementRecords($elementId, $types);
     }
 }

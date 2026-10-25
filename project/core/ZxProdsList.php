@@ -3,13 +3,13 @@
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Shared\DatabaseTable;
 
-const ZXPRODS_TABLE = ProdsRepository::TABLE;
+const ZXPRODS_TABLE = ProdsDbal::TABLE;
 
 trait ZxProdsList
 {
@@ -424,7 +424,7 @@ trait ZxProdsList
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $prodIdsQuery = $query->select('id');
-                $hardwareIds = $this->getService(ProdHardwareRepository::class)->getHardwareIdsForProds($prodIdsQuery);
+                $hardwareIds = $this->getService(ProdHardwareDbal::class)->getHardwareIdsForProds($prodIdsQuery);
                 $hwItems = $db->table(DatabaseTable::Hardware->value)
                     ->whereIn('id', $hardwareIds)
                     ->pluck('code');

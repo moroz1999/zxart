@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Authors\Services;
 
-use ZxArt\Authors\Dbal\AuthorSearchRepository;
+use ZxArt\Authors\Dbal\AuthorSearchDbal;
 use ZxArt\Authors\Dto\AuthorSearchFilterDto;
 use ZxArt\Shared\Dto\IdPageDto;
 
@@ -14,7 +14,7 @@ use ZxArt\Shared\Dto\IdPageDto;
 final readonly class AuthorSearchService
 {
     public function __construct(
-        private AuthorSearchRepository $searchRepository,
+        private AuthorSearchDbal $searchRepository,
     ) {
     }
 

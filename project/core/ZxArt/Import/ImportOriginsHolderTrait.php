@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Import;
 
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 
 /**
  * Reading and saving of the portal ids of one element. The form submits the
@@ -25,7 +25,7 @@ trait ImportOriginsHolderTrait
         if (!$this->hasActualStructureInfo()) {
             return [];
         }
-        return $this->getService(ImportOriginsRepository::class)->getElementOrigins($this->getId());
+        return $this->getService(ImportOriginsDbal::class)->getElementOrigins($this->getId());
     }
 
     /**
@@ -42,7 +42,7 @@ trait ImportOriginsHolderTrait
 
     public function persistImportOrigins(): void
     {
-        $repository = $this->getService(ImportOriginsRepository::class);
+        $repository = $this->getService(ImportOriginsDbal::class);
         $elementId = $this->getPersistedId();
         $submitted = $this->getSubmittedImportOrigins();
 

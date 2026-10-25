@@ -9,7 +9,7 @@ use ZxArt\LinkTypes;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PictureCollectionFilter;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Dbal\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesDbal;
 use ZxArt\Shared\SortingParams;
 use zxPictureElement;
 use zxReleaseElement;
@@ -21,7 +21,7 @@ readonly class PictureListService
     public function __construct(
         private structureManager $structureManager,
         private PicturesTransformer $picturesTransformer,
-        private PicturesRepository $picturesRepository,
+        private PicturesDbal $picturesDbal,
     ) {
     }
 
@@ -105,9 +105,9 @@ readonly class PictureListService
         int $limit,
     ): array {
         return [
-            'total' => $this->picturesRepository->countByLinkedElement($elementId, $linkType),
+            'total' => $this->picturesDbal->countByLinkedElement($elementId, $linkType),
             'items' => $this->loadPictures(
-                $this->picturesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
+                $this->picturesDbal->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
             ),
         ];
     }
@@ -129,9 +129,9 @@ readonly class PictureListService
             $formats = $filter->formats();
             if ($formats !== []) {
                 return [
-                    'total' => $this->picturesRepository->countByFormats($formats),
+                    'total' => $this->picturesDbal->countByFormats($formats),
                     'items' => $this->loadPictures(
-                        $this->picturesRepository->findPagedIdsByFormats($formats, $sorting, $start, $limit)
+                        $this->picturesDbal->findPagedIdsByFormats($formats, $sorting, $start, $limit)
                     ),
                 ];
             }
@@ -143,8 +143,8 @@ readonly class PictureListService
         }
 
         return [
-            'total' => $this->picturesRepository->countAll(),
-            'items' => $this->loadPictures($this->picturesRepository->findPagedIds($sorting, $start, $limit)),
+            'total' => $this->picturesDbal->countAll(),
+            'items' => $this->loadPictures($this->picturesDbal->findPagedIds($sorting, $start, $limit)),
         ];
     }
 
@@ -173,7 +173,7 @@ readonly class PictureListService
     public function getReleasePictures(int $releaseId): array
     {
         $sorting = SortingParams::fromRequest('votes,desc', self::ALLOWED_SORT_COLUMNS, 'votes');
-        $ids = $this->picturesRepository->findPagedByLinkedElement($releaseId, LinkTypes::GAME_LINK->value, $sorting, 0, 500);
+        $ids = $this->picturesDbal->findPagedByLinkedElement($releaseId, LinkTypes::GAME_LINK->value, $sorting, 0, 500);
         $result = [];
         foreach ($ids as $id) {
             $el = $this->structureManager->getElementById($id) ?? $this->structureManager->getElementById($id, null, true);
@@ -186,7 +186,7 @@ readonly class PictureListService
 
     public function countReleasePictures(int $releaseId): int
     {
-        return $this->picturesRepository->countByLinkedElement($releaseId, LinkTypes::GAME_LINK->value);
+        return $this->picturesDbal->countByLinkedElement($releaseId, LinkTypes::GAME_LINK->value);
     }
 
     /**
@@ -242,7 +242,7 @@ readonly class PictureListService
             return [];
         }
 
-        $ids = $this->picturesRepository->findSimilarByTags($pictureId, $tagIds, $limit);
+        $ids = $this->picturesDbal->findSimilarByTags($pictureId, $tagIds, $limit);
         $items = [];
         foreach ($ids as $id) {
             $el = $this->structureManager->getElementById($id)

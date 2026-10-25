@@ -14,12 +14,12 @@ use ZxArt\Comments\CommentTranslationCandidateDto;
 use ZxArt\Comments\CommentTranslationDto;
 use ZxArt\Comments\CommentTranslationService;
 use ZxArt\Comments\LatestCommentsCache;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 
 #[AllowMockObjectsWithoutExpectations]
 class CommentTranslationServiceTest extends TestCase
 {
-    private CommentsRepository&MockObject $commentsRepository;
+    private CommentsDbal&MockObject $commentsDbal;
     private CommentTranslationAiService&MockObject $aiService;
     private structureManager&MockObject $structureManager;
     private LatestCommentsCache&MockObject $latestCommentsCache;
@@ -27,13 +27,13 @@ class CommentTranslationServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commentsRepository = $this->createMock(CommentsRepository::class);
+        $this->commentsDbal = $this->createMock(CommentsDbal::class);
         $this->aiService = $this->createMock(CommentTranslationAiService::class);
         $this->structureManager = $this->createMock(structureManager::class);
         $this->latestCommentsCache = $this->createMock(LatestCommentsCache::class);
 
         $this->service = new CommentTranslationService(
-            commentsRepository: $this->commentsRepository,
+            commentsDbal: $this->commentsDbal,
             aiService: $this->aiService,
             structureManager: $this->structureManager,
             latestCommentsCache: $this->latestCommentsCache,
@@ -42,7 +42,7 @@ class CommentTranslationServiceTest extends TestCase
 
     public function testTranslatedCommentDropsItsElementCache(): void
     {
-        $this->commentsRepository->method('getUntranslatedComments')
+        $this->commentsDbal->method('getUntranslatedComments')
             ->willReturn([new CommentTranslationCandidateDto(id: 42, text: 'Привет')]);
         $this->aiService->method('translate')
             ->willReturn(new CommentTranslationDto('Hi', 'Привет', 'Hola', 'ru'));
@@ -56,7 +56,7 @@ class CommentTranslationServiceTest extends TestCase
 
     public function testFailedTranslationKeepsElementCache(): void
     {
-        $this->commentsRepository->method('getUntranslatedComments')
+        $this->commentsDbal->method('getUntranslatedComments')
             ->willReturn([new CommentTranslationCandidateDto(id: 42, text: 'Привет')]);
         $this->aiService->method('translate')
             ->willThrowException(new UnexpectedValueException('broken'));
@@ -69,7 +69,7 @@ class CommentTranslationServiceTest extends TestCase
 
     public function testBatchWithTranslationsClearsLatestCommentsCacheOnce(): void
     {
-        $this->commentsRepository->method('getUntranslatedComments')->willReturn([
+        $this->commentsDbal->method('getUntranslatedComments')->willReturn([
             new CommentTranslationCandidateDto(id: 42, text: 'Привет'),
             new CommentTranslationCandidateDto(id: 43, text: 'Пока'),
         ]);
@@ -83,7 +83,7 @@ class CommentTranslationServiceTest extends TestCase
 
     public function testBatchWithoutTranslationsKeepsLatestCommentsCache(): void
     {
-        $this->commentsRepository->method('getUntranslatedComments')
+        $this->commentsDbal->method('getUntranslatedComments')
             ->willReturn([new CommentTranslationCandidateDto(id: 42, text: 'Привет')]);
         $this->aiService->method('translate')
             ->willThrowException(new UnexpectedValueException('broken'));

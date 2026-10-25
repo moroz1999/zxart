@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Groups\Services;
 
-use ZxArt\Groups\Dbal\GroupSearchRepository;
+use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\Shared\Dto\IdPageDto;
 
@@ -14,7 +14,7 @@ use ZxArt\Shared\Dto\IdPageDto;
 final readonly class GroupSearchService
 {
     public function __construct(
-        private GroupSearchRepository $searchRepository,
+        private GroupSearchDbal $searchRepository,
     ) {
     }
 

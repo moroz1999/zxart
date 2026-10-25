@@ -1,10 +1,10 @@
 <?php
 
 use App\Logging\EventsLog;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Press\Helpers\PressMentions;
-use ZxArt\Ratings\Dbal\VotesHistoryRepository;
+use ZxArt\Ratings\Dbal\VotesHistoryDbal;
 use ZxArt\Voting\VotingService;
 
 /**
@@ -249,7 +249,7 @@ abstract class ZxArtItem extends structureElement implements
     public function deleteElementData()
     {
         if ($this->hasActualStructureInfo()) {
-            $this->getService(VotesHistoryRepository::class)->deleteByElementId($this->getId());
+            $this->getService(VotesHistoryDbal::class)->deleteByElementId($this->getId());
         }
         parent::deleteElementData();
     }
@@ -422,7 +422,7 @@ abstract class ZxArtItem extends structureElement implements
      */
     public function recalculateComments()
     {
-        $this->commentsAmount = $this->getService(CommentsRepository::class)->countThread($this->getPersistedId());
+        $this->commentsAmount = $this->getService(CommentsDbal::class)->countThread($this->getPersistedId());
         $this->getService('db')
             ->table($this->dataResourceName)
             ->where('id', '=', $this->getPersistedId())

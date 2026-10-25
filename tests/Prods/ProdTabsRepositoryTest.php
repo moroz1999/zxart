@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Prods\Dbal\ProdTabsRepository;
+use ZxArt\Prods\Dbal\ProdTabsDbal;
 
 /**
  * Each flag in ProdTabsDto corresponds to a specific DB query (or pair of queries for inlays/instructions).
@@ -36,7 +36,7 @@ class ProdTabsRepositoryTest extends TestCase
 {
     private Builder&MockObject $builder;
     private Connection&MockObject $db;
-    private ProdTabsRepository $repository;
+    private ProdTabsDbal $repository;
 
     protected function setUp(): void
     {
@@ -50,7 +50,7 @@ class ProdTabsRepositoryTest extends TestCase
         $this->db = $this->createMock(Connection::class);
         $this->db->method('table')->willReturn($this->builder);
 
-        $this->repository = new ProdTabsRepository($this->db);
+        $this->repository = new ProdTabsDbal($this->db);
     }
 
     public function testAllFlagsFalseWhenNoLinksExist(): void

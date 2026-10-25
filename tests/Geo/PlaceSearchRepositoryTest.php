@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use LanguagesManager;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Geo\Dbal\PlaceSearchRepository;
+use ZxArt\Geo\Dbal\PlaceSearchDbal;
 
 /**
  * A place is found by its name in any language and answered in the current one.
@@ -23,7 +23,7 @@ class PlaceSearchRepositoryTest extends TestCase
     private const int TARTU = 21;
 
     private SQLiteConnection $db;
-    private PlaceSearchRepository $repository;
+    private PlaceSearchDbal $repository;
 
     protected function setUp(): void
     {
@@ -44,7 +44,7 @@ class PlaceSearchRepositoryTest extends TestCase
         ]);
         $languagesManager = $this->createStub(LanguagesManager::class);
         $languagesManager->method('getCurrentLanguageId')->willReturn(self::CURRENT_LANGUAGE);
-        $this->repository = new PlaceSearchRepository($this->db, $languagesManager);
+        $this->repository = new PlaceSearchDbal($this->db, $languagesManager);
     }
 
     public function testACountryIsFoundByItsNameInAnotherLanguage(): void

@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Dbal\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsDbal;
 
 /**
  * A production is reachable on the site only through a category; one without a
@@ -22,7 +22,7 @@ class GroupProdsRepositoryTest extends TestCase
     private const int CATEGORY_ID = 900;
 
     private SQLiteConnection $db;
-    private GroupProdsRepository $repository;
+    private GroupProdsDbal $repository;
 
     protected function setUp(): void
     {
@@ -30,7 +30,7 @@ class GroupProdsRepositoryTest extends TestCase
         // the CMS connection fetches rows as arrays
         $this->db->setFetchMode(PDO::FETCH_ASSOC);
         $this->createSchema();
-        $this->repository = new GroupProdsRepository($this->db);
+        $this->repository = new GroupProdsDbal($this->db);
     }
 
     public function testOwnProdWithoutCategoryIsNotListed(): void

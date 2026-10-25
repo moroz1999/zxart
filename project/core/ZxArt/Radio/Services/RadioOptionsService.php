@@ -7,7 +7,7 @@ namespace ZxArt\Radio\Services;
 use Cache;
 use countryElement;
 use structureManager;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdCategoryElement;
 
@@ -19,7 +19,7 @@ readonly class RadioOptionsService
     public function __construct(
         private Cache $cache,
         private structureManager $structureManager,
-        private TunesRepository $tunesRepository,
+        private TunesDbal $tunesDbal,
     ) {
     }
 
@@ -33,12 +33,12 @@ readonly class RadioOptionsService
             return $cached;
         }
 
-        $yearRange = $this->tunesRepository->getYearRange();
-        $ratingRange = $this->tunesRepository->getRatingRange();
+        $yearRange = $this->tunesDbal->getYearRange();
+        $ratingRange = $this->tunesDbal->getRatingRange();
         $categories = $this->loadCategories();
         $countries = $this->loadCountries();
-        $formatGroups = $this->tunesRepository->getAvailableFormatGroups();
-        $formats = $this->tunesRepository->getAvailableFormats();
+        $formatGroups = $this->tunesDbal->getAvailableFormatGroups();
+        $formats = $this->tunesDbal->getAvailableFormats();
 
         $result = [
             'yearRange' => $yearRange,
@@ -61,7 +61,7 @@ readonly class RadioOptionsService
     private function loadCountries(): array
     {
         $countries = [];
-        foreach ($this->tunesRepository->getAuthorCountryIds() as $countryId) {
+        foreach ($this->tunesDbal->getAuthorCountryIds() as $countryId) {
             $element = $this->structureManager->getElementById($countryId, null, true);
             if ($element instanceof countryElement) {
                 $countries[] = [

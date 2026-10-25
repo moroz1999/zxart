@@ -8,7 +8,7 @@ use authorAliasElement;
 use authorElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Dto\GroupDataResultDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\GroupMemberRoles;
@@ -32,7 +32,7 @@ final readonly class SetGroupMemberHandler
         private GroupRepository $groupRepository,
         private GroupPrivileges $groupPrivileges,
         private structureManager $structureManager,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -55,7 +55,7 @@ final readonly class SetGroupMemberHandler
 
         $this->transactionRunner->run(function () use ($group, $command): void {
             $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipRepository->setAuthorship($command->groupId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
+            $this->authorshipDbal->setAuthorship($command->groupId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
             $this->groupRepository->touch($group);
             $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
         });

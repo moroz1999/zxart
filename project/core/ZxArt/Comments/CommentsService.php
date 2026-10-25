@@ -11,7 +11,7 @@ use structureManager;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentNotFoundException;
 use ZxArt\Comments\Exception\CommentOperationException;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 use ZxArt\LinkTypes;
 
 /**
@@ -29,7 +29,7 @@ readonly class CommentsService
         private privilegesManager   $privilegesManager,
         private LatestCommentsCache  $latestCommentsCache,
         private CommentsTransformer  $transformer,
-        private CommentsRepository   $commentsRepository,
+        private CommentsDbal   $commentsDbal,
         private CommentContentPurifier $contentPurifier,
     )
     {
@@ -43,7 +43,7 @@ readonly class CommentsService
      */
     public function getAllCommentsPaginated(int $page = 1, ?string $languageCode = null): CommentsListDto
     {
-        $count = $this->commentsRepository->countAll();
+        $count = $this->commentsDbal->countAll();
 
         $pagesAmount = (int)ceil($count / self::COMMENTS_PER_PAGE);
 
@@ -56,7 +56,7 @@ readonly class CommentsService
 
         $offset = ($page - 1) * self::COMMENTS_PER_PAGE;
 
-        $ids = $this->commentsRepository->getIdsPaginated($offset, self::COMMENTS_PER_PAGE);
+        $ids = $this->commentsDbal->getIdsPaginated($offset, self::COMMENTS_PER_PAGE);
 
         $comments = [];
         foreach ($ids as $id) {
@@ -169,7 +169,7 @@ readonly class CommentsService
         int $perPage = self::COMMENTS_PER_PAGE,
     ): CommentsListDto
     {
-        $count = $this->commentsRepository->countByAuthorId($authorId);
+        $count = $this->commentsDbal->countByAuthorId($authorId);
         $pagesAmount = $count > 0 ? (int)ceil($count / $perPage) : 1;
 
         if ($page < 1) {
@@ -180,7 +180,7 @@ readonly class CommentsService
         }
 
         $offset = ($page - 1) * $perPage;
-        $ids = $this->commentsRepository->getIdsByAuthorId($authorId, $offset, $perPage);
+        $ids = $this->commentsDbal->getIdsByAuthorId($authorId, $offset, $perPage);
 
         $comments = [];
         foreach ($ids as $id) {
@@ -353,7 +353,7 @@ readonly class CommentsService
             }
         }
 
-        $ids = $this->commentsRepository->getLatestIds($limit);
+        $ids = $this->commentsDbal->getLatestIds($limit);
 
         $comments = [];
         foreach ($ids as $id) {

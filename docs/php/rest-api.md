@@ -6,7 +6,7 @@
 
 ## REST API Pattern
 The workflow for REST API:
-1. Service retrieves entities from structure manager and/or data from repositories.
+1. Service retrieves entities from structure manager or repositories and/or data from Dbal classes.
 2. Service returns its own internal DTOs to the controller.
 3. Controller maps service DTOs to REST DTOs using `Symfony\Component\ObjectMapper\ObjectMapper`.
 

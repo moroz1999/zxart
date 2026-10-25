@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Comments;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 
 final class CommentsRepositoryTest extends TestCase
 {
@@ -24,7 +24,7 @@ final class CommentsRepositoryTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection->method('table')->with('structure_links')->willReturn($builder);
 
-        $repository = new CommentsRepository($connection);
+        $repository = new CommentsDbal($connection);
 
         self::assertSame(3, $repository->countThread(1));
     }
@@ -39,7 +39,7 @@ final class CommentsRepositoryTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection->method('table')->willReturn($builder);
 
-        $repository = new CommentsRepository($connection);
+        $repository = new CommentsDbal($connection);
 
         self::assertSame(0, $repository->countThread(1));
     }

@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Ratings;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Ratings\Dbal\VotesHistoryRepository;
+use ZxArt\Ratings\Dbal\VotesHistoryDbal;
 
 /**
  * A deleted work takes its votes with it.
@@ -23,7 +23,7 @@ class VotesHistoryRepositoryTest extends TestCase
             $db->table('votes_history')->insert(['elementId' => $elementId, 'userId' => 1, 'value' => 5, 'date' => 1, 'type' => 'zxPicture']);
         }
 
-        (new VotesHistoryRepository($db))->deleteByElementId(10);
+        (new VotesHistoryDbal($db))->deleteByElementId(10);
 
         $this->assertSame([11], $db->table('votes_history')->pluck('elementId'));
     }

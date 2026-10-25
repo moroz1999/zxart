@@ -17,8 +17,8 @@ use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Domain\UserPreferenceValue;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
 use ZxArt\UserPreferences\PreferenceValidator;
-use ZxArt\UserPreferences\Dbal\PreferencesRepository;
-use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesDbal;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesDbal;
 use ZxArt\UserPreferences\UserPreferencesService;
 
 #[AllowMockObjectsWithoutExpectations]
@@ -63,8 +63,8 @@ class UserPreferencesServiceTest extends TestCase
     {
         $user = $this->createUserMock(false);
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
 
         $service = new UserPreferencesService(
             $this->createCurrentUserServiceMock($user),
@@ -90,12 +90,12 @@ class UserPreferencesServiceTest extends TestCase
     {
         $user = $this->createUserMock(true, 5);
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findAll')->willReturn([
             new Preference(1, PreferenceCode::THEME, 'string'),
         ]);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->method('findByUserId')->with(5)->willReturn([
             new UserPreferenceValue(5, 1, 'dark'),
         ]);
@@ -120,12 +120,12 @@ class UserPreferencesServiceTest extends TestCase
     {
         $user = $this->createUserMock(true, 5);
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findAll')->willReturn([
             new Preference(1, PreferenceCode::THEME, 'string'),
         ]);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->method('findByUserId')->with(5)->willReturn([]);
 
         $service = new UserPreferencesService(
@@ -147,8 +147,8 @@ class UserPreferencesServiceTest extends TestCase
     public function testSetPreferenceThrowsExceptionForInvalidCode(): void
     {
         $user = $this->createUserMock();
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
 
         $service = new UserPreferencesService(
             $this->createCurrentUserServiceMock($user),
@@ -165,8 +165,8 @@ class UserPreferencesServiceTest extends TestCase
     public function testSetPreferenceThrowsExceptionForInvalidValue(): void
     {
         $user = $this->createUserMock();
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
 
         $service = new UserPreferencesService(
             $this->createCurrentUserServiceMock($user),
@@ -184,7 +184,7 @@ class UserPreferencesServiceTest extends TestCase
     {
         $user = $this->createUserMock(true, 5);
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findByCode')
             ->with(PreferenceCode::THEME)
             ->willReturn(new Preference(1, PreferenceCode::THEME, 'string'));
@@ -192,7 +192,7 @@ class UserPreferencesServiceTest extends TestCase
             new Preference(1, PreferenceCode::THEME, 'string'),
         ]);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->expects($this->once())
             ->method('upsert')
             ->with(5, 1, 'dark');
@@ -220,9 +220,9 @@ class UserPreferencesServiceTest extends TestCase
     {
         $user = $this->createUserMock(false);
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->expects($this->never())->method('upsert');
 
         $service = new UserPreferencesService(
@@ -244,10 +244,10 @@ class UserPreferencesServiceTest extends TestCase
     public function testSetPreferenceThrowsWhenPreferenceIsNotConfigured(): void
     {
         $user = $this->createUserMock(true, 5);
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findByCode')->with(PreferenceCode::THEME)->willReturn(null);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->expects($this->never())->method('upsert');
 
         $service = new UserPreferencesService(
@@ -268,14 +268,14 @@ class UserPreferencesServiceTest extends TestCase
         $themePreference = new Preference(1, PreferenceCode::THEME, 'string');
         $borderPreference = new Preference(2, PreferenceCode::PICTURE_BORDER, 'boolean');
 
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findByCode')->willReturnMap([
             [PreferenceCode::THEME, $themePreference],
             [PreferenceCode::PICTURE_BORDER, $borderPreference],
         ]);
         $preferencesRepo->method('findAll')->willReturn([$themePreference, $borderPreference]);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->expects($this->once())
             ->method('upsertMany')
             ->with(5, [1 => 'dark', 2 => '0']);
@@ -304,13 +304,13 @@ class UserPreferencesServiceTest extends TestCase
     public function testSetPreferencesDoesNotWritePartialBatchWhenPreferenceIsNotConfigured(): void
     {
         $user = $this->createUserMock(true, 5);
-        $preferencesRepo = $this->createMock(PreferencesRepository::class);
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
         $preferencesRepo->method('findByCode')->willReturnMap([
             [PreferenceCode::THEME, new Preference(1, PreferenceCode::THEME, 'string')],
             [PreferenceCode::PICTURE_BORDER, null],
         ]);
 
-        $valuesRepo = $this->createMock(UserPreferenceValuesRepository::class);
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
         $valuesRepo->expects($this->never())->method('upsertMany');
 
         $service = new UserPreferencesService(

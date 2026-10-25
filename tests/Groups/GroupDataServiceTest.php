@@ -15,7 +15,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
@@ -138,7 +138,7 @@ final class GroupDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'deleteAuthor', 'group')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('deleteAuthorship')
             ->with(42, 7, EntityType::Group)
@@ -150,7 +150,7 @@ final class GroupDataServiceTest extends TestCase
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         )->deleteMember(42, 7);
 
         self::assertSame(42, $result->id);
@@ -158,12 +158,12 @@ final class GroupDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutAuthorIdIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(groupElement::class),
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
@@ -172,7 +172,7 @@ final class GroupDataServiceTest extends TestCase
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
     {
         // /ajax/ answered success for a removal that changed nothing
-        $authorship = $this->createStub(AuthorshipRepository::class);
+        $authorship = $this->createStub(AuthorshipDbal::class);
         $authorship->method('deleteAuthorship')->willReturn(false);
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
@@ -180,7 +180,7 @@ final class GroupDataServiceTest extends TestCase
             $this->createStub(groupElement::class),
             $this->privileges(true),
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
@@ -188,12 +188,12 @@ final class GroupDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(groupElement::class),
             $this->privileges(false),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
@@ -361,7 +361,7 @@ final class GroupDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'publicReceive', 'group')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['coder', 'musician'], 788918400, 0);
@@ -372,7 +372,7 @@ final class GroupDataServiceTest extends TestCase
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
         )->setMember(42, 7, ['coder', 'musician'], 788918400, 0);
 
@@ -381,14 +381,14 @@ final class GroupDataServiceTest extends TestCase
 
     public function testSetMemberTakesAnAuthorAliasAndNoRolesAsUnknown(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['unknown'], null, null);
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorAliasElement::class)],
         );
 
@@ -397,12 +397,12 @@ final class GroupDataServiceTest extends TestCase
 
     public function testSetMemberOfWhatIsNotAnAuthorIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(groupElement::class)],
         );
 
@@ -411,12 +411,12 @@ final class GroupDataServiceTest extends TestCase
 
     public function testSetMemberWithARoleOfAnotherKindIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
@@ -425,12 +425,12 @@ final class GroupDataServiceTest extends TestCase
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(false),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
@@ -442,7 +442,7 @@ final class GroupDataServiceTest extends TestCase
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
         ?AuthorsService $authorsService = null,
-        ?AuthorshipRepository $authorshipRepository = null,
+        ?AuthorshipDbal $authorshipDbal = null,
         ?GroupFieldsWriter $writer = null,
         ?GroupCreator $creator = null,
         ?CurrentUser $user = null,
@@ -462,7 +462,7 @@ final class GroupDataServiceTest extends TestCase
         $authorsService ??= $this->createStub(AuthorsService::class);
         $groupsService ??= $this->createStub(GroupsService::class);
         $actionsLog ??= $this->createStub(ActionsLogService::class);
-        $authorshipRepository ??= $this->createStub(AuthorshipRepository::class);
+        $authorshipDbal ??= $this->createStub(AuthorshipDbal::class);
         $transactionRunner = new TransactionRunner($this->createStub(Connection::class));
         $repository = new GroupRepository($structureManager, $groupsService);
         $privileges = new GroupPrivileges($privilegesManager, $structureManager);
@@ -473,8 +473,8 @@ final class GroupDataServiceTest extends TestCase
             new DeleteGroupHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertGroupToAuthorHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
             new JoinGroupsHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
-            new SetGroupMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipRepository, $actionsLog),
-            new DeleteGroupMemberHandler($transactionRunner, $repository, $privileges, $authorshipRepository, $actionsLog),
+            new SetGroupMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipDbal, $actionsLog),
+            new DeleteGroupMemberHandler($transactionRunner, $repository, $privileges, $authorshipDbal, $actionsLog),
         );
     }
 

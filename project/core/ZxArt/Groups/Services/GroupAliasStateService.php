@@ -6,7 +6,7 @@ namespace ZxArt\Groups\Services;
 
 use groupAliasElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Dto\GroupAliasStateDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Import\Services\ImportOriginsReader;
@@ -23,7 +23,7 @@ final readonly class GroupAliasStateService
     public function __construct(
         private structureManager $structureManager,
         private GroupAliasFieldsReader $groupAliasFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private GroupDetailsService $groupDetailsService,
         private ImportOriginsReader $importOriginsReader,
     ) {
@@ -40,7 +40,7 @@ final readonly class GroupAliasStateService
             id: $aliasId,
             modifiedAt: $alias->getModifiedTimestamp(),
             fields: $this->groupAliasFieldsReader->read($alias),
-            members: $this->authorshipRepository->findByElement($aliasId, EntityType::Group),
+            members: $this->authorshipDbal->findByElement($aliasId, EntityType::Group),
             counters: $this->groupDetailsService->getCounters($alias),
             importOrigins: $this->importOriginsReader->read($aliasId),
         );

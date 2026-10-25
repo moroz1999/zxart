@@ -15,6 +15,7 @@
 
 - PHP classes in `project/core/ZxArt/` are non-legacy code.
 - Non-legacy code must not depend on legacy project code. Existing dependencies are recorded in `deptrac.baseline.yaml`; do not add new baseline entries for new code.
+- Inside `ZxArt\`, deptrac also keeps the Dbal layer from using repositories and refuses any use of a `*Repository` outside `<Domain>/Repositories/` ([php/repositories.md](php/repositories.md)).
 - Run `composer deptrac` to validate the boundary. Removing an existing dependency also requires removing its obsolete baseline entry.
 
 ## Immutability and Type Safety
@@ -53,7 +54,7 @@
 
 ## Entity Types
 - Use `EntityType` enum (`ZxArt\Shared\EntityType`) instead of hardcoded strings for entity type identifiers (e.g., `'author'`, `'prod'`, `'release'`, `'group'`).
-- Pass `EntityType` directly to repository and service methods that accept it (`ImportIdOperator`, `AuthorshipRepository`, list repositories).
+- Pass `EntityType` directly to repository and service methods that accept it (`ImportIdOperator`, `AuthorshipDbal`, the list Dbal classes).
 - For legacy CMS methods that accept string parameters (e.g., `$element->getAuthorsInfo()`, `$element->getShortAuthorship()`), use `EntityType::Prod->value` to extract the string value.
 
 ## Structure Types
@@ -80,7 +81,7 @@
 - Do NOT "massage" legacy values into the wanted type in random consumers by sprinkling casts, fallbacks, `normalize*()` helpers, `strtotime()` guesses, or "accept everything and coerce it" branches across the codebase. That spreads an implicit contract instead of fixing it. If the code expects `int` timestamps, booleans, enums, or typed arrays, make the source return that type or add one typed accessor at the source boundary and reuse it.
 - For Psalm fixes, local validation and ad hoc type-repair in consumer code are prohibited. Do NOT add one-off `getIntArrayValue()`-style generic wrappers, local exceptions, fallback branches, or consumer-side sanitizers just to satisfy static analysis. The only acceptable fix is to declare or expose a clear strict type at the real source boundary, with casting localized there.
 - Do NOT spread complex inline `@var` array-shape annotations through application code. If a long shape annotation is needed at the usage site, treat that as a signal to type the source data earlier.
-- When a complex Psalm array shape originates in one service or repository, define a named `@psalm-type` there and import it at consumers with `@psalm-import-type` instead of repeating inline shapes at usage sites.
+- When a complex Psalm array shape originates in one service or Dbal class, define a named `@psalm-type` there and import it at consumers with `@psalm-import-type` instead of repeating inline shapes at usage sites.
 - If a legacy method cannot be reasonably typed directly, introduce a named accessor with an explicit return type and keep the local cast or normalization inside that accessor, not at each call site.
 - When handling legacy values, first convert them to the target type, then validate or branch on the typed result. Do NOT scatter repeated strict checks against multiple raw legacy representations such as `false`, `''`, `0`, and `'0'`.
 - Annotate magic variables and methods in original legacy classes.
@@ -94,7 +95,7 @@
 ## Detailed Topics
 For specific topics, see:
 - [Services and Dependency Injection](php/services.md) - DI container, service design, dependency injection patterns
-- [Repositories and Database](php/repositories.md) - Database table names, Query Builder, avoiding raw SQL
+- [Repositories and Dbal](php/repositories.md) - Entity repositories vs hand-written table access, table names, Query Builder, avoiding raw SQL
 - [REST API and DTOs](php/rest-api.md) - REST API pattern, ObjectMapper usage, API verification and documentation
 - [Error Handling](php/error-handling.md) - Never swallowing exceptions silently, logging utilities
 - [Entity Writes](php/entity-writes.md) - Creating and editing prods, releases, authors, groups and aliases: one path per entity

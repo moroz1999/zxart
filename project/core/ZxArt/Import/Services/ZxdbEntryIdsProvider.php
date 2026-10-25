@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Import\Services;
 
 use ZxArt\Import\ImportOrigin;
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 
 /**
  * ZxDB entries a production is linked to. ZxDB ids of series and compilations
@@ -14,7 +14,7 @@ use ZxArt\Import\Dbal\ImportOriginsRepository;
 final readonly class ZxdbEntryIdsProvider
 {
     public function __construct(
-        private ImportOriginsRepository $importOriginsRepository,
+        private ImportOriginsDbal $importOriginsDbal,
     ) {
     }
 
@@ -24,7 +24,7 @@ final readonly class ZxdbEntryIdsProvider
     public function getEntryIds(int $prodId): array
     {
         $entryIds = [];
-        foreach ($this->importOriginsRepository->getElementImportIds($prodId, ImportOrigin::Zxdb) as $importId) {
+        foreach ($this->importOriginsDbal->getElementImportIds($prodId, ImportOrigin::Zxdb) as $importId) {
             if (ctype_digit($importId)) {
                 $entryIds[] = $importId;
             }

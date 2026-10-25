@@ -20,7 +20,7 @@ order.
 `originalContent` is the raw text the article was typed or pasted from, before
 the AI formats it, translates it into the site languages and writes the
 introduction. It has no column of its own: it lives one row per article in
-`module_pressarticle_archive` (`PressArticleRepository`) and is stored exactly
+`module_pressarticle_archive` (`PressArticleDbal`) and is stored exactly
 as submitted — `publicReceive` archives the posted text itself, bypassing the
 `html` chunk that would purify it, and the form templates escape it on output.
 `pressArticleElement::getOriginalContent()` reads it back, and the element puts

@@ -16,7 +16,7 @@ use ZxArt\Geo\Dto\CitySaveDto;
 use ZxArt\Geo\Dto\CountrySaveDto;
 use ZxArt\Geo\Exception\GeoException;
 use ZxArt\Geo\PlacesManageService;
-use ZxArt\Geo\Dbal\GeoManageRepository;
+use ZxArt\Geo\Dbal\GeoManageDbal;
 
 /**
  * The two lists the management screen is built from, and the guards that keep a
@@ -28,7 +28,7 @@ class PlacesManageServiceTest extends TestCase
     private const int RUSSIAN = 930;
     private const int ENGLISH = 2105;
 
-    private GeoManageRepository&MockObject $repository;
+    private GeoManageDbal&MockObject $repository;
     private structureManager&MockObject $structureManager;
     private linksManager&MockObject $linksManager;
     private PlacesManageService $service;
@@ -37,7 +37,7 @@ class PlacesManageServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(GeoManageRepository::class);
+        $this->repository = $this->createMock(GeoManageDbal::class);
         $this->structureManager = $this->createMock(structureManager::class);
         $this->linksManager = $this->createMock(linksManager::class);
 
@@ -97,7 +97,7 @@ class PlacesManageServiceTest extends TestCase
 
     public function testCityWithoutACountryIsLeftOut(): void
     {
-        $repository = $this->createMock(GeoManageRepository::class);
+        $repository = $this->createMock(GeoManageDbal::class);
         $repository->method('getCityRows')->willReturn([$this->row(300, self::ENGLISH, 'Nowhere', 0.0, 0.0)]);
         $repository->method('getCityCountries')->willReturn([]);
         $repository->method('getPlaceUsages')->willReturn([]);

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\Preference;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
-use ZxArt\UserPreferences\Dbal\PreferencesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesDbal;
 
 #[AllowMockObjectsWithoutExpectations]
 class PreferencesRepositoryTest extends TestCase
@@ -28,7 +28,7 @@ class PreferencesRepositoryTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new PreferencesRepository($db);
+        $repository = new PreferencesDbal($db);
         $preference = $repository->findByCode(PreferenceCode::THEME);
 
         $this->assertInstanceOf(Preference::class, $preference);
@@ -46,7 +46,7 @@ class PreferencesRepositoryTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new PreferencesRepository($db);
+        $repository = new PreferencesDbal($db);
         $preference = $repository->findByCode(PreferenceCode::THEME);
 
         $this->assertNull($preference);
@@ -62,7 +62,7 @@ class PreferencesRepositoryTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new PreferencesRepository($db);
+        $repository = new PreferencesDbal($db);
         $preferences = $repository->findAll();
 
         $this->assertCount(1, $preferences);

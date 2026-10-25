@@ -36,7 +36,7 @@ use ZxArt\Groups\Services\GroupAliasStateService;
 use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupFieldsReader;
 use ZxArt\Groups\Services\GroupStateService;
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
@@ -254,9 +254,9 @@ final class EntityStatesTest extends EntityWriteTestCase
         return $element;
     }
 
-    private function importOrigins(): ImportOriginsRepository
+    private function importOrigins(): ImportOriginsDbal
     {
-        return $this->container->get(ImportOriginsRepository::class);
+        return $this->container->get(ImportOriginsDbal::class);
     }
 
     private function prods(): ProdDataService

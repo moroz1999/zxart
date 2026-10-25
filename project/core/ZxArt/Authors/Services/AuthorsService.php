@@ -15,7 +15,7 @@ use LettersElementsListProviderTrait;
 use linksManager;
 use privilegesManager;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\EntityType;
@@ -36,7 +36,7 @@ class AuthorsService extends ElementsManager
         protected Connection                    $db,
         protected structureManager              $structureManager,
         protected readonly GroupsService        $groupsService,
-        protected readonly AuthorshipRepository $authorshipRepository,
+        protected readonly AuthorshipDbal $authorshipDbal,
         private readonly ClaimedAuthorService   $claimedAuthorService,
     )
     {
@@ -196,7 +196,7 @@ class AuthorsService extends ElementsManager
                     //disabled authorship moving to new author
                     //check if author already has authorship in same elements. we dont need duplicates
                     $existingElements = [];
-                    if ($existingAuthorShipRecords = $this->authorshipRepository->getAuthorshipRecords($mainAuthorId)) {
+                    if ($existingAuthorShipRecords = $this->authorshipDbal->getAuthorshipRecords($mainAuthorId)) {
                         foreach ($existingAuthorShipRecords as $record) {
                             $existingElements[] = $record['elementId'];
                         }
@@ -294,10 +294,10 @@ class AuthorsService extends ElementsManager
                     $this->structureManager->clearElementCache($zxProd->id);
                 }
                 foreach ($groupElement->getGroupProds() as $zxProd) {
-                    $this->authorshipRepository->saveAuthorship($zxProd->id, $authorElement->getId(), EntityType::Prod);
+                    $this->authorshipDbal->saveAuthorship($zxProd->id, $authorElement->getId(), EntityType::Prod);
                 }
                 foreach ($groupElement->publishedReleases as $zxRelease) {
-                    $this->authorshipRepository->saveAuthorship($zxRelease->id, $authorElement->getId(), EntityType::Release, ['release']);
+                    $this->authorshipDbal->saveAuthorship($zxRelease->id, $authorElement->getId(), EntityType::Release, ['release']);
                 }
 
                 if ($records = $this->db->table('import_origin')

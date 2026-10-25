@@ -9,7 +9,7 @@ use partyElement;
 use structureManager;
 use ZxArt\Parties\Dto\PartyDto;
 use ZxArt\Parties\PartiesTransformer;
-use ZxArt\Parties\Dbal\PartiesRepository;
+use ZxArt\Parties\Dbal\PartiesDbal;
 
 class PartiesService extends ElementsManager
 {
@@ -17,7 +17,7 @@ class PartiesService extends ElementsManager
     protected array $columnRelations = [];
 
     public function __construct(
-        private readonly PartiesRepository  $partiesRepository,
+        private readonly PartiesDbal  $partiesDbal,
         private readonly PartiesTransformer $partiesTransformer,
         protected structureManager          $structureManager,
         protected LanguagesManager          $languagesManager,
@@ -31,7 +31,7 @@ class PartiesService extends ElementsManager
 
     public function getPartyByTitleAndYear(string $title, int $year): ?partyElement
     {
-        $id = $this->partiesRepository->findPartyIdByTitleAndYear($title, $year);
+        $id = $this->partiesDbal->findPartyIdByTitleAndYear($title, $year);
         if ($id === null) {
             return null;
         }
@@ -47,7 +47,7 @@ class PartiesService extends ElementsManager
      */
     public function getRecent(int $limit): array
     {
-        return $this->getByIds($this->partiesRepository->getRecentIds($limit));
+        return $this->getByIds($this->partiesDbal->getRecentIds($limit));
     }
 
     /**
@@ -55,7 +55,7 @@ class PartiesService extends ElementsManager
      */
     public function getByYear(int $year): array
     {
-        return $this->getByIds($this->partiesRepository->getIdsByYear($year));
+        return $this->getByIds($this->partiesDbal->getIdsByYear($year));
     }
 
     /**

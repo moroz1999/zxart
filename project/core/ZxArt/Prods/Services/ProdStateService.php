@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace ZxArt\Prods\Services;
 
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\Services\ImportOriginsReader;
 use ZxArt\Prods\Dto\ProdStateDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
-use ZxArt\Releases\Dbal\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesDbal;
 use ZxArt\Shared\Dto\AttachedFileDto;
 use ZxArt\Shared\Elements\AttachedFilesReader;
 use ZxArt\Shared\EntityType;
@@ -27,8 +27,8 @@ final readonly class ProdStateService
     public function __construct(
         private structureManager $structureManager,
         private ProdFieldsReader $prodFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
-        private ReleasesRepository $releasesRepository,
+        private AuthorshipDbal $authorshipDbal,
+        private ReleasesDbal $releasesDbal,
         private AttachedFilesReader $attachedFilesReader,
         private ImportOriginsReader $importOriginsReader,
     ) {
@@ -45,8 +45,8 @@ final readonly class ProdStateService
             id: $prodId,
             modifiedAt: $prod->getModifiedTimestamp(),
             fields: $this->prodFieldsReader->read($prod),
-            authors: $this->authorshipRepository->findByElement($prodId, EntityType::Prod),
-            releaseIds: $this->releasesRepository->findIdsByProdId($prodId),
+            authors: $this->authorshipDbal->findByElement($prodId, EntityType::Prod),
+            releaseIds: $this->releasesDbal->findIdsByProdId($prodId),
             files: $this->readFiles($prod),
             importOrigins: $this->importOriginsReader->read($prodId),
         );

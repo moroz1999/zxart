@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use ZxArt\UserPreferences\Domain\UserPreferenceValue;
-use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesDbal;
 
 #[AllowMockObjectsWithoutExpectations]
 class UserPreferenceValuesRepositoryTest extends TestCase
@@ -25,7 +25,7 @@ class UserPreferenceValuesRepositoryTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new UserPreferenceValuesRepository($db);
+        $repository = new UserPreferenceValuesDbal($db);
         $values = $repository->findByUserId(5);
 
         $this->assertCount(1, $values);
@@ -44,7 +44,7 @@ class UserPreferenceValuesRepositoryTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new UserPreferenceValuesRepository($db);
+        $repository = new UserPreferenceValuesDbal($db);
         $values = $repository->findByUserId(5);
 
         $this->assertSame([], $values);
@@ -74,7 +74,7 @@ class UserPreferenceValuesRepositoryTest extends TestCase
                 return $builder;
             });
 
-        $repository = new UserPreferenceValuesRepository($db);
+        $repository = new UserPreferenceValuesDbal($db);
         $repository->upsert(5, 1, 'dark');
 
         $this->assertTrue($updateOrInsertCalled);
@@ -110,7 +110,7 @@ class UserPreferenceValuesRepositoryTest extends TestCase
             },
         );
 
-        $repository = new UserPreferenceValuesRepository($db);
+        $repository = new UserPreferenceValuesDbal($db);
         $repository->upsertMany(5, [1 => 'dark', 2 => '0']);
 
         $this->assertSame([

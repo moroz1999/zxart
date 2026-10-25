@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Shared\EntityType;
 
 /**
@@ -18,7 +18,7 @@ use ZxArt\Shared\EntityType;
 class AuthorshipSetTest extends TestCase
 {
     private SQLiteConnection $db;
-    private AuthorshipRepository $repository;
+    private AuthorshipDbal $repository;
 
     protected function setUp(): void
     {
@@ -26,7 +26,7 @@ class AuthorshipSetTest extends TestCase
         // the CMS connection fetches rows as arrays
         $this->db->setFetchMode(PDO::FETCH_ASSOC);
         $this->db->getPdo()->exec('CREATE TABLE authorship (id INTEGER PRIMARY KEY, authorId INTEGER, elementId INTEGER, roles TEXT, startDate INTEGER DEFAULT 0, endDate INTEGER DEFAULT 0, type TEXT)');
-        $this->repository = new AuthorshipRepository($this->db, $this->createStub(structureManager::class));
+        $this->repository = new AuthorshipDbal($this->db, $this->createStub(structureManager::class));
     }
 
     public function testSetAddsTheRecord(): void

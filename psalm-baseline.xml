@@ -2345,7 +2345,7 @@
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/AuthorList/Dbal/AuthorListRepository.php">
+  <file src="project/core/ZxArt/AuthorList/Dbal/AuthorListDbal.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$authorsQuery->pluck('city')]]></code>
       <code><![CDATA[$authorsQuery->pluck('country')]]></code>
@@ -2596,12 +2596,12 @@
       <code><![CDATA[gatherAuthorNames]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Dbal/AuthorAliasesRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorAliasesDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Dbal/AuthorCollaboratorsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorCollaboratorsDbal.php">
     <InvalidArrayOffset>
       <code><![CDATA[$row['prods']]]></code>
     </InvalidArrayOffset>
@@ -2627,17 +2627,17 @@
       <code><![CDATA[$stats]]></code>
     </ReferenceConstraintViolation>
   </file>
-  <file src="project/core/ZxArt/Authors/Dbal/AuthorProdsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorProdsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Dbal/AuthorsRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Authors/Dbal/AuthorshipRepository.php">
+  <file src="project/core/ZxArt/Authors/Dbal/AuthorshipDbal.php">
     <MissingParamType>
       <code><![CDATA[$authorId]]></code>
     </MissingParamType>
@@ -3463,7 +3463,7 @@
       <code><![CDATA[CommentOperationException]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/Comments/Dbal/CommentsRepository.php">
+  <file src="project/core/ZxArt/Comments/Dbal/CommentsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -5592,7 +5592,7 @@
       <code><![CDATA[(string)$element->structureType]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Email/Dbal/DomainBanRepository.php">
+  <file src="project/core/ZxArt/Email/Dbal/DomainBanDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -5986,12 +5986,12 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Geo/Dbal/GeoManageRepository.php">
+  <file src="project/core/ZxArt/Geo/Dbal/GeoManageDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Geo/Dbal/GeoRepository.php">
+  <file src="project/core/ZxArt/Geo/Dbal/GeoDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6162,7 +6162,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/GroupList/Dbal/GroupListRepository.php">
+  <file src="project/core/ZxArt/GroupList/Dbal/GroupListDbal.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$groupsQuery->pluck('city')]]></code>
       <code><![CDATA[$groupsQuery->pluck('country')]]></code>
@@ -6391,7 +6391,7 @@
       <code><![CDATA[getGroupTypes]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Dbal/GroupActivityRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupActivityDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6399,22 +6399,22 @@
       <code><![CDATA[(int)$row['commentId']]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Groups/Dbal/GroupAliasesRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupAliasesDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Dbal/GroupCollaboratorsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupCollaboratorsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Dbal/GroupProdsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupProdsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Groups/Dbal/GroupsRepository.php">
+  <file src="project/core/ZxArt/Groups/Dbal/GroupsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -6948,7 +6948,7 @@
       <code><![CDATA[itemsToGroups]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Hardware/Dbal/HardwareRepository.php">
+  <file src="project/core/ZxArt/Hardware/Dbal/HardwareDbal.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[array_map(
             static fn(array $row): array => [
@@ -6999,7 +6999,7 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/Hardware/Dbal/StorageRepository.php">
+  <file src="project/core/ZxArt/Hardware/Dbal/StorageDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -7120,8 +7120,8 @@
     <InvalidReturnStatement>
       <code><![CDATA[$this->resolveEntity(
             $label,
-            fn(?string $name) => $this->authorsRepository->findAuthorIdsByName($name, $label->realName),
-            fn(?string $name) => $this->authorAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->authorsDbal->findAuthorIdsByName($name, $label->realName),
+            fn(?string $name) => $this->authorAliasesDbal->findAliasIdsByName($name),
             static fn($alias) => $alias->getAuthorElement(),
 
             function (authorElement|authorAliasElement $author, ?string $elementName, PersonLabel $label) {
@@ -7196,8 +7196,8 @@
         )]]></code>
       <code><![CDATA[$this->resolveEntity(
             $label,
-            fn(?string $name) => $this->groupsRepository->findGroupIdsByName($name),
-            fn(?string $name) => $this->groupAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->groupsDbal->findGroupIdsByName($name),
+            fn(?string $name) => $this->groupAliasesDbal->findAliasIdsByName($name),
             static fn($alias) => $alias->getGroupElement(),
 
             function (groupElement|groupAliasElement $groupElement, ?string $elementName, GroupLabel $label) {
@@ -7596,7 +7596,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Import/Dbal/ImportOriginsRepository.php">
+  <file src="project/core/ZxArt/Import/Dbal/ImportOriginsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8575,7 +8575,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/IpBan/Dbal/IpBanRepository.php">
+  <file src="project/core/ZxArt/IpBan/Dbal/IpBanDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8679,7 +8679,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/MusicSearch/Dbal/MusicSearchRepository.php">
+  <file src="project/core/ZxArt/MusicSearch/Dbal/MusicSearchDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8861,7 +8861,7 @@
       <code><![CDATA[(string)$element->title]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Parties/Dbal/PartiesRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartiesDbal.php">
     <InvalidArgument>
       <code><![CDATA[static function ($join) use ($year) {
                     $join->on('structure_links.childStructureId', '=', 'module_generic.id')
@@ -8946,7 +8946,7 @@
       <code><![CDATA[$record]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/Parties/Dbal/PartyActivityRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartyActivityDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -8954,7 +8954,7 @@
       <code><![CDATA[(int)$row['commentId']]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Parties/Dbal/PartyAuthorsRepository.php">
+  <file src="project/core/ZxArt/Parties/Dbal/PartyAuthorsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -9293,7 +9293,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/PictureSearch/Dbal/PictureSearchRepository.php">
+  <file src="project/core/ZxArt/PictureSearch/Dbal/PictureSearchDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -9479,7 +9479,7 @@
       <code><![CDATA[$element->views]]></code>
     </UndefinedMagicPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Pictures/Dbal/PicturesRepository.php">
+  <file src="project/core/ZxArt/Pictures/Dbal/PicturesDbal.php">
     <InvalidArgument>
       <code><![CDATA[fn($join) => $join
                     ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
@@ -10058,7 +10058,7 @@
       <code><![CDATA[$playlist->userId]]></code>
     </UndefinedMagicPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Playlists/Dbal/PlaylistContentsRepository.php">
+  <file src="project/core/ZxArt/Playlists/Dbal/PlaylistContentsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -10226,7 +10226,7 @@
       <code><![CDATA[$press2->title]]></code>
     </MixedPropertyFetch>
   </file>
-  <file src="project/core/ZxArt/Press/Dbal/PressArticleRepository.php">
+  <file src="project/core/ZxArt/Press/Dbal/PressArticleDbal.php">
     <MixedAssignment>
       <code><![CDATA[$content]]></code>
     </MixedAssignment>
@@ -10985,7 +10985,7 @@
       <code><![CDATA[$userVote !== null && $userVote !== false]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Prods/Dbal/ProdHardwareRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdHardwareDbal.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[array_map(static fn(mixed $code): string => (string)$code, $codes)]]></code>
       <code><![CDATA[array_map(static fn(mixed $code): string => (string)$code, $codes)]]></code>
@@ -10998,12 +10998,12 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Prods/Dbal/ProdTabsRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdTabsDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Prods/Dbal/ProdsRepository.php">
+  <file src="project/core/ZxArt/Prods/Dbal/ProdsDbal.php">
     <InvalidArgument>
       <code><![CDATA[fn($join) => $join
                     ->on('structure_links.childStructureId', '=', self::TABLE . '.id')
@@ -11916,9 +11916,9 @@
       <code><![CDATA[$value]]></code>
     </UnusedForeachValue>
   </file>
-  <file src="project/core/ZxArt/Queue/Dbal/QueueRepository.php">
+  <file src="project/core/ZxArt/Queue/Dbal/QueueDbal.php">
     <ClassMustBeFinal>
-      <code><![CDATA[QueueRepository]]></code>
+      <code><![CDATA[QueueDbal]]></code>
     </ClassMustBeFinal>
     <InvalidArgument>
       <code><![CDATA[QueueStatus::STATUS_TODO->value]]></code>
@@ -12427,7 +12427,7 @@
       <code><![CDATA[(float)$element->votes]]></code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="project/core/ZxArt/Releases/Dbal/ReleasesRepository.php">
+  <file src="project/core/ZxArt/Releases/Dbal/ReleasesDbal.php">
     <MixedReturnTypeCoercion>
       <code><![CDATA[$this->db->table(self::TABLE . ' AS releases')
             ->select('releases.id')
@@ -13302,7 +13302,7 @@
       <code><![CDATA[$years]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="project/core/ZxArt/Stats/Dbal/StatsRepository.php">
+  <file src="project/core/ZxArt/Stats/Dbal/StatsDbal.php">
     <ImplicitToStringCast>
       <code><![CDATA[$this->db->raw($votesHistoryTable . ' FORCE INDEX (' . self::VOTES_HISTORY_USER_INDEX . ')')]]></code>
     </ImplicitToStringCast>
@@ -13700,7 +13700,7 @@
       <code><![CDATA[TagListItemDto]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/TagsList/Dbal/TagsListRepository.php">
+  <file src="project/core/ZxArt/TagsList/Dbal/TagsListDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -13857,7 +13857,7 @@
       <code><![CDATA[TuneDetailsException]]></code>
     </ClassMustBeFinal>
   </file>
-  <file src="project/core/ZxArt/Tunes/Dbal/TunesRepository.php">
+  <file src="project/core/ZxArt/Tunes/Dbal/TunesDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
@@ -14135,7 +14135,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/UserPreferences/Dbal/PreferencesRepository.php">
+  <file src="project/core/ZxArt/UserPreferences/Dbal/PreferencesDbal.php">
     <MixedArgument>
       <code><![CDATA[$row]]></code>
       <code><![CDATA[$row]]></code>
@@ -14157,7 +14157,7 @@
       <code><![CDATA[$row]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="project/core/ZxArt/UserPreferences/Dbal/UserPreferenceValuesRepository.php">
+  <file src="project/core/ZxArt/UserPreferences/Dbal/UserPreferenceValuesDbal.php">
     <InvalidArgument>
       <code><![CDATA[$preferenceId]]></code>
       <code><![CDATA[$userId]]></code>
@@ -14473,7 +14473,7 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/ZxProdCategories/Dbal/CategoryManageRepository.php">
+  <file src="project/core/ZxArt/ZxProdCategories/Dbal/CategoryManageDbal.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>

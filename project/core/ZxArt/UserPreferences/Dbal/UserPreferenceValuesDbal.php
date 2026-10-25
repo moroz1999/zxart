@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ZxArt\UserPreferences\Dbal;
+
+use Illuminate\Database\Connection;
+use ZxArt\UserPreferences\Domain\UserPreferenceValue;
+
+final readonly class UserPreferenceValuesDbal
+{
+    private const TABLE = 'user_preference_values';
+
+    public function __construct(
+        private Connection $db,
+    ) {
+    }
+
+    /**
+     * @return UserPreferenceValue[]
+     */
+    public function findByUserId(int $userId): array
+    {
+        $rows = $this->db->table(self::TABLE)
+            ->where('user_id', $userId)
+            ->get();
+
+        $values = [];
+        foreach ($rows as $row) {
+            $values[] = new UserPreferenceValue(
+                userId: $row['user_id'],
+                preferenceId: $row['preference_id'],
+                value: $row['value'],
+            );
+        }
+
+        return $values;
+    }
+
+    public function findValueByUserIdAndPreferenceId(int $userId, int $preferenceId): ?string
+    {
+        $row = $this->db->table(self::TABLE)
+            ->where('user_id', $userId)
+            ->where('preference_id', $preferenceId)
+            ->first();
+
+        return $row['value'] ?? null;
+    }
+
+    public function upsert(int $userId, int $preferenceId, string $value): void
+    {
+        $this->db->table(self::TABLE)->updateOrInsert(
+            ['user_id' => $userId, 'preference_id' => $preferenceId],
+            ['value' => $value]
+        );
+    }
+
+    /**
+     * @param array<int, string> $valuesByPreferenceId
+     */
+    public function upsertMany(int $userId, array $valuesByPreferenceId): void
+    {
+        $this->db->transaction(function () use ($userId, $valuesByPreferenceId): void {
+            foreach ($valuesByPreferenceId as $preferenceId => $value) {
+                $this->upsert($userId, $preferenceId, $value);
+            }
+        });
+    }
+}

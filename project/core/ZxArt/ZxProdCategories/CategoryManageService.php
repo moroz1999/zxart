@@ -13,7 +13,7 @@ use ZxArt\Shared\StructureType;
 use ZxArt\ZxProdCategories\Dto\CategoryNodeDto;
 use ZxArt\ZxProdCategories\Dto\CategorySaveDto;
 use ZxArt\ZxProdCategories\Exception\CategoryException;
-use ZxArt\ZxProdCategories\Dbal\CategoryManageRepository;
+use ZxArt\ZxProdCategories\Dbal\CategoryManageDbal;
 use zxProdCategoriesCatalogueElement;
 use zxProdCategoryElement;
 
@@ -42,7 +42,7 @@ final class CategoryManageService
     private ?array $prodCounts = null;
 
     public function __construct(
-        private readonly CategoryManageRepository $repository,
+        private readonly CategoryManageDbal $repository,
         private readonly structureManager $structureManager,
         private readonly linksManager $linksManager,
         private readonly LanguagesManager $languagesManager,

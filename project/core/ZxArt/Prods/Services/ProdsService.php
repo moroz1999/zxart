@@ -10,12 +10,12 @@ use linksManager;
 use privilegesManager;
 use structureElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\ProdImportPolicy;
 use ZxArt\Import\Services\ImportIdOperator;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Prods\UseCases\ImportProdCommand;
 use ZxArt\Prods\UseCases\ImportProdHandler;
 use ZxArt\Shared\EntityType;
@@ -23,7 +23,7 @@ use zxProdElement;
 
 class ProdsService extends ElementsManager
 {
-    protected const string TABLE = ProdsRepository::TABLE;
+    protected const string TABLE = ProdsDbal::TABLE;
 
     private bool $forceUpdateYear = false;
     private bool $forceUpdateYoutube = false;
@@ -91,7 +91,7 @@ class ProdsService extends ElementsManager
         protected structureManager $structureManager,
         protected linksManager $linksManager,
         protected privilegesManager $privilegesManager,
-        protected AuthorshipRepository $authorshipRepository,
+        protected AuthorshipDbal $authorshipDbal,
         protected Connection $db,
         protected LanguagesManager $languagesManager,
         private readonly ImportIdOperator $importIdOperator,
@@ -333,7 +333,7 @@ class ProdsService extends ElementsManager
                     if (!$releasesOnly) {
                         //take existing authors
                         $existingAuthorIds = [];
-                        if ($existingAuthorShipRecords = $this->authorshipRepository->getElementAuthorsRecords($mainZxProdId)) {
+                        if ($existingAuthorShipRecords = $this->authorshipDbal->getElementAuthorsRecords($mainZxProdId)) {
                             foreach ($existingAuthorShipRecords as $record) {
                                 $existingAuthorIds[] = $record['authorId'];
                             }
@@ -394,7 +394,7 @@ class ProdsService extends ElementsManager
 
                     if (!empty($data['authors'])) {
                         $authorshipIds = array_keys($data['authors']);
-                        $this->authorshipRepository->moveAuthorship($newProdElement->getId(), $authorshipIds);
+                        $this->authorshipDbal->moveAuthorship($newProdElement->getId(), $authorshipIds);
                     }
                     if (!empty($data['groups'])) {
                         foreach ($data['groups'] as $id => $value) {

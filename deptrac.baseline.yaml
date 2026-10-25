@@ -14,9 +14,9 @@ deptrac:
     ZxArt\AuthorList\AuthorListTransformer:
       - authorAliasElement
       - authorElement
-    ZxArt\AuthorList\Dbal\AuthorListRepository:
+    ZxArt\AuthorList\Dbal\AuthorListDbal:
       - LanguagesManager
-    ZxArt\Authors\Dbal\AuthorshipRepository:
+    ZxArt\Authors\Dbal\AuthorshipDbal:
       - structureManager
     ZxArt\Authors\Services\AuthorAliasCreator:
       - authorAliasElement
@@ -2315,9 +2315,9 @@ deptrac:
       - linksManager
       - structureElement
       - structureManager
-    ZxArt\Geo\Dbal\GeoManageRepository:
+    ZxArt\Geo\Dbal\GeoManageDbal:
       - LanguagesManager
-    ZxArt\Geo\Dbal\GeoRepository:
+    ZxArt\Geo\Dbal\GeoDbal:
       - LanguagesManager
     ZxArt\GroupList\GroupListService:
       - groupAliasElement
@@ -2326,7 +2326,7 @@ deptrac:
     ZxArt\GroupList\GroupListTransformer:
       - groupAliasElement
       - groupElement
-    ZxArt\GroupList\Dbal\GroupListRepository:
+    ZxArt\GroupList\Dbal\GroupListDbal:
       - LanguagesManager
     ZxArt\Groups\Services\GroupActivityService:
       - ZxArtItem
@@ -2463,7 +2463,7 @@ deptrac:
       - structureElement
       - structureManager
       - zxMusicElement
-    ZxArt\MusicSearch\Dbal\MusicSearchRepository:
+    ZxArt\MusicSearch\Dbal\MusicSearchDbal:
       - LanguagesManager
       - tagsManager
     ZxArt\PageMetadata\PageMetadataService:
@@ -2533,7 +2533,7 @@ deptrac:
       - structureElement
       - structureManager
       - zxPictureElement
-    ZxArt\PictureSearch\Dbal\PictureSearchRepository:
+    ZxArt\PictureSearch\Dbal\PictureSearchDbal:
       - LanguagesManager
       - tagsManager
     ZxArt\Pictures\PicturesTransformer:
@@ -2832,7 +2832,7 @@ deptrac:
       - zxProdElement
     ZxArt\Social\Transformers\ZxReleasePostTransformer:
       - zxReleaseElement
-    ZxArt\Stats\Dbal\StatsRepository:
+    ZxArt\Stats\Dbal\StatsDbal:
       - LanguagesManager
     ZxArt\Stats\Services\EventsAggregationService:
       - App\Logging\EventsLog

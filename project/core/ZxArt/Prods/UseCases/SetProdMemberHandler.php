@@ -9,7 +9,7 @@ use authorElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\AuthorshipRoles;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Prods\Dto\ProdDataResultDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\Repositories\ProdRepository;
@@ -32,7 +32,7 @@ final readonly class SetProdMemberHandler
         private ProdRepository $prodRepository,
         private ProdPrivileges $prodPrivileges,
         private structureManager $structureManager,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -55,7 +55,7 @@ final readonly class SetProdMemberHandler
 
         $this->transactionRunner->run(function () use ($prod, $command): void {
             $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipRepository->setAuthorship($command->prodId, $command->authorId, EntityType::Prod, $roles, null, null);
+            $this->authorshipDbal->setAuthorship($command->prodId, $command->authorId, EntityType::Prod, $roles, null, null);
             $this->prodRepository->touch($prod);
             $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
         });

@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\ImportOriginsHolderTrait;
@@ -36,9 +36,9 @@ trait Group
         if (!$this->hasActualStructureInfo()) {
             return [];
         }
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
-        $info = $authorshipRepository->getAuthorsInfo($this->id, $entityType);
+        $info = $authorshipDbal->getAuthorsInfo($this->id, $entityType);
         $sort = [];
         foreach ($info as $item) {
             $sort[] = $item['authorElement']->getTitle();

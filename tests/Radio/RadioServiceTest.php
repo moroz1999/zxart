@@ -11,7 +11,7 @@ use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Radio\Services\RadioService;
 use ZxArt\Tunes\Dto\TuneDto;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\Tunes\TunesTransformer;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
@@ -46,7 +46,7 @@ class RadioServiceTest extends TestCase
             trackerFileUrl: null,
         );
 
-        $repository = $this->createMock(TunesRepository::class);
+        $repository = $this->createMock(TunesDbal::class);
         $repository->method('findRandomIdByCriteria')->with($criteria)->willReturn(1);
 
         $structureManager = $this->createMock(structureManager::class);
@@ -68,7 +68,7 @@ class RadioServiceTest extends TestCase
     public function testGetNextTuneThrowsWhenNoTuneFound(): void
     {
         $criteria = $this->makeCriteria();
-        $repository = $this->createMock(TunesRepository::class);
+        $repository = $this->createMock(TunesDbal::class);
         $repository->method('findRandomIdByCriteria')->with($criteria)->willReturn(null);
 
         $service = new RadioService(

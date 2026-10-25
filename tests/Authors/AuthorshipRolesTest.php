@@ -11,14 +11,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Shared\EntityType;
 
 #[AllowMockObjectsWithoutExpectations]
 class AuthorshipRolesTest extends TestCase
 {
     private Builder&MockObject $builder;
-    private AuthorshipRepository $repository;
+    private AuthorshipDbal $repository;
 
     protected function setUp(): void
     {
@@ -29,7 +29,7 @@ class AuthorshipRolesTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($this->builder);
 
-        $this->repository = new AuthorshipRepository($db, $this->createMock(structureManager::class));
+        $this->repository = new AuthorshipDbal($db, $this->createMock(structureManager::class));
     }
 
     public function testLegacyEmptyRolesAreReadAsNoRoles(): void

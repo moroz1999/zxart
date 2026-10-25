@@ -1,6 +1,6 @@
 <?php
 
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Shared\EntityType;
 
 class receiveGroup extends structureElementAction
@@ -26,8 +26,8 @@ class receiveGroup extends structureElementAction
             $structureElement->checkParentLetter();
             $structureElement->persistSubGroupConnections();
 
-            $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            $authorshipRepository->saveAuthorship(
+            $authorshipDbal = $this->getService(AuthorshipDbal::class);
+            $authorshipDbal->saveAuthorship(
                 $structureElement->getId(),
                 $structureElement->getValue('addAuthor'),
                 EntityType::Group,

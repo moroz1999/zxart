@@ -8,15 +8,15 @@ use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Domain\Exception\PreferenceNotConfiguredException;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Dto\PreferenceDto;
-use ZxArt\UserPreferences\Dbal\PreferencesRepository;
-use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesDbal;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesDbal;
 
 final readonly class UserPreferencesService
 {
     public function __construct(
         private CurrentUserService $currentUserService,
-        private PreferencesRepository $preferencesRepository,
-        private UserPreferenceValuesRepository $valuesRepository,
+        private PreferencesDbal $preferencesDbal,
+        private UserPreferenceValuesDbal $valuesRepository,
         private DefaultUserPreferencesProvider $defaultsProvider,
         private PreferenceValidator $validator,
     ) {
@@ -36,7 +36,7 @@ final readonly class UserPreferencesService
             return $defaults[$code] ?? null;
         }
 
-        $preference = $this->preferencesRepository->findByCode($preferenceCode);
+        $preference = $this->preferencesDbal->findByCode($preferenceCode);
         if ($preference === null) {
             return $defaults[$code] ?? null;
         }
@@ -66,7 +66,7 @@ final readonly class UserPreferencesService
             $valuesByPreferenceId[$value->preferenceId] = $value->value;
         }
 
-        $preferences = $this->preferencesRepository->findAll();
+        $preferences = $this->preferencesDbal->findAll();
         $result = [];
 
         foreach ($preferences as $preference) {
@@ -112,7 +112,7 @@ final readonly class UserPreferencesService
             return $this->getAllPreferences();
         }
 
-        $preference = $this->preferencesRepository->findByCode($preferenceCode);
+        $preference = $this->preferencesDbal->findByCode($preferenceCode);
         if ($preference === null) {
             throw PreferenceNotConfiguredException::forCode($preferenceCode);
         }
@@ -149,7 +149,7 @@ final readonly class UserPreferencesService
 
         foreach ($validatedValues as $code => $validatedValue) {
             $preferenceCode = PreferenceCode::from($code);
-            $preference = $this->preferencesRepository->findByCode($preferenceCode);
+            $preference = $this->preferencesDbal->findByCode($preferenceCode);
             if ($preference === null) {
                 throw PreferenceNotConfiguredException::forCode($preferenceCode);
             }

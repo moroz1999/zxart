@@ -8,7 +8,7 @@ use ApiQueriesManager;
 use ApiQuery;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Prods\Dbal\ProdSearchRepository;
+use ZxArt\Prods\Dbal\ProdSearchDbal;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdSearchService;
@@ -33,7 +33,7 @@ class ProdSearchServiceTest extends TestCase
         ]);
         $apiQuery->expects($this->once())->method('setTemporaryTables')->with(false);
         $apiQuery->method('getExportFilteredQuery')->willReturn($catalogue);
-        $repository = $this->createMock(ProdSearchRepository::class);
+        $repository = $this->createMock(ProdSearchDbal::class);
         $repository->expects($this->once())->method('count')
             ->with($catalogue, 'Star', 1983, 1986, 5, 6)->willReturn(12);
         $repository->expects($this->once())->method('findIds')
@@ -64,13 +64,13 @@ class ProdSearchServiceTest extends TestCase
         $apiQuery = $this->createMock(ApiQuery::class);
         $apiQuery->expects($this->once())->method('setFiltrationParameters')->with(['zxProdAll' => true]);
         $apiQuery->method('getExportFilteredQuery')->willReturn($this->createStub(Builder::class));
-        $repository = $this->createStub(ProdSearchRepository::class);
+        $repository = $this->createStub(ProdSearchDbal::class);
         $repository->method('findIds')->willReturn([]);
 
         $this->service($apiQuery, $repository)->search(new ProdSearchFilterDto(title: 'Elite'), 0, 10);
     }
 
-    private function service(ApiQuery $apiQuery, ProdSearchRepository $repository): ProdSearchService
+    private function service(ApiQuery $apiQuery, ProdSearchDbal $repository): ProdSearchService
     {
         $apiQueriesManager = $this->createStub(ApiQueriesManager::class);
         $apiQueriesManager->method('getQuery')->willReturn($apiQuery);

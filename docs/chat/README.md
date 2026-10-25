@@ -16,7 +16,7 @@ built, its description moves into the regular documentation (`docs/domain/`,
 | [frontend.md](frontend.md) | The chat panel in the SPA: conversations, polling, plan message, entity links, debug modal |
 | [backend.md](backend.md) | Storage, endpoint, the agent run loop, plan execution, cron, cleanup, privileges |
 | [mcp-tools.md](mcp-tools.md) | The tool catalogue the agent calls: read tools, write tools, control tools |
-| [service-changes.md](service-changes.md) | What existing services, repositories and legacy code must gain for the tools |
+| [service-changes.md](service-changes.md) | What existing services, repositories, Dbal classes and legacy code must gain for the tools |
 | [innodb.md](innodb.md) | Converting the MyISAM tables to InnoDB, for transactions and rollback in tests |
 
 ## Decisions taken

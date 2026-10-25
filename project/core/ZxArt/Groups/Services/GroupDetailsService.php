@@ -17,7 +17,7 @@ use ZxArt\Groups\Dto\GroupLocationItemDto;
 use ZxArt\Groups\Dto\GroupRefDto;
 use ZxArt\Groups\Dto\GroupTabsDto;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Dbal\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsDbal;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Prods\PressArticlePreviewFactory;
 use ZxArt\Releases\ReleaseTypes;
@@ -35,7 +35,7 @@ readonly class GroupDetailsService
         private structureManager $structureManager,
         private PressArticlePreviewFactory $pressArticlePreviewFactory,
         private GroupRosterService $groupRosterService,
-        private GroupProdsRepository $groupProdsRepository,
+        private GroupProdsDbal $groupProdsDbal,
         private GroupCollaboratorsService $groupCollaboratorsService,
     ) {
     }
@@ -208,7 +208,7 @@ readonly class GroupDetailsService
             members: $this->groupRosterService->countMembers($group),
             subgroups: $this->groupRosterService->countSubgroups($group),
             prods: count($group->getGroupProds()),
-            published: $this->groupProdsRepository->count((int)$group->getId(), GroupProdsScope::Published),
+            published: $this->groupProdsDbal->count((int)$group->getId(), GroupProdsScope::Published),
             releases: $this->countReleases($group),
             mentions: count($group->getPressMentions()),
             comments: (int)$group->getCommentsAmount(),
@@ -221,7 +221,7 @@ readonly class GroupDetailsService
      */
     private function countReleases(groupElement|groupAliasElement $group): int
     {
-        return $this->groupProdsRepository->count((int)$group->getId(), GroupProdsScope::Releases);
+        return $this->groupProdsDbal->count((int)$group->getId(), GroupProdsScope::Releases);
     }
 
     private function buildTabs(GroupCountersDto $counters, bool $hasConnections): GroupTabsDto

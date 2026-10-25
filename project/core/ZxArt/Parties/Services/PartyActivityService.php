@@ -12,7 +12,7 @@ use ZxArt\Comments\CommentAuthorDto;
 use ZxArt\Comments\CommentsListDto;
 use ZxArt\Comments\CommentsService;
 use ZxArt\Comments\CommentsTransformer;
-use ZxArt\Parties\Dbal\PartyActivityRepository;
+use ZxArt\Parties\Dbal\PartyActivityDbal;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArt\Ratings\Dto\AuthorRatingsListDto;
 use ZxArt\Ratings\Dto\RecentRatingDto;
@@ -23,7 +23,7 @@ readonly final class PartyActivityService
     public function __construct(
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
-        private PartyActivityRepository $activityRepository,
+        private PartyActivityDbal $activityRepository,
         private CommentsTransformer $commentsTransformer,
         private CommentsService $commentsService,
     ) {

@@ -13,7 +13,7 @@ use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\Dto\MusicSearchResult;
-use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchDbal;
 use ZxArt\PictureSearch\Dto\LocationDto;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\Tunes\Services\TunesManager;
@@ -28,7 +28,7 @@ readonly class MusicSearchService
     private const string AUTHORS_EXPORT_TYPE = 'author';
 
     public function __construct(
-        private MusicSearchRepository $musicSearchRepository,
+        private MusicSearchDbal $musicSearchDbal,
         private TunesManager $tunesManager,
         private AuthorsService $authorsService,
         private TunesTransformer $tunesTransformer,
@@ -45,14 +45,14 @@ readonly class MusicSearchService
         $order = [$query->sortParameter->value => $query->sortOrder->value];
 
         if ($query->resultsType === PictureSearchResultsType::Authors) {
-            $authorsQuery = $this->musicSearchRepository->buildAuthorsQuery($query);
+            $authorsQuery = $this->musicSearchDbal->buildAuthorsQuery($query);
             $totalAmount = (clone $authorsQuery)->count();
             /** @var \structureElement[] $authorElements */
             $authorElements = $this->authorsService->getElementsByQuery($authorsQuery, $order, $query->start, $query->limit);
             $tunes = [];
             $authors = $this->transformAuthors($authorElements);
         } else {
-            $tunesQuery = $this->musicSearchRepository->buildTunesQuery($query);
+            $tunesQuery = $this->musicSearchDbal->buildTunesQuery($query);
             $totalAmount = (clone $tunesQuery)->count();
             /** @var \structureElement[] $tuneElements */
             $tuneElements = $this->tunesManager->getElementsByQuery($tunesQuery, $order, $query->start, $query->limit);

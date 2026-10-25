@@ -6,13 +6,13 @@ namespace ZxArt\Import\Tunes;
 
 use structureManager;
 use ZxArt\Import\Resolver;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use zxMusicElement;
 
 readonly final class TuneResolver
 {
     public function __construct(
-        private TunesRepository          $tunesRepository,
+        private TunesDbal          $tunesDbal,
         private structureManager         $structureManager,
         private Resolver $resolver,
     )
@@ -26,7 +26,7 @@ readonly final class TuneResolver
             return null;
         }
 
-        $entityIds = $this->tunesRepository->findTunesByTitle($tuneLabel->title);
+        $entityIds = $this->tunesDbal->findTunesByTitle($tuneLabel->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
         $candidates = [];

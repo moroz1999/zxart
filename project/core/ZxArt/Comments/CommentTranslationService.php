@@ -6,7 +6,7 @@ namespace ZxArt\Comments;
 use JsonException;
 use structureManager;
 use UnexpectedValueException;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 
 /**
  * @psalm-api
@@ -16,7 +16,7 @@ final readonly class CommentTranslationService
     private const int BATCH_SIZE = 20;
 
     public function __construct(
-        private CommentsRepository $commentsRepository,
+        private CommentsDbal $commentsDbal,
         private CommentTranslationAiService $aiService,
         private structureManager $structureManager,
         private LatestCommentsCache $latestCommentsCache,
@@ -31,12 +31,12 @@ final readonly class CommentTranslationService
         $processed = 0;
         $failed = 0;
         $attempts = [];
-        $comments = $this->commentsRepository->getUntranslatedComments(self::BATCH_SIZE);
+        $comments = $this->commentsDbal->getUntranslatedComments(self::BATCH_SIZE);
 
         foreach ($comments as $comment) {
             try {
                 $translation = $this->aiService->translate($comment->id, $comment->text);
-                $this->commentsRepository->saveTranslation($comment->id, $translation);
+                $this->commentsDbal->saveTranslation($comment->id, $translation);
                 // The translation is written past the element, so its cached copy is stale.
                 $this->structureManager->clearElementCache($comment->id);
                 $processed++;

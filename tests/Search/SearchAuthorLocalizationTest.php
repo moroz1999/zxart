@@ -12,12 +12,12 @@ use PHPUnit\Framework\TestCase;
 use tagsManager;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\MusicSearchSort;
-use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchDbal;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchSort;
-use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchDbal;
 
 #[AllowMockObjectsWithoutExpectations]
 class SearchAuthorLocalizationTest extends TestCase
@@ -25,7 +25,7 @@ class SearchAuthorLocalizationTest extends TestCase
     public function testPictureAuthorResultsUseCurrentLanguageRow(): void
     {
         [$connection, $builder, $whereCalls] = $this->createQueryDoubles();
-        $repository = new PictureSearchRepository(
+        $repository = new PictureSearchDbal(
             $connection,
             $this->createMock(tagsManager::class),
             $this->createLanguagesManager(),
@@ -41,7 +41,7 @@ class SearchAuthorLocalizationTest extends TestCase
     public function testMusicAuthorResultsUseCurrentLanguageRow(): void
     {
         [$connection, $builder, $whereCalls] = $this->createQueryDoubles();
-        $repository = new MusicSearchRepository(
+        $repository = new MusicSearchDbal(
             $connection,
             $this->createMock(tagsManager::class),
             $this->createLanguagesManager(),

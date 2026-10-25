@@ -11,7 +11,7 @@ use privilegesManager;
 use structureManager;
 use ZxArt\Playlists\Exception\PlaylistException;
 use ZxArt\Playlists\PlaylistService;
-use ZxArt\Playlists\Dbal\PlaylistContentsRepository;
+use ZxArt\Playlists\Dbal\PlaylistContentsDbal;
 
 final class PlaylistServiceTest extends TestCase
 {
@@ -20,7 +20,7 @@ final class PlaylistServiceTest extends TestCase
         $service = new PlaylistService(
             $this->createStub(structureManager::class),
             $this->createStub(LanguagesManager::class),
-            $this->createStub(PlaylistContentsRepository::class),
+            $this->createStub(PlaylistContentsDbal::class),
             $this->createStub(linksManager::class),
             $this->createStub(privilegesManager::class),
         );

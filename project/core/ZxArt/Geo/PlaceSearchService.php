@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Geo;
 
-use ZxArt\Geo\Dbal\PlaceSearchRepository;
+use ZxArt\Geo\Dbal\PlaceSearchDbal;
 use ZxArt\Geo\Dto\FoundCityDto;
 use ZxArt\Geo\Dto\FoundCountryDto;
 use ZxArt\Geo\Dto\PlaceSearchResultDto;
@@ -21,7 +21,7 @@ final readonly class PlaceSearchService
     private const int LIMIT = 20;
 
     public function __construct(
-        private PlaceSearchRepository $placeSearchRepository,
+        private PlaceSearchDbal $placeSearchDbal,
     ) {
     }
 
@@ -35,7 +35,7 @@ final readonly class PlaceSearchService
         return new PlaceSearchResultDto(
             countries: array_map(
                 static fn(array $row): FoundCountryDto => new FoundCountryDto(id: $row['id'], title: $row['title']),
-                $this->placeSearchRepository->findCountries($phrase, self::LIMIT),
+                $this->placeSearchDbal->findCountries($phrase, self::LIMIT),
             ),
             cities: array_map(
                 static fn(array $row): FoundCityDto => new FoundCityDto(
@@ -44,7 +44,7 @@ final readonly class PlaceSearchService
                     countryId: $row['countryId'],
                     countryTitle: $row['countryTitle'],
                 ),
-                $this->placeSearchRepository->findCities($phrase, self::LIMIT),
+                $this->placeSearchDbal->findCities($phrase, self::LIMIT),
             ),
         );
     }

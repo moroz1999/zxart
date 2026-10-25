@@ -22,7 +22,7 @@ use ZxArt\Prods\Dto\ProdGroupRefDto;
 use ZxArt\Prods\Dto\ProdSubmitterDto;
 use ZxArt\Prods\Dto\ProdTagRefDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
-use ZxArt\Prods\Dbal\ProdTabsRepository;
+use ZxArt\Prods\Dbal\ProdTabsDbal;
 use ZxArt\Releases\ItchIo\ItchIoGameUrl;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
@@ -36,7 +36,7 @@ readonly class ProdCoreService
         private EntityUrlResolver $entityUrlResolver,
         private ProdElementService $prodElementService,
         private ProdInfoBuilder $infoBuilder,
-        private ProdTabsRepository $prodTabsRepository,
+        private ProdTabsDbal $prodTabsDbal,
         private privilegesManager $privilegesManager,
         private PageMetadataService $pageMetadataService,
         private ZxdbEntryIdsProvider $zxdbEntryIdsProvider,
@@ -87,7 +87,7 @@ readonly class ProdCoreService
             tags: $this->buildTags($element),
             voting: $this->buildVoting($element),
             submitter: $this->buildSubmitter($element),
-            tabs: $this->prodTabsRepository->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
+            tabs: $this->prodTabsDbal->buildTabs($element->getId(), $hasDescription, $hasTextInstructions),
             metadata: $this->pageMetadataService->getForPath('/prod/' . $elementId),
         );
     }

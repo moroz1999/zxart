@@ -51,7 +51,7 @@ counts a preview needs are listed in
 ## 3. Authorship and membership
 
 Done for productions, releases, groups and group aliases: `setMember()` next
-to `deleteMember()`, writing through `AuthorshipRepository::setAuthorship()`;
+to `deleteMember()`, writing through `AuthorshipDbal::setAuthorship()`;
 both move the element's modification time — see
 [php/entity-writes.md](../php/entity-writes.md#authors-and-members).
 
@@ -99,7 +99,7 @@ answers a refused file with `400`, moves the modification time and logs
 
 Done, see [features/search.md](../features/search.md#typed-searches):
 `ProdSearchService`, `AuthorSearchService`, `GroupSearchService`, the release
-lookups in `ReleasesRepository` and `PlaceSearchService`. Tags are filtered by
+lookups in `ReleasesDbal` and `PlaceSearchService`. Tags are filtered by
 id; turning a tag name into its id is left to the caller.
 
 The phrase search the assistant's `search` tool needs is

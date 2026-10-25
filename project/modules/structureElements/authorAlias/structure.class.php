@@ -2,7 +2,7 @@
 
 use ZxArt\Authors\Constants;
 use ZxArt\Authors\Entities\Author;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Import\ImportOriginsHolder;
@@ -195,8 +195,8 @@ class authorAliasElement extends structureElement implements
     {
         if ($this->prods === null) {
             $this->prods = [];
-            $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
+            $authorshipDbal = $this->getService(AuthorshipDbal::class);
+            if ($authorShip = $authorshipDbal->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -211,8 +211,8 @@ class authorAliasElement extends structureElement implements
         if ($this->releases === null) {
             $this->releases = [];
 
-            $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Release)) {
+            $authorshipDbal = $this->getService(AuthorshipDbal::class);
+            if ($authorShip = $authorshipDbal->getAuthorshipInfo($this->getId(), EntityType::Release)) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

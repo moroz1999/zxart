@@ -14,8 +14,8 @@ use ZxArt\Parties\Dto\PartyLinkDto;
 use ZxArt\Parties\Dto\PartyLocationDto;
 use ZxArt\Parties\Dto\PartyLocationItemDto;
 use ZxArt\Parties\Dto\PartyTabsDto;
-use ZxArt\Parties\Dbal\PartiesRepository;
-use ZxArt\Parties\Dbal\PartyAuthorsRepository;
+use ZxArt\Parties\Dbal\PartiesDbal;
+use ZxArt\Parties\Dbal\PartyAuthorsDbal;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use ZxArtItem;
 use ZxArt\PageMetadata\PageMetadataService;
@@ -35,8 +35,8 @@ readonly class PartyDetailsService
         private \ZxArt\Urls\EntityUrlResolver $entityUrlResolver,
         private structureManager $structureManager,
         private PartyCompoNameResolver $compoNameResolver,
-        private PartiesRepository $partiesRepository,
-        private PartyAuthorsRepository $partyAuthorsRepository,
+        private PartiesDbal $partiesDbal,
+        private PartyAuthorsDbal $partyAuthorsDbal,
         private PageMetadataService $pageMetadataService,
     ) {
     }
@@ -114,7 +114,7 @@ readonly class PartyDetailsService
         return new PartyCountersDto(
             compos: count($compos),
             entries: $entries,
-            authors: $this->partyAuthorsRepository->countByPartyId($party->getId()),
+            authors: $this->partyAuthorsDbal->countByPartyId($party->getId()),
             pictures: $byMedium['picture'],
             tunes: $byMedium['music'],
             prods: $byMedium['prod'],
@@ -169,7 +169,7 @@ readonly class PartyDetailsService
     private function buildEditions(partyElement $party): array
     {
         $abbreviation = (string)$party->abbreviation;
-        $ids = $this->partiesRepository->getIdsByAbbreviation($abbreviation);
+        $ids = $this->partiesDbal->getIdsByAbbreviation($abbreviation);
         if ($ids === []) {
             $ids = [(int)$party->getId()];
         }

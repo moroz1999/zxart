@@ -16,7 +16,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
@@ -105,7 +105,7 @@ final class ReleaseDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'deleteAuthor', 'zxRelease')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('deleteAuthorship')
             ->with(42, 7, EntityType::Release)
@@ -117,7 +117,7 @@ final class ReleaseDataServiceTest extends TestCase
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         )->deleteMember(42, 7);
 
         self::assertSame(42, $result->id);
@@ -125,12 +125,12 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutAuthorIdIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(zxReleaseElement::class),
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
@@ -139,7 +139,7 @@ final class ReleaseDataServiceTest extends TestCase
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
     {
         // /ajax/ answered success for a removal that changed nothing
-        $authorship = $this->createStub(AuthorshipRepository::class);
+        $authorship = $this->createStub(AuthorshipDbal::class);
         $authorship->method('deleteAuthorship')->willReturn(false);
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
@@ -147,7 +147,7 @@ final class ReleaseDataServiceTest extends TestCase
             $this->createStub(zxReleaseElement::class),
             $this->privileges(true),
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
@@ -155,12 +155,12 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(zxReleaseElement::class),
             $this->privileges(false),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
@@ -322,7 +322,7 @@ final class ReleaseDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'publicReceive', 'zxRelease')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Release, ['release', 'graphics'], null, null);
@@ -333,7 +333,7 @@ final class ReleaseDataServiceTest extends TestCase
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
         )->setMember(42, 7, ['release', 'graphics']);
 
@@ -342,14 +342,14 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testSetMemberTakesAnAuthorAliasAndNoRolesAsUnknown(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Release, ['unknown'], null, null);
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorAliasElement::class)],
         );
 
@@ -358,12 +358,12 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testSetMemberOfWhatIsNotAnAuthorIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(zxReleaseElement::class)],
         );
 
@@ -372,12 +372,12 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testSetMemberWithARoleOfAnotherKindIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
@@ -386,12 +386,12 @@ final class ReleaseDataServiceTest extends TestCase
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(false),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
@@ -434,7 +434,7 @@ final class ReleaseDataServiceTest extends TestCase
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
-        ?AuthorshipRepository $authorshipRepository = null,
+        ?AuthorshipDbal $authorshipDbal = null,
         ?ReleaseFieldsWriter $writer = null,
         ?ReleaseCreator $creator = null,
         ?CurrentUser $user = null,
@@ -451,7 +451,7 @@ final class ReleaseDataServiceTest extends TestCase
         $currentUserService->method('getCurrentUser')->willReturn($user ?? $this->createStub(CurrentUser::class));
 
         $actionsLog ??= $this->createStub(ActionsLogService::class);
-        $authorshipRepository ??= $this->createStub(AuthorshipRepository::class);
+        $authorshipDbal ??= $this->createStub(AuthorshipDbal::class);
         $transactionRunner = new TransactionRunner($this->createStub(Connection::class));
         $releaseRepository = new ReleaseRepository($structureManager);
         $releasePrivileges = new ReleasePrivileges($privilegesManager, $structureManager);
@@ -462,8 +462,8 @@ final class ReleaseDataServiceTest extends TestCase
             new UpdateReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $writer ?? $this->createStub(ReleaseFieldsWriter::class), $actionsLog),
             new DeleteReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),
             new CloneReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $cloner ?? $this->createStub(ReleaseCloner::class), $actionsLog, $currentUserService),
-            new SetReleaseMemberHandler($transactionRunner, $releaseRepository, $releasePrivileges, $structureManager, $authorshipRepository, $actionsLog),
-            new DeleteReleaseMemberHandler($transactionRunner, $releaseRepository, $releasePrivileges, $authorshipRepository, $actionsLog),
+            new SetReleaseMemberHandler($transactionRunner, $releaseRepository, $releasePrivileges, $structureManager, $authorshipDbal, $actionsLog),
+            new DeleteReleaseMemberHandler($transactionRunner, $releaseRepository, $releasePrivileges, $authorshipDbal, $actionsLog),
             new AddReleaseFilesHandler($transactionRunner, $releaseRepository, $releasePrivileges, $fileImporter, $actionsLog),
             new SetReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $fileImporter, $actionsLog),
             new DeleteReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),

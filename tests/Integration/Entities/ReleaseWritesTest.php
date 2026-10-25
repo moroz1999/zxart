@@ -16,7 +16,7 @@ use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Services\ProdDataService;
-use ZxArt\Releases\Dbal\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesDbal;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Services\ReleaseDataService;
@@ -318,7 +318,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
         $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
-        $releases = $this->container->get(ReleasesRepository::class);
+        $releases = $this->container->get(ReleasesDbal::class);
 
         self::assertSame([$releaseId], $releases->findIdsByProdId($references['prodId']));
         self::assertContains($releaseId, $releases->findIdsByTitle('GOLDMASTER TAP', 50));

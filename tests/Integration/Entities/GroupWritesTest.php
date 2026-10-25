@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Groups\Dbal\GroupSearchRepository;
+use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
@@ -386,7 +386,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild', abbreviation: 'GMGLD'))->id;
         $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldmaster Union', groupId: $groupId));
-        $search = $this->container->get(GroupSearchRepository::class);
+        $search = $this->container->get(GroupSearchDbal::class);
 
         self::assertContains($groupId, $search->findIds('gmgld', null, null, null, 0, 50));
         self::assertContains($groupId, $search->findIds('GOLDMASTER UNION', null, null, null, 0, 50));

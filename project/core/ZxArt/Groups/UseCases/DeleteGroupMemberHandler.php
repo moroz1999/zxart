@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Groups\UseCases;
 
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Dto\GroupDataResultDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Repositories\GroupRepository;
@@ -25,7 +25,7 @@ final readonly class DeleteGroupMemberHandler
         private TransactionRunner $transactionRunner,
         private GroupRepository $groupRepository,
         private GroupPrivileges $groupPrivileges,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -42,7 +42,7 @@ final readonly class DeleteGroupMemberHandler
         }
 
         $isDeleted = $this->transactionRunner->run(function () use ($group, $command): bool {
-            $isDeleted = $this->authorshipRepository->deleteAuthorship($command->groupId, $command->authorId, EntityType::Group);
+            $isDeleted = $this->authorshipDbal->deleteAuthorship($command->groupId, $command->authorId, EntityType::Group);
             if ($isDeleted) {
                 $this->groupRepository->touch($group);
                 $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);

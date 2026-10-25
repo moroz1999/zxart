@@ -15,7 +15,7 @@ use privilegesManager;
 use renderer;
 use RuntimeException;
 use structureManager;
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Forms\FormCreateService;
 use ZxArt\Forms\FormCreateType;
 
@@ -340,7 +340,7 @@ abstract class EntityWriteTestCase extends TestCase
      */
     protected function storedImportOrigins(int $elementId): array
     {
-        return $this->container->get(ImportOriginsRepository::class)->getElementOrigins($elementId);
+        return $this->container->get(ImportOriginsDbal::class)->getElementOrigins($elementId);
     }
 
     /**

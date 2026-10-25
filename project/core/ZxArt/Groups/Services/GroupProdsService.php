@@ -11,7 +11,7 @@ use zxProdCategoryElement;
 use zxProdElement;
 use zxReleaseElement;
 use ZxArt\Groups\GroupProdsScope;
-use ZxArt\Groups\Dbal\GroupProdsRepository;
+use ZxArt\Groups\Dbal\GroupProdsDbal;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -22,7 +22,7 @@ readonly class GroupProdsService
 {
     public function __construct(
         private structureManager $structureManager,
-        private GroupProdsRepository $groupProdsRepository,
+        private GroupProdsDbal $groupProdsDbal,
         private ProdsTransformer $prodsTransformer,
         private ProdReleasesService $prodReleasesService,
     ) {
@@ -47,12 +47,12 @@ readonly class GroupProdsService
         }
 
         $categoryIds = $this->buildCategoryTreeIds($categoryId);
-        $page = $this->groupProdsRepository->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type, $categoryIds);
+        $page = $this->groupProdsDbal->findPaged($groupId, $scope, $start, $limit, $sort, $sortDir, $type, $categoryIds);
         $availableTypes = $scope->isReleases()
-            ? $this->groupProdsRepository->findAvailableReleaseTypes($groupId)
+            ? $this->groupProdsDbal->findAvailableReleaseTypes($groupId)
             : [];
         $availableCategories = !$scope->isReleases()
-            ? $this->buildAvailableCategories($this->groupProdsRepository->findAvailableCategoryIds($groupId, $scope))
+            ? $this->buildAvailableCategories($this->groupProdsDbal->findAvailableCategoryIds($groupId, $scope))
             : [];
 
         $items = [];

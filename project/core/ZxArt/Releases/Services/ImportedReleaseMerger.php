@@ -7,7 +7,7 @@ namespace ZxArt\Releases\Services;
 
 use linksManager;
 use ProdsDownloader;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Labels\ImportedLabelsImporter;
 use ZxArt\Import\Prods\Dto\ReleaseImportDTO;
@@ -34,7 +34,7 @@ final readonly class ImportedReleaseMerger
         private ImportedAuthorIdResolver $importedAuthorIdResolver,
         private ImportedFilesAttacher $importedFilesAttacher,
         private ImportedTitleSanitizer $importedTitleSanitizer,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private linksManager $linksManager,
         private ProdsDownloader $prodsDownloader,
     ) {
@@ -125,7 +125,7 @@ final readonly class ImportedReleaseMerger
                 foreach ($releaseAuthors as $importAuthorId => $roles) {
                     $authorId = $this->importedAuthorIdResolver->resolve($importAuthorId, $origin, $element);
                     if ($authorId !== null) {
-                        $this->authorshipRepository->addAuthorship($element->getId(), $authorId, EntityType::Release, $roles);
+                        $this->authorshipDbal->addAuthorship($element->getId(), $authorId, EntityType::Release, $roles);
                     }
                 }
             }

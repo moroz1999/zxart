@@ -26,7 +26,7 @@ use ZxArt\Urls\EntityUrlResolver;
 use ZxArt\Stats\Dto\StatsTopUsersDto;
 use ZxArt\Stats\Dto\StatsUsersSectionDto;
 use ZxArt\Stats\Dto\StatsYearSeriesDto;
-use ZxArt\Stats\Dbal\StatsRepository;
+use ZxArt\Stats\Dbal\StatsDbal;
 use ZxArt\Stats\StatsDistributionColumn;
 
 readonly class StatsService
@@ -35,7 +35,7 @@ readonly class StatsService
     private const int COUNTRY_LIMIT = 15;
 
     public function __construct(
-        private StatsRepository $repository,
+        private StatsDbal $repository,
         private EventsLog $eventsLog,
         private structureManager $structureManager,
         private ConfigManager $configManager,

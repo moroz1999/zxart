@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 use ZxArt\Prods\Services\ProdHardwareMigrationService;
 use ZxArt\Prods\Services\ProdHardwareService;
 use ZxArt\Releases\ReleaseTypes;
@@ -130,7 +130,7 @@ class ProdHardwareMigrationServiceTest extends TestCase
 
             // resolved by the real service, so the migration and the inheritance
             // rules are checked against each other rather than restated here
-            $repository = $this->createMock(ProdHardwareRepository::class);
+            $repository = $this->createMock(ProdHardwareDbal::class);
             $repository->method('getProdCodesForRelease')->willReturn($plan['prod']);
             $resolver = new ProdHardwareService($repository, $catalog);
             $effectiveAfter = $resolver->getEffectiveCodes($id, $plan['releases'][$id] ?? $hardwareBefore);

@@ -28,7 +28,7 @@ An element whose portal ids are editable implements
 `zxProdElement`, `zxReleaseElement`, and — through `AuthorTrait` and the `Group`
 trait — `authorElement`, `authorAliasElement`, `groupElement`,
 `groupAliasElement`. The trait reads and writes through
-`ImportOriginsRepository`; `getImportEntityType()` names the `type` new rows are
+`ImportOriginsDbal`; `getImportEntityType()` names the `type` new rows are
 written under.
 
 Each of these elements declares an `importOrigins` array field in its
@@ -150,7 +150,7 @@ Held as they are by the import golden master
   id; but a caller that uses the result loses the new author: the press article
   import (`ArticleParsedDataUpdater`) leaves it out of the article's authors.
 - **A label with neither name nor real name matches an arbitrary author.**
-  `AuthorsRepository::findAuthorIdsByName('')` compares `title`/`realName` with
+  `AuthorsDbal::findAuthorIdsByName('')` compares `title`/`realName` with
   `LIKE ''`, and `LabelResolver::resolveEntity()` drops an author candidate only
   at a score of exactly `0` (alias candidates at `<= 0`), so a negative score
   still wins; the author found gets the portal id.

@@ -8,7 +8,7 @@ use structureManager;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Radio\Exception\RadioTuneNotFoundException;
 use ZxArt\Tunes\Dto\TuneDto;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\Tunes\TunesTransformer;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
@@ -17,7 +17,7 @@ readonly class RadioService
 {
     public function __construct(
         private structureManager $structureManager,
-        private TunesRepository $tunesRepository,
+        private TunesDbal $tunesDbal,
         private TunesTransformer $tunesTransformer,
         private ProdCategoryTreeService $prodCategoryTreeService,
     ) {
@@ -29,7 +29,7 @@ readonly class RadioService
     public function getNextTune(RadioCriteriaDto $criteria): TuneDto
     {
         $normalizedCriteria = $this->expandCategories($criteria);
-        $id = $this->tunesRepository->findRandomIdByCriteria($normalizedCriteria);
+        $id = $this->tunesDbal->findRandomIdByCriteria($normalizedCriteria);
         if ($id === null) {
             throw RadioTuneNotFoundException::forCriteria();
         }

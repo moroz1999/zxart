@@ -6,10 +6,10 @@ namespace Tests\Import\Labels;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Authors\Dbal\AuthorAliasesRepository;
-use ZxArt\Authors\Dbal\AuthorsRepository;
-use ZxArt\Groups\Dbal\GroupAliasesRepository;
-use ZxArt\Groups\Dbal\GroupsRepository;
+use ZxArt\Authors\Dbal\AuthorAliasesDbal;
+use ZxArt\Authors\Dbal\AuthorsDbal;
+use ZxArt\Groups\Dbal\GroupAliasesDbal;
+use ZxArt\Groups\Dbal\GroupsDbal;
 use ZxArt\Import\Labels\GroupLabel;
 use ZxArt\Import\Labels\LabelResolver;
 use ZxArt\Import\Labels\PersonLabel;
@@ -19,18 +19,18 @@ use ZxArt\Import\Resolver;
 final class LabelResolverTest extends TestCase
 {
     private function createResolver(
-        AuthorsRepository $authorsRepository,
-        AuthorAliasesRepository $authorAliasesRepository,
-        GroupsRepository $groupsRepository,
-        GroupAliasesRepository $groupAliasesRepository,
+        AuthorsDbal $authorsDbal,
+        AuthorAliasesDbal $authorAliasesDbal,
+        GroupsDbal $groupsDbal,
+        GroupAliasesDbal $groupAliasesDbal,
         \structureManager $structureManager,
         Resolver $resolver,
     ): LabelResolver {
         return new LabelResolver(
-            $authorsRepository,
-            $authorAliasesRepository,
-            $groupsRepository,
-            $groupAliasesRepository,
+            $authorsDbal,
+            $authorAliasesDbal,
+            $groupsDbal,
+            $groupAliasesDbal,
             $structureManager,
             new \ZxArt\Import\Authors\AuthorSufficiencyChecker(),
             $resolver,
@@ -39,10 +39,10 @@ final class LabelResolverTest extends TestCase
 
     public function testResolveAuthorByNameAndLocation(): void
     {
-        $authorsRepository = $this->createMock(AuthorsRepository::class);
-        $authorAliasesRepository = $this->createMock(AuthorAliasesRepository::class);
-        $groupsRepository = $this->createMock(GroupsRepository::class);
-        $groupAliasesRepository = $this->createMock(GroupAliasesRepository::class);
+        $authorsDbal = $this->createMock(AuthorsDbal::class);
+        $authorAliasesDbal = $this->createMock(AuthorAliasesDbal::class);
+        $groupsDbal = $this->createMock(GroupsDbal::class);
+        $groupAliasesDbal = $this->createMock(GroupAliasesDbal::class);
         $structureManager = $this->createMock(\structureManager::class);
         $resolver = $this->createMock(Resolver::class);
 
@@ -56,11 +56,11 @@ final class LabelResolverTest extends TestCase
         );
 
         // IDs for entities and aliases
-        $authorsRepository->expects($this->once())
+        $authorsDbal->expects($this->once())
             ->method('findAuthorIdsByName')
             ->with('Gasman', 'Matt Westcott')
             ->willReturn([101]);
-        $authorAliasesRepository->expects($this->once())
+        $authorAliasesDbal->expects($this->once())
             ->method('findAliasIdsByName')
             ->with('Gasman')
             ->willReturn([201]);
@@ -110,10 +110,10 @@ final class LabelResolverTest extends TestCase
         });
 
         $resolverInstance = $this->createResolver(
-            $authorsRepository,
-            $authorAliasesRepository,
-            $groupsRepository,
-            $groupAliasesRepository,
+            $authorsDbal,
+            $authorAliasesDbal,
+            $groupsDbal,
+            $groupAliasesDbal,
             $structureManager,
             $resolver,
         );
@@ -127,10 +127,10 @@ final class LabelResolverTest extends TestCase
 
     public function testResolveAuthorExcludedOnCountryMismatch(): void
     {
-        $authorsRepository = $this->createMock(AuthorsRepository::class);
-        $authorAliasesRepository = $this->createMock(AuthorAliasesRepository::class);
-        $groupsRepository = $this->createMock(GroupsRepository::class);
-        $groupAliasesRepository = $this->createMock(GroupAliasesRepository::class);
+        $authorsDbal = $this->createMock(AuthorsDbal::class);
+        $authorAliasesDbal = $this->createMock(AuthorAliasesDbal::class);
+        $groupsDbal = $this->createMock(GroupsDbal::class);
+        $groupAliasesDbal = $this->createMock(GroupAliasesDbal::class);
         $structureManager = $this->createMock(\structureManager::class);
         $resolver = $this->createMock(Resolver::class);
 
@@ -140,8 +140,8 @@ final class LabelResolverTest extends TestCase
             countryName: 'USA',
         );
 
-        $authorsRepository->method('findAuthorIdsByName')->willReturn([1]);
-        $authorAliasesRepository->method('findAliasIdsByName')->willReturn([]);
+        $authorsDbal->method('findAuthorIdsByName')->willReturn([1]);
+        $authorAliasesDbal->method('findAliasIdsByName')->willReturn([]);
 
         $author = $this->createMock(\authorElement::class);
         $author->method('getGroupsList')->willReturn([]);
@@ -156,10 +156,10 @@ final class LabelResolverTest extends TestCase
         $resolver->method('valueStartsWith')->willReturn(false);
 
         $resolverInstance = $this->createResolver(
-            $authorsRepository,
-            $authorAliasesRepository,
-            $groupsRepository,
-            $groupAliasesRepository,
+            $authorsDbal,
+            $authorAliasesDbal,
+            $groupsDbal,
+            $groupAliasesDbal,
             $structureManager,
             $resolver,
         );
@@ -170,10 +170,10 @@ final class LabelResolverTest extends TestCase
 
     public function testResolveGroupScoresMembersAndLocation(): void
     {
-        $authorsRepository = $this->createMock(AuthorsRepository::class);
-        $authorAliasesRepository = $this->createMock(AuthorAliasesRepository::class);
-        $groupsRepository = $this->createMock(GroupsRepository::class);
-        $groupAliasesRepository = $this->createMock(GroupAliasesRepository::class);
+        $authorsDbal = $this->createMock(AuthorsDbal::class);
+        $authorAliasesDbal = $this->createMock(AuthorAliasesDbal::class);
+        $groupsDbal = $this->createMock(GroupsDbal::class);
+        $groupAliasesDbal = $this->createMock(GroupAliasesDbal::class);
         $structureManager = $this->createMock(\structureManager::class);
         $resolver = $this->createMock(Resolver::class);
 
@@ -184,8 +184,8 @@ final class LabelResolverTest extends TestCase
             memberNames: ['Alice', 'Bob']
         );
 
-        $groupsRepository->method('findGroupIdsByName')->willReturn([10]);
-        $groupAliasesRepository->method('findAliasIdsByName')->willReturn([]);
+        $groupsDbal->method('findGroupIdsByName')->willReturn([10]);
+        $groupAliasesDbal->method('findAliasIdsByName')->willReturn([]);
 
         $group = $this->createMock(\groupElement::class);
         $group->method('getTitle')->willReturn('Coders');
@@ -210,10 +210,10 @@ final class LabelResolverTest extends TestCase
         $resolver->method('valueStartsWith')->willReturn(false);
 
         $resolverInstance = $this->createResolver(
-            $authorsRepository,
-            $authorAliasesRepository,
-            $groupsRepository,
-            $groupAliasesRepository,
+            $authorsDbal,
+            $authorAliasesDbal,
+            $groupsDbal,
+            $groupAliasesDbal,
             $structureManager,
             $resolver,
         );
@@ -225,10 +225,10 @@ final class LabelResolverTest extends TestCase
 
     public function testResolveAuthorRequiresGroupIntersectionWhenBothHaveGroups(): void
     {
-        $authorsRepository = $this->createMock(AuthorsRepository::class);
-        $authorAliasesRepository = $this->createMock(AuthorAliasesRepository::class);
-        $groupsRepository = $this->createMock(GroupsRepository::class);
-        $groupAliasesRepository = $this->createMock(GroupAliasesRepository::class);
+        $authorsDbal = $this->createMock(AuthorsDbal::class);
+        $authorAliasesDbal = $this->createMock(AuthorAliasesDbal::class);
+        $groupsDbal = $this->createMock(GroupsDbal::class);
+        $groupAliasesDbal = $this->createMock(GroupAliasesDbal::class);
         $structureManager = $this->createMock(\structureManager::class);
         $resolver = $this->createMock(Resolver::class);
 
@@ -238,8 +238,8 @@ final class LabelResolverTest extends TestCase
             groupLabels: [new GroupLabel(name: 'Group A')]
         );
 
-        $authorsRepository->method('findAuthorIdsByName')->willReturn([77]);
-        $authorAliasesRepository->method('findAliasIdsByName')->willReturn([]);
+        $authorsDbal->method('findAuthorIdsByName')->willReturn([77]);
+        $authorAliasesDbal->method('findAliasIdsByName')->willReturn([]);
 
         $groupB = $this->makeGroupWithTitle('Group B');
 
@@ -256,10 +256,10 @@ final class LabelResolverTest extends TestCase
         $resolver->method('valueStartsWith')->willReturn(false);
 
         $resolverInstance = $this->createResolver(
-            $authorsRepository,
-            $authorAliasesRepository,
-            $groupsRepository,
-            $groupAliasesRepository,
+            $authorsDbal,
+            $authorAliasesDbal,
+            $groupsDbal,
+            $groupAliasesDbal,
             $structureManager,
             $resolver,
         );

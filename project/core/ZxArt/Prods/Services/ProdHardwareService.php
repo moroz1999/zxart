@@ -6,7 +6,7 @@ namespace ZxArt\Prods\Services;
 
 use ZxArt\Hardware\HardwareCatalogService;
 use ZxArt\Hardware\HardwareGroup;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 
 /**
  * Resolves hardware across the prod/release boundary.
@@ -33,7 +33,7 @@ final class ProdHardwareService
     private array $prodCodesByRelease = [];
 
     public function __construct(
-        private readonly ProdHardwareRepository $repository,
+        private readonly ProdHardwareDbal $repository,
         private readonly HardwareCatalogService $catalogService,
     ) {
     }

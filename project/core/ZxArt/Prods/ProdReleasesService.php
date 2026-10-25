@@ -11,7 +11,7 @@ use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Dto\ProdReleaseFormatDto;
 use ZxArt\Prods\Dto\ProdReleasesDto;
 use ZxArt\Prods\Dto\ProdVotingDto;
-use ZxArt\Releases\Dbal\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesDbal;
 use ZxArt\Releases\Services\EmulatorResolverService;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
 use ZxArt\Shared\DescriptionFormatter;
@@ -26,7 +26,7 @@ readonly class ProdReleasesService
         private DescriptionFormatter $descriptionFormatter,
         private ReleaseFormatsProvider $releaseFormatsProvider,
         private ProdMediaService $prodMediaService,
-        private ReleasesRepository $releasesRepository,
+        private ReleasesDbal $releasesDbal,
         private structureManager $structureManager,
         private EmulatorResolverService $emulatorResolver,
     ) {
@@ -53,7 +53,7 @@ readonly class ProdReleasesService
      */
     public function getLatestAdded(int $limit): array
     {
-        $ids = $this->releasesRepository->getLatestAddedIds($limit);
+        $ids = $this->releasesDbal->getLatestAddedIds($limit);
         $theme = $this->infoBuilder->resolveCurrentTheme();
         $result = [];
         foreach ($ids as $id) {

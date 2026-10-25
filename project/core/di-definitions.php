@@ -27,7 +27,7 @@ use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentTranslationAiService;
 use ZxArt\Comments\CommentTranslationService;
 use ZxArt\AuthorList\AuthorListService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Services\AuthorAliasFormService;
 use ZxArt\Authors\Services\AuthorAliasYearNormalizer;
 use ZxArt\Authors\Services\AuthorImportService;
@@ -70,7 +70,7 @@ return [
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     CommentsService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
-    AuthorshipRepository::class => autowire()
+    AuthorshipDbal::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),
     AuthorAliasFormService::class => autowire()
         ->constructorParameter('structureManager', DI\get('publicStructureManager')),

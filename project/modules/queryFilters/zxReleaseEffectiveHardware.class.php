@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Hardware\HardwareCatalogService;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 
 /**
  * Releases running on the given hardware — their own codes **or** the ones they
@@ -23,7 +23,7 @@ class zxReleaseEffectiveHardwareQueryFilter extends QueryFilter
     {
         $hardwareIds = $this->getService(HardwareCatalogService::class)->getIdsByCodes(array_values((array)$argument));
 
-        return $this->getService(ProdHardwareRepository::class)
+        return $this->getService(ProdHardwareDbal::class)
             ->addReleaseHardwareFilter($query, $this->getTable() . '.id', $hardwareIds);
     }
 }

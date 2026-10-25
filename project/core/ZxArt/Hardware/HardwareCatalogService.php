@@ -10,7 +10,7 @@ use ZxArt\Hardware\Dto\HardwareNameDto;
 use ZxArt\Hardware\Dto\HardwareNameInputDto;
 use ZxArt\Hardware\Dto\HardwareSaveDto;
 use ZxArt\Hardware\Exception\HardwareException;
-use ZxArt\Hardware\Dbal\HardwareRepository;
+use ZxArt\Hardware\Dbal\HardwareDbal;
 use ZxArt\Shared\InterfaceLanguage;
 
 /**
@@ -30,7 +30,7 @@ final class HardwareCatalogService
     private ?array $itemsByCode = null;
 
     public function __construct(
-        private readonly HardwareRepository $repository,
+        private readonly HardwareDbal $repository,
         private readonly LanguagesManager $languagesManager,
     ) {
     }

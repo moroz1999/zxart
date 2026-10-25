@@ -7,7 +7,7 @@ namespace ZxArt\Groups\Services;
 use groupElement;
 use linksManager;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Dto\GroupStateDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Import\Services\ImportOriginsReader;
@@ -25,7 +25,7 @@ final readonly class GroupStateService
     public function __construct(
         private structureManager $structureManager,
         private GroupFieldsReader $groupFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private GroupDetailsService $groupDetailsService,
         private linksManager $linksManager,
         private ImportOriginsReader $importOriginsReader,
@@ -47,7 +47,7 @@ final readonly class GroupStateService
             id: $groupId,
             modifiedAt: $group->getModifiedTimestamp(),
             fields: $this->groupFieldsReader->read($group),
-            members: $this->authorshipRepository->findByElement($groupId, EntityType::Group),
+            members: $this->authorshipDbal->findByElement($groupId, EntityType::Group),
             parentGroupIds: array_values(array_map('intval', $parentGroupIds)),
             aliasIds: array_values(array_map('intval', $group->getAliasElementsIds())),
             counters: $this->groupDetailsService->getCounters($group),

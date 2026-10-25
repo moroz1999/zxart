@@ -55,7 +55,7 @@ standalone SPA route:
 - Endpoint: `GET /tags-list-data/?section=graphics|music|software&minimumAmount=3`
   (`ZxArt\Controllers\TagsListData`). `minimumAmount` is optional and defaults
   to 3. Spec: `api/tags-list.yaml`.
-- `TagsListRepository` joins `tagLink` children to the requested section's item
+- `TagsListDbal` joins `tagLink` children to the requested section's item
   table, groups them by tag, and applies the minimum to that section-specific
   count. `TagsListService` loads the matching tag elements for language-resolved
   titles. The list is ordered by title.

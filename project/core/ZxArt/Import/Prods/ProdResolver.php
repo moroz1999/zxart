@@ -7,13 +7,13 @@ namespace ZxArt\Import\Prods;
 use structureManager;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Resolver;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use zxProdElement;
 
 readonly final class ProdResolver
 {
     public function __construct(
-        private ProdsRepository              $prodsRepository,
+        private ProdsDbal              $prodsDbal,
         private structureManager             $structureManager,
         private Resolver                     $resolver,
         private HardwareCompatibilityService $hardwareCompatibilityService,
@@ -27,7 +27,7 @@ readonly final class ProdResolver
             return null;
         }
 
-        $entityIds = $this->prodsRepository->findProdsByTitles($dto->title);
+        $entityIds = $this->prodsDbal->findProdsByTitles($dto->title);
 
         $entities = $entityIds ? array_map(fn(int $id) => $this->structureManager->getElementById($id), $entityIds) : [];
         $entities = array_filter($entities);

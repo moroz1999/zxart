@@ -16,7 +16,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Repositories\GroupAliasRepository;
@@ -281,7 +281,7 @@ final class GroupAliasDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'publicReceive', 'groupAlias')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['coder', 'musician'], 788918400, 0);
@@ -293,7 +293,7 @@ final class GroupAliasDataServiceTest extends TestCase
             $privilegesManager,
             actionsLog: $actionsLog,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         )->setMember(42, 7, ['coder', 'musician'], 788918400, 0);
 
         self::assertSame(42, $result->id);
@@ -301,7 +301,7 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testSetMemberTakesAnAuthorAliasAndNoRolesAsUnknown(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['unknown'], null, null);
@@ -309,7 +309,7 @@ final class GroupAliasDataServiceTest extends TestCase
             null,
             $this->privileges(true),
             elementsById: [42 => $this->createStub(groupAliasElement::class), 7 => $this->createStub(authorAliasElement::class)],
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $service->setMember(42, 7, []);
@@ -317,7 +317,7 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testSetMemberOfWhatIsNotAnAuthorOrWithARoleOfAnotherKindIsBadRequest(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
@@ -327,7 +327,7 @@ final class GroupAliasDataServiceTest extends TestCase
                 7 => $this->createStub(authorElement::class),
                 8 => $this->createStub(groupElement::class),
             ],
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(400, fn() => $service->setMember(42, 8, ['coder']));
@@ -336,13 +336,13 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
         $service = $this->createService(
             null,
             $this->privileges(false),
             elementsById: [42 => $this->createStub(groupAliasElement::class), 7 => $this->createStub(authorElement::class)],
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(403, fn() => $service->setMember(42, 7, ['coder']));
@@ -357,7 +357,7 @@ final class GroupAliasDataServiceTest extends TestCase
             ->method('checkPrivilegesForAction')
             ->with(42, 'deleteAuthor', 'groupAlias')
             ->willReturn(true);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->once())
             ->method('deleteAuthorship')
             ->with(42, 7, EntityType::Group)
@@ -369,7 +369,7 @@ final class GroupAliasDataServiceTest extends TestCase
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         )->deleteMember(42, 7);
 
         self::assertSame(42, $result->id);
@@ -377,12 +377,12 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutAuthorIdIsBadRequestAndOfANonMemberNotFound(): void
     {
-        $authorship = $this->createStub(AuthorshipRepository::class);
+        $authorship = $this->createStub(AuthorshipDbal::class);
         $authorship->method('deleteAuthorship')->willReturn(false);
         $service = $this->createService(
             $this->createStub(groupAliasElement::class),
             $this->privileges(true),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
@@ -391,12 +391,12 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutThePrivilegeIsForbidden(): void
     {
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(groupAliasElement::class),
             $this->privileges(false),
-            authorshipRepository: $authorship,
+            authorshipDbal: $authorship,
         );
 
         $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
@@ -411,7 +411,7 @@ final class GroupAliasDataServiceTest extends TestCase
         ?GroupAliasCreator $creator = null,
         ?CurrentUser $user = null,
         ?array $elementsById = null,
-        ?AuthorshipRepository $authorshipRepository = null,
+        ?AuthorshipDbal $authorshipDbal = null,
     ): GroupAliasDataService {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
@@ -425,7 +425,7 @@ final class GroupAliasDataServiceTest extends TestCase
 
         $groupsService ??= $this->createStub(GroupsService::class);
         $actionsLog ??= $this->createStub(ActionsLogService::class);
-        $authorshipRepository ??= $this->createStub(AuthorshipRepository::class);
+        $authorshipDbal ??= $this->createStub(AuthorshipDbal::class);
         $transactionRunner = new TransactionRunner($this->createStub(Connection::class));
         $repository = new GroupAliasRepository($structureManager, $groupsService);
         $privileges = new GroupAliasPrivileges($privilegesManager, $structureManager);
@@ -436,8 +436,8 @@ final class GroupAliasDataServiceTest extends TestCase
             new DeleteGroupAliasHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertGroupAliasToGroupHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new JoinGroupAliasesHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
-            new SetGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipRepository, $actionsLog),
-            new DeleteGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $authorshipRepository, $actionsLog),
+            new SetGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipDbal, $actionsLog),
+            new DeleteGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $authorshipDbal, $actionsLog),
         );
     }
 

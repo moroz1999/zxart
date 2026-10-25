@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Authors\Entities\Author;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Elements\PressMentionsProvider;
 use ZxArt\Import\ImportOriginsHolder;
 use ZxArt\LinkTypes;
@@ -362,8 +362,8 @@ class authorElement extends structureElement implements
         if ($this->prods === null) {
             $this->prods = [];
 
-            $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
+            $authorshipDbal = $this->getService(AuthorshipDbal::class);
+            if ($authorShip = $authorshipDbal->getAuthorshipInfo($this->getId(), EntityType::Prod)) {
                 foreach ($authorShip as $item) {
                     $this->prods[] = $item['prodElement'];
                 }
@@ -395,8 +395,8 @@ class authorElement extends structureElement implements
              * @var linksManager $linksManager
              */
 
-            $authorshipRepository = $this->getService(AuthorshipRepository::class);
-            if ($authorShip = $authorshipRepository->getAuthorshipInfo($this->getId(), EntityType::Release)) {
+            $authorshipDbal = $this->getService(AuthorshipDbal::class);
+            if ($authorShip = $authorshipDbal->getAuthorshipInfo($this->getId(), EntityType::Release)) {
                 foreach ($authorShip as $item) {
                     $this->releases[] = $item['releaseElement'];
                 }

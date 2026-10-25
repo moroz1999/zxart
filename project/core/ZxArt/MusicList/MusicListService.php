@@ -8,7 +8,7 @@ use structureManager;
 use ZxArt\Shared\SortingParams;
 use ZxArt\Tunes\Dto\TuneDto;
 use ZxArt\Tunes\MusicCollectionFilter;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\Tunes\TunesTransformer;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxMusicElement;
@@ -20,7 +20,7 @@ readonly class MusicListService
     public function __construct(
         private structureManager $structureManager,
         private TunesTransformer $tunesTransformer,
-        private TunesRepository $tunesRepository,
+        private TunesDbal $tunesDbal,
         private ProdCategoryTreeService $prodCategoryTreeService,
     ) {
     }
@@ -60,9 +60,9 @@ readonly class MusicListService
         int $limit,
     ): array {
         return [
-            'total' => $this->tunesRepository->countByLinkedElement($elementId, $linkType),
+            'total' => $this->tunesDbal->countByLinkedElement($elementId, $linkType),
             'items' => $this->loadTunes(
-                $this->tunesRepository->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
+                $this->tunesDbal->findPagedByLinkedElement($elementId, $linkType, $sorting, $start, $limit)
             ),
         ];
     }
@@ -82,9 +82,9 @@ readonly class MusicListService
         $categoryIds = $this->resolveProdCategoryIds($filter);
 
         return [
-            'total' => $this->tunesRepository->countCollection($filter, $categoryIds),
+            'total' => $this->tunesDbal->countCollection($filter, $categoryIds),
             'items' => $this->loadTunes(
-                $this->tunesRepository->findPagedCollectionIds($filter, $categoryIds, $sorting, $start, $limit)
+                $this->tunesDbal->findPagedCollectionIds($filter, $categoryIds, $sorting, $start, $limit)
             ),
         ];
     }
@@ -134,7 +134,7 @@ readonly class MusicListService
         if ($authorIds === []) {
             return [];
         }
-        $ids = $this->tunesRepository->findIdsByAuthorId((int)reset($authorIds));
+        $ids = $this->tunesDbal->findIdsByAuthorId((int)reset($authorIds));
         return $this->collectTunes($ids, $tuneId, $limit);
     }
 
@@ -156,7 +156,7 @@ readonly class MusicListService
         if ($tagIds === []) {
             return [];
         }
-        $ids = $this->tunesRepository->findSimilarByTags($tuneId, $tagIds, $limit);
+        $ids = $this->tunesDbal->findSimilarByTags($tuneId, $tagIds, $limit);
         return $this->collectTunes($ids, $tuneId, $limit);
     }
 
@@ -175,7 +175,7 @@ readonly class MusicListService
         if ($program === '') {
             return [];
         }
-        $ids = $this->tunesRepository->findByProgram($program, $tuneId, $limit + 1);
+        $ids = $this->tunesDbal->findByProgram($program, $tuneId, $limit + 1);
         return $this->collectTunes($ids, $tuneId, $limit);
     }
 

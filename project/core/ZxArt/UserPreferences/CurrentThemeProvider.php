@@ -7,15 +7,15 @@ namespace ZxArt\UserPreferences;
 use App\Users\CurrentUserService;
 use ZxArt\UserPreferences\Domain\PreferenceCode;
 use ZxArt\UserPreferences\Domain\ThemeValue;
-use ZxArt\UserPreferences\Dbal\PreferencesRepository;
-use ZxArt\UserPreferences\Dbal\UserPreferenceValuesRepository;
+use ZxArt\UserPreferences\Dbal\PreferencesDbal;
+use ZxArt\UserPreferences\Dbal\UserPreferenceValuesDbal;
 
 final readonly class CurrentThemeProvider
 {
     public function __construct(
         private CurrentUserService $currentUserService,
-        private PreferencesRepository $preferencesRepository,
-        private UserPreferenceValuesRepository $valuesRepository,
+        private PreferencesDbal $preferencesDbal,
+        private UserPreferenceValuesDbal $valuesRepository,
         private DefaultUserPreferencesProvider $defaultsProvider,
     ) {
     }
@@ -28,7 +28,7 @@ final readonly class CurrentThemeProvider
             return $this->getDefaultTheme();
         }
 
-        $preference = $this->preferencesRepository->findByCode(PreferenceCode::THEME);
+        $preference = $this->preferencesDbal->findByCode(PreferenceCode::THEME);
         if ($preference === null) {
             return $this->getDefaultTheme();
         }

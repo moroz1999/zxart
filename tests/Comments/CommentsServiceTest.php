@@ -19,7 +19,7 @@ use ZxArt\Comments\CommentsTransformer;
 use ZxArt\Comments\Exception\CommentAccessDeniedException;
 use ZxArt\Comments\Exception\CommentOperationException;
 use ZxArt\Comments\LatestCommentsCache;
-use ZxArt\Comments\Dbal\CommentsRepository;
+use ZxArt\Comments\Dbal\CommentsDbal;
 use zxPictureElement;
 
 #[AllowMockObjectsWithoutExpectations]
@@ -28,7 +28,7 @@ class CommentsServiceTest extends TestCase
     private structureManager&MockObject $structureManager;
     private CurrentUserService&MockObject $currentUserService;
     private CurrentUser&MockObject $user;
-    private CommentsRepository&MockObject $commentsRepository;
+    private CommentsDbal&MockObject $commentsDbal;
     private privilegesManager&MockObject $privilegesManager;
     private LatestCommentsCache&MockObject $latestCommentsCache;
     private CommentsTransformer&MockObject $transformer;
@@ -43,7 +43,7 @@ class CommentsServiceTest extends TestCase
             ->getMock();
         $this->currentUserService = $this->createMock(CurrentUserService::class);
         $this->currentUserService->method('getCurrentUser')->willReturn($this->user);
-        $this->commentsRepository = $this->createMock(CommentsRepository::class);
+        $this->commentsDbal = $this->createMock(CommentsDbal::class);
         $this->privilegesManager = $this->createMock(privilegesManager::class);
         $this->latestCommentsCache = $this->createMock(LatestCommentsCache::class);
         $this->transformer = $this->createMock(CommentsTransformer::class);
@@ -54,7 +54,7 @@ class CommentsServiceTest extends TestCase
             privilegesManager: $this->privilegesManager,
             latestCommentsCache: $this->latestCommentsCache,
             transformer: $this->transformer,
-            commentsRepository: $this->commentsRepository,
+            commentsDbal: $this->commentsDbal,
             contentPurifier: new CommentContentPurifier(),
         );
     }
@@ -140,7 +140,7 @@ class CommentsServiceTest extends TestCase
         $cached = [new CommentDto(1, null, '', 'text', 'text', '', false, false)];
         $this->latestCommentsCache->method('get')->with('eng')->willReturn($cached);
 
-        $this->commentsRepository->expects($this->never())->method('getLatestIds');
+        $this->commentsDbal->expects($this->never())->method('getLatestIds');
 
         $this->assertSame($cached, $this->service->getLatestComments(10, 'eng'));
     }
@@ -150,7 +150,7 @@ class CommentsServiceTest extends TestCase
         $comment = $this->createMock(commentElement::class);
         $dto = new CommentDto(3, null, '', 'text', 'text', '', false, false);
         $this->latestCommentsCache->method('get')->willReturn(null);
-        $this->commentsRepository->method('getLatestIds')->with(10)->willReturn([3]);
+        $this->commentsDbal->method('getLatestIds')->with(10)->willReturn([3]);
         $this->structureManager->method('getElementById')->with(3)->willReturn($comment);
         $this->transformer->method('transformToReadOnlyDto')->with($comment, 'eng')->willReturn($dto);
 
@@ -161,7 +161,7 @@ class CommentsServiceTest extends TestCase
 
     public function testLatestCommentsWithCustomLimitBypassCache(): void
     {
-        $this->commentsRepository->method('getLatestIds')->willReturn([]);
+        $this->commentsDbal->method('getLatestIds')->willReturn([]);
 
         $this->latestCommentsCache->expects($this->never())->method('get');
         $this->latestCommentsCache->expects($this->never())->method('set');
@@ -206,11 +206,11 @@ class CommentsServiceTest extends TestCase
 
     public function testAuthorCommentsUseRequestedPageSize(): void
     {
-        $this->commentsRepository
+        $this->commentsDbal
             ->method('countByAuthorId')
             ->with(7)
             ->willReturn(40);
-        $this->commentsRepository
+        $this->commentsDbal
             ->expects($this->once())
             ->method('getIdsByAuthorId')
             ->with(7, 10, 10)

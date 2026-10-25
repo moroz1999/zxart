@@ -8,7 +8,7 @@ use authorElement;
 use groupElement;
 use partyElement;
 use pressArticleElement;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Services\AuthorImportService;
 use ZxArt\Groups\UseCases\ImportGroupCommand;
 use ZxArt\Groups\UseCases\ImportGroupHandler;
@@ -107,7 +107,7 @@ final class ArticleParsedDataUpdater
     private array $toGroupRolesMap;
 
     public function __construct(
-        private readonly AuthorshipRepository     $authorshipRepository,
+        private readonly AuthorshipDbal     $authorshipDbal,
         private readonly AuthorImportService      $authorImportService,
         private readonly ImportGroupHandler       $importGroupHandler,
         private readonly ProdsService             $prodsService,
@@ -255,7 +255,7 @@ final class ArticleParsedDataUpdater
         foreach ($authorRoles as $authorId => $roles) {
             $authorElement = $this->authorsMap[$authorId] ?? null;
             if ($authorElement !== null) {
-                $this->authorshipRepository->addAuthorship($pressElement->id, $authorElement->id, EntityType::Prod, $roles);
+                $this->authorshipDbal->addAuthorship($pressElement->id, $authorElement->id, EntityType::Prod, $roles);
             }
         }
     }

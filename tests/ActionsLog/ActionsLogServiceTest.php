@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use zxProdElement;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\ActionsLog\Dto\ActionsLogRecordDto;
-use ZxArt\ActionsLog\Dbal\ActionsLogRepository;
+use ZxArt\ActionsLog\Dbal\ActionsLogDbal;
 use ZxArt\Shared\StructureType;
 
 final class ActionsLogServiceTest extends TestCase
@@ -31,7 +31,7 @@ final class ActionsLogServiceTest extends TestCase
         $currentUserService->method('getCurrentUser')->willReturn($user);
 
         $recorded = null;
-        $repository = $this->createMock(ActionsLogRepository::class);
+        $repository = $this->createMock(ActionsLogDbal::class);
         $repository->expects($this->once())
             ->method('add')
             ->willReturnCallback(function (ActionsLogRecordDto $record) use (&$recorded): void {

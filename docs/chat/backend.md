@@ -8,8 +8,8 @@ All new code lives in `project/core/ZxArt/Assistant/`:
 
 | Namespace | Holds |
 |---|---|
-| `Assistant\Conversations` | conversations and messages: repositories, DTOs, `ConversationService` |
-| `Assistant\Runs` | `AgentRunner` (the loop), run repository, run limits |
+| `Assistant\Conversations` | conversations and messages: Dbal classes, DTOs, `ConversationService` |
+| `Assistant\Runs` | `AgentRunner` (the loop), run Dbal, run limits |
 | `Assistant\Plans` | plans and plan actions, `PlanExecutor`, reference resolution |
 | `Assistant\Llm` | `ToolCallingClient` interface and its OpenAI implementation |
 | `Assistant\Tools` | the tool registry and every tool (see [mcp-tools.md](mcp-tools.md)) |
@@ -258,7 +258,7 @@ Run every 15 minutes by the server's crontab, like the existing cron URLs.
 ## Checklist
 
 - [ ] Migration: five InnoDB tables, `aiAssistant` privilege, empty `ai-assistant-users` group
-- [ ] Repositories for conversations, messages, runs, plans, actions (+ SQLite repository tests)
+- [ ] Dbal classes for conversations, messages, runs, plans, actions (+ SQLite Dbal tests)
 - [ ] `ToolCallingClient` interface + OpenAI implementation (tools, image input, token usage)
 - [ ] System prompt and history assembly with truncation
 - [ ] `AgentRunner`: claim, loop, stop, deadline, heartbeat, step and size limits

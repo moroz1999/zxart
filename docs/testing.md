@@ -120,7 +120,7 @@ scenario, never of the import code.
 halfway — an author the structure cannot load, an import id store that throws
 — and check that it left no element (`newElementIds()`).
 
-## Writing Tests for Repository Classes
+## Writing Tests for Dbal Classes
 
 ### Mocking Query Builder
 
@@ -250,7 +250,7 @@ public function testDtoLacksHardwareProdHasHardwareReturnsTrue(): void
 | Scenario | Approach |
 |----------|----------|
 | New services with DI | Unit tests with mocks |
-| Repository classes | Mock Query Builder (returns arrays due to `FETCH_ASSOC`) |
+| Dbal classes | Mock Query Builder (returns arrays due to `FETCH_ASSOC`) |
 | Legacy `*Element` classes | Integration tests or extract logic |
 | Business logic | Document rules in test comments |
 | Magic method classes | Don't mock magic methods; use alternatives |

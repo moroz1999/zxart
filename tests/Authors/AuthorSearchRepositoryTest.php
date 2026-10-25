@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Authors;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Authors\Dbal\AuthorSearchRepository;
+use ZxArt\Authors\Dbal\AuthorSearchDbal;
 
 /**
  * Authors by a part of the nickname, of the real name in any language or of an
@@ -25,7 +25,7 @@ class AuthorSearchRepositoryTest extends TestCase
     private const int GROUP_ALIAS = 201;
 
     private SQLiteConnection $db;
-    private AuthorSearchRepository $repository;
+    private AuthorSearchDbal $repository;
 
     protected function setUp(): void
     {
@@ -42,7 +42,7 @@ class AuthorSearchRepositoryTest extends TestCase
         $this->addAuthor(self::CLAUDE, 'Claude', ['', ''], 0, 0);
         $this->db->table('module_authoralias')->insert(['id' => self::ALEX_ALIAS, 'title' => 'Zorro', 'authorId' => self::ALEX]);
         $this->db->table('module_groupalias')->insert(['id' => self::GROUP_ALIAS, 'title' => 'Crew', 'groupId' => self::GROUP]);
-        $this->repository = new AuthorSearchRepository($this->db);
+        $this->repository = new AuthorSearchDbal($this->db);
     }
 
     public function testANameMatchesTheNicknameTheRealNameInAnyLanguageOrAnAlias(): void

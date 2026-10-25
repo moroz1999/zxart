@@ -193,9 +193,9 @@ CREATE TABLE `engine_auth_login_attempts` (
 ```
 
 - `scope` is `'ip'` or `'user'`.
-- Repositories must **not** write the `engine_` prefix — Illuminate adds it
-  (`docs/php/repositories.md:14`).
-- Add both tables to `ZxArt\Shared\DatabaseTable` (`docs/php/repositories.md:15`
+- Dbal classes must **not** write the `engine_` prefix — Illuminate adds it
+  (`docs/php/repositories.md`, "Database Table Names").
+- Add both tables to `ZxArt\Shared\DatabaseTable` (`docs/php/repositories.md`, "Database Table Names"
   forbids local table-name constants).
 
 ### 2.2 Cleanup
@@ -232,10 +232,10 @@ readonly class AccessTokenService
 
 `readonly class AccessTokenClaims { int $userId; string $familyId; int $expiresAt; }`
 
-### 3.3 `Dbal/RefreshTokenRepository.php`
+### 3.3 `Dbal/RefreshTokenDbal.php`
 
-`final readonly class`, **extends `ZxArt\Shared\Dbal\AbstractRepository`**
-(`docs/php/repositories.md:8`), table name from `DatabaseTable`.
+`final readonly class`, **extends `ZxArt\Shared\Dbal\AbstractDbal`**
+(`docs/php/repositories.md`, "Dbal"), table name from `DatabaseTable`.
 
 ```
 findByIdForUpdate(int $id): ?array        // inside a transaction
@@ -250,9 +250,9 @@ listActiveForUser(int $userId, int $now): array
 deleteExpired(int $threshold): int
 ```
 
-Query Builder only, no raw SQL (`docs/php/repositories.md:21`).
+Query Builder only, no raw SQL (`docs/php/repositories.md`, "No Raw SQL in Dbal Classes").
 
-### 3.4 `Dbal/LoginAttemptRepository.php`
+### 3.4 `Dbal/LoginAttemptDbal.php`
 
 Same conventions. `registerFailure(string $scope, string $subject, int $now, int $windowSeconds): int`,
 `countFailures(...)`, `reset(string $scope, string $subject)`, `deleteStale(int $threshold)`.
@@ -826,8 +826,8 @@ Each phase is independently deployable and leaves the site working.
 ### Phase 1 — additive backend (no behaviour change)
 
 - [ ] Migration `2026.08.08 - auth-tokens.sql`, applied; `DatabaseTable` cases added.
-- [ ] `AccessTokenService`, `AccessTokenClaims`, `RefreshTokenRepository`,
-      `LoginAttemptRepository`, `RefreshTokenService`, `RefreshCookie`,
+- [ ] `AccessTokenService`, `AccessTokenClaims`, `RefreshTokenDbal`,
+      `LoginAttemptDbal`, `RefreshTokenService`, `RefreshCookie`,
       `BearerTokenReader`, `BearerUserIdResolver`, `LoginThrottle`,
       `AuthenticationService`.
 - [ ] `AuthenticatedUserIdResolver` interface + null-object default + project binding.
@@ -894,7 +894,7 @@ Each phase is independently deployable and leaves the site working.
       id; expired; revoked; **replay inside the window returns the same
       successor**; **replay outside the window revokes the family**;
       `revokeAllForUser`; absolute family expiry is not extended by rotation.
-- [ ] `RefreshTokenRepositoryTest` / `LoginAttemptRepositoryTest` — Query Builder
+- [ ] `RefreshTokenDbalTest` / `LoginAttemptDbalTest` — Query Builder
       mocks returning arrays, per `docs/testing.md`.
 - [ ] `RefreshCookieTest` — flags, path, `Max-Age` only when persistent, `Secure`
       only under https, trailing-slash path.

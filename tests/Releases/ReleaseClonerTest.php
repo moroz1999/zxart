@@ -9,7 +9,7 @@ require_once __DIR__ . '/../Doubles/Elements/ZxReleaseElementSpy.php';
 use PHPUnit\Framework\TestCase;
 use structureElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ReleaseTypes;
@@ -45,7 +45,7 @@ final class ReleaseClonerTest extends TestCase
                 denyComments: false,
             ))
             ->willReturn($clone);
-        $authorship = $this->createMock(AuthorshipRepository::class);
+        $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->method('findByElement')->with(42, EntityType::Release)->willReturn([
             new AuthorshipDto(elementId: 42, authorId: 7, roles: ['release'], startDate: 0, endDate: 0),
         ]);
@@ -66,7 +66,7 @@ final class ReleaseClonerTest extends TestCase
         $creator = $this->createStub(ReleaseCreator::class);
         $creator->method('create')->willReturn($clone);
 
-        (new ReleaseCloner($creator, new ReleaseFieldsReader(), $this->createStub(AuthorshipRepository::class), new ReleaseRepository($this->createStub(structureManager::class))))
+        (new ReleaseCloner($creator, new ReleaseFieldsReader(), $this->createStub(AuthorshipDbal::class), new ReleaseRepository($this->createStub(structureManager::class))))
             ->clone($this->source(file: '', fileName: ''));
 
         self::assertSame([], $clone->values);

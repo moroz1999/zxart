@@ -7,7 +7,7 @@ namespace ZxArt\Email;
 use SpamCheckAdapter;
 use VerifaliaAdapter;
 use VerifyMailAdapter;
-use ZxArt\Email\Dbal\DomainBanRepository;
+use ZxArt\Email\Dbal\DomainBanDbal;
 
 /**
  * Validates an email address against local heuristics, a cached domain ban list
@@ -18,7 +18,7 @@ final readonly class EmailValidationService
     private const int MAX_LOCAL_PART_DOTS = 2;
 
     public function __construct(
-        private DomainBanRepository $domainBanRepository,
+        private DomainBanDbal $domainBanDbal,
         private VerifaliaAdapter $verifaliaAdapter,
         private VerifyMailAdapter $verifyMailAdapter,
     ) {
@@ -38,13 +38,13 @@ final readonly class EmailValidationService
             return false;
         }
 
-        $knownDecision = $this->domainBanRepository->findAllowed($domain);
+        $knownDecision = $this->domainBanDbal->findAllowed($domain);
         if ($knownDecision !== null) {
             return $knownDecision;
         }
 
         $allowed = $this->checkExternalServices($email);
-        $this->domainBanRepository->save($domain, $allowed);
+        $this->domainBanDbal->save($domain, $allowed);
 
         return $allowed;
     }

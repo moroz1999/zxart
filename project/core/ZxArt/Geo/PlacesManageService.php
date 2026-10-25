@@ -15,7 +15,7 @@ use ZxArt\Geo\Dto\CountrySaveDto;
 use ZxArt\Geo\Dto\ManageCityDto;
 use ZxArt\Geo\Dto\ManageCountryDto;
 use ZxArt\Geo\Exception\GeoException;
-use ZxArt\Geo\Dbal\GeoManageRepository;
+use ZxArt\Geo\Dbal\GeoManageDbal;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\StructureType;
 
@@ -44,7 +44,7 @@ final class PlacesManageService
     private ?array $placeUsages = null;
 
     public function __construct(
-        private readonly GeoManageRepository $repository,
+        private readonly GeoManageDbal $repository,
         private readonly structureManager $structureManager,
         private readonly linksManager $linksManager,
         private readonly LanguagesManager $languagesManager,

@@ -7,13 +7,13 @@ namespace ZxArt\Press\Helpers;
 use LanguagesManager;
 use pressArticleElement;
 use ZxArt\Helpers\HtmlTagsStripper;
-use ZxArt\Press\Dbal\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleDbal;
 use ZxArt\Strings\LanguageDetector;
 
 final class AiTextContent
 {
     public function __construct(
-        private PressArticleRepository $repository,
+        private PressArticleDbal $repository,
         private LanguageDetector       $languageDetector,
         private LanguagesManager       $languagesManager,
     )

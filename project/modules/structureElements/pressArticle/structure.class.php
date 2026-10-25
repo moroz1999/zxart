@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\LinkTypes;
-use ZxArt\Press\Dbal\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleDbal;
 use ZxArt\Queue\QueueStatusProvider;
 
 /**
@@ -142,7 +142,7 @@ class pressArticleElement extends structureElement implements SearchContentHolde
     /** Empty while nothing was archived for the article. */
     public function getOriginalContent(): string
     {
-        $repository = $this->getService(PressArticleRepository::class);
+        $repository = $this->getService(PressArticleDbal::class);
 
         return (string)$repository->getOriginalContent($this->getId());
     }

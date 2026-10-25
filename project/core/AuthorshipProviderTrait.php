@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Authors\AuthorshipRoles;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Shared\EntityType;
 
 /**
@@ -19,9 +19,9 @@ trait AuthorshipProviderTrait
             return [];
         }
         $result = [];
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
-        if ($info = $authorshipRepository->getAuthorsInfo($this->id, $entityType)) {
+        if ($info = $authorshipDbal->getAuthorsInfo($this->id, $entityType)) {
             if (!$roles) {
                 $result = $info;
             } else {
@@ -40,9 +40,9 @@ trait AuthorshipProviderTrait
         if (!$this->hasActualStructureInfo()) {
             return [];
         }
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
-        return $authorshipRepository->getElementAuthorsRecords($this->id, $entityType);
+        return $authorshipDbal->getElementAuthorsRecords($this->id, $entityType);
     }
 
     public function getAuthorshipInfo($type)
@@ -50,9 +50,9 @@ trait AuthorshipProviderTrait
         if (!$this->hasActualStructureInfo()) {
             return [];
         }
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
-        return $authorshipRepository->getAuthorshipInfo($this->getId(), $entityType);
+        return $authorshipDbal->getAuthorshipInfo($this->getId(), $entityType);
     }
 
     public function getAuthorshipRecords($type)
@@ -60,9 +60,9 @@ trait AuthorshipProviderTrait
         if (!$this->hasActualStructureInfo()) {
             return [];
         }
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $entityType = $type instanceof EntityType ? $type : EntityType::from($type);
-        return $authorshipRepository->getAuthorshipRecords($this->getId(), $entityType);
+        return $authorshipDbal->getAuthorshipRecords($this->getId(), $entityType);
     }
 
     /**

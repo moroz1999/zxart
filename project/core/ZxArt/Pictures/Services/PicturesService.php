@@ -8,14 +8,14 @@ use App\Users\CurrentUserService;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Dbal\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesDbal;
 use zxPictureElement;
 
 readonly class PicturesService
 {
     public function __construct(
         private structureManager $structureManager,
-        private PicturesRepository $picturesRepository,
+        private PicturesDbal $picturesDbal,
         private PicturesTransformer $picturesTransformer,
         private CurrentUserService $currentUserService,
     ) {
@@ -26,7 +26,7 @@ readonly class PicturesService
      */
     public function getNew(int $limit): array
     {
-        $ids = $this->picturesRepository->getNewIds($limit);
+        $ids = $this->picturesDbal->getNewIds($limit);
         return $this->loadAndTransform($ids);
     }
 
@@ -35,7 +35,7 @@ readonly class PicturesService
      */
     public function getBestOfMonth(int $limit): array
     {
-        $ids = $this->picturesRepository->getBestOfMonthIds($limit, (int)date('Y'));
+        $ids = $this->picturesDbal->getBestOfMonthIds($limit, (int)date('Y'));
         return $this->loadAndTransform($ids);
     }
 
@@ -49,7 +49,7 @@ readonly class PicturesService
         if ($isAuthorized === false) {
             return [];
         }
-        $ids = $this->picturesRepository->getUnvotedByUserIds(
+        $ids = $this->picturesDbal->getUnvotedByUserIds(
             (int)$user->id,
             $limit,
             $topN,
@@ -62,7 +62,7 @@ readonly class PicturesService
      */
     public function getRandomGood(int $limit, int $topN = 2000): array
     {
-        $ids = $this->picturesRepository->getRandomGoodIds($limit, $topN);
+        $ids = $this->picturesDbal->getRandomGoodIds($limit, $topN);
         return $this->loadAndTransform($ids);
     }
 
@@ -71,7 +71,7 @@ readonly class PicturesService
      */
     public function getByAuthor(int $authorId): array
     {
-        $ids = $this->picturesRepository->findIdsByAuthorId($authorId);
+        $ids = $this->picturesDbal->findIdsByAuthorId($authorId);
         return $this->loadAndTransform($ids);
     }
 
@@ -80,9 +80,9 @@ readonly class PicturesService
      */
     public function getByAuthorPaged(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $typeFilter = ''): array
     {
-        $total = $this->picturesRepository->countByAuthorId($authorId, $typeFilter);
-        $ids = $this->picturesRepository->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
-        $availableFormats = $this->picturesRepository->getDistinctTypesByAuthorId($authorId);
+        $total = $this->picturesDbal->countByAuthorId($authorId, $typeFilter);
+        $ids = $this->picturesDbal->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $typeFilter);
+        $availableFormats = $this->picturesDbal->getDistinctTypesByAuthorId($authorId);
         return [
             'items' => $this->loadAndTransform($ids),
             'total' => $total,

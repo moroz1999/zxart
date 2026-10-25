@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Authors;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Authors\Dbal\AuthorCollaboratorsRepository;
+use ZxArt\Authors\Dbal\AuthorCollaboratorsDbal;
 
 class AuthorCollaboratorsRepositoryTest extends TestCase
 {
@@ -16,7 +16,7 @@ class AuthorCollaboratorsRepositoryTest extends TestCase
     private const int OTHER_AUTHOR_ID = 102;
 
     private SQLiteConnection $db;
-    private AuthorCollaboratorsRepository $repository;
+    private AuthorCollaboratorsDbal $repository;
 
     protected function setUp(): void
     {
@@ -27,7 +27,7 @@ class AuthorCollaboratorsRepositoryTest extends TestCase
         $pdo->exec('CREATE TABLE module_authoralias (id INTEGER PRIMARY KEY, authorId INTEGER)');
         $pdo->exec('CREATE TABLE authorship (id INTEGER PRIMARY KEY, authorId INTEGER, elementId INTEGER, type TEXT)');
         $this->db->table('module_authoralias')->insert(['id' => self::ALIAS_ID, 'authorId' => self::AUTHOR_ID]);
-        $this->repository = new AuthorCollaboratorsRepository($this->db);
+        $this->repository = new AuthorCollaboratorsDbal($this->db);
     }
 
     public function testCountGroupMembershipsCountsEachGroupOfTheAuthorAndItsAliasesOnce(): void

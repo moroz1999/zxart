@@ -8,7 +8,7 @@ use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Shared\EntityType;
 
@@ -18,7 +18,7 @@ use ZxArt\Shared\EntityType;
  */
 class AuthorshipFindTest extends TestCase
 {
-    private AuthorshipRepository $repository;
+    private AuthorshipDbal $repository;
 
     protected function setUp(): void
     {
@@ -32,7 +32,7 @@ class AuthorshipFindTest extends TestCase
             ['authorId' => 7, 'elementId' => 42, 'roles' => '["code"]', 'startDate' => 0, 'endDate' => 0, 'type' => 'prod'],
             ['authorId' => 7, 'elementId' => 43, 'roles' => '["graphics"]', 'startDate' => 0, 'endDate' => 0, 'type' => 'group'],
         ]);
-        $this->repository = new AuthorshipRepository($db, $this->createStub(structureManager::class));
+        $this->repository = new AuthorshipDbal($db, $this->createStub(structureManager::class));
     }
 
     public function testFindByElementAnswersTheRecordsOfThatType(): void

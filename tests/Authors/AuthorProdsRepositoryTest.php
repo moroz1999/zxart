@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Authors;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Authors\Dbal\AuthorProdsRepository;
+use ZxArt\Authors\Dbal\AuthorProdsDbal;
 
 /**
  * A production is reachable on the site only through a category; one without a
@@ -23,7 +23,7 @@ class AuthorProdsRepositoryTest extends TestCase
     private const int ORPHAN_FOREIGN_PROD_ID = 801;
 
     private SQLiteConnection $db;
-    private AuthorProdsRepository $repository;
+    private AuthorProdsDbal $repository;
 
     protected function setUp(): void
     {
@@ -31,7 +31,7 @@ class AuthorProdsRepositoryTest extends TestCase
         // the CMS connection fetches rows as arrays
         $this->db->setFetchMode(PDO::FETCH_ASSOC);
         $this->createSchema();
-        $this->repository = new AuthorProdsRepository($this->db);
+        $this->repository = new AuthorProdsDbal($this->db);
     }
 
     public function testProdWithoutCategoryIsNotListed(): void

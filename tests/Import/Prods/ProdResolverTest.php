@@ -13,14 +13,14 @@ use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
 use ZxArt\Import\Prods\ProdResolver;
 use ZxArt\Import\Resolver;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use zxProdElement;
 
 #[AllowMockObjectsWithoutExpectations]
 final class ProdResolverTest extends TestCase
 {
-    /** @var ProdsRepository&MockObject */
-    private ProdsRepository $prodsRepository;
+    /** @var ProdsDbal&MockObject */
+    private ProdsDbal $prodsDbal;
     /** @var structureManager&MockObject */
     private structureManager $structureManager;
     private Resolver $resolver;
@@ -30,7 +30,7 @@ final class ProdResolverTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->prodsRepository = $this->createMock(ProdsRepository::class);
+        $this->prodsDbal = $this->createMock(ProdsDbal::class);
         $this->structureManager = $this->createMock(structureManager::class);
         $this->resolver = new Resolver(new AlphanumericColumnSearch());
         $this->hardware = $this->createMock(HardwareCompatibilityService::class);
@@ -61,7 +61,7 @@ final class ProdResolverTest extends TestCase
 
     private function sut(): ProdResolver
     {
-        return new ProdResolver($this->prodsRepository, $this->structureManager, $this->resolver, $this->hardware);
+        return new ProdResolver($this->prodsDbal, $this->structureManager, $this->resolver, $this->hardware);
     }
 
     public function testReturnsNullWhenTitleIsNull(): void
@@ -75,7 +75,7 @@ final class ProdResolverTest extends TestCase
     {
         $e1 = $this->makeElement('Foo', '', 1990);
         $e2 = $this->makeElement('Foo', '', 1991);
-        $this->prodsRepository->method('findProdsByTitles')->with('Foo')->willReturn([1, 2]);
+        $this->prodsDbal->method('findProdsByTitles')->with('Foo')->willReturn([1, 2]);
         $this->structureManager->method('getElementById')->willReturnMap([
             [1, $e1],
             [2, $e2],
@@ -94,7 +94,7 @@ final class ProdResolverTest extends TestCase
         $a = $this->makeElement('amazing prod deluxe', '', 1985);
         // B: exact alt title match
         $b = $this->makeElement('something else', 'amazing prod', 1985);
-        $this->prodsRepository->method('findProdsByTitles')->with('amazing prod')->willReturn([1, 2]);
+        $this->prodsDbal->method('findProdsByTitles')->with('amazing prod')->willReturn([1, 2]);
         $this->structureManager->method('getElementById')->willReturnMap([
             [1, $a],
             [2, $b],
@@ -111,7 +111,7 @@ final class ProdResolverTest extends TestCase
     public function testYearMismatchLeadsToNull(): void
     {
         $e = $this->makeElement('Bar', '', 1990);
-        $this->prodsRepository->method('findProdsByTitles')->with('Bar')->willReturn([1]);
+        $this->prodsDbal->method('findProdsByTitles')->with('Bar')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(true);
 
@@ -122,7 +122,7 @@ final class ProdResolverTest extends TestCase
     public function testOriginAlreadyLinkedRejects(): void
     {
         $e = $this->makeElement('X', '', 1999, static fn(ImportOrigin $origin) => $origin === ImportOrigin::Zxdb ? '123' : null);
-        $this->prodsRepository->method('findProdsByTitles')->with('X')->willReturn([1]);
+        $this->prodsDbal->method('findProdsByTitles')->with('X')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(true);
 
@@ -133,7 +133,7 @@ final class ProdResolverTest extends TestCase
     public function testHardwareIncompatibleRejects(): void
     {
         $e = $this->makeElement('Y', '', 2000);
-        $this->prodsRepository->method('findProdsByTitles')->with('Y')->willReturn([1]);
+        $this->prodsDbal->method('findProdsByTitles')->with('Y')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(false);
 
@@ -144,7 +144,7 @@ final class ProdResolverTest extends TestCase
     public function testNoYearEntityExcludedUnlessFlagTrue(): void
     {
         $e = $this->makeElement('Test', '', 0);
-        $this->prodsRepository->method('findProdsByTitles')->with('Test')->willReturn([1]);
+        $this->prodsDbal->method('findProdsByTitles')->with('Test')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(true);
 
@@ -157,7 +157,7 @@ final class ProdResolverTest extends TestCase
     public function testCrackOrIntroTitleRejected(): void
     {
         $e = $this->makeElement('Cool intro', '', 1994);
-        $this->prodsRepository->method('findProdsByTitles')->with('cool intro')->willReturn([1]);
+        $this->prodsDbal->method('findProdsByTitles')->with('cool intro')->willReturn([1]);
         $this->structureManager->method('getElementById')->willReturnMap([[1, $e]]);
         $this->hardware->method('areProdAndDtoCompatible')->willReturn(true);
 
@@ -171,7 +171,7 @@ final class ProdResolverTest extends TestCase
         // intended behavior is to select none when ties exist, assert null. Otherwise adjust accordingly.
         $a = $this->makeElement('Same', '', 2001);
         $b = $this->makeElement('Same', '', 2001);
-        $this->prodsRepository->method('findProdsByTitles')->with('Same')->willReturn([1, 2]);
+        $this->prodsDbal->method('findProdsByTitles')->with('Same')->willReturn([1, 2]);
         $this->structureManager->method('getElementById')->willReturnMap([
             [1, $a],
             [2, $b],

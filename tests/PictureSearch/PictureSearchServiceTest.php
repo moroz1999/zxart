@@ -20,7 +20,7 @@ use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchService;
 use ZxArt\PictureSearch\PictureSearchSort;
-use ZxArt\PictureSearch\Dbal\PictureSearchRepository;
+use ZxArt\PictureSearch\Dbal\PictureSearchDbal;
 use ZxArt\Pictures\PicturesTransformer;
 use ZxArt\Pictures\Services\PicturesManager;
 use ZxArt\Shared\EntityType;
@@ -43,7 +43,7 @@ class PictureSearchServiceTest extends TestCase
         $countQuery = $this->createMock(Builder::class);
         $countQuery->method('count')->willReturn(1);
 
-        $repository = $this->createMock(PictureSearchRepository::class);
+        $repository = $this->createMock(PictureSearchDbal::class);
         $repository->method('buildPicturesQuery')->willReturn($countQuery);
         $repository->method('buildAuthorsQuery')->willReturn($countQuery);
 

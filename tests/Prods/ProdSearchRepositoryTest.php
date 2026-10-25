@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Prods;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Prods\Dbal\ProdSearchRepository;
+use ZxArt\Prods\Dbal\ProdSearchDbal;
 
 /**
  * Narrows the productions the catalogue filters left by title, years, author
@@ -24,7 +24,7 @@ class ProdSearchRepositoryTest extends TestCase
     private const int GROUP_ALIAS = 21;
 
     private SQLiteConnection $db;
-    private ProdSearchRepository $repository;
+    private ProdSearchDbal $repository;
 
     protected function setUp(): void
     {
@@ -44,7 +44,7 @@ class ProdSearchRepositoryTest extends TestCase
         ]);
         $this->db->table('module_authoralias')->insert(['id' => self::AUTHOR_ALIAS, 'authorId' => self::AUTHOR]);
         $this->db->table('module_groupalias')->insert(['id' => self::GROUP_ALIAS, 'groupId' => self::GROUP]);
-        $this->repository = new ProdSearchRepository($this->db);
+        $this->repository = new ProdSearchDbal($this->db);
     }
 
     public function testTheTitleMatchesTheTitleOrTheAlternativeTitle(): void

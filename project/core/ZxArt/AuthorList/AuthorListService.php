@@ -10,7 +10,7 @@ use authorElement;
 use structureManager;
 use ZxArt\AuthorList\Dto\AuthorListItemDto;
 use ZxArt\AuthorList\Dto\FilterOptionDto;
-use ZxArt\AuthorList\Dbal\AuthorListRepository;
+use ZxArt\AuthorList\Dbal\AuthorListDbal;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\SortingParams;
 
@@ -22,7 +22,7 @@ readonly class AuthorListService
 
     public function __construct(
         private structureManager $structureManager,
-        private AuthorListRepository $repository,
+        private AuthorListDbal $repository,
         private AuthorListTransformer $transformer,
         private ApiQueriesManager $apiQueriesManager,
     ) {

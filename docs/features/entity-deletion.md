@@ -51,4 +51,4 @@ author).
 
 A deleted picture, tune, production or release also drops its `votes_history`
 rows: `ZxArtItem::deleteElementData()` calls
-`VotesHistoryRepository::deleteByElementId()` before the CMS deletion.
+`VotesHistoryDbal::deleteByElementId()` before the CMS deletion.

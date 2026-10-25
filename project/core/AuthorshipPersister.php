@@ -1,20 +1,20 @@
 <?php
 
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Shared\EntityType;
 
 trait AuthorshipPersister
 {
     public function persistAuthorship(EntityType $entityType): void
     {
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
-        $existingRecords = $authorshipRepository->getElementAuthorsRecords($this->id, $entityType);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
+        $existingRecords = $authorshipDbal->getElementAuthorsRecords($this->id, $entityType);
 
         $rolesInfo = $this->getValue('addAuthorRole');
         $startDates = $this->getValue('addAuthorStartDate');
         $endDates = $this->getValue('addAuthorEndDate');
         if ($addAuthorId = $this->getValue('addAuthor')) {
-            $authorshipRepository->saveAuthorship(
+            $authorshipDbal->saveAuthorship(
                 $this->getPersistedId(),
                 $addAuthorId,
                 $entityType,
@@ -42,12 +42,12 @@ trait AuthorshipPersister
                 $info[$authorId]['endDate'] = $endDate;
             }
         }
-        $info = $authorshipRepository->checkDuplicates($info);
+        $info = $authorshipDbal->checkDuplicates($info);
         foreach ($info as $authorId => $item) {
             $roles = !empty($item['roles']) ? $item['roles'] : ['unknown'];
             $startDate = !empty($item['startDate']) ? strtotime($item['startDate']) : 0;
             $endDate = !empty($item['endDate']) ? strtotime($item['endDate']) : 0;
-            $authorshipRepository->saveAuthorship(
+            $authorshipDbal->saveAuthorship(
                 $this->getPersistedId(),
                 $authorId,
                 $entityType,
@@ -58,7 +58,7 @@ trait AuthorshipPersister
         }
         foreach ($existingRecords as $record) {
             if (!isset($info[$record['authorId']])) {
-                $authorshipRepository->deleteAuthorship($this->getId(), $record['authorId'], $entityType);
+                $authorshipDbal->deleteAuthorship($this->getId(), $record['authorId'], $entityType);
             }
         }
     }
@@ -72,9 +72,9 @@ trait AuthorshipPersister
      */
     public function persistMemberships(EntityType $entityType): void
     {
-        $authorshipRepository = $this->getService(AuthorshipRepository::class);
+        $authorshipDbal = $this->getService(AuthorshipDbal::class);
         $authorId = $this->getPersistedId();
-        $existingRecords = $authorshipRepository->getAuthorshipRecords($authorId, $entityType);
+        $existingRecords = $authorshipDbal->getAuthorshipRecords($authorId, $entityType);
 
         $prefix = 'add' . ucfirst($entityType->value);
         $rolesInfo = $this->getValue($prefix . 'Role');
@@ -101,7 +101,7 @@ trait AuthorshipPersister
             $roles = !empty($item['roles']) ? $item['roles'] : ['unknown'];
             $startDate = !empty($item['startDate']) ? strtotime($item['startDate']) : 0;
             $endDate = !empty($item['endDate']) ? strtotime($item['endDate']) : 0;
-            $authorshipRepository->saveAuthorship(
+            $authorshipDbal->saveAuthorship(
                 (int)$elementId,
                 $authorId,
                 $entityType,
@@ -112,7 +112,7 @@ trait AuthorshipPersister
         }
         foreach ($existingRecords as $record) {
             if (!isset($info[$record['elementId']])) {
-                $authorshipRepository->deleteAuthorship((int)$record['elementId'], $authorId, $entityType);
+                $authorshipDbal->deleteAuthorship((int)$record['elementId'], $authorId, $entityType);
             }
         }
     }

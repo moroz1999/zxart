@@ -8,7 +8,7 @@ use partyElement;
 use structureManager;
 use ZxArt\Pictures\Dto\PictureDto;
 use ZxArt\Pictures\PicturesTransformer;
-use ZxArt\Pictures\Dbal\PicturesRepository;
+use ZxArt\Pictures\Dbal\PicturesDbal;
 use ZxArt\Prods\Exception\ProdDetailsException;
 use zxPictureElement;
 
@@ -26,7 +26,7 @@ readonly class PartyPicturesService
 
     public function __construct(
         private structureManager $structureManager,
-        private PicturesRepository $picturesRepository,
+        private PicturesDbal $picturesDbal,
         private PicturesTransformer $picturesTransformer,
     ) {
     }
@@ -42,7 +42,7 @@ readonly class PartyPicturesService
         }
 
         $compo = $compoType === self::COMPO_NONE ? '' : $compoType;
-        $pictureIds = $this->picturesRepository->findIdsByPartyAndCompo($partyId, $compo);
+        $pictureIds = $this->picturesDbal->findIdsByPartyAndCompo($partyId, $compo);
 
         $result = [];
         foreach ($pictureIds as $pictureId) {

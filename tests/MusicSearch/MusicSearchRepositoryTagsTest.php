@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use tagsManager;
 use ZxArt\MusicSearch\Dto\MusicSearchQuery;
 use ZxArt\MusicSearch\MusicSearchSort;
-use ZxArt\MusicSearch\Dbal\MusicSearchRepository;
+use ZxArt\MusicSearch\Dbal\MusicSearchDbal;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 
@@ -33,7 +33,7 @@ class MusicSearchRepositoryTagsTest extends TestCase
         $connection->method('table')->willReturnCallback(
             fn(string $table): Builder => (new Builder($connection, new MySqlGrammar(), new MySqlProcessor()))->from($table),
         );
-        $repository = new MusicSearchRepository($connection, $tagsManager, $this->createMock(LanguagesManager::class));
+        $repository = new MusicSearchDbal($connection, $tagsManager, $this->createMock(LanguagesManager::class));
 
         $sql = $repository->buildTunesQuery($this->queryWithTags(['No such tag']))->toSql();
 

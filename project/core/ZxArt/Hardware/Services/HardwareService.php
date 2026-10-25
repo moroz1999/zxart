@@ -6,12 +6,12 @@ namespace ZxArt\Hardware\Services;
 
 use JsonException;
 use ZxArt\Hardware\Dto\HardwareDto;
-use ZxArt\Hardware\Dbal\StorageRepository;
+use ZxArt\Hardware\Dbal\StorageDbal;
 
 final class HardwareService
 {
     public function __construct(
-        private StorageRepository $storageRepository,
+        private StorageDbal $storageDbal,
     )
     {
 
@@ -27,6 +27,6 @@ final class HardwareService
             hardwareId: $data['name'],
             json: json_encode($data, JSON_THROW_ON_ERROR)
         );
-        $this->storageRepository->store($dto);
+        $this->storageDbal->store($dto);
     }
 }

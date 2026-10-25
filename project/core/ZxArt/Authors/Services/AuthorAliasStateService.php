@@ -6,7 +6,7 @@ namespace ZxArt\Authors\Services;
 
 use authorAliasElement;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Authors\Dto\AuthorAliasStateDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Import\Services\ImportOriginsReader;
@@ -23,7 +23,7 @@ final readonly class AuthorAliasStateService
     public function __construct(
         private structureManager $structureManager,
         private AuthorAliasFieldsReader $authorAliasFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private AuthorDetailsService $authorDetailsService,
         private ImportOriginsReader $importOriginsReader,
     ) {
@@ -40,7 +40,7 @@ final readonly class AuthorAliasStateService
             id: $aliasId,
             modifiedAt: $alias->getModifiedTimestamp(),
             fields: $this->authorAliasFieldsReader->read($alias),
-            memberships: $this->authorshipRepository->findByAuthor($aliasId, EntityType::Group),
+            memberships: $this->authorshipDbal->findByAuthor($aliasId, EntityType::Group),
             counters: $this->authorDetailsService->getCounters($alias),
             importOrigins: $this->importOriginsReader->read($aliasId),
         );

@@ -9,10 +9,10 @@ use groupAliasElement;
 use groupElement;
 use RuntimeException;
 use structureManager;
-use ZxArt\Authors\Dbal\AuthorAliasesRepository;
-use ZxArt\Authors\Dbal\AuthorsRepository;
-use ZxArt\Groups\Dbal\GroupAliasesRepository;
-use ZxArt\Groups\Dbal\GroupsRepository;
+use ZxArt\Authors\Dbal\AuthorAliasesDbal;
+use ZxArt\Authors\Dbal\AuthorsDbal;
+use ZxArt\Groups\Dbal\GroupAliasesDbal;
+use ZxArt\Groups\Dbal\GroupsDbal;
 use ZxArt\Import\Authors\AuthorSufficiencyChecker;
 use ZxArt\Import\Resolver;
 use ZxArt\Shared\EntityType;
@@ -20,10 +20,10 @@ use ZxArt\Shared\EntityType;
 final readonly class LabelResolver
 {
     public function __construct(
-        private AuthorsRepository        $authorsRepository,
-        private AuthorAliasesRepository  $authorAliasesRepository,
-        private GroupsRepository         $groupsRepository,
-        private GroupAliasesRepository   $groupAliasesRepository,
+        private AuthorsDbal        $authorsDbal,
+        private AuthorAliasesDbal  $authorAliasesDbal,
+        private GroupsDbal         $groupsDbal,
+        private GroupAliasesDbal   $groupAliasesDbal,
         private structureManager         $structureManager,
         private AuthorSufficiencyChecker $authorSufficiencyChecker,
         private Resolver                 $resolver,
@@ -48,8 +48,8 @@ final readonly class LabelResolver
     {
         return $this->resolveEntity(
             $label,
-            fn(?string $name) => $this->groupsRepository->findGroupIdsByName($name),
-            fn(?string $name) => $this->groupAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->groupsDbal->findGroupIdsByName($name),
+            fn(?string $name) => $this->groupAliasesDbal->findAliasIdsByName($name),
             static fn($alias) => $alias->getGroupElement(),
 
             function (groupElement|groupAliasElement $groupElement, ?string $elementName, GroupLabel $label) {
@@ -97,8 +97,8 @@ final readonly class LabelResolver
     {
         return $this->resolveEntity(
             $label,
-            fn(?string $name) => $this->authorsRepository->findAuthorIdsByName($name, $label->realName),
-            fn(?string $name) => $this->authorAliasesRepository->findAliasIdsByName($name),
+            fn(?string $name) => $this->authorsDbal->findAuthorIdsByName($name, $label->realName),
+            fn(?string $name) => $this->authorAliasesDbal->findAliasIdsByName($name),
             static fn($alias) => $alias->getAuthorElement(),
 
             function (authorElement|authorAliasElement $author, ?string $elementName, PersonLabel $label) {

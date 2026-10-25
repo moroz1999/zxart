@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Releases;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Releases\Dbal\ReleasesRepository;
+use ZxArt\Releases\Dbal\ReleasesDbal;
 
 /**
  * A release is reachable only through its production, which needs a category.
@@ -21,7 +21,7 @@ class ReleasesRepositoryTest extends TestCase
     private const int ORPHAN_PROD_ID = 801;
 
     private SQLiteConnection $db;
-    private ReleasesRepository $repository;
+    private ReleasesDbal $repository;
 
     protected function setUp(): void
     {
@@ -34,7 +34,7 @@ class ReleasesRepositoryTest extends TestCase
         $pdo->exec('CREATE TABLE structure_elements (id INTEGER PRIMARY KEY, dateCreated INTEGER)');
         $pdo->exec('CREATE TABLE structure_links (parentStructureId INTEGER, childStructureId INTEGER, type TEXT)');
         $this->addLink(self::CATEGORY_ID, self::PROD_ID, 'zxProdCategory');
-        $this->repository = new ReleasesRepository($this->db);
+        $this->repository = new ReleasesDbal($this->db);
     }
 
     public function testLatestAddedLeavesOutReleaseOfProdWithoutCategory(): void

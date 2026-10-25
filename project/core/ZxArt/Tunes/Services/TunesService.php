@@ -7,7 +7,7 @@ namespace ZxArt\Tunes\Services;
 use App\Users\CurrentUserService;
 use structureManager;
 use ZxArt\Tunes\Dto\TuneDto;
-use ZxArt\Tunes\Dbal\TunesRepository;
+use ZxArt\Tunes\Dbal\TunesDbal;
 use ZxArt\Tunes\TunesTransformer;
 use zxMusicElement;
 
@@ -15,7 +15,7 @@ readonly class TunesService
 {
     public function __construct(
         private structureManager $structureManager,
-        private TunesRepository $tunesRepository,
+        private TunesDbal $tunesDbal,
         private TunesTransformer $tunesTransformer,
         private CurrentUserService $currentUserService,
     ) {
@@ -26,7 +26,7 @@ readonly class TunesService
      */
     public function getNew(int $limit): array
     {
-        $ids = $this->tunesRepository->getNewIds($limit);
+        $ids = $this->tunesDbal->getNewIds($limit);
         return $this->loadAndTransform($ids);
     }
 
@@ -35,7 +35,7 @@ readonly class TunesService
      */
     public function getBestOfMonth(int $limit): array
     {
-        $ids = $this->tunesRepository->getBestOfMonthIds($limit, (int)date('Y'));
+        $ids = $this->tunesDbal->getBestOfMonthIds($limit, (int)date('Y'));
         return $this->loadAndTransform($ids);
     }
 
@@ -49,7 +49,7 @@ readonly class TunesService
         if ($isAuthorized === false) {
             return [];
         }
-        $ids = $this->tunesRepository->getUnvotedByUserIds(
+        $ids = $this->tunesDbal->getUnvotedByUserIds(
             (int)$user->id,
             $limit,
             $topN,
@@ -62,7 +62,7 @@ readonly class TunesService
      */
     public function getRandomGood(int $limit, int $topN = 2000): array
     {
-        $ids = $this->tunesRepository->getRandomGoodIds($limit, $topN);
+        $ids = $this->tunesDbal->getRandomGoodIds($limit, $topN);
         return $this->loadAndTransform($ids);
     }
 
@@ -71,7 +71,7 @@ readonly class TunesService
      */
     public function getByAuthor(int $authorId): array
     {
-        $ids = $this->tunesRepository->findIdsByAuthorId($authorId);
+        $ids = $this->tunesDbal->findIdsByAuthorId($authorId);
         return $this->loadAndTransform($ids);
     }
 
@@ -80,9 +80,9 @@ readonly class TunesService
      */
     public function getByAuthorPaged(int $authorId, int $start, int $limit, string $sortColumn, string $sortDir, string $formatGroupFilter = ''): array
     {
-        $total = $this->tunesRepository->countByAuthorId($authorId, $formatGroupFilter);
-        $ids = $this->tunesRepository->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $formatGroupFilter);
-        $availableFormatGroups = $this->tunesRepository->getDistinctFormatGroupsByAuthorId($authorId);
+        $total = $this->tunesDbal->countByAuthorId($authorId, $formatGroupFilter);
+        $ids = $this->tunesDbal->findPagedIdsByAuthorId($authorId, $start, $limit, $sortColumn, $sortDir, $formatGroupFilter);
+        $availableFormatGroups = $this->tunesDbal->getDistinctFormatGroupsByAuthorId($authorId);
         return [
             'items' => $this->loadAndTransform($ids),
             'total' => $total,

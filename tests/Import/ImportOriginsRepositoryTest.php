@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Import\ImportOrigin;
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Shared\EntityType;
 
 #[AllowMockObjectsWithoutExpectations]
@@ -18,7 +18,7 @@ class ImportOriginsRepositoryTest extends TestCase
 {
     private Builder&MockObject $builder;
     private Connection&MockObject $db;
-    private ImportOriginsRepository $repository;
+    private ImportOriginsDbal $repository;
 
     protected function setUp(): void
     {
@@ -30,7 +30,7 @@ class ImportOriginsRepositoryTest extends TestCase
         $this->db = $this->createMock(Connection::class);
         $this->db->method('table')->willReturn($this->builder);
 
-        $this->repository = new ImportOriginsRepository($this->db);
+        $this->repository = new ImportOriginsDbal($this->db);
     }
 
     public function testElementOriginsAreReturnedAsPortalAndIdPairs(): void

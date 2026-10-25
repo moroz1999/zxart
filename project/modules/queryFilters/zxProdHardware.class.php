@@ -1,7 +1,7 @@
 <?php
 
 use ZxArt\Hardware\HardwareCatalogService;
-use ZxArt\Prods\Dbal\ProdHardwareRepository;
+use ZxArt\Prods\Dbal\ProdHardwareDbal;
 
 /**
  * Productions running on the given hardware — matching the production's own
@@ -23,7 +23,7 @@ class zxProdHardwareQueryFilter extends QueryFilter
     {
         $hardwareIds = $this->getService(HardwareCatalogService::class)->getIdsByCodes(array_values((array)$argument));
 
-        return $this->getService(ProdHardwareRepository::class)
+        return $this->getService(ProdHardwareDbal::class)
             ->addProdHardwareFilter($query, $this->getTable() . '.id', $hardwareIds);
     }
 }

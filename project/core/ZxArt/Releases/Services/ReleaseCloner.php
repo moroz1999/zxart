@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Releases\Services;
 
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
 use ZxArt\Shared\Elements\ElementFields;
@@ -26,7 +26,7 @@ final readonly class ReleaseCloner
     public function __construct(
         private ReleaseCreator $releaseCreator,
         private ReleaseFieldsReader $releaseFieldsReader,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ReleaseRepository $releaseRepository,
     ) {
     }
@@ -49,8 +49,8 @@ final readonly class ReleaseCloner
             $clone->updateFileStructure();
         }
 
-        foreach ($this->authorshipRepository->findByElement($sourceId, EntityType::Release) as $authorship) {
-            $this->authorshipRepository->setAuthorship(
+        foreach ($this->authorshipDbal->findByElement($sourceId, EntityType::Release) as $authorship) {
+            $this->authorshipDbal->setAuthorship(
                 $cloneId,
                 $authorship->authorId,
                 EntityType::Release,

@@ -9,7 +9,7 @@ use authorElement;
 use structureManager;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\AuthorshipRoles;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Releases\Dto\ReleaseDataResultDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\Repositories\ReleaseRepository;
@@ -32,7 +32,7 @@ final readonly class SetReleaseMemberHandler
         private ReleaseRepository $releaseRepository,
         private ReleasePrivileges $releasePrivileges,
         private structureManager $structureManager,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -55,7 +55,7 @@ final readonly class SetReleaseMemberHandler
 
         $this->transactionRunner->run(function () use ($release, $command): void {
             $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipRepository->setAuthorship($command->releaseId, $command->authorId, EntityType::Release, $roles, null, null);
+            $this->authorshipDbal->setAuthorship($command->releaseId, $command->authorId, EntityType::Release, $roles, null, null);
             $this->releaseRepository->touch($release);
             $this->actionsLogService->log($release, StructureType::ZxRelease, self::PRIVILEGE);
         });

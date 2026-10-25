@@ -8,7 +8,7 @@ require_once __DIR__ . '/EntityWriteTestCase.php';
 
 use LanguagesManager;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use ZxArt\Authors\Dbal\AuthorSearchRepository;
+use ZxArt\Authors\Dbal\AuthorSearchDbal;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Exception\AuthorDataException;
@@ -381,7 +381,7 @@ final class AuthorWritesTest extends EntityWriteTestCase
         $this->container->get(AuthorAliasDataService::class)->create(new AuthorAliasFieldsDto(title: 'Goldmaster Ghost', authorId: $authorId));
         $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
         $this->container->get(GroupDataService::class)->setMember($groupId, $authorId, ['coder']);
-        $search = $this->container->get(AuthorSearchRepository::class);
+        $search = $this->container->get(AuthorSearchDbal::class);
 
         self::assertContains($authorId, $search->findIds('johann goldm', null, null, null, 0, 50));
         self::assertContains($authorId, $search->findIds('GOLDMASTER GHOST', null, null, null, 0, 50));

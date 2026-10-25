@@ -8,7 +8,7 @@ Domain rules: [../domain/picture.md](../domain/picture.md).
 either a tag element id or a list of `module_zxpicture.type` values, and never to
 both. `PictureListService::getPagedCollection()` sends the tag ones through the
 `tagLink` query and the format ones through
-`PicturesRepository::findPagedIdsByFormats()`/`countByFormats()`.
+`PicturesDbal::findPagedIdsByFormats()`/`countByFormats()`.
 
 Adding a subset means one enum case plus its `top-pictures.filter.<case>`
 translation in all three i18n bundles — the SPA builds the chip strip from the

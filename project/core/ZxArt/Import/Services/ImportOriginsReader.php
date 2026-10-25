@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Import\Services;
 
-use ZxArt\Import\Dbal\ImportOriginsRepository;
+use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 
@@ -16,7 +16,7 @@ use ZxArt\Import\ImportOrigin;
 final readonly class ImportOriginsReader
 {
     public function __construct(
-        private ImportOriginsRepository $importOriginsRepository,
+        private ImportOriginsDbal $importOriginsDbal,
     ) {
     }
 
@@ -26,7 +26,7 @@ final readonly class ImportOriginsReader
     public function read(int $elementId): array
     {
         $origins = [];
-        foreach ($this->importOriginsRepository->getElementOrigins($elementId) as $row) {
+        foreach ($this->importOriginsDbal->getElementOrigins($elementId) as $row) {
             $origin = ImportOrigin::tryFrom($row['origin']);
             if ($origin !== null) {
                 $origins[] = new ImportOriginDto($origin, $row['importId']);

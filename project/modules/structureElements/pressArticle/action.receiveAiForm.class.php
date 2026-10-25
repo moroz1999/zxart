@@ -1,7 +1,7 @@
 <?php
 
 
-use ZxArt\Press\Dbal\PressArticleRepository;
+use ZxArt\Press\Dbal\PressArticleDbal;
 use ZxArt\Queue\QueueService;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
@@ -43,8 +43,8 @@ class receiveAiFormPressArticle extends structureElementAction
 
     public function restoreOriginalContent($structureElement)
     {
-        $pressArticleRepository = $this->getService(PressArticleRepository::class);
-        $pressArticleRepository->restoreContent($structureElement->getId());
+        $pressArticleDbal = $this->getService(PressArticleDbal::class);
+        $pressArticleDbal->restoreContent($structureElement->getId());
     }
 
     public function setExpectedFields(&$expectedFields): void

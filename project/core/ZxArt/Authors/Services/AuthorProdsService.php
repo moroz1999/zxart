@@ -9,7 +9,7 @@ use authorElement;
 use structureManager;
 use zxProdElement;
 use zxReleaseElement;
-use ZxArt\Authors\Dbal\AuthorProdsRepository;
+use ZxArt\Authors\Dbal\AuthorProdsDbal;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\Dto\ProdReleaseDto;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -20,7 +20,7 @@ readonly class AuthorProdsService
 {
     public function __construct(
         private structureManager $structureManager,
-        private AuthorProdsRepository $authorProdsRepository,
+        private AuthorProdsDbal $authorProdsDbal,
         private ProdsTransformer $prodsTransformer,
         private ProdReleasesService $prodReleasesService,
     ) {
@@ -42,8 +42,8 @@ readonly class AuthorProdsService
             throw new ProdDetailsException('Author or alias not found', 404);
         }
 
-        $page = $this->authorProdsRepository->findPagedByAuthorId($authorId, $start, $limit, $sort, $sortDir, $role);
-        $availableRoles = $this->authorProdsRepository->findAvailableRolesByAuthorId($authorId);
+        $page = $this->authorProdsDbal->findPagedByAuthorId($authorId, $start, $limit, $sort, $sortDir, $role);
+        $availableRoles = $this->authorProdsDbal->findAvailableRolesByAuthorId($authorId);
 
         $items = [];
         foreach ($page['items'] as $item) {

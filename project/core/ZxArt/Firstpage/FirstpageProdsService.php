@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use structureManager;
 use ZxArt\Prods\Dto\ProdDto;
 use ZxArt\Prods\ProdsTransformer;
-use ZxArt\Prods\Dbal\ProdsRepository;
+use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\ZxProdCategories\CategoryIds;
 use ZxArt\ZxProdCategories\ProdCategoryTreeService;
 use zxProdElement;
@@ -17,7 +17,7 @@ readonly class FirstpageProdsService
 {
     public function __construct(
         private structureManager $structureManager,
-        private ProdsRepository $prodsRepository,
+        private ProdsDbal $prodsDbal,
         private ProdsTransformer $prodsTransformer,
         private ProdCategoryTreeService $prodCategoryTreeService,
     ) {
@@ -28,7 +28,7 @@ readonly class FirstpageProdsService
      */
     public function getNewProds(int $limit, float $minRating, int $daysAgo = 30, ?int $startYear = null): array
     {
-        $ids = $this->prodsRepository->getNewProdIds($limit, $minRating, $daysAgo, $startYear);
+        $ids = $this->prodsDbal->getNewProdIds($limit, $minRating, $daysAgo, $startYear);
         return $this->loadAndTransform($ids);
     }
 
@@ -37,7 +37,7 @@ readonly class FirstpageProdsService
      */
     public function getLatestAdded(int $limit): array
     {
-        $ids = $this->prodsRepository->getLatestAddedIds($limit);
+        $ids = $this->prodsDbal->getLatestAddedIds($limit);
         return $this->loadAndTransform($ids);
     }
 
@@ -46,7 +46,7 @@ readonly class FirstpageProdsService
      */
     public function getBestNewDemos(int $limit, float $minRating): array
     {
-        $ids = $this->prodsRepository->getBestNewByCategoryIds(
+        $ids = $this->prodsDbal->getBestNewByCategoryIds(
             $this->prodCategoryTreeService->getTreeIds(CategoryIds::DEMOSCENE->value),
             $limit,
             $minRating,
@@ -60,7 +60,7 @@ readonly class FirstpageProdsService
      */
     public function getBestNewGames(int $limit, float $minRating): array
     {
-        $ids = $this->prodsRepository->getBestNewByCategoryIds(
+        $ids = $this->prodsDbal->getBestNewByCategoryIds(
             $this->prodCategoryTreeService->getTreeIds(CategoryIds::GAMES->value),
             $limit,
             $minRating,
@@ -74,7 +74,7 @@ readonly class FirstpageProdsService
      */
     public function getForSaleOrDonation(int $limit): array
     {
-        $ids = $this->prodsRepository->getForSaleOrDonationIds($limit);
+        $ids = $this->prodsDbal->getForSaleOrDonationIds($limit);
         return $this->loadAndTransform($ids);
     }
 

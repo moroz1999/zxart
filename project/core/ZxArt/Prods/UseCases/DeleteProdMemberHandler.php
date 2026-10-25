@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Prods\UseCases;
 
 use ZxArt\ActionsLog\ActionsLogService;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\Prods\Dto\ProdDataResultDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\Repositories\ProdRepository;
@@ -27,7 +27,7 @@ final readonly class DeleteProdMemberHandler
         private TransactionRunner $transactionRunner,
         private ProdRepository $prodRepository,
         private ProdPrivileges $prodPrivileges,
-        private AuthorshipRepository $authorshipRepository,
+        private AuthorshipDbal $authorshipDbal,
         private ActionsLogService $actionsLogService,
     ) {
     }
@@ -44,7 +44,7 @@ final readonly class DeleteProdMemberHandler
         }
 
         $isDeleted = $this->transactionRunner->run(function () use ($prod, $command): bool {
-            $isDeleted = $this->authorshipRepository->deleteAuthorship($command->prodId, $command->authorId, EntityType::Prod);
+            $isDeleted = $this->authorshipDbal->deleteAuthorship($command->prodId, $command->authorId, EntityType::Prod);
             if ($isDeleted) {
                 $this->prodRepository->touch($prod);
                 $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);

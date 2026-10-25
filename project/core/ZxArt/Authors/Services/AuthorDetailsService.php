@@ -23,8 +23,8 @@ use ZxArt\Authors\Dto\AuthorLocationItemDto;
 use ZxArt\Authors\Dto\AuthorRatingsDto;
 use ZxArt\Authors\Dto\AuthorTabsDto;
 use ZxArt\Authors\Dto\AuthorTechDto;
-use ZxArt\Authors\Dbal\AuthorProdsRepository;
-use ZxArt\Authors\Dbal\AuthorshipRepository;
+use ZxArt\Authors\Dbal\AuthorProdsDbal;
+use ZxArt\Authors\Dbal\AuthorshipDbal;
 use ZxArt\LinkTypes;
 use ZxArt\PageMetadata\PageMetadataService;
 use ZxArt\Prods\Exception\ProdDetailsException;
@@ -41,8 +41,8 @@ readonly class AuthorDetailsService
     public function __construct(
         private structureManager $structureManager,
         private controller $controller,
-        private AuthorshipRepository $authorshipRepository,
-        private AuthorProdsRepository $authorProdsRepository,
+        private AuthorshipDbal $authorshipDbal,
+        private AuthorProdsDbal $authorProdsDbal,
         private EntityUrlResolver $entityUrlResolver,
         private PageMetadataService $pageMetadataService,
         private AuthorCollaboratorsService $collaboratorsService,
@@ -175,7 +175,7 @@ readonly class AuthorDetailsService
     /** @return AuthorGroupDto[] */
     private function buildGroups(authorElement|authorAliasElement $author): array
     {
-        $records = $this->authorshipRepository->getAuthorshipRecords($author->getId(), EntityType::Group);
+        $records = $this->authorshipDbal->getAuthorshipRecords($author->getId(), EntityType::Group);
         if (empty($records)) {
             return [];
         }
@@ -254,7 +254,7 @@ readonly class AuthorDetailsService
         if ($hasTunes) {
             $roles[] = 'musician';
         }
-        if ($this->authorProdsRepository->hasCodingRoles($author->getId())) {
+        if ($this->authorProdsDbal->hasCodingRoles($author->getId())) {
             $roles[] = 'coder';
         }
         return $roles;
@@ -305,7 +305,7 @@ readonly class AuthorDetailsService
             return new AuthorCountersDto(
                 pictures: (int)$author->picturesQuantity,
                 tunes: (int)$author->tunesQuantity,
-                prods: $this->authorProdsRepository->countByAuthorId($author->getId()),
+                prods: $this->authorProdsDbal->countByAuthorId($author->getId()),
                 comments: (int)$author->getCommentsAmount(),
             );
         }
@@ -313,7 +313,7 @@ readonly class AuthorDetailsService
         return new AuthorCountersDto(
             pictures: count($author->getWorksList([LinkTypes::AUTHOR_PICTURE->value])),
             tunes: count($author->getWorksList([LinkTypes::AUTHOR_MUSIC->value])),
-            prods: $this->authorProdsRepository->countByAuthorId($author->getId()),
+            prods: $this->authorProdsDbal->countByAuthorId($author->getId()),
             comments: (int)$author->getCommentsAmount(),
         );
     }
