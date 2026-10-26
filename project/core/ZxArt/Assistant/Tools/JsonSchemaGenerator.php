@@ -18,6 +18,7 @@ use Symfony\Component\TypeInfo\Type\CollectionType;
 use Symfony\Component\TypeInfo\Type\NullableType;
 use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\Component\TypeInfo\TypeIdentifier;
+use stdClass;
 
 /**
  * Builds the JSON Schema of a request DTO from its constructor: the property
@@ -76,7 +77,8 @@ final readonly class JsonSchemaGenerator
 
         return [
             'type' => 'object',
-            'properties' => $properties,
+            // an empty list would encode as [], and properties are an object
+            'properties' => $properties === [] ? new stdClass() : $properties,
             'required' => $required,
             'additionalProperties' => false,
         ];

@@ -40,6 +40,13 @@ Read tools so far:
 | `search_releases` | `Search\SearchReleasesTool` | `ReleaseSearchService`, then `FoundReleasesReader` |
 | `search_authors` | `Search\SearchAuthorsTool` | `AuthorSearchService`, then `FoundAuthorsReader` |
 | `search_groups` | `Search\SearchGroupsTool` | `GroupSearchService`, then `FoundGroupsReader` |
+| `find_tags` | `Catalogues\FindTagsTool` | `Tags\Dbal\TagSearchDbal` (see [search.md](search.md#typed-searches)) |
+| `list_categories` | `Catalogues\ListCategoriesTool` | `CategoryManageService::getTree()`: id, parent, level, title, productions of the subtree |
+| `list_hardware` | `Catalogues\ListHardwareTool` | `HardwareCatalogService`: codes by group, named in the current language |
+| `list_options` | `Catalogues\ListOptionsTool` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
+
+A tool without input has an empty request DTO; its schema's `properties` is
+an empty object.
 
 The four typed searches take `{filter, limit, offset}`: `filter` is the
 service's own filter DTO (see [search.md](search.md#typed-searches)), so the

@@ -91,6 +91,7 @@ Handled by the runner itself, not by the registry.
 | `list_categories` | The category tree with ids and names |
 | `list_hardware` | Hardware codes with names, by group |
 | `list_options` | Fixed value lists: legal statuses, release types, release formats, languages, group types, author roles in prods, member roles in groups |
+| `find_tags(phrase)` | Tags by a part of the name or a synonym in any language, the most used first: id, title, synonyms, how many works carry it |
 
 ### Outside the site
 
@@ -173,7 +174,7 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [x] JSON Schema generation from request DTOs (+ tests on representative DTOs)
 - [x] Search tools on the services from [service-changes.md](service-changes.md) — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [ ] `get_*` tools for the six entity types
-- [ ] Catalogue tools
+- [x] Catalogue tools, `find_tags`
 - [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`
 - [ ] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
 - [ ] Tests per tool: request mapping, preview rows, refused privilege

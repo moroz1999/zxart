@@ -15,6 +15,10 @@ use ZxArt\Shared\Http\PublicAddressGuard;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Shared\Serializer\RequestDenormalizerFactory;
 use ZxArt\Ai\ChunkProcessor;
+use ZxArt\Assistant\Tools\Catalogues\FindTagsTool;
+use ZxArt\Assistant\Tools\Catalogues\ListCategoriesTool;
+use ZxArt\Assistant\Tools\Catalogues\ListHardwareTool;
+use ZxArt\Assistant\Tools\Catalogues\ListOptionsTool;
 use ZxArt\Assistant\Tools\Search\FindLocationsTool;
 use ZxArt\Assistant\Tools\Search\SearchAuthorsTool;
 use ZxArt\Assistant\Tools\Search\SearchGroupsTool;
@@ -225,6 +229,10 @@ return [
         DI\get(SearchReleasesTool::class),
         DI\get(SearchAuthorsTool::class),
         DI\get(SearchGroupsTool::class),
+        DI\get(FindTagsTool::class),
+        DI\get(ListCategoriesTool::class),
+        DI\get(ListHardwareTool::class),
+        DI\get(ListOptionsTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),

@@ -156,6 +156,9 @@ author or group, and an author or group is answered once, never its alias.
   languages; publishers — authors or groups, with their aliases; credited
   authors and roles as in the production search. `ReleaseSearchDbal` answers
   each release once, though it is stored in a row per language.
+- `ZxArt\Tags\Dbal\TagSearchDbal::find()` — tags by a part of the name or of
+  a synonym in any language, the most used first, each once and named by the
+  language row that matched; the ids the production search filters by.
 - `ZxArt\Geo\PlaceSearchService::find()` — countries and cities by a part of
   their name in any language, named in the current one; a city with its
   country.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Assistant\Tools;
 
+require_once __DIR__ . '/Fixtures/EmptyRequestDto.php';
 require_once __DIR__ . '/Fixtures/SampleKind.php';
 require_once __DIR__ . '/Fixtures/SampleItemDto.php';
 require_once __DIR__ . '/Fixtures/SampleRequestDto.php';
@@ -12,6 +13,7 @@ require_once __DIR__ . '/Fixtures/UntypedRequestDto.php';
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Assistant\Tools\JsonSchemaGenerator;
+use ZxArt\Tests\Assistant\Tools\Fixtures\EmptyRequestDto;
 use ZxArt\Tests\Assistant\Tools\Fixtures\SampleRequestDto;
 use ZxArt\Tests\Assistant\Tools\Fixtures\UntypedRequestDto;
 
@@ -49,6 +51,13 @@ final class JsonSchemaGeneratorTest extends TestCase
             'required' => ['title'],
             'additionalProperties' => false,
         ], (new JsonSchemaGenerator())->forClass(SampleRequestDto::class));
+    }
+
+    public function testARequestWithoutFieldsHasAnEmptyObjectOfProperties(): void
+    {
+        $schema = (new JsonSchemaGenerator())->forClass(EmptyRequestDto::class);
+
+        self::assertSame('{"type":"object","properties":{},"required":[],"additionalProperties":false}', json_encode($schema, JSON_THROW_ON_ERROR));
     }
 
     public function testAPropertyWithoutAUsableTypeIsRefused(): void
