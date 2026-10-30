@@ -23,6 +23,8 @@ use ZxArt\Assistant\Tools\Entities\GetAuthorTool;
 use ZxArt\Assistant\Tools\Entities\GetAuthorAliasTool;
 use ZxArt\Assistant\Tools\Entities\GetGroupTool;
 use ZxArt\Assistant\Tools\Entities\GetGroupAliasTool;
+use ZxArt\Assistant\Tools\Web\FetchUrlTool;
+use ZxArt\Assistant\Tools\Web\ViewImageTool;
 use ZxArt\Assistant\Tools\Entities\GetProdTool;
 use ZxArt\Assistant\Tools\Entities\GetReleaseTool;
 use ZxArt\Assistant\Tools\Search\FindLocationsTool;
@@ -245,6 +247,8 @@ return [
         DI\get(GetAuthorAliasTool::class),
         DI\get(GetGroupTool::class),
         DI\get(GetGroupAliasTool::class),
+        DI\get(FetchUrlTool::class),
+        DI\get(ViewImageTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),

@@ -31,6 +31,8 @@ use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Search\Dto\FoundEntityDto;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\Http\HttpRequestRefusedException;
+use ZxArt\Shared\Images\ImageRefusedException;
 use ZxArt\Tests\Integration\Entities\EntityWriteTestCase;
 
 /**
@@ -124,6 +126,22 @@ final class ToolCallTest extends EntityWriteTestCase
         self::assertInstanceOf(GroupCardDto::class, $card);
         self::assertSame($groupId, $card->id);
         self::assertSame('Goldsearch Guild', $card->fields->title);
+    }
+
+    public function testFetchUrlRefusesAnAddressInsideTheNetwork(): void
+    {
+        $this->expectException(HttpRequestRefusedException::class);
+
+        $this->call('fetch_url', '{"url": "http://127.0.0.1/"}');
+    }
+
+    public function testViewImageRefusesAnIdThatIsNoFile(): void
+    {
+        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
+        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldsearch Guild'))->id;
+        $this->expectException(ImageRefusedException::class);
+
+        $this->call('view_image', '{"fileId": ' . $groupId . '}');
     }
 
     private function call(string $toolName, string $arguments): object

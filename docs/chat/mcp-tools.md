@@ -175,6 +175,6 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [x] Search tools on the services from [service-changes.md](service-changes.md) — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] `get_*` tools for the six entity types — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] Catalogue tools, `find_tags`
-- [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`
+- [x] `fetch_url` with address guard and limits, body returned as is; `view_image`
 - [ ] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
 - [ ] Tests per tool: request mapping, preview rows, refused privilege

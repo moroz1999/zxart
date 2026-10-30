@@ -10,6 +10,7 @@ require_once __DIR__ . '/../../Doubles/Http/LoopbackUrlGuard.php';
 use PHPUnit\Framework\TestCase;
 use ZxArt\Shared\Http\DownloadRefusedException;
 use ZxArt\Shared\Http\GuardedDownloader;
+use ZxArt\Shared\Http\GuardedHttpClient;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
 use ZxArt\Tests\Doubles\Http\LoopbackUrlGuard;
 
@@ -101,6 +102,6 @@ class GuardedDownloaderTest extends TestCase
 
     private function createDownloader(): GuardedDownloader
     {
-        return new GuardedDownloader(new LoopbackUrlGuard());
+        return new GuardedDownloader(new GuardedHttpClient(new LoopbackUrlGuard()));
     }
 }

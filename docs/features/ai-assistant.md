@@ -44,8 +44,9 @@ Read tools so far:
 | `list_categories` | `Catalogues\ListCategoriesTool` | `CategoryManageService::getTree()`: id, parent, level, title, productions of the subtree |
 | `list_hardware` | `Catalogues\ListHardwareTool` | `HardwareCatalogService`: codes by group, named in the current language |
 | `list_options` | `Catalogues\ListOptionsTool` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
-
 | `get_prod`, `get_release`, `get_author`, `get_author_alias`, `get_group`, `get_group_alias` | `Entities\Get<Entity>Tool` | `<Entity>CardReader` in the entity's module |
+| `fetch_url` | `Web\FetchUrlTool` | `Shared\Http\PageFetcher` |
+| `view_image` | `Web\ViewImageTool` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
 
 The `get_*` tools take `GetEntityRequestDto` (`id`) and answer a card
 (`<Entity>CardDto`) built for an edit:
@@ -72,6 +73,26 @@ Links that other entities make to the read one (series, compilations, parent
 groups) are read from `structure_links` through `StructureLinksDbal`, not from
 the element, which holds what it loaded.
 
+`fetch_url` answers `FetchedPageDto`: the final URL after redirects, the
+status (any — an error page is read too), the Content-Type header as it came,
+the body and its size. The body is converted to UTF-8 from the charset of the
+header, or for HTML of its `<meta>`, and cut at `PageFetcher::MAX_BYTES` (200
+KB) without breaking a character, `truncated` then set. A response whose type
+is not text, JSON, XML or JavaScript has no body, only its type and size.
+`view_image` takes `url` or `fileId` (one of them, else
+`ToolArgumentsException`) and answers `ImageDto` (media type, base64 data) for
+the LLM client to pass as image input: a PNG, JPEG, GIF or WebP of up to 5 MB,
+the type read from the bytes (`ImageBytes`); anything else is
+`ImageRefusedException`. A `fileId` is a `fileElement` read from its path on
+disk.
+
+Both go through `Shared\Http\GuardedHttpClient`, which `GuardedDownloader`
+uses too: `http`/`https` only, every address — the first and each redirect, at
+most 5 — passes `UrlGuard` (`PublicAddressGuard`), the request is pinned to
+the checked address, the bodies of redirects are dropped and the body of the
+last response goes to a consumer that can stop the transfer at a limit. A
+refused address or a failed transfer is `HttpRequestRefusedException`.
+
 A tool without input has an empty request DTO; its schema's `properties` is
 an empty object.
 
@@ -96,4 +117,6 @@ Tests: `tests/Assistant/Tools/` (schema, request building, registry, each tool
 with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
 call resolved from the container and built from JSON, a nested filter among
 them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
-`tests/Integration/Entities/EntityCardsTest.php` (the cards).
+`tests/Integration/Entities/EntityCardsTest.php` (the cards);
+`tests/Shared/Http/` and `tests/Shared/Images/` fetch from PHP's built-in
+server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.

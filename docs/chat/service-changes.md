@@ -72,13 +72,15 @@ the new baseline for later actions on that entity.
   derived on save, for an upload neither. A refused download keeps the
   release's file.
 
-Both go through `ZxArt\Shared\Http\GuardedDownloader`: `http`/`https` only,
+Both go through `ZxArt\Shared\Http\GuardedDownloader`, over
+`GuardedHttpClient`: `http`/`https` only,
 every address — the first and each redirect, at most 5 — passes
 `PublicAddressGuard` (the host must resolve to public addresses alone, not
 loopback, private, link-local, shared, reserved, multicast or NAT64), and the
 request is pinned to the checked address so a second DNS answer cannot move it;
-a file is dropped as soon as it grows past its limit. `fetch_url` is to use the
-same guard (`UrlGuard`).
+a file is dropped as soon as it grows past its limit. `fetch_url` and
+`view_image` use the same client (see
+[features/ai-assistant.md](../features/ai-assistant.md)).
 
 Entry points: `ProdDataService::addFiles()`, `ReleaseDataService::addFiles()`
 (`AddedFilesDto`: the element and the new file ids) and
