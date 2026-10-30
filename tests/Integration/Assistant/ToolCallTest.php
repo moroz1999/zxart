@@ -19,6 +19,9 @@ use ZxArt\Assistant\Tools\Search\FoundAuthorsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\FoundAuthorDto;
 use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Groups\Dto\GroupCardDto;
+use ZxArt\Groups\Dto\GroupFieldsDto;
+use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Assistant\Tools\Search\FoundEntitiesDto;
 use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Assistant\Tools\ToolRequestBuilder;
@@ -109,6 +112,18 @@ final class ToolCallTest extends EntityWriteTestCase
 
         self::assertInstanceOf(FoundProdsDto::class, $prods);
         self::assertSame([$prodId], array_map(static fn(FoundProdDto $prod): int => $prod->id, $prods->results));
+    }
+
+    public function testAGetCallAnswersTheCardOfTheId(): void
+    {
+        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
+        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldsearch Guild'))->id;
+
+        $card = $this->call('get_group', '{"id": ' . $groupId . '}');
+
+        self::assertInstanceOf(GroupCardDto::class, $card);
+        self::assertSame($groupId, $card->id);
+        self::assertSame('Goldsearch Guild', $card->fields->title);
     }
 
     private function call(string $toolName, string $arguments): object

@@ -77,12 +77,12 @@ Handled by the runner itself, not by the registry.
 
 | Tool | Returns |
 |---|---|
-| `get_prod(id)` | All editable fields; authors with roles; groups; publishers; categories; tags; hardware; languages; party, compo, place; series and compilations; releases (id, title, year, type, format); external links |
-| `get_release(id)` | All editable fields; prod; authors with roles; publishers; hardware and languages (own and inherited); file name and size; screenshots and other files (id, name) |
-| `get_author(id)` | All editable fields; aliases with dates; group memberships with roles and dates; counts of prods, releases, pictures, tunes; external links |
-| `get_author_alias(id)` | Fields; its author; group memberships; counts of works |
-| `get_group(id)` | All editable fields; members with roles and dates; parent groups and subgroups; aliases; counts of prods and published releases |
-| `get_group_alias(id)` | Fields; its group; members; counts |
+| `get_prod(id)` | All editable fields as `update_prod` takes them, with the titles of what they name (party, categories, groups, publishers, compilation items, series parts); authors with roles; releases (as `search_releases` summarises them); files of every list (kind, id, name); the series and compilations it is part of |
+| `get_release(id)` | All editable fields as `update_release` takes them, with the titles of what they name (publishers, prod); authors with roles; files of every list (kind, id, name); file name and size; the prod's hardware and languages it inherits |
+| `get_author(id)` | All editable fields with the country and city titles; aliases with dates; group memberships with roles and dates; counts of prods, pictures, tunes, comments |
+| `get_author_alias(id)` | Fields; its author; group memberships with roles and dates; counts of its works |
+| `get_group(id)` | All editable fields with the titles of the country, city and subgroups; members with roles and dates; parent groups; aliases with dates; counts of members, subgroups, prods, published prods, releases, mentions, comments |
+| `get_group_alias(id)` | Fields; its group; members with roles and dates; counts |
 
 ### Catalogues
 
@@ -173,7 +173,7 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [x] `ReadTool` / `WriteTool` interfaces, `ChangePreviewDto`, `ToolRegistry`, `ToolRequestBuilder` — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] JSON Schema generation from request DTOs (+ tests on representative DTOs)
 - [x] Search tools on the services from [service-changes.md](service-changes.md) — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
-- [ ] `get_*` tools for the six entity types
+- [x] `get_*` tools for the six entity types — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] Catalogue tools, `find_tags`
 - [ ] `fetch_url` with address guard and limits, body returned as is; `view_image`
 - [ ] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`

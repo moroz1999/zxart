@@ -19,6 +19,12 @@ use ZxArt\Assistant\Tools\Catalogues\FindTagsTool;
 use ZxArt\Assistant\Tools\Catalogues\ListCategoriesTool;
 use ZxArt\Assistant\Tools\Catalogues\ListHardwareTool;
 use ZxArt\Assistant\Tools\Catalogues\ListOptionsTool;
+use ZxArt\Assistant\Tools\Entities\GetAuthorTool;
+use ZxArt\Assistant\Tools\Entities\GetAuthorAliasTool;
+use ZxArt\Assistant\Tools\Entities\GetGroupTool;
+use ZxArt\Assistant\Tools\Entities\GetGroupAliasTool;
+use ZxArt\Assistant\Tools\Entities\GetProdTool;
+use ZxArt\Assistant\Tools\Entities\GetReleaseTool;
 use ZxArt\Assistant\Tools\Search\FindLocationsTool;
 use ZxArt\Assistant\Tools\Search\SearchAuthorsTool;
 use ZxArt\Assistant\Tools\Search\SearchGroupsTool;
@@ -233,6 +239,12 @@ return [
         DI\get(ListCategoriesTool::class),
         DI\get(ListHardwareTool::class),
         DI\get(ListOptionsTool::class),
+        DI\get(GetProdTool::class),
+        DI\get(GetReleaseTool::class),
+        DI\get(GetAuthorTool::class),
+        DI\get(GetAuthorAliasTool::class),
+        DI\get(GetGroupTool::class),
+        DI\get(GetGroupAliasTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),

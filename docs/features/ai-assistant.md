@@ -45,6 +45,33 @@ Read tools so far:
 | `list_hardware` | `Catalogues\ListHardwareTool` | `HardwareCatalogService`: codes by group, named in the current language |
 | `list_options` | `Catalogues\ListOptionsTool` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
 
+| `get_prod`, `get_release`, `get_author`, `get_author_alias`, `get_group`, `get_group_alias` | `Entities\Get<Entity>Tool` | `<Entity>CardReader` in the entity's module |
+
+The `get_*` tools take `GetEntityRequestDto` (`id`) and answer a card
+(`<Entity>CardDto`) built for an edit:
+
+- `fields` — the entity's `<Entity>FieldsDto` from its fields reader, the very
+  shape its writes take;
+- `refs` — `EntityRefDto` of every entity the fields name by id (party,
+  categories, groups, publishers, series and compilation items, production,
+  country, city, subgroups, the owner of an alias), from `EntityRefsReader`,
+  which leaves out an id of nothing;
+- production: credited authors (`CreditDto`), its releases as
+  `FoundReleaseDto`, the files of every list (`ListedFileDto`: kind, id, file
+  name, from `ListedFilesReader`), the series and compilations it is part of;
+- release: credited authors, files, the release file's name and size, the
+  hardware and languages of its production;
+- author and group: aliases with dates (`AliasDto`), memberships from their own
+  side (`MembershipDto`: the other side's ref, roles, dates, from
+  `MembershipsReader`) — an alias's are on its own card — and the counters the
+  public page shows (`AuthorDetailsService::getCounters()`,
+  `GroupDetailsService::getCounters()`); a group also has the groups it is a
+  subgroup of.
+
+Links that other entities make to the read one (series, compilations, parent
+groups) are read from `structure_links` through `StructureLinksDbal`, not from
+the element, which holds what it loaded.
+
 A tool without input has an empty request DTO; its schema's `properties` is
 an empty object.
 
@@ -68,4 +95,5 @@ roles, from `CreditsReader`):
 Tests: `tests/Assistant/Tools/` (schema, request building, registry, each tool
 with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
 call resolved from the container and built from JSON, a nested filter among
-them) and `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries).
+them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
+`tests/Integration/Entities/EntityCardsTest.php` (the cards).
