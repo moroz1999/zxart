@@ -91,8 +91,7 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     private function generateImageUrl(bool $full, int $zoom, string $preset): ?string
     {
         $baseUrl = $this->getService(controller::class)->baseURL;
-        $extension = strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION));
-        $type = $this->resolveFileType($extension);
+        $type = $this->getZxScreenType();
 
         if ($type === null) {
             return $this->buildFallbackUrl($baseUrl, $full, $preset);
@@ -107,6 +106,15 @@ class fileElement extends structureElement implements StructureElementUploadedFi
         );
 
         return ZxPictureUrlHelper::getUrl($baseUrl, $params);
+    }
+
+    /**
+     * The converter type of a ZX Spectrum screen file, by its extension; null
+     * for any other file.
+     */
+    public function getZxScreenType(): ?string
+    {
+        return $this->resolveFileType(strtolower(pathinfo($this->fileName, PATHINFO_EXTENSION)));
     }
 
     private function resolveFileType(string $extension): ?string

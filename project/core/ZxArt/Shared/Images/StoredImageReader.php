@@ -6,9 +6,11 @@ namespace ZxArt\Shared\Images;
 
 use fileElement;
 use structureManager;
+use ZxArt\ZxScreen\ZxScreenRenderer;
 
 /**
- * Reads an image file stored on the site, by the id of its file element.
+ * Reads an image file stored on the site, by the id of its file element. A ZX
+ * Spectrum screen comes rendered as the site shows it.
  *
  * @psalm-api
  */
@@ -16,6 +18,7 @@ final readonly class StoredImageReader
 {
     public function __construct(
         private structureManager $structureManager,
+        private ZxScreenRenderer $zxScreenRenderer,
     ) {
     }
 
@@ -36,8 +39,9 @@ final readonly class StoredImageReader
         if ($size > ImageBytes::MAX_BYTES) {
             throw new ImageRefusedException("File $fileId is larger than " . ImageBytes::MAX_BYTES . ' bytes');
         }
-        $bytes = file_get_contents($path);
-        if ($bytes === false) {
+        $zxScreenType = $file->getZxScreenType();
+        $bytes = $zxScreenType === null ? file_get_contents($path) : $this->zxScreenRenderer->render($path, $zxScreenType);
+        if ($bytes === false || $bytes === null) {
             throw new ImageRefusedException("File $fileId cannot be read");
         }
 

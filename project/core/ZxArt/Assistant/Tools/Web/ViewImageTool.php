@@ -33,8 +33,9 @@ final readonly class ViewImageTool implements ReadTool
     #[Override]
     public function description(): string
     {
-        return 'Shows an image: one from the web by url, or a file of the site by fileId. Only PNG, JPEG, GIF and '
-            . 'WebP files; ZX Spectrum screen files are not images.';
+        return 'Shows an image: one from the web by url, or a file of the site by fileId. PNG, JPEG, GIF and WebP '
+            . 'files; a ZX Spectrum screen file of the site (scr, img, mlt and the like) comes rendered as the site '
+            . 'shows it.';
     }
 
     #[Override]

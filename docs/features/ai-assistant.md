@@ -84,7 +84,11 @@ is not text, JSON, XML or JavaScript has no body, only its type and size.
 the LLM client to pass as image input: a PNG, JPEG, GIF or WebP of up to 5 MB,
 the type read from the bytes (`ImageBytes`); anything else is
 `ImageRefusedException`. A `fileId` is a `fileElement` read from its path on
-disk.
+disk; a ZX Spectrum screen (`fileElement::getZxScreenType()` names its
+converter type by the extension) is rendered in process by
+`ZxScreen\ZxScreenRenderer` — the `ZxImage\Converter` the `zximages`
+controller uses, colours mixed, sRGB, zoom 2, no border — to a PNG, or a GIF
+for a flickering screen.
 
 Both go through `Shared\Http\GuardedHttpClient`, which `GuardedDownloader`
 uses too: `http`/`https` only, every address — the first and each redirect, at
