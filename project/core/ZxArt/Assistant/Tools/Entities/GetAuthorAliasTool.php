@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace ZxArt\Assistant\Tools\Entities;
 
 use Override;
+use ZxArt\Assistant\Tools\Dto\EntityIdRequestDto;
 use ZxArt\Assistant\Tools\ReadTool;
 use ZxArt\Authors\Dto\AuthorAliasCardDto;
 use ZxArt\Authors\Services\AuthorAliasCardReader;
 
 /**
- * @implements ReadTool<GetEntityRequestDto>
+ * @implements ReadTool<EntityIdRequestDto>
  *
  * @psalm-api
  */
@@ -37,7 +38,7 @@ final readonly class GetAuthorAliasTool implements ReadTool
     #[Override]
     public function requestClass(): string
     {
-        return GetEntityRequestDto::class;
+        return EntityIdRequestDto::class;
     }
 
     #[Override]

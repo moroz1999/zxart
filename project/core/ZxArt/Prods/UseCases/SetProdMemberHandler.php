@@ -17,6 +17,7 @@ use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxProdElement;
 
 /**
  * Adds the author to the production's authors, or makes their roles these.
@@ -42,6 +43,25 @@ final readonly class SetProdMemberHandler
      */
     public function handle(SetProdMemberCommand $command): ProdDataResultDto
     {
+        $prod = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($prod, $command): void {
+            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
+            $this->authorshipDbal->setAuthorship($command->prodId, $command->authorId, EntityType::Prod, $roles, null, null);
+            $this->prodRepository->touch($prod);
+            $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
+        });
+
+        return new ProdDataResultDto(id: $command->prodId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ProdDataException
+     */
+    public function check(SetProdMemberCommand $command): zxProdElement
+    {
         $prod = $this->prodRepository->get($command->prodId);
         $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
         $member = $command->authorId > 0 ? $this->structureManager->getElementById($command->authorId) : null;
@@ -53,13 +73,6 @@ final readonly class SetProdMemberHandler
             throw new ProdDataException('Unknown role: ' . implode(', ', $unknownRoles), 400);
         }
 
-        $this->transactionRunner->run(function () use ($prod, $command): void {
-            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipDbal->setAuthorship($command->prodId, $command->authorId, EntityType::Prod, $roles, null, null);
-            $this->prodRepository->touch($prod);
-            $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
-        });
-
-        return new ProdDataResultDto(id: $command->prodId);
+        return $prod;
     }
 }

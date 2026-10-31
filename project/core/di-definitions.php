@@ -23,6 +23,12 @@ use ZxArt\Assistant\Tools\Entities\GetAuthorTool;
 use ZxArt\Assistant\Tools\Entities\GetAuthorAliasTool;
 use ZxArt\Assistant\Tools\Entities\GetGroupTool;
 use ZxArt\Assistant\Tools\Entities\GetGroupAliasTool;
+use ZxArt\Assistant\Tools\Prods\CreateProdTool;
+use ZxArt\Assistant\Tools\Prods\UpdateProdTool;
+use ZxArt\Assistant\Tools\Prods\DeleteProdTool;
+use ZxArt\Assistant\Tools\Prods\JoinProdsTool;
+use ZxArt\Assistant\Tools\Prods\SetProdAuthorTool;
+use ZxArt\Assistant\Tools\Prods\RemoveProdAuthorTool;
 use ZxArt\Assistant\Tools\Web\FetchUrlTool;
 use ZxArt\Assistant\Tools\Web\ViewImageTool;
 use ZxArt\Assistant\Tools\Entities\GetProdTool;
@@ -249,6 +255,12 @@ return [
         DI\get(GetGroupAliasTool::class),
         DI\get(FetchUrlTool::class),
         DI\get(ViewImageTool::class),
+        DI\get(CreateProdTool::class),
+        DI\get(UpdateProdTool::class),
+        DI\get(DeleteProdTool::class),
+        DI\get(JoinProdsTool::class),
+        DI\get(SetProdAuthorTool::class),
+        DI\get(RemoveProdAuthorTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),

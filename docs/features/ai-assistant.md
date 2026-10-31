@@ -48,7 +48,7 @@ Read tools so far:
 | `fetch_url` | `Web\FetchUrlTool` | `Shared\Http\PageFetcher` |
 | `view_image` | `Web\ViewImageTool` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
 
-The `get_*` tools take `GetEntityRequestDto` (`id`) and answer a card
+The `get_*` tools take `Dto\EntityIdRequestDto` (`id`) and answer a card
 (`<Entity>CardDto`) built for an edit:
 
 - `fields` — the entity's `<Entity>FieldsDto` from its fields reader, the very
@@ -97,6 +97,29 @@ the checked address, the bodies of redirects are dropped and the body of the
 last response goes to a consumer that can stop the transfer at a limit. A
 refused address or a failed transfer is `HttpRequestRefusedException`.
 
+Write tools so far (`Prods\`): `create_prod`, `update_prod`, `delete_prod`,
+`join_prods`, `set_prod_author`, `remove_prod_author`. Each builds the command
+of its use case once: `preview()` calls the handler's `check()` (privilege,
+existence, input — see [php/entity-writes.md](../php/entity-writes.md#use-cases)),
+reads the state through `<Entity>StateService` and answers the preview;
+`execute()` calls `handle()` and answers the handler's result (`{id}`).
+
+- `create_*` / `update_*` take the entity's `<Entity>FieldsDto` as `fields`
+  (an update also `id`): only the fields given change, a list given replaces
+  the list. Their rows come from `Previews\FieldChanges::diff()` — a row per
+  given field that differs from the state (none for a create); a field named
+  `…Id`/`…Ids` shows mentions (`Previews\Mentions`), an id of nothing stays a
+  number, an enum its value.
+- `delete_*` takes `Dto\EntityIdRequestDto`; its consequences name what goes
+  with it (the releases of a production).
+- `join_*` previews the joined entity's deletion and what moves, as sentences
+  with `[[type:id]]` mentions (`EntityMentionDto::text()`).
+- `set_*_author` / `remove_*_author` show the author coming or going and its
+  roles (`Previews\CreditChanges`).
+
+The modification time in a preview is the target's (the main entity's for a
+join); a create has none.
+
 A tool without input has an empty request DTO; its schema's `properties` is
 an empty object.
 
@@ -122,5 +145,7 @@ with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
 call resolved from the container and built from JSON, a nested filter among
 them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
 `tests/Integration/Entities/EntityCardsTest.php` (the cards);
-`tests/Shared/Http/` and `tests/Shared/Images/` fetch from PHP's built-in
+`tests/Integration/Assistant/ProdWriteToolsTest.php` (previews and writes of
+the production tools, refusals at the preview); `tests/Shared/Http/` and
+`tests/Shared/Images/` fetch from PHP's built-in
 server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Assistant\Tools\Entities\GetAuthorAliasTool;
 use ZxArt\Assistant\Tools\Entities\GetAuthorTool;
-use ZxArt\Assistant\Tools\Entities\GetEntityRequestDto;
+use ZxArt\Assistant\Tools\Dto\EntityIdRequestDto;
 use ZxArt\Assistant\Tools\Entities\GetGroupAliasTool;
 use ZxArt\Assistant\Tools\Entities\GetGroupTool;
 use ZxArt\Assistant\Tools\Entities\GetProdTool;
@@ -57,7 +57,7 @@ final class GetEntityToolsTest extends TestCase
 
         self::assertInstanceOf(ReadTool::class, $tool);
         self::assertSame($name, $tool->name());
-        self::assertSame(GetEntityRequestDto::class, $tool->requestClass());
-        self::assertSame($card, $tool->execute(new GetEntityRequestDto(42)));
+        self::assertSame(EntityIdRequestDto::class, $tool->requestClass());
+        self::assertSame($card, $tool->execute(new EntityIdRequestDto(42)));
     }
 }

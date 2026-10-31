@@ -13,6 +13,7 @@ use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxProdElement;
 
 /**
  * Removes the author from the production's authors.
@@ -37,24 +38,35 @@ final readonly class DeleteProdMemberHandler
      */
     public function handle(DeleteProdMemberCommand $command): ProdDataResultDto
     {
+        $prod = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($prod, $command): void {
+            $this->authorshipDbal->deleteAuthorship($command->prodId, $command->authorId, EntityType::Prod);
+            $this->prodRepository->touch($prod);
+            $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
+        });
+
+        return new ProdDataResultDto(id: $command->prodId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ProdDataException
+     */
+    public function check(DeleteProdMemberCommand $command): zxProdElement
+    {
         $prod = $this->prodRepository->get($command->prodId);
         $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
         if ($command->authorId <= 0) {
             throw new ProdDataException('Missing required author id', 400);
         }
-
-        $isDeleted = $this->transactionRunner->run(function () use ($prod, $command): bool {
-            $isDeleted = $this->authorshipDbal->deleteAuthorship($command->prodId, $command->authorId, EntityType::Prod);
-            if ($isDeleted) {
-                $this->prodRepository->touch($prod);
-                $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
+        foreach ($this->authorshipDbal->findByElement($command->prodId, EntityType::Prod) as $authorship) {
+            if ($authorship->authorId === $command->authorId) {
+                return $prod;
             }
-            return $isDeleted;
-        });
-        if (!$isDeleted) {
-            throw new ProdDataException('The author is not a member of this production', 404);
         }
 
-        return new ProdDataResultDto(id: $command->prodId);
+        throw new ProdDataException('The author is not a member of this production', 404);
     }
 }

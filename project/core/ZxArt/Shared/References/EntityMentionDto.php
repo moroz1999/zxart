@@ -26,4 +26,12 @@ final readonly class EntityMentionDto
     {
         return $this->type->value . ':' . $this->id;
     }
+
+    /**
+     * `[[type:id]]`, as messages write it.
+     */
+    public function text(): string
+    {
+        return '[[' . $this->key() . ']]';
+    }
 }

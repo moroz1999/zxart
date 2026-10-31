@@ -12,6 +12,7 @@ use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxProdElement;
 
 /**
  * Moves the releases and materials of the joined production into this one and
@@ -38,6 +39,23 @@ final readonly class JoinProdsHandler
      */
     public function handle(JoinProdsCommand $command): ProdDataResultDto
     {
+        $prod = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($prod, $command): void {
+            $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
+            $this->prodsService->joinDeleteZxProd($command->prodId, $command->joinedId, $command->releasesOnly);
+        });
+
+        return new ProdDataResultDto(id: $command->prodId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ProdDataException
+     */
+    public function check(JoinProdsCommand $command): zxProdElement
+    {
         if ($command->joinedId === $command->prodId) {
             throw new ProdDataException('A production cannot be joined into itself', 400);
         }
@@ -46,11 +64,6 @@ final readonly class JoinProdsHandler
         $this->prodRepository->get($command->joinedId);
         $this->prodPrivileges->assert($command->joinedId, self::PRIVILEGE);
 
-        $this->transactionRunner->run(function () use ($prod, $command): void {
-            $this->actionsLogService->log($prod, StructureType::ZxProd, self::PRIVILEGE);
-            $this->prodsService->joinDeleteZxProd($command->prodId, $command->joinedId, $command->releasesOnly);
-        });
-
-        return new ProdDataResultDto(id: $command->prodId);
+        return $prod;
     }
 }
