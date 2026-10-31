@@ -13,6 +13,7 @@ use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupElement;
 
 /**
  * @psalm-api
@@ -35,24 +36,35 @@ final readonly class DeleteGroupMemberHandler
      */
     public function handle(DeleteGroupMemberCommand $command): GroupDataResultDto
     {
+        $group = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($group, $command): void {
+            $this->authorshipDbal->deleteAuthorship($command->groupId, $command->authorId, EntityType::Group);
+            $this->groupRepository->touch($group);
+            $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
+        });
+
+        return new GroupDataResultDto(id: $command->groupId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupDataException
+     */
+    public function check(DeleteGroupMemberCommand $command): groupElement
+    {
         $group = $this->groupRepository->get($command->groupId);
         $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
         if ($command->authorId <= 0) {
             throw new GroupDataException('Missing required author id', 400);
         }
-
-        $isDeleted = $this->transactionRunner->run(function () use ($group, $command): bool {
-            $isDeleted = $this->authorshipDbal->deleteAuthorship($command->groupId, $command->authorId, EntityType::Group);
-            if ($isDeleted) {
-                $this->groupRepository->touch($group);
-                $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
+        foreach ($this->authorshipDbal->findByElement($command->groupId, EntityType::Group) as $authorship) {
+            if ($authorship->authorId === $command->authorId) {
+                return $group;
             }
-            return $isDeleted;
-        });
-        if (!$isDeleted) {
-            throw new GroupDataException('The author is not a member of this group', 404);
         }
 
-        return new GroupDataResultDto(id: $command->groupId);
+        throw new GroupDataException('The author is not a member of this group', 404);
     }
 }

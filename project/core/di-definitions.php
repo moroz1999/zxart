@@ -29,6 +29,40 @@ use ZxArt\Assistant\Tools\Prods\DeleteProdTool;
 use ZxArt\Assistant\Tools\Prods\JoinProdsTool;
 use ZxArt\Assistant\Tools\Prods\SetProdAuthorTool;
 use ZxArt\Assistant\Tools\Prods\RemoveProdAuthorTool;
+use ZxArt\Assistant\Tools\Releases\AddReleaseFilesTool;
+use ZxArt\Assistant\Tools\Releases\CreateReleaseTool;
+use ZxArt\Assistant\Tools\Releases\DeleteReleaseFileTool;
+use ZxArt\Assistant\Tools\Releases\DeleteReleaseTool;
+use ZxArt\Assistant\Tools\Releases\RemoveReleaseAuthorTool;
+use ZxArt\Assistant\Tools\Releases\SetReleaseAuthorTool;
+use ZxArt\Assistant\Tools\Releases\SetReleaseFileTool;
+use ZxArt\Assistant\Tools\Releases\UpdateReleaseTool;
+use ZxArt\Assistant\Tools\Prods\AddProdFilesTool;
+use ZxArt\Assistant\Tools\Prods\DeleteProdFileTool;
+use ZxArt\Assistant\Tools\Authors\ConvertAuthorToGroupTool;
+use ZxArt\Assistant\Tools\Authors\CreateAuthorTool;
+use ZxArt\Assistant\Tools\Authors\DeleteAuthorTool;
+use ZxArt\Assistant\Tools\Authors\JoinAuthorsTool;
+use ZxArt\Assistant\Tools\Authors\UpdateAuthorTool;
+use ZxArt\Assistant\Tools\AuthorAliases\ConvertAuthorAliasToAuthorTool;
+use ZxArt\Assistant\Tools\AuthorAliases\CreateAuthorAliasTool;
+use ZxArt\Assistant\Tools\AuthorAliases\DeleteAuthorAliasTool;
+use ZxArt\Assistant\Tools\AuthorAliases\JoinAuthorAliasesTool;
+use ZxArt\Assistant\Tools\AuthorAliases\UpdateAuthorAliasTool;
+use ZxArt\Assistant\Tools\Groups\ConvertGroupToAuthorTool;
+use ZxArt\Assistant\Tools\Groups\CreateGroupTool;
+use ZxArt\Assistant\Tools\Groups\DeleteGroupTool;
+use ZxArt\Assistant\Tools\Groups\JoinGroupsTool;
+use ZxArt\Assistant\Tools\Groups\RemoveGroupMemberTool;
+use ZxArt\Assistant\Tools\Groups\SetGroupMemberTool;
+use ZxArt\Assistant\Tools\Groups\UpdateGroupTool;
+use ZxArt\Assistant\Tools\GroupAliases\ConvertGroupAliasToGroupTool;
+use ZxArt\Assistant\Tools\GroupAliases\CreateGroupAliasTool;
+use ZxArt\Assistant\Tools\GroupAliases\DeleteGroupAliasTool;
+use ZxArt\Assistant\Tools\GroupAliases\JoinGroupAliasesTool;
+use ZxArt\Assistant\Tools\GroupAliases\RemoveGroupAliasMemberTool;
+use ZxArt\Assistant\Tools\GroupAliases\SetGroupAliasMemberTool;
+use ZxArt\Assistant\Tools\GroupAliases\UpdateGroupAliasTool;
 use ZxArt\Assistant\Tools\Web\FetchUrlTool;
 use ZxArt\Assistant\Tools\Web\ViewImageTool;
 use ZxArt\Assistant\Tools\Entities\GetProdTool;
@@ -261,6 +295,40 @@ return [
         DI\get(JoinProdsTool::class),
         DI\get(SetProdAuthorTool::class),
         DI\get(RemoveProdAuthorTool::class),
+        DI\get(AddReleaseFilesTool::class),
+        DI\get(CreateReleaseTool::class),
+        DI\get(DeleteReleaseFileTool::class),
+        DI\get(DeleteReleaseTool::class),
+        DI\get(RemoveReleaseAuthorTool::class),
+        DI\get(SetReleaseAuthorTool::class),
+        DI\get(SetReleaseFileTool::class),
+        DI\get(UpdateReleaseTool::class),
+        DI\get(AddProdFilesTool::class),
+        DI\get(DeleteProdFileTool::class),
+        DI\get(ConvertAuthorToGroupTool::class),
+        DI\get(CreateAuthorTool::class),
+        DI\get(DeleteAuthorTool::class),
+        DI\get(JoinAuthorsTool::class),
+        DI\get(UpdateAuthorTool::class),
+        DI\get(ConvertAuthorAliasToAuthorTool::class),
+        DI\get(CreateAuthorAliasTool::class),
+        DI\get(DeleteAuthorAliasTool::class),
+        DI\get(JoinAuthorAliasesTool::class),
+        DI\get(UpdateAuthorAliasTool::class),
+        DI\get(ConvertGroupToAuthorTool::class),
+        DI\get(CreateGroupTool::class),
+        DI\get(DeleteGroupTool::class),
+        DI\get(JoinGroupsTool::class),
+        DI\get(RemoveGroupMemberTool::class),
+        DI\get(SetGroupMemberTool::class),
+        DI\get(UpdateGroupTool::class),
+        DI\get(ConvertGroupAliasToGroupTool::class),
+        DI\get(CreateGroupAliasTool::class),
+        DI\get(DeleteGroupAliasTool::class),
+        DI\get(JoinGroupAliasesTool::class),
+        DI\get(RemoveGroupAliasMemberTool::class),
+        DI\get(SetGroupAliasMemberTool::class),
+        DI\get(UpdateGroupAliasTool::class),
     ]),
 
     HostResolver::class => autowire(DnsHostResolver::class),

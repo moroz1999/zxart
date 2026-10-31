@@ -12,6 +12,7 @@ use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupAliasElement;
 
 /**
  * Turns the group alias into a new group; the group alias itself is deleted.
@@ -36,8 +37,7 @@ final readonly class ConvertGroupAliasToGroupHandler
      */
     public function handle(ConvertGroupAliasToGroupCommand $command): GroupAliasDataResultDto
     {
-        $alias = $this->groupAliasRepository->get($command->aliasId);
-        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+        $alias = $this->check($command);
 
         $resultId = $this->transactionRunner->run(function () use ($alias): int {
             $group = $this->groupsService->convertGroupAliasToGroup($alias);
@@ -49,5 +49,18 @@ final readonly class ConvertGroupAliasToGroupHandler
         });
 
         return new GroupAliasDataResultDto(id: $resultId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupAliasDataException
+     */
+    public function check(ConvertGroupAliasToGroupCommand $command): groupAliasElement
+    {
+        $alias = $this->groupAliasRepository->get($command->aliasId);
+        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+
+        return $alias;
     }
 }

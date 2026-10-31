@@ -13,6 +13,7 @@ use ZxArt\Releases\Services\ElementFileImporter;
 use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxReleaseElement;
 
 /**
  * Makes the download the release's file, named as given or as in the URL; its
@@ -39,8 +40,7 @@ final readonly class SetReleaseFileHandler
      */
     public function handle(SetReleaseFileCommand $command): ReleaseDataResultDto
     {
-        $release = $this->releaseRepository->get($command->releaseId);
-        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
+        $release = $this->check($command);
 
         try {
             $this->transactionRunner->run(function () use ($release, $command): void {
@@ -52,5 +52,18 @@ final readonly class SetReleaseFileHandler
         }
 
         return new ReleaseDataResultDto(id: $command->releaseId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ReleaseDataException
+     */
+    public function check(SetReleaseFileCommand $command): zxReleaseElement
+    {
+        $release = $this->releaseRepository->get($command->releaseId);
+        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
+
+        return $release;
     }
 }

@@ -12,6 +12,7 @@ use ZxArt\Authors\Services\AuthorAliasPrivileges;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
 
 /**
  * Turns the author alias into a new author; the author alias itself is deleted.
@@ -36,8 +37,7 @@ final readonly class ConvertAuthorAliasToAuthorHandler
      */
     public function handle(ConvertAuthorAliasToAuthorCommand $command): AuthorAliasDataResultDto
     {
-        $alias = $this->authorAliasRepository->get($command->aliasId);
-        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+        $alias = $this->check($command);
 
         $resultId = $this->transactionRunner->run(function () use ($alias): int {
             $author = $this->authorsService->convertAliasToAuthor($alias);
@@ -49,5 +49,18 @@ final readonly class ConvertAuthorAliasToAuthorHandler
         });
 
         return new AuthorAliasDataResultDto(id: $resultId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws AuthorAliasDataException
+     */
+    public function check(ConvertAuthorAliasToAuthorCommand $command): authorAliasElement
+    {
+        $alias = $this->authorAliasRepository->get($command->aliasId);
+        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+
+        return $alias;
     }
 }

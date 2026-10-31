@@ -17,6 +17,7 @@ use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupAliasElement;
 
 /**
  * Adds the author to the group alias's members, or makes their roles these.
@@ -42,6 +43,25 @@ final readonly class SetGroupAliasMemberHandler
      */
     public function handle(SetGroupAliasMemberCommand $command): GroupAliasDataResultDto
     {
+        $alias = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($alias, $command): void {
+            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
+            $this->authorshipDbal->setAuthorship($command->aliasId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
+            $this->groupAliasRepository->touch($alias);
+            $this->actionsLogService->log($alias, StructureType::GroupAlias, self::PRIVILEGE);
+        });
+
+        return new GroupAliasDataResultDto(id: $command->aliasId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupAliasDataException
+     */
+    public function check(SetGroupAliasMemberCommand $command): groupAliasElement
+    {
         $alias = $this->groupAliasRepository->get($command->aliasId);
         $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
         $member = $command->authorId > 0 ? $this->structureManager->getElementById($command->authorId) : null;
@@ -53,13 +73,6 @@ final readonly class SetGroupAliasMemberHandler
             throw new GroupAliasDataException('Unknown role: ' . implode(', ', $unknownRoles), 400);
         }
 
-        $this->transactionRunner->run(function () use ($alias, $command): void {
-            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipDbal->setAuthorship($command->aliasId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
-            $this->groupAliasRepository->touch($alias);
-            $this->actionsLogService->log($alias, StructureType::GroupAlias, self::PRIVILEGE);
-        });
-
-        return new GroupAliasDataResultDto(id: $command->aliasId);
+        return $alias;
     }
 }

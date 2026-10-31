@@ -50,7 +50,7 @@ final readonly class CreateGroupHandler
      */
     public function handle(CreateGroupCommand $command): GroupDataResultDto
     {
-        $this->groupPrivileges->assertMayCreate();
+        $this->check($command);
 
         $id = $this->transactionRunner->run(function () use ($command): int {
             try {
@@ -75,5 +75,15 @@ final readonly class CreateGroupHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new GroupDataResultDto(id: $id);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupDataException
+     */
+    public function check(CreateGroupCommand $command): void
+    {
+        $this->groupPrivileges->assertMayCreate();
     }
 }

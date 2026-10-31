@@ -18,6 +18,7 @@ use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxReleaseElement;
 
 /**
  * Changes the fields the command carries, replaces the authors and portal ids
@@ -50,12 +51,7 @@ final readonly class UpdateReleaseHandler
      */
     public function handle(UpdateReleaseCommand $command): ReleaseDataResultDto
     {
-        $release = $this->releaseRepository->get($command->releaseId);
-        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
-        $prodId = $command->fields->prodId;
-        if ($prodId !== null && $prodId !== $release->getProd()?->getId()) {
-            $this->releasePrivileges->assertMayAddTo($prodId);
-        }
+        $release = $this->check($command);
 
         $this->transactionRunner->run(function () use ($release, $command): void {
             try {
@@ -88,5 +84,22 @@ final readonly class UpdateReleaseHandler
         });
 
         return new ReleaseDataResultDto(id: $command->releaseId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ReleaseDataException
+     */
+    public function check(UpdateReleaseCommand $command): zxReleaseElement
+    {
+        $release = $this->releaseRepository->get($command->releaseId);
+        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
+        $prodId = $command->fields->prodId;
+        if ($prodId !== null && $prodId !== $release->getProd()?->getId()) {
+            $this->releasePrivileges->assertMayAddTo($prodId);
+        }
+
+        return $release;
     }
 }

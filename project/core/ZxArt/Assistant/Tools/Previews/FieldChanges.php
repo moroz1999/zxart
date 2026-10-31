@@ -6,18 +6,38 @@ namespace ZxArt\Assistant\Tools\Previews;
 
 use BackedEnum;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
+use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
+use ZxArt\Authors\Dto\AuthorFieldsDto;
+use ZxArt\Groups\Dto\GroupAliasFieldsDto;
+use ZxArt\Groups\Dto\GroupFieldsDto;
+use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Shared\References\EntityMentionDto;
 
 /**
  * The rows a preview shows for a fields DTO applied over the current one: a row
- * for every field the patch gives and that differs. A field named `…Id` or
- * `…Ids` holds ids, shown as mentions of what they name; an id of nothing
- * stays a number, an id of 0 is no value.
+ * for every field the patch gives and that differs. Fields of entity ids show
+ * mentions of what they name (an id of nothing stays a number, 0 is no value);
+ * date fields, timestamps, show the day (0 is no value); an enum its value.
  *
  * @psalm-api
  */
 final readonly class FieldChanges
 {
+    private const array ID_FIELDS = [
+        ProdFieldsDto::class => ['partyId', 'categoryIds', 'groupIds', 'publisherIds', 'compilationItemIds', 'seriesProdIds'],
+        ReleaseFieldsDto::class => ['publisherIds', 'prodId'],
+        AuthorFieldsDto::class => ['countryId', 'cityId'],
+        AuthorAliasFieldsDto::class => ['authorId'],
+        GroupFieldsDto::class => ['countryId', 'cityId', 'subGroupIds'],
+        GroupAliasFieldsDto::class => ['groupId'],
+    ];
+    private const array DATE_FIELDS = [
+        AuthorAliasFieldsDto::class => ['startDate', 'endDate'],
+        GroupFieldsDto::class => ['startDate', 'endDate'],
+        GroupAliasFieldsDto::class => ['startDate', 'endDate'],
+    ];
+
     public function __construct(
         private Mentions $mentions,
     ) {
@@ -32,15 +52,18 @@ final readonly class FieldChanges
     public function diff(?object $before, object $patch): array
     {
         $current = $before !== null ? get_object_vars($before) : [];
+        $idFields = self::ID_FIELDS[$patch::class] ?? [];
+        $dateFields = self::DATE_FIELDS[$patch::class] ?? [];
         $changes = [];
         /** @var mixed $after */
         foreach (get_object_vars($patch) as $field => $after) {
             if ($after === null) {
                 continue;
             }
-            $isId = str_ends_with($field, 'Id') || str_ends_with($field, 'Ids');
-            $beforeValue = $this->value($current[$field] ?? null, $isId);
-            $afterValue = $this->value($after, $isId);
+            $isId = in_array($field, $idFields, true);
+            $isDate = in_array($field, $dateFields, true);
+            $beforeValue = $this->value($current[$field] ?? null, $isId, $isDate);
+            $afterValue = $this->value($after, $isId, $isDate);
             // mentions are equal by value, not by identity
             if (serialize($beforeValue) !== serialize($afterValue)) {
                 $changes[] = new FieldChangeDto($field, $beforeValue, $afterValue);
@@ -53,8 +76,11 @@ final readonly class FieldChanges
     /**
      * @return string|int|bool|EntityMentionDto|list<string|int|EntityMentionDto>|null
      */
-    private function value(mixed $value, bool $isId): string|int|bool|EntityMentionDto|array|null
+    private function value(mixed $value, bool $isId, bool $isDate): string|int|bool|EntityMentionDto|array|null
     {
+        if ($isDate && is_int($value)) {
+            return Dates::day($value);
+        }
         if ($value instanceof BackedEnum) {
             return $value->value;
         }

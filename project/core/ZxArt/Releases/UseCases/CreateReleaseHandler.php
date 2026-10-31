@@ -35,11 +35,7 @@ final readonly class CreateReleaseHandler
      */
     public function handle(CreateReleaseCommand $command): ReleaseDataResultDto
     {
-        $prodId = $command->fields->prodId;
-        if ($prodId === null || $prodId <= 0) {
-            throw new ReleaseDataException('A release needs its production', 400);
-        }
-        $this->releasePrivileges->assertMayAddTo($prodId);
+        $this->check($command);
 
         $releaseId = $this->transactionRunner->run(function () use ($command): int {
             $release = $this->releaseCreator->create($command->fields);
@@ -49,5 +45,19 @@ final readonly class CreateReleaseHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new ReleaseDataResultDto(id: $releaseId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ReleaseDataException
+     */
+    public function check(CreateReleaseCommand $command): void
+    {
+        $prodId = $command->fields->prodId;
+        if ($prodId === null || $prodId <= 0) {
+            throw new ReleaseDataException('A release needs its production', 400);
+        }
+        $this->releasePrivileges->assertMayAddTo($prodId);
     }
 }

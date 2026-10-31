@@ -17,6 +17,7 @@ use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxReleaseElement;
 
 /**
  * Adds the author to the release's authors, or makes their roles these.
@@ -42,6 +43,25 @@ final readonly class SetReleaseMemberHandler
      */
     public function handle(SetReleaseMemberCommand $command): ReleaseDataResultDto
     {
+        $release = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($release, $command): void {
+            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
+            $this->authorshipDbal->setAuthorship($command->releaseId, $command->authorId, EntityType::Release, $roles, null, null);
+            $this->releaseRepository->touch($release);
+            $this->actionsLogService->log($release, StructureType::ZxRelease, self::PRIVILEGE);
+        });
+
+        return new ReleaseDataResultDto(id: $command->releaseId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ReleaseDataException
+     */
+    public function check(SetReleaseMemberCommand $command): zxReleaseElement
+    {
         $release = $this->releaseRepository->get($command->releaseId);
         $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
         $member = $command->authorId > 0 ? $this->structureManager->getElementById($command->authorId) : null;
@@ -53,13 +73,6 @@ final readonly class SetReleaseMemberHandler
             throw new ReleaseDataException('Unknown role: ' . implode(', ', $unknownRoles), 400);
         }
 
-        $this->transactionRunner->run(function () use ($release, $command): void {
-            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipDbal->setAuthorship($command->releaseId, $command->authorId, EntityType::Release, $roles, null, null);
-            $this->releaseRepository->touch($release);
-            $this->actionsLogService->log($release, StructureType::ZxRelease, self::PRIVILEGE);
-        });
-
-        return new ReleaseDataResultDto(id: $command->releaseId);
+        return $release;
     }
 }

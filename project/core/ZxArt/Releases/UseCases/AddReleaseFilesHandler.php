@@ -13,6 +13,7 @@ use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Shared\Dto\AddedFilesDto;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use zxReleaseElement;
 
 /**
  * Downloads the URLs into the release's list of that kind. A refused download,
@@ -38,11 +39,7 @@ final readonly class AddReleaseFilesHandler
      */
     public function handle(AddReleaseFilesCommand $command): AddedFilesDto
     {
-        $release = $this->releaseRepository->get($command->releaseId);
-        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
-        if ($command->urls === []) {
-            throw new ReleaseDataException('No file to add', 400);
-        }
+        $release = $this->check($command);
 
         $fileIds = $this->transactionRunner->run(function () use ($release, $command): array {
             try {
@@ -56,5 +53,21 @@ final readonly class AddReleaseFilesHandler
         });
 
         return new AddedFilesDto(id: $command->releaseId, fileIds: $fileIds);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws ReleaseDataException
+     */
+    public function check(AddReleaseFilesCommand $command): zxReleaseElement
+    {
+        $release = $this->releaseRepository->get($command->releaseId);
+        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
+        if ($command->urls === []) {
+            throw new ReleaseDataException('No file to add', 400);
+        }
+
+        return $release;
     }
 }

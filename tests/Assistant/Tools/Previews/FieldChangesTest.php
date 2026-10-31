@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
 use ZxArt\Assistant\Tools\Previews\FieldChanges;
 use ZxArt\Assistant\Tools\Previews\Mentions;
+use ZxArt\Authors\Dto\AuthorFieldsDto;
+use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\LegalStatus;
 use ZxArt\Shared\EntityType;
@@ -67,6 +69,25 @@ final class FieldChangesTest extends TestCase
         self::assertEquals(
             [new FieldChangeDto('title', null, 'Demo'), new FieldChangeDto('year', null, 1999)],
             $this->fieldChanges()->diff(null, new ProdFieldsDto(title: 'Demo', year: 1999)),
+        );
+    }
+
+    public function testAnExternalIdIsNoMention(): void
+    {
+        self::assertEquals(
+            [new FieldChangeDto('zxTunesId', 0, 10)],
+            $this->fieldChanges()->diff(new AuthorFieldsDto(zxTunesId: 0), new AuthorFieldsDto(zxTunesId: 10)),
+        );
+    }
+
+    public function testADateShowsAsADay(): void
+    {
+        self::assertEquals(
+            [new FieldChangeDto('startDate', null, '1994-05-01'), new FieldChangeDto('endDate', '1999-12-31', null)],
+            $this->fieldChanges()->diff(
+                new GroupFieldsDto(startDate: 0, endDate: (int)strtotime('1999-12-31 12:00')),
+                new GroupFieldsDto(startDate: (int)strtotime('1994-05-01 12:00'), endDate: 0),
+            ),
         );
     }
 

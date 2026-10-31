@@ -11,6 +11,7 @@ use ZxArt\Authors\Repositories\AuthorAliasRepository;
 use ZxArt\Authors\Services\AuthorAliasPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorAliasElement;
 
 /**
  * @psalm-api
@@ -32,8 +33,7 @@ final readonly class DeleteAuthorAliasHandler
      */
     public function handle(DeleteAuthorAliasCommand $command): AuthorAliasDataResultDto
     {
-        $alias = $this->authorAliasRepository->get($command->aliasId);
-        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+        $alias = $this->check($command);
 
         $this->transactionRunner->run(function () use ($alias): void {
             // logged first: the element data is gone after the deletion
@@ -42,5 +42,18 @@ final readonly class DeleteAuthorAliasHandler
         });
 
         return new AuthorAliasDataResultDto(id: $command->aliasId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws AuthorAliasDataException
+     */
+    public function check(DeleteAuthorAliasCommand $command): authorAliasElement
+    {
+        $alias = $this->authorAliasRepository->get($command->aliasId);
+        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+
+        return $alias;
     }
 }

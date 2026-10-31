@@ -26,8 +26,8 @@ A data service handler (not an import) does step 1 — and every other refusal
 that needs no writing: title rules, member type, roles, a credit to remove that
 is not there — in a public `check(command)`, which `handle()` calls first. The
 assistant's write tools call `check()` for their preview and `handle()` to
-execute, so a preview refuses exactly what the write would. Done so far for
-the production use cases.
+execute, so a preview refuses exactly what the write would. The handler
+returns the loaded element from `check()` when `handle()` needs it.
 
 `TransactionRunner` commits when the work returns and rolls back when it
 throws; a run inside another becomes a savepoint, so a use case called from

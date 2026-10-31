@@ -12,6 +12,7 @@ use ZxArt\Authors\Services\AuthorPrivileges;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorElement;
 
 /**
  * Moves everything of the joined author into this one. The joined author is
@@ -37,13 +38,7 @@ final readonly class JoinAuthorsHandler
      */
     public function handle(JoinAuthorsCommand $command): AuthorDataResultDto
     {
-        if ($command->joinedId === $command->authorId) {
-            throw new AuthorDataException('A author cannot be joined into itself', 400);
-        }
-        $author = $this->authorRepository->get($command->authorId);
-        $this->authorPrivileges->assert($command->authorId, self::PRIVILEGE);
-        $this->authorRepository->get($command->joinedId);
-        $this->authorPrivileges->assert($command->joinedId, self::PRIVILEGE);
+        $author = $this->check($command);
 
         $this->transactionRunner->run(function () use ($author, $command): void {
             $this->actionsLogService->log($author, StructureType::Author, self::PRIVILEGE);
@@ -56,5 +51,23 @@ final readonly class JoinAuthorsHandler
         });
 
         return new AuthorDataResultDto(id: $command->authorId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws AuthorDataException
+     */
+    public function check(JoinAuthorsCommand $command): authorElement
+    {
+        if ($command->joinedId === $command->authorId) {
+            throw new AuthorDataException('A author cannot be joined into itself', 400);
+        }
+        $author = $this->authorRepository->get($command->authorId);
+        $this->authorPrivileges->assert($command->authorId, self::PRIVILEGE);
+        $this->authorRepository->get($command->joinedId);
+        $this->authorPrivileges->assert($command->joinedId, self::PRIVILEGE);
+
+        return $author;
     }
 }

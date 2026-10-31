@@ -18,6 +18,7 @@ use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupElement;
 
 /**
  * Changes the fields the command carries and leaves the others as they are;
@@ -47,8 +48,7 @@ final readonly class UpdateGroupHandler
      */
     public function handle(UpdateGroupCommand $command): GroupDataResultDto
     {
-        $group = $this->groupRepository->get($command->groupId);
-        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
+        $group = $this->check($command);
 
         $this->transactionRunner->run(function () use ($group, $command): void {
             try {
@@ -75,5 +75,18 @@ final readonly class UpdateGroupHandler
         });
 
         return new GroupDataResultDto(id: $command->groupId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupDataException
+     */
+    public function check(UpdateGroupCommand $command): groupElement
+    {
+        $group = $this->groupRepository->get($command->groupId);
+        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
+
+        return $group;
     }
 }

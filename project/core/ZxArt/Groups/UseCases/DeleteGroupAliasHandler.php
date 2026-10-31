@@ -11,6 +11,7 @@ use ZxArt\Groups\Repositories\GroupAliasRepository;
 use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupAliasElement;
 
 /**
  * @psalm-api
@@ -32,8 +33,7 @@ final readonly class DeleteGroupAliasHandler
      */
     public function handle(DeleteGroupAliasCommand $command): GroupAliasDataResultDto
     {
-        $alias = $this->groupAliasRepository->get($command->aliasId);
-        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+        $alias = $this->check($command);
 
         $this->transactionRunner->run(function () use ($alias): void {
             // logged first: the element data is gone after the deletion
@@ -42,5 +42,18 @@ final readonly class DeleteGroupAliasHandler
         });
 
         return new GroupAliasDataResultDto(id: $command->aliasId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupAliasDataException
+     */
+    public function check(DeleteGroupAliasCommand $command): groupAliasElement
+    {
+        $alias = $this->groupAliasRepository->get($command->aliasId);
+        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+
+        return $alias;
     }
 }

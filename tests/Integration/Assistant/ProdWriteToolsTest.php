@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Integration\Assistant;
 
-require_once __DIR__ . '/../Entities/EntityWriteTestCase.php';
+require_once __DIR__ . '/WriteToolTestCase.php';
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Assistant\Tools\Dto\ChangeKind;
 use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
 use ZxArt\Assistant\Tools\Dto\ChangeTargetDto;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
-use ZxArt\Assistant\Tools\WriteTool;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Groups\Dto\GroupFieldsDto;
@@ -28,14 +25,12 @@ use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
-use ZxArt\Tests\Integration\Entities\EntityWriteTestCase;
 
 /**
- * The production write tools as a plan runs them: resolved by name, built from
- * JSON, previewed, then executed.
+ * The production write tools.
  */
 #[RunTestsInSeparateProcesses]
-final class ProdWriteToolsTest extends EntityWriteTestCase
+final class ProdWriteToolsTest extends WriteToolTestCase
 {
     public function testCreateProdPreviewsTheGivenFieldsAndCreates(): void
     {
@@ -214,28 +209,6 @@ final class ProdWriteToolsTest extends EntityWriteTestCase
         $this->assertRefused(404, ProdDataException::class, fn() => $this->preview('remove_prod_author', '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}'));
     }
 
-    private function preview(string $toolName, string $arguments): ChangePreviewDto
-    {
-        $tool = $this->writeTool($toolName);
-
-        return $tool->preview($this->container->get(ToolRequestBuilder::class)->build($tool->requestClass(), $arguments));
-    }
-
-    private function execute(string $toolName, string $arguments): object
-    {
-        $tool = $this->writeTool($toolName);
-
-        return $tool->execute($this->container->get(ToolRequestBuilder::class)->build($tool->requestClass(), $arguments));
-    }
-
-    private function writeTool(string $toolName): WriteTool
-    {
-        $tool = $this->container->get(ToolRegistry::class)->get($toolName);
-        self::assertInstanceOf(WriteTool::class, $tool);
-
-        return $tool;
-    }
-
     private function state(int $prodId): ProdStateDto
     {
         return $this->container->get(ProdStateService::class)->get($prodId);
@@ -249,15 +222,5 @@ final class ProdWriteToolsTest extends EntityWriteTestCase
     private function prodDataService(): ProdDataService
     {
         return $this->container->get(ProdDataService::class);
-    }
-
-    private function signInAsRegisteredUser(): void
-    {
-        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-    }
-
-    private function signInAsEditor(): void
-    {
-        $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
     }
 }

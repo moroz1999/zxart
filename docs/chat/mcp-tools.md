@@ -108,62 +108,30 @@ tools, never by the agent.
 
 ## Write tools
 
-Each takes the ids and fields shown; every field of an `update_*` is optional
-and only the fields given change ("patch"). List-valued fields (categories,
-hardware, languages, groups, publishers) are **replaced as a whole** when given;
-the preview shows exactly what is added and removed.
+The tools and their previews are described in
+[features/ai-assistant.md](../features/ai-assistant.md#tools). Inputs:
 
-### Productions
+- `create_<entity>` — `fields`, the entity's fields DTO (the shape the SPA
+  saves); `update_<entity>` — `id` and `fields` with only the fields to change.
+  List-valued fields are **replaced as a whole** when given; the preview shows
+  the list before and after.
+- `delete_<entity>`, `convert_<entity>_to_<type>` — `id`.
+- `join_<entities>` — `mainId`, `joinedId`; `releasesOnly` for productions,
+  `asAlias` for authors and groups.
+- `set_prod_author` / `set_release_author` — `prodId`/`releaseId`, `authorId`
+  (author or alias), `roles[]`; `remove_*_author` — the two ids.
+- `set_group_member` / `set_group_alias_member` — `groupId`/`aliasId`,
+  `authorId`, `roles[]`, optional `startDate`, `endDate` (timestamps);
+  `remove_*_member` — the two ids.
+- `add_prod_files` / `add_release_files` — `prodId`/`releaseId`, `kind`
+  (prod: `screenshots`, `inlays`, `maps`, `rzx`; release: `screenshots`,
+  `inlays`, `info`, `ads`), `urls[]`; `delete_*_file` — the id and `fileId`.
+- `set_release_file` — `releaseId`, `url`, optional `fileName`; the site
+  downloads the file and makes it the release's file, reading its structure
+  and formats as for an upload.
 
-| Tool | Input |
-|---|---|
-| `create_prod` | `title`, optional `altTitle`, `year`, `description`, `htmlDescription`, `instructions`, `legalStatus`, `externalLink`, `youtubeId`, `languages[]`, `hardware[]`, `categoryIds[]`, `groupIds[]`, `publisherIds[]`, `tags[]`, `compilationItemIds[]`, `seriesProdIds[]` |
-| `update_prod` | `id` + any field of `create_prod` |
-| `delete_prod` | `id` |
-| `join_prods` | `mainId`, `joinedId`, `releasesOnly` — the joined prod's releases and data move to the main one, the joined one is deleted |
-| `set_prod_author` | `prodId`, `authorId` (author or alias), `roles[]` — adds the author or replaces their roles |
-| `remove_prod_author` | `prodId`, `authorId` |
-
-### Releases
-
-| Tool | Input |
-|---|---|
-| `create_release` | `prodId`, `title`, optional `year`, `version`, `releaseType`, `releaseFormat[]`, `hardware[]`, `languages[]`, `publisherIds[]`, `description`, `fileUrl` |
-| `update_release` | `id` + any field of `create_release` except `fileUrl`; `prodId` moves the release |
-| `delete_release` | `id` |
-| `set_release_file` | `releaseId`, `url`, optional `fileName` — the site downloads the file and makes it the release's file; format and hardware are derived from it as for an upload |
-| `add_files` | `entityType` (`prod`/`release`), `id`, `kind` (prod: `screenshots`, `inlays`, `maps`, `rzx`; release: `screenshots`, `inlays`, `info`, `ads`), `urls[]` |
-| `delete_file` | `entityType`, `id`, `fileId` |
-| `set_release_author` / `remove_release_author` | as for prods |
-
-### Authors and aliases
-
-| Tool | Input |
-|---|---|
-| `create_author` | `title`, optional `realName`, `countryId`, `cityId`, `wikiLink`, `site` |
-| `update_author` | `id` + any field of `create_author` |
-| `delete_author` | `id` |
-| `join_authors` | `mainId`, `joinedId`, `asAlias` — merge into the main author, or keep the joined one as its alias |
-| `convert_author_to_group` | `id` |
-| `create_author_alias` | `authorId`, `title`, optional `startDate`, `endDate` |
-| `update_author_alias` | `id` + `title`, `startDate`, `endDate`, `authorId` |
-| `delete_author_alias` | `id` |
-| `convert_alias_to_author` | `id` |
-
-### Groups and aliases
-
-| Tool | Input |
-|---|---|
-| `create_group` | `title`, optional `abbreviation`, `type`, `countryId`, `cityId`, `website`, `wikiLink`, `slogan`, `startDate`, `endDate`, `parentGroupIds[]` |
-| `update_group` | `id` + any field of `create_group` |
-| `delete_group` | `id` |
-| `join_groups` | `mainId`, `joinedId`, `asAlias` |
-| `convert_group_to_author` | `id` |
-| `create_group_alias` | `groupId`, `title`, optional `startDate`, `endDate` |
-| `update_group_alias` | `id` + `title`, `startDate`, `endDate`, `groupId` |
-| `delete_group_alias` | `id` |
-| `set_group_member` | `groupId` (group or alias), `authorId` (author or alias), `roles[]`, optional `startDate`, `endDate` — adds or updates the membership |
-| `remove_group_member` | `groupId`, `authorId` |
+A release is created without a file; `set_release_file` in a later step of the
+plan gives it one.
 
 Not in the first version: splitting a production, screenshot ordering, import
 ids, tags as entities, parties, pictures, tunes, press.
@@ -176,5 +144,5 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [x] `get_*` tools for the six entity types — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] Catalogue tools, `find_tags`
 - [x] `fetch_url` with address guard and limits, body returned as is; `view_image`
-- [ ] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
-- [ ] Tests per tool: request mapping, preview rows, refused privilege
+- [x] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
+- [x] Tests per tool: request mapping, preview rows, refused privilege

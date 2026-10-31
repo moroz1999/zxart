@@ -45,11 +45,7 @@ final readonly class CreateGroupAliasHandler
      */
     public function handle(CreateGroupAliasCommand $command): GroupAliasDataResultDto
     {
-        $ownerId = $command->fields->groupId;
-        if ($ownerId === null || $ownerId <= 0) {
-            throw new GroupAliasDataException('An alias needs its group', 400);
-        }
-        $this->groupAliasPrivileges->assertMayAddTo($ownerId);
+        $this->check($command);
 
         $id = $this->transactionRunner->run(function () use ($command): int {
             try {
@@ -70,5 +66,19 @@ final readonly class CreateGroupAliasHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new GroupAliasDataResultDto(id: $id);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupAliasDataException
+     */
+    public function check(CreateGroupAliasCommand $command): void
+    {
+        $ownerId = $command->fields->groupId;
+        if ($ownerId === null || $ownerId <= 0) {
+            throw new GroupAliasDataException('An alias needs its group', 400);
+        }
+        $this->groupAliasPrivileges->assertMayAddTo($ownerId);
     }
 }

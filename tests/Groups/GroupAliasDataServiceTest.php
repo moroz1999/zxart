@@ -10,6 +10,7 @@ use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
@@ -360,6 +361,7 @@ final class GroupAliasDataServiceTest extends TestCase
             ->with(42, 'deleteAuthor', 'groupAlias')
             ->willReturn(true);
         $authorship = $this->createMock(AuthorshipDbal::class);
+        $authorship->method('findByElement')->with(42, EntityType::Group)->willReturn([new AuthorshipDto(42, 7, [], 0, 0)]);
         $authorship->expects($this->once())
             ->method('deleteAuthorship')
             ->with(42, 7, EntityType::Group)
@@ -379,8 +381,9 @@ final class GroupAliasDataServiceTest extends TestCase
 
     public function testDeleteMemberWithoutAuthorIdIsBadRequestAndOfANonMemberNotFound(): void
     {
-        $authorship = $this->createStub(AuthorshipDbal::class);
-        $authorship->method('deleteAuthorship')->willReturn(false);
+        $authorship = $this->createMock(AuthorshipDbal::class);
+        $authorship->method('findByElement')->willReturn([new AuthorshipDto(42, 8, [], 0, 0)]);
+        $authorship->expects($this->never())->method('deleteAuthorship');
         $service = $this->createService(
             $this->createStub(groupAliasElement::class),
             $this->privileges(true),

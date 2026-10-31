@@ -50,7 +50,7 @@ final readonly class CreateAuthorHandler
      */
     public function handle(CreateAuthorCommand $command): AuthorDataResultDto
     {
-        $this->authorPrivileges->assertMayCreate();
+        $this->check($command);
 
         $id = $this->transactionRunner->run(function () use ($command): int {
             try {
@@ -78,5 +78,15 @@ final readonly class CreateAuthorHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new AuthorDataResultDto(id: $id);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws AuthorDataException
+     */
+    public function check(CreateAuthorCommand $command): void
+    {
+        $this->authorPrivileges->assertMayCreate();
     }
 }

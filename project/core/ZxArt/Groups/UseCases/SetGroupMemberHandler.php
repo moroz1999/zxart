@@ -17,6 +17,7 @@ use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use groupElement;
 
 /**
  * Adds the author to the group's members, or makes their roles these.
@@ -42,6 +43,25 @@ final readonly class SetGroupMemberHandler
      */
     public function handle(SetGroupMemberCommand $command): GroupDataResultDto
     {
+        $group = $this->check($command);
+
+        $this->transactionRunner->run(function () use ($group, $command): void {
+            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
+            $this->authorshipDbal->setAuthorship($command->groupId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
+            $this->groupRepository->touch($group);
+            $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
+        });
+
+        return new GroupDataResultDto(id: $command->groupId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws GroupDataException
+     */
+    public function check(SetGroupMemberCommand $command): groupElement
+    {
         $group = $this->groupRepository->get($command->groupId);
         $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
         $member = $command->authorId > 0 ? $this->structureManager->getElementById($command->authorId) : null;
@@ -53,13 +73,6 @@ final readonly class SetGroupMemberHandler
             throw new GroupDataException('Unknown role: ' . implode(', ', $unknownRoles), 400);
         }
 
-        $this->transactionRunner->run(function () use ($group, $command): void {
-            $roles = $command->roles === [] ? ['unknown'] : $command->roles;
-            $this->authorshipDbal->setAuthorship($command->groupId, $command->authorId, EntityType::Group, $roles, $command->startDate, $command->endDate);
-            $this->groupRepository->touch($group);
-            $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
-        });
-
-        return new GroupDataResultDto(id: $command->groupId);
+        return $group;
     }
 }

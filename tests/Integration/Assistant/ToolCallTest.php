@@ -23,6 +23,7 @@ use ZxArt\Groups\Dto\GroupCardDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Assistant\Tools\Search\FoundEntitiesDto;
+use ZxArt\Assistant\Tools\JsonSchemaGenerator;
 use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Assistant\Tools\ToolRequestBuilder;
 use ZxArt\Prods\Dto\FoundProdDto;
@@ -142,6 +143,19 @@ final class ToolCallTest extends EntityWriteTestCase
         $this->expectException(ImageRefusedException::class);
 
         $this->call('view_image', '{"fileId": ' . $groupId . '}');
+    }
+
+    public function testEveryToolHasASchemaForItsRequest(): void
+    {
+        $generator = $this->container->get(JsonSchemaGenerator::class);
+        $names = [];
+        foreach ($this->container->get(ToolRegistry::class)->all() as $tool) {
+            self::assertSame('object', $generator->forClass($tool->requestClass())['type'], $tool->name());
+            $names[] = $tool->name();
+        }
+
+        self::assertContains('set_group_alias_member', $names);
+        self::assertContains('delete_release_file', $names);
     }
 
     private function call(string $toolName, string $arguments): object

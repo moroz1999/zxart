@@ -11,6 +11,7 @@ use ZxArt\Authors\Repositories\AuthorRepository;
 use ZxArt\Authors\Services\AuthorPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
+use authorElement;
 
 /**
  * @psalm-api
@@ -32,8 +33,7 @@ final readonly class DeleteAuthorHandler
      */
     public function handle(DeleteAuthorCommand $command): AuthorDataResultDto
     {
-        $author = $this->authorRepository->get($command->authorId);
-        $this->authorPrivileges->assert($command->authorId, self::PRIVILEGE);
+        $author = $this->check($command);
 
         $this->transactionRunner->run(function () use ($author): void {
             // logged first: the element data is gone after the deletion
@@ -42,5 +42,18 @@ final readonly class DeleteAuthorHandler
         });
 
         return new AuthorDataResultDto(id: $command->authorId);
+    }
+
+    /**
+     * Everything {@see self::handle()} refuses, without writing.
+     *
+     * @throws AuthorDataException
+     */
+    public function check(DeleteAuthorCommand $command): authorElement
+    {
+        $author = $this->authorRepository->get($command->authorId);
+        $this->authorPrivileges->assert($command->authorId, self::PRIVILEGE);
+
+        return $author;
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Authors\Services\ElementAuthorsWriter;
 use ZxArt\Groups\Dto\GroupFieldsDto;
@@ -142,6 +143,7 @@ final class GroupDataServiceTest extends TestCase
             ->with(42, 'deleteAuthor', 'group')
             ->willReturn(true);
         $authorship = $this->createMock(AuthorshipDbal::class);
+        $authorship->method('findByElement')->with(42, EntityType::Group)->willReturn([new AuthorshipDto(42, 7, [], 0, 0)]);
         $authorship->expects($this->once())
             ->method('deleteAuthorship')
             ->with(42, 7, EntityType::Group)
@@ -175,8 +177,9 @@ final class GroupDataServiceTest extends TestCase
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
     {
         // /ajax/ answered success for a removal that changed nothing
-        $authorship = $this->createStub(AuthorshipDbal::class);
-        $authorship->method('deleteAuthorship')->willReturn(false);
+        $authorship = $this->createMock(AuthorshipDbal::class);
+        $authorship->method('findByElement')->willReturn([new AuthorshipDto(42, 8, [], 0, 0)]);
+        $authorship->expects($this->never())->method('deleteAuthorship');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
         $service = $this->createService(

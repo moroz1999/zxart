@@ -97,25 +97,52 @@ the checked address, the bodies of redirects are dropped and the body of the
 last response goes to a consumer that can stop the transfer at a limit. A
 refused address or a failed transfer is `HttpRequestRefusedException`.
 
-Write tools so far (`Prods\`): `create_prod`, `update_prod`, `delete_prod`,
-`join_prods`, `set_prod_author`, `remove_prod_author`. Each builds the command
-of its use case once: `preview()` calls the handler's `check()` (privilege,
-existence, input — see [php/entity-writes.md](../php/entity-writes.md#use-cases)),
-reads the state through `<Entity>StateService` and answers the preview;
-`execute()` calls `handle()` and answers the handler's result (`{id}`).
+Write tools, in `Prods\`, `Releases\`, `Authors\`, `AuthorAliases\`,
+`Groups\`, `GroupAliases\`:
+
+| Entity | Tools |
+|---|---|
+| prod | `create_prod`, `update_prod`, `delete_prod`, `join_prods`, `set_prod_author`, `remove_prod_author`, `add_prod_files`, `delete_prod_file` |
+| release | `create_release`, `update_release`, `delete_release`, `set_release_author`, `remove_release_author`, `add_release_files`, `delete_release_file`, `set_release_file` |
+| author | `create_author`, `update_author`, `delete_author`, `join_authors`, `convert_author_to_group` |
+| author alias | `create_author_alias`, `update_author_alias`, `delete_author_alias`, `join_author_aliases`, `convert_author_alias_to_author` |
+| group | `create_group`, `update_group`, `delete_group`, `join_groups`, `convert_group_to_author`, `set_group_member`, `remove_group_member` |
+| group alias | `create_group_alias`, `update_group_alias`, `delete_group_alias`, `join_group_aliases`, `convert_group_alias_to_group`, `set_group_alias_member`, `remove_group_alias_member` |
+
+Each builds the command of its use case once: `preview()` calls the handler's
+`check()` (privilege, existence, input — see
+[php/entity-writes.md](../php/entity-writes.md#use-cases)), reads the state
+through `<Entity>StateService` and answers the preview; `execute()` calls
+`handle()` and answers the handler's result: `{id}` — of the new entity for a
+create or a conversion — or, for added files, `AddedFilesDto` (`id`,
+`fileIds`).
 
 - `create_*` / `update_*` take the entity's `<Entity>FieldsDto` as `fields`
   (an update also `id`): only the fields given change, a list given replaces
   the list. Their rows come from `Previews\FieldChanges::diff()` — a row per
-  given field that differs from the state (none for a create); a field named
-  `…Id`/`…Ids` shows mentions (`Previews\Mentions`), an id of nothing stays a
-  number, an enum its value.
-- `delete_*` takes `Dto\EntityIdRequestDto`; its consequences name what goes
-  with it (the releases of a production).
-- `join_*` previews the joined entity's deletion and what moves, as sentences
-  with `[[type:id]]` mentions (`EntityMentionDto::text()`).
-- `set_*_author` / `remove_*_author` show the author coming or going and its
-  roles (`Previews\CreditChanges`).
+  given field that differs from the state (every given field for a create).
+  The fields of entity ids and of dates are listed per fields DTO in
+  `FieldChanges`: ids show mentions (`Previews\Mentions`; an id of nothing
+  stays a number, 0 is no value), dates the day (`Previews\Dates`, `Y-m-d`);
+  an enum shows its value, every other field as it is (`zxTunesId` is a
+  number).
+- `delete_*`, `convert_*` take `Dto\EntityIdRequestDto`. A delete's
+  consequences name what the entity holds: a production's releases, an
+  author's or alias's credits (the public page's counters) and aliases, a
+  group's or group alias's members, productions made and publications
+  (`Previews\Quantities::phrase()`). A conversion says the entity is deleted
+  and what the new one of the same title takes.
+- `join_*` (`mainId`, `joinedId`; `releasesOnly` for productions, `asAlias` for
+  authors and groups) previews the joined entity's deletion and what moves,
+  as sentences with `[[type:id]]` mentions (`EntityMentionDto::text()`).
+- `set_*_author` / `set_*_member` and their `remove_*` show the author coming
+  or going, its roles and, for group members, the dates
+  (`Previews\CreditChanges`). Removing someone not credited is refused at the
+  preview (`404`).
+- `add_*_files` (`kind` of the entity's file kinds, `urls`) shows the list
+  with the URLs appended; `delete_*_file` the list without the file;
+  `set_release_file` (`url`, optional `fileName`) the release file's name
+  before and after.
 
 The modification time in a preview is the target's (the main entity's for a
 join); a create has none.
@@ -145,7 +172,7 @@ with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
 call resolved from the container and built from JSON, a nested filter among
 them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
 `tests/Integration/Entities/EntityCardsTest.php` (the cards);
-`tests/Integration/Assistant/ProdWriteToolsTest.php` (previews and writes of
-the production tools, refusals at the preview); `tests/Shared/Http/` and
+`tests/Integration/Assistant/*WriteToolsTest.php` (previews and writes of
+the write tools, refusals at the preview, over `WriteToolTestCase`); `tests/Shared/Http/` and
 `tests/Shared/Images/` fetch from PHP's built-in
 server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.
