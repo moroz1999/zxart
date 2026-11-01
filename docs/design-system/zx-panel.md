@@ -9,6 +9,7 @@ Universal layout container.
 | Prop | Values | Default |
 |---|---|---|
 | `variant` | `elevated` \| `flat` | `elevated` |
+| `surface` | `default` \| `muted` \| `primary` | `default` |
 | `radius` | `sm` \| `md` \| `lg` \| `xl` | — |
 | `padding` | `none` \| `sm` \| `md` \| `lg` | — |
 | `title` | string | — |
@@ -19,6 +20,8 @@ Universal layout container.
 ## Rules
 
 **Variant**: Use `elevated` for top-level standalone panels. Use `flat` for panels nested inside another panel.
+
+**Surface**: `default` is the panel background. `muted` and `primary` tint a nested (`flat`) panel when sibling blocks must be told apart by meaning — chat messages of different authors, an expanded technical detail. A tinted flat panel has no border. Do not tint top-level panels or use the tint as decoration.
 
 **Content bleed**: Use `[contentBleed]="true"` when child content (e.g., tables) needs to go edge-to-edge while the title retains consistent padding. Do NOT use `padding="none"` as a workaround for tables.
 

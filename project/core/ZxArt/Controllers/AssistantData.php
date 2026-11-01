@@ -17,7 +17,10 @@ use Throwable;
 use App\Users\CurrentUserService;
 use ZxArt\Assistant\Chat\AssistantChatService;
 use ZxArt\Assistant\Chat\AssistantException;
+use ZxArt\Assistant\Chat\Dto\ConversationSummaryDto;
 use ZxArt\Assistant\Chat\Rest\ApprovePlanRequestDto;
+use ZxArt\Assistant\Chat\Rest\ConversationIdRequestDto;
+use ZxArt\Assistant\Chat\Rest\ConversationSummaryRestDto;
 use ZxArt\Assistant\Chat\Rest\ConversationRestDto;
 use ZxArt\Assistant\Chat\Rest\ConversationStateRestDto;
 use ZxArt\Assistant\Chat\Rest\RunStartedRestDto;
@@ -28,8 +31,9 @@ use ZxArt\Shared\Http\ResponseCloser;
 /**
  * The editors' AI assistant (`/assistant-data/`).
  *
- * `GET ?action=get&id=&afterSeq=` answers what is new in a conversation;
- * `POST ?action=create|send|approvePlan` changes it. `send` and `approvePlan`
+ * `GET ?action=list` lists the user's conversations, `GET ?action=get&id=&afterSeq=`
+ * answers what is new in one; `POST ?action=create|send|approvePlan|stop|delete`
+ * changes them. `send` and `approvePlan`
  * answer at once and then run the agent or the plan in the same process, after
  * the response is out; the client polls `get` meanwhile.
  *
@@ -73,7 +77,7 @@ class AssistantData extends LoggedControllerApplication
             $userId = $this->authorizedUserId();
             $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
             $action = (string)$this->getParameter('action');
-            if ($method !== 'POST' && $action !== 'get') {
+            if ($method !== 'POST' && $action !== 'get' && $action !== 'list') {
                 throw new AssistantException('Method not allowed', 405);
             }
             $body = match ($action) {
@@ -81,7 +85,13 @@ class AssistantData extends LoggedControllerApplication
                     $this->chatService->state($userId, (int)$this->getParameter('id'), (int)$this->getParameter('afterSeq')),
                     ConversationStateRestDto::class,
                 ),
+                'list' => array_map(
+                    fn(ConversationSummaryDto $conversation): ConversationSummaryRestDto => $this->objectMapper->map($conversation, ConversationSummaryRestDto::class),
+                    $this->chatService->list($userId),
+                ),
                 'create' => $this->objectMapper->map($this->chatService->create($userId), ConversationRestDto::class),
+                'delete' => $this->delete($userId),
+                'stop' => $this->stop($userId),
                 'send' => $this->send($userId, $afterResponse),
                 'approvePlan' => $this->approvePlan($userId, $afterResponse),
                 default => throw new AssistantException('Unsupported assistant action', 400),
@@ -106,6 +116,28 @@ class AssistantData extends LoggedControllerApplication
         } catch (Throwable $throwable) {
             $this->logThrowable('AssistantData::afterResponse', $throwable);
         }
+    }
+
+    /**
+     * @return array<never, never>
+     * @throws AssistantException
+     */
+    private function delete(int $userId): array
+    {
+        $this->chatService->delete($userId, $this->deserialize(ConversationIdRequestDto::class)->conversationId);
+
+        return [];
+    }
+
+    /**
+     * @return array<never, never>
+     * @throws AssistantException
+     */
+    private function stop(int $userId): array
+    {
+        $this->chatService->stop($userId, $this->deserialize(ConversationIdRequestDto::class)->conversationId);
+
+        return [];
     }
 
     /**

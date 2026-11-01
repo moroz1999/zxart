@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Tests\Integration\Assistant\Agent;
 
 require_once __DIR__ . '/../WriteToolTestCase.php';
+require_once __DIR__ . '/AgentFakes.php';
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use stdClass;
@@ -13,7 +14,13 @@ use ZxArt\Assistant\Agent\PlanProposer;
 use ZxArt\Assistant\Agent\PlanRefusedException;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
+use ZxArt\Assistant\Chat\AssistantChatService;
 use ZxArt\Assistant\Chat\Dbal\PlansDbal;
+use ZxArt\Assistant\Chat\Dbal\RunsDbal;
+use ZxArt\Assistant\Chat\RunStatus;
+use ZxArt\Assistant\Chat\RunType;
+use ZxArt\Assistant\Llm\LlmClient;
+use ZxArt\Assistant\Llm\LlmReplyDto;
 use ZxArt\Assistant\Chat\Dto\MessageDto;
 use ZxArt\Assistant\Chat\Dto\PlanDto;
 use ZxArt\Assistant\Chat\MessageKind;
@@ -129,7 +136,7 @@ final class PlansTest extends WriteToolTestCase
             ],
         ]);
 
-        $this->container->get(PlanExecutor::class)->execute($plan->id);
+        $this->container->get(PlanExecutor::class)->execute($plan->id, $this->executeRun());
 
         $executed = $this->container->get(PlansDbal::class)->find($plan->id);
         self::assertSame(PlanStatus::Done, $executed?->status);
@@ -155,7 +162,7 @@ final class PlansTest extends WriteToolTestCase
             ],
         ], preview: false);
 
-        $this->container->get(PlanExecutor::class)->execute($plan->id);
+        $this->container->get(PlanExecutor::class)->execute($plan->id, $this->executeRun());
 
         $executed = $this->container->get(PlansDbal::class)->find($plan->id);
         self::assertSame(PlanStatus::Failed, $executed?->status);
@@ -163,6 +170,48 @@ final class PlansTest extends WriteToolTestCase
         self::assertNotSame('', $executed->actions[0]['error']);
         self::assertSame('skipped', $executed->actions[1]['status']);
         self::assertSame([], $this->newElementIds());
+    }
+
+    public function testAStoppedPlanSkipsTheActionsLeft(): void
+    {
+        $this->signInAsEditor();
+        $plan = $this->propose([
+            'title' => 'Two games',
+            'actions' => [
+                ['tool' => 'create_prod', 'arguments' => ['fields' => ['title' => 'Goldwrite Demo']]],
+                ['tool' => 'create_prod', 'arguments' => ['fields' => ['title' => 'Goldwrite Demo 2']]],
+            ],
+        ]);
+        $runs = $this->container->get(RunsDbal::class);
+        $runId = $runs->start($this->conversationId, RunType::Execute, self::NOW);
+        $runs->requestStop($runId);
+
+        $this->container->get(PlanExecutor::class)->execute($plan->id, $runId);
+
+        $executed = $this->container->get(PlansDbal::class)->find($plan->id);
+        self::assertSame(PlanStatus::Stopped, $executed?->status);
+        self::assertSame(['skipped', 'skipped'], array_column($executed->actions, 'status'));
+    }
+
+    public function testAnExecutedPlanIsSummedUpByTheAssistant(): void
+    {
+        $this->signInAsEditor();
+        $plan = $this->propose([
+            'title' => 'New game',
+            'actions' => [['tool' => 'create_prod', 'arguments' => ['fields' => ['title' => 'Goldwrite Demo']]]],
+        ]);
+        $llm = new ScriptedLlmClient([new LlmReplyDto('Готово', [], 1, 1)]);
+        $this->container->set(LlmClient::class, $llm);
+        $runs = $this->container->get(RunsDbal::class);
+        $runId = $this->container->get(AssistantChatService::class)->approvePlan(7, $plan->id);
+
+        $this->container->get(AssistantChatService::class)->continueExecution($runId, $plan->id);
+
+        self::assertSame(RunStatus::Done, $runs->find($runId)?->status);
+        self::assertStringStartsWith("Plan {$plan->id}, action 1 (create_prod): done.", end($llm->askedWith[0])->text);
+        $last = end($this->messages());
+        self::assertSame('Готово', $last->text);
+        self::assertNull($runs->findActive($this->conversationId));
     }
 
     private string $arguments = '';
@@ -206,6 +255,11 @@ final class PlansTest extends WriteToolTestCase
     private function messages(): array
     {
         return $this->container->get(MessagesDbal::class)->findAfter($this->conversationId, 0);
+    }
+
+    private function executeRun(): int
+    {
+        return $this->container->get(RunsDbal::class)->start($this->conversationId, RunType::Execute, self::NOW);
     }
 
     private function createProd(): int

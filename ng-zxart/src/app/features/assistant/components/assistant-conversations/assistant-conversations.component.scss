@@ -1,0 +1,10 @@
+// the title takes the free width of the row and is cut with an ellipsis
+.ac-pick {
+  flex: 1;
+  min-width: 0;
+}
+
+.ac-icon {
+  width: var(--zx-assistant-icon-size);
+  height: var(--zx-assistant-icon-size);
+}

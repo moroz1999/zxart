@@ -196,7 +196,7 @@ Each table has a Dbal class in `Assistant\Chat\Dbal`:
 |---|---|---|
 | `ai_conversation` | `ConversationsDbal` | owner, title (the first message, cut to 80 characters), last activity |
 | `ai_message` | `MessagesDbal` | `seq` per conversation, `role`, `kind` (`MessageKind`), text, JSON payload |
-| `ai_run` | `RunsDbal` | `type` (`chat`, `execute`), `status` (`RunStatus`), steps, tokens, error |
+| `ai_run` | `RunsDbal` | `type` (`chat`, `execute`), `status` (`RunStatus`), `stopRequested`, steps, tokens, error |
 | `ai_plan` | `PlansDbal` | title, `status` (`PlanStatus`), its actions as one JSON column |
 
 `MessagesDbal::append()` gives a message the conversation's next `seq`; the
@@ -242,8 +242,9 @@ environment variable (`docker-compose.yml` takes it from `.env`).
    tool called directly, a refusal) is told to the model as `Error: …`, and the
    run goes on.
 3. The run ends `done` on a reply without calls, `waitingApproval` once a plan
-   is proposed, `failed` after 20 steps, 10 minutes or a model failure, with an
-   `error` message.
+   is proposed, `stopped` when the user asked it to stop (checked before each
+   step, told as a `stopped` message), `failed` after 20 steps, 10 minutes or a
+   model failure, with an `error` message.
 
 ### Plans
 
@@ -257,14 +258,18 @@ references is not previewed, because what it refers to does not exist yet.
 
 `Agent\PlanExecutor` runs an approved plan: each action through its write tool,
 references resolved from the earlier results' `id`, stopping at the first
-failure (the rest are `skipped`). Each outcome is saved on the plan and told as
-a `planProgress` message.
+failure, or before the next action once the run is asked to stop (the rest are
+`skipped`, the plan `failed` or `stopped`). Each outcome is saved on the plan
+and told as a `planProgress` message. Unless it was stopped, a `chat` run
+follows at once, so the assistant sums up what came of the plan.
 
 ### Service and endpoint
 
 `Chat\AssistantChatService` is what the controller calls: a conversation of
 another user does not exist (404); one run at a time per conversation (409); a
-run still `running` after 15 minutes is taken for dead and failed. `send`
+run still `running` after 15 minutes is taken for dead and failed. `list` gives
+the user's conversations with a running flag; `delete` is refused while a run
+works on the conversation; `stop` flags its active run. `send`
 supersedes a proposed plan and starts a `chat` run; `approvePlan` marks the plan
 `executing` and starts an `execute` run. `state()` answers the messages after a
 `seq`, every plan, the active run and `refs` — the entities that the messages'
@@ -284,7 +289,16 @@ time limit, then the run continues in the same process.
   of `aiAssistant` (`RootPrivilegeService`).
 - `AssistantDrawerComponent` — a fixed drawer on the right, in `spa-root`
   outside the router outlet, so links to entities keep it open. While it exists
-  it subscribes to `AssistantStore.polling$`.
+  it subscribes to `AssistantStore.polling$`. It holds the conversation list
+  (`AssistantConversationsComponent`, delete behind a confirm dialog), "Stop"
+  while a run works, and the page the next message will carry.
+- `AssistantMarkdownComponent` — the assistant's prose: `marked`, loaded in a
+  chunk of its own when the store is created, renders it with known mentions as
+  links (`createAssistantMarkdown`); Angular sanitizes the HTML as it binds it.
+  A click on a link to a page of the site goes through the router; until
+  `marked` arrives, prose is shown as text with links (`zx-assistant-text`).
+  Every message with a payload, and a plan with its whole record, can be
+  expanded to its JSON.
 - `AssistantPanelService` — open or closed, remembered per browser.
 - `AssistantStore` — the open conversation (remembered per browser, created on
   the first message, "new" forgets it), messages merged by `seq`, plans and run
@@ -296,6 +310,14 @@ time limit, then the run continues in the same process.
 - `AssistantPlanComponent` — the actions with their previews and statuses;
   "Approve" opens a confirm dialog that counts the destructive actions.
 - `AssistantDataApiService` (`shared/api/`) — the only code that knows the URL.
+
+The components are built from the design system only: layout through
+`zx-stack` / `zx-inline` / `zx-inset`, text through `appText` / `appHeading`,
+messages in tinted flat `zx-panel`s (`surface` `primary` for the user, `muted`
+for the assistant), plans and expanded JSON in flat panels too, JSON in
+`zx-preformatted`, preview rows in `zx-item-data`, controls as `zx-button`.
+Their SCSS keeps only the drawer's contour and scrolling; the drawer's own
+tokens are in `shared/theme/_zx-assistant.theme.scss`.
 
 Tests: `tests/Integration/Assistant/Chat/` (storage, the service),
 `tests/Integration/Assistant/Agent/` (the run with a scripted model, plans

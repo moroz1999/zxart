@@ -21,6 +21,8 @@ final class ScriptedLlmClient implements LlmClient
     public array $askedWith = [];
     /** @var list<list<string>> tool names */
     public array $offeredTools = [];
+    /** @var ?callable(int): void called with the run after each reply */
+    public $afterReply = null;
 
     /**
      * @param list<LlmReplyDto|Throwable> $replies
@@ -36,6 +38,9 @@ final class ScriptedLlmClient implements LlmClient
         $reply = array_shift($this->replies) ?? throw new RuntimeException('No reply scripted');
         if ($reply instanceof Throwable) {
             throw $reply;
+        }
+        if ($this->afterReply !== null) {
+            ($this->afterReply)($runId);
         }
 
         return $reply;

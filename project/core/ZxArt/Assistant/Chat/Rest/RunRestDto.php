@@ -13,6 +13,7 @@ final readonly class RunRestDto
         public int $steps,
         public ?string $error,
         public int $startedAt,
+        public bool $stopRequested,
     ) {
     }
 }

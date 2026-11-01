@@ -34,6 +34,7 @@ use ZxArt\Shared\Images\ImageDto;
  *
  * Write tools are not offered; the model reaches them only through
  * `propose_plan`. A failed tool call is told to the model, which may try again.
+ * A stop the user asked for is honoured before the next step.
  */
 final readonly class AgentRunner
 {
@@ -80,6 +81,10 @@ final readonly class AgentRunner
         $context = $this->history->build($this->messages->findAfter($conversationId, 0));
         $tools = $this->offeredTools();
         for ($step = 1; $step <= $this->maxSteps; $step++) {
+            if ($this->runs->find($runId)?->stopRequested === true) {
+                $this->store($conversationId, MessageKind::Stopped, 'Stopped by the user', null);
+                return RunStatus::Stopped;
+            }
             if (time() - $startedAt > $this->timeLimitSeconds) {
                 throw new LlmException('The assistant took longer than ' . intdiv($this->timeLimitSeconds, 60) . ' minutes and was stopped');
             }
@@ -96,9 +101,8 @@ final readonly class AgentRunner
             $planProposed = false;
             foreach ($reply->toolCalls as $call) {
                 if ($call->name === PlanProposer::TOOL_NAME) {
-                    $told = $this->proposePlan($conversationId, $call);
-                    $planProposed = $planProposed || $told === null;
-                    $told ??= 'The plan is proposed and waits for the user to approve it.';
+                    [$planProposedNow, $told] = $this->proposePlan($conversationId, $call);
+                    $planProposed = $planProposed || $planProposedNow;
                 } else {
                     $told = $this->callTool($conversationId, $call, $images);
                 }
@@ -116,17 +120,17 @@ final readonly class AgentRunner
     }
 
     /**
-     * @return ?string why the plan was refused, null once it is proposed
+     * @return array{bool, string} whether the plan is proposed, and what the model is told
      */
-    private function proposePlan(int $conversationId, LlmToolCallDto $call): ?string
+    private function proposePlan(int $conversationId, LlmToolCallDto $call): array
     {
         try {
-            $this->planProposer->propose($conversationId, $call->id, $call->arguments);
-            return null;
+            $plan = $this->planProposer->propose($conversationId, $call->id, $call->arguments);
+            return [true, PlanProposer::proposedNote($plan->id)];
         } catch (PlanRefusedException $exception) {
             $told = 'Error: ' . $exception->getMessage();
             $this->storeCall($conversationId, $call, $told, true);
-            return $told;
+            return [false, $told];
         }
     }
 

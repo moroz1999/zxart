@@ -11,4 +11,6 @@ enum RunStatus: string
     /** The agent proposed a plan and stopped. */
     case WaitingApproval = 'waitingApproval';
     case Failed = 'failed';
+    /** The user stopped it. */
+    case Stopped = 'stopped';
 }

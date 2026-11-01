@@ -14,9 +14,10 @@ built, its description moves into the regular documentation (`docs/domain/`,
 A minimal first version runs: chat with read tools, plans proposed and executed
 after approval, the drawer in the SPA — see
 [../features/ai-assistant.md](../features/ai-assistant.md#chat). It leaves out,
-for now: the conversation list and deletion, stopping a run, `ask_user`,
-Markdown, the debug modal, cron recovery of runs, separate `ai_plan_action`
-rows, and re-previewing a plan at approval.
+for now: `ask_user`, the debug modal (the exchange log takes its place), cron
+recovery of runs, separate `ai_plan_action` rows, a projection of a plan for
+previewing actions that take earlier results, and re-previewing a plan at
+approval.
 
 | Document | Topic |
 |---|---|

@@ -40,6 +40,8 @@ export interface AssistantMessageView {
   role: 'user' | 'assistant';
   kind: AssistantMessageKind;
   segments: AssistantSegment[];
+  /** The assistant's prose as HTML, once Markdown is loaded; null otherwise. */
+  html: string | null;
   /** The tool a tool call called. */
   toolName: string | null;
   /** The message's payload as pretty JSON, for the details toggle. */
@@ -49,6 +51,7 @@ export interface AssistantMessageView {
 }
 
 export interface AssistantView {
+  conversationId: number | null;
   hasConversation: boolean;
   messages: AssistantMessageView[];
   running: boolean;

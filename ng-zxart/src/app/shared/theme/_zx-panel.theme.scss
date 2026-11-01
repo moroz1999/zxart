@@ -26,10 +26,16 @@
 
 .dark-mode {
   --zx-panel-bg: var(--secondary-100);
+  /* Tinted surfaces of nested panels */
+  --zx-panel-bg-muted: var(--secondary-200);
+  --zx-panel-bg-primary: var(--primary-200);
   --zx-panel-shadow: var(--shadow-md);
 }
 
 .light-mode {
   --zx-panel-bg: var(--white);
+  /* Tinted surfaces of nested panels */
+  --zx-panel-bg-muted: var(--secondary-100);
+  --zx-panel-bg-primary: var(--primary-100);
   --zx-panel-shadow: var(--shadow-md);
 }

@@ -1,40 +1,75 @@
 @if (view$ | async; as view) {
-  <div class="ad-header">
-    <span class="ad-title">{{ 'assistant.title' | translate }}</span>
-    <div class="ad-header-tools">
-      <zx-button size="sm" color="transparent" (click)="startNew()" [disabled]="!view.hasConversation">
-        {{ 'assistant.new' | translate }}
-      </zx-button>
-      <zx-close-button size="sm" [ariaLabel]="'assistant.close' | translate" (closed)="close()"></zx-close-button>
-    </div>
-  </div>
+  <zx-stack gap="none" class="ast-body">
+    <zx-inset padding="sm" class="ast-header">
+      <zx-inline gap="xs" align="center" justify="between">
+        <zx-button size="sm" color="transparent" (click)="toggleList()" [attr.aria-expanded]="listOpen | async">
+          {{ 'assistant.conversations' | translate }}
+          <svg-icon [name]="(listOpen | async) ? 'expand-less' : 'expand-more'" class="ast-icon" aria-hidden="true"></svg-icon>
+        </zx-button>
+        <zx-inline gap="xs" align="center">
+          <zx-button size="sm" color="transparent" (click)="startNew()" [disabled]="!view.hasConversation">
+            {{ 'assistant.new' | translate }}
+          </zx-button>
+          <zx-close-button size="sm" [ariaLabel]="'assistant.close' | translate" (closed)="close()"></zx-close-button>
+        </zx-inline>
+      </zx-inline>
+    </zx-inset>
 
-  <div class="ad-stream" #stream>
-    @if (view.messages.length === 0) {
-      <div class="ad-empty">{{ 'assistant.empty' | translate }}</div>
+    @if (listOpen | async) {
+      <zx-inset padding="sm" class="ast-list">
+        <zx-assistant-conversations
+          [conversations]="(conversations$ | async) ?? []"
+          [currentId]="view.conversationId"
+          (picked)="pick($event)"
+          (deleted)="deleteConversation($event)"
+        ></zx-assistant-conversations>
+      </zx-inset>
     }
-    @for (message of view.messages; track message.id) {
-      <zx-assistant-message [message]="message" (approve)="approve($event)"></zx-assistant-message>
-    }
-    @if (view.running) {
-      <div class="ad-running">
-        <zx-spinner size="xs"></zx-spinner>
-        {{ 'assistant.running' | translate }}
-      </div>
-    }
-  </div>
 
-  @if (view.error) {
-    <div class="ad-error">{{ view.error }}</div>
-  }
+    <zx-inset padding="md" class="ast-stream" #stream>
+      <zx-stack gap="sm">
+        @if (view.messages.length === 0) {
+          <div appText="bodySm" tone="muted">{{ 'assistant.empty' | translate }}</div>
+        }
+        @for (message of view.messages; track message.id) {
+          <zx-assistant-message [message]="message" (approve)="approve($event)"></zx-assistant-message>
+        }
+        @if (view.running) {
+          <zx-inline gap="sm" align="center">
+            <zx-spinner size="xs"></zx-spinner>
+            <span appText="bodySm" tone="muted">{{ 'assistant.running' | translate }}</span>
+            <zx-button size="xs" color="outlined" (click)="stop()">{{ 'assistant.stop' | translate }}</zx-button>
+          </zx-inline>
+        }
+      </zx-stack>
+    </zx-inset>
 
-  <form class="ad-composer" (ngSubmit)="submit()">
-    <zx-textarea
-      [formControl]="text"
-      [rows]="3"
-      [placeholder]="'assistant.placeholder' | translate"
-      (keydown)="onKeydown($event)"
-    ></zx-textarea>
-    <zx-button type="submit" size="sm" [disabled]="view.running">{{ 'assistant.send' | translate }}</zx-button>
-  </form>
+    @if (view.error) {
+      <zx-inset padding="md" side="inline">
+        <div appText="bodySm" tone="danger">{{ view.error }}</div>
+      </zx-inset>
+    }
+
+    <zx-inset padding="md" class="ast-composer">
+      <form (ngSubmit)="submit()">
+        <zx-stack gap="sm">
+          <zx-textarea
+            [formControl]="text"
+            [rows]="3"
+            [placeholder]="'assistant.placeholder' | translate"
+            (keydown)="onKeydown($event)"
+          ></zx-textarea>
+          <zx-inline gap="sm" align="center" justify="between">
+            @if (page$ | async; as page) {
+              <span class="ast-context" appText="caption" tone="muted" [truncate]="true">
+                {{ 'assistant.context' | translate }}:
+                {{ page.entityType ? page.entityType + ' #' + page.entityId : page.url }}
+              </span>
+            }
+            <zx-button type="submit" size="sm" [disabled]="view.running">{{ 'assistant.send' | translate }}</zx-button>
+          </zx-inline>
+        </zx-stack>
+      </form>
+    </zx-inset>
+  </zx-stack>
 }

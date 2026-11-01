@@ -32,17 +32,33 @@ final readonly class ConversationsDbal extends AbstractDbal
         $row = $this->db->table($this->tableName(DatabaseTable::AiConversation))
             ->where('id', '=', $id)
             ->first(['id', 'userId', 'title', 'createdAt', 'lastMessageAt']);
-        if ($row === null) {
-            return null;
-        }
 
-        return new ConversationDto(
-            id: (int)$row['id'],
-            userId: (int)$row['userId'],
-            title: $row['title'],
-            createdAt: (int)$row['createdAt'],
-            lastMessageAt: (int)$row['lastMessageAt'],
-        );
+        return $row === null ? null : $this->toDto($row);
+    }
+
+    /**
+     * @return list<ConversationDto> latest activity first
+     */
+    public function findByUser(int $userId): array
+    {
+        /** @var list<array{id: int|string, userId: int|string, title: string, createdAt: int|string, lastMessageAt: int|string}> $rows */
+        $rows = $this->db->table($this->tableName(DatabaseTable::AiConversation))
+            ->where('userId', '=', $userId)
+            ->orderBy('lastMessageAt', 'desc')
+            ->orderBy('id', 'desc')
+            ->get(['id', 'userId', 'title', 'createdAt', 'lastMessageAt']);
+
+        return array_map($this->toDto(...), $rows);
+    }
+
+    /**
+     * Its messages, runs and plans go with it.
+     */
+    public function delete(int $id): void
+    {
+        $this->db->table($this->tableName(DatabaseTable::AiConversation))
+            ->where('id', '=', $id)
+            ->delete();
     }
 
     public function touch(int $id, int $lastMessageAt): void
@@ -57,5 +73,19 @@ final readonly class ConversationsDbal extends AbstractDbal
         $this->db->table($this->tableName(DatabaseTable::AiConversation))
             ->where('id', '=', $id)
             ->update(['title' => $title]);
+    }
+
+    /**
+     * @param array{id: int|string, userId: int|string, title: string, createdAt: int|string, lastMessageAt: int|string} $row
+     */
+    private function toDto(array $row): ConversationDto
+    {
+        return new ConversationDto(
+            id: (int)$row['id'],
+            userId: (int)$row['userId'],
+            title: $row['title'],
+            createdAt: (int)$row['createdAt'],
+            lastMessageAt: (int)$row['lastMessageAt'],
+        );
     }
 }

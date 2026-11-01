@@ -91,6 +91,40 @@ describe('buildAssistantView', () => {
     expect(planView.actions[1].dependsOn).toEqual([1]);
   });
 
+  it('shows the plan record as the details of a plan message and the payload of the others', () => {
+    const proposed = plan({});
+    const view = buildAssistantView({
+      conversationId: 1,
+      messages: [
+        message({id: 1, kind: 'plan', payload: {planId: 3}}),
+        message({id: 2, kind: 'planProgress', payload: {planId: 3, action: 1}}),
+        message({id: 3, kind: 'stopped', text: 'Stopped by the user'}),
+      ],
+      plans: {3: proposed},
+      refs: {},
+      activeRun: null,
+      error: null,
+    });
+
+    expect(view.messages[0].details).toBe(JSON.stringify(proposed, null, 2));
+    expect(view.messages[1].details).toBe(JSON.stringify({planId: 3, action: 1}, null, 2));
+    expect(view.messages[2].details).toBeNull();
+  });
+
+  it('renders the assistant\'s prose with the renderer it is given, and the user\'s as text', () => {
+    const view = buildAssistantView({
+      conversationId: 1,
+      messages: [message({id: 1, text: '**a**'}), message({id: 2, role: 'user', text: '**b**'})],
+      plans: {},
+      refs,
+      activeRun: null,
+      error: null,
+    }, (text, mentions) => `<b>${text}</b>${Object.keys(mentions).join()}`);
+
+    expect(view.messages[0].html).toBe('<b>**a**</b>prod:5');
+    expect(view.messages[1].html).toBeNull();
+  });
+
   it('offers no approval while a run is active or once the plan has moved on', () => {
     const input = {
       conversationId: 1,
@@ -99,7 +133,7 @@ describe('buildAssistantView', () => {
       error: null,
     };
 
-    expect(buildAssistantView({...input, plans: {3: plan({})}, activeRun: {id: 1, type: 'chat', status: 'running', steps: 0, error: null, startedAt: 0}}).messages[0].plan!.canApprove).toBe(false);
+    expect(buildAssistantView({...input, plans: {3: plan({})}, activeRun: {id: 1, type: 'chat', status: 'running', steps: 0, error: null, startedAt: 0, stopRequested: false}}).messages[0].plan!.canApprove).toBe(false);
     expect(buildAssistantView({...input, plans: {3: plan({status: 'superseded'})}, activeRun: null}).messages[0].plan!.canApprove).toBe(false);
   });
 });

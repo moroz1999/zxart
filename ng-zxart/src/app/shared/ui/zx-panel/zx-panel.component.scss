@@ -25,6 +25,15 @@
     border: var(--zx-panel-flat-border);
   }
 
+  // a tinted surface is told apart by its fill, so a flat one drops the border
+  &.zx-panel--surface-muted { background-color: var(--zx-panel-bg-muted); }
+  &.zx-panel--surface-primary { background-color: var(--zx-panel-bg-primary); }
+
+  &.zx-panel--flat.zx-panel--surface-muted,
+  &.zx-panel--flat.zx-panel--surface-primary {
+    border: 0;
+  }
+
   &.zx-panel--stripe-primary,
   &.zx-panel--stripe-artist,
   &.zx-panel--stripe-coder {

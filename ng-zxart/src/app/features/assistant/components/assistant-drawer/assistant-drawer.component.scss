@@ -1,72 +1,46 @@
+// the drawer's contour: a full-height overlay on the right
 :host {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   z-index: var(--zx-assistant-drawer-z-index);
-  display: flex;
-  flex-direction: column;
   width: var(--zx-assistant-drawer-width);
   max-width: 100vw;
   background: var(--zx-assistant-drawer-bg);
-  color: var(--text-color);
   box-shadow: var(--zx-assistant-drawer-shadow);
 }
 
-.ad-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-8) var(--space-12);
-  border-bottom: var(--zx-assistant-plan-border);
+.ast-body {
+  height: 100%;
 }
 
-.ad-title {
-  font-weight: 600;
+.ast-header {
+  border-bottom: var(--zx-assistant-divider);
 }
 
-.ad-header-tools {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.ad-stream {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+.ast-list {
+  max-height: var(--zx-assistant-list-max-height);
   overflow-y: auto;
-  padding: var(--space-12);
+  border-bottom: var(--zx-assistant-divider);
 }
 
-.ad-empty,
-.ad-running {
-  color: var(--zx-assistant-muted-color);
-  font-size: var(--font-sm);
+// the stream takes the rest of the height and scrolls on its own
+.ast-stream {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
-.ad-running {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
+.ast-composer {
+  border-top: var(--zx-assistant-divider);
 }
 
-.ad-error {
-  padding: var(--space-4) var(--space-12);
-  color: var(--zx-assistant-danger-color);
-  font-size: var(--font-sm);
+.ast-context {
+  min-width: 0;
 }
 
-.ad-composer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-8);
-  padding: var(--space-12);
-  border-top: var(--zx-assistant-plan-border);
-
-  zx-textarea {
-    align-self: stretch;
-  }
+.ast-icon {
+  width: var(--zx-assistant-icon-size);
+  height: var(--zx-assistant-icon-size);
 }

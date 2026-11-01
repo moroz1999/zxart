@@ -1,5 +1,7 @@
 import {Inject, Injectable, InjectionToken} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {filter, map, startWith} from 'rxjs/operators';
 import {AssistantPage} from '../../../shared/models/assistant-data';
 
 export const ASSISTANT_ORIGIN = new InjectionToken<string>('ASSISTANT_ORIGIN', {
@@ -23,10 +25,19 @@ const ENTITY_ROUTES: Readonly<Record<string, string>> = {
  */
 @Injectable({providedIn: 'root'})
 export class AssistantPageContextService {
+  /** The page, again after every navigation. */
+  readonly page$: Observable<AssistantPage>;
+
   constructor(
     private readonly router: Router,
     @Inject(ASSISTANT_ORIGIN) private readonly origin: string,
-  ) {}
+  ) {
+    this.page$ = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      startWith(null),
+      map(() => this.current()),
+    );
+  }
 
   current(): AssistantPage {
     const path = this.router.url;

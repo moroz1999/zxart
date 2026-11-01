@@ -70,9 +70,10 @@ final readonly class ConversationHistory
                 (string)($payload['callId'] ?? ''),
                 PlanProposer::TOOL_NAME,
                 (string)($payload['arguments'] ?? ''),
-                'Plan ' . (int)($payload['planId'] ?? 0) . ' is proposed and waits for the user to approve it.',
+                PlanProposer::proposedNote((int)($payload['planId'] ?? 0)),
             ),
             MessageKind::PlanProgress => [new LlmMessageDto(LlmRole::System, $message->text)],
+            MessageKind::Stopped => [new LlmMessageDto(LlmRole::System, 'The user stopped the assistant here.')],
             MessageKind::Error => [],
         };
     }

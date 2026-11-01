@@ -132,6 +132,61 @@ final class AssistantChatServiceTest extends WriteToolTestCase
         self::assertNull($state->activeRun);
     }
 
+    public function testTheUsersConversationsAreListedWithTheRunningOnesMarked(): void
+    {
+        $service = $this->service();
+        $idle = $service->create(self::USER_ID);
+        $busy = $service->create(self::USER_ID);
+        $service->send(self::USER_ID, $busy->id, 'Найди Elite', null);
+        $service->create(self::OTHER_USER_ID);
+
+        $listed = $service->list(self::USER_ID);
+
+        self::assertSame([$busy->id, $idle->id], array_map(static fn($item): int => $item->id, $listed));
+        self::assertSame('Найди Elite', $listed[0]->title);
+        self::assertTrue($listed[0]->running);
+        self::assertFalse($listed[1]->running);
+    }
+
+    public function testADeletedConversationIsGone(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+
+        $service->delete(self::USER_ID, $conversation->id);
+
+        $this->assertAssistantRefused(404, fn() => $service->state(self::USER_ID, $conversation->id, 0));
+    }
+
+    public function testAConversationIsNotDeletedWhileARunWorksOnIt(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+        $service->send(self::USER_ID, $conversation->id, 'one', null);
+
+        $this->assertAssistantRefused(409, fn() => $service->delete(self::USER_ID, $conversation->id));
+    }
+
+    public function testAnotherUsersConversationCannotBeDeletedOrStopped(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::OTHER_USER_ID);
+
+        $this->assertAssistantRefused(404, fn() => $service->delete(self::USER_ID, $conversation->id));
+        $this->assertAssistantRefused(404, fn() => $service->stop(self::USER_ID, $conversation->id));
+    }
+
+    public function testStoppingAsksTheActiveRunToStop(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+        $runId = $service->send(self::USER_ID, $conversation->id, 'one', null);
+
+        $service->stop(self::USER_ID, $conversation->id);
+
+        self::assertTrue($this->container->get(RunsDbal::class)->find($runId)?->stopRequested);
+    }
+
     private function service(): AssistantChatService
     {
         return $this->container->get(AssistantChatService::class);

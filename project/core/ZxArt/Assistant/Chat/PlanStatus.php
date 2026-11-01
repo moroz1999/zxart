@@ -10,6 +10,8 @@ enum PlanStatus: string
     case Executing = 'executing';
     case Done = 'done';
     case Failed = 'failed';
+    /** The user stopped it; the actions left were skipped. */
+    case Stopped = 'stopped';
     /** The user sent another message instead of approving it. */
     case Superseded = 'superseded';
 }

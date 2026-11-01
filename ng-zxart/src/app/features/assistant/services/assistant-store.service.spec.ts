@@ -70,6 +70,49 @@ describe('AssistantStore', () => {
     expect((await firstValueFrom(store.view$)).error).toBe('Still working');
   });
 
+  it('lists the conversations and switches to the one picked', async () => {
+    const api = {
+      list: vi.fn().mockReturnValue(of([{id: 9, title: 'Old', lastMessageAt: 0, running: false}])),
+      get: vi.fn().mockReturnValue(of(state({conversationId: 9, messages: [message(1)]}))),
+    };
+    const local = storage({'assistant-conversation': 5});
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, local, pageContext);
+
+    await firstValueFrom(store.loadConversations());
+    expect((await firstValueFrom(store.conversations$)).map(item => item.title)).toEqual(['Old']);
+
+    store.select(9);
+    await firstValueFrom(store.refresh());
+
+    expect(local.get('assistant-conversation')).toBe(9);
+    expect(api.get).toHaveBeenCalledWith(9, 0);
+    expect((await firstValueFrom(store.view$)).messages).toHaveLength(1);
+  });
+
+  it('deletes a conversation, forgetting it when it is the open one', async () => {
+    const api = {
+      delete: vi.fn().mockReturnValue(of([])),
+      list: vi.fn().mockReturnValue(of([])),
+    };
+    const local = storage({'assistant-conversation': 5});
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, local, pageContext);
+
+    await firstValueFrom(store.delete(5));
+
+    expect(api.delete).toHaveBeenCalledWith(5);
+    expect(local.get('assistant-conversation')).toBeNull();
+    expect(await firstValueFrom(store.conversations$)).toEqual([]);
+  });
+
+  it('asks the open conversation to stop', async () => {
+    const api = {stop: vi.fn().mockReturnValue(of([]))};
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, storage({'assistant-conversation': 5}), pageContext);
+
+    await firstValueFrom(store.stop(), {defaultValue: undefined});
+
+    expect(api.stop).toHaveBeenCalledWith(5);
+  });
+
   it('starts over without a request when a new conversation is asked for', async () => {
     const local = storage({'assistant-conversation': 5});
     const store = new AssistantStore({} as AssistantDataApiService, local, pageContext);

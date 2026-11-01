@@ -14,6 +14,7 @@ use ZxArt\Assistant\Chat\Dbal\PlansDbal;
 use ZxArt\Assistant\Chat\Dbal\RunsDbal;
 use ZxArt\Assistant\Chat\Dto\ConversationDto;
 use ZxArt\Assistant\Chat\Dto\ConversationStateDto;
+use ZxArt\Assistant\Chat\Dto\ConversationSummaryDto;
 use ZxArt\Assistant\Chat\Dto\PageDto;
 use ZxArt\Assistant\Chat\Dto\RunDto;
 use ZxArt\Shared\References\EntityMentionLookup;
@@ -44,6 +45,49 @@ final readonly class AssistantChatService
     public function create(int $userId): ConversationDto
     {
         return $this->conversation($userId, $this->conversations->create($userId, time()));
+    }
+
+    /**
+     * @return list<ConversationSummaryDto> latest activity first
+     */
+    public function list(int $userId): array
+    {
+        $conversations = $this->conversations->findByUser($userId);
+        $running = $this->runs->findRunningConversationIds(array_map(static fn(ConversationDto $conversation): int => $conversation->id, $conversations));
+
+        return array_map(
+            static fn(ConversationDto $conversation): ConversationSummaryDto => new ConversationSummaryDto(
+                $conversation->id,
+                $conversation->title,
+                $conversation->lastMessageAt,
+                in_array($conversation->id, $running, true),
+            ),
+            $conversations,
+        );
+    }
+
+    /**
+     * @throws AssistantException
+     */
+    public function delete(int $userId, int $conversationId): void
+    {
+        $this->conversation($userId, $conversationId);
+        $this->assertNoActiveRun($conversationId);
+        $this->conversations->delete($conversationId);
+    }
+
+    /**
+     * Asks the active run to stop before its next step; nothing to do without one.
+     *
+     * @throws AssistantException
+     */
+    public function stop(int $userId, int $conversationId): void
+    {
+        $this->conversation($userId, $conversationId);
+        $run = $this->activeRun($conversationId);
+        if ($run !== null) {
+            $this->runs->requestStop($run->id);
+        }
     }
 
     /**
@@ -134,18 +178,28 @@ final readonly class AssistantChatService
     }
 
     /**
+     * Executes the plan, then lets the assistant sum up what came of it —
+     * unless the user stopped the execution.
+     *
      * @throws Throwable
      */
     public function continueExecution(int $runId, int $planId): void
     {
+        $plan = $this->plans->find($planId) ?? throw new AssistantException('Plan not found', 404);
         try {
-            $this->planExecutor->execute($planId);
+            $planStatus = $this->planExecutor->execute($planId, $runId);
         } catch (Throwable $throwable) {
             $this->runs->finish($runId, RunStatus::Failed, $throwable->getMessage(), time());
             throw $throwable;
         }
-        $status = $this->plans->find($planId)?->status === PlanStatus::Done ? RunStatus::Done : RunStatus::Failed;
-        $this->runs->finish($runId, $status, null, time());
+        $this->runs->finish($runId, match ($planStatus) {
+            PlanStatus::Done => RunStatus::Done,
+            PlanStatus::Stopped => RunStatus::Stopped,
+            default => RunStatus::Failed,
+        }, null, time());
+        if ($planStatus !== PlanStatus::Stopped) {
+            $this->agentRunner->run($this->runs->start($plan->conversationId, RunType::Chat, time()));
+        }
     }
 
     private function activeRun(int $conversationId): ?RunDto

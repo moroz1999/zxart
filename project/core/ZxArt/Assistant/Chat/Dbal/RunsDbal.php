@@ -12,11 +12,11 @@ use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
 
 /**
- * @psalm-type RunRow = array{id: int|string, conversationId: int|string, type: string, status: string, steps: int|string, tokensIn: int|string, tokensOut: int|string, error: string|null, startedAt: int|string, finishedAt: int|string|null}
+ * @psalm-type RunRow = array{id: int|string, conversationId: int|string, type: string, status: string, steps: int|string, tokensIn: int|string, tokensOut: int|string, error: string|null, startedAt: int|string, finishedAt: int|string|null, stopRequested: int|string}
  */
 final readonly class RunsDbal extends AbstractDbal
 {
-    private const array COLUMNS = ['id', 'conversationId', 'type', 'status', 'steps', 'tokensIn', 'tokensOut', 'error', 'startedAt', 'finishedAt'];
+    private const array COLUMNS = ['id', 'conversationId', 'type', 'status', 'steps', 'tokensIn', 'tokensOut', 'error', 'startedAt', 'finishedAt', 'stopRequested'];
 
     public function __construct(
         private Connection $db,
@@ -55,6 +55,32 @@ final readonly class RunsDbal extends AbstractDbal
         return $row === null ? null : $this->toDto($row);
     }
 
+    /**
+     * @param list<int> $conversationIds
+     * @return list<int> those with a running run
+     */
+    public function findRunningConversationIds(array $conversationIds): array
+    {
+        if ($conversationIds === []) {
+            return [];
+        }
+        /** @var list<int|string> $ids */
+        $ids = $this->db->table($this->tableName(DatabaseTable::AiRun))
+            ->whereIn('conversationId', $conversationIds)
+            ->where('status', '=', RunStatus::Running->value)
+            ->distinct()
+            ->pluck('conversationId');
+
+        return array_map(static fn(int|string $id): int => (int)$id, $ids);
+    }
+
+    public function requestStop(int $id): void
+    {
+        $this->db->table($this->tableName(DatabaseTable::AiRun))
+            ->where('id', '=', $id)
+            ->update(['stopRequested' => 1]);
+    }
+
     public function recordStep(int $id, int $tokensIn, int $tokensOut): void
     {
         $this->db->table($this->tableName(DatabaseTable::AiRun))
@@ -89,6 +115,7 @@ final readonly class RunsDbal extends AbstractDbal
             error: $row['error'],
             startedAt: (int)$row['startedAt'],
             finishedAt: $row['finishedAt'] === null ? null : (int)$row['finishedAt'],
+            stopRequested: (int)$row['stopRequested'] === 1,
         );
     }
 }

@@ -78,6 +78,38 @@ final class ChatDbalTest extends TestCase
         self::assertNull($this->conversations->find(999_999_999));
     }
 
+    public function testAUsersConversationsAreListedLatestFirst(): void
+    {
+        $older = $this->conversations->create(self::USER_ID, self::NOW);
+        $newer = $this->conversations->create(self::USER_ID, self::NOW + 10);
+        $this->conversations->create(self::USER_ID + 1, self::NOW + 20);
+
+        self::assertSame([$newer, $older], array_map(
+            static fn(ConversationDto $conversation): int => $conversation->id,
+            $this->conversations->findByUser(self::USER_ID),
+        ));
+    }
+
+    public function testTheConversationsWithARunningRunAreFound(): void
+    {
+        $idle = $this->conversations->create(self::USER_ID, self::NOW);
+        $busy = $this->conversations->create(self::USER_ID, self::NOW);
+        $this->runs->start($busy, RunType::Chat, self::NOW);
+        $this->runs->finish($this->runs->start($idle, RunType::Chat, self::NOW), RunStatus::Done, null, self::NOW);
+
+        self::assertSame([$busy], $this->runs->findRunningConversationIds([$idle, $busy]));
+        self::assertSame([], $this->runs->findRunningConversationIds([]));
+    }
+
+    public function testAStopRequestIsKeptOnTheRun(): void
+    {
+        $runId = $this->runs->start($this->conversations->create(self::USER_ID, self::NOW), RunType::Chat, self::NOW);
+
+        $this->runs->requestStop($runId);
+
+        self::assertTrue($this->runs->find($runId)?->stopRequested);
+    }
+
     public function testMessagesAreNumberedInTheOrderTheyAreAppended(): void
     {
         $conversationId = $this->conversations->create(self::USER_ID, self::NOW);
@@ -136,6 +168,7 @@ final class ChatDbalTest extends TestCase
             error: null,
             startedAt: self::NOW,
             finishedAt: null,
+            stopRequested: false,
         ), $this->runs->findActive($conversationId));
 
         $this->runs->finish($runId, RunStatus::Failed, 'model unavailable', self::NOW + 9);
@@ -199,7 +232,7 @@ final class ChatDbalTest extends TestCase
         $runId = $this->runs->start($conversationId, RunType::Chat, self::NOW);
         $planId = $this->plans->create($conversationId, 'Fix', [], self::NOW);
 
-        $this->db->table('ai_conversation')->where('id', '=', $conversationId)->delete();
+        $this->conversations->delete($conversationId);
 
         self::assertSame([], $this->messages->findAfter($conversationId, 0));
         self::assertNull($this->runs->find($runId));

@@ -1,0 +1,29 @@
+<zx-stack gap="xs">
+  @if (conversations.length === 0) {
+    <div appText="bodySm" tone="muted">{{ 'assistant.no-conversations' | translate }}</div>
+  }
+  @for (conversation of conversations; track conversation.id) {
+    <zx-inline gap="sm" align="center">
+      <zx-button
+        class="ac-pick"
+        size="sm"
+        [color]="conversation.id === currentId ? 'secondary' : 'transparent'"
+        (click)="picked.emit(conversation.id)"
+      >{{ conversation.title || ('assistant.untitled' | translate) }}</zx-button>
+      <span appText="caption" tone="muted">{{ conversation.lastMessageAt * 1000 | date: 'short' }}</span>
+      @if (conversation.running) {
+        <zx-spinner size="xs"></zx-spinner>
+      } @else {
+        <zx-button
+          size="sm"
+          color="transparent"
+          [square]="true"
+          [ariaLabel]="'assistant.delete' | translate"
+          (click)="deleted.emit(conversation)"
+        >
+          <svg-icon name="delete" class="ac-icon" aria-hidden="true"></svg-icon>
+        </zx-button>
+      }
+    </zx-inline>
+  }
+</zx-stack>

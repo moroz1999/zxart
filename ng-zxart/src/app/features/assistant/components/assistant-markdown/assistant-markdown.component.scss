@@ -1,0 +1,18 @@
+// wide code blocks scroll inside the message instead of widening the drawer
+:host {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: anywhere;
+}
+
+// the bubble's padding is the only space around the prose: the rendered
+// HTML's outer paragraphs give up their browser margins (bound HTML carries
+// no encapsulation attribute, hence ::ng-deep under the component's own div)
+.amd-body ::ng-deep > :first-child {
+  margin-top: 0;
+}
+
+.amd-body ::ng-deep > :last-child {
+  margin-bottom: 0;
+}

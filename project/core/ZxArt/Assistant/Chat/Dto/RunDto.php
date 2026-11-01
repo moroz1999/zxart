@@ -26,6 +26,7 @@ final readonly class RunDto
         public ?string $error,
         public int $startedAt,
         public ?int $finishedAt,
+        public bool $stopRequested,
     ) {
     }
 }

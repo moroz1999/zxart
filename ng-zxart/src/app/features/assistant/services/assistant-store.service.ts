@@ -1,13 +1,14 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, EMPTY, Observable, of, timer} from 'rxjs';
-import {catchError, distinctUntilChanged, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, EMPTY, from, Observable, of, timer} from 'rxjs';
+import {catchError, distinctUntilChanged, exhaustMap, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {AssistantDataApiService} from '../../../shared/api/assistant-data-api.service';
-import {AssistantPlan, AssistantRun, AssistantState} from '../../../shared/models/assistant-data';
+import {AssistantConversationSummary, AssistantPlan, AssistantRun, AssistantState} from '../../../shared/models/assistant-data';
 import {LocalStorageService} from '../../../shared/services/local-storage.service';
 import {AssistantView} from '../models/assistant-view';
 import {AssistantPageContextService} from './assistant-page-context.service';
 import {AssistantViewInput, buildAssistantView} from './assistant-view';
+import {AssistantMarkdownRenderer, createAssistantMarkdown} from './assistant-markdown';
 
 const CONVERSATION_KEY = 'assistant-conversation';
 const FAST_POLL_MS = 2000;
@@ -25,6 +26,10 @@ interface StoreState extends AssistantViewInput {
 @Injectable({providedIn: 'root'})
 export class AssistantStore {
   private readonly state: BehaviorSubject<StoreState>;
+  private readonly conversations = new BehaviorSubject<AssistantConversationSummary[]>([]);
+
+  /** The user's conversations as last loaded by {@see loadConversations}. */
+  readonly conversations$ = this.conversations.asObservable();
 
   readonly view$: Observable<AssistantView>;
 
@@ -37,11 +42,22 @@ export class AssistantStore {
     private readonly pageContext: AssistantPageContextService,
   ) {
     this.state = new BehaviorSubject<StoreState>(this.emptyState(this.storage.get<number>(CONVERSATION_KEY)));
-    this.view$ = this.state.pipe(map(buildAssistantView));
+    // Markdown arrives in a chunk of its own; until then prose is plain text
+    const markdown$: Observable<AssistantMarkdownRenderer | null> = from(import('marked')).pipe(
+      map(markedModule => createAssistantMarkdown(markedModule)),
+      catchError(() => of(null)),
+      startWith(null),
+      shareReplay({bufferSize: 1, refCount: false}),
+    );
+    this.view$ = combineLatest([this.state, markdown$]).pipe(map(([state, markdown]) => buildAssistantView(state, markdown)));
     this.polling$ = this.state.pipe(
-      map(state => state.conversationId === null ? null : state.activeRun !== null ? FAST_POLL_MS : IDLE_POLL_MS),
-      distinctUntilChanged(),
-      switchMap(period => period === null ? EMPTY : timer(0, period)),
+      map(state => ({
+        conversationId: state.conversationId,
+        period: state.activeRun !== null ? FAST_POLL_MS : IDLE_POLL_MS,
+      })),
+      // another conversation or another pace starts over with a fetch at once
+      distinctUntilChanged((a, b) => a.conversationId === b.conversationId && a.period === b.period),
+      switchMap(({conversationId, period}) => conversationId === null ? EMPTY : timer(0, period)),
       exhaustMap(() => this.refresh()),
     );
   }
@@ -82,6 +98,52 @@ export class AssistantStore {
   approvePlan(planId: number): Observable<void> {
     return this.api.approvePlan(planId).pipe(
       tap(started => this.markRunning(started.runId, 'execute')),
+      map(() => undefined),
+      catchError((error: unknown) => {
+        this.fail(error);
+        return EMPTY;
+      }),
+    );
+  }
+
+  loadConversations(): Observable<void> {
+    return this.api.list().pipe(
+      tap(conversations => this.conversations.next(conversations)),
+      map(() => undefined),
+      catchError((error: unknown) => {
+        this.fail(error);
+        return EMPTY;
+      }),
+    );
+  }
+
+  /** Opens another conversation; the poll fetches it. */
+  select(conversationId: number): void {
+    this.storage.set(CONVERSATION_KEY, conversationId);
+    this.state.next(this.emptyState(conversationId));
+  }
+
+  delete(conversationId: number): Observable<void> {
+    return this.api.delete(conversationId).pipe(
+      tap(() => {
+        if (this.state.getValue().conversationId === conversationId) {
+          this.startNew();
+        }
+      }),
+      switchMap(() => this.loadConversations()),
+      catchError((error: unknown) => {
+        this.fail(error);
+        return EMPTY;
+      }),
+    );
+  }
+
+  stop(): Observable<void> {
+    const conversationId = this.state.getValue().conversationId;
+    if (conversationId === null) {
+      return EMPTY;
+    }
+    return this.api.stop(conversationId).pipe(
       map(() => undefined),
       catchError((error: unknown) => {
         this.fail(error);
@@ -132,7 +194,7 @@ export class AssistantStore {
   }
 
   private markRunning(runId: number, type: AssistantRun['type']): void {
-    const run: AssistantRun = {id: runId, type, status: 'running', steps: 0, error: null, startedAt: Date.now() / 1000};
+    const run: AssistantRun = {id: runId, type, status: 'running', steps: 0, error: null, startedAt: Date.now() / 1000, stopRequested: false};
     this.state.next({...this.state.getValue(), activeRun: run, error: null});
   }
 

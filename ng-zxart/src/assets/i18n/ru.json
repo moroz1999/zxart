@@ -2300,7 +2300,8 @@
       "executing": "Выполняется",
       "done": "Выполнен",
       "failed": "Ошибка",
-      "superseded": "Заменён"
+      "superseded": "Заменён",
+      "stopped": "Остановлен"
     },
     "action-status": {
       "pending": "Ожидает",
@@ -2318,6 +2319,17 @@
       "unlink": "Отвязать",
       "attachFile": "Добавить файл",
       "deleteFile": "Удалить файл"
+    },
+    "conversations": "Разговоры",
+    "no-conversations": "Разговоров пока нет",
+    "untitled": "Без названия",
+    "delete": "Удалить",
+    "stop": "Стоп",
+    "details": "Подробности",
+    "context": "Контекст",
+    "delete-confirm": {
+      "title": "Удалить разговор?",
+      "message": "«{{title}}» будет удалён вместе с сообщениями и планами."
     }
   }
 }

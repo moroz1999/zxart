@@ -15,10 +15,10 @@ info:
 paths:
   /assistant-data/:
     get:
-      summary: What is new in a conversation
+      summary: The user's conversations (`list`), or what is new in one (`get`)
       parameters:
-        - {in: query, name: action, required: true, schema: {type: string, enum: [get]}}
-        - {in: query, name: id, required: true, schema: {type: integer}}
+        - {in: query, name: action, required: true, schema: {type: string, enum: [list, get]}}
+        - {in: query, name: id, required: false, description: For `get`., schema: {type: integer}}
         - in: query
           name: afterSeq
           required: false
@@ -26,17 +26,27 @@ paths:
           schema: {type: integer}
       responses:
         '200':
-          description: The messages after `afterSeq`, every plan, the active run and the entities they mention
+          description: >
+            `list`: the conversations, latest activity first. `get`: the messages after `afterSeq`,
+            every plan, the active run and the entities they mention.
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/AssistantState'}
+              schema:
+                oneOf:
+                  - type: array
+                    items: {$ref: '#/components/schemas/AssistantConversationSummary'}
+                  - $ref: '#/components/schemas/AssistantState'
         '401': {$ref: '#/components/responses/Error'}
         '403': {$ref: '#/components/responses/Error'}
         '404': {$ref: '#/components/responses/Error'}
     post:
-      summary: Create a conversation, send a message or approve a plan
+      summary: Create, send, approve a plan, stop the active run, or delete a conversation
+      description: >
+        `stop` asks the active run to stop before its next step (nothing happens without one).
+        `delete` removes the conversation with its messages, runs and plans; refused with 409 while a run works on it.
+        Both answer an empty array.
       parameters:
-        - {in: query, name: action, required: true, schema: {type: string, enum: [create, send, approvePlan]}}
+        - {in: query, name: action, required: true, schema: {type: string, enum: [create, send, approvePlan, stop, delete]}}
       requestBody:
         required: false
         description: None for `create`.
@@ -46,6 +56,7 @@ paths:
               oneOf:
                 - $ref: '#/components/schemas/AssistantSendRequest'
                 - $ref: '#/components/schemas/AssistantApprovePlanRequest'
+                - $ref: '#/components/schemas/AssistantConversationIdRequest'
       responses:
         '200':
           description: The new conversation (`create`) or the run that started (`send`, `approvePlan`)
@@ -80,6 +91,18 @@ components:
         title: {type: string}
         createdAt: {type: integer}
         lastMessageAt: {type: integer}
+    AssistantConversationSummary:
+      type: object
+      properties:
+        id: {type: integer}
+        title: {type: string}
+        lastMessageAt: {type: integer}
+        running: {type: boolean, description: A run is working on it.}
+    AssistantConversationIdRequest:
+      type: object
+      required: [conversationId]
+      properties:
+        conversationId: {type: integer}
     AssistantRunStarted:
       type: object
       properties:
@@ -108,7 +131,7 @@ components:
         id: {type: integer}
         seq: {type: integer}
         role: {type: string, enum: [user, assistant]}
-        kind: {type: string, enum: [text, toolCall, plan, planProgress, error]}
+        kind: {type: string, enum: [text, toolCall, plan, planProgress, error, stopped]}
         text:
           type: string
           description: Entities are mentioned as `[[type:id]]`; `refs` resolves them.
@@ -124,7 +147,7 @@ components:
       properties:
         id: {type: integer}
         title: {type: string}
-        status: {type: string, enum: [proposed, executing, done, failed, superseded]}
+        status: {type: string, enum: [proposed, executing, done, failed, stopped, superseded]}
         actions:
           type: array
           items:
@@ -148,10 +171,11 @@ components:
       properties:
         id: {type: integer}
         type: {type: string, enum: [chat, execute]}
-        status: {type: string, enum: [running, done, waitingApproval, failed]}
+        status: {type: string, enum: [running, done, waitingApproval, failed, stopped]}
         steps: {type: integer}
         error: {type: string, nullable: true}
         startedAt: {type: integer}
+        stopRequested: {type: boolean}
     AssistantState:
       type: object
       properties:

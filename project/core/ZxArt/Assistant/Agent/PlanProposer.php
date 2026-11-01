@@ -44,6 +44,14 @@ final readonly class PlanProposer
     }
 
     /**
+     * What the model is told once its plan is proposed.
+     */
+    public static function proposedNote(int $planId): string
+    {
+        return "Plan $planId is proposed and waits for the user to approve it.";
+    }
+
+    /**
      * @throws JsonException
      */
     public function tool(): LlmToolDto

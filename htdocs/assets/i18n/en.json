@@ -2302,7 +2302,8 @@
       "executing": "Running",
       "done": "Done",
       "failed": "Failed",
-      "superseded": "Replaced"
+      "superseded": "Replaced",
+      "stopped": "Stopped"
     },
     "action-status": {
       "pending": "Pending",
@@ -2320,6 +2321,17 @@
       "unlink": "Unlink",
       "attachFile": "Attach file",
       "deleteFile": "Delete file"
+    },
+    "conversations": "Conversations",
+    "no-conversations": "No conversations yet",
+    "untitled": "Untitled",
+    "delete": "Delete",
+    "stop": "Stop",
+    "details": "Details",
+    "context": "Context",
+    "delete-confirm": {
+      "title": "Delete the conversation?",
+      "message": "«{{title}}» will be deleted with its messages and plans."
     }
   }
 }

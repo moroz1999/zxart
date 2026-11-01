@@ -14,6 +14,7 @@ import {
   AssistantSegment,
   AssistantView,
 } from '../models/assistant-view';
+import {AssistantMarkdownRenderer} from './assistant-markdown';
 
 export interface AssistantViewInput {
   conversationId: number | null;
@@ -46,17 +47,23 @@ export function mentionSegments(text: string, refs: Record<string, AssistantMent
   return segments;
 }
 
-export function buildAssistantView(input: AssistantViewInput): AssistantView {
+export function buildAssistantView(input: AssistantViewInput, markdown: AssistantMarkdownRenderer | null = null): AssistantView {
   const running = input.activeRun !== null;
   return {
+    conversationId: input.conversationId,
     hasConversation: input.conversationId !== null,
-    messages: input.messages.map(message => messageView(message, input, running)),
+    messages: input.messages.map(message => messageView(message, input, running, markdown)),
     running,
     error: input.error,
   };
 }
 
-function messageView(message: AssistantMessage, input: AssistantViewInput, running: boolean): AssistantMessageView {
+function messageView(
+  message: AssistantMessage,
+  input: AssistantViewInput,
+  running: boolean,
+  markdown: AssistantMarkdownRenderer | null,
+): AssistantMessageView {
   const payload = message.payload;
   const planId = message.kind === 'plan' && typeof payload?.['planId'] === 'number' ? payload['planId'] : null;
   const plan = planId !== null ? input.plans[planId] : undefined;
@@ -65,8 +72,9 @@ function messageView(message: AssistantMessage, input: AssistantViewInput, runni
     role: message.role,
     kind: message.kind,
     segments: mentionSegments(message.text, input.refs),
+    html: markdown !== null && message.kind === 'text' && message.role === 'assistant' ? markdown(message.text, input.refs) : null,
     toolName: message.kind === 'toolCall' && typeof payload?.['tool'] === 'string' ? payload['tool'] : null,
-    details: payload !== null && message.kind === 'toolCall' ? JSON.stringify(payload, null, 2) : null,
+    details: plan ? JSON.stringify(plan, null, 2) : payload !== null ? JSON.stringify(payload, null, 2) : null,
     failed: payload?.['failed'] === true,
     plan: plan ? planView(plan, input.refs, running) : null,
   };

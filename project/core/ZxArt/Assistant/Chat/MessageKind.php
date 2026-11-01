@@ -16,4 +16,6 @@ enum MessageKind: string
     case PlanProgress = 'planProgress';
     /** A run that failed. */
     case Error = 'error';
+    /** A run the user stopped. */
+    case Stopped = 'stopped';
 }

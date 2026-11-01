@@ -34,6 +34,26 @@ describe('AssistantDataApiService', () => {
     expect(result).toEqual({runId: 9});
   });
 
+  it('list asks for the conversations', async () => {
+    const http = {get: vi.fn().mockReturnValue(of([]))};
+    const service = new AssistantDataApiService(http as unknown as HttpClient);
+
+    await firstValueFrom(service.list());
+
+    expect(http.get).toHaveBeenCalledWith('/assistant-data/', {params: {action: 'list'}});
+  });
+
+  it('delete and stop post the conversation', async () => {
+    const http = {post: vi.fn().mockReturnValue(of([]))};
+    const service = new AssistantDataApiService(http as unknown as HttpClient);
+
+    await firstValueFrom(service.delete(5));
+    await firstValueFrom(service.stop(6));
+
+    expect(http.post).toHaveBeenNthCalledWith(1, '/assistant-data/', {conversationId: 5}, {params: {action: 'delete'}});
+    expect(http.post).toHaveBeenNthCalledWith(2, '/assistant-data/', {conversationId: 6}, {params: {action: 'stop'}});
+  });
+
   it('approvePlan posts the plan', async () => {
     const http = {post: vi.fn().mockReturnValue(of({runId: 10}))};
     const service = new AssistantDataApiService(http as unknown as HttpClient);

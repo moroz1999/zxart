@@ -1,8 +1,8 @@
 /** Shapes of the `/assistant-data/` endpoint. */
 
-export type AssistantMessageKind = 'text' | 'toolCall' | 'plan' | 'planProgress' | 'error';
-export type AssistantRunStatus = 'running' | 'done' | 'waitingApproval' | 'failed';
-export type AssistantPlanStatus = 'proposed' | 'executing' | 'done' | 'failed' | 'superseded';
+export type AssistantMessageKind = 'text' | 'toolCall' | 'plan' | 'planProgress' | 'error' | 'stopped';
+export type AssistantRunStatus = 'running' | 'done' | 'waitingApproval' | 'failed' | 'stopped';
+export type AssistantPlanStatus = 'proposed' | 'executing' | 'done' | 'failed' | 'stopped' | 'superseded';
 export type AssistantActionStatus = 'pending' | 'done' | 'failed' | 'skipped';
 
 export interface AssistantConversation {
@@ -10,6 +10,14 @@ export interface AssistantConversation {
   title: string;
   createdAt: number;
   lastMessageAt: number;
+}
+
+export interface AssistantConversationSummary {
+  id: number;
+  title: string;
+  lastMessageAt: number;
+  /** A run is working on it. */
+  running: boolean;
 }
 
 export interface AssistantMessage {
@@ -61,6 +69,7 @@ export interface AssistantRun {
   steps: number;
   error: string | null;
   startedAt: number;
+  stopRequested: boolean;
 }
 
 export interface AssistantMention {

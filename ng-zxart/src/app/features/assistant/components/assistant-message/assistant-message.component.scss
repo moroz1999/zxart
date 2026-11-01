@@ -1,46 +1,21 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 .am-bubble {
-  align-self: flex-start;
-  max-width: 90%;
-  padding: var(--space-8) var(--space-12);
-  border-radius: var(--zx-assistant-radius);
-  background: var(--zx-assistant-bubble-bg);
-
-  &--user {
-    align-self: flex-end;
-    background: var(--zx-assistant-user-bubble-bg);
-  }
+  max-width: var(--zx-assistant-bubble-max-width);
 }
 
-.am-line {
-  font-size: var(--font-xs);
-  color: var(--zx-assistant-muted-color);
-
-  &--failed {
-    color: var(--zx-assistant-danger-color);
-  }
-}
-
-.am-toggle {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
+.am-plan,
 .am-details {
-  max-height: 300px;
-  overflow: auto;
-  margin: var(--space-4) 0 0;
-  padding: var(--space-8);
-  border-radius: var(--zx-assistant-radius);
-  background: var(--zx-assistant-bubble-bg);
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  align-self: stretch;
+}
+
+.am-details-text {
+  max-height: var(--zx-assistant-details-max-height);
+}
+
+.am-icon {
+  width: var(--zx-assistant-icon-size);
+  height: var(--zx-assistant-icon-size);
 }

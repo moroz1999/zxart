@@ -144,6 +144,25 @@ final class AgentRunnerTest extends TestCase
         self::assertSame('The assistant took more than 3 steps and was stopped', end($this->messages())->text);
     }
 
+    public function testARunAskedToStopEndsBeforeItsNextStep(): void
+    {
+        $runs = $this->container->get(RunsDbal::class);
+        $llm = new ScriptedLlmClient([
+            new LlmReplyDto('', [new LlmToolCallDto('call_1', 'echo', '{"text":"a"}')], 1, 1),
+            new LlmReplyDto('never asked', [], 1, 1),
+        ]);
+        $llm->afterReply = static function (int $runId) use ($runs): void {
+            $runs->requestStop($runId);
+        };
+
+        $runId = $this->runAgent($llm);
+
+        self::assertCount(1, $llm->askedWith);
+        self::assertSame(RunStatus::Stopped, $runs->find($runId)?->status);
+        $last = end($this->messages());
+        self::assertSame(MessageKind::Stopped, $last->kind);
+    }
+
     private function runAgent(ScriptedLlmClient $llm, ?ToolRegistry $tools = null, int $maxSteps = 20): int
     {
         $runs = $this->container->get(RunsDbal::class);

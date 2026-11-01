@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
 use ZxArt\Assistant\Chat\Dbal\PlansDbal;
+use ZxArt\Assistant\Chat\Dbal\RunsDbal;
 use ZxArt\Assistant\Chat\MessageKind;
 use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Chat\PlanStatus;
@@ -21,8 +22,9 @@ use ZxArt\Assistant\Tools\WriteTool;
 
 /**
  * Runs an approved plan's actions in order, each through its write tool, and
- * stops at the first that fails. Every action's outcome is stored on the plan
- * and told in the conversation.
+ * stops at the first that fails, or before the next one once the user asks the
+ * run to stop. Every action's outcome is stored on the plan and told in the
+ * conversation.
  */
 final readonly class PlanExecutor
 {
@@ -34,22 +36,29 @@ final readonly class PlanExecutor
         private PlansDbal $plans,
         private MessagesDbal $messages,
         private ConversationsDbal $conversations,
+        private RunsDbal $runs,
     ) {
     }
 
     /**
+     * @param int $runId the run executing it, which the user may stop
+     * @return PlanStatus how the plan ended
      * @throws JsonException
      */
-    public function execute(int $planId): void
+    public function execute(int $planId, int $runId): PlanStatus
     {
         $plan = $this->plans->find($planId) ?? throw new RuntimeException("There is no plan $planId");
         $actions = $plan->actions;
         /** @var array<int, array<array-key, mixed>> $results by action number */
         $results = [];
-        $failed = false;
+        $status = PlanStatus::Done;
         foreach ($actions as $index => $action) {
             $number = $index + 1;
-            if ($failed) {
+            if ($status === PlanStatus::Done && $this->runs->find($runId)?->stopRequested === true) {
+                $status = PlanStatus::Stopped;
+                $this->tell($plan->conversationId, $planId, $number, "Plan $planId stopped by the user before action $number");
+            }
+            if ($status !== PlanStatus::Done) {
                 $actions[$index]['status'] = PlanActionStatus::Skipped->value;
                 continue;
             }
@@ -61,24 +70,31 @@ final readonly class PlanExecutor
                 $actions[$index]['result'] = $result;
                 $outcome = 'done. ' . json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (Exception $exception) {
-                $failed = true;
+                $status = PlanStatus::Failed;
                 $actions[$index]['status'] = PlanActionStatus::Failed->value;
                 $actions[$index]['error'] = $exception->getMessage();
                 $outcome = 'failed. ' . $exception->getMessage();
             }
             $this->plans->saveActions($planId, $actions);
-            $this->messages->append(
-                $plan->conversationId,
-                MessageRole::Assistant,
-                MessageKind::PlanProgress,
-                "Plan $planId, action $number ($toolName): $outcome",
-                ['planId' => $planId, 'action' => $number],
-                time(),
-            );
+            $this->tell($plan->conversationId, $planId, $number, "Plan $planId, action $number ($toolName): $outcome");
         }
         $this->plans->saveActions($planId, $actions);
-        $this->plans->finish($planId, $failed ? PlanStatus::Failed : PlanStatus::Done, time());
+        $this->plans->finish($planId, $status, time());
         $this->conversations->touch($plan->conversationId, time());
+
+        return $status;
+    }
+
+    private function tell(int $conversationId, int $planId, int $action, string $text): void
+    {
+        $this->messages->append(
+            $conversationId,
+            MessageRole::Assistant,
+            MessageKind::PlanProgress,
+            $text,
+            ['planId' => $planId, 'action' => $action],
+            time(),
+        );
     }
 
     /**

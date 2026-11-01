@@ -2299,7 +2299,8 @@
       "executing": "En ejecución",
       "done": "Hecho",
       "failed": "Error",
-      "superseded": "Reemplazado"
+      "superseded": "Reemplazado",
+      "stopped": "Detenido"
     },
     "action-status": {
       "pending": "Pendiente",
@@ -2317,6 +2318,17 @@
       "unlink": "Desvincular",
       "attachFile": "Adjuntar archivo",
       "deleteFile": "Eliminar archivo"
+    },
+    "conversations": "Conversaciones",
+    "no-conversations": "Aún no hay conversaciones",
+    "untitled": "Sin título",
+    "delete": "Eliminar",
+    "stop": "Detener",
+    "details": "Detalles",
+    "context": "Contexto",
+    "delete-confirm": {
+      "title": "¿Eliminar la conversación?",
+      "message": "«{{title}}» se eliminará con sus mensajes y planes."
     }
   }
 }
