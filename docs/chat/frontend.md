@@ -105,7 +105,7 @@ existing blocks (and never breaks a button the user is pressing).
 
 ## Checklist
 
-- [ ] `AssistantDataApiService` + models + spec
+- [x] `AssistantDataApiService` + models + spec
 - [ ] `AssistantStore`: load, send, stop, approve, delete, adaptive polling, merge by `seq` (+ spec)
 - [ ] `AssistantPageContextService` from router params (+ spec)
 - [ ] Header button behind `aiAssistant`; drawer in `spa-root`

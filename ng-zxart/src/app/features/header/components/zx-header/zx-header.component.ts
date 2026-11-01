@@ -9,6 +9,7 @@ import {
   PictureSettingsTriggerComponent
 } from '../../../picture-settings/components/picture-settings-trigger/picture-settings-trigger.component';
 import {LoginTriggerComponent} from '../login-trigger/login-trigger.component';
+import {AssistantTriggerComponent} from '../../../assistant/components/assistant-trigger/assistant-trigger.component';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
 import {environment} from '../../../../../environments/environment';
 
@@ -23,6 +24,7 @@ import {environment} from '../../../../../environments/environment';
     ThemeTriggerComponent,
     PictureSettingsTriggerComponent,
     LoginTriggerComponent,
+    AssistantTriggerComponent,
     SvgIconComponent,
     RouterLink,
   ],

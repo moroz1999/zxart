@@ -33,8 +33,11 @@ class CmsHttpResponse
         $this->statusTextList['302'] = 'Found';
         $this->statusTextList['304'] = 'Not Modified';
         $this->statusTextList['400'] = 'Bad Request';
+        $this->statusTextList['401'] = 'Unauthorized';
         $this->statusTextList['403'] = 'Forbidden';
         $this->statusTextList['404'] = 'Not Found';
+        $this->statusTextList['405'] = 'Method Not Allowed';
+        $this->statusTextList['409'] = 'Conflict';
         $this->statusTextList['500'] = 'Internal Server Error';
 
         $this->setStatusCode('200');

@@ -24,6 +24,8 @@ services:
       - DB_PASSWORD=zxart
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      # the AI assistant's key; a local copy has no live config (put it in .env)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
       - db
       - redis

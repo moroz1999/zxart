@@ -1,0 +1,27 @@
+:root {
+  /* Header trigger icon */
+  --zx-assistant-trigger-icon-size: 20px;
+  /* Drawer width on wide screens; phones get the full width */
+  --zx-assistant-drawer-width: 420px;
+  --zx-assistant-drawer-shadow: var(--shadow-lg);
+  --zx-assistant-drawer-z-index: 900;
+  --zx-assistant-radius: var(--space-8);
+  --zx-assistant-muted-color: var(--text-light-color);
+  --zx-assistant-danger-color: var(--error-color);
+  --zx-assistant-success-color: var(--primary-600);
+  --zx-assistant-plan-border: var(--border-light);
+}
+
+.dark-mode {
+  --zx-assistant-drawer-bg: var(--zx-panel-bg);
+  --zx-assistant-bubble-bg: var(--secondary-200);
+  --zx-assistant-user-bubble-bg: var(--primary-200);
+  --zx-assistant-plan-bg: var(--secondary-50);
+}
+
+.light-mode {
+  --zx-assistant-drawer-bg: var(--zx-panel-bg);
+  --zx-assistant-bubble-bg: var(--secondary-100);
+  --zx-assistant-user-bubble-bg: var(--primary-100);
+  --zx-assistant-plan-bg: var(--secondary-50);
+}

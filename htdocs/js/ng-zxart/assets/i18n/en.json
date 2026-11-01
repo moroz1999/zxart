@@ -2277,5 +2277,49 @@
     "previous": "Previous picture",
     "next": "Next picture",
     "close": "Close"
+  },
+  "assistant": {
+    "title": "Assistant",
+    "open": "AI assistant",
+    "close": "Close",
+    "new": "New conversation",
+    "empty": "Ask about the catalogue or describe what to fix. The assistant sees the page you are on.",
+    "placeholder": "Message… (Enter sends, Shift+Enter is a new line)",
+    "send": "Send",
+    "running": "Working…",
+    "tool-call": "Called {{tool}}",
+    "approve": "Approve plan",
+    "cancel": "Cancel",
+    "created-in-step": "created in step {{step}}",
+    "uses-result": "uses the result of step {{steps}}",
+    "approve-confirm": {
+      "title": "Approve the plan?",
+      "message": "{{count}} actions will be run in order.",
+      "message-destructive": "{{count}} actions will be run in order; {{destructive}} of them delete or merge data."
+    },
+    "plan-status": {
+      "proposed": "Waiting for approval",
+      "executing": "Running",
+      "done": "Done",
+      "failed": "Failed",
+      "superseded": "Replaced"
+    },
+    "action-status": {
+      "pending": "Pending",
+      "done": "Done",
+      "failed": "Failed",
+      "skipped": "Skipped"
+    },
+    "kind": {
+      "create": "Create",
+      "update": "Change",
+      "delete": "Delete",
+      "join": "Merge",
+      "convert": "Convert",
+      "link": "Link",
+      "unlink": "Unlink",
+      "attachFile": "Attach file",
+      "deleteFile": "Delete file"
+    }
   }
 }

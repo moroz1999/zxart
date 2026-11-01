@@ -176,3 +176,129 @@ them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
 the write tools, refusals at the preview, over `WriteToolTestCase`); `tests/Shared/Http/` and
 `tests/Shared/Images/` fetch from PHP's built-in
 server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.
+
+## Chat
+
+### Access
+
+`aiAssistant` is a site-wide privilege on the public root, like
+`editHardware` (declared in `root/structure.actions.php`). The migration
+`2026.11.01 - ai assistant.sql` grants it to the group `ai-assistant-users`.
+Membership is managed in the admin panel; a new member sees the assistant after
+their next login, because privileges are read from the session.
+
+### Storage
+
+InnoDB tables, one migration; deleting a conversation cascades to its rows.
+Each table has a Dbal class in `Assistant\Chat\Dbal`:
+
+| Table | Dbal | Holds |
+|---|---|---|
+| `ai_conversation` | `ConversationsDbal` | owner, title (the first message, cut to 80 characters), last activity |
+| `ai_message` | `MessagesDbal` | `seq` per conversation, `role`, `kind` (`MessageKind`), text, JSON payload |
+| `ai_run` | `RunsDbal` | `type` (`chat`, `execute`), `status` (`RunStatus`), steps, tokens, error |
+| `ai_plan` | `PlansDbal` | title, `status` (`PlanStatus`), its actions as one JSON column |
+
+`MessagesDbal::append()` gives a message the conversation's next `seq`; the
+client polls for everything after the last `seq` it holds.
+
+A plan action as stored: `tool`, `arguments` (the JSON as written),
+`preview` (the normalized `ChangePreviewDto`, or null), `dependsOn` (the
+actions it takes ids from), `status` (`PlanActionStatus`), `result`, `error`.
+
+### The model
+
+`Assistant\Llm\LlmClient` is a chat model that may answer with tool calls, in
+the assistant's own DTOs (`LlmMessageDto`, `LlmToolDto`, `LlmToolCallDto`,
+`LlmReplyDto`). `OpenAiLlmClient` implements it over the OpenAI **Responses
+API** with function tools (the configured model does not take function tools
+over chat completions), `store: false`, so every request carries the whole
+conversation. An image is sent as an `input_image` data URL inside a user
+message.
+
+Every exchange is logged to `temporary/logs/assistant/<date>.log` (path key
+`assistant_logs`), each entry prefixed with the run id: `request` with the
+exact body sent (an image as `<type, size>`), then `response after N ms` with
+the raw response — output items, reasoning, usage — or `failed after N ms` with
+the error. That log is where a run is debugged.
+
+The model is `ai_assistant_model` in the main config, the key is `ai_key`; a
+local copy, which has no live config, reads the key from the `OPENAI_API_KEY`
+environment variable (`docker-compose.yml` takes it from `.env`).
+
+### A run
+
+`Agent\AgentRunner::run()` answers the conversation:
+
+1. `ConversationHistory` turns the stored messages into the model's: the
+   system prompt first; a tool call as the call and its result; a proposed
+   plan as the `propose_plan` call; plan progress as a system note; errors left
+   out. The page a user wrote from is appended to their message. Images a tool
+   showed are not kept.
+2. The model is offered every **read** tool, with its request's JSON schema,
+   and `propose_plan`. Each reply is stored first — prose as a `text`
+   message, each call as a `toolCall` message with its result — then the
+   results are fed back. A failed call (unknown tool, bad arguments, a write
+   tool called directly, a refusal) is told to the model as `Error: …`, and the
+   run goes on.
+3. The run ends `done` on a reply without calls, `waitingApproval` once a plan
+   is proposed, `failed` after 20 steps, 10 minutes or a model failure, with an
+   `error` message.
+
+### Plans
+
+`Agent\PlanProposer` handles `propose_plan` (`title`, `actions` of `tool` and
+`arguments`). Its description lists every write tool with its argument schema.
+Each action must name a write tool; `{"$ref": N}` in place of an id takes the
+id action N creates, and must point to an earlier action (`PlanReferences`).
+An action without references is built and previewed; a refusal at the preview
+refuses the plan, and the reason goes back to the model. An action with
+references is not previewed, because what it refers to does not exist yet.
+
+`Agent\PlanExecutor` runs an approved plan: each action through its write tool,
+references resolved from the earlier results' `id`, stopping at the first
+failure (the rest are `skipped`). Each outcome is saved on the plan and told as
+a `planProgress` message.
+
+### Service and endpoint
+
+`Chat\AssistantChatService` is what the controller calls: a conversation of
+another user does not exist (404); one run at a time per conversation (409); a
+run still `running` after 15 minutes is taken for dead and failed. `send`
+supersedes a proposed plan and starts a `chat` run; `approvePlan` marks the plan
+`executing` and starts an `execute` run. `state()` answers the messages after a
+`seq`, every plan, the active run and `refs` — the entities that the messages'
+`[[type:id]]` and the plans' previews mention, found by `EntityMentionLookup`.
+
+`Controllers\AssistantData` (`/assistant-data/`, see `api/assistant-data.yaml`)
+checks the user and the privilege, answers, and for `send` and `approvePlan`
+goes on after the response: `Shared\Http\ResponseCloser` releases the session,
+closes the connection (`fastcgi_finish_request` where it exists) and lifts the
+time limit, then the run continues in the same process.
+
+### Panel
+
+`features/assistant/` in the SPA:
+
+- `AssistantTriggerComponent` — the header button, rendered only for a holder
+  of `aiAssistant` (`RootPrivilegeService`).
+- `AssistantDrawerComponent` — a fixed drawer on the right, in `spa-root`
+  outside the router outlet, so links to entities keep it open. While it exists
+  it subscribes to `AssistantStore.polling$`.
+- `AssistantPanelService` — open or closed, remembered per browser.
+- `AssistantStore` — the open conversation (remembered per browser, created on
+  the first message, "new" forgets it), messages merged by `seq`, plans and run
+  replaced from each poll; polls every 2 s while a run is active, every 15 s
+  otherwise. `buildAssistantView()` turns it into what the components draw:
+  `[[type:id]]` as router links, previews as field / before / after rows.
+- `AssistantPageContextService` — the page sent with every message: the URL,
+  and the entity type and id of an entity page.
+- `AssistantPlanComponent` — the actions with their previews and statuses;
+  "Approve" opens a confirm dialog that counts the destructive actions.
+- `AssistantDataApiService` (`shared/api/`) — the only code that knows the URL.
+
+Tests: `tests/Integration/Assistant/Chat/` (storage, the service),
+`tests/Integration/Assistant/Agent/` (the run with a scripted model, plans
+proposed and executed with real write tools), `tests/Assistant/Agent/`
+(history), `tests/Assistant/Llm/` (the OpenAI request and reply over the
+client's fake); the specs next to the panel's services.

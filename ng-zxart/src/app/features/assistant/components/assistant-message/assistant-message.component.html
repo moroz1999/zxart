@@ -1,0 +1,28 @@
+@switch (message.kind) {
+  @case ('text') {
+    <div class="am-bubble" [class.am-bubble--user]="message.role === 'user'">
+      <zx-assistant-text [segments]="message.segments"></zx-assistant-text>
+    </div>
+  }
+  @case ('toolCall') {
+    <div class="am-line" [class.am-line--failed]="message.failed">
+      <button type="button" class="am-toggle" (click)="toggleDetails()" [attr.aria-expanded]="detailsOpen">
+        {{ detailsOpen ? '▾' : '▸' }} {{ 'assistant.tool-call' | translate: {tool: message.toolName} }}
+      </button>
+      @if (detailsOpen) {
+        <pre class="am-details">{{ message.details }}</pre>
+      }
+    </div>
+  }
+  @case ('plan') {
+    @if (message.plan) {
+      <zx-assistant-plan [plan]="message.plan" (approve)="approve.emit($event)"></zx-assistant-plan>
+    }
+  }
+  @case ('planProgress') {
+    <div class="am-line"><zx-assistant-text [segments]="message.segments"></zx-assistant-text></div>
+  }
+  @case ('error') {
+    <div class="am-line am-line--failed"><zx-assistant-text [segments]="message.segments"></zx-assistant-text></div>
+  }
+}

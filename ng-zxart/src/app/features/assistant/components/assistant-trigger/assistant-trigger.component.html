@@ -1,0 +1,10 @@
+@if (panel.available$ | async) {
+  <zx-button
+    color="transparent"
+    [square]="true"
+    [ariaLabel]="'assistant.open' | translate"
+    (click)="panel.toggle()"
+  >
+    <svg-icon name="chat" class="at-icon"></svg-icon>
+  </zx-button>
+}

@@ -19,5 +19,6 @@
     'rootMarkerPublic' => 'public_root',
     'rootMarkerAdmin' => 'admin_root',
     'ai_key' => '',
+    'ai_assistant_model' => 'gpt-6-luna',
     'bestGuesssTypes' => ['zxProd', 'zxRelease'],
 ];

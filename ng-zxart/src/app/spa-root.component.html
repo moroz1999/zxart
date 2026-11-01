@@ -13,3 +13,6 @@
   </div>
 </div>
 <zx-player-view></zx-player-view>
+@if (assistantOpen$ | async) {
+  <zx-assistant-drawer></zx-assistant-drawer>
+}

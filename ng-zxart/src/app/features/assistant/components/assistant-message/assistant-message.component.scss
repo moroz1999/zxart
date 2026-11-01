@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.am-bubble {
+  align-self: flex-start;
+  max-width: 90%;
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--zx-assistant-radius);
+  background: var(--zx-assistant-bubble-bg);
+
+  &--user {
+    align-self: flex-end;
+    background: var(--zx-assistant-user-bubble-bg);
+  }
+}
+
+.am-line {
+  font-size: var(--font-xs);
+  color: var(--zx-assistant-muted-color);
+
+  &--failed {
+    color: var(--zx-assistant-danger-color);
+  }
+}
+
+.am-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.am-details {
+  max-height: 300px;
+  overflow: auto;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-8);
+  border-radius: var(--zx-assistant-radius);
+  background: var(--zx-assistant-bubble-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

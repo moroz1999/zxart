@@ -13,3 +13,4 @@ $moduleActions[] = 'cloneElements';
 // Site-wide editing rights that belong to no single element. Checked directly by
 // the SPA data endpoints, so there is no action class behind them.
 $moduleActions[] = 'editHardware';
+$moduleActions[] = 'aiAssistant';

@@ -78,6 +78,8 @@ use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\ProdQueryService;
 use ZxArt\Ai\Service\PromptSender;
+use ZxArt\Assistant\Llm\LlmClient;
+use ZxArt\Assistant\Llm\OpenAiLlmClient;
 use ZxArt\Ai\Service\TextBeautifier;
 use ZxArt\Ai\Service\Translator;
 use ZxArt\Comments\CommentTranslationAiService;
@@ -179,7 +181,13 @@ return [
 
         return $logger;
     }),
-    'openai_key' => factory(fn(ConfigManager $cm) => $cm->getConfig('main')->get('ai_key')),
+    // the environment serves a local copy, which has no live config
+    'openai_key' => factory(fn(ConfigManager $cm) => $cm->getConfig('main')->get('ai_key') ?: (string)getenv('OPENAI_API_KEY')),
+    LlmClient::class => factory(static fn(ContainerInterface $c, ConfigManager $cm): LlmClient => new OpenAiLlmClient(
+        OpenAI::client((string)$c->get('openai_key')),
+        (string)$cm->getConfig('main')->get('ai_assistant_model'),
+        $c->get('create_log')('assistant_logs'),
+    )),
     'telegram_token' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('token')),
     'telegram_channel_id' => factory(fn(ConfigManager $cm) => $cm->getConfig('telegram')->get('channel_id')),
 

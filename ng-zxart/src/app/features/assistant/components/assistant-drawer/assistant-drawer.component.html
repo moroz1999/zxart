@@ -1,0 +1,40 @@
+@if (view$ | async; as view) {
+  <div class="ad-header">
+    <span class="ad-title">{{ 'assistant.title' | translate }}</span>
+    <div class="ad-header-tools">
+      <zx-button size="sm" color="transparent" (click)="startNew()" [disabled]="!view.hasConversation">
+        {{ 'assistant.new' | translate }}
+      </zx-button>
+      <zx-close-button size="sm" [ariaLabel]="'assistant.close' | translate" (closed)="close()"></zx-close-button>
+    </div>
+  </div>
+
+  <div class="ad-stream" #stream>
+    @if (view.messages.length === 0) {
+      <div class="ad-empty">{{ 'assistant.empty' | translate }}</div>
+    }
+    @for (message of view.messages; track message.id) {
+      <zx-assistant-message [message]="message" (approve)="approve($event)"></zx-assistant-message>
+    }
+    @if (view.running) {
+      <div class="ad-running">
+        <zx-spinner size="xs"></zx-spinner>
+        {{ 'assistant.running' | translate }}
+      </div>
+    }
+  </div>
+
+  @if (view.error) {
+    <div class="ad-error">{{ view.error }}</div>
+  }
+
+  <form class="ad-composer" (ngSubmit)="submit()">
+    <zx-textarea
+      [formControl]="text"
+      [rows]="3"
+      [placeholder]="'assistant.placeholder' | translate"
+      (keydown)="onKeydown($event)"
+    ></zx-textarea>
+    <zx-button type="submit" size="sm" [disabled]="view.running">{{ 'assistant.send' | translate }}</zx-button>
+  </form>
+}

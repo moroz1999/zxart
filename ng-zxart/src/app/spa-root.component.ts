@@ -9,6 +9,9 @@ import {ZxBreadcrumbBarComponent} from './shared/ui/zx-breadcrumb-bar/zx-breadcr
 import {PlayerHostComponent} from './features/player/components/player-host/player-host.component';
 import {AnalyticsService} from './shared/services/analytics.service';
 import {PageMetadataService} from './shared/services/page-metadata.service';
+import {AssistantDrawerComponent} from './features/assistant/components/assistant-drawer/assistant-drawer.component';
+import {AssistantPanelService} from './features/assistant/services/assistant-panel.service';
+import {AsyncPipe} from '@angular/common';
 
 /**
  * Root component of the routed SPA. Bootstrapped into the `<app-root>` tag
@@ -23,7 +26,7 @@ import {PageMetadataService} from './shared/services/page-metadata.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ZxHeaderComponent, ZxRightColumnComponent, ZxBreadcrumbBarComponent, PlayerHostComponent],
+  imports: [AsyncPipe, RouterOutlet, ZxHeaderComponent, ZxRightColumnComponent, ZxBreadcrumbBarComponent, PlayerHostComponent, AssistantDrawerComponent],
   templateUrl: './spa-root.component.html',
   styleUrls: ['./spa-root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,12 +34,14 @@ import {PageMetadataService} from './shared/services/page-metadata.service';
 export class SpaRootComponent implements OnInit, OnDestroy {
   private readonly subscription = new Subscription();
   private currentViewKey: string | null = null;
+  readonly assistantOpen$ = this.assistantPanel.open$;
 
   constructor(
     private readonly router: Router,
     private readonly languageService: LanguageService,
     private readonly pageMetadataService: PageMetadataService,
     private readonly analyticsService: AnalyticsService,
+    private readonly assistantPanel: AssistantPanelService,
   ) {}
 
   ngOnInit(): void {

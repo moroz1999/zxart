@@ -11,6 +11,13 @@ checklist. They describe the intended design, not existing code. Once a part is
 built, its description moves into the regular documentation (`docs/domain/`,
 `docs/features/`, `php.md`, `angular.md`) and the plan's checklist is ticked.
 
+A minimal first version runs: chat with read tools, plans proposed and executed
+after approval, the drawer in the SPA — see
+[../features/ai-assistant.md](../features/ai-assistant.md#chat). It leaves out,
+for now: the conversation list and deletion, stopping a run, `ask_user`,
+Markdown, the debug modal, cron recovery of runs, separate `ai_plan_action`
+rows, and re-previewing a plan at approval.
+
 | Document | Topic |
 |---|---|
 | [frontend.md](frontend.md) | The chat panel in the SPA: conversations, polling, plan message, entity links, debug modal |

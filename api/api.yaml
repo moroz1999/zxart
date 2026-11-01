@@ -117,6 +117,8 @@ paths:
     $ref: 'categories-data.yaml#/paths/~1categories-data~1'
   /countries-data/:
     $ref: 'countries-data.yaml#/paths/~1countries-data~1'
+  /assistant-data/:
+    $ref: 'assistant-data.yaml#/paths/~1assistant-data~1'
 components:
   schemas:
     CommentDto:

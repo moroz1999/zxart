@@ -7,6 +7,10 @@ namespace ZxArt\Shared;
 enum DatabaseTable: string
 {
     case ActionsLog = 'actions_log';
+    case AiConversation = 'ai_conversation';
+    case AiMessage = 'ai_message';
+    case AiPlan = 'ai_plan';
+    case AiRun = 'ai_run';
     case Author = 'module_author';
     case AuthorAlias = 'module_authoralias';
     case Authorship = 'authorship';

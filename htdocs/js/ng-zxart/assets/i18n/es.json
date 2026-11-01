@@ -2274,5 +2274,49 @@
     "previous": "Imagen anterior",
     "next": "Imagen siguiente",
     "close": "Cerrar"
+  },
+  "assistant": {
+    "title": "Asistente",
+    "open": "Asistente IA",
+    "close": "Cerrar",
+    "new": "Nueva conversación",
+    "empty": "Pregunta sobre el catálogo o describe qué corregir. El asistente ve la página en la que estás.",
+    "placeholder": "Mensaje… (Enter envía, Shift+Enter es una nueva línea)",
+    "send": "Enviar",
+    "running": "Trabajando…",
+    "tool-call": "Llamada a {{tool}}",
+    "approve": "Aprobar plan",
+    "cancel": "Cancelar",
+    "created-in-step": "se crea en el paso {{step}}",
+    "uses-result": "usa el resultado del paso {{steps}}",
+    "approve-confirm": {
+      "title": "¿Aprobar el plan?",
+      "message": "Se ejecutarán {{count}} acciones en orden.",
+      "message-destructive": "Se ejecutarán {{count}} acciones en orden; {{destructive}} de ellas eliminan o fusionan datos."
+    },
+    "plan-status": {
+      "proposed": "Esperando aprobación",
+      "executing": "En ejecución",
+      "done": "Hecho",
+      "failed": "Error",
+      "superseded": "Reemplazado"
+    },
+    "action-status": {
+      "pending": "Pendiente",
+      "done": "Hecho",
+      "failed": "Error",
+      "skipped": "Omitido"
+    },
+    "kind": {
+      "create": "Crear",
+      "update": "Cambiar",
+      "delete": "Eliminar",
+      "join": "Fusionar",
+      "convert": "Convertir",
+      "link": "Vincular",
+      "unlink": "Desvincular",
+      "attachFile": "Adjuntar archivo",
+      "deleteFile": "Eliminar archivo"
+    }
   }
 }

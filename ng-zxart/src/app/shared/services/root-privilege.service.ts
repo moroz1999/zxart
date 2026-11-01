@@ -18,6 +18,8 @@ export const PRIVILEGE_CATEGORY_DELETE = 'zxProdCategory.delete';
 export const PRIVILEGE_COUNTRY_SAVE = 'country.receive';
 export const PRIVILEGE_COUNTRY_DELETE = 'country.delete';
 export const PRIVILEGE_CITY_DELETE = 'city.delete';
+/** Talking to the editors' AI assistant and approving its plans. */
+export const ROOT_PRIVILEGE_AI_ASSISTANT = 'aiAssistant';
 
 /**
  * The privileges that open some part of the management section. They are

@@ -1,0 +1,171 @@
+openapi: 3.0.0
+info:
+  title: ZxArt AI Assistant API
+  version: 1.0.0
+  description: >
+    The editors' AI assistant. Every request requires a signed-in user holding
+    the `aiAssistant` privilege on the public root (401 / 403 otherwise). A
+    conversation of another user answers 404.
+
+    `send` and `approvePlan` answer at once; the agent's run or the plan's
+    execution goes on in the same process after the response, and the client
+    polls `get` with the last `seq` it holds. One run at a time per
+    conversation: a second one answers 409.
+
+paths:
+  /assistant-data/:
+    get:
+      summary: What is new in a conversation
+      parameters:
+        - {in: query, name: action, required: true, schema: {type: string, enum: [get]}}
+        - {in: query, name: id, required: true, schema: {type: integer}}
+        - in: query
+          name: afterSeq
+          required: false
+          description: Only messages after this seq; 0 or absent is the whole conversation.
+          schema: {type: integer}
+      responses:
+        '200':
+          description: The messages after `afterSeq`, every plan, the active run and the entities they mention
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AssistantState'}
+        '401': {$ref: '#/components/responses/Error'}
+        '403': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+    post:
+      summary: Create a conversation, send a message or approve a plan
+      parameters:
+        - {in: query, name: action, required: true, schema: {type: string, enum: [create, send, approvePlan]}}
+      requestBody:
+        required: false
+        description: None for `create`.
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/AssistantSendRequest'
+                - $ref: '#/components/schemas/AssistantApprovePlanRequest'
+      responses:
+        '200':
+          description: The new conversation (`create`) or the run that started (`send`, `approvePlan`)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AssistantConversation'
+                  - $ref: '#/components/schemas/AssistantRunStarted'
+        '400': {$ref: '#/components/responses/Error'}
+        '401': {$ref: '#/components/responses/Error'}
+        '403': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+        '405': {$ref: '#/components/responses/Error'}
+        '409': {$ref: '#/components/responses/Error'}
+
+components:
+  responses:
+    Error:
+      description: The request was refused
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errorMessage: {type: string}
+  schemas:
+    AssistantConversation:
+      type: object
+      properties:
+        id: {type: integer}
+        title: {type: string}
+        createdAt: {type: integer}
+        lastMessageAt: {type: integer}
+    AssistantRunStarted:
+      type: object
+      properties:
+        runId: {type: integer}
+    AssistantSendRequest:
+      type: object
+      required: [conversationId, text]
+      properties:
+        conversationId: {type: integer}
+        text: {type: string}
+        page:
+          type: object
+          description: The page the user writes from.
+          properties:
+            url: {type: string}
+            entityType: {type: string, nullable: true, enum: [prod, release, author, authorAlias, group, groupAlias]}
+            entityId: {type: integer, nullable: true}
+    AssistantApprovePlanRequest:
+      type: object
+      required: [planId]
+      properties:
+        planId: {type: integer}
+    AssistantMessage:
+      type: object
+      properties:
+        id: {type: integer}
+        seq: {type: integer}
+        role: {type: string, enum: [user, assistant]}
+        kind: {type: string, enum: [text, toolCall, plan, planProgress, error]}
+        text:
+          type: string
+          description: Entities are mentioned as `[[type:id]]`; `refs` resolves them.
+        payload:
+          type: object
+          nullable: true
+          description: >
+            `text` from the user: `page`. `toolCall`: `callId`, `tool`, `arguments`, `result`, `failed`.
+            `plan`: `callId`, `arguments`, `planId`. `planProgress`: `planId`, `action`.
+        createdAt: {type: integer}
+    AssistantPlan:
+      type: object
+      properties:
+        id: {type: integer}
+        title: {type: string}
+        status: {type: string, enum: [proposed, executing, done, failed, superseded]}
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              tool: {type: string}
+              arguments: {type: string, description: JSON}
+              preview:
+                type: object
+                nullable: true
+                description: The change preview; null for an action that takes an earlier action's result.
+              dependsOn: {type: array, items: {type: integer}}
+              status: {type: string, enum: [pending, done, failed, skipped]}
+              result: {type: object, nullable: true}
+              error: {type: string, nullable: true}
+        createdAt: {type: integer}
+        approvedAt: {type: integer, nullable: true}
+        finishedAt: {type: integer, nullable: true}
+    AssistantRun:
+      type: object
+      properties:
+        id: {type: integer}
+        type: {type: string, enum: [chat, execute]}
+        status: {type: string, enum: [running, done, waitingApproval, failed]}
+        steps: {type: integer}
+        error: {type: string, nullable: true}
+        startedAt: {type: integer}
+    AssistantState:
+      type: object
+      properties:
+        conversationId: {type: integer}
+        messages: {type: array, items: {$ref: '#/components/schemas/AssistantMessage'}}
+        plans: {type: array, items: {$ref: '#/components/schemas/AssistantPlan'}}
+        activeRun:
+          nullable: true
+          allOf: [{$ref: '#/components/schemas/AssistantRun'}]
+        refs:
+          type: object
+          description: The mentioned entities by `type:id`
+          additionalProperties:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}

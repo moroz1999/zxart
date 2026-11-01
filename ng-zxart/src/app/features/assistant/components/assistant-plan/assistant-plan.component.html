@@ -1,0 +1,59 @@
+<div class="ap" [class.ap--inactive]="plan.status === 'superseded'">
+  <div class="ap-header">
+    <span class="ap-title">{{ plan.title }}</span>
+    <zx-chip size="sm" [color]="plan.status === 'proposed' ? 'primary' : 'neutral'">
+      {{ 'assistant.plan-status.' + plan.status | translate }}
+    </zx-chip>
+  </div>
+  <ol class="ap-actions">
+    @for (action of plan.actions; track action.number) {
+      <li class="ap-action" [class.ap-action--destructive]="action.changeKind === 'delete' || action.changeKind === 'join'">
+        <div class="ap-action-head">
+          <span class="ap-kind">
+            {{ action.changeKind ? ('assistant.kind.' + action.changeKind | translate) : action.tool }}
+          </span>
+          @if (action.target.length > 0) {
+            <zx-assistant-text [segments]="action.target"></zx-assistant-text>
+          }
+          @if (action.targetCreatedInStep !== null) {
+            <span class="ap-note">{{ 'assistant.created-in-step' | translate: {step: action.targetCreatedInStep} }}</span>
+          }
+          @if (plan.status !== 'proposed' && plan.status !== 'superseded') {
+            <span class="ap-status ap-status--{{ action.status }}">{{ 'assistant.action-status.' + action.status | translate }}</span>
+          }
+        </div>
+        <div class="ap-tool">{{ action.tool }}</div>
+        @if (action.dependsOn.length > 0) {
+          <div class="ap-note">{{ 'assistant.uses-result' | translate: {steps: action.dependsOn.join(', ')} }}</div>
+        }
+        @if (action.changes.length > 0) {
+          <table class="ap-changes">
+            @for (change of action.changes; track change.field) {
+              <tr>
+                <th>{{ change.field }}</th>
+                <td class="ap-before"><zx-assistant-text [segments]="change.before"></zx-assistant-text></td>
+                <td class="ap-arrow">→</td>
+                <td><zx-assistant-text [segments]="change.after"></zx-assistant-text></td>
+              </tr>
+            }
+          </table>
+        }
+        @if (action.consequences.length > 0) {
+          <zx-callout accent="warning" surface="raised">
+            @for (consequence of action.consequences; track $index) {
+              <div>{{ consequence }}</div>
+            }
+          </zx-callout>
+        }
+        @if (action.error) {
+          <div class="ap-error">{{ action.error }}</div>
+        }
+      </li>
+    }
+  </ol>
+  @if (plan.canApprove) {
+    <zx-button size="sm" [color]="plan.destructiveCount > 0 ? 'danger' : 'primary'" (click)="approve.emit(plan)">
+      {{ 'assistant.approve' | translate }}
+    </zx-button>
+  }
+</div>
