@@ -16,7 +16,6 @@ use ZxArt\Assistant\Chat\Dto\PlanDto;
 use ZxArt\Assistant\Chat\MessageKind;
 use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Llm\LlmToolDto;
-use ZxArt\Assistant\Tools\JsonSchemaGenerator;
 use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Assistant\Tools\ToolRequestBuilder;
 use ZxArt\Assistant\Tools\UnknownToolException;
@@ -39,7 +38,7 @@ final readonly class PlanProposer
         private PlansDbal $plans,
         private MessagesDbal $messages,
         private ConversationsDbal $conversations,
-        private JsonSchemaGenerator $schemaGenerator,
+        private WriteToolCatalogue $writeTools,
     ) {
     }
 
@@ -51,16 +50,14 @@ final readonly class PlanProposer
         return "Plan $planId is proposed and waits for the user to approve it.";
     }
 
-    /**
-     * @throws JsonException
-     */
     public function tool(): LlmToolDto
     {
         return new LlmToolDto(
             name: self::TOOL_NAME,
             description: 'Proposes changes to the site as a plan of write tool calls, run in order once the user approves it. '
                 . 'Each action names a write tool and its arguments; {"$ref": N} in place of an id takes the id action N creates.'
-                . "\n\nThe write tools, each with the JSON schema of its arguments:\n" . $this->writeToolCatalogue(),
+                . ' Read what a write tool does and its arguments with ' . WriteToolCatalogue::TOOL_NAME . ' before you use it.'
+                . ' The write tools: ' . $this->writeTools->list() . '.',
             parameters: [
                 'type' => 'object',
                 'properties' => [
@@ -158,21 +155,5 @@ final readonly class PlanProposer
             'result' => null,
             'error' => null,
         ];
-    }
-
-    /**
-     * @throws JsonException
-     */
-    private function writeToolCatalogue(): string
-    {
-        $lines = [];
-        foreach ($this->tools->all() as $tool) {
-            if ($tool instanceof WriteTool) {
-                $schema = json_encode($this->schemaGenerator->forClass($tool->requestClass()), JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-                $lines[] = '- ' . $tool->name() . ': ' . $tool->description() . ' Arguments: ' . $schema;
-            }
-        }
-
-        return implode("\n", $lines);
     }
 }

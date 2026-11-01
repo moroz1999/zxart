@@ -54,10 +54,10 @@ abstract class controllerApplication extends errorLogger implements DependencyIn
      */
     protected function startSession(string $sessionName = 'default', $lifeTime = false)
     {
-        $clientIpAddress = $_SERVER['REMOTE_ADDR'];
-        $serverIpAddress = $_SERVER['SERVER_ADDR'];
+        $clientIpAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+        $serverIpAddress = $_SERVER['SERVER_ADDR'] ?? null;
 
-        $isRequestFromServer = $clientIpAddress === $serverIpAddress;
+        $isRequestFromServer = $clientIpAddress === null || $clientIpAddress === $serverIpAddress;
         if (!$isRequestFromServer){
             $isCrawler = new CrawlerDetect()->isCrawler();
             if ($isCrawler === true) {

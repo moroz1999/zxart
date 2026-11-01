@@ -45,21 +45,70 @@ final class OpenAiLlmClientTest extends TestCase
         }
     }
 
-    public function testEachExchangeIsLoggedUnderItsRunWithImagesLeftOut(): void
+    public function testEachExchangeIsLoggedUnderItsConversationAndRunWithImagesLeftOut(): void
     {
         $client = new ClientFake([CreateResponse::fake()]);
 
         $this->client($client)->complete([
             new LlmMessageDto(LlmRole::User, 'Look', images: [new ImageDto('image/png', 'AAAA')]),
-        ], [], 42);
+        ], [], 7, 42);
 
         $logged = $this->logged();
-        self::assertStringContainsString('[42] : request', $logged);
-        self::assertStringContainsString('"model": "gpt-6-luna"', $logged);
+        self::assertStringContainsString('[42] : conversation 7 request gpt-6-luna input[0..0] of 1', $logged);
         self::assertStringContainsString('"image_url": "<image/png, 3 bytes>"', $logged);
         self::assertStringNotContainsString('AAAA', $logged);
-        self::assertStringContainsString('[42] : response', $logged);
+        self::assertStringContainsString('[42] : conversation 7 response after', $logged);
         self::assertStringContainsString('"id": "resp_67ccf18ef5fc8190b16dbee19bc54e5f087bb177ab789d5c"', $logged);
+    }
+
+    public function testTheFirstRequestOfARunLogsWhatCameAfterTheModelsLastTurn(): void
+    {
+        $client = new ClientFake([CreateResponse::fake()]);
+
+        $this->client($client)->complete([
+            new LlmMessageDto(LlmRole::System, 'Be brief'),
+            new LlmMessageDto(LlmRole::User, 'Old question'),
+            new LlmMessageDto(LlmRole::Assistant, 'Old answer'),
+            new LlmMessageDto(LlmRole::User, 'New question'),
+        ], [], 7, 42);
+
+        $logged = $this->logged();
+        self::assertStringContainsString('input[3..3] of 4', $logged);
+        self::assertStringContainsString('New question', $logged);
+        self::assertStringNotContainsString('Old question', $logged);
+        self::assertStringNotContainsString('Be brief', $logged);
+    }
+
+    public function testALaterRequestOfTheRunLogsOnlyWhatWasAdded(): void
+    {
+        $client = new ClientFake([CreateResponse::fake(), CreateResponse::fake()]);
+        $llm = $this->client($client);
+        $asked = [new LlmMessageDto(LlmRole::User, 'Find Elite')];
+        $llm->complete($asked, [], 7, 42);
+
+        $asked[] = new LlmMessageDto(LlmRole::Assistant, '', [new LlmToolCallDto('call_1', 'search', '{"query":"Elite"}')]);
+        $asked[] = new LlmMessageDto(LlmRole::Tool, '{"found":[]}', toolCallId: 'call_1');
+        $llm->complete($asked, [], 7, 42);
+
+        $logged = $this->logged();
+        self::assertSame(1, substr_count($logged, 'Find Elite'));
+        self::assertStringContainsString('input[1..2] of 3', $logged);
+    }
+
+    public function testToolsAreLoggedByNameAndTheResponseWithoutThem(): void
+    {
+        $client = new ClientFake([CreateResponse::fake(['tools' => [['type' => 'function', 'name' => 'search', 'description' => 'Finds', 'parameters' => [], 'strict' => false]]])]);
+
+        $this->client($client)->complete(
+            [new LlmMessageDto(LlmRole::User, 'hi')],
+            [new LlmToolDto('search', 'Finds', ['type' => 'object']), new LlmToolDto('propose_plan', 'Proposes', ['type' => 'object'])],
+            7,
+            42,
+        );
+
+        $logged = $this->logged();
+        self::assertStringContainsString('tools: search, propose_plan', $logged);
+        self::assertStringNotContainsString('Finds', $logged);
     }
 
     public function testAFailedExchangeIsLoggedWithItsError(): void
@@ -67,11 +116,11 @@ final class OpenAiLlmClientTest extends TestCase
         $client = new ClientFake([new RuntimeException('timeout')]);
 
         try {
-            $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 42);
+            $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 7, 42);
         } catch (LlmException) {
         }
 
-        self::assertStringContainsString('[42] : failed', $this->logged());
+        self::assertStringContainsString('[42] : conversation 7 failed', $this->logged());
         self::assertStringContainsString('timeout', $this->logged());
     }
 
@@ -84,7 +133,7 @@ final class OpenAiLlmClientTest extends TestCase
             new LlmMessageDto(LlmRole::Assistant, 'Searching', [new LlmToolCallDto('call_1', 'search', '{"query":"Elite"}')]),
             new LlmMessageDto(LlmRole::Tool, '{"found":[]}', toolCallId: 'call_1'),
             new LlmMessageDto(LlmRole::User, 'Look', images: [new ImageDto('image/png', 'AAAA')]),
-        ], [new LlmToolDto('search', 'Finds', ['type' => 'object'])], 1);
+        ], [new LlmToolDto('search', 'Finds', ['type' => 'object'])], 7, 1);
 
         $client->assertSent(Responses::class, static fn(string $method, array $parameters): bool => $method === 'create' && $parameters === [
             'model' => 'gpt-6-luna',
@@ -121,7 +170,7 @@ final class OpenAiLlmClientTest extends TestCase
 
         self::assertEquals(
             new LlmReplyDto('', [new LlmToolCallDto('call_9', 'search', '{}')], 120, 7),
-            $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 1),
+            $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 7, 1),
         );
     }
 
@@ -132,7 +181,7 @@ final class OpenAiLlmClientTest extends TestCase
         $this->expectException(LlmException::class);
         $this->expectExceptionMessage('The model could not be asked: timeout');
 
-        $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 1);
+        $this->client($client)->complete([new LlmMessageDto(LlmRole::User, 'hi')], [], 7, 1);
     }
 
     private function client(ClientFake $client): OpenAiLlmClient

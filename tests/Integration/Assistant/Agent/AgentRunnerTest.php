@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use ZxArt\Assistant\Agent\AgentRunner;
 use ZxArt\Assistant\Agent\ConversationHistory;
 use ZxArt\Assistant\Agent\PlanProposer;
+use ZxArt\Assistant\Agent\WriteToolCatalogue;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
 use ZxArt\Assistant\Chat\Dbal\RunsDbal;
@@ -68,7 +69,7 @@ final class AgentRunnerTest extends TestCase
         self::assertSame(RunStatus::Done, $run?->status);
         self::assertSame(1, $run->steps);
         self::assertSame(100, $run->tokensIn);
-        self::assertSame(['echo', 'propose_plan'], $llm->offeredTools[0]);
+        self::assertSame(['echo', 'describe_write_tool', 'propose_plan'], $llm->offeredTools[0]);
         self::assertSame(LlmRole::System, $llm->askedWith[0][0]->role);
     }
 
@@ -90,6 +91,21 @@ final class AgentRunnerTest extends TestCase
         );
         self::assertSame('{"echoed":"привет"}', end($llm->askedWith[1])->text);
         self::assertSame('Привет', $this->messages()[2]->text);
+    }
+
+    public function testAWriteToolIsDescribedOnRequest(): void
+    {
+        $llm = new ScriptedLlmClient([
+            new LlmReplyDto('', [new LlmToolCallDto('call_1', 'describe_write_tool', '{"name":"update_prod"}')], 100, 10),
+            new LlmReplyDto('Понял', [], 100, 10),
+        ]);
+
+        $this->runAgent($llm);
+
+        $toolCall = $this->messages()[1];
+        self::assertSame('describe_write_tool', $toolCall->text);
+        self::assertFalse($toolCall->payload['failed'] ?? null);
+        self::assertStringContainsString('"name":"update_prod"', end($llm->askedWith[1])->text);
     }
 
     public function testAFailedToolCallIsToldToTheModelAndTheRunGoesOn(): void
@@ -175,6 +191,7 @@ final class AgentRunnerTest extends TestCase
             serializer: $this->container->get(SerializerInterface::class),
             history: new ConversationHistory(),
             planProposer: $this->container->get(PlanProposer::class),
+            writeTools: $this->container->get(WriteToolCatalogue::class),
             conversations: $this->container->get(ConversationsDbal::class),
             messages: $this->container->get(MessagesDbal::class),
             runs: $runs,

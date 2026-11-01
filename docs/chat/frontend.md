@@ -91,8 +91,10 @@ preview, error), pretty-printed, with a copy button.
 `AssistantStore` (one per open panel) holds the conversation and its last
 `seq`:
 
-- poll `get&afterSeq=` every **2 s while a run is active**, every **15 s when
-  idle**, and **not at all while the panel is closed** or the tab is hidden;
+- fetch `get&afterSeq=` once when a conversation is opened, then poll every
+  **2 s while a run is active** and **not at all otherwise** (an idle
+  conversation changes only by the user's own actions), nor while the panel is
+  closed;
 - appended messages are merged by `seq`; the plan and run status are replaced
   from each response;
 - after `send`, `approvePlan` or `stop` the store switches to fast polling at

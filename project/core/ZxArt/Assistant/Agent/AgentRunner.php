@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ZxArt\Assistant\Agent;
 
 use Exception;
+use JsonException;
 use RuntimeException;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -45,6 +46,7 @@ final readonly class AgentRunner
         private SerializerInterface $serializer,
         private ConversationHistory $history,
         private PlanProposer $planProposer,
+        private WriteToolCatalogue $writeTools,
         private ConversationsDbal $conversations,
         private MessagesDbal $messages,
         private RunsDbal $runs,
@@ -88,7 +90,7 @@ final readonly class AgentRunner
             if (time() - $startedAt > $this->timeLimitSeconds) {
                 throw new LlmException('The assistant took longer than ' . intdiv($this->timeLimitSeconds, 60) . ' minutes and was stopped');
             }
-            $reply = $this->llm->complete($context, $tools, $runId);
+            $reply = $this->llm->complete($context, $tools, $conversationId, $runId);
             $this->runs->recordStep($runId, $reply->tokensIn, $reply->tokensOut);
             if ($reply->text !== '') {
                 $this->store($conversationId, MessageKind::Text, $reply->text, null);
@@ -103,6 +105,8 @@ final readonly class AgentRunner
                 if ($call->name === PlanProposer::TOOL_NAME) {
                     [$planProposedNow, $told] = $this->proposePlan($conversationId, $call);
                     $planProposed = $planProposed || $planProposedNow;
+                } elseif ($call->name === WriteToolCatalogue::TOOL_NAME) {
+                    $told = $this->describeWriteTool($conversationId, $call);
                 } else {
                     $told = $this->callTool($conversationId, $call, $images);
                 }
@@ -132,6 +136,24 @@ final readonly class AgentRunner
             $this->storeCall($conversationId, $call, $told, true);
             return [false, $told];
         }
+    }
+
+    /**
+     * @return string what the model is told
+     * @throws JsonException
+     */
+    private function describeWriteTool(int $conversationId, LlmToolCallDto $call): string
+    {
+        try {
+            $told = $this->writeTools->describe($call->arguments);
+        } catch (PlanRefusedException $exception) {
+            $told = 'Error: ' . $exception->getMessage();
+            $this->storeCall($conversationId, $call, $told, true);
+            return $told;
+        }
+        $this->storeCall($conversationId, $call, $told, false);
+
+        return $told;
     }
 
     /**
@@ -173,6 +195,7 @@ final readonly class AgentRunner
                 $offered[] = new LlmToolDto($tool->name(), $tool->description(), $this->schemaGenerator->forClass($tool->requestClass()));
             }
         }
+        $offered[] = $this->writeTools->describeTool();
         $offered[] = $this->planProposer->tool();
 
         return $offered;

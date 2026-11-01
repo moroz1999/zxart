@@ -31,7 +31,7 @@ final class ScriptedLlmClient implements LlmClient
     {
     }
 
-    public function complete(array $messages, array $tools, int $runId): LlmReplyDto
+    public function complete(array $messages, array $tools, int $conversationId, int $runId): LlmReplyDto
     {
         $this->askedWith[] = $messages;
         $this->offeredTools[] = array_map(static fn(LlmToolDto $tool): string => $tool->name, $tools);

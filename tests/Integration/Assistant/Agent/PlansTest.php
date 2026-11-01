@@ -49,13 +49,14 @@ final class PlansTest extends WriteToolTestCase
         $this->conversationId = $this->container->get(ConversationsDbal::class)->create(7, self::NOW);
     }
 
-    public function testTheProposeToolTellsTheModelEveryWriteToolAndItsArguments(): void
+    public function testTheProposeToolListsTheWriteToolsAndSendsForTheirArguments(): void
     {
         $description = $this->container->get(PlanProposer::class)->tool()->description;
 
-        self::assertStringContainsString('- update_prod: ', $description);
-        self::assertStringContainsString('"fields":{"type":"object"', $description);
-        self::assertStringNotContainsString('- search: ', $description);
+        self::assertStringContainsString('update_prod', $description);
+        self::assertStringNotContainsString('Changes the fields', $description);
+        self::assertStringContainsString('describe_write_tool', $description);
+        self::assertStringNotContainsString('"fields":{"type":"object"', $description);
     }
 
     public function testAProposedPlanKeepsThePreviewOfEachActionItCanPreview(): void

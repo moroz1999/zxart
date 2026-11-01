@@ -77,7 +77,7 @@ class CurrentUser
                 $this->supporter = $this->userDataObject->supporter;
                 $this->vip = $this->userDataObject->vip;
                 $this->volunteer = $this->userDataObject->volunteer;
-                $this->IP = $_SERVER['REMOTE_ADDR'];
+                $this->IP = $_SERVER['REMOTE_ADDR'] ?? null;
                 $this->authorId = $this->userDataObject->authorId;
 
                 $this->loadPrivileges();

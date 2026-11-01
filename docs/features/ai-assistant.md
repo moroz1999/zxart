@@ -217,10 +217,14 @@ conversation. An image is sent as an `input_image` data URL inside a user
 message.
 
 Every exchange is logged to `temporary/logs/assistant/<date>.log` (path key
-`assistant_logs`), each entry prefixed with the run id: `request` with the
-exact body sent (an image as `<type, size>`), then `response after N ms` with
-the raw response — output items, reasoning, usage — or `failed after N ms` with
-the error. That log is where a run is debugged.
+`assistant_logs`), each entry as `[run] : conversation N …`, and only what is
+new: `request <model> input[from..to] of count, tools: <names>` with the input
+items not logged before — for the first request of a run those after the
+model's last turn (what came before is in the log of the earlier runs), for a
+later one those added since the previous request of the run; an image as
+`<type, size>`. Then `response after N ms` with the raw response — output
+items, reasoning, usage — but without its echo of the tools, or
+`failed after N ms` with the error. That log is where a run is debugged.
 
 The model is `ai_assistant_model` in the main config, the key is `ai_key`; a
 local copy, which has no live config, reads the key from the `OPENAI_API_KEY`
@@ -236,7 +240,7 @@ environment variable (`docker-compose.yml` takes it from `.env`).
    out. The page a user wrote from is appended to their message. Images a tool
    showed are not kept.
 2. The model is offered every **read** tool, with its request's JSON schema,
-   and `propose_plan`. Each reply is stored first — prose as a `text`
+   `describe_write_tool` and `propose_plan`. Each reply is stored first — prose as a `text`
    message, each call as a `toolCall` message with its result — then the
    results are fed back. A failed call (unknown tool, bad arguments, a write
    tool called directly, a refusal) is told to the model as `Error: …`, and the
@@ -249,7 +253,10 @@ environment variable (`docker-compose.yml` takes it from `.env`).
 ### Plans
 
 `Agent\PlanProposer` handles `propose_plan` (`title`, `actions` of `tool` and
-`arguments`). Its description lists every write tool with its argument schema.
+`arguments`). Its description lists the write tools by name only
+(`Agent\WriteToolCatalogue`); the model reads what one does and its argument schema with
+`describe_write_tool` before it writes the tool into a plan, so the descriptions and schemas of
+some thirty write tools do not ride along with every request.
 Each action must name a write tool; `{"$ref": N}` in place of an id takes the
 id action N creates, and must point to an earlier action (`PlanReferences`).
 An action without references is built and previewed; a refusal at the preview
@@ -302,8 +309,10 @@ time limit, then the run continues in the same process.
 - `AssistantPanelService` — open or closed, remembered per browser.
 - `AssistantStore` — the open conversation (remembered per browser, created on
   the first message, "new" forgets it), messages merged by `seq`, plans and run
-  replaced from each poll; polls every 2 s while a run is active, every 15 s
-  otherwise. `buildAssistantView()` turns it into what the components draw:
+  replaced from each poll; fetches a conversation once when it is opened and
+  then polls every 2 s only while a run is active — an idle conversation
+  changes only by the user's own send, approve or stop, which mark a run.
+  `buildAssistantView()` turns it into what the components draw:
   `[[type:id]]` as router links, previews as field / before / after rows.
 - `AssistantPageContextService` — the page sent with every message: the URL,
   and the entity type and id of an entity page.

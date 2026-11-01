@@ -113,6 +113,38 @@ describe('AssistantStore', () => {
     expect(api.stop).toHaveBeenCalledWith(5);
   });
 
+  it('fetches an idle conversation once and then waits for the user', () => {
+    vi.useFakeTimers();
+    const api = {get: vi.fn().mockReturnValue(of(state({messages: [message(1)]})))};
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, storage({'assistant-conversation': 5}), pageContext);
+
+    const subscription = store.polling$.subscribe();
+    vi.advanceTimersByTime(60000);
+    subscription.unsubscribe();
+    vi.useRealTimers();
+
+    expect(api.get).toHaveBeenCalledTimes(1);
+  });
+
+  it('polls while a run is active and stops once it is over', () => {
+    vi.useFakeTimers();
+    const run = {id: 3, type: 'chat' as const, status: 'running' as const, steps: 0, error: null, startedAt: 0, stopRequested: false};
+    const api = {
+      get: vi.fn()
+        .mockReturnValueOnce(of(state({activeRun: run})))
+        .mockReturnValueOnce(of(state({activeRun: run})))
+        .mockReturnValue(of(state({messages: [message(1)]}))),
+    };
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, storage({'assistant-conversation': 5}), pageContext);
+
+    const subscription = store.polling$.subscribe();
+    vi.advanceTimersByTime(60000);
+    subscription.unsubscribe();
+    vi.useRealTimers();
+
+    expect(api.get).toHaveBeenCalledTimes(3);
+  });
+
   it('starts over without a request when a new conversation is asked for', async () => {
     const local = storage({'assistant-conversation': 5});
     const store = new AssistantStore({} as AssistantDataApiService, local, pageContext);

@@ -15,22 +15,28 @@ use ZxArt\Shared\Images\ImageDto;
  * The OpenAI Responses API with function tools. Nothing is stored on OpenAI's
  * side: every request carries the whole conversation.
  *
- * Every exchange is logged under its run: the request as sent, with images left
- * out, then the raw response or the failure.
+ * Every exchange is logged under its conversation and run, as what is new: the
+ * first request of a run from the model's last turn on (what came before is in
+ * the log of the earlier runs), each later one from where the previous request
+ * of the run ended. Tools are named only, images left out; the response is
+ * logged raw but for its echo of the tools.
  */
-final readonly class OpenAiLlmClient implements LlmClient
+final class OpenAiLlmClient implements LlmClient
 {
+    /** @var array<int, int> the input items already logged, by run */
+    private array $loggedItems = [];
+
     public function __construct(
-        private ClientContract $client,
-        private string $model,
-        private Log $log,
+        private readonly ClientContract $client,
+        private readonly string $model,
+        private readonly Log $log,
     ) {
     }
 
     /**
      * @throws JsonException
      */
-    public function complete(array $messages, array $tools, int $runId): LlmReplyDto
+    public function complete(array $messages, array $tools, int $conversationId, int $runId): LlmReplyDto
     {
         $input = [];
         foreach ($messages as $message) {
@@ -40,15 +46,18 @@ final readonly class OpenAiLlmClient implements LlmClient
         if ($tools !== []) {
             $request['tools'] = array_map($this->tool(...), $tools);
         }
-        $this->log->logMessage('request ' . $this->json($this->withoutImages($request)), E_USER_NOTICE, $runId);
+        $prefix = "conversation $conversationId ";
+        $this->logRequest($prefix, $runId, $input, $tools);
         $startedAt = microtime(true);
         try {
             $response = $this->client->responses()->create($request);
         } catch (Throwable $throwable) {
-            $this->log->logMessage('failed after ' . $this->elapsed($startedAt) . ': ' . $throwable->getMessage(), E_USER_WARNING, $runId);
+            $this->log->logMessage($prefix . 'failed after ' . $this->elapsed($startedAt) . ': ' . $throwable->getMessage(), E_USER_WARNING, $runId);
             throw new LlmException('The model could not be asked: ' . $throwable->getMessage(), 0, $throwable);
         }
-        $this->log->logMessage('response after ' . $this->elapsed($startedAt) . ' ' . $this->json($response->toArray()), E_USER_NOTICE, $runId);
+        $logged = $response->toArray();
+        unset($logged['tools']);
+        $this->log->logMessage($prefix . 'response after ' . $this->elapsed($startedAt) . ' ' . $this->json($logged), E_USER_NOTICE, $runId);
         if ($response->error !== null) {
             throw new LlmException('The model failed: ' . $response->error->message);
         }
@@ -65,6 +74,41 @@ final readonly class OpenAiLlmClient implements LlmClient
             tokensIn: $response->usage?->inputTokens ?? 0,
             tokensOut: $response->usage?->outputTokens ?? 0,
         );
+    }
+
+    /**
+     * @param list<array<string, mixed>> $input
+     * @param list<LlmToolDto> $tools
+     * @throws JsonException
+     */
+    private function logRequest(string $prefix, int $runId, array $input, array $tools): void
+    {
+        $from = $this->loggedItems[$runId] ?? $this->afterModelsLastTurn($input);
+        $count = count($input);
+        $this->loggedItems[$runId] = $count;
+        $names = implode(', ', array_map(static fn(LlmToolDto $tool): string => $tool->name, $tools));
+        $this->log->logMessage(
+            $prefix . 'request ' . $this->model . ' input[' . $from . '..' . ($count - 1) . '] of ' . $count
+            . ($names === '' ? '' : ', tools: ' . $names) . ' '
+            . $this->json($this->withoutImages(array_slice($input, $from))),
+            E_USER_NOTICE,
+            $runId,
+        );
+    }
+
+    /**
+     * @param list<array<string, mixed>> $input
+     */
+    private function afterModelsLastTurn(array $input): int
+    {
+        for ($index = count($input) - 1; $index >= 0; $index--) {
+            $item = $input[$index];
+            if (($item['role'] ?? null) === LlmRole::Assistant->value || isset($item['type'])) {
+                return $index + 1;
+            }
+        }
+
+        return 0;
     }
 
     /**

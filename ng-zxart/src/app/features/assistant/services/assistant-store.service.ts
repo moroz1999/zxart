@@ -1,6 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, EMPTY, from, Observable, of, timer} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, EMPTY, from, Observable, of, timer} from 'rxjs';
 import {catchError, distinctUntilChanged, exhaustMap, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {AssistantDataApiService} from '../../../shared/api/assistant-data-api.service';
 import {AssistantConversationSummary, AssistantPlan, AssistantRun, AssistantState} from '../../../shared/models/assistant-data';
@@ -12,7 +12,6 @@ import {AssistantMarkdownRenderer, createAssistantMarkdown} from './assistant-ma
 
 const CONVERSATION_KEY = 'assistant-conversation';
 const FAST_POLL_MS = 2000;
-const IDLE_POLL_MS = 15000;
 
 interface StoreState extends AssistantViewInput {
   lastSeq: number;
@@ -33,7 +32,11 @@ export class AssistantStore {
 
   readonly view$: Observable<AssistantView>;
 
-  /** Polls while subscribed: every 2 s while a run is active, every 15 s otherwise. */
+  /**
+   * While subscribed: fetches a conversation once when it is opened, then
+   * every 2 s while a run is active. Nothing changes an idle conversation but
+   * the user's own send, approve or stop, and each of those marks a run.
+   */
   readonly polling$: Observable<void>;
 
   constructor(
@@ -51,14 +54,17 @@ export class AssistantStore {
     );
     this.view$ = combineLatest([this.state, markdown$]).pipe(map(([state, markdown]) => buildAssistantView(state, markdown)));
     this.polling$ = this.state.pipe(
-      map(state => ({
-        conversationId: state.conversationId,
-        period: state.activeRun !== null ? FAST_POLL_MS : IDLE_POLL_MS,
-      })),
-      // another conversation or another pace starts over with a fetch at once
-      distinctUntilChanged((a, b) => a.conversationId === b.conversationId && a.period === b.period),
-      switchMap(({conversationId, period}) => conversationId === null ? EMPTY : timer(0, period)),
-      exhaustMap(() => this.refresh()),
+      map(state => state.conversationId),
+      distinctUntilChanged(),
+      switchMap(conversationId => conversationId === null ? EMPTY : concat(
+        this.refresh(),
+        this.state.pipe(
+          map(state => state.activeRun !== null),
+          distinctUntilChanged(),
+          switchMap(active => active ? timer(0, FAST_POLL_MS) : EMPTY),
+          exhaustMap(() => this.refresh()),
+        ),
+      )),
     );
   }
 
