@@ -1,0 +1,48 @@
+:host {
+  display: grid;
+  grid-template-columns: var(--zx-step-marker-size) minmax(0, 1fr);
+  gap: var(--zx-step-gap);
+  align-items: start;
+}
+
+.zx-step__marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--zx-step-marker-size);
+  height: var(--zx-step-marker-size);
+  border-radius: var(--zx-step-marker-radius);
+  border: var(--zx-step-marker-border-width) solid transparent;
+  font-size: var(--zx-step-marker-font-size);
+  font-weight: var(--zx-step-marker-font-weight);
+}
+
+.zx-step__icon {
+  width: var(--zx-step-icon-size);
+  height: var(--zx-step-icon-size);
+}
+
+.zx-step__body {
+  min-width: 0;
+}
+
+:host.zx-step--number .zx-step__marker,
+:host.zx-step--pending .zx-step__marker {
+  color: var(--zx-step-number-text);
+  border-color: var(--zx-step-number-border);
+}
+
+:host.zx-step--done .zx-step__marker {
+  color: var(--zx-step-done-text);
+  background: var(--zx-step-done-bg);
+}
+
+:host.zx-step--failed .zx-step__marker {
+  color: var(--zx-step-failed-text);
+  background: var(--zx-step-failed-bg);
+}
+
+:host.zx-step--pending {
+  opacity: var(--zx-step-pending-opacity);
+}

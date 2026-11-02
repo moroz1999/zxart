@@ -11,7 +11,7 @@ import {AsyncPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxCloseButtonComponent} from '../../../../shared/ui/zx-close-button/zx-close-button.component';
@@ -22,11 +22,12 @@ import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.componen
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
 import {ZxTextareaComponent} from '../../../../shared/ui/zx-textarea/zx-textarea.component';
 import {ConfirmDialogService} from '../../../../shared/ui/zx-confirm-dialog/confirm-dialog.service';
-import {AssistantPlanView} from '../../models/assistant-view';
+import {AssistantPlanView, AssistantView} from '../../models/assistant-view';
 import {AssistantPanelService} from '../../services/assistant-panel.service';
 import {AssistantStore} from '../../services/assistant-store.service';
 import {AssistantMessageComponent} from '../assistant-message/assistant-message.component';
 import {AssistantConversationsComponent} from '../assistant-conversations/assistant-conversations.component';
+import {AssistantActivityComponent} from '../assistant-activity/assistant-activity.component';
 import {AssistantPageContextService} from '../../services/assistant-page-context.service';
 import {AssistantConversationSummary} from '../../../../shared/models/assistant-data';
 import {environment} from '../../../../../environments/environment';
@@ -34,7 +35,8 @@ import {environment} from '../../../../../environments/environment';
 /**
  * The assistant's drawer, above the page and outside the router outlet, so it
  * stays open while the user follows the links it gives. It polls the open
- * conversation for as long as it exists.
+ * conversation for as long as it exists, and opens on a new conversation; the
+ * list of conversations takes the stream's place while it is open.
  */
 @Component({
   selector: 'zx-assistant-drawer',
@@ -54,6 +56,7 @@ import {environment} from '../../../../../environments/environment';
     TextDirective,
     AssistantMessageComponent,
     AssistantConversationsComponent,
+    AssistantActivityComponent,
   ],
   templateUrl: './assistant-drawer.component.html',
   styleUrls: ['./assistant-drawer.component.scss'],
@@ -64,7 +67,11 @@ export class AssistantDrawerComponent implements OnInit, AfterViewInit, OnDestro
 
   readonly view$ = this.store.view$;
   readonly conversations$ = this.store.conversations$;
-  readonly page$ = this.pageContext.page$;
+  readonly pageTitle$ = this.pageContext.title$;
+  /** The open conversation's title; empty for a new one. */
+  readonly title$: Observable<string> = combineLatest([this.store.view$, this.store.conversations$]).pipe(
+    map(([view, conversations]) => conversations.find(item => item.id === view.conversationId)?.title ?? ''),
+  );
   readonly listOpen = new BehaviorSubject<boolean>(false);
   readonly text = new FormControl('', {nonNullable: true});
 
@@ -78,19 +85,30 @@ export class AssistantDrawerComponent implements OnInit, AfterViewInit, OnDestro
     private readonly pageContext: AssistantPageContextService,
     iconReg: SvgIconRegistryService,
   ) {
-    for (const icon of ['expand-more', 'expand-less']) {
+    for (const icon of ['expand-more', 'expand-less', 'file', 'stop']) {
       iconReg.loadSvg(`${environment.svgUrl}${icon}.svg`, icon)?.subscribe();
     }
   }
 
   ngOnInit(): void {
     this.subscription.add(this.store.polling$.subscribe());
+    // the list knows the titles: a conversation gets one with its first message
+    this.subscription.add(this.store.view$.pipe(
+      map(view => `${view.conversationId}:${view.running}`),
+      distinctUntilChanged(),
+      switchMap(() => this.store.loadConversations()),
+    ).subscribe());
+    // nothing is typed while the assistant works
+    this.subscription.add(this.store.view$.pipe(
+      map(view => view.running),
+      distinctUntilChanged(),
+    ).subscribe(running => running ? this.text.disable() : this.text.enable()));
   }
 
   ngAfterViewInit(): void {
     // a new message scrolls the stream to the bottom
     this.subscription.add(this.store.view$.pipe(
-      map(view => view.messages.length + (view.running ? 1 : 0)),
+      map(view => view.items.reduce((count, item) => count + (item.kind === 'activity' ? item.activity.steps.length : 1), 0) + (view.running ? 1 : 0)),
       distinctUntilChanged(),
     ).subscribe(() => requestAnimationFrame(() => {
       const element = this.stream?.nativeElement;
@@ -135,6 +153,14 @@ export class AssistantDrawerComponent implements OnInit, AfterViewInit, OnDestro
       filter(confirmed => confirmed),
       switchMap(() => this.store.approvePlan(plan.id)),
     ).subscribe());
+  }
+
+  cancelPlan(plan: AssistantPlanView): void {
+    this.subscription.add(this.store.cancelPlan(plan.id).subscribe());
+  }
+
+  lastIsActivity(view: AssistantView): boolean {
+    return view.items[view.items.length - 1]?.kind === 'activity';
   }
 
   startNew(): void {

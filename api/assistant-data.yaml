@@ -10,7 +10,8 @@ info:
     `send` and `approvePlan` answer at once; the agent's run or the plan's
     execution goes on in the same process after the response, and the client
     polls `get` with the last `seq` it holds. One run at a time per
-    conversation: a second one answers 409.
+    conversation: a second one answers 409. `cancelPlan` ends a proposed plan
+    without running it.
 
 paths:
   /assistant-data/:
@@ -46,7 +47,7 @@ paths:
         `delete` removes the conversation with its messages, runs and plans; refused with 409 while a run works on it.
         Both answer an empty array.
       parameters:
-        - {in: query, name: action, required: true, schema: {type: string, enum: [create, send, approvePlan, stop, delete]}}
+        - {in: query, name: action, required: true, schema: {type: string, enum: [create, send, approvePlan, cancelPlan, stop, delete]}}
       requestBody:
         required: false
         description: None for `create`.
@@ -55,7 +56,7 @@ paths:
             schema:
               oneOf:
                 - $ref: '#/components/schemas/AssistantSendRequest'
-                - $ref: '#/components/schemas/AssistantApprovePlanRequest'
+                - $ref: '#/components/schemas/AssistantPlanIdRequest'
                 - $ref: '#/components/schemas/AssistantConversationIdRequest'
       responses:
         '200':
@@ -120,7 +121,7 @@ components:
             url: {type: string}
             entityType: {type: string, nullable: true, enum: [prod, release, author, authorAlias, group, groupAlias]}
             entityId: {type: integer, nullable: true}
-    AssistantApprovePlanRequest:
+    AssistantPlanIdRequest:
       type: object
       required: [planId]
       properties:
@@ -147,7 +148,7 @@ components:
       properties:
         id: {type: integer}
         title: {type: string}
-        status: {type: string, enum: [proposed, executing, done, failed, stopped, superseded]}
+        status: {type: string, enum: [proposed, executing, done, failed, stopped, superseded, cancelled]}
         actions:
           type: array
           items:

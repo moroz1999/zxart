@@ -1,0 +1,7 @@
+<button type="button" class="zx-list-item__main" [attr.aria-current]="active ? 'true' : null" (click)="picked.emit()">
+  <span class="zx-list-item__title" appText="body" tone="strong">{{ title }}</span>
+  @if (subtitle) {
+    <span class="zx-list-item__subtitle" appText="bodySm" tone="muted">{{ subtitle }}</span>
+  }
+</button>
+<ng-content></ng-content>

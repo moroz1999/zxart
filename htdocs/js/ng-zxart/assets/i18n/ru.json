@@ -2281,55 +2281,98 @@
     "open": "ИИ-ассистент",
     "close": "Закрыть",
     "new": "Новый разговор",
-    "empty": "Спросите о каталоге или опишите, что исправить. Ассистент видит страницу, на которой вы находитесь.",
-    "placeholder": "Сообщение… (Enter — отправить, Shift+Enter — новая строка)",
+    "placeholder": "Сообщение…",
     "send": "Отправить",
     "running": "Работаю…",
-    "tool-call": "Вызов {{tool}}",
-    "approve": "Утвердить план",
+    "approve": "Выполнить план",
     "cancel": "Отмена",
-    "created-in-step": "создаётся на шаге {{step}}",
-    "uses-result": "использует результат шага {{steps}}",
+    "created-in-step": "из шага {{step}}",
     "approve-confirm": {
       "title": "Утвердить план?",
       "message": "Будет выполнено действий: {{count}}, по порядку.",
       "message-destructive": "Будет выполнено действий: {{count}}, по порядку; из них {{destructive}} удаляют или объединяют данные."
     },
     "plan-status": {
-      "proposed": "Ждёт утверждения",
-      "executing": "Выполняется",
-      "done": "Выполнен",
+      "proposed": "Нужно подтверждение",
+      "progress": "Выполнено {{done}} из {{total}}",
       "failed": "Ошибка",
+      "failed-at": "Остановлен на шаге {{step}}",
+      "stopped": "Остановлен",
       "superseded": "Заменён",
-      "stopped": "Остановлен"
-    },
-    "action-status": {
-      "pending": "Ожидает",
-      "done": "Готово",
-      "failed": "Ошибка",
-      "skipped": "Пропущено"
+      "cancelled": "Отменён"
     },
     "kind": {
-      "create": "Создать",
-      "update": "Изменить",
-      "delete": "Удалить",
-      "join": "Объединить",
-      "convert": "Преобразовать",
-      "link": "Связать",
-      "unlink": "Отвязать",
-      "attachFile": "Добавить файл",
-      "deleteFile": "Удалить файл"
+      "create": "создать",
+      "update": "изменить",
+      "delete": "удалить",
+      "join": "объединить",
+      "convert": "преобразовать",
+      "link": "связать",
+      "unlink": "отвязать",
+      "attachFile": "добавить файл",
+      "deleteFile": "удалить файл"
     },
     "conversations": "Разговоры",
     "no-conversations": "Разговоров пока нет",
     "untitled": "Без названия",
     "delete": "Удалить",
-    "stop": "Стоп",
+    "stop": "Остановить",
     "details": "Подробности",
-    "context": "Контекст",
+    "context": "Страница: {{title}}",
     "delete-confirm": {
       "title": "Удалить разговор?",
       "message": "«{{title}}» будет удалён вместе с сообщениями и планами."
-    }
+    },
+    "placeholder-running": "Ассистент работает…",
+    "cancel-plan": "Отменить",
+    "waits-for": "Ждёт шага {{step}}",
+    "activity": {
+      "done": "Выполнено действий: {{count}}",
+      "running": "Работаю · действий: {{count}}",
+      "failed": "ошибок: {{count}}"
+    },
+    "tool": {
+      "default": "Действие",
+      "search": "Поиск по каталогу",
+      "find_locations": "Поиск места",
+      "search_prods": "Поиск продов",
+      "search_releases": "Поиск релизов",
+      "search_authors": "Поиск авторов",
+      "search_groups": "Поиск групп",
+      "find_tags": "Поиск тегов",
+      "list_categories": "Справочник категорий",
+      "list_hardware": "Справочник железа",
+      "list_options": "Справочник значений",
+      "get_prod": "Карточка прода",
+      "get_release": "Карточка релиза",
+      "get_author": "Карточка автора",
+      "get_author_alias": "Карточка псевдонима автора",
+      "get_group": "Карточка группы",
+      "get_group_alias": "Карточка псевдонима группы",
+      "fetch_url": "Загрузка страницы",
+      "view_image": "Просмотр картинки",
+      "describe_write_tool": "Какие поля нужны для записи"
+    },
+    "entity": {
+      "prod": "Прод",
+      "release": "Релиз",
+      "author": "Автор",
+      "authorAlias": "Псевдоним автора",
+      "group": "Группа",
+      "groupAlias": "Псевдоним группы",
+      "picture": "Картинка",
+      "tune": "Мелодия",
+      "comment": "Комментарий",
+      "category": "Категория",
+      "country": "Страна",
+      "city": "Город",
+      "party": "Пати"
+    },
+    "day": {
+      "today": "Сегодня",
+      "yesterday": "Вчера",
+      "earlier": "Ранее"
+    },
+    "step-ref": "{{text}} (шаг {{step}})"
   }
 }

@@ -1,0 +1,25 @@
+:root {
+  /* Space between the steps of a list. */
+  --zx-steps-gap: var(--space-12);
+  /* Space between a step's marker and its content. */
+  --zx-step-gap: var(--space-8);
+  /* The round status marker. */
+  --zx-step-marker-size: 20px;
+  --zx-step-marker-radius: 50%;
+  --zx-step-marker-border-width: var(--border-width-thin);
+  --zx-step-marker-font-size: var(--zx-font-size-xs);
+  --zx-step-marker-font-weight: 700;
+  /* The check of a done step. */
+  --zx-step-icon-size: 14px;
+  /* A numbered (not yet run) step: outlined, muted number. */
+  --zx-step-number-text: var(--text-light-color);
+  --zx-step-number-border: var(--secondary-300);
+  /* A done step: filled with the primary color. */
+  --zx-step-done-text: var(--white);
+  --zx-step-done-bg: var(--primary-500);
+  /* A failed step: filled with the danger color. */
+  --zx-step-failed-text: var(--white);
+  --zx-step-failed-bg: var(--danger-400);
+  /* A step that waits for another steps back. */
+  --zx-step-pending-opacity: 0.6;
+}

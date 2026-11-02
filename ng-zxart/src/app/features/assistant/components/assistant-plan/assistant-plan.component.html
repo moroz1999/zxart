@@ -1,66 +1,76 @@
-<zx-panel variant="flat" radius="lg" padding="sm" [class.ap--inactive]="plan.status === 'superseded'">
-  <zx-stack gap="sm">
+<zx-panel variant="flat" radius="lg" padding="sm" [class.ap--inactive]="plan.status === 'superseded' || plan.status === 'cancelled'">
+  <zx-stack gap="md">
     <zx-inline gap="sm" align="center" justify="between">
       <h3 appHeading="title">{{ plan.title }}</h3>
-      <zx-chip size="sm" [color]="plan.status === 'proposed' ? 'primary' : 'neutral'">
-        {{ 'assistant.plan-status.' + plan.status | translate }}
-      </zx-chip>
+      <zx-chip size="sm" variant="filled" [color]="statusColor">{{ statusKey | translate: statusParams }}</zx-chip>
     </zx-inline>
-    <zx-stack gap="md" role="list">
+    <zx-steps>
       @for (action of plan.actions; track action.number) {
-        <zx-stack gap="xs" role="listitem">
-          <zx-inline gap="sm" align="baseline" [wrap]="true">
-            <span appText="body" [tone]="action.changeKind === 'delete' || action.changeKind === 'join' ? 'danger' : 'strong'">
-              {{ action.number }}. {{ action.changeKind ? ('assistant.kind.' + action.changeKind | translate) : action.tool }}
-            </span>
-            @if (action.target.length > 0) {
-              <span appText="body" tone="primary"><zx-assistant-text [segments]="action.target"></zx-assistant-text></span>
-            }
+        <zx-step [number]="action.number" [status]="action.marker">
+          <zx-stack gap="xs">
+            <zx-inline gap="xs" align="baseline" [wrap]="true">
+              @if (action.entityType) {
+                <span appText="body" tone="strong">{{ 'assistant.entity.' + action.entityType | translate }}</span>
+              } @else {
+                <span appText="body" tone="strong">{{ action.tool }}</span>
+              }
+              @if (action.target.length > 0) {
+                <span appText="body" tone="primary"><zx-assistant-text [segments]="action.target"></zx-assistant-text></span>
+              }
+              @if (action.changeKind) {
+                <zx-chip size="sm" variant="filled" [color]="isDestructive(action.changeKind) ? 'danger' : 'neutral'">
+                  {{ 'assistant.kind.' + action.changeKind | translate }}
+                </zx-chip>
+              }
+            </zx-inline>
             @if (action.targetCreatedInStep !== null) {
               <span appText="bodySm" tone="muted">{{ 'assistant.created-in-step' | translate: {step: action.targetCreatedInStep} }}</span>
             }
-            @if (plan.status !== 'proposed' && plan.status !== 'superseded') {
-              <span appText="caption" [tone]="statusTones[action.status]">{{ 'assistant.action-status.' + action.status | translate }}</span>
+            @if (action.changes.length > 0) {
+              <zx-item-data>
+                @for (change of action.changes; track change.field) {
+                  <zx-item-data-item [label]="change.field">
+                    <zx-inline gap="xs" align="baseline" [wrap]="true">
+                      @if (change.before.length > 0) {
+                        <del appText="body" tone="muted"><zx-assistant-text [segments]="change.before"></zx-assistant-text></del>
+                        <span aria-hidden="true">→</span>
+                      }
+                      <span><zx-assistant-text [segments]="change.after"></zx-assistant-text></span>
+                    </zx-inline>
+                  </zx-item-data-item>
+                }
+              </zx-item-data>
             }
-          </zx-inline>
-          <span appText="caption" tone="muted">{{ action.tool }}</span>
-          @if (action.dependsOn.length > 0) {
-            <span appText="caption" tone="muted">{{ 'assistant.uses-result' | translate: {steps: action.dependsOn.join(', ')} }}</span>
-          }
-          @if (action.changes.length > 0) {
-            <zx-item-data>
-              @for (change of action.changes; track change.field) {
-                <zx-item-data-item [label]="change.field">
-                  <zx-inline gap="xs" align="baseline" [wrap]="true">
-                    @if (change.before.length > 0) {
-                      <del appText="body" tone="muted"><zx-assistant-text [segments]="change.before"></zx-assistant-text></del>
-                      <span aria-hidden="true">→</span>
-                    }
-                    <span><zx-assistant-text [segments]="change.after"></zx-assistant-text></span>
-                  </zx-inline>
-                </zx-item-data-item>
-              }
-            </zx-item-data>
-          }
-          @if (action.consequences.length > 0) {
-            <zx-callout accent="warning" surface="raised">
-              @for (consequence of action.consequences; track $index) {
-                <div appText="bodySm" tone="primary">{{ consequence }}</div>
-              }
-            </zx-callout>
-          }
-          @if (action.error) {
-            <div appText="bodySm" tone="danger">{{ action.error }}</div>
-          }
-        </zx-stack>
+            @if (action.consequences.length > 0) {
+              <zx-callout accent="warning" surface="raised">
+                @for (consequence of action.consequences; track $index) {
+                  <div appText="bodySm" tone="primary">{{ consequence }}</div>
+                }
+              </zx-callout>
+            }
+            @if (action.error) {
+              <zx-callout accent="danger">
+                <div appText="bodySm" tone="primary">{{ action.error }}</div>
+              </zx-callout>
+            }
+            @if (action.waitsFor !== null) {
+              <span appText="bodySm" tone="muted">{{ 'assistant.waits-for' | translate: {step: action.waitsFor} }}</span>
+            }
+          </zx-stack>
+        </zx-step>
       }
-    </zx-stack>
-    @if (plan.canApprove) {
-      <div>
-        <zx-button size="sm" [color]="plan.destructiveCount > 0 ? 'danger' : 'primary'" (click)="approve.emit(plan)">
-          {{ 'assistant.approve' | translate }}
-        </zx-button>
-      </div>
+    </zx-steps>
+    @if (plan.canApprove || plan.canCancel) {
+      <zx-inline gap="sm" align="center">
+        @if (plan.canApprove) {
+          <zx-button size="sm" [color]="plan.destructiveCount > 0 ? 'danger' : 'primary'" (click)="approve.emit(plan)">
+            {{ 'assistant.approve' | translate: {count: plan.actions.length} }}
+          </zx-button>
+        }
+        @if (plan.canCancel) {
+          <zx-button size="sm" color="transparent" (click)="cancelPlan.emit(plan)">{{ 'assistant.cancel-plan' | translate }}</zx-button>
+        }
+      </zx-inline>
     }
   </zx-stack>
 </zx-panel>

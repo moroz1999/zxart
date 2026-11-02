@@ -34,6 +34,7 @@ import {AssistantMarkdownComponent} from '../assistant-markdown/assistant-markdo
 export class AssistantMessageComponent {
   @Input({required: true}) message!: AssistantMessageView;
   @Output() readonly approve = new EventEmitter<AssistantPlanView>();
+  @Output() readonly cancelPlan = new EventEmitter<AssistantPlanView>();
 
   detailsOpen = false;
 

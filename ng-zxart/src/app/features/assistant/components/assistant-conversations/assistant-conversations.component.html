@@ -1,29 +1,34 @@
-<zx-stack gap="xs">
-  @if (conversations.length === 0) {
+<zx-stack gap="md">
+  @if (groups.length === 0) {
     <div appText="bodySm" tone="muted">{{ 'assistant.no-conversations' | translate }}</div>
   }
-  @for (conversation of conversations; track conversation.id) {
-    <zx-inline gap="sm" align="center">
-      <zx-button
-        class="ac-pick"
-        size="sm"
-        [color]="conversation.id === currentId ? 'secondary' : 'transparent'"
-        (click)="picked.emit(conversation.id)"
-      >{{ conversation.title || ('assistant.untitled' | translate) }}</zx-button>
-      <span appText="caption" tone="muted">{{ conversation.lastMessageAt * 1000 | date: 'short' }}</span>
-      @if (conversation.running) {
-        <zx-spinner size="xs"></zx-spinner>
-      } @else {
-        <zx-button
-          size="sm"
-          color="transparent"
-          [square]="true"
-          [ariaLabel]="'assistant.delete' | translate"
-          (click)="deleted.emit(conversation)"
+  @for (group of groups; track group.day) {
+    <zx-stack gap="xs">
+      <zx-inset padding="sm" side="inline">
+        <span appText="bodySm" tone="muted">{{ 'assistant.day.' + group.day | translate }}</span>
+      </zx-inset>
+      @for (conversation of group.conversations; track conversation.id) {
+        <zx-list-item
+          [title]="conversation.title || ('assistant.untitled' | translate)"
+          [subtitle]="(conversation.lastMessageAt * 1000 | date: (group.day === 'earlier' ? 'd MMM' : 'shortTime')) ?? ''"
+          [active]="conversation.id === currentId"
+          (picked)="picked.emit(conversation.id)"
         >
-          <svg-icon name="delete" class="ac-icon" aria-hidden="true"></svg-icon>
-        </zx-button>
+          @if (conversation.running) {
+            <zx-spinner size="xs"></zx-spinner>
+          } @else {
+            <zx-button
+              size="sm"
+              color="transparent"
+              [square]="true"
+              [ariaLabel]="'assistant.delete' | translate"
+              (click)="deleted.emit(conversation)"
+            >
+              <svg-icon name="delete" class="ac-icon" aria-hidden="true"></svg-icon>
+            </zx-button>
+          }
+        </zx-list-item>
       }
-    </zx-inline>
+    </zx-stack>
   }
 </zx-stack>

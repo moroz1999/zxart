@@ -1,1 +1,1 @@
-@for (segment of segments; track $index) {@if (segment.kind === 'link') {<a [routerLink]="segment.url">{{ segment.text }}</a>} @else {{{ segment.text }}}}
+@for (segment of segments; track $index) {@switch (segment.kind) {@case ('link') {<a [routerLink]="segment.url">{{ segment.text }}</a>} @case ('step') {{{ 'assistant.step-ref' | translate: {text: segment.text, step: segment.step} }}} @case ('image') {<img class="at-image" [src]="segment.url" alt="" loading="lazy" referrerpolicy="no-referrer"> } @default {{{ segment.text }}}}}

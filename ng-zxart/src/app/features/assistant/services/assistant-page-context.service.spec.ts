@@ -6,7 +6,7 @@ import {AssistantPageContextService} from './assistant-page-context.service';
 
 function contextAt(url: string, events = new Subject<unknown>()): {service: AssistantPageContextService; router: {url: string}} {
   const router = {url, events};
-  return {service: new AssistantPageContextService(router as unknown as Router, 'https://zxart.ee'), router};
+  return {service: new AssistantPageContextService(router as unknown as Router, 'https://zxart.ee', document), router};
 }
 
 describe('AssistantPageContextService', () => {
@@ -34,5 +34,15 @@ describe('AssistantPageContextService', () => {
       {url: 'https://zxart.ee/prods'},
       {url: 'https://zxart.ee/prod/7', entityType: 'prod', entityId: 7},
     ]);
+  });
+
+  it('follows the title of the page', async () => {
+    document.title = 'Elite';
+    const {service} = contextAt('/prod/7');
+    const titles = firstValueFrom(service.title$.pipe(take(2), toArray()));
+
+    document.title = 'Eternal Flame';
+
+    expect(await titles).toEqual(['Elite', 'Eternal Flame']);
   });
 });

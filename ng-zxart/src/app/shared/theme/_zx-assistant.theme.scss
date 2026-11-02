@@ -1,17 +1,20 @@
 :root {
-  /* Icons in the trigger and the drawer's buttons */
+  /* Icons in the trigger and the drawer's header */
   --zx-assistant-icon-size: 20px;
+  /* Icons beside small text: activity, details, the page, stop */
+  --zx-assistant-small-icon-size: 16px;
   /* Drawer width on wide screens; phones get the full width */
   --zx-assistant-drawer-width: 420px;
   --zx-assistant-drawer-shadow: var(--shadow-lg);
   --zx-assistant-drawer-z-index: 900;
   --zx-assistant-divider: var(--border-light);
-  /* The conversation list never pushes the stream off the drawer */
-  --zx-assistant-list-max-height: 40%;
   /* Messages leave room to see who wrote them */
   --zx-assistant-bubble-max-width: 90%;
   --zx-assistant-details-max-height: calc(var(--space-64) * 5);
   --zx-assistant-inactive-opacity: 0.5;
+  /* Images a plan step points to, previewed small */
+  --zx-assistant-image-height: var(--space-48);
+  --zx-assistant-image-radius: var(--radius-sm);
 }
 
 /* The panel background is set per theme, so the drawer follows it there */

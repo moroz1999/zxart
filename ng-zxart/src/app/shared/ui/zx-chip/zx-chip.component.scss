@@ -56,6 +56,22 @@ a.zx-chip--filled.zx-chip--primary:hover {
   background: var(--zx-chip-primary-filled-hover-bg);
 }
 
+.zx-chip--opaque.zx-chip--danger {
+  color: var(--zx-chip-danger-opaque-text);
+  border-color: currentColor;
+  background: transparent;
+}
+
+.zx-chip--filled.zx-chip--danger {
+  color: var(--zx-chip-danger-filled-text);
+  border-color: var(--zx-chip-danger-filled-border);
+  background: var(--zx-chip-danger-filled-bg);
+}
+
+a.zx-chip--filled.zx-chip--danger:hover {
+  background: var(--zx-chip-danger-filled-hover-bg);
+}
+
 .zx-chip--opaque.zx-chip--artist {
   color: var(--zx-chip-artist-opaque-text);
   border-color: currentColor;

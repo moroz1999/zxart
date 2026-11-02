@@ -2283,44 +2283,36 @@
     "open": "AI assistant",
     "close": "Close",
     "new": "New conversation",
-    "empty": "Ask about the catalogue or describe what to fix. The assistant sees the page you are on.",
-    "placeholder": "Message… (Enter sends, Shift+Enter is a new line)",
+    "placeholder": "Message…",
     "send": "Send",
     "running": "Working…",
-    "tool-call": "Called {{tool}}",
-    "approve": "Approve plan",
+    "approve": "Run the plan",
     "cancel": "Cancel",
-    "created-in-step": "created in step {{step}}",
-    "uses-result": "uses the result of step {{steps}}",
+    "created-in-step": "from step {{step}}",
     "approve-confirm": {
       "title": "Approve the plan?",
       "message": "{{count}} actions will be run in order.",
       "message-destructive": "{{count}} actions will be run in order; {{destructive}} of them delete or merge data."
     },
     "plan-status": {
-      "proposed": "Waiting for approval",
-      "executing": "Running",
-      "done": "Done",
+      "proposed": "Needs approval",
+      "progress": "{{done}} of {{total}} done",
       "failed": "Failed",
+      "failed-at": "Stopped at step {{step}}",
+      "stopped": "Stopped",
       "superseded": "Replaced",
-      "stopped": "Stopped"
-    },
-    "action-status": {
-      "pending": "Pending",
-      "done": "Done",
-      "failed": "Failed",
-      "skipped": "Skipped"
+      "cancelled": "Cancelled"
     },
     "kind": {
-      "create": "Create",
-      "update": "Change",
-      "delete": "Delete",
-      "join": "Merge",
-      "convert": "Convert",
-      "link": "Link",
-      "unlink": "Unlink",
-      "attachFile": "Attach file",
-      "deleteFile": "Delete file"
+      "create": "create",
+      "update": "change",
+      "delete": "delete",
+      "join": "merge",
+      "convert": "convert",
+      "link": "link",
+      "unlink": "unlink",
+      "attachFile": "attach file",
+      "deleteFile": "delete file"
     },
     "conversations": "Conversations",
     "no-conversations": "No conversations yet",
@@ -2328,10 +2320,61 @@
     "delete": "Delete",
     "stop": "Stop",
     "details": "Details",
-    "context": "Context",
+    "context": "Page: {{title}}",
     "delete-confirm": {
       "title": "Delete the conversation?",
       "message": "«{{title}}» will be deleted with its messages and plans."
-    }
+    },
+    "placeholder-running": "The assistant is working…",
+    "cancel-plan": "Cancel",
+    "waits-for": "Waits for step {{step}}",
+    "activity": {
+      "done": "Actions done: {{count}}",
+      "running": "Working · actions: {{count}}",
+      "failed": "failed: {{count}}"
+    },
+    "tool": {
+      "default": "Action",
+      "search": "Catalogue search",
+      "find_locations": "Place search",
+      "search_prods": "Prod search",
+      "search_releases": "Release search",
+      "search_authors": "Author search",
+      "search_groups": "Group search",
+      "find_tags": "Tag search",
+      "list_categories": "Category list",
+      "list_hardware": "Hardware list",
+      "list_options": "Value lists",
+      "get_prod": "Prod card",
+      "get_release": "Release card",
+      "get_author": "Author card",
+      "get_author_alias": "Author alias card",
+      "get_group": "Group card",
+      "get_group_alias": "Group alias card",
+      "fetch_url": "Page fetch",
+      "view_image": "Image view",
+      "describe_write_tool": "Fields a write needs"
+    },
+    "entity": {
+      "prod": "Prod",
+      "release": "Release",
+      "author": "Author",
+      "authorAlias": "Author alias",
+      "group": "Group",
+      "groupAlias": "Group alias",
+      "picture": "Picture",
+      "tune": "Tune",
+      "comment": "Comment",
+      "category": "Category",
+      "country": "Country",
+      "city": "City",
+      "party": "Party"
+    },
+    "day": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "earlier": "Earlier"
+    },
+    "step-ref": "{{text}} (step {{step}})"
   }
 }

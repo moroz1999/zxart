@@ -4,13 +4,11 @@ import {BehaviorSubject, combineLatest, concat, EMPTY, from, Observable, of, tim
 import {catchError, distinctUntilChanged, exhaustMap, map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {AssistantDataApiService} from '../../../shared/api/assistant-data-api.service';
 import {AssistantConversationSummary, AssistantPlan, AssistantRun, AssistantState} from '../../../shared/models/assistant-data';
-import {LocalStorageService} from '../../../shared/services/local-storage.service';
 import {AssistantView} from '../models/assistant-view';
 import {AssistantPageContextService} from './assistant-page-context.service';
 import {AssistantViewInput, buildAssistantView} from './assistant-view';
 import {AssistantMarkdownRenderer, createAssistantMarkdown} from './assistant-markdown';
 
-const CONVERSATION_KEY = 'assistant-conversation';
 const FAST_POLL_MS = 2000;
 
 interface StoreState extends AssistantViewInput {
@@ -19,8 +17,8 @@ interface StoreState extends AssistantViewInput {
 
 /**
  * The open conversation: its messages merged by `seq`, its plans and run as the
- * last poll reported them. The conversation is remembered per browser and
- * created on the first message.
+ * last poll reported them. It starts on a new conversation, which is created
+ * on the first message.
  */
 @Injectable({providedIn: 'root'})
 export class AssistantStore {
@@ -41,10 +39,9 @@ export class AssistantStore {
 
   constructor(
     private readonly api: AssistantDataApiService,
-    private readonly storage: LocalStorageService,
     private readonly pageContext: AssistantPageContextService,
   ) {
-    this.state = new BehaviorSubject<StoreState>(this.emptyState(this.storage.get<number>(CONVERSATION_KEY)));
+    this.state = new BehaviorSubject<StoreState>(this.emptyState(null));
     // Markdown arrives in a chunk of its own; until then prose is plain text
     const markdown$: Observable<AssistantMarkdownRenderer | null> = from(import('marked')).pipe(
       map(markedModule => createAssistantMarkdown(markedModule)),
@@ -112,6 +109,17 @@ export class AssistantStore {
     );
   }
 
+  /** Ends a proposed plan unrun, then fetches the note the cancelling left. */
+  cancelPlan(planId: number): Observable<void> {
+    return this.api.cancelPlan(planId).pipe(
+      switchMap(() => this.refresh()),
+      catchError((error: unknown) => {
+        this.fail(error);
+        return EMPTY;
+      }),
+    );
+  }
+
   loadConversations(): Observable<void> {
     return this.api.list().pipe(
       tap(conversations => this.conversations.next(conversations)),
@@ -125,7 +133,6 @@ export class AssistantStore {
 
   /** Opens another conversation; the poll fetches it. */
   select(conversationId: number): void {
-    this.storage.set(CONVERSATION_KEY, conversationId);
     this.state.next(this.emptyState(conversationId));
   }
 
@@ -159,7 +166,6 @@ export class AssistantStore {
   }
 
   startNew(): void {
-    this.storage.remove(CONVERSATION_KEY);
     this.state.next(this.emptyState(null));
   }
 
@@ -170,10 +176,7 @@ export class AssistantStore {
     }
     return this.api.create().pipe(
       map(conversation => conversation.id),
-      tap(id => {
-        this.storage.set(CONVERSATION_KEY, id);
-        this.state.next(this.emptyState(id));
-      }),
+      tap(id => this.state.next(this.emptyState(id))),
     );
   }
 

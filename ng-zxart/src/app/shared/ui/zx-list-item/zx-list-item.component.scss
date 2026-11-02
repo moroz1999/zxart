@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--zx-list-item-gap);
+  padding: var(--zx-list-item-padding);
+  border-radius: var(--zx-list-item-radius);
+  transition: background-color var(--animation-xs);
+}
+
+:host(:hover) {
+  background-color: var(--zx-list-item-hover-bg);
+}
+
+:host.zx-list-item--active {
+  background-color: var(--zx-list-item-active-bg);
+}
+
+.zx-list-item__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--zx-list-item-lines-gap);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.zx-list-item__title,
+.zx-list-item__subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

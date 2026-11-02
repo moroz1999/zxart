@@ -14,4 +14,6 @@ enum PlanStatus: string
     case Stopped = 'stopped';
     /** The user sent another message instead of approving it. */
     case Superseded = 'superseded';
+    /** The user cancelled it instead of approving it. */
+    case Cancelled = 'cancelled';
 }

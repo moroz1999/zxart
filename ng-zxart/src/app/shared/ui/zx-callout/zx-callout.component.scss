@@ -39,6 +39,7 @@
 
 :host.zx-callout--accent-warning { --zx-callout-accent: var(--zx-callout-accent-warning); }
 :host.zx-callout--accent-primary { --zx-callout-accent: var(--zx-callout-accent-primary); }
+:host.zx-callout--accent-danger { --zx-callout-accent: var(--zx-callout-accent-danger); }
 :host.zx-callout--accent-none {
   --zx-callout-accent: transparent;
   border-left-color: transparent;

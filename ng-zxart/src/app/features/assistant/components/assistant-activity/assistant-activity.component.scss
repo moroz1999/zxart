@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.aa-icon {
+  width: var(--zx-assistant-small-icon-size);
+  height: var(--zx-assistant-small-icon-size);
+}
+
+.aa-details-text {
+  max-height: var(--zx-assistant-details-max-height);
+}

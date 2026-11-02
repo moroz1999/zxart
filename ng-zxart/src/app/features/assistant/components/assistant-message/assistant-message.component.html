@@ -15,17 +15,9 @@
         </zx-panel>
       }
     }
-    @case ('toolCall') {
-      <zx-button size="xs" color="transparent" (click)="toggleDetails()" [attr.aria-expanded]="detailsOpen">
-        <svg-icon [name]="detailsOpen ? 'expand-less' : 'expand-more'" class="am-icon" aria-hidden="true"></svg-icon>
-        <span appText="caption" [tone]="message.failed ? 'danger' : 'muted'">
-          {{ 'assistant.tool-call' | translate: {tool: message.toolName} }}
-        </span>
-      </zx-button>
-    }
     @case ('plan') {
       @if (message.plan) {
-        <zx-assistant-plan class="am-plan" [plan]="message.plan" (approve)="approve.emit($event)"></zx-assistant-plan>
+        <zx-assistant-plan class="am-plan" [plan]="message.plan" (approve)="approve.emit($event)" (cancelPlan)="cancelPlan.emit($event)"></zx-assistant-plan>
       }
     }
     @default {
@@ -34,7 +26,7 @@
       </div>
     }
   }
-  @if (message.details && message.kind !== 'toolCall') {
+  @if (message.details) {
     <zx-button size="xs" color="transparent" (click)="toggleDetails()" [attr.aria-expanded]="detailsOpen">
       <svg-icon [name]="detailsOpen ? 'expand-less' : 'expand-more'" class="am-icon" aria-hidden="true"></svg-icon>
       <span appText="caption" tone="muted">{{ 'assistant.details' | translate }}</span>

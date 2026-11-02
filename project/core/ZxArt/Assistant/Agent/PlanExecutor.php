@@ -24,7 +24,8 @@ use ZxArt\Assistant\Tools\WriteTool;
  * Runs an approved plan's actions in order, each through its write tool, and
  * stops at the first that fails, or before the next one once the user asks the
  * run to stop. Every action's outcome is stored on the plan and told in the
- * conversation.
+ * conversation. An action the proposal could not preview, because it takes an
+ * id an earlier one created, is previewed now, with that id in place.
  */
 final readonly class PlanExecutor
 {
@@ -64,8 +65,11 @@ final readonly class PlanExecutor
             }
             $toolName = (string)$action['tool'];
             try {
-                $result = $this->run($toolName, (string)$action['arguments'], $results);
+                [$result, $preview] = $this->run($toolName, (string)$action['arguments'], $results, $action['preview'] === null);
                 $results[$number] = $result;
+                if ($preview !== null) {
+                    $actions[$index]['preview'] = $preview;
+                }
                 $actions[$index]['status'] = PlanActionStatus::Done->value;
                 $actions[$index]['result'] = $result;
                 $outcome = 'done. ' . json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
@@ -99,10 +103,10 @@ final readonly class PlanExecutor
 
     /**
      * @param array<int, array<array-key, mixed>> $results
-     * @return array<array-key, mixed>
+     * @return array{array<array-key, mixed>, ?array<array-key, mixed>} the result, and the preview when asked for
      * @throws Exception
      */
-    private function run(string $toolName, string $arguments, array $results): array
+    private function run(string $toolName, string $arguments, array $results, bool $withPreview): array
     {
         $tool = $this->tools->get($toolName);
         if (!$tool instanceof WriteTool) {
@@ -118,8 +122,19 @@ final readonly class PlanExecutor
                 return $id;
             },
         );
-        $result = $tool->execute($this->requestBuilder->build($tool->requestClass(), json_encode($resolved, JSON_THROW_ON_ERROR)));
+        $request = $this->requestBuilder->build($tool->requestClass(), json_encode($resolved, JSON_THROW_ON_ERROR));
+        $preview = $withPreview ? $this->normalize($tool->preview($request)) : null;
+
+        return [$this->normalize($tool->execute($request)), $preview];
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     * @throws JsonException
+     */
+    private function normalize(object $dto): array
+    {
         /** @var array<array-key, mixed> */
-        return json_decode($this->serializer->serialize($result, 'json', [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE]), true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($this->serializer->serialize($dto, 'json', [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE]), true, 512, JSON_THROW_ON_ERROR);
     }
 }

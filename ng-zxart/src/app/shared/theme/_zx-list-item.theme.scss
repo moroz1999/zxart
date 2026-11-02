@@ -1,0 +1,13 @@
+:root {
+  /* Padding around a row. */
+  --zx-list-item-padding: var(--space-8);
+  /* Space between the row's lines and its actions. */
+  --zx-list-item-gap: var(--space-8);
+  /* Space between the title and the second line. */
+  --zx-list-item-lines-gap: var(--space-2);
+  --zx-list-item-radius: var(--radius-lg);
+  /* Background under the pointer. */
+  --zx-list-item-hover-bg: var(--secondary-100);
+  /* Background of the row picked. */
+  --zx-list-item-active-bg: var(--primary-50);
+}

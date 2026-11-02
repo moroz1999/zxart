@@ -1,0 +1,19 @@
+<span class="zx-step__marker" aria-hidden="true">
+  @switch (status) {
+    @case ('done') {
+      <svg-icon name="check" class="zx-step__icon"></svg-icon>
+    }
+    @case ('failed') {
+      !
+    }
+    @case ('running') {
+      <zx-spinner size="xs"></zx-spinner>
+    }
+    @default {
+      {{ markerText }}
+    }
+  }
+</span>
+<div class="zx-step__body">
+  <ng-content></ng-content>
+</div>

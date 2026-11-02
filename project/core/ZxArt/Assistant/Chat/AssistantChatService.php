@@ -170,6 +170,25 @@ final readonly class AssistantChatService
     }
 
     /**
+     * Ends a proposed plan unexecuted and tells the assistant so; no run starts.
+     *
+     * @throws AssistantException
+     * @throws JsonException
+     */
+    public function cancelPlan(int $userId, int $planId): void
+    {
+        $plan = $this->plans->find($planId) ?? throw new AssistantException('Plan not found', 404);
+        $this->conversation($userId, $plan->conversationId);
+        if ($plan->status !== PlanStatus::Proposed) {
+            throw new AssistantException('The plan is not waiting for approval', 409);
+        }
+        $now = time();
+        $this->plans->finish($planId, PlanStatus::Cancelled, $now);
+        $this->messages->append($plan->conversationId, MessageRole::Assistant, MessageKind::PlanProgress, "Plan $planId cancelled by the user", ['planId' => $planId], $now);
+        $this->conversations->touch($plan->conversationId, $now);
+    }
+
+    /**
      * @throws Throwable
      */
     public function continueChat(int $runId): void

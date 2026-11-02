@@ -42,6 +42,11 @@ export class AssistantDataApiService {
     return this.http.post<AssistantRunStarted>(ENDPOINT, {conversationId, text, page}, {params: {action: 'send'}});
   }
 
+  /** Ends a proposed plan without running it. */
+  cancelPlan(planId: number): Observable<unknown> {
+    return this.http.post<unknown>(ENDPOINT, {planId}, {params: {action: 'cancelPlan'}});
+  }
+
   /** Starts running a proposed plan. */
   approvePlan(planId: number): Observable<AssistantRunStarted> {
     return this.http.post<AssistantRunStarted>(ENDPOINT, {planId}, {params: {action: 'approvePlan'}});

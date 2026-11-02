@@ -2,7 +2,7 @@
 
 export type AssistantMessageKind = 'text' | 'toolCall' | 'plan' | 'planProgress' | 'error' | 'stopped';
 export type AssistantRunStatus = 'running' | 'done' | 'waitingApproval' | 'failed' | 'stopped';
-export type AssistantPlanStatus = 'proposed' | 'executing' | 'done' | 'failed' | 'stopped' | 'superseded';
+export type AssistantPlanStatus = 'proposed' | 'executing' | 'done' | 'failed' | 'stopped' | 'superseded' | 'cancelled';
 export type AssistantActionStatus = 'pending' | 'done' | 'failed' | 'skipped';
 
 export interface AssistantConversation {

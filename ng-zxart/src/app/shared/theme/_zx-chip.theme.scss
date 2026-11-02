@@ -37,6 +37,15 @@
   --zx-chip-primary-filled-bg: var(--primary-50);
   --zx-chip-primary-filled-hover-bg: var(--primary-100);
 
+  /* Danger opaque: red text, no fill (failures, refusals). */
+  --zx-chip-danger-opaque-text: var(--danger-600);
+
+  /* Danger filled: tinted red background. */
+  --zx-chip-danger-filled-text: var(--danger-600);
+  --zx-chip-danger-filled-border: var(--danger-200);
+  --zx-chip-danger-filled-bg: var(--danger-50);
+  --zx-chip-danger-filled-hover-bg: var(--danger-100);
+
   /* Artist opaque: green text (for artist / gfx role). */
   --zx-chip-artist-opaque-text: var(--role-artist);
 

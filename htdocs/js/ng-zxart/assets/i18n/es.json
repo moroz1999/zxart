@@ -2280,44 +2280,36 @@
     "open": "Asistente IA",
     "close": "Cerrar",
     "new": "Nueva conversación",
-    "empty": "Pregunta sobre el catálogo o describe qué corregir. El asistente ve la página en la que estás.",
-    "placeholder": "Mensaje… (Enter envía, Shift+Enter es una nueva línea)",
+    "placeholder": "Mensaje…",
     "send": "Enviar",
     "running": "Trabajando…",
-    "tool-call": "Llamada a {{tool}}",
-    "approve": "Aprobar plan",
+    "approve": "Ejecutar el plan",
     "cancel": "Cancelar",
-    "created-in-step": "se crea en el paso {{step}}",
-    "uses-result": "usa el resultado del paso {{steps}}",
+    "created-in-step": "del paso {{step}}",
     "approve-confirm": {
       "title": "¿Aprobar el plan?",
       "message": "Se ejecutarán {{count}} acciones en orden.",
       "message-destructive": "Se ejecutarán {{count}} acciones en orden; {{destructive}} de ellas eliminan o fusionan datos."
     },
     "plan-status": {
-      "proposed": "Esperando aprobación",
-      "executing": "En ejecución",
-      "done": "Hecho",
+      "proposed": "Requiere aprobación",
+      "progress": "{{done}} de {{total}} hechos",
       "failed": "Error",
+      "failed-at": "Detenido en el paso {{step}}",
+      "stopped": "Detenido",
       "superseded": "Reemplazado",
-      "stopped": "Detenido"
-    },
-    "action-status": {
-      "pending": "Pendiente",
-      "done": "Hecho",
-      "failed": "Error",
-      "skipped": "Omitido"
+      "cancelled": "Cancelado"
     },
     "kind": {
-      "create": "Crear",
-      "update": "Cambiar",
-      "delete": "Eliminar",
-      "join": "Fusionar",
-      "convert": "Convertir",
-      "link": "Vincular",
-      "unlink": "Desvincular",
-      "attachFile": "Adjuntar archivo",
-      "deleteFile": "Eliminar archivo"
+      "create": "crear",
+      "update": "cambiar",
+      "delete": "eliminar",
+      "join": "fusionar",
+      "convert": "convertir",
+      "link": "vincular",
+      "unlink": "desvincular",
+      "attachFile": "adjuntar archivo",
+      "deleteFile": "eliminar archivo"
     },
     "conversations": "Conversaciones",
     "no-conversations": "Aún no hay conversaciones",
@@ -2325,10 +2317,61 @@
     "delete": "Eliminar",
     "stop": "Detener",
     "details": "Detalles",
-    "context": "Contexto",
+    "context": "Página: {{title}}",
     "delete-confirm": {
       "title": "¿Eliminar la conversación?",
       "message": "«{{title}}» se eliminará con sus mensajes y planes."
-    }
+    },
+    "placeholder-running": "El asistente está trabajando…",
+    "cancel-plan": "Cancelar",
+    "waits-for": "Espera al paso {{step}}",
+    "activity": {
+      "done": "Acciones hechas: {{count}}",
+      "running": "Trabajando · acciones: {{count}}",
+      "failed": "errores: {{count}}"
+    },
+    "tool": {
+      "default": "Acción",
+      "search": "Búsqueda en el catálogo",
+      "find_locations": "Búsqueda de lugar",
+      "search_prods": "Búsqueda de prods",
+      "search_releases": "Búsqueda de releases",
+      "search_authors": "Búsqueda de autores",
+      "search_groups": "Búsqueda de grupos",
+      "find_tags": "Búsqueda de etiquetas",
+      "list_categories": "Lista de categorías",
+      "list_hardware": "Lista de hardware",
+      "list_options": "Listas de valores",
+      "get_prod": "Ficha del prod",
+      "get_release": "Ficha del release",
+      "get_author": "Ficha del autor",
+      "get_author_alias": "Ficha del alias de autor",
+      "get_group": "Ficha del grupo",
+      "get_group_alias": "Ficha del alias de grupo",
+      "fetch_url": "Carga de página",
+      "view_image": "Vista de imagen",
+      "describe_write_tool": "Campos que necesita una escritura"
+    },
+    "entity": {
+      "prod": "Prod",
+      "release": "Release",
+      "author": "Autor",
+      "authorAlias": "Alias de autor",
+      "group": "Grupo",
+      "groupAlias": "Alias de grupo",
+      "picture": "Imagen",
+      "tune": "Melodía",
+      "comment": "Comentario",
+      "category": "Categoría",
+      "country": "País",
+      "city": "Ciudad",
+      "party": "Party"
+    },
+    "day": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "earlier": "Antes"
+    },
+    "step-ref": "{{text}} (paso {{step}})"
   }
 }

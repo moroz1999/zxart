@@ -1,0 +1,45 @@
+<zx-stack gap="xs">
+  <zx-inline gap="xs" align="center">
+    <zx-button size="xs" color="transparent" (click)="toggle()" [attr.aria-expanded]="open">
+      @if (activity.running) {
+        <zx-spinner size="xs"></zx-spinner>
+      } @else {
+        <svg-icon name="check" class="aa-icon" aria-hidden="true"></svg-icon>
+      }
+      <span appText="bodySm" tone="muted">
+        {{ (activity.running ? 'assistant.activity.running' : 'assistant.activity.done') | translate: {count: activity.steps.length} }}
+        @if (activity.failedCount > 0) {
+          · <span appText="bodySm" tone="danger">{{ 'assistant.activity.failed' | translate: {count: activity.failedCount} }}</span>
+        }
+      </span>
+      <svg-icon [name]="open ? 'expand-less' : 'expand-more'" class="aa-icon" aria-hidden="true"></svg-icon>
+    </zx-button>
+  </zx-inline>
+  @if (open) {
+    <zx-inset padding="md" side="left">
+      <zx-stack gap="sm">
+        <zx-steps>
+          @for (step of activity.steps; track step.id; let last = $last) {
+            <zx-step [number]="$index + 1" [status]="stepStatus(step, last)">
+              <zx-stack gap="xs">
+                <span appText="bodySm" [tone]="step.failed ? 'danger' : 'primary'">
+                  {{ step.labelKey | translate }}@if (step.subject) {: <span tone="strong" appText="bodySm">{{ step.subject }}</span>}
+                </span>
+                @if (detailsOpen) {
+                  <zx-panel class="aa-details" variant="flat" surface="muted" radius="lg" padding="sm">
+                    <zx-preformatted class="aa-details-text" appText="mono" [content]="step.details"></zx-preformatted>
+                  </zx-panel>
+                }
+              </zx-stack>
+            </zx-step>
+          }
+        </zx-steps>
+        <zx-inline>
+          <zx-button size="xs" color="transparent" (click)="toggleDetails()" [attr.aria-expanded]="detailsOpen">
+            <span appText="caption" tone="muted">{{ 'assistant.details' | translate }}</span>
+          </zx-button>
+        </zx-inline>
+      </zx-stack>
+    </zx-inset>
+  }
+</zx-stack>

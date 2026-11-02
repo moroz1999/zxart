@@ -267,7 +267,9 @@ references is not previewed, because what it refers to does not exist yet.
 references resolved from the earlier results' `id`, stopping at the first
 failure, or before the next action once the run is asked to stop (the rest are
 `skipped`, the plan `failed` or `stopped`). Each outcome is saved on the plan
-and told as a `planProgress` message. Unless it was stopped, a `chat` run
+and told as a `planProgress` message. An action proposed without a preview,
+because it refers to an earlier one, is previewed right before it runs, with
+the ids in place, and that preview is saved on it. Unless it was stopped, a `chat` run
 follows at once, so the assistant sums up what came of the plan.
 
 ### Service and endpoint
@@ -278,9 +280,12 @@ run still `running` after 15 minutes is taken for dead and failed. `list` gives
 the user's conversations with a running flag; `delete` is refused while a run
 works on the conversation; `stop` flags its active run. `send`
 supersedes a proposed plan and starts a `chat` run; `approvePlan` marks the plan
-`executing` and starts an `execute` run. `state()` answers the messages after a
+`executing` and starts an `execute` run; `cancelPlan` ends a proposed plan
+`cancelled` and tells it as a `planProgress` message, without a run. `state()` answers the messages after a
 `seq`, every plan, the active run and `refs` — the entities that the messages'
-`[[type:id]]` and the plans' previews mention, found by `EntityMentionLookup`.
+`[[type:id]]` and the plans' previews mention, and those the plans' done
+actions created (the preview target's type, the result's `id`), found by
+`EntityMentionLookup`.
 
 `Controllers\AssistantData` (`/assistant-data/`, see `api/assistant-data.yaml`)
 checks the user and the privilege, answers, and for `send` and `approvePlan`
@@ -296,9 +301,32 @@ time limit, then the run continues in the same process.
   of `aiAssistant` (`RootPrivilegeService`).
 - `AssistantDrawerComponent` — a fixed drawer on the right, in `spa-root`
   outside the router outlet, so links to entities keep it open. While it exists
-  it subscribes to `AssistantStore.polling$`. It holds the conversation list
-  (`AssistantConversationsComponent`, delete behind a confirm dialog), "Stop"
-  while a run works, and the page the next message will carry.
+  it subscribes to `AssistantStore.polling$`. Its header names the open
+  conversation (from the list, reloaded whenever the conversation or its run
+  changes) and opens the conversation list
+  (`AssistantConversationsComponent`), which then takes the place of the stream
+  and the composer. The composer is locked while a run works, and "Stop" takes
+  the place of "Send"; under it is the title of the page the next message
+  carries.
+- `AssistantConversationsComponent` — the conversations grouped into today,
+  yesterday and earlier (`groupConversations()`), each a `zx-list-item` with
+  its time and a delete button behind a confirm dialog.
+- `AssistantActivityComponent` — the tool calls made in a row, folded into one
+  line with their count; a step per call in `zx-steps`, named by a phrase per
+  tool and what it was about. It is open while the run adds to it; "Details"
+  shows each call's JSON.
+- `AssistantPlanComponent` — the plan's status chip (the steps done, the step
+  it stopped at), a `zx-step` per action: the entity type, the target (a link
+  once it exists, also for what the plan created), the kind of change, the
+  changed fields, consequences, an error, the step a skipped one waited for.
+  An action without a preview shows its arguments instead (its `fields`
+  opened), the title its fields give as the target, and an id it takes from an
+  earlier step as that step's target with the step's number, a link once the
+  step has created it.  An argument named `<type>Id(s)` after an entity type
+  names that entity with its title and id (the state's `refs` hold it); an
+  image address (png, jpg, gif, webp) shows as a small image.
+  While the plan waits: "Run the plan", behind a confirm dialog that counts the
+  destructive actions, and "Cancel".
 - `AssistantMarkdownComponent` — the assistant's prose: `marked`, loaded in a
   chunk of its own when the store is created, renders it with known mentions as
   links (`createAssistantMarkdown`); Angular sanitizes the HTML as it binds it.
@@ -307,26 +335,27 @@ time limit, then the run continues in the same process.
   Every message with a payload, and a plan with its whole record, can be
   expanded to its JSON.
 - `AssistantPanelService` — open or closed, remembered per browser.
-- `AssistantStore` — the open conversation (remembered per browser, created on
-  the first message, "new" forgets it), messages merged by `seq`, plans and run
+- `AssistantStore` — the open conversation: a new one when the drawer starts,
+  created on the first message; messages merged by `seq`, plans and run
   replaced from each poll; fetches a conversation once when it is opened and
   then polls every 2 s only while a run is active — an idle conversation
-  changes only by the user's own send, approve or stop, which mark a run.
-  `buildAssistantView()` turns it into what the components draw:
-  `[[type:id]]` as router links, previews as field / before / after rows.
+  changes only by the user's own send, approve or stop, which mark a run, and
+  a cancelled plan is fetched once. `buildAssistantView()` turns it into the
+  stream the components draw: messages, and the tool calls between them as
+  activities; plan progress notes are left out, the plan shows them.
 - `AssistantPageContextService` — the page sent with every message: the URL,
-  and the entity type and id of an entity page.
-- `AssistantPlanComponent` — the actions with their previews and statuses;
-  "Approve" opens a confirm dialog that counts the destructive actions.
+  and the entity type and id of an entity page; and the page's title, for the
+  composer.
 - `AssistantDataApiService` (`shared/api/`) — the only code that knows the URL.
 
 The components are built from the design system only: layout through
 `zx-stack` / `zx-inline` / `zx-inset`, text through `appText` / `appHeading`,
 messages in tinted flat `zx-panel`s (`surface` `primary` for the user, `muted`
-for the assistant), plans and expanded JSON in flat panels too, JSON in
-`zx-preformatted`, preview rows in `zx-item-data`, controls as `zx-button`.
-Their SCSS keeps only the drawer's contour and scrolling; the drawer's own
-tokens are in `shared/theme/_zx-assistant.theme.scss`.
+for the assistant), plans and expanded JSON in flat panels too, steps in
+`zx-steps`, statuses and kinds in `zx-chip`s, JSON in `zx-preformatted`,
+preview rows in `zx-item-data`, controls as `zx-button`. Their SCSS keeps only
+the drawer's contour and scrolling; the drawer's own tokens are in
+`shared/theme/_zx-assistant.theme.scss`.
 
 Tests: `tests/Integration/Assistant/Chat/` (storage, the service),
 `tests/Integration/Assistant/Agent/` (the run with a scripted model, plans

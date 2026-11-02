@@ -18,7 +18,7 @@ use App\Users\CurrentUserService;
 use ZxArt\Assistant\Chat\AssistantChatService;
 use ZxArt\Assistant\Chat\AssistantException;
 use ZxArt\Assistant\Chat\Dto\ConversationSummaryDto;
-use ZxArt\Assistant\Chat\Rest\ApprovePlanRequestDto;
+use ZxArt\Assistant\Chat\Rest\PlanIdRequestDto;
 use ZxArt\Assistant\Chat\Rest\ConversationIdRequestDto;
 use ZxArt\Assistant\Chat\Rest\ConversationSummaryRestDto;
 use ZxArt\Assistant\Chat\Rest\ConversationRestDto;
@@ -32,7 +32,7 @@ use ZxArt\Shared\Http\ResponseCloser;
  * The editors' AI assistant (`/assistant-data/`).
  *
  * `GET ?action=list` lists the user's conversations, `GET ?action=get&id=&afterSeq=`
- * answers what is new in one; `POST ?action=create|send|approvePlan|stop|delete`
+ * answers what is new in one; `POST ?action=create|send|approvePlan|cancelPlan|stop|delete`
  * changes them. `send` and `approvePlan`
  * answer at once and then run the agent or the plan in the same process, after
  * the response is out; the client polls `get` meanwhile.
@@ -94,6 +94,7 @@ class AssistantData extends LoggedControllerApplication
                 'stop' => $this->stop($userId),
                 'send' => $this->send($userId, $afterResponse),
                 'approvePlan' => $this->approvePlan($userId, $afterResponse),
+                'cancelPlan' => $this->cancelPlan($userId),
                 default => throw new AssistantException('Unsupported assistant action', 400),
             };
             $this->renderer->assign('body', $body);
@@ -155,13 +156,25 @@ class AssistantData extends LoggedControllerApplication
     }
 
     /**
+     * @return array<never, never>
+     * @throws AssistantException
+     * @throws JsonException
+     */
+    private function cancelPlan(int $userId): array
+    {
+        $this->chatService->cancelPlan($userId, $this->deserialize(PlanIdRequestDto::class)->planId);
+
+        return [];
+    }
+
+    /**
      * @param ?callable(): void $afterResponse
      * @throws AssistantException
      * @throws JsonException
      */
     private function approvePlan(int $userId, ?callable &$afterResponse): RunStartedRestDto
     {
-        $planId = $this->deserialize(ApprovePlanRequestDto::class)->planId;
+        $planId = $this->deserialize(PlanIdRequestDto::class)->planId;
         $runId = $this->chatService->approvePlan($userId, $planId);
         $afterResponse = fn() => $this->chatService->continueExecution($runId, $planId);
 

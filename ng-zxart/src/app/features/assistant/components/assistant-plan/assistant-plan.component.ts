@@ -10,12 +10,14 @@ import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.componen
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {HeadingDirective} from '../../../../shared/ui/typography/directives/heading.directive';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
-import {TypographyTone} from '../../../../shared/ui/typography/typography.types';
-import {AssistantActionStatus} from '../../../../shared/models/assistant-data';
+import {ZxStepComponent} from '../../../../shared/ui/zx-steps/zx-step.component';
+import {ZxStepsComponent} from '../../../../shared/ui/zx-steps/zx-steps.component';
+import {ZxChipColor} from '../../../../shared/ui/zx-chip/zx-chip.component';
 import {AssistantPlanView} from '../../models/assistant-view';
+import {isDestructiveKind} from '../../services/assistant-view';
 import {AssistantTextComponent} from '../assistant-text/assistant-text.component';
 
-/** A proposed plan: its actions with their previews, and the approve button. */
+/** A plan: its steps with their previews and outcomes, and, while it waits, approve and cancel. */
 @Component({
   selector: 'zx-assistant-plan',
   standalone: true,
@@ -29,6 +31,8 @@ import {AssistantTextComponent} from '../assistant-text/assistant-text.component
     ZxItemDataItemComponent,
     ZxPanelComponent,
     ZxStackComponent,
+    ZxStepComponent,
+    ZxStepsComponent,
     HeadingDirective,
     TextDirective,
     AssistantTextComponent,
@@ -40,11 +44,35 @@ import {AssistantTextComponent} from '../assistant-text/assistant-text.component
 export class AssistantPlanComponent {
   @Input({required: true}) plan!: AssistantPlanView;
   @Output() readonly approve = new EventEmitter<AssistantPlanView>();
+  @Output() readonly cancelPlan = new EventEmitter<AssistantPlanView>();
 
-  readonly statusTones: Record<AssistantActionStatus, TypographyTone> = {
-    pending: 'muted',
-    done: 'strong',
-    failed: 'danger',
-    skipped: 'muted',
-  };
+  get statusColor(): ZxChipColor {
+    switch (this.plan.status) {
+      case 'proposed':
+        return 'primary';
+      case 'failed':
+        return 'danger';
+      default:
+        return 'neutral';
+    }
+  }
+
+  /** Executing and done plans count their steps; a failed one names where it stopped. */
+  get statusKey(): string {
+    switch (this.plan.status) {
+      case 'executing':
+      case 'done':
+        return 'assistant.plan-status.progress';
+      case 'failed':
+        return this.plan.stoppedAt !== null ? 'assistant.plan-status.failed-at' : 'assistant.plan-status.failed';
+      default:
+        return `assistant.plan-status.${this.plan.status}`;
+    }
+  }
+
+  get statusParams(): Record<string, number> {
+    return {done: this.plan.doneCount, total: this.plan.actions.length, step: this.plan.stoppedAt ?? 0};
+  }
+
+  readonly isDestructive = isDestructiveKind;
 }

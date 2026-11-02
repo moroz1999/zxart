@@ -8,7 +8,7 @@ Accent callout: a recessed inset box with a colored left rule. The visual atom b
 
 | Prop | Values | Default |
 |---|---|---|
-| `accent` | `warning` \| `primary` \| `none` | `warning` |
+| `accent` | `warning` \| `primary` \| `danger` \| `none` | `warning` |
 | `surface` | `deep` \| `raised` | `deep` |
 | `orientation` | `row` \| `column` | `column` |
 | `align` | `start` \| `center` \| `stretch` | `stretch` |
@@ -26,3 +26,5 @@ Accent callout: a recessed inset box with a colored left rule. The visual atom b
 **Label**: `label` renders a standardized uppercase caption header; its typography is fixed by the component. Pass an already-translated string. Content goes through `ng-content`.
 
 **Link**: setting `href` turns the whole callout into a full-area link (it also enables the interactive hover). Provide `ariaLabel` when the projected content has no accessible text.
+
+**Accent**: `warning` for a caution, `danger` for a failure or refusal the user must see, `primary` for neutral provenance.

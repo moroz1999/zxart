@@ -57,6 +57,9 @@ All design system components are in `ng-zxart/src/app/shared/ui/`.
 - [zx-pixel-zoom](design-system/zx-pixel-zoom.md) — pixel-art image at an exact size with a hover loupe and wheel zoom
 - [zx-toggle](design-system/zx-toggle.md) — segmented control picking one of a few options; usable as a form control
 - [zx-tree](design-system/zx-tree.md) — collapsible tree of rows with caller-supplied row actions
+- [zx-steps](design-system/zx-steps.md) — vertical list of process steps with a status marker each
+- [zx-list-item](design-system/zx-list-item.md) — pickable row with a second line and trailing actions
+- `zx-chip` — pill label; `variant` `opaque` \| `filled` \| `mono` \| `mono-outline`, `color` `neutral` \| `primary` \| `danger` \| `artist` \| `code` \| `intro`; `danger` only for failures
 - [zx-button](design-system/zx-button.md) — button with colors and sizes
 - [zx-button-controls](design-system/zx-button-controls.md) — wrapper for button groups
 - [zx-pagination](design-system/zx-pagination.md) — page navigation

@@ -152,6 +152,26 @@ final class PlansTest extends WriteToolTestCase
         ], array_map(static fn(MessageDto $message): string => $message->text, $progress));
     }
 
+    public function testAnActionThatTakesAnEarlierResultIsPreviewedWhenItRuns(): void
+    {
+        $this->signInAsEditor();
+        $plan = $this->propose([
+            'title' => 'New game',
+            'actions' => [
+                ['tool' => 'create_prod', 'arguments' => ['fields' => ['title' => 'Goldwrite Demo']]],
+                ['tool' => 'create_release', 'arguments' => ['fields' => ['title' => 'Tape', 'prodId' => ['$ref' => 1]]]],
+            ],
+        ]);
+
+        $this->container->get(PlanExecutor::class)->execute($plan->id, $this->executeRun());
+
+        $executed = $this->container->get(PlansDbal::class)->find($plan->id);
+        $preview = $executed?->actions[1]['preview'];
+        self::assertSame('create', $preview['kind']);
+        self::assertSame('release', $preview['target']['type']);
+        self::assertSame('Tape', $preview['target']['title']);
+    }
+
     public function testAFailedActionStopsThePlan(): void
     {
         $this->signInAsEditor();

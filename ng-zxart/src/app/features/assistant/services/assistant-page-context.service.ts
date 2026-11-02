@@ -1,7 +1,8 @@
 import {Inject, Injectable, InjectionToken} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {NavigationEnd, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {filter, map, startWith} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, startWith} from 'rxjs/operators';
 import {AssistantPage} from '../../../shared/models/assistant-data';
 
 export const ASSISTANT_ORIGIN = new InjectionToken<string>('ASSISTANT_ORIGIN', {
@@ -28,10 +29,23 @@ export class AssistantPageContextService {
   /** The page, again after every navigation. */
   readonly page$: Observable<AssistantPage>;
 
+  /** The page's title, for the user to see which page goes along; again whenever it changes. */
+  readonly title$: Observable<string>;
+
   constructor(
     private readonly router: Router,
     @Inject(ASSISTANT_ORIGIN) private readonly origin: string,
+    @Inject(DOCUMENT) private readonly document: Document,
   ) {
+    this.title$ = new Observable<void>(subscriber => {
+      const observer = new MutationObserver(() => subscriber.next());
+      observer.observe(this.document.head, {subtree: true, childList: true, characterData: true});
+      return () => observer.disconnect();
+    }).pipe(
+      startWith(undefined),
+      map(() => this.document.title),
+      distinctUntilChanged(),
+    );
     this.page$ = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       startWith(null),

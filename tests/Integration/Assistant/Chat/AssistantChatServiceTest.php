@@ -111,6 +111,75 @@ final class AssistantChatServiceTest extends WriteToolTestCase
         $this->assertAssistantRefused(404, fn() => $service->approvePlan(self::USER_ID, $planId));
     }
 
+    public function testCancellingAProposedPlanEndsItAndTellsTheAssistant(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+        $planId = $this->container->get(PlansDbal::class)->create($conversation->id, 'Fix', [], time());
+
+        $service->cancelPlan(self::USER_ID, $planId);
+
+        self::assertSame(PlanStatus::Cancelled, $this->container->get(PlansDbal::class)->find($planId)?->status);
+        $state = $service->state(self::USER_ID, $conversation->id, 0);
+        self::assertNull($state->activeRun);
+        self::assertCount(1, $state->messages);
+        self::assertSame(MessageKind::PlanProgress, $state->messages[0]->kind);
+        self::assertSame("Plan $planId cancelled by the user", $state->messages[0]->text);
+        self::assertSame(['planId' => $planId], $state->messages[0]->payload);
+        $this->assertAssistantRefused(409, fn() => $service->cancelPlan(self::USER_ID, $planId));
+    }
+
+    public function testAnotherUsersPlanCannotBeCancelled(): void
+    {
+        $service = $this->service();
+        $conversation = $service->create(self::OTHER_USER_ID);
+        $planId = $this->container->get(PlansDbal::class)->create($conversation->id, 'Fix', [], time());
+
+        $this->assertAssistantRefused(404, fn() => $service->cancelPlan(self::USER_ID, $planId));
+    }
+
+    public function testTheStateMentionsWhatAnExecutedPlanCreated(): void
+    {
+        $this->signInAsEditor();
+        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+        $this->container->get(PlansDbal::class)->create($conversation->id, 'New game', [[
+            'tool' => 'create_prod',
+            'arguments' => '{}',
+            'preview' => ['kind' => 'create', 'target' => ['type' => 'prod', 'id' => null, 'title' => 'Goldwrite Demo', 'createdInStep' => null], 'changes' => [], 'consequences' => []],
+            'dependsOn' => [],
+            'status' => 'done',
+            'result' => ['id' => $prodId],
+            'error' => null,
+        ]], time());
+
+        $state = $service->state(self::USER_ID, $conversation->id, 0);
+
+        self::assertSame(['prod:' . $prodId], array_keys($state->refs));
+    }
+
+    public function testTheStateMentionsTheEntitiesAnUnpreviewedActionNamesById(): void
+    {
+        $this->signInAsEditor();
+        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $service = $this->service();
+        $conversation = $service->create(self::USER_ID);
+        $this->container->get(PlansDbal::class)->create($conversation->id, 'Credit', [[
+            'tool' => 'create_release',
+            'arguments' => json_encode(['fields' => ['title' => 'Tape', 'prodId' => $prodId, 'publisherIds' => [5], 'authorIds' => [['$ref' => 1]]]], JSON_THROW_ON_ERROR),
+            'preview' => null,
+            'dependsOn' => [1],
+            'status' => 'pending',
+            'result' => null,
+            'error' => null,
+        ]], time());
+
+        $state = $service->state(self::USER_ID, $conversation->id, 0);
+
+        self::assertSame(['prod:' . $prodId], array_keys($state->refs));
+    }
+
     public function testTheStateIsWhatIsNewAndTheEntitiesItMentions(): void
     {
         $this->signInAsEditor();

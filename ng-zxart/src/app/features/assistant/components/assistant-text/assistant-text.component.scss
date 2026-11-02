@@ -2,3 +2,12 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+// an image an argument points to: a small preview, pixels kept sharp
+.at-image {
+  height: var(--zx-assistant-image-height);
+  max-width: 100%;
+  vertical-align: middle;
+  image-rendering: pixelated;
+  border-radius: var(--zx-assistant-image-radius);
+}

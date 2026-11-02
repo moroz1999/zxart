@@ -3,7 +3,7 @@ import {NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {TextDirective} from '../typography/directives/text.directive';
 import {isSpaUrl} from '../../utils/spa-url';
-export type CalloutAccent = 'warning' | 'primary' | 'none';
+export type CalloutAccent = 'warning' | 'primary' | 'danger' | 'none';
 export type CalloutSurface = 'deep' | 'raised';
 export type CalloutOrientation = 'row' | 'column';
 export type CalloutAlign = 'start' | 'center' | 'stretch';
