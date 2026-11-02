@@ -22,7 +22,9 @@ trait DbLoggableApplication
                 $pathsManager = $this->getService(PathsManager::class);
 
                 $this->connection = $this->getService('db');
-                $this->logFilePath = $pathsManager->getPath('logs') . 'db_' . time() . '.log';
+                $logsPath = $pathsManager->getPath('logs');
+                $pathsManager->ensureDirectory($logsPath);
+                $this->logFilePath = $logsPath . 'db_' . time() . '.log';
 
                 $this->connection->enableQueryLog();
 
@@ -40,7 +42,12 @@ trait DbLoggableApplication
     {
         if ($this->logFilePath) {
             $overall = 0;
-            $text = '';
+            $httpsValue = strtolower((string)($_SERVER['HTTPS'] ?? ''));
+            $isHttps = $httpsValue === 'on' || $httpsValue === '1';
+            $scheme = $isHttps ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? '';
+            $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+            $text = 'URL: ' . $scheme . '://' . $host . $requestUri . "\r\n";
             if ($this->transportObject) {
                 if ($log = $this->transportObject->getQueriesHistory()) {
                     foreach ($log as $item) {
