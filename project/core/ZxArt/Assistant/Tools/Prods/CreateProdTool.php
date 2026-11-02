@@ -50,8 +50,6 @@ final readonly class CreateProdTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createProdHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::Prod, null, (string)$request->fields->title),

@@ -11,7 +11,6 @@ use ZxArt\Groups\Repositories\GroupRepository;
 use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupElement;
 
 /**
  * @psalm-api
@@ -33,7 +32,8 @@ final readonly class DeleteGroupHandler
      */
     public function handle(DeleteGroupCommand $command): GroupDataResultDto
     {
-        $group = $this->check($command);
+        $group = $this->groupRepository->get($command->groupId);
+        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($group): void {
             // logged first: the element data is gone after the deletion
@@ -42,18 +42,5 @@ final readonly class DeleteGroupHandler
         });
 
         return new GroupDataResultDto(id: $command->groupId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupDataException
-     */
-    public function check(DeleteGroupCommand $command): groupElement
-    {
-        $group = $this->groupRepository->get($command->groupId);
-        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
-
-        return $group;
     }
 }

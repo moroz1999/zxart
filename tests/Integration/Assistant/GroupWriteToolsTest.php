@@ -72,12 +72,14 @@ final class GroupWriteToolsTest extends WriteToolTestCase
         self::assertSame('GWC', $this->container->get(GroupStateService::class)->get($groupId)->fields->abbreviation);
     }
 
-    public function testUpdateGroupIsRefusedAtThePreviewWithoutThePrivilege(): void
+    public function testUpdateGroupWithoutThePrivilegeIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsRegisteredUser();
         $groupId = (int)$this->db->table('module_group')->min('id');
 
-        $this->assertRefused(403, GroupDataException::class, fn() => $this->preview('update_group', '{"id": ' . $groupId . ', "fields": {"slogan": "X"}}'));
+        $this->preview('update_group', '{"id": ' . $groupId . ', "fields": {"slogan": "X"}}');
+
+        $this->assertRefused(403, GroupDataException::class, fn() => $this->execute('update_group', '{"id": ' . $groupId . ', "fields": {"slogan": "X"}}'));
     }
 
     public function testDeleteGroupPreviewsItsMembersAndDeletes(): void

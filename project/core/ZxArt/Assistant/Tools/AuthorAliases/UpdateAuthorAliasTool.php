@@ -52,7 +52,6 @@ final readonly class UpdateAuthorAliasTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->updateAuthorAliasHandler->check($this->command($request));
         $state = $this->authorAliasStateService->get($request->id);
 
         return new ChangePreviewDto(

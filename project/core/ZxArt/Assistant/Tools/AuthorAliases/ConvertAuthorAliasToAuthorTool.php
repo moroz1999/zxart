@@ -52,7 +52,6 @@ final readonly class ConvertAuthorAliasToAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->convertAuthorAliasToAuthorHandler->check($this->command($request));
         $state = $this->authorAliasStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::AuthorAlias, $request->id))->text();
 

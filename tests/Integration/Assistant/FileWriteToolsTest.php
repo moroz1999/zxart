@@ -83,12 +83,14 @@ final class FileWriteToolsTest extends WriteToolTestCase
         self::assertCount(2, $this->container->get(ProdStateService::class)->get($prodId)->files['maps']);
     }
 
-    public function testAddProdFilesWithoutAUrlIsRefusedAtThePreview(): void
+    public function testAddProdFilesWithoutAUrlIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsEditor();
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->preview('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}'));
+        $this->preview('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}');
+
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->execute('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}'));
     }
 
     public function testDeleteProdFilePreviewsTheListShrinkingAndDeletes(): void

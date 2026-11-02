@@ -37,7 +37,8 @@ final readonly class DeleteReleaseFileHandler
      */
     public function handle(DeleteReleaseFileCommand $command): ReleaseDataResultDto
     {
-        $file = $this->check($command);
+        $file = $this->getSelectorFile($this->releaseRepository->get($command->releaseId), $command->fileId);
+        $this->releasePrivileges->assert($command->fileId, self::PRIVILEGE, StructureType::File);
 
         $this->transactionRunner->run(function () use ($file): void {
             // logged first: the element data is gone after the deletion
@@ -46,19 +47,6 @@ final readonly class DeleteReleaseFileHandler
         });
 
         return new ReleaseDataResultDto(id: $command->releaseId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ReleaseDataException
-     */
-    public function check(DeleteReleaseFileCommand $command): fileElement
-    {
-        $file = $this->getSelectorFile($this->releaseRepository->get($command->releaseId), $command->fileId);
-        $this->releasePrivileges->assert($command->fileId, self::PRIVILEGE, StructureType::File);
-
-        return $file;
     }
 
     private function getSelectorFile(zxReleaseElement $release, int $fileId): fileElement

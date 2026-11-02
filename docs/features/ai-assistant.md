@@ -109,11 +109,11 @@ Write tools, in `Prods\`, `Releases\`, `Authors\`, `AuthorAliases\`,
 | group | `create_group`, `update_group`, `delete_group`, `join_groups`, `convert_group_to_author`, `set_group_member`, `remove_group_member` |
 | group alias | `create_group_alias`, `update_group_alias`, `delete_group_alias`, `join_group_aliases`, `convert_group_alias_to_group`, `set_group_alias_member`, `remove_group_alias_member` |
 
-Each builds the command of its use case once: `preview()` calls the handler's
-`check()` (privilege, existence, input — see
-[php/entity-writes.md](../php/entity-writes.md#use-cases)), reads the state
-through `<Entity>StateService` and answers the preview; `execute()` calls
-`handle()` and answers the handler's result: `{id}` — of the new entity for a
+`preview()` reads the state through `<Entity>StateService` and answers what
+would change; it does not check privileges or input rules, so an action the
+handler would refuse is previewed and fails when it runs. `execute()` builds the
+command of its use case, calls `handle()` (see
+[php/entity-writes.md](../php/entity-writes.md#use-cases)) and answers the handler's result: `{id}` — of the new entity for a
 create or a conversion — or, for added files, `AddedFilesDto` (`id`,
 `fileIds`).
 
@@ -173,7 +173,7 @@ call resolved from the container and built from JSON, a nested filter among
 them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
 `tests/Integration/Entities/EntityCardsTest.php` (the cards);
 `tests/Integration/Assistant/*WriteToolsTest.php` (previews and writes of
-the write tools, refusals at the preview, over `WriteToolTestCase`); `tests/Shared/Http/` and
+the write tools, refusals when they run, over `WriteToolTestCase`); `tests/Shared/Http/` and
 `tests/Shared/Images/` fetch from PHP's built-in
 server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.
 
@@ -259,8 +259,10 @@ environment variable (`docker-compose.yml` takes it from `.env`).
 some thirty write tools do not ride along with every request.
 Each action must name a write tool; `{"$ref": N}` in place of an id takes the
 id action N creates, and must point to an earlier action (`PlanReferences`).
-An action without references is built and previewed; a refusal at the preview
-refuses the plan, and the reason goes back to the model. An action with
+An action without references is built and previewed; when its arguments do not
+fit the tool or its preview finds nothing to change (an id of nothing), the plan
+is refused and the reason goes back to the model. The privileges and rules of
+the use case are not checked before the plan runs. An action with
 references is not previewed, because what it refers to does not exist yet.
 
 `Agent\PlanExecutor` runs an approved plan: each action through its write tool,
@@ -270,7 +272,9 @@ failure, or before the next action once the run is asked to stop (the rest are
 and told as a `planProgress` message. An action proposed without a preview,
 because it refers to an earlier one, is previewed right before it runs, with
 the ids in place, and that preview is saved on it. Unless it was stopped, a `chat` run
-follows at once, so the assistant sums up what came of the plan.
+follows at once, so the assistant sums up what came of the plan; a failed
+action reaches it with its error, and the prompt tells it to fix the cause and
+propose a new plan of the actions left.
 
 ### Service and endpoint
 

@@ -49,8 +49,6 @@ final readonly class CreateAuthorAliasTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createAuthorAliasHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::AuthorAlias, null, (string)$request->fields->title),

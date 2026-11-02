@@ -50,8 +50,6 @@ final readonly class CreateAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createAuthorHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::Author, null, (string)$request->fields->title),

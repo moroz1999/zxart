@@ -52,7 +52,6 @@ final readonly class JoinProdsTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->joinProdsHandler->check($this->command($request));
         $main = $this->prodStateService->get($request->mainId);
         $joined = $this->prodStateService->get($request->joinedId);
         $mainText = (new EntityMentionDto(EntityType::Prod, $request->mainId))->text();

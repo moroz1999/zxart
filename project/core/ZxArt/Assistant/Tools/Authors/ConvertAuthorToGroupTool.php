@@ -52,7 +52,6 @@ final readonly class ConvertAuthorToGroupTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->convertAuthorToGroupHandler->check($this->command($request));
         $state = $this->authorStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::Author, $request->id))->text();
 

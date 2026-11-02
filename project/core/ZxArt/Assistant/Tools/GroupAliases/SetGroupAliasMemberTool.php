@@ -52,7 +52,6 @@ final readonly class SetGroupAliasMemberTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->setGroupAliasMemberHandler->check($this->command($request));
         $state = $this->groupAliasStateService->get($request->aliasId);
 
         return new ChangePreviewDto(

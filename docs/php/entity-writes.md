@@ -23,12 +23,11 @@ entities, is a use case in `ZxArt\<Module>\UseCases`: a readonly
    new element whose structure record is not stored yet, `delete()`; then logs
    the action.
 
-A handler of a data endpoint (not an import) does step 1 — and every other refusal
-that needs no writing: title rules, member type, roles, a credit to remove that
-is not there — in a public `check(command)`, which `handle()` calls first. The
-assistant's write tools call `check()` for their preview and `handle()` to
-execute, so a preview refuses exactly what the write would. The handler
-returns the loaded element from `check()` when `handle()` needs it.
+A handler of a data endpoint (not an import) also refuses in step 1 whatever
+needs no writing to find out: title rules, member type, roles, a credit to
+remove that is not there. `handle()` is the handler's only public method; the
+assistant's previews do not ask it in advance, its refusals come when the plan
+runs.
 
 `TransactionRunner` commits when the work returns and rolls back when it
 throws; a run inside another becomes a savepoint, so a use case called from

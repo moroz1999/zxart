@@ -64,11 +64,13 @@ final class ProdWriteToolsTest extends WriteToolTestCase
         self::assertSame('Goldwrite Demo', $this->state($result->id)->fields->title);
     }
 
-    public function testCreateProdWithoutATitleIsRefusedAtThePreview(): void
+    public function testCreateProdWithoutATitleIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsRegisteredUser();
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->preview('create_prod', '{"fields": {"year": 1999}}'));
+        $this->preview('create_prod', '{"fields": {"year": 1999}}');
+
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->execute('create_prod', '{"fields": {"year": 1999}}'));
     }
 
     public function testUpdateProdPreviewsWhatChangesAndUpdates(): void
@@ -95,12 +97,14 @@ final class ProdWriteToolsTest extends WriteToolTestCase
         self::assertSame(2001, $this->state($prodId)->fields->year);
     }
 
-    public function testUpdateProdIsRefusedAtThePreviewWithoutThePrivilege(): void
+    public function testUpdateProdWithoutThePrivilegeIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsRegisteredUser();
         $prodId = (int)$this->db->table('module_zxprod')->min('id');
 
-        $this->assertRefused(403, ProdDataException::class, fn() => $this->preview('update_prod', '{"id": ' . $prodId . ', "fields": {"year": 2001}}'));
+        $this->preview('update_prod', '{"id": ' . $prodId . ', "fields": {"year": 2001}}');
+
+        $this->assertRefused(403, ProdDataException::class, fn() => $this->execute('update_prod', '{"id": ' . $prodId . ', "fields": {"year": 2001}}'));
     }
 
     public function testDeleteProdPreviewsTheReleasesItTakesAlong(): void
@@ -175,13 +179,18 @@ final class ProdWriteToolsTest extends WriteToolTestCase
         self::assertEquals([new FieldChangeDto('roles', ['code'], ['code', 'music'])], $preview->changes);
     }
 
-    public function testSetProdAuthorOfAnUnknownRoleIsRefusedAtThePreview(): void
+    public function testSetProdAuthorOfAnUnknownRoleIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsEditor();
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->preview(
+        $this->preview(
+            'set_prod_author',
+            '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . ', "roles": ["juggling"]}',
+        );
+
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->execute(
             'set_prod_author',
             '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . ', "roles": ["juggling"]}',
         ));
@@ -206,13 +215,15 @@ final class ProdWriteToolsTest extends WriteToolTestCase
         self::assertSame([], $this->state($prodId)->authors);
     }
 
-    public function testRemovingAnAuthorWhoIsNotCreditedIsRefusedAtThePreview(): void
+    public function testRemovingAnAuthorWhoIsNotCreditedIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'deleteAuthor']]);
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
 
-        $this->assertRefused(404, ProdDataException::class, fn() => $this->preview('remove_prod_author', '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}'));
+        $this->preview('remove_prod_author', '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}');
+
+        $this->assertRefused(404, ProdDataException::class, fn() => $this->execute('remove_prod_author', '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}'));
     }
 
     private function state(int $prodId): ProdStateDto

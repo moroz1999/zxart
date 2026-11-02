@@ -53,7 +53,6 @@ final readonly class JoinAuthorsTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->joinAuthorsHandler->check($this->command($request));
         $main = $this->authorStateService->get($request->mainId);
         $joined = $this->authorStateService->get($request->joinedId);
         $mainText = (new EntityMentionDto(EntityType::Author, $request->mainId))->text();

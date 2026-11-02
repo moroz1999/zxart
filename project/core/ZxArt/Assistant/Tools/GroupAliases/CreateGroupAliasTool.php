@@ -49,8 +49,6 @@ final readonly class CreateGroupAliasTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createGroupAliasHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::GroupAlias, null, (string)$request->fields->title),

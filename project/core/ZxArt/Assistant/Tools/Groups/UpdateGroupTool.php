@@ -52,7 +52,6 @@ final readonly class UpdateGroupTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->updateGroupHandler->check($this->command($request));
         $state = $this->groupStateService->get($request->id);
 
         return new ChangePreviewDto(

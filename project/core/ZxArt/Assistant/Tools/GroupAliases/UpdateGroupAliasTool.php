@@ -52,7 +52,6 @@ final readonly class UpdateGroupAliasTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->updateGroupAliasHandler->check($this->command($request));
         $state = $this->groupAliasStateService->get($request->id);
 
         return new ChangePreviewDto(

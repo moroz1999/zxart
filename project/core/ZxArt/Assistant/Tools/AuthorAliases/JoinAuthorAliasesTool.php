@@ -51,7 +51,6 @@ final readonly class JoinAuthorAliasesTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->joinAuthorAliasesHandler->check($this->command($request));
         $main = $this->authorAliasStateService->get($request->mainId);
         $joined = $this->authorAliasStateService->get($request->joinedId);
         $mainText = (new EntityMentionDto(EntityType::AuthorAlias, $request->mainId))->text();

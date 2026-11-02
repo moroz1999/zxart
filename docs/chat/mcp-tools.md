@@ -145,4 +145,4 @@ ids, tags as entities, parties, pictures, tunes, press.
 - [x] Catalogue tools, `find_tags`
 - [x] `fetch_url` with address guard and limits, body returned as is; `view_image`
 - [x] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
-- [x] Tests per tool: request mapping, preview rows, refused privilege
+- [x] Tests per tool: request mapping, preview rows, refused privilege when it runs

@@ -51,7 +51,6 @@ final readonly class DeleteProdFileTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteProdFileHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->prodId);
         $changes = [];
         foreach ($state->files as $kind => $files) {

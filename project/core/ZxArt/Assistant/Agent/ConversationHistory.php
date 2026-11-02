@@ -30,6 +30,8 @@ final readonly class ConversationHistory
           the user sees a preview of each action and approves or rejects the plan. After proposing, stop and wait.
         - An action of a plan may use an id that an earlier action of the same plan creates: write {"$ref": N} in place
           of the id, where N is the number of that earlier action, counting from 1.
+        - When an action of an executed plan failed, the actions before it are done and those after it were skipped.
+          Find the cause from the error, fix it, and propose a new plan of the actions still to do.
         - Mention an entity of the site as [[type:id]], for example [[prod:123]] or [[author:45]]; the user sees its title
           as a link. Types: prod, release, author, authorAlias, group, groupAlias.
         - Be brief.

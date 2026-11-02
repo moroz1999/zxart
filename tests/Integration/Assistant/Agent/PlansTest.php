@@ -120,11 +120,29 @@ final class PlansTest extends WriteToolTestCase
         self::assertSame([], $this->messages());
     }
 
-    public function testAPlanIsRefusedWhenAPreviewRefusesTheAction(): void
+    public function testAPlanIsRefusedWhenAnActionHasNothingToPreview(): void
     {
         $this->signInAsEditor();
 
-        $this->assertPlanRefused('Action 1 (create_release): ', ['title' => 'x', 'actions' => [['tool' => 'create_release', 'arguments' => ['fields' => ['title' => 'Tape']]]]]);
+        $this->assertPlanRefused('Action 1 (update_prod): ', ['title' => 'x', 'actions' => [['tool' => 'update_prod', 'arguments' => ['id' => 999_999_999, 'fields' => ['year' => 1987]]]]]);
+    }
+
+    public function testAnActionTheUserMayNotDoIsProposedAndFailsWithItsReasonWhenItRuns(): void
+    {
+        $prodId = (int)$this->db->table('module_zxprod')->min('id');
+        $this->signInAsRegisteredUser();
+        $plan = $this->propose(['title' => 'Fix', 'actions' => [['tool' => 'update_prod', 'arguments' => ['id' => $prodId, 'fields' => ['year' => 1987]]]]]);
+
+        $this->container->get(PlanExecutor::class)->execute($plan->id, $this->executeRun());
+
+        $executed = $this->container->get(PlansDbal::class)->find($plan->id);
+        self::assertSame(PlanStatus::Failed, $executed?->status);
+        self::assertSame('This production change is forbidden', $executed->actions[0]['error']);
+        $progress = array_values(array_filter($this->messages(), static fn(MessageDto $message): bool => $message->kind === MessageKind::PlanProgress));
+        self::assertSame(
+            ["Plan {$plan->id}, action 1 (update_prod): failed. This production change is forbidden"],
+            array_map(static fn(MessageDto $message): string => $message->text, $progress),
+        );
     }
 
     public function testAnApprovedPlanRunsItsActionsAndPassesCreatedIdsOn(): void

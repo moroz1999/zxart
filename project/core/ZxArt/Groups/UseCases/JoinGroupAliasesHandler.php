@@ -12,7 +12,6 @@ use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupAliasElement;
 
 /**
  * Moves everything of the joined group alias into this one and deletes it.
@@ -37,23 +36,6 @@ final readonly class JoinGroupAliasesHandler
      */
     public function handle(JoinGroupAliasesCommand $command): GroupAliasDataResultDto
     {
-        $alias = $this->check($command);
-
-        $this->transactionRunner->run(function () use ($alias, $command): void {
-            $this->actionsLogService->log($alias, StructureType::GroupAlias, self::PRIVILEGE);
-            $this->groupsService->joinDeleteGroup($command->aliasId, $command->joinedId);
-        });
-
-        return new GroupAliasDataResultDto(id: $command->aliasId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupAliasDataException
-     */
-    public function check(JoinGroupAliasesCommand $command): groupAliasElement
-    {
         if ($command->joinedId === $command->aliasId) {
             throw new GroupAliasDataException('A group alias cannot be joined into itself', 400);
         }
@@ -62,6 +44,11 @@ final readonly class JoinGroupAliasesHandler
         $this->groupAliasRepository->get($command->joinedId);
         $this->groupAliasPrivileges->assert($command->joinedId, self::PRIVILEGE);
 
-        return $alias;
+        $this->transactionRunner->run(function () use ($alias, $command): void {
+            $this->actionsLogService->log($alias, StructureType::GroupAlias, self::PRIVILEGE);
+            $this->groupsService->joinDeleteGroup($command->aliasId, $command->joinedId);
+        });
+
+        return new GroupAliasDataResultDto(id: $command->aliasId);
     }
 }

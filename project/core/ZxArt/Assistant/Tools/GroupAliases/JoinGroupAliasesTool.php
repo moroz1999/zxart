@@ -8,7 +8,6 @@ use Override;
 use ZxArt\Assistant\Tools\Dto\ChangeKind;
 use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
 use ZxArt\Assistant\Tools\Dto\ChangeTargetDto;
-use ZxArt\Assistant\Tools\Previews\Quantities;
 use ZxArt\Assistant\Tools\WriteTool;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Services\GroupAliasStateService;
@@ -52,7 +51,6 @@ final readonly class JoinGroupAliasesTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->joinGroupAliasesHandler->check($this->command($request));
         $main = $this->groupAliasStateService->get($request->mainId);
         $joined = $this->groupAliasStateService->get($request->joinedId);
         $mainText = (new EntityMentionDto(EntityType::GroupAlias, $request->mainId))->text();

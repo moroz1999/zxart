@@ -11,7 +11,6 @@ use ZxArt\Releases\Repositories\ReleaseRepository;
 use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use zxReleaseElement;
 
 /**
  * @psalm-api
@@ -33,7 +32,8 @@ final readonly class DeleteReleaseHandler
      */
     public function handle(DeleteReleaseCommand $command): ReleaseDataResultDto
     {
-        $release = $this->check($command);
+        $release = $this->releaseRepository->get($command->releaseId);
+        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($release): void {
             // logged first: the element data is gone after the deletion
@@ -42,18 +42,5 @@ final readonly class DeleteReleaseHandler
         });
 
         return new ReleaseDataResultDto(id: $command->releaseId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ReleaseDataException
-     */
-    public function check(DeleteReleaseCommand $command): zxReleaseElement
-    {
-        $release = $this->releaseRepository->get($command->releaseId);
-        $this->releasePrivileges->assert($command->releaseId, self::PRIVILEGE);
-
-        return $release;
     }
 }

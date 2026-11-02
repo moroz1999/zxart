@@ -52,7 +52,6 @@ final readonly class SetGroupMemberTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->setGroupMemberHandler->check($this->command($request));
         $state = $this->groupStateService->get($request->groupId);
 
         return new ChangePreviewDto(

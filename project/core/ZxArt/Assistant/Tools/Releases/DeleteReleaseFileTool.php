@@ -51,7 +51,6 @@ final readonly class DeleteReleaseFileTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteReleaseFileHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->releaseId);
         $changes = [];
         foreach ($state->files as $kind => $files) {

@@ -51,7 +51,6 @@ final readonly class RemoveReleaseAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteReleaseMemberHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->releaseId);
 
         return new ChangePreviewDto(

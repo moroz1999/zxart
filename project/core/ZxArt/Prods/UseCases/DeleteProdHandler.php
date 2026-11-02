@@ -11,7 +11,6 @@ use ZxArt\Prods\Repositories\ProdRepository;
 use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use zxProdElement;
 
 /**
  * @psalm-api
@@ -33,7 +32,8 @@ final readonly class DeleteProdHandler
      */
     public function handle(DeleteProdCommand $command): ProdDataResultDto
     {
-        $prod = $this->check($command);
+        $prod = $this->prodRepository->get($command->prodId);
+        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($prod): void {
             // logged first: the element data is gone after the deletion
@@ -42,18 +42,5 @@ final readonly class DeleteProdHandler
         });
 
         return new ProdDataResultDto(id: $command->prodId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ProdDataException
-     */
-    public function check(DeleteProdCommand $command): zxProdElement
-    {
-        $prod = $this->prodRepository->get($command->prodId);
-        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
-
-        return $prod;
     }
 }

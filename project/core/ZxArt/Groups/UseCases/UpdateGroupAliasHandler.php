@@ -16,7 +16,6 @@ use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupAliasElement;
 
 /**
  * Changes the fields the command carries and leaves the others as they are;
@@ -45,7 +44,8 @@ final readonly class UpdateGroupAliasHandler
      */
     public function handle(UpdateGroupAliasCommand $command): GroupAliasDataResultDto
     {
-        $alias = $this->check($command);
+        $alias = $this->groupAliasRepository->get($command->aliasId);
+        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($alias, $command): void {
             try {
@@ -63,18 +63,5 @@ final readonly class UpdateGroupAliasHandler
         });
 
         return new GroupAliasDataResultDto(id: $command->aliasId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupAliasDataException
-     */
-    public function check(UpdateGroupAliasCommand $command): groupAliasElement
-    {
-        $alias = $this->groupAliasRepository->get($command->aliasId);
-        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
-
-        return $alias;
     }
 }

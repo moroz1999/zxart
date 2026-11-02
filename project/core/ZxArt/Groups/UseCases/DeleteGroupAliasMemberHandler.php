@@ -6,6 +6,7 @@ namespace ZxArt\Groups\UseCases;
 
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
+use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Repositories\GroupAliasRepository;
@@ -13,7 +14,6 @@ use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupAliasElement;
 
 /**
  * @psalm-api
@@ -36,7 +36,18 @@ final readonly class DeleteGroupAliasMemberHandler
      */
     public function handle(DeleteGroupAliasMemberCommand $command): GroupAliasDataResultDto
     {
-        $alias = $this->check($command);
+        $alias = $this->groupAliasRepository->get($command->aliasId);
+        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
+        if ($command->authorId <= 0) {
+            throw new GroupAliasDataException('Missing required author id', 400);
+        }
+        $credits = array_filter(
+            $this->authorshipDbal->findByElement($command->aliasId, EntityType::Group),
+            static fn(AuthorshipDto $authorship): bool => $authorship->authorId === $command->authorId,
+        );
+        if ($credits === []) {
+            throw new GroupAliasDataException('The author is not a member of this group alias', 404);
+        }
 
         $this->transactionRunner->run(function () use ($alias, $command): void {
             $this->authorshipDbal->deleteAuthorship($command->aliasId, $command->authorId, EntityType::Group);
@@ -45,26 +56,5 @@ final readonly class DeleteGroupAliasMemberHandler
         });
 
         return new GroupAliasDataResultDto(id: $command->aliasId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupAliasDataException
-     */
-    public function check(DeleteGroupAliasMemberCommand $command): groupAliasElement
-    {
-        $alias = $this->groupAliasRepository->get($command->aliasId);
-        $this->groupAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
-        if ($command->authorId <= 0) {
-            throw new GroupAliasDataException('Missing required author id', 400);
-        }
-        foreach ($this->authorshipDbal->findByElement($command->aliasId, EntityType::Group) as $authorship) {
-            if ($authorship->authorId === $command->authorId) {
-                return $alias;
-            }
-        }
-
-        throw new GroupAliasDataException('The author is not a member of this group alias', 404);
     }
 }

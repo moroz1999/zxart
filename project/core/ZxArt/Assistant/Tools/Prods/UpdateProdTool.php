@@ -52,7 +52,6 @@ final readonly class UpdateProdTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->updateProdHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->id);
 
         return new ChangePreviewDto(

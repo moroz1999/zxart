@@ -15,7 +15,6 @@ use ZxArt\Releases\Services\ReleaseStateService;
 use ZxArt\Releases\UseCases\DeleteReleaseCommand;
 use ZxArt\Releases\UseCases\DeleteReleaseHandler;
 use ZxArt\Shared\EntityType;
-use ZxArt\Shared\References\EntityMentionDto;
 
 /**
  * @implements WriteTool<EntityIdRequestDto>
@@ -51,7 +50,6 @@ final readonly class DeleteReleaseTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteReleaseHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->id);
         $consequences = [];
 

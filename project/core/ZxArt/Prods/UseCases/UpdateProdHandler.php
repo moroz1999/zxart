@@ -18,7 +18,6 @@ use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use zxProdElement;
 
 /**
  * Changes the fields the command carries, replaces the authors and portal ids
@@ -48,7 +47,11 @@ final readonly class UpdateProdHandler
      */
     public function handle(UpdateProdCommand $command): ProdDataResultDto
     {
-        $prod = $this->check($command);
+        $prod = $this->prodRepository->get($command->prodId);
+        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
+        if ($command->fields->title !== null && trim($command->fields->title) === '') {
+            throw new ProdDataException('A production needs a title', 400);
+        }
 
         $this->transactionRunner->run(function () use ($prod, $command): void {
             try {
@@ -73,21 +76,5 @@ final readonly class UpdateProdHandler
         });
 
         return new ProdDataResultDto(id: $command->prodId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ProdDataException
-     */
-    public function check(UpdateProdCommand $command): zxProdElement
-    {
-        $prod = $this->prodRepository->get($command->prodId);
-        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
-        if ($command->fields->title !== null && trim($command->fields->title) === '') {
-            throw new ProdDataException('A production needs a title', 400);
-        }
-
-        return $prod;
     }
 }

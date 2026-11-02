@@ -45,7 +45,11 @@ final readonly class CreateAuthorAliasHandler
      */
     public function handle(CreateAuthorAliasCommand $command): AuthorAliasDataResultDto
     {
-        $this->check($command);
+        $ownerId = $command->fields->authorId;
+        if ($ownerId === null || $ownerId <= 0) {
+            throw new AuthorAliasDataException('An alias needs its author', 400);
+        }
+        $this->authorAliasPrivileges->assertMayAddTo($ownerId);
 
         $id = $this->transactionRunner->run(function () use ($command): int {
             try {
@@ -69,19 +73,5 @@ final readonly class CreateAuthorAliasHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new AuthorAliasDataResultDto(id: $id);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws AuthorAliasDataException
-     */
-    public function check(CreateAuthorAliasCommand $command): void
-    {
-        $ownerId = $command->fields->authorId;
-        if ($ownerId === null || $ownerId <= 0) {
-            throw new AuthorAliasDataException('An alias needs its author', 400);
-        }
-        $this->authorAliasPrivileges->assertMayAddTo($ownerId);
     }
 }

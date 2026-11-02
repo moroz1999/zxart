@@ -52,7 +52,6 @@ final readonly class DeleteAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteAuthorHandler->check($this->command($request));
         $state = $this->authorStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::Author, $request->id))->text();
         $credits = Quantities::phrase([

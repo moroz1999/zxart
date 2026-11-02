@@ -13,7 +13,6 @@ use ZxArt\Releases\Services\ElementFileImporter;
 use ZxArt\Shared\Dto\AddedFilesDto;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use zxProdElement;
 
 /**
  * Downloads the URLs into the production's list of that kind. A refused
@@ -39,7 +38,11 @@ final readonly class AddProdFilesHandler
      */
     public function handle(AddProdFilesCommand $command): AddedFilesDto
     {
-        $prod = $this->check($command);
+        $prod = $this->prodRepository->get($command->prodId);
+        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
+        if ($command->urls === []) {
+            throw new ProdDataException('No file to add', 400);
+        }
 
         $fileIds = $this->transactionRunner->run(function () use ($prod, $command): array {
             try {
@@ -53,21 +56,5 @@ final readonly class AddProdFilesHandler
         });
 
         return new AddedFilesDto(id: $command->prodId, fileIds: $fileIds);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ProdDataException
-     */
-    public function check(AddProdFilesCommand $command): zxProdElement
-    {
-        $prod = $this->prodRepository->get($command->prodId);
-        $this->prodPrivileges->assert($command->prodId, self::PRIVILEGE);
-        if ($command->urls === []) {
-            throw new ProdDataException('No file to add', 400);
-        }
-
-        return $prod;
     }
 }

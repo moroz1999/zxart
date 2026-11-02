@@ -52,7 +52,6 @@ final readonly class UpdateReleaseTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->updateReleaseHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->id);
 
         return new ChangePreviewDto(

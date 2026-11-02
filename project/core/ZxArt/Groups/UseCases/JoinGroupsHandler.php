@@ -12,7 +12,6 @@ use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupElement;
 
 /**
  * Moves everything of the joined group into this one. The joined group is
@@ -38,7 +37,13 @@ final readonly class JoinGroupsHandler
      */
     public function handle(JoinGroupsCommand $command): GroupDataResultDto
     {
-        $group = $this->check($command);
+        if ($command->joinedId === $command->groupId) {
+            throw new GroupDataException('A group cannot be joined into itself', 400);
+        }
+        $group = $this->groupRepository->get($command->groupId);
+        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
+        $this->groupRepository->get($command->joinedId);
+        $this->groupPrivileges->assert($command->joinedId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($group, $command): void {
             $this->actionsLogService->log($group, StructureType::Group, self::PRIVILEGE);
@@ -50,23 +55,5 @@ final readonly class JoinGroupsHandler
         });
 
         return new GroupDataResultDto(id: $command->groupId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupDataException
-     */
-    public function check(JoinGroupsCommand $command): groupElement
-    {
-        if ($command->joinedId === $command->groupId) {
-            throw new GroupDataException('A group cannot be joined into itself', 400);
-        }
-        $group = $this->groupRepository->get($command->groupId);
-        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
-        $this->groupRepository->get($command->joinedId);
-        $this->groupPrivileges->assert($command->joinedId, self::PRIVILEGE);
-
-        return $group;
     }
 }

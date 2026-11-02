@@ -37,7 +37,8 @@ final readonly class DeleteProdFileHandler
      */
     public function handle(DeleteProdFileCommand $command): ProdDataResultDto
     {
-        $file = $this->check($command);
+        $file = $this->getSelectorFile($this->prodRepository->get($command->prodId), $command->fileId);
+        $this->prodPrivileges->assert($command->fileId, self::PRIVILEGE, StructureType::File);
 
         $this->transactionRunner->run(function () use ($file): void {
             // logged first: the element data is gone after the deletion
@@ -46,19 +47,6 @@ final readonly class DeleteProdFileHandler
         });
 
         return new ProdDataResultDto(id: $command->prodId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ProdDataException
-     */
-    public function check(DeleteProdFileCommand $command): fileElement
-    {
-        $file = $this->getSelectorFile($this->prodRepository->get($command->prodId), $command->fileId);
-        $this->prodPrivileges->assert($command->fileId, self::PRIVILEGE, StructureType::File);
-
-        return $file;
     }
 
     private function getSelectorFile(zxProdElement $prod, int $fileId): fileElement

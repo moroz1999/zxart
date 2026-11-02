@@ -75,12 +75,14 @@ final class AuthorWriteToolsTest extends WriteToolTestCase
         self::assertSame('Jan Kowalski', $this->authorState($authorId)->fields->realName);
     }
 
-    public function testUpdateAuthorIsRefusedAtThePreviewWithoutThePrivilege(): void
+    public function testUpdateAuthorWithoutThePrivilegeIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsRegisteredUser();
         $authorId = (int)$this->db->table('module_author')->min('id');
 
-        $this->assertRefused(403, AuthorDataException::class, fn() => $this->preview('update_author', '{"id": ' . $authorId . ', "fields": {"realName": "X"}}'));
+        $this->preview('update_author', '{"id": ' . $authorId . ', "fields": {"realName": "X"}}');
+
+        $this->assertRefused(403, AuthorDataException::class, fn() => $this->execute('update_author', '{"id": ' . $authorId . ', "fields": {"realName": "X"}}'));
     }
 
     public function testDeleteAuthorPreviewsItsCreditsAndAliases(): void

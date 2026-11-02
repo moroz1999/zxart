@@ -52,7 +52,6 @@ final readonly class AddReleaseFilesTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->addReleaseFilesHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->releaseId);
         $names = array_map(static fn(AttachedFileDto $file): string => $file->fileName, $state->files[$request->kind->value]);
 

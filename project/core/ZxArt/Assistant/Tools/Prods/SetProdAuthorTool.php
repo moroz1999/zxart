@@ -52,7 +52,6 @@ final readonly class SetProdAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->setProdMemberHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->prodId);
 
         return new ChangePreviewDto(

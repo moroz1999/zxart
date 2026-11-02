@@ -51,7 +51,6 @@ final readonly class RemoveGroupAliasMemberTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteGroupAliasMemberHandler->check($this->command($request));
         $state = $this->groupAliasStateService->get($request->aliasId);
 
         return new ChangePreviewDto(

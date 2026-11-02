@@ -57,11 +57,13 @@ final class ReleaseWriteToolsTest extends WriteToolTestCase
         self::assertSame($prodId, $this->container->get(ReleaseStateService::class)->get($result->id)->fields->prodId);
     }
 
-    public function testCreateReleaseWithoutAProductionIsRefusedAtThePreview(): void
+    public function testCreateReleaseWithoutAProductionIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsEditor();
 
-        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->preview('create_release', '{"fields": {"title": "Goldwrite Tape"}}'));
+        $this->preview('create_release', '{"fields": {"title": "Goldwrite Tape"}}');
+
+        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->execute('create_release', '{"fields": {"title": "Goldwrite Tape"}}'));
     }
 
     public function testUpdateReleasePreviewsWhatChangesAndUpdates(): void
@@ -80,12 +82,14 @@ final class ReleaseWriteToolsTest extends WriteToolTestCase
         self::assertSame(1995, $this->container->get(ReleaseStateService::class)->get($releaseId)->fields->year);
     }
 
-    public function testUpdateReleaseIsRefusedAtThePreviewWithoutThePrivilege(): void
+    public function testUpdateReleaseWithoutThePrivilegeIsPreviewedAndRefusedWhenItRuns(): void
     {
         $this->signInAsRegisteredUser();
         $releaseId = (int)$this->db->table('module_zxrelease')->min('id');
 
-        $this->assertRefused(403, ReleaseDataException::class, fn() => $this->preview('update_release', '{"id": ' . $releaseId . ', "fields": {"year": 1995}}'));
+        $this->preview('update_release', '{"id": ' . $releaseId . ', "fields": {"year": 1995}}');
+
+        $this->assertRefused(403, ReleaseDataException::class, fn() => $this->execute('update_release', '{"id": ' . $releaseId . ', "fields": {"year": 1995}}'));
     }
 
     public function testDeleteReleasePreviewsAndDeletes(): void

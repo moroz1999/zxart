@@ -51,7 +51,6 @@ final readonly class SetReleaseFileTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->setReleaseFileHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->releaseId);
         $before = $state->fileName !== '' ? $state->fileName : null;
 

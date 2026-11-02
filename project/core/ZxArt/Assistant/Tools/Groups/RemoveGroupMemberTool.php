@@ -51,7 +51,6 @@ final readonly class RemoveGroupMemberTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteGroupMemberHandler->check($this->command($request));
         $state = $this->groupStateService->get($request->groupId);
 
         return new ChangePreviewDto(

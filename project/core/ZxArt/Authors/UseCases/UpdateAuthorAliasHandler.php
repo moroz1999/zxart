@@ -16,7 +16,6 @@ use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\InvalidReferenceException;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use authorAliasElement;
 
 /**
  * Changes the fields the command carries and leaves the others as they are;
@@ -45,7 +44,8 @@ final readonly class UpdateAuthorAliasHandler
      */
     public function handle(UpdateAuthorAliasCommand $command): AuthorAliasDataResultDto
     {
-        $alias = $this->check($command);
+        $alias = $this->authorAliasRepository->get($command->aliasId);
+        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
 
         $this->transactionRunner->run(function () use ($alias, $command): void {
             try {
@@ -66,18 +66,5 @@ final readonly class UpdateAuthorAliasHandler
         });
 
         return new AuthorAliasDataResultDto(id: $command->aliasId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws AuthorAliasDataException
-     */
-    public function check(UpdateAuthorAliasCommand $command): authorAliasElement
-    {
-        $alias = $this->authorAliasRepository->get($command->aliasId);
-        $this->authorAliasPrivileges->assert($command->aliasId, self::PRIVILEGE);
-
-        return $alias;
     }
 }

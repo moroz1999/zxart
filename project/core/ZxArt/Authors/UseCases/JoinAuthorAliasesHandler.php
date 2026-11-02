@@ -12,7 +12,6 @@ use ZxArt\Authors\Services\AuthorAliasPrivileges;
 use ZxArt\Authors\Services\AuthorsService;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use authorAliasElement;
 
 /**
  * Moves everything of the joined author alias into this one and deletes it.
@@ -37,23 +36,6 @@ final readonly class JoinAuthorAliasesHandler
      */
     public function handle(JoinAuthorAliasesCommand $command): AuthorAliasDataResultDto
     {
-        $alias = $this->check($command);
-
-        $this->transactionRunner->run(function () use ($alias, $command): void {
-            $this->actionsLogService->log($alias, StructureType::AuthorAlias, self::PRIVILEGE);
-            $this->authorsService->joinDeleteAuthor($command->aliasId, $command->joinedId);
-        });
-
-        return new AuthorAliasDataResultDto(id: $command->aliasId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws AuthorAliasDataException
-     */
-    public function check(JoinAuthorAliasesCommand $command): authorAliasElement
-    {
         if ($command->joinedId === $command->aliasId) {
             throw new AuthorAliasDataException('A author alias cannot be joined into itself', 400);
         }
@@ -62,6 +44,11 @@ final readonly class JoinAuthorAliasesHandler
         $this->authorAliasRepository->get($command->joinedId);
         $this->authorAliasPrivileges->assert($command->joinedId, self::PRIVILEGE);
 
-        return $alias;
+        $this->transactionRunner->run(function () use ($alias, $command): void {
+            $this->actionsLogService->log($alias, StructureType::AuthorAlias, self::PRIVILEGE);
+            $this->authorsService->joinDeleteAuthor($command->aliasId, $command->joinedId);
+        });
+
+        return new AuthorAliasDataResultDto(id: $command->aliasId);
     }
 }

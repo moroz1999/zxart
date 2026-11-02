@@ -161,10 +161,11 @@ Validation before the plan is shown:
    `{"$ref": "<position>.<field>"}` — for example the `id` of the author created
    in action 1. A reference must point at an earlier action and at a field its
    result type declares.
-3. Each tool's `preview()` runs as the user: it checks the privilege, loads the
-   current state and returns the before/after rows (see
-   [mcp-tools.md](mcp-tools.md)). A refused privilege or a missing entity makes
-   the plan invalid. An action whose input is a reference previews with the
+3. Each tool's `preview()` loads the current state and returns the
+   before/after rows (see [mcp-tools.md](mcp-tools.md)). A missing entity makes
+   the plan invalid; privileges and the use case's rules are checked only when
+   the action runs, and a refusal there is a failed step the assistant then
+   plans around. An action whose input is a reference previews with the
    referenced entity as "created in step N".
 
 The stored preview is what the panel shows, and also the **baseline** for

@@ -53,7 +53,6 @@ final readonly class JoinGroupsTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->joinGroupsHandler->check($this->command($request));
         $main = $this->groupStateService->get($request->mainId);
         $joined = $this->groupStateService->get($request->joinedId);
         $mainText = (new EntityMentionDto(EntityType::Group, $request->mainId))->text();

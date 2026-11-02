@@ -52,7 +52,6 @@ final readonly class SetReleaseAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->setReleaseMemberHandler->check($this->command($request));
         $state = $this->releaseStateService->get($request->releaseId);
 
         return new ChangePreviewDto(

@@ -37,7 +37,12 @@ final readonly class CreateProdHandler
      */
     public function handle(CreateProdCommand $command): ProdDataResultDto
     {
-        $this->check($command);
+        if (trim($command->fields->title ?? '') === '') {
+            throw new ProdDataException('A production needs a title', 400);
+        }
+        // the privileges of an element are worked out as it loads
+        $this->structureManager->getRootElement();
+        $this->prodPrivileges->assert($this->structureManager->getRootElementId(), self::PRIVILEGE, StructureType::ZxProdsUploadForm);
 
         $prodId = $this->transactionRunner->run(function () use ($command): int {
             $prod = $this->prodCreator->create($command->fields);
@@ -47,20 +52,5 @@ final readonly class CreateProdHandler
         $this->currentUserService->getCurrentUser()->refreshPrivileges();
 
         return new ProdDataResultDto(id: $prodId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws ProdDataException
-     */
-    public function check(CreateProdCommand $command): void
-    {
-        if (trim($command->fields->title ?? '') === '') {
-            throw new ProdDataException('A production needs a title', 400);
-        }
-        // the privileges of an element are worked out as it loads
-        $this->structureManager->getRootElement();
-        $this->prodPrivileges->assert($this->structureManager->getRootElementId(), self::PRIVILEGE, StructureType::ZxProdsUploadForm);
     }
 }

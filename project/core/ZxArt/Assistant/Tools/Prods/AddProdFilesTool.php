@@ -52,7 +52,6 @@ final readonly class AddProdFilesTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->addProdFilesHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->prodId);
         $names = array_map(static fn(AttachedFileDto $file): string => $file->fileName, $state->files[$request->kind->value]);
 

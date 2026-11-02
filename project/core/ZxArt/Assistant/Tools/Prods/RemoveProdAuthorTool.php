@@ -51,7 +51,6 @@ final readonly class RemoveProdAuthorTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteProdMemberHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->prodId);
 
         return new ChangePreviewDto(

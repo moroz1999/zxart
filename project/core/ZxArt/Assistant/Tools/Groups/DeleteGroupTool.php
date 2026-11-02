@@ -52,7 +52,6 @@ final readonly class DeleteGroupTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteGroupHandler->check($this->command($request));
         $state = $this->groupStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::Group, $request->id))->text();
         $holds = Quantities::phrase([

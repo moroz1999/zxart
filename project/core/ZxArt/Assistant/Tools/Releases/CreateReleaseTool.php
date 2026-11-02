@@ -50,8 +50,6 @@ final readonly class CreateReleaseTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createReleaseHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::Release, null, (string)$request->fields->title),

@@ -52,7 +52,6 @@ final readonly class DeleteAuthorAliasTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteAuthorAliasHandler->check($this->command($request));
         $state = $this->authorAliasStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::AuthorAlias, $request->id))->text();
         $credits = Quantities::phrase([

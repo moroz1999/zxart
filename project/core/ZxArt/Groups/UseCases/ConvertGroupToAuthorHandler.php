@@ -12,7 +12,6 @@ use ZxArt\Groups\Repositories\GroupRepository;
 use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
-use groupElement;
 
 /**
  * Turns the group into a new author; the group itself is deleted.
@@ -37,7 +36,8 @@ final readonly class ConvertGroupToAuthorHandler
      */
     public function handle(ConvertGroupToAuthorCommand $command): GroupDataResultDto
     {
-        $group = $this->check($command);
+        $group = $this->groupRepository->get($command->groupId);
+        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
 
         $resultId = $this->transactionRunner->run(function () use ($group): int {
             $author = $this->authorsService->convertGroupToAuthor($group);
@@ -49,18 +49,5 @@ final readonly class ConvertGroupToAuthorHandler
         });
 
         return new GroupDataResultDto(id: $resultId);
-    }
-
-    /**
-     * Everything {@see self::handle()} refuses, without writing.
-     *
-     * @throws GroupDataException
-     */
-    public function check(ConvertGroupToAuthorCommand $command): groupElement
-    {
-        $group = $this->groupRepository->get($command->groupId);
-        $this->groupPrivileges->assert($command->groupId, self::PRIVILEGE);
-
-        return $group;
     }
 }

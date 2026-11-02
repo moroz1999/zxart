@@ -50,8 +50,6 @@ final readonly class CreateGroupTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->createGroupHandler->check($this->command($request));
-
         return new ChangePreviewDto(
             kind: ChangeKind::Create,
             target: new ChangeTargetDto(EntityType::Group, null, (string)$request->fields->title),

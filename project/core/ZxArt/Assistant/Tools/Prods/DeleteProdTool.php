@@ -50,7 +50,6 @@ final readonly class DeleteProdTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->deleteProdHandler->check($this->command($request));
         $state = $this->prodStateService->get($request->id);
         $releases = count($state->releaseIds);
 

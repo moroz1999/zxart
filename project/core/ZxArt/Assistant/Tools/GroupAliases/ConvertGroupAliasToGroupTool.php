@@ -52,7 +52,6 @@ final readonly class ConvertGroupAliasToGroupTool implements WriteTool
     #[Override]
     public function preview(object $request): ChangePreviewDto
     {
-        $this->convertGroupAliasToGroupHandler->check($this->command($request));
         $state = $this->groupAliasStateService->get($request->id);
         $text = (new EntityMentionDto(EntityType::GroupAlias, $request->id))->text();
 
