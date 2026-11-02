@@ -15,7 +15,14 @@ use ZxArt\Authors\Dto\AuthorAliasDataResultDto;
 use ZxArt\Authors\Dto\AuthorAliasSaveRequestDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Rest\AuthorAliasDataResultRestDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
+use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorCommand;
+use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorHandler;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorAliasCommand;
+use ZxArt\Authors\UseCases\DeleteAuthorAliasHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
 
@@ -34,7 +41,10 @@ final class AuthorAliasData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly AuthorAliasDataService $authorAliasDataService,
+        private readonly DeleteAuthorAliasHandler $deleteAuthorAliasHandler,
+        private readonly ConvertAuthorAliasToAuthorHandler $convertAuthorAliasToAuthorHandler,
+        private readonly CreateAuthorAliasHandler $createAuthorAliasHandler,
+        private readonly UpdateAuthorAliasHandler $updateAuthorAliasHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -60,8 +70,8 @@ final class AuthorAliasData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'create' => $this->create(),
                 'update' => $this->update($aliasId),
-                'delete' => $this->authorAliasDataService->delete($aliasId),
-                'convertToAuthor' => $this->authorAliasDataService->convertToAuthor($aliasId),
+                'delete' => $this->deleteAuthorAliasHandler->handle(new DeleteAuthorAliasCommand($aliasId)),
+                'convertToAuthor' => $this->convertAuthorAliasToAuthorHandler->handle(new ConvertAuthorAliasToAuthorCommand($aliasId)),
                 default => throw new AuthorAliasDataException('Unsupported author alias action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, AuthorAliasDataResultRestDto::class));
@@ -87,7 +97,7 @@ final class AuthorAliasData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, AuthorAliasSaveRequestDto::class);
 
-        return $this->authorAliasDataService->create($request->fields, $request->groups, $request->prods, $request->importOrigins);
+        return $this->createAuthorAliasHandler->handle(new CreateAuthorAliasCommand($request->fields, $request->groups, $request->prods, $request->importOrigins));
     }
 
     /**
@@ -98,7 +108,7 @@ final class AuthorAliasData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, AuthorAliasSaveRequestDto::class);
 
-        return $this->authorAliasDataService->update($aliasId, $request->fields, $request->groups, $request->prods, $request->importOrigins);
+        return $this->updateAuthorAliasHandler->handle(new UpdateAuthorAliasCommand($aliasId, $request->fields, $request->groups, $request->prods, $request->importOrigins));
     }
 
     private function assignError(string $message, int $statusCode): void

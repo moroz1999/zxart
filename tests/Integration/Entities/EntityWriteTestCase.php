@@ -20,7 +20,7 @@ use ZxArt\Forms\FormCreateService;
 use ZxArt\Forms\FormCreateType;
 
 /**
- * Writes of an entity through its data service and through the legacy forms,
+ * Writes of an entity through its use cases and through the legacy forms,
  * checked against what the database then holds.
  *
  * The rows are read back directly: the structure manager, the links manager
@@ -123,21 +123,6 @@ abstract class EntityWriteTestCase extends TestCase
             ->submit($formType, null, controller::getInstance(), $fields, $parentId);
 
         return $element->getId();
-    }
-
-    /**
-     * The edit form as `/ajax/` submits it: the fields under the element's id
-     * and the action run on it.
-     *
-     * @param array<array-key, mixed> $fields
-     */
-    protected function submitEditForm(int $elementId, array $fields, string $action = 'publicReceive'): void
-    {
-        controller::getInstance()->setElementFormData($elementId, $fields);
-        $element = $this->structureManager->getElementById($elementId);
-        if ($element === null || $element->executeAction($action) !== true) {
-            throw new RuntimeException('The form of element ' . $elementId . ' was not submitted');
-        }
     }
 
     /**

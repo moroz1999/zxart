@@ -10,20 +10,28 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Dto\MembershipInputDto;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
+use ZxArt\Authors\UseCases\JoinAuthorAliasesCommand;
+use ZxArt\Authors\UseCases\JoinAuthorAliasesHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Authors\Services\AuthorAliasFieldsReader;
 use authorAliasElement;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 
 /**
- * Author aliases written through {@see AuthorAliasDataService}.
+ * Author aliases written through their use cases.
  */
 #[RunTestsInSeparateProcesses]
 final class AuthorAliasWritesTest extends EntityWriteTestCase
@@ -37,7 +45,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $authorId = $this->createAuthor('Goldmaster Writer');
 
-        $aliasId = $this->aliasDataService()->create($this->everyField($authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
 
         self::assertSame($this->everyFieldStored($authorId), $this->storedRow(self::TABLE, $aliasId, self::COLUMNS));
         self::assertSame(['structureType' => 'letter', 'structureName' => 'w'], $this->letterOf($aliasId));
@@ -49,7 +57,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $authorId = $this->createAuthor('Goldmaster Writer');
 
-        $aliasId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
 
         self::assertSame(
             ['authorAlias.publicDelete', 'authorAlias.publicReceive', 'authorAlias.showPublicForm'],
@@ -62,9 +70,9 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(displayInMusic: true));
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(displayInMusic: true)));
 
         self::assertSame(1, $this->storedRow(self::TABLE, $aliasId, ['displayInMusic'])['displayInMusic']);
     }
@@ -74,7 +82,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $authorId = (int)$this->db->table('module_author')->min('id');
 
-        $aliasId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
 
         self::assertSame($authorId, $this->storedRow(self::TABLE, $aliasId, ['authorId'])['authorId']);
     }
@@ -90,7 +98,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
             new AuthorAliasFieldsDto(title: 'Wandering Goldmaster'),
         ] as $fields) {
             try {
-                $this->aliasDataService()->create($fields);
+                $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($fields));
                 self::fail('An alias needs a name and its author');
             } catch (AuthorAliasDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -104,7 +112,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
 
         try {
-            $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: self::COUNTRY_POLAND));
+            $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: self::COUNTRY_POLAND)));
             self::fail('A country given as the author must be rejected');
         } catch (AuthorAliasDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -119,7 +127,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->structureManager->getElementById($authorId);
 
         try {
-            $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId));
+            $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)));
             self::fail('Creating must need authorAlias.publicAdd');
         } catch (AuthorAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -131,12 +139,12 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create($this->everyField($authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(
             endDate: $this->date('31.12.2001'),
             displayInMusic: false,
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored($authorId), ['endDate' => $this->date('31.12.2001'), 'displayInMusic' => 0]),
@@ -149,9 +157,9 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create($this->everyField($authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(startDate: 0, endDate: 0));
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(startDate: 0, endDate: 0)));
 
         self::assertSame(
             array_replace($this->everyFieldStored($authorId), ['startDate' => 0, 'endDate' => 0]),
@@ -164,9 +172,9 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherAuthorId = $this->createAuthor('Goldmaster Painter');
-        $aliasId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster', authorId: $otherAuthorId));
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster', authorId: $otherAuthorId)));
 
         self::assertSame(['title' => 'Zeta Goldmaster', 'authorId' => $otherAuthorId], $this->storedRow(self::TABLE, $aliasId, ['title', 'authorId']));
         self::assertSame(['structureType' => 'letter', 'structureName' => 'z'], $this->letterOf($aliasId));
@@ -177,10 +185,10 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create($this->everyField($authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
 
         try {
-            $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster', authorId: self::COUNTRY_POLAND));
+            $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster', authorId: self::COUNTRY_POLAND)));
             self::fail('A country given as the author must be rejected');
         } catch (AuthorAliasDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -195,7 +203,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $stored = $this->db->table(self::TABLE)->where('id', '=', $aliasId)->get();
 
         try {
-            $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster'));
+            $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(title: 'Zeta Goldmaster')));
             self::fail('Updating must need authorAlias.publicReceive');
         } catch (AuthorAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -207,15 +215,15 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $aliasId = $this->aliasDataService()->create(
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId),
             groups: [new MembershipInputDto($groupId, ['musician'], $this->date('1993-01-01'))],
             prods: [new MembershipInputDto($prodId, ['music', 'sfx'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '9002')],
-        )->id;
+        ))->id;
 
         self::assertSame(
             [['roles' => ['musician'], 'startDate' => $this->date('1993-01-01'), 'endDate' => 0]],
@@ -229,20 +237,20 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $aliasId = $this->aliasDataService()->create(
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId),
             groups: [new MembershipInputDto($groupId, ['musician'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '9002')],
-        )->id;
+        ))->id;
 
-        $this->aliasDataService()->update(
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand(
             $aliasId,
             new AuthorAliasFieldsDto(title: 'Zeta Goldmaster'),
             groups: [],
             prods: [new MembershipInputDto($prodId, ['code'])],
-        );
+        ));
 
         self::assertSame(['title' => 'Zeta Goldmaster'], $this->storedRow(self::TABLE, $aliasId, ['title']));
         self::assertSame([], $this->authorshipRecords($groupId, $aliasId, 'group'));
@@ -254,14 +262,14 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
 
-        $this->assertRefused(400, AuthorAliasDataException::class, fn() => $this->aliasDataService()->update(
+        $this->assertRefused(400, AuthorAliasDataException::class, fn() => $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand(
             $aliasId,
             new AuthorAliasFieldsDto(title: 'Zeta Goldmaster'),
             prods: [new MembershipInputDto($authorId, ['code'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '9002')],
-        ));
+        )));
 
         self::assertSame(['title' => 'Wandering Goldmaster'], $this->storedRow(self::TABLE, $aliasId, ['title']));
         self::assertSame([], $this->storedImportOrigins($aliasId));
@@ -271,13 +279,13 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, AuthorAliasDataException::class, fn() => $this->aliasDataService()->create(
+        $this->assertRefused(400, AuthorAliasDataException::class, fn() => $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId),
             prods: [new MembershipInputDto($prodId, ['coder'])],
-        ));
+        )));
 
         self::assertSame($createdBefore, $this->newElementIds());
     }
@@ -285,13 +293,13 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     public function testJoinMovesTheWorksOfTheJoinedAliasAndDeletesIt(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['authorAlias', 'join']]);
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $mainId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Writer', authorId: $authorId))->id;
-        $joinedId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Painter', authorId: $authorId))->id;
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $mainId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Writer', authorId: $authorId)))->id;
+        $joinedId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Painter', authorId: $authorId)))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $this->addAuthorship($joinedId, $prodId, 'prod');
 
-        $this->aliasDataService()->join($mainId, $joinedId);
+        $this->container->get(JoinAuthorAliasesHandler::class)->handle(new JoinAuthorAliasesCommand($mainId, $joinedId));
 
         self::assertFalse($this->elementExists($joinedId));
         self::assertSame([['authorId' => $mainId, 'elementId' => $prodId, 'type' => 'prod']], $this->authorshipRows($mainId));
@@ -301,12 +309,12 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
     public function testJoinIsForbiddenWithoutThePrivilegeAndJoinsNothing(): void
     {
         $this->signInAsRegisteredUser();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $mainId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Writer', authorId: $authorId))->id;
-        $joinedId = $this->aliasDataService()->create(new AuthorAliasFieldsDto(title: 'Wandering Painter', authorId: $authorId))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $mainId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Writer', authorId: $authorId)))->id;
+        $joinedId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Painter', authorId: $authorId)))->id;
 
         try {
-            $this->aliasDataService()->join($mainId, $joinedId);
+            $this->container->get(JoinAuthorAliasesHandler::class)->handle(new JoinAuthorAliasesCommand($mainId, $joinedId));
             self::fail('Joining must need authorAlias.join');
         } catch (AuthorAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -319,12 +327,12 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherAuthorId = $this->createAuthor('Goldmaster Painter');
-        $aliasId = $this->aliasDataService()->create($this->everyField($authorId))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
         $reader = $this->container->get(AuthorAliasFieldsReader::class);
 
         self::assertEquals($this->everyField($authorId), $reader->read($this->element($aliasId)));
 
-        $this->aliasDataService()->update($aliasId, new AuthorAliasFieldsDto(authorId: $otherAuthorId, endDate: 0));
+        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(authorId: $otherAuthorId, endDate: 0)));
 
         self::assertEquals(
             new AuthorAliasFieldsDto(...array_replace(get_object_vars($this->everyField($authorId)), ['authorId' => $otherAuthorId, 'endDate' => 0])),
@@ -347,7 +355,7 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
 
     private function createAuthor(string $title): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: $title))->id;
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: $title)))->id;
     }
 
     private function everyField(int $authorId): AuthorAliasFieldsDto
@@ -383,10 +391,5 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
         self::assertInstanceOf(authorAliasElement::class, $element);
 
         return $element;
-    }
-
-    private function aliasDataService(): AuthorAliasDataService
-    {
-        return $this->container->get(AuthorAliasDataService::class);
     }
 }

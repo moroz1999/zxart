@@ -25,8 +25,9 @@ use ZxArt\Assistant\Chat\Dto\MessageDto;
 use ZxArt\Assistant\Chat\Dto\PlanDto;
 use ZxArt\Assistant\Chat\MessageKind;
 use ZxArt\Assistant\Chat\PlanStatus;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Dto\ProdFieldsDto;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Services\ReleaseStateService;
 use ZxArt\Tests\Integration\Assistant\WriteToolTestCase;
 
@@ -285,6 +286,6 @@ final class PlansTest extends WriteToolTestCase
 
     private function createProd(): int
     {
-        return $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        return $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
     }
 }

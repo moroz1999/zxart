@@ -12,16 +12,21 @@ use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
 use ZxArt\Assistant\Tools\Dto\ChangeTargetDto;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupDataResultDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
-use ZxArt\Groups\Services\GroupAliasDataService;
 use ZxArt\Groups\Services\GroupAliasStateService;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupStateService;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
 
@@ -79,7 +84,7 @@ final class GroupWriteToolsTest extends WriteToolTestCase
     {
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldwrite Crew');
-        $this->container->get(GroupDataService::class)->setMember($groupId, $this->createAuthor(), ['coder']);
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $this->createAuthor(), ['coder']));
 
         $preview = $this->preview('delete_group', '{"id": ' . $groupId . '}');
 
@@ -93,7 +98,7 @@ final class GroupWriteToolsTest extends WriteToolTestCase
         $this->signInAsEditor();
         $mainId = $this->createGroup('Goldwrite Crew');
         $joinedId = $this->createGroup('Goldwrite Krew');
-        $this->container->get(GroupDataService::class)->setMember($joinedId, $this->createAuthor(), ['coder']);
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($joinedId, $this->createAuthor(), ['coder']));
         $arguments = '{"mainId": ' . $mainId . ', "joinedId": ' . $joinedId . '}';
 
         self::assertSame(
@@ -213,16 +218,16 @@ final class GroupWriteToolsTest extends WriteToolTestCase
 
     private function createGroup(string $title): int
     {
-        return $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: $title))->id;
+        return $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: $title)))->id;
     }
 
     private function createAlias(int $groupId, string $title): int
     {
-        return $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: $title, groupId: $groupId))->id;
+        return $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: $title, groupId: $groupId)))->id;
     }
 
     private function createAuthor(): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Coder'))->id;
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
     }
 }

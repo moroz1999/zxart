@@ -7,21 +7,26 @@ namespace ZxArt\Tests\Authors;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Repositories\AuthorAliasRepository;
 use ZxArt\Authors\Services\AuthorAliasCreator;
-use ZxArt\Authors\Services\AuthorAliasDataService;
 use ZxArt\Authors\Services\AuthorAliasFieldsWriter;
 use ZxArt\Authors\Services\AuthorAliasPrivileges;
 use ZxArt\Authors\Services\AuthorMembershipsWriter;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorCommand;
 use ZxArt\Authors\UseCases\ConvertAuthorAliasToAuthorHandler;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
 use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorAliasCommand;
 use ZxArt\Authors\UseCases\DeleteAuthorAliasHandler;
+use ZxArt\Authors\UseCases\JoinAuthorAliasesCommand;
 use ZxArt\Authors\UseCases\JoinAuthorAliasesHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorAliasCommand;
 use ZxArt\Authors\UseCases\UpdateAuthorAliasHandler;
 use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Shared\StructureType;
@@ -32,7 +37,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 
-final class AuthorAliasDataServiceTest extends TestCase
+final class AuthorAliasUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -47,32 +52,32 @@ final class AuthorAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::AuthorAlias, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteAuthorAliasHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteAuthorAliasCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteAuthorAliasCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteAuthorAliasCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(authorElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorAliasHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteAuthorAliasCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -81,9 +86,9 @@ final class AuthorAliasDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteAuthorAliasHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteAuthorAliasCommand(42)));
     }
 
     public function testConvertToAuthorReturnsCreatedEntityId(): void
@@ -101,7 +106,7 @@ final class AuthorAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::AuthorAlias, 'convertToAuthor');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, $authorsService)->convertToAuthor(42);
+        $result = $this->handler(ConvertAuthorAliasToAuthorHandler::class, $element, $privilegesManager, $actionsLog, $authorsService)->handle(new ConvertAuthorAliasToAuthorCommand(42));
 
         self::assertSame(900, $result->id);
     }
@@ -110,18 +115,18 @@ final class AuthorAliasDataServiceTest extends TestCase
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('convertAliasToAuthor');
-        $service = $this->createService($this->createStub(authorAliasElement::class), $this->privileges(false), null, $authorsService);
+        $handler = $this->handler(ConvertAuthorAliasToAuthorHandler::class, $this->createStub(authorAliasElement::class), $this->privileges(false), null, $authorsService);
 
-        $this->assertStatus(403, fn() => $service->convertToAuthor(42));
+        $this->assertStatus(403, fn() => $handler->handle(new ConvertAuthorAliasToAuthorCommand(42)));
     }
 
     public function testFailedConvertToAuthorIsServerError(): void
     {
         $authorsService = $this->createStub(AuthorsService::class);
         $authorsService->method('convertAliasToAuthor')->willReturn(null);
-        $service = $this->createService($this->createStub(authorAliasElement::class), $this->privileges(true), null, $authorsService);
+        $handler = $this->handler(ConvertAuthorAliasToAuthorHandler::class, $this->createStub(authorAliasElement::class), $this->privileges(true), null, $authorsService);
 
-        $this->assertStatus(500, fn() => $service->convertToAuthor(42));
+        $this->assertStatus(500, fn() => $handler->handle(new ConvertAuthorAliasToAuthorCommand(42)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -138,7 +143,7 @@ final class AuthorAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::AuthorAlias, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateAuthorAliasHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateAuthorAliasCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -147,16 +152,16 @@ final class AuthorAliasDataServiceTest extends TestCase
     {
         $writer = $this->createMock(AuthorAliasFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(authorAliasElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateAuthorAliasHandler::class, $this->createStub(authorAliasElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new AuthorAliasFieldsDto(title: 'New')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateAuthorAliasCommand(42, new AuthorAliasFieldsDto(title: 'New'))));
     }
 
     public function testUpdateOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateAuthorAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new AuthorAliasFieldsDto(title: 'New')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateAuthorAliasCommand(42, new AuthorAliasFieldsDto(title: 'New'))));
     }
 
     public function testCreateChecksTheAddPrivilegeAndReturnsTheNewId(): void
@@ -176,7 +181,7 @@ final class AuthorAliasDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService($this->createStub(authorElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateAuthorAliasHandler::class, $this->createStub(authorElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateAuthorAliasCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -185,18 +190,18 @@ final class AuthorAliasDataServiceTest extends TestCase
     {
         $creator = $this->createMock(AuthorAliasCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(authorElement::class), $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateAuthorAliasHandler::class, $this->createStub(authorElement::class), $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new AuthorAliasFieldsDto(title: 'Fx', authorId: 7)));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Fx', authorId: 7))));
     }
 
     public function testCreateForWhatIsNotAnAuthorIsBadRequestAndCreatesNothing(): void
     {
         $creator = $this->createMock(AuthorAliasCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(authorAliasElement::class), $this->privileges(true), creator: $creator);
+        $handler = $this->handler(CreateAuthorAliasHandler::class, $this->createStub(authorAliasElement::class), $this->privileges(true), creator: $creator);
 
-        $this->assertStatus(400, fn() => $service->create(new AuthorAliasFieldsDto(title: 'Fx', authorId: 7)));
+        $this->assertStatus(400, fn() => $handler->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Fx', authorId: 7))));
     }
 
     public function testJoinMovesTheJoinedOneIntoThisOneAndLogsIt(): void
@@ -215,13 +220,13 @@ final class AuthorAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($main, StructureType::AuthorAlias, 'join');
 
-        $result = $this->createService(
+        $result = $this->handler(JoinAuthorAliasesHandler::class,
             null,
             $privilegesManager,
             $actionsLog,
             authorsService: $authorsService,
             elementsById: [42 => $main, 43 => $joined],
-        )->join(42, 43);
+        )->handle(new JoinAuthorAliasesCommand(42, 43));
 
         self::assertSame(42, $result->id);
     }
@@ -230,9 +235,9 @@ final class AuthorAliasDataServiceTest extends TestCase
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(null, $this->privileges(true), authorsService: $authorsService, elementsById: [42 => $this->createStub(authorAliasElement::class)]);
+        $handler = $this->handler(JoinAuthorAliasesHandler::class, null, $this->privileges(true), authorsService: $authorsService, elementsById: [42 => $this->createStub(authorAliasElement::class)]);
 
-        $this->assertStatus(400, fn() => $service->join(42, 42));
+        $this->assertStatus(400, fn() => $handler->handle(new JoinAuthorAliasesCommand(42, 42)));
     }
 
     public function testJoinWithoutThePrivilegeOnTheJoinedOneIsForbiddenAndJoinsNothing(): void
@@ -244,31 +249,39 @@ final class AuthorAliasDataServiceTest extends TestCase
         ]);
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(
+        $handler = $this->handler(JoinAuthorAliasesHandler::class,
             null,
             $privilegesManager,
             authorsService: $authorsService,
             elementsById: [42 => $this->createStub(authorAliasElement::class), 43 => $this->createStub(authorAliasElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->join(42, 43));
+        $this->assertStatus(403, fn() => $handler->handle(new JoinAuthorAliasesCommand(42, 43)));
     }
 
     public function testJoinOfAnotherEntityTypeIsNotFound(): void
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(
+        $handler = $this->handler(JoinAuthorAliasesHandler::class,
             null,
             $this->privileges(true),
             authorsService: $authorsService,
             elementsById: [42 => $this->createStub(authorAliasElement::class), 43 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(404, fn() => $service->join(42, 43));
+        $this->assertStatus(404, fn() => $handler->handle(new JoinAuthorAliasesCommand(42, 43)));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -277,7 +290,7 @@ final class AuthorAliasDataServiceTest extends TestCase
         ?AuthorAliasCreator $creator = null,
         ?CurrentUser $user = null,
         ?array $elementsById = null,
-    ): AuthorAliasDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -294,13 +307,19 @@ final class AuthorAliasDataServiceTest extends TestCase
         $repository = new AuthorAliasRepository($structureManager, $authorsService);
         $privileges = new AuthorAliasPrivileges($privilegesManager, $structureManager);
 
-        return new AuthorAliasDataService(
+        foreach ([
             new CreateAuthorAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorAliasCreator::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog, $currentUserService),
             new UpdateAuthorAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorAliasFieldsWriter::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog),
             new DeleteAuthorAliasHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertAuthorAliasToAuthorHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
             new JoinAuthorAliasesHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function privileges(bool $isAllowed): privilegesManager

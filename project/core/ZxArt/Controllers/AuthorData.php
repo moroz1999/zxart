@@ -15,7 +15,14 @@ use ZxArt\Authors\Dto\AuthorDataResultDto;
 use ZxArt\Authors\Dto\AuthorSaveRequestDto;
 use ZxArt\Authors\Exception\AuthorDataException;
 use ZxArt\Authors\Rest\AuthorDataResultRestDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\ConvertAuthorToGroupCommand;
+use ZxArt\Authors\UseCases\ConvertAuthorToGroupHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorCommand;
+use ZxArt\Authors\UseCases\DeleteAuthorHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorCommand;
+use ZxArt\Authors\UseCases\UpdateAuthorHandler;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
 
@@ -34,7 +41,10 @@ final class AuthorData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly AuthorDataService $authorDataService,
+        private readonly DeleteAuthorHandler $deleteAuthorHandler,
+        private readonly ConvertAuthorToGroupHandler $convertAuthorToGroupHandler,
+        private readonly CreateAuthorHandler $createAuthorHandler,
+        private readonly UpdateAuthorHandler $updateAuthorHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -60,8 +70,8 @@ final class AuthorData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'create' => $this->create(),
                 'update' => $this->update($authorId),
-                'delete' => $this->authorDataService->delete($authorId),
-                'convertToGroup' => $this->authorDataService->convertToGroup($authorId),
+                'delete' => $this->deleteAuthorHandler->handle(new DeleteAuthorCommand($authorId)),
+                'convertToGroup' => $this->convertAuthorToGroupHandler->handle(new ConvertAuthorToGroupCommand($authorId)),
                 default => throw new AuthorDataException('Unsupported author action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, AuthorDataResultRestDto::class));
@@ -87,7 +97,7 @@ final class AuthorData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, AuthorSaveRequestDto::class);
 
-        return $this->authorDataService->create($request->fields, $request->realNames, $request->groups, $request->prods, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'));
+        return $this->createAuthorHandler->handle(new CreateAuthorCommand($request->fields, $request->realNames, $request->groups, $request->prods, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image')));
     }
 
     /**
@@ -98,7 +108,7 @@ final class AuthorData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, AuthorSaveRequestDto::class);
 
-        return $this->authorDataService->update($authorId, $request->fields, $request->realNames, $request->groups, $request->prods, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'), $request->removeImage);
+        return $this->updateAuthorHandler->handle(new UpdateAuthorCommand($authorId, $request->fields, $request->realNames, $request->groups, $request->prods, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'), $request->removeImage));
     }
 
     private function assignError(string $message, int $statusCode): void

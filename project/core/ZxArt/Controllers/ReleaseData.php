@@ -18,7 +18,18 @@ use ZxArt\Releases\Dto\ReleaseSaveRequestDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\ReleaseFileKind;
 use ZxArt\Releases\Rest\ReleaseDataResultRestDto;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CloneReleaseCommand;
+use ZxArt\Releases\UseCases\CloneReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesCommand;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
+use ZxArt\Releases\UseCases\DeleteReleaseCommand;
+use ZxArt\Releases\UseCases\DeleteReleaseFileCommand;
+use ZxArt\Releases\UseCases\DeleteReleaseFileHandler;
+use ZxArt\Releases\UseCases\DeleteReleaseHandler;
+use ZxArt\Releases\UseCases\DeleteReleaseMemberCommand;
+use ZxArt\Releases\UseCases\DeleteReleaseMemberHandler;
+use ZxArt\Releases\UseCases\UpdateReleaseCommand;
+use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 use ZxArt\Shared\Dto\CreatedIdsDto;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
@@ -26,13 +37,13 @@ use ZxArt\Shared\Rest\CreatedIdsRestDto;
 
 /**
  * Changes to one release: POST `/release-data/?id=&action=` with the action
- * one of `update`, `createFromFiles`, `delete`, `deleteMember`, `deleteFile`.
- * Answers the id of the element the change produced. Answers `{ids}` for
- * `createFromFiles`. `update` and `createFromFiles` take a multipart body: the
- * JSON `data` part (`ReleaseSaveRequestDto`,
- * `ReleaseCreateFromFilesRequestDto`), the release file under `file` or the
- * files to make releases of under `releaseFiles[]`, and the files of each list
- * under `files[<kind>][]`.
+ * one of `update`, `createFromFiles`, `delete`, `clone`, `deleteMember`,
+ * `deleteFile`. Answers the id of the element the change produced (the copy
+ * for `clone`), and `{ids}` for `createFromFiles`. `update` and
+ * `createFromFiles` take a multipart body: the JSON `data` part
+ * (`ReleaseSaveRequestDto`, `ReleaseCreateFromFilesRequestDto`), the release
+ * file under `file` or the files to make releases of under `releaseFiles[]`,
+ * and the files of each list under `files[<kind>][]`.
  *
  * @psalm-api
  */
@@ -43,7 +54,12 @@ final class ReleaseData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly ReleaseDataService $releaseDataService,
+        private readonly DeleteReleaseHandler $deleteReleaseHandler,
+        private readonly CloneReleaseHandler $cloneReleaseHandler,
+        private readonly DeleteReleaseMemberHandler $deleteReleaseMemberHandler,
+        private readonly DeleteReleaseFileHandler $deleteReleaseFileHandler,
+        private readonly UpdateReleaseHandler $updateReleaseHandler,
+        private readonly CreateReleasesFromFilesHandler $createReleasesFromFilesHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -69,9 +85,10 @@ final class ReleaseData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'update' => $this->update($releaseId),
                 'createFromFiles' => $this->createFromFiles(),
-                'delete' => $this->releaseDataService->delete($releaseId),
-                'deleteMember' => $this->releaseDataService->deleteMember($releaseId, (int)$this->getParameter('authorId')),
-                'deleteFile' => $this->releaseDataService->deleteFile($releaseId, (int)$this->getParameter('fileId')),
+                'delete' => $this->deleteReleaseHandler->handle(new DeleteReleaseCommand($releaseId)),
+                'clone' => $this->cloneReleaseHandler->handle(new CloneReleaseCommand($releaseId)),
+                'deleteMember' => $this->deleteReleaseMemberHandler->handle(new DeleteReleaseMemberCommand($releaseId, (int)$this->getParameter('authorId'))),
+                'deleteFile' => $this->deleteReleaseFileHandler->handle(new DeleteReleaseFileCommand($releaseId, (int)$this->getParameter('fileId'))),
                 default => throw new ReleaseDataException('Unsupported release action', 400),
             };
             $this->renderer->assign('body', $result instanceof CreatedIdsDto
@@ -99,7 +116,7 @@ final class ReleaseData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, ReleaseSaveRequestDto::class);
 
-        return $this->releaseDataService->update(
+        return $this->updateReleaseHandler->handle(new UpdateReleaseCommand(
             $releaseId,
             $request->fields,
             $request->authors,
@@ -107,7 +124,7 @@ final class ReleaseData extends LoggedControllerApplication
             $this->uploadedFiles(),
             $this->uploadedFilesReader->one($_FILES, 'file'),
             $request->removeFile,
-        );
+        ));
     }
 
     /**
@@ -118,12 +135,12 @@ final class ReleaseData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, ReleaseCreateFromFilesRequestDto::class);
 
-        return $this->releaseDataService->createFromFiles(
+        return $this->createReleasesFromFilesHandler->handle(new CreateReleasesFromFilesCommand(
             $request->fields,
             $this->uploadedFilesReader->many($_FILES, 'releaseFiles'),
             $request->authors,
             $this->uploadedFiles(),
-        );
+        ));
     }
 
     /**

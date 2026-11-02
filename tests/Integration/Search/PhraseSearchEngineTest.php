@@ -9,10 +9,13 @@ require_once __DIR__ . '/../Entities/EntityWriteTestCase.php';
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Search\Dto\PhraseSearchHitDto;
 use ZxArt\Search\Dto\PhraseSearchQueryDto;
 use ZxArt\Search\Dto\PhraseSearchResultDto;
@@ -58,9 +61,9 @@ final class PhraseSearchEngineTest extends EntityWriteTestCase
 
     public function testClosestFirstOrdersAcrossTheTypes(): void
     {
-        $containingId = $this->prods()->create(new ProdFieldsDto(title: 'The Goldsearch Demo'))->id;
-        $startingId = $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch Megademo'))->id;
-        $exactId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch'))->id;
+        $containingId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'The Goldsearch Demo')))->id;
+        $startingId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Megademo')))->id;
+        $exactId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch')))->id;
 
         $byType = $this->find(new PhraseSearchQueryDto('goldsearch', ['zxProd', 'author'], 10, PhraseSearchMode::SinglePage));
         $closestFirst = $this->find(new PhraseSearchQueryDto('goldsearch', ['zxProd', 'author'], 10, PhraseSearchMode::SinglePage, closestFirst: true));
@@ -71,9 +74,9 @@ final class PhraseSearchEngineTest extends EntityWriteTestCase
 
     public function testAPageIsCutFromTheAlphabeticalList(): void
     {
-        $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch Gamma'));
-        $betaId = $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch Beta'))->id;
-        $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch Alpha'));
+        $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Gamma')));
+        $betaId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Beta')))->id;
+        $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Alpha')));
 
         $result = $this->find(new PhraseSearchQueryDto('Goldsearch', ['zxProd'], 1, PhraseSearchMode::Paged, offset: 1));
 
@@ -94,10 +97,10 @@ final class PhraseSearchEngineTest extends EntityWriteTestCase
      */
     private function authorWithAlias(): array
     {
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch Writer'))->id;
-        $aliasId = $this->container->get(AuthorAliasDataService::class)->create(
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch Writer')))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Goldsearch Wanderer', authorId: $authorId),
-        )->id;
+        ))->id;
 
         return [$authorId, $aliasId];
     }
@@ -113,10 +116,5 @@ final class PhraseSearchEngineTest extends EntityWriteTestCase
     private function hits(PhraseSearchResultDto $result): array
     {
         return array_map(static fn(PhraseSearchHitDto $hit): array => [$hit->type, $hit->element->getId()], $result->hits);
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
     }
 }

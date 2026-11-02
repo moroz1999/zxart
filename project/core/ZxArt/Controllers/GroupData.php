@@ -15,7 +15,16 @@ use ZxArt\Groups\Dto\GroupDataResultDto;
 use ZxArt\Groups\Dto\GroupSaveRequestDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Rest\GroupDataResultRestDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\ConvertGroupToAuthorCommand;
+use ZxArt\Groups\UseCases\ConvertGroupToAuthorHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\DeleteGroupCommand;
+use ZxArt\Groups\UseCases\DeleteGroupHandler;
+use ZxArt\Groups\UseCases\DeleteGroupMemberCommand;
+use ZxArt\Groups\UseCases\DeleteGroupMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupCommand;
+use ZxArt\Groups\UseCases\UpdateGroupHandler;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
 
@@ -35,7 +44,11 @@ final class GroupData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly GroupDataService $groupDataService,
+        private readonly DeleteGroupHandler $deleteGroupHandler,
+        private readonly DeleteGroupMemberHandler $deleteGroupMemberHandler,
+        private readonly ConvertGroupToAuthorHandler $convertGroupToAuthorHandler,
+        private readonly CreateGroupHandler $createGroupHandler,
+        private readonly UpdateGroupHandler $updateGroupHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -61,9 +74,9 @@ final class GroupData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'create' => $this->create(),
                 'update' => $this->update($groupId),
-                'delete' => $this->groupDataService->delete($groupId),
-                'deleteMember' => $this->groupDataService->deleteMember($groupId, (int)$this->getParameter('authorId')),
-                'convertToAuthor' => $this->groupDataService->convertToAuthor($groupId),
+                'delete' => $this->deleteGroupHandler->handle(new DeleteGroupCommand($groupId)),
+                'deleteMember' => $this->deleteGroupMemberHandler->handle(new DeleteGroupMemberCommand($groupId, (int)$this->getParameter('authorId'))),
+                'convertToAuthor' => $this->convertGroupToAuthorHandler->handle(new ConvertGroupToAuthorCommand($groupId)),
                 default => throw new GroupDataException('Unsupported group action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, GroupDataResultRestDto::class));
@@ -89,7 +102,7 @@ final class GroupData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, GroupSaveRequestDto::class);
 
-        return $this->groupDataService->create($request->fields, $request->members, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'));
+        return $this->createGroupHandler->handle(new CreateGroupCommand($request->fields, $request->members, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image')));
     }
 
     /**
@@ -100,7 +113,7 @@ final class GroupData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, GroupSaveRequestDto::class);
 
-        return $this->groupDataService->update($groupId, $request->fields, $request->members, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'), $request->removeImage);
+        return $this->updateGroupHandler->handle(new UpdateGroupCommand($groupId, $request->fields, $request->members, $request->importOrigins, $this->uploadedFilesReader->one($_FILES, 'image'), $request->removeImage));
     }
 
     private function assignError(string $message, int $statusCode): void

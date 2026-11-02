@@ -15,7 +15,14 @@ use ZxArt\Groups\Dto\GroupAliasDataResultDto;
 use ZxArt\Groups\Dto\GroupAliasSaveRequestDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Rest\GroupAliasDataResultRestDto;
-use ZxArt\Groups\Services\GroupAliasDataService;
+use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupCommand;
+use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupHandler;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasCommand;
+use ZxArt\Groups\UseCases\DeleteGroupAliasHandler;
+use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
+use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
 
@@ -34,7 +41,10 @@ final class GroupAliasData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly GroupAliasDataService $groupAliasDataService,
+        private readonly DeleteGroupAliasHandler $deleteGroupAliasHandler,
+        private readonly ConvertGroupAliasToGroupHandler $convertGroupAliasToGroupHandler,
+        private readonly CreateGroupAliasHandler $createGroupAliasHandler,
+        private readonly UpdateGroupAliasHandler $updateGroupAliasHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -60,8 +70,8 @@ final class GroupAliasData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'create' => $this->create(),
                 'update' => $this->update($aliasId),
-                'delete' => $this->groupAliasDataService->delete($aliasId),
-                'convertToGroup' => $this->groupAliasDataService->convertToGroup($aliasId),
+                'delete' => $this->deleteGroupAliasHandler->handle(new DeleteGroupAliasCommand($aliasId)),
+                'convertToGroup' => $this->convertGroupAliasToGroupHandler->handle(new ConvertGroupAliasToGroupCommand($aliasId)),
                 default => throw new GroupAliasDataException('Unsupported group alias action', 400),
             };
             $this->renderer->assign('body', $this->objectMapper->map($result, GroupAliasDataResultRestDto::class));
@@ -87,7 +97,7 @@ final class GroupAliasData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, GroupAliasSaveRequestDto::class);
 
-        return $this->groupAliasDataService->create($request->fields, $request->members, $request->importOrigins);
+        return $this->createGroupAliasHandler->handle(new CreateGroupAliasCommand($request->fields, $request->members, $request->importOrigins));
     }
 
     /**
@@ -98,7 +108,7 @@ final class GroupAliasData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, GroupAliasSaveRequestDto::class);
 
-        return $this->groupAliasDataService->update($aliasId, $request->fields, $request->members, $request->importOrigins);
+        return $this->updateGroupAliasHandler->handle(new UpdateGroupAliasCommand($aliasId, $request->fields, $request->members, $request->importOrigins));
     }
 
     private function assignError(string $message, int $statusCode): void

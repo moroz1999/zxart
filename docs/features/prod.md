@@ -176,7 +176,7 @@ category heading is still an SPA string (`hardware-group.<code>`).
 - **userId** - ID of user who added the element
 
 ### Special Operations
-- **joinAndDelete** - merge and delete products; `ProdDataService::join()` does the same outside the form (see [php/entity-writes.md](../php/entity-writes.md#joins))
+- **joinAndDelete** - merge and delete products; `JoinProdsHandler` does the same outside the form (see [php/entity-writes.md](../php/entity-writes.md#joins))
 - **splitData** - data for splitting product
 - **aiRestartSeo** - restart AI for SEO
 - **aiRestartIntro** - restart AI for intro
@@ -185,7 +185,7 @@ category heading is still an SPA string (`hardware-group.<code>`).
 ### Writing the Fields
 
 Every write of a production's own fields goes through `ProdFieldsWriter`, the
-same path for the edit form, the batch upload and `ProdDataService` — see
+same path for the edit form, the batch upload and the production use cases — see
 [../php/entity-writes.md](../php/entity-writes.md). Beyond the fields it renews
 the party link, the tags and a missing year, checks the categories (*misc* when
 none is left), and keeps the AI queue in step: categories or tags given → the AI

@@ -7,21 +7,26 @@ namespace ZxArt\Tests\Authors;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Exception\AuthorDataException;
 use ZxArt\Authors\Repositories\AuthorRepository;
 use ZxArt\Authors\Services\AuthorCreator;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\AuthorFieldsWriter;
 use ZxArt\Authors\Services\AuthorMembershipsWriter;
 use ZxArt\Authors\Services\AuthorPrivileges;
 use ZxArt\Authors\Services\AuthorsService;
+use ZxArt\Authors\UseCases\ConvertAuthorToGroupCommand;
 use ZxArt\Authors\UseCases\ConvertAuthorToGroupHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
 use ZxArt\Authors\UseCases\CreateAuthorHandler;
+use ZxArt\Authors\UseCases\DeleteAuthorCommand;
 use ZxArt\Authors\UseCases\DeleteAuthorHandler;
+use ZxArt\Authors\UseCases\JoinAuthorsCommand;
 use ZxArt\Authors\UseCases\JoinAuthorsHandler;
+use ZxArt\Authors\UseCases\UpdateAuthorCommand;
 use ZxArt\Authors\UseCases\UpdateAuthorHandler;
 use ZxArt\Groups\Services\GroupsService;
 use ZxArt\Import\Services\ImportOriginsWriter;
@@ -34,7 +39,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 
-final class AuthorDataServiceTest extends TestCase
+final class AuthorUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -49,32 +54,32 @@ final class AuthorDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Author, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteAuthorHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteAuthorCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteAuthorCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteAuthorCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(groupElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteAuthorHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteAuthorCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -83,9 +88,9 @@ final class AuthorDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteAuthorHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteAuthorCommand(42)));
     }
 
     public function testConvertToGroupReturnsCreatedEntityId(): void
@@ -103,7 +108,7 @@ final class AuthorDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Author, 'convertToGroup');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, $groupsService)->convertToGroup(42);
+        $result = $this->handler(ConvertAuthorToGroupHandler::class, $element, $privilegesManager, $actionsLog, $groupsService)->handle(new ConvertAuthorToGroupCommand(42));
 
         self::assertSame(900, $result->id);
     }
@@ -112,18 +117,18 @@ final class AuthorDataServiceTest extends TestCase
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('convertAuthorToGroup');
-        $service = $this->createService($this->createStub(authorElement::class), $this->privileges(false), null, $groupsService);
+        $handler = $this->handler(ConvertAuthorToGroupHandler::class, $this->createStub(authorElement::class), $this->privileges(false), null, $groupsService);
 
-        $this->assertStatus(403, fn() => $service->convertToGroup(42));
+        $this->assertStatus(403, fn() => $handler->handle(new ConvertAuthorToGroupCommand(42)));
     }
 
     public function testFailedConvertToGroupIsServerError(): void
     {
         $groupsService = $this->createStub(GroupsService::class);
         $groupsService->method('convertAuthorToGroup')->willReturn(null);
-        $service = $this->createService($this->createStub(authorElement::class), $this->privileges(true), null, $groupsService);
+        $handler = $this->handler(ConvertAuthorToGroupHandler::class, $this->createStub(authorElement::class), $this->privileges(true), null, $groupsService);
 
-        $this->assertStatus(500, fn() => $service->convertToGroup(42));
+        $this->assertStatus(500, fn() => $handler->handle(new ConvertAuthorToGroupCommand(42)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -140,7 +145,7 @@ final class AuthorDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Author, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateAuthorHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateAuthorCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -149,16 +154,16 @@ final class AuthorDataServiceTest extends TestCase
     {
         $writer = $this->createMock(AuthorFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(authorElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateAuthorHandler::class, $this->createStub(authorElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new AuthorFieldsDto(title: 'New')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateAuthorCommand(42, new AuthorFieldsDto(title: 'New'))));
     }
 
     public function testUpdateOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateAuthorHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new AuthorFieldsDto(title: 'New')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateAuthorCommand(42, new AuthorFieldsDto(title: 'New'))));
     }
 
     public function testCreateChecksTheAddPrivilegeAndReturnsTheNewId(): void
@@ -178,7 +183,7 @@ final class AuthorDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService(null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateAuthorHandler::class, null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateAuthorCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -187,9 +192,9 @@ final class AuthorDataServiceTest extends TestCase
     {
         $creator = $this->createMock(AuthorCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService(null, $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateAuthorHandler::class, null, $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new AuthorFieldsDto(title: 'Fikus')));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Fikus'))));
     }
 
     public function testJoinMovesTheJoinedOneIntoThisOneAndLogsIt(): void
@@ -210,13 +215,13 @@ final class AuthorDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($main, StructureType::Author, 'join');
 
-        $result = $this->createService(
+        $result = $this->handler(JoinAuthorsHandler::class,
             null,
             $privilegesManager,
             $actionsLog,
             authorsService: $authorsService,
             elementsById: [42 => $main, 43 => $joined],
-        )->join(42, 43, false);
+        )->handle(new JoinAuthorsCommand(42, 43, false));
 
         self::assertSame(42, $result->id);
     }
@@ -226,14 +231,14 @@ final class AuthorDataServiceTest extends TestCase
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->once())->method('joinAuthorAsAlias')->with(42, 43);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(
+        $handler = $this->handler(JoinAuthorsHandler::class,
             null,
             $this->privileges(true),
             authorsService: $authorsService,
             elementsById: [42 => $this->createStub(authorElement::class), 43 => $this->createStub(authorElement::class)],
         );
 
-        $result = $service->join(42, 43, true);
+        $result = $handler->handle(new JoinAuthorsCommand(42, 43, true));
 
         self::assertSame(42, $result->id);
     }
@@ -242,9 +247,9 @@ final class AuthorDataServiceTest extends TestCase
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(null, $this->privileges(true), authorsService: $authorsService, elementsById: [42 => $this->createStub(authorElement::class)]);
+        $handler = $this->handler(JoinAuthorsHandler::class, null, $this->privileges(true), authorsService: $authorsService, elementsById: [42 => $this->createStub(authorElement::class)]);
 
-        $this->assertStatus(400, fn() => $service->join(42, 42, false));
+        $this->assertStatus(400, fn() => $handler->handle(new JoinAuthorsCommand(42, 42, false)));
     }
 
     public function testJoinWithoutThePrivilegeOnTheJoinedOneIsForbiddenAndJoinsNothing(): void
@@ -256,31 +261,39 @@ final class AuthorDataServiceTest extends TestCase
         ]);
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(
+        $handler = $this->handler(JoinAuthorsHandler::class,
             null,
             $privilegesManager,
             authorsService: $authorsService,
             elementsById: [42 => $this->createStub(authorElement::class), 43 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->join(42, 43, false));
+        $this->assertStatus(403, fn() => $handler->handle(new JoinAuthorsCommand(42, 43, false)));
     }
 
     public function testJoinOfAnotherEntityTypeIsNotFound(): void
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('joinDeleteAuthor');
-        $service = $this->createService(
+        $handler = $this->handler(JoinAuthorsHandler::class,
             null,
             $this->privileges(true),
             authorsService: $authorsService,
             elementsById: [42 => $this->createStub(authorElement::class), 43 => $this->createStub(groupElement::class)],
         );
 
-        $this->assertStatus(404, fn() => $service->join(42, 43, false));
+        $this->assertStatus(404, fn() => $handler->handle(new JoinAuthorsCommand(42, 43, false)));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -290,7 +303,7 @@ final class AuthorDataServiceTest extends TestCase
         ?CurrentUser $user = null,
         ?AuthorsService $authorsService = null,
         ?array $elementsById = null,
-    ): AuthorDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -308,13 +321,19 @@ final class AuthorDataServiceTest extends TestCase
         $repository = new AuthorRepository($structureManager, $authorsService);
         $privileges = new AuthorPrivileges($privilegesManager, $structureManager);
 
-        return new AuthorDataService(
+        foreach ([
             new CreateAuthorHandler($transactionRunner, $privileges, $creator ?? $this->createStub(AuthorCreator::class), $repository, $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog, $currentUserService),
             new UpdateAuthorHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(AuthorFieldsWriter::class), $this->createStub(AuthorMembershipsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog),
             new DeleteAuthorHandler($transactionRunner, $repository, $privileges, $actionsLog),
             new ConvertAuthorToGroupHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new JoinAuthorsHandler($transactionRunner, $repository, $privileges, $authorsService, $actionsLog),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function privileges(bool $isAllowed): privilegesManager

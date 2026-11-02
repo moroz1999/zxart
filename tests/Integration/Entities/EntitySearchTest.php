@@ -11,16 +11,22 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupAliasDataService;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Search\Dto\FoundEntityDto;
 use ZxArt\Search\Services\EntitySearchService;
 use ZxArt\Shared\EntityType;
@@ -38,24 +44,24 @@ final class EntitySearchTest extends EntityWriteTestCase
     public function testEveryTypeIsFoundWithItsYearAndQualifier(): void
     {
         $this->signInAsEditor();
-        $authorId = $this->container->get(AuthorDataService::class)->create(
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(
             new AuthorFieldsDto(title: 'Goldsearch Writer', realName: 'Ivan Petrov', countryId: self::COUNTRY_POLAND),
-        )->id;
-        $authorAliasId = $this->container->get(AuthorAliasDataService::class)->create(
+        ))->id;
+        $authorAliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Goldsearch Wanderer', authorId: $authorId),
-        )->id;
-        $groupId = $this->container->get(GroupDataService::class)->create(
+        ))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(
             new GroupFieldsDto(title: 'Goldsearch Guild', countryId: self::COUNTRY_UNITED_KINGDOM),
-        )->id;
-        $groupAliasId = $this->container->get(GroupAliasDataService::class)->create(
+        ))->id;
+        $groupAliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(
             new GroupAliasFieldsDto(title: 'Goldsearch Crew', groupId: $groupId),
-        )->id;
-        $prodId = $this->container->get(ProdDataService::class)->create(
+        ))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(
             new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999, groupIds: [$groupId]),
-        )->id;
-        $releaseId = $this->container->get(ReleaseDataService::class)->create(
+        ))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(
             new ReleaseFieldsDto(title: 'Goldsearch Tape', year: 2001, prodId: $prodId),
-        )->id;
+        ))->id;
 
         self::assertEquals([
             new FoundEntityDto(EntityType::Prod, $prodId, 'Goldsearch Demo', 1999, 'Goldsearch Guild'),
@@ -70,9 +76,9 @@ final class EntitySearchTest extends EntityWriteTestCase
     public function testTheClosestTitlesComeFirstWhateverTheirType(): void
     {
         $this->signInAsEditor();
-        $containingId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'The Goldsearch Demo'))->id;
-        $startingId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldsearch Megademo'))->id;
-        $exactId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch'))->id;
+        $containingId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'The Goldsearch Demo')))->id;
+        $startingId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Megademo')))->id;
+        $exactId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch')))->id;
 
         self::assertSame(
             [[EntityType::Author, $exactId], [EntityType::Prod, $startingId], [EntityType::Prod, $containingId]],
@@ -83,11 +89,11 @@ final class EntitySearchTest extends EntityWriteTestCase
     public function testOnlyTheRequestedTypesAreSearchedAndAliasesStandApart(): void
     {
         $this->signInAsEditor();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch Writer'))->id;
-        $aliasId = $this->container->get(AuthorAliasDataService::class)->create(
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch Writer')))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Goldsearch Wanderer', authorId: $authorId),
-        )->id;
-        $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldsearch Demo'));
+        ))->id;
+        $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo')));
 
         self::assertEquals(
             [new FoundEntityDto(EntityType::AuthorAlias, $aliasId, 'Goldsearch Wanderer', null, 'Goldsearch Writer')],
@@ -99,7 +105,7 @@ final class EntitySearchTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         foreach (['Goldsearch One', 'Goldsearch Two', 'Goldsearch Three'] as $title) {
-            $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: $title));
+            $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: $title)));
         }
 
         self::assertCount(2, $this->search()->search('Goldsearch', [EntityType::Prod], 2));

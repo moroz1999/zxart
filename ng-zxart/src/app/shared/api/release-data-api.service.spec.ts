@@ -15,6 +15,16 @@ describe('ReleaseDataApiService', () => {
     expect(result).toEqual({id: 900});
   });
 
+  it('clone posts the id and the `clone` action to /release-data/ and answers the copy', async () => {
+    const http = {post: vi.fn().mockReturnValue(of({id: 901}))};
+    const service = new ReleaseDataApiService(http as unknown as HttpClient);
+
+    const result = await firstValueFrom(service.clone(42));
+
+    expect(http.post).toHaveBeenCalledWith('/release-data/', null, {params: {id: 42, action: 'clone'}});
+    expect(result).toEqual({id: 901});
+  });
+
   it('deleteMember posts the id, the author and the `deleteMember` action to /release-data/', async () => {
     const http = {post: vi.fn().mockReturnValue(of({id: 42}))};
     const service = new ReleaseDataApiService(http as unknown as HttpClient);

@@ -13,12 +13,20 @@ use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
 use ZxArt\Prods\Services\ProdStateService;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\AddProdFilesCommand;
+use ZxArt\Prods\UseCases\AddProdFilesHandler;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\ReleaseFileKind;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseStateService;
+use ZxArt\Releases\UseCases\AddReleaseFilesCommand;
+use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\SetReleaseFileCommand;
+use ZxArt\Releases\UseCases\SetReleaseFileHandler;
 use ZxArt\Shared\Dto\AttachedFileDto;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
@@ -59,13 +67,13 @@ final class EntityFilesTest extends EntityWriteTestCase
     public function testAddFilesStoresEachFileInTheListOfItsKind(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $this->ageModificationTime($prodId);
 
-        $added = $this->prods()->addFiles($prodId, ProdFileKind::Screenshots, [
+        $added = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Screenshots, [
             $this->server->url('/image.png'),
             $this->server->url('/redirect-image'),
-        ]);
+        ]));
         $this->rememberStoredFiles($added->fileIds);
 
         self::assertSame($prodId, $added->id);
@@ -79,13 +87,13 @@ final class EntityFilesTest extends EntityWriteTestCase
     public function testAFileOfATypeTheKindDoesNotTakeIsRefusedAndNothingIsStored(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
         try {
-            $this->prods()->addFiles($prodId, ProdFileKind::Inlays, [
+            $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Inlays, [
                 $this->server->url('/image.png'),
                 $this->server->url('/page.html'),
-            ]);
+            ]));
             self::fail('An HTML page is not an inlay');
         } catch (ProdDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -99,7 +107,7 @@ final class EntityFilesTest extends EntityWriteTestCase
         $releaseId = $this->createRelease();
 
         try {
-            $this->releases()->addFiles($releaseId, ReleaseFileKind::Screenshots, [$this->server->url('/image.png', 'refused.test')]);
+            $this->container->get(AddReleaseFilesHandler::class)->handle(new AddReleaseFilesCommand($releaseId, ReleaseFileKind::Screenshots, [$this->server->url('/image.png', 'refused.test')]));
             self::fail('The guard refuses the host');
         } catch (ReleaseDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -113,7 +121,7 @@ final class EntityFilesTest extends EntityWriteTestCase
         $prodId = (int)$this->db->table('module_zxprod')->min('id');
 
         try {
-            $this->prods()->addFiles($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]);
+            $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]));
             self::fail('Adding files must need zxProd.publicReceive');
         } catch (ProdDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -126,7 +134,7 @@ final class EntityFilesTest extends EntityWriteTestCase
         $releaseId = $this->createRelease();
         $this->ageModificationTime($releaseId);
 
-        $this->releases()->setFile($releaseId, $this->server->url('/intro.tap'), null);
+        $this->container->get(SetReleaseFileHandler::class)->handle(new SetReleaseFileCommand($releaseId, $this->server->url('/intro.tap'), null));
 
         $release = $this->structureManager->getElementById($releaseId);
         self::assertInstanceOf(zxReleaseElement::class, $release);
@@ -144,7 +152,7 @@ final class EntityFilesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $releaseId = $this->createRelease();
 
-        $this->releases()->setFile($releaseId, $this->server->url('/intro.tap'), 'Goldmaster Intro.tap');
+        $this->container->get(SetReleaseFileHandler::class)->handle(new SetReleaseFileCommand($releaseId, $this->server->url('/intro.tap'), 'Goldmaster Intro.tap'));
 
         $release = $this->structureManager->getElementById($releaseId);
         self::assertInstanceOf(zxReleaseElement::class, $release);
@@ -160,7 +168,7 @@ final class EntityFilesTest extends EntityWriteTestCase
         $stored = $this->storedRow('module_zxrelease', $releaseId, ['file', 'fileName', 'parsed']);
 
         try {
-            $this->releases()->setFile($releaseId, $this->server->url('/missing'), null);
+            $this->container->get(SetReleaseFileHandler::class)->handle(new SetReleaseFileCommand($releaseId, $this->server->url('/missing'), null));
             self::fail('A missing file cannot be the release file');
         } catch (ReleaseDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -178,9 +186,9 @@ final class EntityFilesTest extends EntityWriteTestCase
 
     private function createRelease(): int
     {
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        return $this->releases()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId))->id;
+        return $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)))->id;
     }
 
     /**
@@ -211,13 +219,13 @@ final class EntityFilesTest extends EntityWriteTestCase
     public function testTheStatesListTheFilesOfEachKindAndTheReleaseFileSize(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $prodFileIds = $this->prods()->addFiles($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')])->fileIds;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $prodFileIds = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds;
         $this->rememberStoredFiles($prodFileIds);
         $releaseId = $this->createRelease();
-        $releaseFileIds = $this->releases()->addFiles($releaseId, ReleaseFileKind::Inlays, [$this->server->url('/image.png')])->fileIds;
+        $releaseFileIds = $this->container->get(AddReleaseFilesHandler::class)->handle(new AddReleaseFilesCommand($releaseId, ReleaseFileKind::Inlays, [$this->server->url('/image.png')]))->fileIds;
         $this->rememberStoredFiles($releaseFileIds);
-        $this->releases()->setFile($releaseId, $this->server->url('/intro.tap'), null);
+        $this->container->get(SetReleaseFileHandler::class)->handle(new SetReleaseFileCommand($releaseId, $this->server->url('/intro.tap'), null));
         $release = $this->structureManager->getElementById($releaseId);
         self::assertInstanceOf(zxReleaseElement::class, $release);
         $this->storedPaths[] = $release->getFilePath();
@@ -235,15 +243,5 @@ final class EntityFilesTest extends EntityWriteTestCase
         );
         self::assertSame('intro.tap', $releaseState->fileName);
         self::assertSame(filesize($release->getFilePath()), $releaseState->fileSize);
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
-    }
-
-    private function releases(): ReleaseDataService
-    {
-        return $this->container->get(ReleaseDataService::class);
     }
 }

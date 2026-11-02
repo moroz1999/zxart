@@ -12,17 +12,23 @@ use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
 use ZxArt\Assistant\Tools\Dto\ChangeTargetDto;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Prods\Dto\ProdDataResultDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdStateDto;
 use ZxArt\Prods\Exception\ProdDataException;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdStateService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
 
@@ -35,7 +41,7 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testCreateProdPreviewsTheGivenFieldsAndCreates(): void
     {
         $this->signInAsRegisteredUser();
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldwrite Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldwrite Guild')))->id;
         $arguments = '{"fields": {"title": "Goldwrite Demo", "year": 1999, "groupIds": [' . $groupId . ']}}';
 
         self::assertEquals(
@@ -68,7 +74,7 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testUpdateProdPreviewsWhatChangesAndUpdates(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo', year: 1999))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo', year: 1999)))->id;
         $arguments = '{"id": ' . $prodId . ', "fields": {"title": "Goldwrite Demo", "year": 2001, "legalStatus": "allowed"}}';
 
         self::assertEquals(
@@ -100,7 +106,7 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testDeleteProdPreviewsTheReleasesItTakesAlong(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicDelete']]);
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $this->createRelease($prodId);
         $this->createRelease($prodId);
 
@@ -115,8 +121,8 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testJoinProdsPreviewsWhatMovesAndJoins(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'join']]);
-        $mainId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $joinedId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Intro'))->id;
+        $mainId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $joinedId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Intro')))->id;
         $this->createRelease($joinedId);
         $arguments = '{"mainId": ' . $mainId . ', "joinedId": ' . $joinedId . '}';
 
@@ -142,8 +148,8 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testJoinOfReleasesOnlyPreviewsNothingElseMoving(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'join']]);
-        $mainId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $joinedId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Intro'))->id;
+        $mainId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $joinedId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Intro')))->id;
 
         self::assertSame(
             ["[[prod:$joinedId]] is deleted"],
@@ -154,8 +160,8 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testSetProdAuthorPreviewsANewAuthorThenNewRoles(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Coder'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
         $author = new EntityMentionDto(EntityType::Author, $authorId);
 
         self::assertEquals(
@@ -172,8 +178,8 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testSetProdAuthorOfAnUnknownRoleIsRefusedAtThePreview(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Coder'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
 
         $this->assertRefused(400, ProdDataException::class, fn() => $this->preview(
             'set_prod_author',
@@ -184,9 +190,9 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testRemoveProdAuthorPreviewsTheCreditItRemovesAndRemoves(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive'], ['zxProd', 'deleteAuthor']]);
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Coder'))->id;
-        $this->prodDataService()->setMember($prodId, $authorId, ['code']);
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code']));
         $arguments = '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}';
 
         $preview = $this->preview('remove_prod_author', $arguments);
@@ -203,8 +209,8 @@ final class ProdWriteToolsTest extends WriteToolTestCase
     public function testRemovingAnAuthorWhoIsNotCreditedIsRefusedAtThePreview(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'deleteAuthor']]);
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Coder'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Coder')))->id;
 
         $this->assertRefused(404, ProdDataException::class, fn() => $this->preview('remove_prod_author', '{"prodId": ' . $prodId . ', "authorId": ' . $authorId . '}'));
     }
@@ -216,11 +222,6 @@ final class ProdWriteToolsTest extends WriteToolTestCase
 
     private function createRelease(int $prodId): void
     {
-        $this->container->get(ReleaseDataService::class)->create(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $prodId));
-    }
-
-    private function prodDataService(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
+        $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $prodId)));
     }
 }

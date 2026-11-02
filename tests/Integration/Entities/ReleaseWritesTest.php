@@ -10,28 +10,37 @@ use Closure;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dbal\ReleasesDbal;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Dto\ReleaseSearchFilterDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseFieldsReader;
 use ZxArt\Releases\Services\ReleaseSearchService;
 use ZxArt\Releases\ReleaseTypes;
 use zxReleaseElement;
+use ZxArt\Releases\UseCases\CloneReleaseCommand;
+use ZxArt\Releases\UseCases\CloneReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\SetReleaseMemberCommand;
+use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
+use ZxArt\Releases\UseCases\UpdateReleaseCommand;
+use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 
 /**
- * Releases written through {@see ReleaseDataService}, and the legacy clone
- * action the release page still runs. Creating a release per uploaded file is
- * covered with the other uploads.
+ * Releases written through their use cases. Creating a release per uploaded
+ * file is covered with the other uploads.
  */
 #[RunTestsInSeparateProcesses]
 final class ReleaseWritesTest extends EntityWriteTestCase
@@ -45,7 +54,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
 
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
 
         self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $releaseId, self::COLUMNS));
         self::assertSame($this->everyLinkStored($references), $this->storedLinks($releaseId));
@@ -58,7 +67,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
 
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
 
         self::assertSame(
             ['zxRelease.clone', 'zxRelease.deleteFile', 'zxRelease.publicDelete', 'zxRelease.publicReceive', 'zxRelease.showPublicForm'],
@@ -71,9 +80,9 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(version: '1.1'));
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(version: '1.1')));
 
         self::assertSame('1.1', $this->storedRow(self::TABLE, $releaseId, ['version'])['version']);
     }
@@ -83,7 +92,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $prodId = (int)$this->db->table('module_zxprod')->min('id');
 
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)))->id;
 
         self::assertSame($prodId, $this->structureParent($releaseId)['id']);
     }
@@ -97,7 +106,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
             new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: self::COUNTRY_POLAND),
         ] as $fields) {
             try {
-                $this->releaseDataService()->create($fields);
+                $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($fields));
                 self::fail('A release needs its production');
             } catch (ReleaseDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -119,7 +128,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
             new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'], publisherIds: [self::COUNTRY_POLAND]),
         ] as $fields) {
             try {
-                $this->releaseDataService()->create($fields);
+                $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($fields));
                 self::fail('A wrong reference must be rejected');
             } catch (ReleaseDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -137,7 +146,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $this->structureManager->getElementById($prodId);
 
         try {
-            $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId));
+            $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)));
             self::fail('Creating must need zxRelease.publicAdd');
         } catch (ReleaseDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -149,15 +158,15 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(
             year: 2001,
             releaseType: ReleaseTypes::crack,
             denyVoting: false,
             releaseFormats: ['trd'],
             publisherIds: [$references['otherPublisherId']],
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), ['year' => 2001, 'releaseType' => 'crack', 'denyVoting' => 0]),
@@ -174,9 +183,9 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(
             year: 0,
             version: '',
             description: '',
@@ -184,7 +193,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
             languages: [],
             hardware: [],
             publisherIds: [],
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), ['year' => 0, 'version' => '', 'description' => '']),
@@ -200,9 +209,9 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(prodId: $references['otherProdId']));
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(prodId: $references['otherProdId'])));
 
         self::assertSame([$references['otherProdId']], $this->linkedParents($releaseId, 'structure'));
     }
@@ -215,7 +224,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $otherProdId = (int)$this->db->table('module_zxprod')->whereNotIn('id', $prodIds)->min('id');
 
         try {
-            $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(prodId: $otherProdId));
+            $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(prodId: $otherProdId)));
             self::fail('Moving must need zxRelease.publicAdd on the target');
         } catch (ReleaseDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -230,7 +239,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         $stored = $this->db->table(self::TABLE)->where('id', '=', $releaseId)->get();
 
         try {
-            $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(version: '1.1'));
+            $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(version: '1.1')));
             self::fail('Updating must need zxRelease.publicReceive');
         } catch (ReleaseDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -242,16 +251,16 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
         $this->ageModificationTime($releaseId);
 
-        $this->releaseDataService()->update(
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand(
             $releaseId,
             new ReleaseFieldsDto(),
             authors: [new AuthorshipInputDto($authorId, ['release', 'adaptation'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '6001')],
-        );
+        ));
 
         self::assertSame(
             [['roles' => ['release', 'adaptation'], 'startDate' => 0, 'endDate' => 0]],
@@ -265,21 +274,21 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
-        $this->releaseDataService()->update(
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand(
             $releaseId,
             new ReleaseFieldsDto(),
             authors: [new AuthorshipInputDto($authorId, ['release'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '6001')],
-        );
+        ));
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(version: '1.1'), importOrigins: []);
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(version: '1.1'), importOrigins: []));
 
         self::assertSame([['roles' => ['release'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($releaseId, $authorId, 'release'));
         self::assertSame([], $this->storedImportOrigins($releaseId));
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(), authors: []);
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(), authors: []));
 
         self::assertSame([], $this->authorshipRecords($releaseId, $authorId, 'release'));
     }
@@ -288,15 +297,15 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
 
-        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->releaseDataService()->update(
+        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand(
             $releaseId,
             new ReleaseFieldsDto(version: '1.1'),
             authors: [new AuthorshipInputDto($authorId, ['coder'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '6001')],
-        ));
+        )));
 
         self::assertSame(['version' => ''], $this->storedRow(self::TABLE, $releaseId, ['version']));
         self::assertSame([], $this->authorshipRecords($releaseId, $authorId, 'release'));
@@ -307,11 +316,11 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->ageModificationTime($releaseId);
 
-        $this->releaseDataService()->setMember($releaseId, $authorId, ['release']);
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($releaseId, $authorId, ['release']));
 
         self::assertSame([['roles' => ['release'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($releaseId, $authorId, 'release'));
         self::assertGreaterThan(1, $this->modificationTime($releaseId));
@@ -321,7 +330,7 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId']))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $references['prodId'])))->id;
         $find = $this->finder();
 
         self::assertSame([$releaseId], $this->container->get(ReleasesDbal::class)->findIdsByProdId($references['prodId']));
@@ -335,16 +344,16 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $tapeId = $this->releaseDataService()->create($this->everyField($references))->id;
-        $diskId = $this->releaseDataService()->create(new ReleaseFieldsDto(
+        $tapeId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
+        $diskId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(
             title: 'Goldmaster Disk',
             year: 2003,
             releaseType: ReleaseTypes::crack,
             releaseFormats: ['trd'],
             prodId: $references['otherProdId'],
-        ))->id;
-        $adapterId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Adapter'))->id;
-        $this->releaseDataService()->setMember($diskId, $adapterId, ['adaptation']);
+        )))->id;
+        $adapterId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Adapter')))->id;
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($diskId, $adapterId, ['adaptation']));
         $find = $this->finder();
 
         self::assertSame([$diskId, $tapeId], $find(new ReleaseSearchFilterDto(title: 'goldmaster')));
@@ -360,17 +369,17 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
         $reader = $this->container->get(ReleaseFieldsReader::class);
 
         self::assertEquals($this->everyField($references), $reader->read($this->release($releaseId)));
 
-        $this->releaseDataService()->update($releaseId, new ReleaseFieldsDto(
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(
             releaseFormats: ['trd'],
             languages: [],
             publisherIds: [$references['otherPublisherId']],
             prodId: $references['otherProdId'],
-        ));
+        )));
 
         self::assertEquals(
             new ReleaseFieldsDto(...array_replace(get_object_vars($this->everyField($references)), [
@@ -387,11 +396,11 @@ final class ReleaseWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $this->releaseDataService()->setMember($releaseId, $authorId, ['release']);
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand($this->everyField($references)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($releaseId, $authorId, ['release']));
 
-        $cloneId = $this->releaseDataService()->cloneRelease($releaseId)->id;
+        $cloneId = $this->container->get(CloneReleaseHandler::class)->handle(new CloneReleaseCommand($releaseId))->id;
 
         self::assertNotSame($releaseId, $cloneId);
         self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $cloneId, self::COLUMNS));
@@ -402,25 +411,6 @@ final class ReleaseWritesTest extends EntityWriteTestCase
             $this->allowedOnElement($cloneId),
         );
         self::assertContains('clone', $this->loggedActions($releaseId));
-    }
-
-    public function testTheCloneActionMakesTheSameCopy(): void
-    {
-        $this->signInAsEditor();
-        $references = $this->createReferences();
-        $releaseId = $this->releaseDataService()->create($this->everyField($references))->id;
-        $releasesBefore = $this->releaseRows($this->newElementIds());
-
-        $this->submitEditForm($releaseId, [], 'clone');
-
-        $newReleaseIds = array_values(array_diff(
-            array_column($this->releaseRows($this->newElementIds()), 'id'),
-            array_column($releasesBefore, 'id'),
-        ));
-        self::assertCount(1, $newReleaseIds);
-        $cloneId = (int)$newReleaseIds[0];
-        self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $cloneId, self::COLUMNS));
-        self::assertSame($this->everyLinkStored($references), $this->storedLinks($cloneId));
     }
 
     /**
@@ -453,14 +443,12 @@ final class ReleaseWritesTest extends EntityWriteTestCase
      */
     private function createReferences(): array
     {
-        $prods = $this->container->get(ProdDataService::class);
-        $groups = $this->container->get(GroupDataService::class);
 
         return [
-            'prodId' => $prods->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id,
-            'otherProdId' => $prods->create(new ProdFieldsDto(title: 'Goldmaster Intro'))->id,
-            'publisherId' => $groups->create(new GroupFieldsDto(title: 'Goldmaster Publishing'))->id,
-            'otherPublisherId' => $groups->create(new GroupFieldsDto(title: 'Goldmaster Press'))->id,
+            'prodId' => $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id,
+            'otherProdId' => $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro')))->id,
+            'publisherId' => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Publishing')))->id,
+            'otherPublisherId' => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Press')))->id,
         ];
     }
 
@@ -562,10 +550,5 @@ final class ReleaseWritesTest extends EntityWriteTestCase
         self::assertInstanceOf(zxReleaseElement::class, $release);
 
         return $release;
-    }
-
-    private function releaseDataService(): ReleaseDataService
-    {
-        return $this->container->get(ReleaseDataService::class);
     }
 }

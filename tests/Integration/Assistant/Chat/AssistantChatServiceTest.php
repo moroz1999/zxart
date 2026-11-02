@@ -19,7 +19,8 @@ use ZxArt\Assistant\Chat\PlanStatus;
 use ZxArt\Assistant\Chat\RunStatus;
 use ZxArt\Assistant\Chat\RunType;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Tests\Integration\Assistant\WriteToolTestCase;
 
 /**
@@ -141,7 +142,7 @@ final class AssistantChatServiceTest extends WriteToolTestCase
     public function testTheStateMentionsWhatAnExecutedPlanCreated(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $service = $this->service();
         $conversation = $service->create(self::USER_ID);
         $this->container->get(PlansDbal::class)->create($conversation->id, 'New game', [[
@@ -162,7 +163,7 @@ final class AssistantChatServiceTest extends WriteToolTestCase
     public function testTheStateMentionsTheEntitiesAnUnpreviewedActionNamesById(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $service = $this->service();
         $conversation = $service->create(self::USER_ID);
         $this->container->get(PlansDbal::class)->create($conversation->id, 'Credit', [[
@@ -183,7 +184,7 @@ final class AssistantChatServiceTest extends WriteToolTestCase
     public function testTheStateIsWhatIsNewAndTheEntitiesItMentions(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
         $service = $this->service();
         $conversation = $service->create(self::USER_ID);
         $messages = $this->container->get(MessagesDbal::class);

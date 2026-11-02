@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Groups;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
@@ -17,16 +18,22 @@ use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupDataException;
 use ZxArt\Groups\Repositories\GroupRepository;
 use ZxArt\Groups\Services\GroupCreator;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupFieldsWriter;
 use ZxArt\Groups\Services\GroupPrivileges;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Groups\UseCases\ConvertGroupToAuthorCommand;
 use ZxArt\Groups\UseCases\ConvertGroupToAuthorHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
 use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\DeleteGroupCommand;
 use ZxArt\Groups\UseCases\DeleteGroupHandler;
+use ZxArt\Groups\UseCases\DeleteGroupMemberCommand;
 use ZxArt\Groups\UseCases\DeleteGroupMemberHandler;
+use ZxArt\Groups\UseCases\JoinGroupsCommand;
 use ZxArt\Groups\UseCases\JoinGroupsHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
 use ZxArt\Groups\UseCases\SetGroupMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupCommand;
 use ZxArt\Groups\UseCases\UpdateGroupHandler;
 use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Shared\Elements\ElementImageWriter;
@@ -40,7 +47,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 
-final class GroupDataServiceTest extends TestCase
+final class GroupUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -55,32 +62,32 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteGroupHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteGroupCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteGroupCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(authorElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -89,9 +96,9 @@ final class GroupDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteGroupHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteGroupCommand(42)));
     }
 
     public function testConvertToAuthorReturnsCreatedEntityId(): void
@@ -109,7 +116,7 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'convertToAuthor');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, $authorsService)->convertToAuthor(42);
+        $result = $this->handler(ConvertGroupToAuthorHandler::class, $element, $privilegesManager, $actionsLog, $authorsService)->handle(new ConvertGroupToAuthorCommand(42));
 
         self::assertSame(900, $result->id);
     }
@@ -118,18 +125,18 @@ final class GroupDataServiceTest extends TestCase
     {
         $authorsService = $this->createMock(AuthorsService::class);
         $authorsService->expects($this->never())->method('convertGroupToAuthor');
-        $service = $this->createService($this->createStub(groupElement::class), $this->privileges(false), null, $authorsService);
+        $handler = $this->handler(ConvertGroupToAuthorHandler::class, $this->createStub(groupElement::class), $this->privileges(false), null, $authorsService);
 
-        $this->assertStatus(403, fn() => $service->convertToAuthor(42));
+        $this->assertStatus(403, fn() => $handler->handle(new ConvertGroupToAuthorCommand(42)));
     }
 
     public function testFailedConvertToAuthorIsServerError(): void
     {
         $authorsService = $this->createStub(AuthorsService::class);
         $authorsService->method('convertGroupToAuthor')->willReturn(null);
-        $service = $this->createService($this->createStub(groupElement::class), $this->privileges(true), null, $authorsService);
+        $handler = $this->handler(ConvertGroupToAuthorHandler::class, $this->createStub(groupElement::class), $this->privileges(true), null, $authorsService);
 
-        $this->assertStatus(500, fn() => $service->convertToAuthor(42));
+        $this->assertStatus(500, fn() => $handler->handle(new ConvertGroupToAuthorCommand(42)));
     }
 
     public function testDeleteMemberRemovesOnlyThisGroupAuthorshipAndReturnsItsId(): void
@@ -151,12 +158,12 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'deleteAuthor');
 
-        $result = $this->createService(
+        $result = $this->handler(DeleteGroupMemberHandler::class,
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
-        )->deleteMember(42, 7);
+        )->handle(new DeleteGroupMemberCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
@@ -165,13 +172,13 @@ final class GroupDataServiceTest extends TestCase
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteGroupMemberHandler::class,
             $this->createStub(groupElement::class),
             $this->privileges(true),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteGroupMemberCommand(42, 0)));
     }
 
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
@@ -182,27 +189,27 @@ final class GroupDataServiceTest extends TestCase
         $authorship->expects($this->never())->method('deleteAuthorship');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteGroupMemberHandler::class,
             $this->createStub(groupElement::class),
             $this->privileges(true),
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupMemberCommand(42, 7)));
     }
 
     public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteGroupMemberHandler::class,
             $this->createStub(groupElement::class),
             $this->privileges(false),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteGroupMemberCommand(42, 7)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -219,7 +226,7 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateGroupHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateGroupCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -228,16 +235,16 @@ final class GroupDataServiceTest extends TestCase
     {
         $writer = $this->createMock(GroupFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(groupElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateGroupHandler::class, $this->createStub(groupElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new GroupFieldsDto(title: 'New')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateGroupCommand(42, new GroupFieldsDto(title: 'New'))));
     }
 
     public function testUpdateOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateGroupHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new GroupFieldsDto(title: 'New')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateGroupCommand(42, new GroupFieldsDto(title: 'New'))));
     }
 
     public function testCreateChecksTheAddPrivilegeAndReturnsTheNewId(): void
@@ -257,7 +264,7 @@ final class GroupDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService(null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateGroupHandler::class, null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateGroupCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -266,9 +273,9 @@ final class GroupDataServiceTest extends TestCase
     {
         $creator = $this->createMock(GroupCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService(null, $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateGroupHandler::class, null, $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new GroupFieldsDto(title: 'Fenomen')));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Fenomen'))));
     }
 
     public function testJoinMovesTheJoinedOneIntoThisOneAndLogsIt(): void
@@ -288,13 +295,13 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($main, StructureType::Group, 'join');
 
-        $result = $this->createService(
+        $result = $this->handler(JoinGroupsHandler::class,
             null,
             $privilegesManager,
             $actionsLog,
             groupsService: $groupsService,
             elementsById: [42 => $main, 43 => $joined],
-        )->join(42, 43, false);
+        )->handle(new JoinGroupsCommand(42, 43, false));
 
         self::assertSame(42, $result->id);
     }
@@ -304,14 +311,14 @@ final class GroupDataServiceTest extends TestCase
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->once())->method('joinGroupAsAlias')->with(42, 43);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(
+        $handler = $this->handler(JoinGroupsHandler::class,
             null,
             $this->privileges(true),
             groupsService: $groupsService,
             elementsById: [42 => $this->createStub(groupElement::class), 43 => $this->createStub(groupElement::class)],
         );
 
-        $result = $service->join(42, 43, true);
+        $result = $handler->handle(new JoinGroupsCommand(42, 43, true));
 
         self::assertSame(42, $result->id);
     }
@@ -320,9 +327,9 @@ final class GroupDataServiceTest extends TestCase
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(null, $this->privileges(true), groupsService: $groupsService, elementsById: [42 => $this->createStub(groupElement::class)]);
+        $handler = $this->handler(JoinGroupsHandler::class, null, $this->privileges(true), groupsService: $groupsService, elementsById: [42 => $this->createStub(groupElement::class)]);
 
-        $this->assertStatus(400, fn() => $service->join(42, 42, false));
+        $this->assertStatus(400, fn() => $handler->handle(new JoinGroupsCommand(42, 42, false)));
     }
 
     public function testJoinWithoutThePrivilegeOnTheJoinedOneIsForbiddenAndJoinsNothing(): void
@@ -334,28 +341,28 @@ final class GroupDataServiceTest extends TestCase
         ]);
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(
+        $handler = $this->handler(JoinGroupsHandler::class,
             null,
             $privilegesManager,
             groupsService: $groupsService,
             elementsById: [42 => $this->createStub(groupElement::class), 43 => $this->createStub(groupElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->join(42, 43, false));
+        $this->assertStatus(403, fn() => $handler->handle(new JoinGroupsCommand(42, 43, false)));
     }
 
     public function testJoinOfAnotherEntityTypeIsNotFound(): void
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(
+        $handler = $this->handler(JoinGroupsHandler::class,
             null,
             $this->privileges(true),
             groupsService: $groupsService,
             elementsById: [42 => $this->createStub(groupElement::class), 43 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(404, fn() => $service->join(42, 43, false));
+        $this->assertStatus(404, fn() => $handler->handle(new JoinGroupsCommand(42, 43, false)));
     }
 
     public function testSetMemberWritesTheRolesBumpsTheModificationTimeAndLogsIt(): void
@@ -374,13 +381,13 @@ final class GroupDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::Group, 'publicReceive');
 
-        $result = $this->createService(
+        $result = $this->handler(SetGroupMemberHandler::class,
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
-        )->setMember(42, 7, ['coder', 'musician'], 788918400, 0);
+        )->handle(new SetGroupMemberCommand(42, 7, ['coder', 'musician'], 788918400, 0));
 
         self::assertSame(42, $result->id);
     }
@@ -391,59 +398,67 @@ final class GroupDataServiceTest extends TestCase
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['unknown'], null, null);
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorAliasElement::class)],
         );
 
-        $service->setMember(42, 7, []);
+        $handler->handle(new SetGroupMemberCommand(42, 7, []));
     }
 
     public function testSetMemberOfWhatIsNotAnAuthorIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(groupElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['coder', 'musician']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetGroupMemberCommand(42, 7, ['coder', 'musician'])));
     }
 
     public function testSetMemberWithARoleOfAnotherKindIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['code']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetGroupMemberCommand(42, 7, ['code'])));
     }
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupMemberHandler::class,
             null,
             $this->privileges(false),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(groupElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->setMember(42, 7, ['coder', 'musician']));
+        $this->assertStatus(403, fn() => $handler->handle(new SetGroupMemberCommand(42, 7, ['coder', 'musician'])));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -454,7 +469,7 @@ final class GroupDataServiceTest extends TestCase
         ?CurrentUser $user = null,
         ?GroupsService $groupsService = null,
         ?array $elementsById = null,
-    ): GroupDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -473,7 +488,7 @@ final class GroupDataServiceTest extends TestCase
         $repository = new GroupRepository($structureManager, $groupsService);
         $privileges = new GroupPrivileges($privilegesManager, $structureManager);
 
-        return new GroupDataService(
+        foreach ([
             new CreateGroupHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupCreator::class), $repository, $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog, $currentUserService),
             new UpdateGroupHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementImageWriter::class), $actionsLog),
             new DeleteGroupHandler($transactionRunner, $repository, $privileges, $actionsLog),
@@ -481,7 +496,13 @@ final class GroupDataServiceTest extends TestCase
             new JoinGroupsHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new SetGroupMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipDbal, $actionsLog),
             new DeleteGroupMemberHandler($transactionRunner, $repository, $privileges, $authorshipDbal, $actionsLog),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function privileges(bool $isAllowed): privilegesManager

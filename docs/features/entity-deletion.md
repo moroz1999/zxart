@@ -13,7 +13,8 @@ navigates away once the element is gone.
 Every entity type has its own data endpoint — `/prod-data/`, `/release-data/`,
 `/picture-data/`, `/tune-data/`, `/press-data/`, `/party-data/`,
 `/author-data/`, `/author-alias-data/`, `/group-data/`, `/group-alias-data/` —
-backed by its own `<Entity>DataService` in the entity's domain namespace.
+backed by its own delete use case (`Delete<Entity>Handler`) or, for pictures, tunes,
+press and parties, its own `<Entity>DataService`, in the entity's domain namespace.
 `POST ?id=&action=delete` deletes the element and answers its `{id}`.
 
 - An id of another entity type answers `404`: the endpoint names the type.

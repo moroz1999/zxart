@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Releases;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
@@ -20,18 +21,24 @@ use ZxArt\Releases\Repositories\ReleaseRepository;
 use ZxArt\Releases\Services\ElementFileImporter;
 use ZxArt\Releases\Services\ReleaseCloner;
 use ZxArt\Releases\Services\ReleaseCreator;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseFieldsWriter;
 use ZxArt\Releases\Services\ReleasePrivileges;
 use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
+use ZxArt\Releases\UseCases\CloneReleaseCommand;
 use ZxArt\Releases\UseCases\CloneReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
+use ZxArt\Releases\UseCases\DeleteReleaseCommand;
+use ZxArt\Releases\UseCases\DeleteReleaseFileCommand;
 use ZxArt\Releases\UseCases\DeleteReleaseFileHandler;
 use ZxArt\Releases\UseCases\DeleteReleaseHandler;
+use ZxArt\Releases\UseCases\DeleteReleaseMemberCommand;
 use ZxArt\Releases\UseCases\DeleteReleaseMemberHandler;
 use ZxArt\Releases\UseCases\SetReleaseFileHandler;
+use ZxArt\Releases\UseCases\SetReleaseMemberCommand;
 use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
+use ZxArt\Releases\UseCases\UpdateReleaseCommand;
 use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\StructureType;
@@ -45,7 +52,7 @@ use structureManager;
 use zxProdElement;
 use zxReleaseElement;
 
-final class ReleaseDataServiceTest extends TestCase
+final class ReleaseUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -60,32 +67,32 @@ final class ReleaseDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxRelease, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteReleaseHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteReleaseCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteReleaseHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteReleaseCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteReleaseHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteReleaseCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(zxProdElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteReleaseHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteReleaseCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -94,9 +101,9 @@ final class ReleaseDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteReleaseHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteReleaseCommand(42)));
     }
 
     public function testDeleteMemberRemovesOnlyThisReleaseAuthorshipAndReturnsItsId(): void
@@ -118,12 +125,12 @@ final class ReleaseDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxRelease, 'deleteAuthor');
 
-        $result = $this->createService(
+        $result = $this->handler(DeleteReleaseMemberHandler::class,
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
-        )->deleteMember(42, 7);
+        )->handle(new DeleteReleaseMemberCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
@@ -132,13 +139,13 @@ final class ReleaseDataServiceTest extends TestCase
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteReleaseMemberHandler::class,
             $this->createStub(zxReleaseElement::class),
             $this->privileges(true),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteReleaseMemberCommand(42, 0)));
     }
 
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
@@ -149,27 +156,27 @@ final class ReleaseDataServiceTest extends TestCase
         $authorship->expects($this->never())->method('deleteAuthorship');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteReleaseMemberHandler::class,
             $this->createStub(zxReleaseElement::class),
             $this->privileges(true),
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteReleaseMemberCommand(42, 7)));
     }
 
     public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteReleaseMemberHandler::class,
             $this->createStub(zxReleaseElement::class),
             $this->privileges(false),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteReleaseMemberCommand(42, 7)));
     }
 
     public function testDeleteFileRemovesFileOfThisReleaseAndReturnsItsId(): void
@@ -185,35 +192,35 @@ final class ReleaseDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($file, StructureType::File, 'delete');
 
-        $result = $this->createService($this->releaseWithFile($file), $privilegesManager, actionsLog: $actionsLog)
-            ->deleteFile(42, 7);
+        $result = $this->handler(DeleteReleaseFileHandler::class, $this->releaseWithFile($file), $privilegesManager, actionsLog: $actionsLog)
+            ->handle(new DeleteReleaseFileCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteFileWithoutFileIdIsBadRequest(): void
     {
-        $service = $this->createService($this->releaseWithFile($this->createStub(fileElement::class)), $this->privileges(true));
+        $handler = $this->handler(DeleteReleaseFileHandler::class, $this->releaseWithFile($this->createStub(fileElement::class)), $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->deleteFile(42, 0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteReleaseFileCommand(42, 0)));
     }
 
     public function testDeleteFileOfAnotherElementIsNotFound(): void
     {
         $file = $this->fileWithId(8);
         $file->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($this->releaseWithFile($file), $this->privileges(true));
+        $handler = $this->handler(DeleteReleaseFileHandler::class, $this->releaseWithFile($file), $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->deleteFile(42, 7));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteReleaseFileCommand(42, 7)));
     }
 
     public function testDeleteFileWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
     {
         $file = $this->fileWithId(7);
         $file->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($this->releaseWithFile($file), $this->privileges(false));
+        $handler = $this->handler(DeleteReleaseFileHandler::class, $this->releaseWithFile($file), $this->privileges(false));
 
-        $this->assertStatus(403, fn() => $service->deleteFile(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteReleaseFileCommand(42, 7)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -230,7 +237,7 @@ final class ReleaseDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxRelease, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateReleaseHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateReleaseCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -239,16 +246,16 @@ final class ReleaseDataServiceTest extends TestCase
     {
         $writer = $this->createMock(ReleaseFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(zxReleaseElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateReleaseHandler::class, $this->createStub(zxReleaseElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new ReleaseFieldsDto(version: '1.1')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateReleaseCommand(42, new ReleaseFieldsDto(version: '1.1'))));
     }
 
     public function testUpdateOfMissingReleaseIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateReleaseHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new ReleaseFieldsDto(version: '1.1')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateReleaseCommand(42, new ReleaseFieldsDto(version: '1.1'))));
     }
 
     public function testMovingToAnotherProductionNeedsTheRightToAddReleasesThere(): void
@@ -260,14 +267,14 @@ final class ReleaseDataServiceTest extends TestCase
             [42, 'publicReceive', 'zxRelease', true],
             [9, 'publicAdd', 'zxRelease', false],
         ]);
-        $service = $this->createService(
+        $handler = $this->handler(UpdateReleaseHandler::class,
             $this->createStub(zxReleaseElement::class),
             $privilegesManager,
             writer: $writer,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 9 => $this->createStub(zxProdElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->update(42, new ReleaseFieldsDto(prodId: 9)));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateReleaseCommand(42, new ReleaseFieldsDto(prodId: 9))));
     }
 
     public function testCreateNeedsTheRightToAddReleasesToTheProductionAndReturnsTheNewId(): void
@@ -287,7 +294,7 @@ final class ReleaseDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService($this->createStub(zxProdElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateReleaseHandler::class, $this->createStub(zxProdElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateReleaseCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -296,27 +303,27 @@ final class ReleaseDataServiceTest extends TestCase
     {
         $creator = $this->createMock(ReleaseCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService(null, $this->privileges(true), creator: $creator);
+        $handler = $this->handler(CreateReleaseHandler::class, null, $this->privileges(true), creator: $creator);
 
-        $this->assertStatus(400, fn() => $service->create(new ReleaseFieldsDto(title: 'Dizzy')));
+        $this->assertStatus(400, fn() => $handler->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Dizzy'))));
     }
 
     public function testCreateWithoutPrivilegeIsForbiddenAndCreatesNothing(): void
     {
         $creator = $this->createMock(ReleaseCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(zxProdElement::class), $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateReleaseHandler::class, $this->createStub(zxProdElement::class), $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new ReleaseFieldsDto(prodId: 9)));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateReleaseCommand(new ReleaseFieldsDto(prodId: 9))));
     }
 
     public function testCreateForWhatIsNotAProductionIsBadRequestAndCreatesNothing(): void
     {
         $creator = $this->createMock(ReleaseCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(zxReleaseElement::class), $this->privileges(true), creator: $creator);
+        $handler = $this->handler(CreateReleaseHandler::class, $this->createStub(zxReleaseElement::class), $this->privileges(true), creator: $creator);
 
-        $this->assertStatus(400, fn() => $service->create(new ReleaseFieldsDto(prodId: 9)));
+        $this->assertStatus(400, fn() => $handler->handle(new CreateReleaseCommand(new ReleaseFieldsDto(prodId: 9))));
     }
 
     public function testSetMemberWritesTheRolesBumpsTheModificationTimeAndLogsIt(): void
@@ -335,13 +342,13 @@ final class ReleaseDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxRelease, 'publicReceive');
 
-        $result = $this->createService(
+        $result = $this->handler(SetReleaseMemberHandler::class,
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
-        )->setMember(42, 7, ['release', 'graphics']);
+        )->handle(new SetReleaseMemberCommand(42, 7, ['release', 'graphics']));
 
         self::assertSame(42, $result->id);
     }
@@ -352,56 +359,56 @@ final class ReleaseDataServiceTest extends TestCase
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Release, ['unknown'], null, null);
-        $service = $this->createService(
+        $handler = $this->handler(SetReleaseMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorAliasElement::class)],
         );
 
-        $service->setMember(42, 7, []);
+        $handler->handle(new SetReleaseMemberCommand(42, 7, []));
     }
 
     public function testSetMemberOfWhatIsNotAnAuthorIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetReleaseMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(zxReleaseElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['release', 'graphics']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetReleaseMemberCommand(42, 7, ['release', 'graphics'])));
     }
 
     public function testSetMemberWithARoleOfAnotherKindIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetReleaseMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['cracker']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetReleaseMemberCommand(42, 7, ['cracker'])));
     }
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetReleaseMemberHandler::class,
             null,
             $this->privileges(false),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxReleaseElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->setMember(42, 7, ['release', 'graphics']));
+        $this->assertStatus(403, fn() => $handler->handle(new SetReleaseMemberCommand(42, 7, ['release', 'graphics'])));
     }
 
     public function testCloneCopiesTheReleaseLogsItAndLetsTheUserEditTheCopy(): void
@@ -421,8 +428,8 @@ final class ReleaseDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService($source, $privilegesManager, actionsLog: $actionsLog, user: $user, cloner: $cloner)
-            ->cloneRelease(42);
+        $result = $this->handler(CloneReleaseHandler::class, $source, $privilegesManager, actionsLog: $actionsLog, user: $user, cloner: $cloner)
+            ->handle(new CloneReleaseCommand(42));
 
         self::assertSame(43, $result->id);
     }
@@ -431,12 +438,20 @@ final class ReleaseDataServiceTest extends TestCase
     {
         $cloner = $this->createMock(ReleaseCloner::class);
         $cloner->expects($this->never())->method('clone');
-        $service = $this->createService($this->createStub(zxReleaseElement::class), $this->privileges(false), cloner: $cloner);
+        $handler = $this->handler(CloneReleaseHandler::class, $this->createStub(zxReleaseElement::class), $this->privileges(false), cloner: $cloner);
 
-        $this->assertStatus(403, fn() => $service->cloneRelease(42));
+        $this->assertStatus(403, fn() => $handler->handle(new CloneReleaseCommand(42)));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -446,7 +461,7 @@ final class ReleaseDataServiceTest extends TestCase
         ?CurrentUser $user = null,
         ?array $elementsById = null,
         ?ReleaseCloner $cloner = null,
-    ): ReleaseDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -463,7 +478,7 @@ final class ReleaseDataServiceTest extends TestCase
         $releasePrivileges = new ReleasePrivileges($privilegesManager, $structureManager);
         $fileImporter = $this->createStub(ElementFileImporter::class);
 
-        return new ReleaseDataService(
+        foreach ([
             new CreateReleaseHandler($transactionRunner, $releasePrivileges, $creator ?? $this->createStub(ReleaseCreator::class), $actionsLog, $currentUserService),
             new UpdateReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $writer ?? $this->createStub(ReleaseFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $this->createStub(ElementFileImporter::class), $actionsLog),
             new DeleteReleaseHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),
@@ -474,7 +489,13 @@ final class ReleaseDataServiceTest extends TestCase
             new SetReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $fileImporter, $actionsLog),
             new DeleteReleaseFileHandler($transactionRunner, $releaseRepository, $releasePrivileges, $actionsLog),
             $this->createStub(CreateReleasesFromFilesHandler::class),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function fileWithId(int $id): fileElement&MockObject

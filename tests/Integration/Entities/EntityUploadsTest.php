@@ -10,19 +10,33 @@ use App\Paths\PathsManager;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\UpdateGroupCommand;
+use ZxArt\Groups\UseCases\UpdateGroupHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdFileUploadDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\BatchUploadProdsCommand;
+use ZxArt\Prods\UseCases\BatchUploadProdsHandler;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\UpdateProdCommand;
+use ZxArt\Prods\UseCases\UpdateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Dto\ReleaseFileUploadDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\ReleaseFileKind;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesCommand;
+use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
+use ZxArt\Releases\UseCases\UpdateReleaseCommand;
+use ZxArt\Releases\UseCases\UpdateReleaseHandler;
 use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
@@ -63,7 +77,7 @@ final class EntityUploadsTest extends EntityWriteTestCase
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
 
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'), image: $this->upload('screen-1.png'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer'), image: $this->upload('screen-1.png')))->id;
 
         self::assertSame(
             ['image' => (string)$authorId, 'originalName' => 'screen-1.png'],
@@ -75,9 +89,9 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testUpdateReplacesOrRemovesTheGroupsImage(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['group', 'publicReceive']]);
-        $groupId = $this->groupData()->create(new GroupFieldsDto(title: 'Goldmaster Guild'), image: $this->upload('screen-1.png'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild'), image: $this->upload('screen-1.png')))->id;
 
-        $this->groupData()->update($groupId, new GroupFieldsDto(), image: $this->upload('screen-2.png'));
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(), image: $this->upload('screen-2.png')));
 
         self::assertSame(
             ['image' => (string)$groupId, 'originalName' => 'screen-2.png'],
@@ -85,7 +99,7 @@ final class EntityUploadsTest extends EntityWriteTestCase
         );
         self::assertFileEquals(self::FIXTURES . 'screen-2.png', $this->uploadsPath() . $groupId);
 
-        $this->groupData()->update($groupId, new GroupFieldsDto(), removeImage: true);
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(), removeImage: true));
 
         self::assertSame(['image' => '', 'originalName' => ''], $this->storedRow('module_group', $groupId, ['image', 'originalName']));
         self::assertFileDoesNotExist($this->uploadsPath() . $groupId);
@@ -94,15 +108,15 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testUpdateAddsEachUploadedFileToTheListOfItsKind(): void
     {
         $this->signInAsProdEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $this->ageModificationTime($prodId);
 
-        $this->prods()->update($prodId, new ProdFieldsDto(), files: [
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(), files: [
             new ProdFileUploadDto(ProdFileKind::Screenshots, $this->upload('screen-1.png')),
             new ProdFileUploadDto(ProdFileKind::Screenshots, $this->upload('screen-2.png')),
             new ProdFileUploadDto(ProdFileKind::Maps, $this->upload('map.png')),
             new ProdFileUploadDto(ProdFileKind::Rzx, $this->upload('playthrough.rzx')),
-        ]);
+        ]));
 
         self::assertSame(['screen-1.png', 'screen-2.png'], $this->fileNames($this->linkedChildren($prodId, 'connectedFile')));
         self::assertSame(['map.png'], $this->fileNames($this->linkedChildren($prodId, 'mapFilesSelector')));
@@ -113,17 +127,17 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testAFileTheKindDoesNotTakeRefusesTheWholeUpdate(): void
     {
         $this->signInAsProdEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->prods()->update(
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand(
             $prodId,
             new ProdFieldsDto(altTitle: 'Gm Demo'),
             files: [
                 new ProdFileUploadDto(ProdFileKind::Screenshots, $this->upload('screen-1.png')),
                 new ProdFileUploadDto(ProdFileKind::Screenshots, $this->upload('manual.txt')),
             ],
-        ));
+        )));
 
         self::assertSame(['altTitle' => ''], $this->storedRow('module_zxprod', $prodId, ['altTitle']));
         self::assertSame($createdBefore, $this->newElementIds());
@@ -134,7 +148,7 @@ final class EntityUploadsTest extends EntityWriteTestCase
         $this->signInAsReleaseEditor();
         $releaseId = $this->createRelease();
 
-        $this->releases()->update(
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand(
             $releaseId,
             new ReleaseFieldsDto(),
             files: [
@@ -142,7 +156,7 @@ final class EntityUploadsTest extends EntityWriteTestCase
                 new ReleaseFileUploadDto(ReleaseFileKind::Info, $this->upload('manual.txt')),
             ],
             file: $this->upload('alpha.tap'),
-        );
+        ));
 
         self::assertSame(
             ['file' => (string)$releaseId, 'fileName' => 'alpha.tap', 'parsed' => 1],
@@ -157,9 +171,9 @@ final class EntityUploadsTest extends EntityWriteTestCase
     {
         $this->signInAsReleaseEditor();
         $releaseId = $this->createRelease();
-        $this->releases()->update($releaseId, new ReleaseFieldsDto(), file: $this->upload('alpha.tap'));
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(), file: $this->upload('alpha.tap')));
 
-        $this->releases()->update($releaseId, new ReleaseFieldsDto(), removeFile: true);
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand($releaseId, new ReleaseFieldsDto(), removeFile: true));
 
         self::assertSame(
             ['file' => '', 'fileName' => '', 'parsed' => 1],
@@ -171,14 +185,14 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testBatchUploadMakesAProductionWithAReleasePerFile(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
 
-        $prodIds = $this->prods()->batchUpload(
+        $prodIds = $this->container->get(BatchUploadProdsHandler::class)->handle(new BatchUploadProdsCommand(
             new ProdFieldsDto(year: 1999, categoryIds: [self::CATEGORY_DEMO]),
             [$this->upload('alpha.tap', 'gold_master.tap'), $this->upload('beta.tap')],
             authors: [new AuthorshipInputDto($authorId, ['code'])],
             files: [new ProdFileUploadDto(ProdFileKind::Screenshots, $this->upload('screen-1.png'))],
-        )->ids;
+        ))->ids;
 
         self::assertCount(2, $prodIds);
         self::assertSame(
@@ -203,10 +217,10 @@ final class EntityUploadsTest extends EntityWriteTestCase
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
 
-        $prodIds = $this->prods()->batchUpload(
+        $prodIds = $this->container->get(BatchUploadProdsHandler::class)->handle(new BatchUploadProdsCommand(
             new ProdFieldsDto(title: 'Goldmaster Demo'),
             [$this->upload('alpha.tap'), $this->upload('beta.tap')],
-        )->ids;
+        ))->ids;
 
         self::assertSame(
             [['title' => 'Goldmaster Demo'], ['title' => 'Goldmaster Demo']],
@@ -217,14 +231,14 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testBatchUploadWithAWrongAuthorCreatesNothing(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $groupId = $this->groupData()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->prods()->batchUpload(
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->container->get(BatchUploadProdsHandler::class)->handle(new BatchUploadProdsCommand(
             new ProdFieldsDto(),
             [$this->upload('alpha.tap'), $this->upload('beta.tap')],
             authors: [new AuthorshipInputDto($groupId)],
-        ));
+        )));
 
         self::assertSame($createdBefore, $this->newElementIds());
     }
@@ -232,26 +246,26 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testBatchUploadNeedsAFileAndThePrivilege(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->prods()->batchUpload(new ProdFieldsDto(), []));
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->container->get(BatchUploadProdsHandler::class)->handle(new BatchUploadProdsCommand(new ProdFieldsDto(), [])));
 
         $this->signIn([self::PUBLIC_VISITORS]);
         $createdBefore = $this->newElementIds();
-        $this->assertRefused(403, ProdDataException::class, fn() => $this->prods()->batchUpload(new ProdFieldsDto(), [$this->upload('alpha.tap')]));
+        $this->assertRefused(403, ProdDataException::class, fn() => $this->container->get(BatchUploadProdsHandler::class)->handle(new BatchUploadProdsCommand(new ProdFieldsDto(), [$this->upload('alpha.tap')])));
         self::assertSame($createdBefore, $this->newElementIds());
     }
 
     public function testCreateFromFilesMakesAReleasePerFileWithTheSameValues(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
 
-        $releaseIds = $this->releases()->createFromFiles(
+        $releaseIds = $this->container->get(CreateReleasesFromFilesHandler::class)->handle(new CreateReleasesFromFilesCommand(
             new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId, version: '1.0'),
             [$this->upload('alpha.tap'), $this->upload('alpha-128.tap')],
             authors: [new AuthorshipInputDto($authorId, ['release'])],
             files: [new ReleaseFileUploadDto(ReleaseFileKind::Screenshots, $this->upload('release-screen.png'))],
-        )->ids;
+        ))->ids;
 
         self::assertCount(2, $releaseIds);
         self::assertSame($releaseIds, $this->linkedChildren($prodId, 'structure'));
@@ -269,12 +283,12 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testCreateFromFilesTakesTheTitleFromAFileWhenNoneIsGiven(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $releaseIds = $this->releases()->createFromFiles(
+        $releaseIds = $this->container->get(CreateReleasesFromFilesHandler::class)->handle(new CreateReleasesFromFilesCommand(
             new ReleaseFieldsDto(prodId: $prodId),
             [$this->upload('alpha.tap', 'gold_master_128.tap')],
-        )->ids;
+        ))->ids;
 
         self::assertSame(['title' => 'Gold master 128'], $this->storedRow('module_zxrelease', $releaseIds[0], ['title']));
     }
@@ -282,9 +296,9 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testCreateFromFilesWithoutAFileMakesTheOneReleaseDescribed(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $releaseIds = $this->releases()->createFromFiles(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId), [])->ids;
+        $releaseIds = $this->container->get(CreateReleasesFromFilesHandler::class)->handle(new CreateReleasesFromFilesCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId), []))->ids;
 
         self::assertCount(1, $releaseIds);
         self::assertSame(
@@ -296,15 +310,15 @@ final class EntityUploadsTest extends EntityWriteTestCase
     public function testCreateFromFilesWithAWrongRoleCreatesNothing(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->releases()->createFromFiles(
+        $this->assertRefused(400, ReleaseDataException::class, fn() => $this->container->get(CreateReleasesFromFilesHandler::class)->handle(new CreateReleasesFromFilesCommand(
             new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId),
             [$this->upload('alpha.tap'), $this->upload('beta.tap')],
             authors: [new AuthorshipInputDto($authorId, ['coder'])],
-        ));
+        )));
 
         self::assertSame($createdBefore, $this->newElementIds());
     }
@@ -349,9 +363,9 @@ final class EntityUploadsTest extends EntityWriteTestCase
 
     private function createRelease(): int
     {
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        return $this->releases()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId))->id;
+        return $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)))->id;
     }
 
     private function uploadsPath(): string
@@ -362,25 +376,5 @@ final class EntityUploadsTest extends EntityWriteTestCase
     private function releasesPath(): string
     {
         return $this->container->get(PathsManager::class)->getPath('releases');
-    }
-
-    private function authors(): AuthorDataService
-    {
-        return $this->container->get(AuthorDataService::class);
-    }
-
-    private function groupData(): GroupDataService
-    {
-        return $this->container->get(GroupDataService::class);
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
-    }
-
-    private function releases(): ReleaseDataService
-    {
-        return $this->container->get(ReleaseDataService::class);
     }
 }

@@ -63,8 +63,8 @@ and any output there fails the test.
 
 ### Entity writes
 
-`tests/Integration/Entities/` writes each entity type through its
-`<Entity>DataService` and through the legacy add and edit forms, and checks the
+`tests/Integration/Entities/` writes each entity type through its use cases
+and through the legacy add and edit forms, and checks the
 rows the database then holds (`EntityWriteTestCase`):
 
 - each test runs in its own process and in a transaction that is rolled back;
@@ -75,12 +75,10 @@ rows the database then holds (`EntityWriteTestCase`):
   groups and gets the given actions on the public root, then the public root is
   loaded as a request's path loads it — privileges are worked out per element
   as it loads, so nothing may be loaded before;
-- creates and updates go through the entity's data service, as its data
+- creates and updates go through the entity's use cases, as its data
   endpoint calls it; uploads are fixture files copied to a temporary path,
-  the way PHP hands them over. A legacy action still reached from the SPA
-  (`clone`) goes through `setElementFormData()` and `executeAction()` as
-  `/ajax/` does; the json renderer makes it answer instead of redirect;
-- joins are covered through the data services: what moves, what is deleted,
+  the way PHP hands them over;
+- joins are covered through the join use cases: what moves, what is deleted,
   and the refused privilege;
 - reads are checked in the process that wrote: each `*WritesTest` reads back
   what a create and an update wrote through the entity's fields reader, and

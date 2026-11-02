@@ -10,6 +10,7 @@ paths:
         The action is selected by `action`. Each one checks the privilege of the
         matching legacy action on the release and is recorded in the actions log.
         - `delete` removes the release; needs `publicDelete`. Answers the deleted id.
+        - `clone` makes a new release of the same production from this one: its fields, links and authors, pointing at the same stored file; needs `clone`. The user may edit the copy right away. Answers the copy's id.
         - `deleteMember` removes the author `authorId` from the members (authorship of this entity type only); needs `deleteAuthor`. Answers `404` when the author was not a member.
         - `deleteFile` deletes the file `fileId` of one of the multi-file selectors; the file itself needs `delete`. Answers `404` for a file of another element.
         - `update` changes the release `id` from the multipart body, replaces its own file with `file` (or takes it away with `removeFile`) and adds the files of `files[<kind>][]` to their lists; needs `publicReceive`, and moving it to another production needs `publicAdd` there. Answers the id.
@@ -27,7 +28,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [delete, deleteMember, deleteFile, update, createFromFiles]
+            enum: [delete, clone, deleteMember, deleteFile, update, createFromFiles]
         - in: query
           name: authorId
           required: false

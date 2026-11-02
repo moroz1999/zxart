@@ -3,21 +3,20 @@
 Overview: [README.md](README.md). The tools these serve: [mcp-tools.md](mcp-tools.md).
 
 The tools are thin adapters; the work is in domain services. The writes of the
-six entity types are use cases behind `<Entity>DataService`, which the SPA (over
-the data endpoints), the assistant and the imports all call — **one code path**.
-The rule for every item below: extend the existing `<Entity>DataService` and the
+six entity types are use cases (`<Module>\UseCases`), which the SPA (over
+the data endpoints), the assistant and the imports all call directly — **one
+code path**. The rule for every item below: add or extend a use case and the
 existing repositories where they are good, and delete a legacy action once
 nothing calls it.
 
-The `<Entity>DataService` contract stays as it is
-([rest-api.md](../php/rest-api.md)): it loads its own element class, checks the
-privilege of the matching legacy action through `privilegesManager`, and logs to
-the actions log.
+A use case loads its own element class, checks the privilege of the matching
+legacy action through `privilegesManager`, and logs to the actions log
+([entity-writes.md](../php/entity-writes.md)).
 
 ## 1. Create and update as services
 
 Done, see [php/entity-writes.md](../php/entity-writes.md):
-`<Entity>DataService::create()` / `update()` of the six types take the fields
+The create and update use cases of the six types take the fields
 DTO (every field optional, only the given ones change), the entity's lists
 (authors or members, memberships, import origins; `null` keeps, the given list
 replaces) and its uploads, and run as one transaction. The SPA edit pages call
@@ -33,10 +32,9 @@ form posts remain.
 
 ## 2. Joins and conversions
 
-Done: `join()` in `ProdDataService`, `AuthorDataService`,
-`AuthorAliasDataService`, `GroupDataService`, `GroupAliasDataService` checks
-`join` on both elements, logs, then calls the existing method; the
-`convertToGroup()` / `convertToAuthor()` methods already had that shape. The
+Done: the join use cases of prods, authors, author aliases, groups and group
+aliases check `join` on both elements, log, then call the existing method; the
+conversion use cases have the same shape. The
 counts a preview needs are listed in
 [php/entity-writes.md](../php/entity-writes.md#joins).
 
@@ -82,12 +80,12 @@ a file is dropped as soon as it grows past its limit. `fetch_url` and
 `view_image` use the same client (see
 [features/ai-assistant.md](../features/ai-assistant.md)).
 
-Entry points: `ProdDataService::addFiles()`, `ReleaseDataService::addFiles()`
+Entry points: `AddProdFilesHandler`, `AddReleaseFilesHandler`
 (`AddedFilesDto`: the element and the new file ids) and
-`ReleaseDataService::setFile()`; each needs `publicReceive` on the element,
+`SetReleaseFileHandler`; each needs `publicReceive` on the element,
 answers a refused file with `400`, moves the modification time and logs
-`publicReceive`. Deleting a file: `ProdDataService::deleteFile()`,
-`ReleaseDataService::deleteFile()`.
+`publicReceive`. Deleting a file: `DeleteProdFileHandler`,
+`DeleteReleaseFileHandler`.
 
 ## 5. Search with filters
 
@@ -144,14 +142,14 @@ out of a message is the assistant's own.
 
 ## 10. Integration tests
 
-The unit tests check the writers, creators, factories and data services against
+The unit tests check the writers, creators, factories and use cases against
 element spies; they cannot see how the CMS data layer really stores links,
 hardware, languages, letter moves and categories. A separate PHPUnit suite
 (`tests/Integration/`, `composer test:integration`, not part of `composer test`)
 runs against the local docker database:
 
-- for each of the six entity types: create through `<Entity>DataService::create()`,
-  update through `update()`, then read the stored rows back and compare every
+- for each of the six entity types: create through its create use case,
+  update through its update use case, then read the stored rows back and compare every
   field and link with what was written;
 - the legacy add and edit actions through the same request a form sends.
 
@@ -212,16 +210,16 @@ over as ints.
 
 ## 12. Release cloning
 
-Done: `ReleaseCloner` creates the copy through `ReleaseCreator`; the clone
-action and `ReleaseDataService::cloneRelease()` both use it — see
+Done: `ReleaseCloner` creates the copy through `ReleaseCreator`;
+`CloneReleaseHandler`, the `clone` action of `/release-data/`, uses it — see
 [features/release.md](../features/release.md#special-operations).
 
 ## Checklist
 
-- [x] prod: `ProdFieldsDto`, `ProdFieldsWriter`, `ProdCreator`, `ProdDataService::create()` / `update()` / `batchUpload()` (see [features/prod.md](../features/prod.md#writing-the-fields))
+- [x] prod: `ProdFieldsDto`, `ProdFieldsWriter`, `ProdCreator`, the create, update and batch upload use cases (see [features/prod.md](../features/prod.md#writing-the-fields))
 - [x] release, author, author alias, group, group alias: the same pieces — see [php/entity-writes.md](../php/entity-writes.md)
 - [x] SPA edit pages save through the data endpoints with lists and uploads; the public form actions of five types, the production batch upload action and the release batch create service are deleted
-- [x] `join()` with privilege and log in five data services; move counts for previews
+- [x] join use cases with privilege and log for five types; move counts for previews
 - [x] Authorship and membership set-with-roles; modification time bumped
 - [x] `ElementFileImporter` extracted from `ProdsService`; imports use it — only once the import golden master is in place
 - [x] `ElementFileImporter::setMainFile()` / `addFiles()` with the size, type and address guards
@@ -231,7 +229,7 @@ action and `ReleaseDataService::cloneRelease()` both use it — see
 - [x] Complete state reads for the six types with modification time, files and import origins
 - [x] Batch title/URL lookup for entity refs
 - [ ] Tests first for every new service method; update `docs/features/*.md` for each changed entity
-- [x] Integration suite (`tests/Integration/`, separate testsuite) for the six data services, their lists and uploads
+- [x] Integration suite (`tests/Integration/`, separate testsuite) for the use cases of the six types, their lists and uploads
 - [x] Golden-master suite for the imports; snapshots stored before any import code changes
 - [x] Imports and writers as use cases over the same repositories, each in one transaction (section 11)
 - [x] Release cloning through `ReleaseCreator`

@@ -10,29 +10,40 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdFieldsReader;
 use ZxArt\Prods\Services\ProdSearchService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\JoinProdsCommand;
+use ZxArt\Prods\UseCases\JoinProdsHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
+use ZxArt\Prods\UseCases\UpdateProdCommand;
+use ZxArt\Prods\UseCases\UpdateProdHandler;
 use ZxArt\Queue\QueueStatus;
 use ZxArt\Queue\QueueType;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ReleaseTypes;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\ZxProdCategories\CategoryIds;
 use zxProdElement;
 
 /**
- * Productions written through {@see ProdDataService}. The batch upload, which
+ * Productions written through their use cases. The batch upload, which
  * needs uploaded files, is covered with the other uploads.
  */
 #[RunTestsInSeparateProcesses]
@@ -56,7 +67,7 @@ final class ProdWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $references = $this->createReferences();
 
-        $prodId = $this->prodDataService()->create($this->everyField($references))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($this->everyField($references)))->id;
 
         self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $prodId, self::COLUMNS));
         self::assertSame($this->everyLinkStored($references), $this->storedLinks($prodId));
@@ -69,7 +80,7 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
 
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
 
         self::assertSame([
             QueueType::AI_CATEGORIES_TAGS->value => QueueStatus::STATUS_SKIP->value,
@@ -83,7 +94,7 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
 
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
         self::assertSame([
             'file.delete', 'file.receive',
@@ -98,9 +109,9 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testTheCreatorMayUpdateTheProdRightAway(): void
     {
         $this->signInAsRegisteredUser();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(altTitle: 'Demo Of Goldmaster'));
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(altTitle: 'Demo Of Goldmaster')));
 
         self::assertSame('Demo Of Goldmaster', $this->storedRow(self::TABLE, $prodId, ['altTitle'])['altTitle']);
     }
@@ -109,7 +120,7 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
 
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
         self::assertSame(CategoryIds::MISC->value, $this->structureParent($prodId)['id']);
     }
@@ -118,7 +129,7 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
 
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', partyId: self::PARTY))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', partyId: self::PARTY)))->id;
 
         self::assertSame(self::PARTY_YEAR, $this->storedRow(self::TABLE, $prodId, ['year'])['year']);
     }
@@ -128,7 +139,7 @@ final class ProdWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
 
         try {
-            $this->prodDataService()->create(new ProdFieldsDto(title: ''));
+            $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: '')));
             self::fail('A production needs a title');
         } catch (ProdDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -148,7 +159,7 @@ final class ProdWritesTest extends EntityWriteTestCase
             new ProdFieldsDto(title: 'Goldmaster Demo', languages: ['xx']),
         ] as $fields) {
             try {
-                $this->prodDataService()->create($fields);
+                $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($fields));
                 self::fail('A wrong reference must be rejected');
             } catch (ProdDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -164,7 +175,7 @@ final class ProdWritesTest extends EntityWriteTestCase
         $this->signIn([self::PUBLIC_VISITORS]);
 
         try {
-            $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'));
+            $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')));
             self::fail('Creating must need zxProdsUploadForm.batchUpload');
         } catch (ProdDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -176,15 +187,15 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $prodId = $this->prodDataService()->create($this->everyField($references))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($this->everyField($references)))->id;
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(
             year: 2001,
             legalStatus: LegalStatus::forbidden,
             denyComments: false,
             hardware: ['zx128'],
             groupIds: [$references['otherGroupId']],
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), ['year' => 2001, 'legalStatus' => 'forbidden', 'denyComments' => 0]),
@@ -201,9 +212,9 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $prodId = $this->prodDataService()->create($this->everyField($references))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($this->everyField($references)))->id;
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(
             altTitle: '',
             description: '',
             instructions: '',
@@ -218,7 +229,7 @@ final class ProdWritesTest extends EntityWriteTestCase
             publisherIds: [],
             tags: [],
             compilationItemIds: [],
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), [
@@ -250,10 +261,10 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testChangedCategoriesQueueTheAiTextsAgain(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
         $this->db->table('queue')->where('elementId', '=', $prodId)->update(['status' => QueueStatus::STATUS_SUCCESS->value]);
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(categoryIds: [self::CATEGORY_INTRO]));
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(categoryIds: [self::CATEGORY_INTRO])));
 
         self::assertSame([self::CATEGORY_INTRO], $this->linkedParents($prodId, 'zxProdCategory'));
         self::assertSame([
@@ -267,10 +278,10 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testAProdWithSeriesPartsAndNoReleasesIsASeries(): void
     {
         $this->signInAsEditor();
-        $partId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo 2'))->id;
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Saga', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $partId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo 2')))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Saga', categoryIds: [self::CATEGORY_DEMO])))->id;
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(seriesProdIds: [$partId]));
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(seriesProdIds: [$partId])));
 
         self::assertSame([$partId], $this->linkedChildren($prodId, 'series'));
         self::assertSame([CategoryIds::SERIES->value], $this->linkedParents($prodId, 'zxProdCategory'));
@@ -279,9 +290,9 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testMiscIsDroppedWhenAnotherCategoryIsGiven(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(categoryIds: [CategoryIds::MISC->value, self::CATEGORY_DEMO]));
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(categoryIds: [CategoryIds::MISC->value, self::CATEGORY_DEMO])));
 
         self::assertSame([self::CATEGORY_DEMO], $this->linkedParents($prodId, 'zxProdCategory'));
     }
@@ -293,7 +304,7 @@ final class ProdWritesTest extends EntityWriteTestCase
         $stored = $this->db->table(self::TABLE)->where('id', '=', $prodId)->get();
 
         try {
-            $this->prodDataService()->update($prodId, new ProdFieldsDto(altTitle: 'Demo Of Goldmaster'));
+            $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(altTitle: 'Demo Of Goldmaster')));
             self::fail('Updating must need zxProd.publicReceive');
         } catch (ProdDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -305,17 +316,16 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->container->get(AuthorAliasDataService::class)
-            ->create(new AuthorAliasFieldsDto(title: 'Goldmaster Ghost', authorId: $this->createAuthor('Goldmaster Painter')))->id;
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Goldmaster Ghost', authorId: $this->createAuthor('Goldmaster Painter'))))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
         $this->ageModificationTime($prodId);
 
-        $this->prodDataService()->update(
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand(
             $prodId,
             new ProdFieldsDto(),
             authors: [new AuthorshipInputDto($authorId, ['code', 'music']), new AuthorshipInputDto($aliasId, ['graphics'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '5001'), new ImportOriginDto(ImportOrigin::Vtrdos, 'gm-demo')],
-        );
+        ));
 
         self::assertSame([['roles' => ['code', 'music'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($prodId, $authorId, 'prod'));
         self::assertSame([['roles' => ['graphics'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($prodId, $aliasId, 'prod'));
@@ -331,15 +341,15 @@ final class ProdWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherAuthorId = $this->createAuthor('Goldmaster Painter');
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $this->prodDataService()->update(
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand(
             $prodId,
             new ProdFieldsDto(),
             authors: [new AuthorshipInputDto($authorId, ['code'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '5001')],
-        );
+        ));
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(altTitle: 'Gm Demo'), authors: [new AuthorshipInputDto($otherAuthorId)]);
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(altTitle: 'Gm Demo'), authors: [new AuthorshipInputDto($otherAuthorId)]));
 
         self::assertSame([], $this->authorshipRecords($prodId, $authorId, 'prod'));
         self::assertSame([['roles' => ['unknown'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($prodId, $otherAuthorId, 'prod'));
@@ -352,14 +362,14 @@ final class ProdWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $references = $this->createReferences();
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
 
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->prodDataService()->update(
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand(
             $prodId,
             new ProdFieldsDto(altTitle: 'Gm Demo'),
             authors: [new AuthorshipInputDto($authorId, ['code']), new AuthorshipInputDto($references['groupId'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '5001')],
-        ));
+        )));
 
         self::assertSame(['altTitle' => ''], $this->storedRow(self::TABLE, $prodId, ['altTitle']));
         self::assertSame([], $this->authorshipRecords($prodId, $authorId, 'prod'));
@@ -369,14 +379,13 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testJoinMovesTheReleasesAndAuthorsAndDeletesTheJoinedProduction(): void
     {
         $this->signInAsJoiner();
-        $mainId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $joinedId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Intro', year: 1997))->id;
-        $releaseId = $this->container->get(ReleaseDataService::class)
-            ->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $joinedId))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $mainId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $joinedId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro', year: 1997)))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $joinedId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->addAuthorship($authorId, $joinedId, 'prod');
 
-        $this->prodDataService()->join($mainId, $joinedId);
+        $this->container->get(JoinProdsHandler::class)->handle(new JoinProdsCommand($mainId, $joinedId));
 
         self::assertFalse($this->elementExists($joinedId));
         self::assertSame($mainId, $this->structureParent($releaseId)['id']);
@@ -388,14 +397,13 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testJoinOfTheReleasesOnlyMovesNothingElseOfTheJoinedProduction(): void
     {
         $this->signInAsJoiner();
-        $mainId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $joinedId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Intro', year: 1997))->id;
-        $releaseId = $this->container->get(ReleaseDataService::class)
-            ->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $joinedId))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $mainId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $joinedId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro', year: 1997)))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $joinedId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->addAuthorship($authorId, $joinedId, 'prod');
 
-        $this->prodDataService()->join($mainId, $joinedId, true);
+        $this->container->get(JoinProdsHandler::class)->handle(new JoinProdsCommand($mainId, $joinedId, true));
 
         self::assertFalse($this->elementExists($joinedId));
         self::assertSame($mainId, $this->structureParent($releaseId)['id']);
@@ -406,11 +414,11 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testJoinIsForbiddenWithoutThePrivilegeAndJoinsNothing(): void
     {
         $this->signInAsRegisteredUser();
-        $mainId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $joinedId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Intro'))->id;
+        $mainId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $joinedId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro')))->id;
 
         try {
-            $this->prodDataService()->join($mainId, $joinedId);
+            $this->container->get(JoinProdsHandler::class)->handle(new JoinProdsCommand($mainId, $joinedId));
             self::fail('Joining must need zxProd.join');
         } catch (ProdDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -421,12 +429,12 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testSetMemberAddsTheAuthorThenReplacesItsRolesAndMovesTheModificationTime(): void
     {
         $this->signInAsRegisteredUser();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->ageModificationTime($prodId);
 
-        $this->prodDataService()->setMember($prodId, $authorId, ['code', 'music']);
-        $this->prodDataService()->setMember($prodId, $authorId, ['graphics']);
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code', 'music']));
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['graphics']));
 
         self::assertSame([['roles' => ['graphics'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($prodId, $authorId, 'prod'));
         self::assertGreaterThan(1, $this->modificationTime($prodId));
@@ -436,11 +444,11 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testSetMemberOfWhatIsNotAnAuthorWritesNothing(): void
     {
         $this->signInAsRegisteredUser();
-        $prodId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
 
         try {
-            $this->prodDataService()->setMember($prodId, $groupId, ['code']);
+            $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $groupId, ['code']));
             self::fail('A group is no author of a production');
         } catch (ProdDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -451,25 +459,25 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testSearchCombinesTheCatalogueFiltersWithTitleYearsAndGroup(): void
     {
         $this->signInAsRegisteredUser();
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $demoId = $this->prodDataService()->create(new ProdFieldsDto(
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $demoId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(
             title: 'Goldmaster Demo',
             year: 1990,
             legalStatus: LegalStatus::allowed,
             categoryIds: [self::CATEGORY_DEMO],
             groupIds: [$groupId],
-        ))->id;
-        $introId = $this->prodDataService()->create(new ProdFieldsDto(
+        )))->id;
+        $introId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(
             title: 'Goldmaster Intro',
             year: 1995,
             categoryIds: [self::CATEGORY_INTRO],
-        ))->id;
-        $this->container->get(ReleaseDataService::class)->create(new ReleaseFieldsDto(
+        )))->id;
+        $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(
             title: 'Goldmaster Tape',
             prodId: $introId,
             releaseType: ReleaseTypes::original,
             releaseFormats: ['tap'],
-        ));
+        )));
         $search = $this->container->get(ProdSearchService::class);
 
         self::assertSame([$demoId, $introId], $search->search(new ProdSearchFilterDto(title: 'goldmaster'), 0, 10)->ids);
@@ -485,14 +493,13 @@ final class ProdWritesTest extends EntityWriteTestCase
     public function testTheSearchFindsByCoAuthorsTheirRolesAndTheirCity(): void
     {
         $this->signInAsEditor();
-        $coderId = $this->container->get(AuthorDataService::class)
-            ->create(new AuthorFieldsDto(title: 'Goldmaster Coder', cityId: self::CITY_VORONEZH))->id;
+        $coderId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Coder', cityId: self::CITY_VORONEZH)))->id;
         $musicianId = $this->createAuthor('Goldmaster Musician');
-        $demoId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
-        $introId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Intro', categoryIds: [self::CATEGORY_INTRO]))->id;
-        $this->prodDataService()->setMember($demoId, $coderId, ['code']);
-        $this->prodDataService()->setMember($demoId, $musicianId, ['music']);
-        $this->prodDataService()->setMember($introId, $musicianId, ['music', 'graphics']);
+        $demoId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
+        $introId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro', categoryIds: [self::CATEGORY_INTRO])))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($demoId, $coderId, ['code']));
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($demoId, $musicianId, ['music']));
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($introId, $musicianId, ['music', 'graphics']));
         $search = $this->container->get(ProdSearchService::class);
         $find = static fn(ProdSearchFilterDto $filter): array => $search->search($filter, 0, 10)->ids;
 
@@ -506,11 +513,11 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $search = $this->container->get(ProdSearchService::class);
-        $demoId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $demoId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
         $filter = new ProdSearchFilterDto(title: 'goldmaster', categoryIds: [self::CATEGORY_DEMO]);
         self::assertSame([$demoId], $search->search($filter, 0, 10)->ids);
 
-        $otherId = $this->prodDataService()->create(new ProdFieldsDto(title: 'Goldmaster Megademo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $otherId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Megademo', categoryIds: [self::CATEGORY_DEMO])))->id;
 
         self::assertSame([$demoId, $otherId], $search->search($filter, 0, 10)->ids);
     }
@@ -519,17 +526,17 @@ final class ProdWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $references = $this->createReferences();
-        $prodId = $this->prodDataService()->create($this->everyField($references))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($this->everyField($references)))->id;
         $reader = $this->container->get(ProdFieldsReader::class);
 
         self::assertEquals($this->everyFieldRead($references), $reader->read($this->prod($prodId)));
 
-        $this->prodDataService()->update($prodId, new ProdFieldsDto(
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(
             groupIds: [$references['otherGroupId']],
             categoryIds: [self::CATEGORY_INTRO],
             tags: [],
             languages: [],
-        ));
+        )));
 
         self::assertEquals(
             new ProdFieldsDto(...array_replace(get_object_vars($this->everyFieldRead($references)), [
@@ -570,14 +577,12 @@ final class ProdWritesTest extends EntityWriteTestCase
      */
     private function createReferences(): array
     {
-        $groups = $this->container->get(GroupDataService::class);
-        $prods = $this->prodDataService();
 
         return [
-            'groupId' => $groups->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id,
-            'otherGroupId' => $groups->create(new GroupFieldsDto(title: 'Goldmaster Union'))->id,
-            'publisherId' => $groups->create(new GroupFieldsDto(title: 'Goldmaster Publishing'))->id,
-            'itemId' => $prods->create(new ProdFieldsDto(title: 'Goldmaster Intro'))->id,
+            'groupId' => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id,
+            'otherGroupId' => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Union')))->id,
+            'publisherId' => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Publishing')))->id,
+            'itemId' => $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Intro')))->id,
         ];
     }
 
@@ -740,11 +745,6 @@ final class ProdWritesTest extends EntityWriteTestCase
 
     private function createAuthor(string $title): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: $title))->id;
-    }
-
-    private function prodDataService(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: $title)))->id;
     }
 }

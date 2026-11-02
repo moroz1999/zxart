@@ -8,9 +8,11 @@ require_once __DIR__ . '/EntityWriteTestCase.php';
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
 use ZxArt\Shared\References\EntityMentionLookup;
@@ -25,8 +27,8 @@ final class EntityMentionLookupTest extends EntityWriteTestCase
     public function testMentionsAnswerTheTitlesAndPagesOfWhatExists(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Rock & Roll'))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Rock & Roll')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
 
         self::assertEquals([
             "prod:$prodId" => new MentionedEntityDto('Rock & Roll', "/prod/$prodId"),

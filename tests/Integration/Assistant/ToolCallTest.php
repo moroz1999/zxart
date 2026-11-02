@@ -18,18 +18,23 @@ use ZxArt\Assistant\Tools\Search\FoundProdsDto;
 use ZxArt\Assistant\Tools\Search\FoundAuthorsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\FoundAuthorDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupCardDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Assistant\Tools\Search\FoundEntitiesDto;
 use ZxArt\Assistant\Tools\JsonSchemaGenerator;
 use ZxArt\Assistant\Tools\ToolRegistry;
 use ZxArt\Assistant\Tools\ToolRequestBuilder;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Prods\Dto\FoundProdDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Search\Dto\FoundEntityDto;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\Http\HttpRequestRefusedException;
@@ -48,7 +53,7 @@ final class ToolCallTest extends EntityWriteTestCase
     public function testASearchCallFindsWhatTheTestWrote(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
-        $prodId = $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999)))->id;
 
         $tool = $this->container->get(ToolRegistry::class)->get('search');
         $request = $this->container->get(ToolRequestBuilder::class)->build(
@@ -65,10 +70,9 @@ final class ToolCallTest extends EntityWriteTestCase
     public function testASearchAuthorsCallTakesANestedSoftwareFilterFromJson(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch Coder'))->id;
-        $prods = $this->container->get(ProdDataService::class);
-        $prodId = $prods->create(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999, legalStatus: LegalStatus::allowed))->id;
-        $prods->setMember($prodId, $authorId, ['code']);
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch Coder')))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999, legalStatus: LegalStatus::allowed)))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code']));
 
         $tool = $this->container->get(ToolRegistry::class)->get('search_authors');
         $request = $this->container->get(ToolRequestBuilder::class)->build(
@@ -105,8 +109,7 @@ final class ToolCallTest extends EntityWriteTestCase
     public function testATagFoundByItsNameNarrowsTheProductionSearch(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $prodId = $this->container->get(ProdDataService::class)
-            ->create(new ProdFieldsDto(title: 'Goldsearch Demo', tags: ['Goldtag Shimmer']))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo', tags: ['Goldtag Shimmer'])))->id;
 
         $tags = $this->call('find_tags', '{"phrase": "goldtag shim"}');
         self::assertInstanceOf(FoundTagsDto::class, $tags);
@@ -120,7 +123,7 @@ final class ToolCallTest extends EntityWriteTestCase
     public function testAGetCallAnswersTheCardOfTheId(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldsearch Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldsearch Guild')))->id;
 
         $card = $this->call('get_group', '{"id": ' . $groupId . '}');
 
@@ -139,7 +142,7 @@ final class ToolCallTest extends EntityWriteTestCase
     public function testViewImageRefusesAnIdThatIsNoFile(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $groupId = $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: 'Goldsearch Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldsearch Guild')))->id;
         $this->expectException(ImageRefusedException::class);
 
         $this->call('view_image', '{"fileId": ' . $groupId . '}');

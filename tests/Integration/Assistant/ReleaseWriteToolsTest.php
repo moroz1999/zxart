@@ -12,14 +12,17 @@ use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
 use ZxArt\Assistant\Tools\Dto\ChangeTargetDto;
 use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseDataResultDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseStateService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
 
@@ -102,7 +105,7 @@ final class ReleaseWriteToolsTest extends WriteToolTestCase
     {
         $this->signInAsEditor();
         $releaseId = $this->createRelease();
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldwrite Cracker'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Cracker')))->id;
         $author = new EntityMentionDto(EntityType::Author, $authorId);
         $arguments = '{"releaseId": ' . $releaseId . ', "authorId": ' . $authorId . ', "roles": ["adaptation"]}';
 
@@ -123,12 +126,11 @@ final class ReleaseWriteToolsTest extends WriteToolTestCase
 
     private function createProd(): int
     {
-        return $this->container->get(ProdDataService::class)->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        return $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
     }
 
     private function createRelease(): int
     {
-        return $this->container->get(ReleaseDataService::class)
-            ->create(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $this->createProd()))->id;
+        return $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $this->createProd())))->id;
     }
 }

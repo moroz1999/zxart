@@ -9,19 +9,30 @@ require_once __DIR__ . '/EntityWriteTestCase.php';
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
-use ZxArt\Groups\Services\GroupAliasDataService;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupAliasFieldsReader;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasMemberCommand;
+use ZxArt\Groups\UseCases\DeleteGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\JoinGroupAliasesCommand;
+use ZxArt\Groups\UseCases\JoinGroupAliasesHandler;
+use ZxArt\Groups\UseCases\SetGroupAliasMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
+use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use groupAliasElement;
 
 /**
- * Group aliases written through {@see GroupAliasDataService}.
+ * Group aliases written through their use cases.
  */
 #[RunTestsInSeparateProcesses]
 final class GroupAliasWritesTest extends EntityWriteTestCase
@@ -35,7 +46,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
 
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
 
         self::assertSame($this->everyFieldStored($groupId), $this->storedRow(self::TABLE, $aliasId, self::COLUMNS));
         self::assertSame(['structureType' => 'letter', 'structureName' => 'w'], $this->letterOf($aliasId));
@@ -47,7 +58,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
 
-        $aliasId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
 
         self::assertSame(
             ['groupAlias.publicDelete', 'groupAlias.publicReceive', 'groupAlias.showPublicForm'],
@@ -60,9 +71,9 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(startDate: $this->date('15.03.1995')));
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(startDate: $this->date('15.03.1995'))));
 
         self::assertSame($this->date('15.03.1995'), $this->storedRow(self::TABLE, $aliasId, ['startDate'])['startDate']);
     }
@@ -72,7 +83,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $groupId = (int)$this->db->table('module_group')->min('id');
 
-        $aliasId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
 
         self::assertSame($groupId, $this->storedRow(self::TABLE, $aliasId, ['groupId'])['groupId']);
     }
@@ -88,7 +99,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
             new GroupAliasFieldsDto(title: 'Wandering Guild'),
         ] as $fields) {
             try {
-                $this->aliasDataService()->create($fields);
+                $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($fields));
                 self::fail('An alias needs a name and its group');
             } catch (GroupAliasDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -102,7 +113,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
 
         try {
-            $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: self::COUNTRY_POLAND));
+            $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: self::COUNTRY_POLAND)));
             self::fail('A country given as the group must be rejected');
         } catch (GroupAliasDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -117,7 +128,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->structureManager->getElementById($groupId);
 
         try {
-            $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId));
+            $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)));
             self::fail('Creating must need groupAlias.publicAdd');
         } catch (GroupAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -130,9 +141,9 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
         $otherGroupId = $this->createGroup('Goldmaster Union');
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(groupId: $otherGroupId, endDate: $this->date('31.12.2001')));
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(groupId: $otherGroupId, endDate: $this->date('31.12.2001'))));
 
         self::assertSame(
             array_replace($this->everyFieldStored($groupId), ['groupId' => $otherGroupId, 'endDate' => $this->date('31.12.2001')]),
@@ -145,9 +156,9 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(startDate: 0, endDate: 0));
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(startDate: 0, endDate: 0)));
 
         self::assertSame(
             array_replace($this->everyFieldStored($groupId), ['startDate' => 0, 'endDate' => 0]),
@@ -159,9 +170,9 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
 
-        $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild'));
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild')));
 
         self::assertSame('Zeta Guild', $this->storedRow(self::TABLE, $aliasId, ['title'])['title']);
         self::assertSame('zeta-guild', $this->structureName($aliasId));
@@ -172,10 +183,10 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
 
         try {
-            $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild', groupId: self::COUNTRY_POLAND));
+            $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild', groupId: self::COUNTRY_POLAND)));
             self::fail('A country given as the group must be rejected');
         } catch (GroupAliasDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -190,7 +201,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $stored = $this->db->table(self::TABLE)->where('id', '=', $aliasId)->get();
 
         try {
-            $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild'));
+            $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(title: 'Zeta Guild')));
             self::fail('Updating must need groupAlias.publicReceive');
         } catch (GroupAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -204,11 +215,11 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $groupId = $this->createGroup('Goldmaster Guild');
         $authorId = $this->createAuthor('Goldmaster Writer');
 
-        $aliasId = $this->aliasDataService()->create(
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(
             new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $groupId),
             members: [new AuthorshipInputDto($authorId, ['cracker'], 0, $this->date('1996-01-01'))],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7002')],
-        )->id;
+        ))->id;
 
         self::assertSame(
             [['roles' => ['cracker'], 'startDate' => 0, 'endDate' => $this->date('1996-01-01')]],
@@ -222,18 +233,18 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
         $authorId = $this->createAuthor('Goldmaster Writer');
-        $aliasId = $this->aliasDataService()->create(
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(
             new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $groupId),
             members: [new AuthorshipInputDto($authorId, ['cracker'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7002')],
-        )->id;
+        ))->id;
 
-        $this->aliasDataService()->update(
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand(
             $aliasId,
             new GroupAliasFieldsDto(title: 'Zeta Crew'),
             members: [],
             importOrigins: [new ImportOriginDto(ImportOrigin::Pouet, '42')],
-        );
+        ));
 
         self::assertSame(['title' => 'Zeta Crew'], $this->storedRow(self::TABLE, $aliasId, ['title']));
         self::assertSame([], $this->authorshipRecords($aliasId, $authorId, 'group'));
@@ -244,14 +255,14 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $groupId)))->id;
 
-        $this->assertRefused(400, GroupAliasDataException::class, fn() => $this->aliasDataService()->update(
+        $this->assertRefused(400, GroupAliasDataException::class, fn() => $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand(
             $aliasId,
             new GroupAliasFieldsDto(title: 'Zeta Crew'),
             members: [new AuthorshipInputDto($groupId)],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7002')],
-        ));
+        )));
 
         self::assertSame(['title' => 'Goldmaster Crew'], $this->storedRow(self::TABLE, $aliasId, ['title']));
         self::assertSame([], $this->storedImportOrigins($aliasId));
@@ -264,10 +275,10 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $authorId = $this->createAuthor('Goldmaster Writer');
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, GroupAliasDataException::class, fn() => $this->aliasDataService()->create(
+        $this->assertRefused(400, GroupAliasDataException::class, fn() => $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(
             new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $groupId),
             members: [new AuthorshipInputDto($authorId, ['music'])],
-        ));
+        )));
 
         self::assertSame($createdBefore, $this->newElementIds());
     }
@@ -276,12 +287,12 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['groupAlias', 'join']]);
         $groupId = $this->createGroup('Goldmaster Guild');
-        $mainId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
-        $joinedId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Union', groupId: $groupId))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $mainId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
+        $joinedId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Union', groupId: $groupId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->addAuthorship($authorId, $joinedId, 'group');
 
-        $this->aliasDataService()->join($mainId, $joinedId);
+        $this->container->get(JoinGroupAliasesHandler::class)->handle(new JoinGroupAliasesCommand($mainId, $joinedId));
 
         self::assertFalse($this->elementExists($joinedId));
         self::assertContains(['authorId' => $authorId, 'elementId' => $mainId, 'type' => 'group'], $this->authorshipRows($authorId));
@@ -292,11 +303,11 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $mainId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
-        $joinedId = $this->aliasDataService()->create(new GroupAliasFieldsDto(title: 'Wandering Union', groupId: $groupId))->id;
+        $mainId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
+        $joinedId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Union', groupId: $groupId)))->id;
 
         try {
-            $this->aliasDataService()->join($mainId, $joinedId);
+            $this->container->get(JoinGroupAliasesHandler::class)->handle(new JoinGroupAliasesCommand($mainId, $joinedId));
             self::fail('Joining must need groupAlias.join');
         } catch (GroupAliasDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -309,12 +320,12 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $groupId = $this->createGroup('Goldmaster Guild');
         $otherGroupId = $this->createGroup('Goldmaster Union');
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
         $reader = $this->container->get(GroupAliasFieldsReader::class);
 
         self::assertEquals($this->everyField($groupId), $reader->read($this->element($aliasId)));
 
-        $this->aliasDataService()->update($aliasId, new GroupAliasFieldsDto(groupId: $otherGroupId, startDate: 0));
+        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(groupId: $otherGroupId, startDate: 0)));
 
         self::assertEquals(
             new GroupAliasFieldsDto(...array_replace(get_object_vars($this->everyField($groupId)), ['groupId' => $otherGroupId, 'startDate' => 0])),
@@ -326,11 +337,11 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['groupAlias', 'publicReceive'], ['groupAlias', 'deleteAuthor']]);
         $groupId = $this->createGroup('Goldmaster Guild');
-        $aliasId = $this->aliasDataService()->create($this->everyField($groupId))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->ageModificationTime($aliasId);
 
-        $this->aliasDataService()->setMember($aliasId, $authorId, ['coder'], $this->date('15.03.1995'), null);
+        $this->container->get(SetGroupAliasMemberHandler::class)->handle(new SetGroupAliasMemberCommand($aliasId, $authorId, ['coder'], $this->date('15.03.1995'), null));
 
         self::assertSame(
             [['roles' => ['coder'], 'startDate' => $this->date('15.03.1995'), 'endDate' => 0]],
@@ -339,7 +350,7 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         self::assertGreaterThan(1, $this->modificationTime($aliasId));
 
         $this->ageModificationTime($aliasId);
-        $this->aliasDataService()->deleteMember($aliasId, $authorId);
+        $this->container->get(DeleteGroupAliasMemberHandler::class)->handle(new DeleteGroupAliasMemberCommand($aliasId, $authorId));
 
         self::assertSame([], $this->authorshipRecords($aliasId, $authorId, 'group'));
         self::assertGreaterThan(1, $this->modificationTime($aliasId));
@@ -360,12 +371,12 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
 
     private function createAuthor(string $title): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: $title))->id;
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: $title)))->id;
     }
 
     private function createGroup(string $title): int
     {
-        return $this->container->get(GroupDataService::class)->create(new GroupFieldsDto(title: $title))->id;
+        return $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: $title)))->id;
     }
 
     private function everyField(int $groupId): GroupAliasFieldsDto
@@ -397,10 +408,5 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         self::assertInstanceOf(groupAliasElement::class, $element);
 
         return $element;
-    }
-
-    private function aliasDataService(): GroupAliasDataService
-    {
-        return $this->container->get(GroupAliasDataService::class);
     }
 }

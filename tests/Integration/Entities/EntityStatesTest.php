@@ -18,39 +18,51 @@ use ZxArt\Authors\Dto\AuthorshipDto;
 use ZxArt\Authors\Dto\AuthorStateDto;
 use ZxArt\Authors\Exception\AuthorAliasDataException;
 use ZxArt\Authors\Exception\AuthorDataException;
-use ZxArt\Authors\Services\AuthorAliasDataService;
 use ZxArt\Authors\Services\AuthorAliasFieldsReader;
 use ZxArt\Authors\Services\AuthorAliasStateService;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\AuthorFieldsReader;
 use ZxArt\Authors\Services\AuthorStateService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupAliasStateDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Dto\GroupStateDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Exception\GroupDataException;
-use ZxArt\Groups\Services\GroupAliasDataService;
 use ZxArt\Groups\Services\GroupAliasFieldsReader;
 use ZxArt\Groups\Services\GroupAliasStateService;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupFieldsReader;
 use ZxArt\Groups\Services\GroupStateService;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Import\Dbal\ImportOriginsDbal;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdStateDto;
 use ZxArt\Prods\Exception\ProdDataException;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdFieldsReader;
 use ZxArt\Prods\Services\ProdStateService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Dto\ReleaseStateDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseFieldsReader;
 use ZxArt\Releases\Services\ReleaseStateService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\SetReleaseMemberCommand;
+use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
 use ZxArt\Shared\EntityType;
 use zxProdElement;
 use zxReleaseElement;
@@ -67,10 +79,10 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testProdStateHoldsFieldsAuthorsReleasesFilesOriginsAndModificationTime(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1999))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $this->prods()->setMember($prodId, $authorId, ['code']);
-        $releaseId = $this->releases()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1999)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code']));
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)))->id;
         $this->importOrigins()->saveOrigin($prodId, ImportOrigin::Zxdb, '31337', EntityType::Prod);
         $this->importOrigins()->saveOrigin($prodId, ImportOrigin::Pouet, '42', EntityType::Prod);
 
@@ -89,10 +101,10 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testReleaseStateHoldsFieldsAuthorsFilesOriginsAndModificationTime(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo'))->id;
-        $releaseId = $this->releases()->create(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $this->releases()->setMember($releaseId, $authorId, ['release']);
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+        $releaseId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldmaster Tape', prodId: $prodId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($releaseId, $authorId, ['release']));
         $this->importOrigins()->saveOrigin($releaseId, ImportOrigin::Vtrdos, '777', EntityType::Release);
 
         $release = $this->element($releaseId, zxReleaseElement::class);
@@ -111,12 +123,12 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testAuthorStateHoldsFieldsAliasesMembershipsAndCounts(): void
     {
         $this->signInAsEditor();
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $aliasId = $this->authorAliases()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
-        $groupId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $this->groupService()->setMember($groupId, $authorId, ['coder'], $this->date('15.03.1995'), null);
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
-        $this->prods()->setMember($prodId, $authorId, ['code']);
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $authorId, ['coder'], $this->date('15.03.1995'), null));
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code']));
         $this->importOrigins()->saveOrigin($authorId, ImportOrigin::Zxdb, '1001', EntityType::Author);
 
         $state = $this->container->get(AuthorStateService::class)->get($authorId);
@@ -138,10 +150,10 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testAuthorAliasStateHoldsFieldsMembershipsAndCounts(): void
     {
         $this->signInAsEditor();
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $aliasId = $this->authorAliases()->create(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId))->id;
-        $groupId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $this->groupService()->setMember($groupId, $aliasId, ['graphician'], null, null);
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Wandering Goldmaster', authorId: $authorId)))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $aliasId, ['graphician'], null, null));
 
         $this->importOrigins()->saveOrigin($aliasId, ImportOrigin::Zxdb, '1002', EntityType::Author);
 
@@ -163,12 +175,12 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testGroupStateHoldsFieldsMembersParentsAliasesAndCounts(): void
     {
         $this->signInAsEditor();
-        $groupId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Division'))->id;
-        $parentId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Guild', subGroupIds: [$groupId]))->id;
-        $aliasId = $this->groupAliases()->create(new GroupAliasFieldsDto(title: 'Wandering Division', groupId: $groupId))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
-        $this->groupService()->setMember($groupId, $authorId, ['coder'], null, $this->date('01.06.1999'));
-        $this->prods()->create(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO], groupIds: [$groupId]));
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Division')))->id;
+        $parentId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild', subGroupIds: [$groupId])))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Division', groupId: $groupId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $authorId, ['coder'], null, $this->date('01.06.1999')));
+        $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', categoryIds: [self::CATEGORY_DEMO], groupIds: [$groupId])));
 
         $this->importOrigins()->saveOrigin($groupId, ImportOrigin::Zxaaa, 'division', EntityType::Group);
 
@@ -192,8 +204,8 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testGroupAliasStateHoldsFieldsMembersAndCounts(): void
     {
         $this->signInAsEditor();
-        $groupId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $aliasId = $this->groupAliases()->create(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Wandering Guild', groupId: $groupId)))->id;
 
         $state = $this->container->get(GroupAliasStateService::class)->get($aliasId);
 
@@ -210,8 +222,8 @@ final class EntityStatesTest extends EntityWriteTestCase
     public function testTheStateOfAnElementOfAnotherTypeIsNotFound(): void
     {
         $this->signInAsEditor();
-        $groupId = $this->groupService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
-        $authorId = $this->authors()->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
 
         $readers = [
             ProdDataException::class => fn() => $this->container->get(ProdStateService::class)->get($groupId),
@@ -257,35 +269,5 @@ final class EntityStatesTest extends EntityWriteTestCase
     private function importOrigins(): ImportOriginsDbal
     {
         return $this->container->get(ImportOriginsDbal::class);
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
-    }
-
-    private function releases(): ReleaseDataService
-    {
-        return $this->container->get(ReleaseDataService::class);
-    }
-
-    private function authors(): AuthorDataService
-    {
-        return $this->container->get(AuthorDataService::class);
-    }
-
-    private function authorAliases(): AuthorAliasDataService
-    {
-        return $this->container->get(AuthorAliasDataService::class);
-    }
-
-    private function groupService(): GroupDataService
-    {
-        return $this->container->get(GroupDataService::class);
-    }
-
-    private function groupAliases(): GroupAliasDataService
-    {
-        return $this->container->get(GroupAliasDataService::class);
     }
 }

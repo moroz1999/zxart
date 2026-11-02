@@ -29,6 +29,11 @@ export class ReleaseDataApiService {
     return this.run(id, 'delete');
   }
 
+  /** Makes a new release of the same production from this one; answers the copy's id. */
+  clone(id: number): Observable<EntityChangeResult> {
+    return this.run(id, 'clone');
+  }
+
   /** Removes the author from the members. */
   deleteMember(id: number, authorId: number): Observable<EntityChangeResult> {
     return this.run(id, 'deleteMember', {authorId});

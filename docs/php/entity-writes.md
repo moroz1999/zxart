@@ -3,13 +3,14 @@
 Creating and editing productions, releases, authors, author aliases, groups and
 group aliases goes through one path per entity type, whoever asks for it: the
 SPA edit pages through the entity's data endpoint (`/<entity>-data/`), the
-assistant, and the imports, all through the entity's `<Entity>DataService`.
+assistant, and the imports, all through the entity's use cases, which each of
+them calls directly.
 Nothing writes their fields on the element directly; the one exception left is
 the admin alias form (see [What stays in the legacy actions](#what-stays-in-the-legacy-actions)).
 
 ## Use cases
 
-Every change requested through a data service, and every import of these
+Every change requested through a data endpoint or the assistant, and every import of these
 entities, is a use case in `ZxArt\<Module>\UseCases`: a readonly
 `<Action>Command` and a `<Action>Handler` with `handle(command)`. A handler
 
@@ -22,7 +23,7 @@ entities, is a use case in `ZxArt\<Module>\UseCases`: a readonly
    new element whose structure record is not stored yet, `delete()`; then logs
    the action.
 
-A data service handler (not an import) does step 1 — and every other refusal
+A handler of a data endpoint (not an import) does step 1 — and every other refusal
 that needs no writing: title rules, member type, roles, a credit to remove that
 is not there — in a public `check(command)`, which `handle()` calls first. The
 assistant's write tools call `check()` for their preview and `handle()` to
@@ -36,8 +37,9 @@ with its caller. A change stopped halfway therefore leaves nothing, not even a
 structure record. On the MyISAM tables of production this is a no-op until the
 InnoDB migration ([../chat/innodb.md](../chat/innodb.md)).
 
-`<Entity>DataService` is a thin facade: each method builds the command and
-returns what the handler returns. `<Entity>Repository` lives in
+The `<Entity>Data` controller and the assistant's write tools take the
+handlers they need and build the commands themselves; there is no facade over
+the use cases. `<Entity>Repository` lives in
 `<Module>/Repositories/` and supplies entities; table access stays in
 `<Module>/Dbal/` ([repositories.md](repositories.md)).
 
@@ -60,7 +62,7 @@ The imports keep their own merge rules (`Imported<Entity>Merger`); see
 | `<Entity>FieldsDto` | The editable fields. `null` leaves a field untouched; an empty string or list clears it; 0 clears a reference or a date (dates are timestamps). |
 | `<Entity>FieldsWriter::apply()` | Checks every reference, then writes the given fields and what follows from them, and saves through `<Entity>Repository::save()`. Checks no privilege and logs nothing. A wrong reference is a `400` of the entity's `<Entity>DataException`, thrown before anything is written. |
 | `<Entity>Creator` | `create()` makes the element where it belongs (`<Entity>Repository::create()`; `500` when it cannot be made) and calls `completeCreation()`, which runs the writer and grants the creator the actions on it. The admin alias add form creates its own element and calls `completeCreation()` itself. The caller refreshes the user's privileges once done creating. |
-| `Create<Entity>Handler` / `Update<Entity>Handler` | Privilege check, title rules, the lists and uploads of the request, one transaction, actions log. Reached through `<Entity>DataService::create()` / `update()`. |
+| `Create<Entity>Handler` / `Update<Entity>Handler` | Privilege check, title rules, the lists and uploads of the request, one transaction, actions log. Called by the `<Entity>Data` controller (`create`, `update`) and the assistant. |
 
 What follows from the fields, per type:
 
@@ -145,28 +147,28 @@ malformed body or a failed upload is a `400`. The specs are in `api/`
 
 ## Authors and members
 
-`ProdDataService::setMember()` / `ReleaseDataService::setMember()` add an author
+`SetProdMemberHandler` / `SetReleaseMemberHandler` add an author
 or an author alias to the element's authors, or make its roles exactly the given
-ones; `GroupDataService::setMember()` / `GroupAliasDataService::setMember()` do
+ones; `SetGroupMemberHandler` / `SetGroupAliasMemberHandler` do
 the same for the members of a group or a group alias and also take the start
 and end date (`null` keeps the stored one, 0 clears it). An empty role list is
 stored as `unknown`. They check `publicReceive` on the element, reject with a
 `400` a member that is no author or alias and a role outside
 `ZxArt\Authors\AuthorshipRoles::LIST` (productions, releases) or
 `ZxArt\Groups\GroupMemberRoles::LIST` (groups and their aliases), and log
-`publicReceive`. `deleteMember()` removes one; it checks `deleteAuthor`.
+`publicReceive`. `Delete<Entity>MemberHandler` removes one; it checks `deleteAuthor`.
 
 The records live in `authorship` (`AuthorshipDbal::setAuthorship()`), not
-on the element, so `setMember()` and `deleteMember()` store a new modification
+on the element, so setting and removing a member store a new modification
 time on the element itself (`structureElement::persistModificationTime()`).
 
 ## Joins
 
-`<Entity>DataService::join()` of prod, author, author alias, group and group
-alias merges another element of the same type into the given one and returns
-its id. It checks `join` on both elements, rejects joining an element into
-itself (`400`) and an id of another type (`404`), logs `join` on the surviving
-element, then calls the method the legacy `join` action calls:
+`JoinProdsHandler`, `JoinAuthorsHandler`, `JoinAuthorAliasesHandler`,
+`JoinGroupsHandler` and `JoinGroupAliasesHandler` merge another element of the
+same type into the given one and return its id. Each checks `join` on both
+elements, rejects joining an element into itself (`400`) and an id of another
+type (`404`), logs `join` on the surviving element, then calls the method the legacy `join` action calls:
 
 - **prod** — `ProdsService::joinDeleteZxProd()`: releases and materials move,
   and unless `releasesOnly` also authors, groups, publishers, categories,

@@ -18,7 +18,16 @@ use ZxArt\Prods\Dto\ProdSaveRequestDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
 use ZxArt\Prods\Rest\ProdDataResultRestDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\BatchUploadProdsCommand;
+use ZxArt\Prods\UseCases\BatchUploadProdsHandler;
+use ZxArt\Prods\UseCases\DeleteProdCommand;
+use ZxArt\Prods\UseCases\DeleteProdFileCommand;
+use ZxArt\Prods\UseCases\DeleteProdFileHandler;
+use ZxArt\Prods\UseCases\DeleteProdHandler;
+use ZxArt\Prods\UseCases\DeleteProdMemberCommand;
+use ZxArt\Prods\UseCases\DeleteProdMemberHandler;
+use ZxArt\Prods\UseCases\UpdateProdCommand;
+use ZxArt\Prods\UseCases\UpdateProdHandler;
 use ZxArt\Shared\Dto\CreatedIdsDto;
 use ZxArt\Shared\Http\MultipartDataReader;
 use ZxArt\Shared\Http\UploadedFilesReader;
@@ -42,7 +51,11 @@ final class ProdData extends LoggedControllerApplication
     public function __construct(
         controller $controller,
         Logger $logger,
-        private readonly ProdDataService $prodDataService,
+        private readonly DeleteProdHandler $deleteProdHandler,
+        private readonly DeleteProdMemberHandler $deleteProdMemberHandler,
+        private readonly DeleteProdFileHandler $deleteProdFileHandler,
+        private readonly UpdateProdHandler $updateProdHandler,
+        private readonly BatchUploadProdsHandler $batchUploadProdsHandler,
         private readonly ObjectMapper $objectMapper,
         private readonly MultipartDataReader $multipartDataReader,
         private readonly UploadedFilesReader $uploadedFilesReader,
@@ -68,9 +81,9 @@ final class ProdData extends LoggedControllerApplication
             $result = match ((string)$this->getParameter('action')) {
                 'update' => $this->update($prodId),
                 'batchUpload' => $this->batchUpload(),
-                'delete' => $this->prodDataService->delete($prodId),
-                'deleteMember' => $this->prodDataService->deleteMember($prodId, (int)$this->getParameter('authorId')),
-                'deleteFile' => $this->prodDataService->deleteFile($prodId, (int)$this->getParameter('fileId')),
+                'delete' => $this->deleteProdHandler->handle(new DeleteProdCommand($prodId)),
+                'deleteMember' => $this->deleteProdMemberHandler->handle(new DeleteProdMemberCommand($prodId, (int)$this->getParameter('authorId'))),
+                'deleteFile' => $this->deleteProdFileHandler->handle(new DeleteProdFileCommand($prodId, (int)$this->getParameter('fileId'))),
                 default => throw new ProdDataException('Unsupported production action', 400),
             };
             $this->renderer->assign('body', $result instanceof CreatedIdsDto
@@ -98,7 +111,7 @@ final class ProdData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, ProdSaveRequestDto::class);
 
-        return $this->prodDataService->update($prodId, $request->fields, $request->authors, $request->importOrigins, $this->uploadedFiles());
+        return $this->updateProdHandler->handle(new UpdateProdCommand($prodId, $request->fields, $request->authors, $request->importOrigins, $this->uploadedFiles()));
     }
 
     /**
@@ -109,12 +122,12 @@ final class ProdData extends LoggedControllerApplication
     {
         $request = $this->multipartDataReader->read($_POST, ProdBatchUploadRequestDto::class);
 
-        return $this->prodDataService->batchUpload(
+        return $this->batchUploadProdsHandler->handle(new BatchUploadProdsCommand(
             $request->fields,
             $this->uploadedFilesReader->many($_FILES, 'releaseFiles'),
             $request->authors,
             $this->uploadedFiles(),
-        );
+        ));
     }
 
     /**

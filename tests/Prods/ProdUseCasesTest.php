@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Prods;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
@@ -18,18 +19,24 @@ use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\Repositories\ProdRepository;
 use ZxArt\Prods\Services\ProdCreator;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdFieldsWriter;
 use ZxArt\Prods\Services\ProdPrivileges;
 use ZxArt\Prods\Services\ProdsService;
 use ZxArt\Prods\UseCases\AddProdFilesHandler;
 use ZxArt\Prods\UseCases\BatchUploadProdsHandler;
+use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\DeleteProdCommand;
+use ZxArt\Prods\UseCases\DeleteProdFileCommand;
 use ZxArt\Prods\UseCases\DeleteProdFileHandler;
 use ZxArt\Prods\UseCases\DeleteProdHandler;
+use ZxArt\Prods\UseCases\DeleteProdMemberCommand;
 use ZxArt\Prods\UseCases\DeleteProdMemberHandler;
+use ZxArt\Prods\UseCases\JoinProdsCommand;
 use ZxArt\Prods\UseCases\JoinProdsHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
 use ZxArt\Prods\UseCases\SetProdMemberHandler;
+use ZxArt\Prods\UseCases\UpdateProdCommand;
 use ZxArt\Prods\UseCases\UpdateProdHandler;
 use ZxArt\Releases\Services\ElementFileImporter;
 use ZxArt\Shared\EntityType;
@@ -43,7 +50,7 @@ use structureElement;
 use structureManager;
 use zxProdElement;
 
-final class ProdDataServiceTest extends TestCase
+final class ProdUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -58,32 +65,32 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxProd, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteProdHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteProdCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteProdHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteProdCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteProdHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteProdCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(authorElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteProdHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteProdCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -92,9 +99,9 @@ final class ProdDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteProdHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteProdCommand(42)));
     }
 
     public function testDeleteMemberRemovesOnlyThisProdAuthorshipAndReturnsItsId(): void
@@ -116,12 +123,12 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxProd, 'deleteAuthor');
 
-        $result = $this->createService(
+        $result = $this->handler(DeleteProdMemberHandler::class,
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
-        )->deleteMember(42, 7);
+        )->handle(new DeleteProdMemberCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
@@ -130,13 +137,13 @@ final class ProdDataServiceTest extends TestCase
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteProdMemberHandler::class,
             $this->createStub(zxProdElement::class),
             $this->privileges(true),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteProdMemberCommand(42, 0)));
     }
 
     public function testDeleteMemberOfAuthorWhoIsNotAMemberIsNotFound(): void
@@ -147,27 +154,27 @@ final class ProdDataServiceTest extends TestCase
         $authorship->expects($this->never())->method('deleteAuthorship');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteProdMemberHandler::class,
             $this->createStub(zxProdElement::class),
             $this->privileges(true),
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteProdMemberCommand(42, 7)));
     }
 
     public function testDeleteMemberWithoutPrivilegeIsForbiddenAndRemovesNothing(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteProdMemberHandler::class,
             $this->createStub(zxProdElement::class),
             $this->privileges(false),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteProdMemberCommand(42, 7)));
     }
 
     public function testDeleteFileRemovesFileOfThisProdAndReturnsItsId(): void
@@ -183,35 +190,35 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($file, StructureType::File, 'delete');
 
-        $result = $this->createService($this->prodWithFile($file), $privilegesManager, actionsLog: $actionsLog)
-            ->deleteFile(42, 7);
+        $result = $this->handler(DeleteProdFileHandler::class, $this->prodWithFile($file), $privilegesManager, actionsLog: $actionsLog)
+            ->handle(new DeleteProdFileCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteFileWithoutFileIdIsBadRequest(): void
     {
-        $service = $this->createService($this->prodWithFile($this->createStub(fileElement::class)), $this->privileges(true));
+        $handler = $this->handler(DeleteProdFileHandler::class, $this->prodWithFile($this->createStub(fileElement::class)), $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->deleteFile(42, 0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteProdFileCommand(42, 0)));
     }
 
     public function testDeleteFileOfAnotherElementIsNotFound(): void
     {
         $file = $this->fileWithId(8);
         $file->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($this->prodWithFile($file), $this->privileges(true));
+        $handler = $this->handler(DeleteProdFileHandler::class, $this->prodWithFile($file), $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->deleteFile(42, 7));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteProdFileCommand(42, 7)));
     }
 
     public function testDeleteFileWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
     {
         $file = $this->fileWithId(7);
         $file->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($this->prodWithFile($file), $this->privileges(false));
+        $handler = $this->handler(DeleteProdFileHandler::class, $this->prodWithFile($file), $this->privileges(false));
 
-        $this->assertStatus(403, fn() => $service->deleteFile(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteProdFileCommand(42, 7)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -228,7 +235,7 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxProd, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateProdHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateProdCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -237,25 +244,25 @@ final class ProdDataServiceTest extends TestCase
     {
         $writer = $this->createMock(ProdFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(zxProdElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateProdHandler::class, $this->createStub(zxProdElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new ProdFieldsDto(title: 'Dizzy')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateProdCommand(42, new ProdFieldsDto(title: 'Dizzy'))));
     }
 
     public function testUpdateOfMissingProdIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateProdHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new ProdFieldsDto(title: 'Dizzy')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateProdCommand(42, new ProdFieldsDto(title: 'Dizzy'))));
     }
 
     public function testUpdateToBlankTitleIsBadRequest(): void
     {
         $writer = $this->createMock(ProdFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(zxProdElement::class), $this->privileges(true), writer: $writer);
+        $handler = $this->handler(UpdateProdHandler::class, $this->createStub(zxProdElement::class), $this->privileges(true), writer: $writer);
 
-        $this->assertStatus(400, fn() => $service->update(42, new ProdFieldsDto(title: '  ')));
+        $this->assertStatus(400, fn() => $handler->handle(new UpdateProdCommand(42, new ProdFieldsDto(title: '  '))));
     }
 
     public function testCreateNeedsTheUploadPrivilegeOnTheRootAndReturnsTheNewId(): void
@@ -276,7 +283,7 @@ final class ProdDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService(null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateProdHandler::class, null, $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateProdCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -285,18 +292,18 @@ final class ProdDataServiceTest extends TestCase
     {
         $creator = $this->createMock(ProdCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService(null, $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateProdHandler::class, null, $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new ProdFieldsDto(title: 'Dizzy')));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Dizzy'))));
     }
 
     public function testCreateWithoutTitleIsBadRequest(): void
     {
         $creator = $this->createMock(ProdCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService(null, $this->privileges(true), creator: $creator);
+        $handler = $this->handler(CreateProdHandler::class, null, $this->privileges(true), creator: $creator);
 
-        $this->assertStatus(400, fn() => $service->create(new ProdFieldsDto(year: 1987)));
+        $this->assertStatus(400, fn() => $handler->handle(new CreateProdCommand(new ProdFieldsDto(year: 1987))));
     }
 
     public function testJoinMovesTheJoinedOneIntoThisOneAndLogsIt(): void
@@ -315,13 +322,13 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($main, StructureType::ZxProd, 'join');
 
-        $result = $this->createService(
+        $result = $this->handler(JoinProdsHandler::class,
             null,
             $privilegesManager,
             $actionsLog,
             prodsService: $prodsService,
             elementsById: [42 => $main, 43 => $joined],
-        )->join(42, 43, false);
+        )->handle(new JoinProdsCommand(42, 43, false));
 
         self::assertSame(42, $result->id);
     }
@@ -330,23 +337,23 @@ final class ProdDataServiceTest extends TestCase
     {
         $prodsService = $this->createMock(ProdsService::class);
         $prodsService->expects($this->once())->method('joinDeleteZxProd')->with(42, 43, true);
-        $service = $this->createService(
+        $handler = $this->handler(JoinProdsHandler::class,
             null,
             $this->privileges(true),
             prodsService: $prodsService,
             elementsById: [42 => $this->createStub(zxProdElement::class), 43 => $this->createStub(zxProdElement::class)],
         );
 
-        $service->join(42, 43, true);
+        $handler->handle(new JoinProdsCommand(42, 43, true));
     }
 
     public function testJoinIntoItselfIsBadRequest(): void
     {
         $prodsService = $this->createMock(ProdsService::class);
         $prodsService->expects($this->never())->method('joinDeleteZxProd');
-        $service = $this->createService(null, $this->privileges(true), prodsService: $prodsService, elementsById: [42 => $this->createStub(zxProdElement::class)]);
+        $handler = $this->handler(JoinProdsHandler::class, null, $this->privileges(true), prodsService: $prodsService, elementsById: [42 => $this->createStub(zxProdElement::class)]);
 
-        $this->assertStatus(400, fn() => $service->join(42, 42, false));
+        $this->assertStatus(400, fn() => $handler->handle(new JoinProdsCommand(42, 42, false)));
     }
 
     public function testJoinWithoutThePrivilegeOnTheJoinedOneIsForbiddenAndJoinsNothing(): void
@@ -358,28 +365,28 @@ final class ProdDataServiceTest extends TestCase
         ]);
         $prodsService = $this->createMock(ProdsService::class);
         $prodsService->expects($this->never())->method('joinDeleteZxProd');
-        $service = $this->createService(
+        $handler = $this->handler(JoinProdsHandler::class,
             null,
             $privilegesManager,
             prodsService: $prodsService,
             elementsById: [42 => $this->createStub(zxProdElement::class), 43 => $this->createStub(zxProdElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->join(42, 43, false));
+        $this->assertStatus(403, fn() => $handler->handle(new JoinProdsCommand(42, 43, false)));
     }
 
     public function testJoinOfAnotherEntityTypeIsNotFound(): void
     {
         $prodsService = $this->createMock(ProdsService::class);
         $prodsService->expects($this->never())->method('joinDeleteZxProd');
-        $service = $this->createService(
+        $handler = $this->handler(JoinProdsHandler::class,
             null,
             $this->privileges(true),
             prodsService: $prodsService,
             elementsById: [42 => $this->createStub(zxProdElement::class), 43 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(404, fn() => $service->join(42, 43, false));
+        $this->assertStatus(404, fn() => $handler->handle(new JoinProdsCommand(42, 43, false)));
     }
 
     public function testSetMemberWritesTheRolesBumpsTheModificationTimeAndLogsIt(): void
@@ -398,13 +405,13 @@ final class ProdDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::ZxProd, 'publicReceive');
 
-        $result = $this->createService(
+        $result = $this->handler(SetProdMemberHandler::class,
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
-        )->setMember(42, 7, ['code', 'music']);
+        )->handle(new SetProdMemberCommand(42, 7, ['code', 'music']));
 
         self::assertSame(42, $result->id);
     }
@@ -415,59 +422,67 @@ final class ProdDataServiceTest extends TestCase
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Prod, ['unknown'], null, null);
-        $service = $this->createService(
+        $handler = $this->handler(SetProdMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxProdElement::class), 7 => $this->createStub(authorAliasElement::class)],
         );
 
-        $service->setMember(42, 7, []);
+        $handler->handle(new SetProdMemberCommand(42, 7, []));
     }
 
     public function testSetMemberOfWhatIsNotAnAuthorIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetProdMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxProdElement::class), 7 => $this->createStub(zxProdElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['code', 'music']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetProdMemberCommand(42, 7, ['code', 'music'])));
     }
 
     public function testSetMemberWithARoleOfAnotherKindIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetProdMemberHandler::class,
             null,
             $this->privileges(true),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxProdElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['cracker']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetProdMemberCommand(42, 7, ['cracker'])));
     }
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetProdMemberHandler::class,
             null,
             $this->privileges(false),
             authorshipDbal: $authorship,
             elementsById: [42 => $this->createStub(zxProdElement::class), 7 => $this->createStub(authorElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->setMember(42, 7, ['code', 'music']));
+        $this->assertStatus(403, fn() => $handler->handle(new SetProdMemberCommand(42, 7, ['code', 'music'])));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -477,7 +492,7 @@ final class ProdDataServiceTest extends TestCase
         ?CurrentUser $user = null,
         ?ProdsService $prodsService = null,
         ?array $elementsById = null,
-    ): ProdDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -494,7 +509,7 @@ final class ProdDataServiceTest extends TestCase
         $prodRepository = new ProdRepository($structureManager);
         $prodPrivileges = new ProdPrivileges($privilegesManager);
 
-        return new ProdDataService(
+        foreach ([
             new CreateProdHandler(
                 $transactionRunner,
                 $structureManager,
@@ -511,7 +526,13 @@ final class ProdDataServiceTest extends TestCase
             new DeleteProdFileHandler($transactionRunner, $prodRepository, $prodPrivileges, $actionsLog),
             new JoinProdsHandler($transactionRunner, $prodRepository, $prodPrivileges, $prodsService ?? $this->createStub(ProdsService::class), $actionsLog),
             $this->createStub(BatchUploadProdsHandler::class),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function fileWithId(int $id): fileElement&MockObject

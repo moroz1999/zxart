@@ -10,24 +10,36 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\FoundAuthorDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\FoundAuthorsReader;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\FoundGroupDto;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Services\FoundGroupsReader;
-use ZxArt\Groups\Services\GroupAliasDataService;
-use ZxArt\Groups\Services\GroupDataService;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Prods\Dto\FoundProdDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Services\FoundProdsReader;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Releases\Dto\FoundReleaseDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\FoundReleasesReader;
-use ZxArt\Releases\Services\ReleaseDataService;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\SetReleaseMemberCommand;
+use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
 use ZxArt\Shared\Dto\CreditDto;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityRefDto;
@@ -48,44 +60,40 @@ final class FoundEntitiesTest extends EntityWriteTestCase
     public function testEachSummaryNamesWhatTellsTheEntityApart(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive'], ['zxRelease', 'publicReceive'], ['group', 'publicReceive']]);
-        $authors = $this->container->get(AuthorDataService::class);
-        $coderId = $authors->create(new AuthorFieldsDto(
+        $coderId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(
             title: 'Goldfound Coder',
             realName: 'Ivan Petrov',
             countryId: self::COUNTRY_POLAND,
             cityId: self::CITY_WARSAW,
-        ))->id;
-        $ghostId = $this->container->get(AuthorAliasDataService::class)->create(new AuthorAliasFieldsDto(title: 'Goldfound Ghost', authorId: $coderId))->id;
-        $labelId = $authors->create(new AuthorFieldsDto(title: 'Goldfound Label'))->id;
-        $groups = $this->container->get(GroupDataService::class);
-        $guildId = $groups->create(new GroupFieldsDto(
+        )))->id;
+        $ghostId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Goldfound Ghost', authorId: $coderId)))->id;
+        $labelId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldfound Label')))->id;
+        $guildId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(
             title: 'Goldfound Guild',
             abbreviation: 'GFG',
             type: 'scene',
             countryId: self::COUNTRY_UNITED_KINGDOM,
             cityId: self::CITY_LONDON,
-        ))->id;
-        $crewId = $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldfound Crew', groupId: $guildId))->id;
-        $groups->setMember($guildId, $coderId, ['coder']);
-        $prods = $this->container->get(ProdDataService::class);
-        $demoId = $prods->create(new ProdFieldsDto(
+        )))->id;
+        $crewId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldfound Crew', groupId: $guildId)))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($guildId, $coderId, ['coder']));
+        $demoId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(
             title: 'Goldfound Demo',
             year: 1999,
             categoryIds: [self::CATEGORY_DEMO],
             groupIds: [$guildId],
             publisherIds: [$labelId],
-        ))->id;
-        $prods->setMember($demoId, $ghostId, ['code']);
-        $releases = $this->container->get(ReleaseDataService::class);
-        $tapeId = $releases->create(new ReleaseFieldsDto(
+        )))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($demoId, $ghostId, ['code']));
+        $tapeId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(
             title: 'Goldfound Tape',
             year: 2001,
             releaseType: ReleaseTypes::original,
             releaseFormats: ['tap'],
             publisherIds: [$guildId],
             prodId: $demoId,
-        ))->id;
-        $releases->setMember($tapeId, $coderId, ['release']);
+        )))->id;
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($tapeId, $coderId, ['release']));
         $coder = new EntityRefDto(EntityType::Author, $coderId, 'Goldfound Coder');
         $guild = new EntityRefDto(EntityType::Group, $guildId, 'Goldfound Guild');
 
@@ -132,9 +140,8 @@ final class FoundEntitiesTest extends EntityWriteTestCase
     public function testTheSummariesKeepTheOrderOfTheIds(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
-        $groups = $this->container->get(GroupDataService::class);
-        $firstId = $groups->create(new GroupFieldsDto(title: 'Goldfound Alpha'))->id;
-        $secondId = $groups->create(new GroupFieldsDto(title: 'Goldfound Beta'))->id;
+        $firstId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldfound Alpha')))->id;
+        $secondId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldfound Beta')))->id;
 
         $found = $this->container->get(FoundGroupsReader::class)->read([$secondId, $firstId]);
 

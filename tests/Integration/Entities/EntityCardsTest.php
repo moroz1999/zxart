@@ -16,35 +16,47 @@ use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorCardDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Services\AuthorAliasCardReader;
-use ZxArt\Authors\Services\AuthorAliasDataService;
 use ZxArt\Authors\Services\AuthorAliasFieldsReader;
 use ZxArt\Authors\Services\AuthorCardReader;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\AuthorDetailsService;
 use ZxArt\Authors\Services\AuthorFieldsReader;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasCardDto;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupCardDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Services\GroupAliasCardReader;
-use ZxArt\Groups\Services\GroupAliasDataService;
 use ZxArt\Groups\Services\GroupAliasFieldsReader;
 use ZxArt\Groups\Services\GroupCardReader;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupDetailsService;
 use ZxArt\Groups\Services\GroupFieldsReader;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupMemberHandler;
 use ZxArt\Prods\Dto\ProdCardDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Services\ProdCardReader;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdFieldsReader;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
+use ZxArt\Prods\UseCases\SetProdMemberCommand;
+use ZxArt\Prods\UseCases\SetProdMemberHandler;
 use ZxArt\Releases\Dto\ReleaseCardDto;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\FoundReleasesReader;
 use ZxArt\Releases\Services\ReleaseCardReader;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseFieldsReader;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
+use ZxArt\Releases\UseCases\SetReleaseMemberCommand;
+use ZxArt\Releases\UseCases\SetReleaseMemberHandler;
 use ZxArt\Shared\Dto\AliasDto;
 use ZxArt\Shared\Dto\CreditDto;
 use ZxArt\Shared\Dto\MembershipDto;
@@ -69,42 +81,37 @@ final class EntityCardsTest extends EntityWriteTestCase
     public function testEachCardHoldsTheFieldsTheTitlesTheyNameAndTheLinks(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive'], ['zxRelease', 'publicReceive'], ['group', 'publicReceive']]);
-        $authors = $this->container->get(AuthorDataService::class);
-        $coderId = $authors->create(new AuthorFieldsDto(title: 'Goldcard Coder', countryId: self::COUNTRY_POLAND, cityId: self::CITY_WARSAW))->id;
-        $ghostId = $this->container->get(AuthorAliasDataService::class)
-            ->create(new AuthorAliasFieldsDto(title: 'Goldcard Ghost', authorId: $coderId, startDate: $this->date('01.01.1990')))->id;
-        $labelId = $authors->create(new AuthorFieldsDto(title: 'Goldcard Label'))->id;
-        $groups = $this->container->get(GroupDataService::class);
-        $divisionId = $groups->create(new GroupFieldsDto(title: 'Goldcard Division'))->id;
-        $guildId = $groups->create(new GroupFieldsDto(
+        $coderId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldcard Coder', countryId: self::COUNTRY_POLAND, cityId: self::CITY_WARSAW)))->id;
+        $ghostId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: 'Goldcard Ghost', authorId: $coderId, startDate: $this->date('01.01.1990'))))->id;
+        $labelId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldcard Label')))->id;
+        $divisionId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldcard Division')))->id;
+        $guildId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(
             title: 'Goldcard Guild',
             countryId: self::COUNTRY_UNITED_KINGDOM,
             cityId: self::CITY_LONDON,
             subGroupIds: [$divisionId],
-        ))->id;
-        $crewId = $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldcard Crew', groupId: $guildId))->id;
-        $groups->setMember($guildId, $coderId, ['coder'], $this->date('01.01.1991'), 0);
-        $prods = $this->container->get(ProdDataService::class);
-        $demoId = $prods->create(new ProdFieldsDto(
+        )))->id;
+        $crewId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldcard Crew', groupId: $guildId)))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($guildId, $coderId, ['coder'], $this->date('01.01.1991'), 0));
+        $demoId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(
             title: 'Goldcard Demo',
             year: 1999,
             categoryIds: [self::CATEGORY_DEMO],
             groupIds: [$guildId],
             publisherIds: [$labelId],
-        ))->id;
-        $sagaId = $prods->create(new ProdFieldsDto(title: 'Goldcard Saga', categoryIds: [self::CATEGORY_DEMO], seriesProdIds: [$demoId]))->id;
-        $packId = $prods->create(new ProdFieldsDto(title: 'Goldcard Pack', categoryIds: [self::CATEGORY_DEMO], compilationItemIds: [$demoId]))->id;
-        $prods->setMember($demoId, $ghostId, ['code']);
-        $releases = $this->container->get(ReleaseDataService::class);
-        $tapeId = $releases->create(new ReleaseFieldsDto(
+        )))->id;
+        $sagaId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldcard Saga', categoryIds: [self::CATEGORY_DEMO], seriesProdIds: [$demoId])))->id;
+        $packId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldcard Pack', categoryIds: [self::CATEGORY_DEMO], compilationItemIds: [$demoId])))->id;
+        $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($demoId, $ghostId, ['code']));
+        $tapeId = $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(
             title: 'Goldcard Tape',
             year: 2001,
             releaseType: ReleaseTypes::original,
             releaseFormats: ['tap'],
             publisherIds: [$guildId],
             prodId: $demoId,
-        ))->id;
-        $releases->setMember($tapeId, $coderId, ['release']);
+        )))->id;
+        $this->container->get(SetReleaseMemberHandler::class)->handle(new SetReleaseMemberCommand($tapeId, $coderId, ['release']));
         $coder = new EntityRefDto(EntityType::Author, $coderId, 'Goldcard Coder');
         $ghost = new EntityRefDto(EntityType::AuthorAlias, $ghostId, 'Goldcard Ghost');
         $guild = new EntityRefDto(EntityType::Group, $guildId, 'Goldcard Guild');

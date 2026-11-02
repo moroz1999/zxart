@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Groups;
 use App\Users\CurrentUser;
 use App\Users\CurrentUserService;
 use Illuminate\Database\Connection;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use ZxArt\ActionsLog\ActionsLogService;
 use ZxArt\Authors\Dbal\AuthorshipDbal;
@@ -16,16 +17,22 @@ use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
 use ZxArt\Groups\Repositories\GroupAliasRepository;
 use ZxArt\Groups\Services\GroupAliasCreator;
-use ZxArt\Groups\Services\GroupAliasDataService;
 use ZxArt\Groups\Services\GroupAliasFieldsWriter;
 use ZxArt\Groups\Services\GroupAliasPrivileges;
 use ZxArt\Groups\Services\GroupsService;
+use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupCommand;
 use ZxArt\Groups\UseCases\ConvertGroupAliasToGroupHandler;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
 use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasCommand;
 use ZxArt\Groups\UseCases\DeleteGroupAliasHandler;
+use ZxArt\Groups\UseCases\DeleteGroupAliasMemberCommand;
 use ZxArt\Groups\UseCases\DeleteGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\JoinGroupAliasesCommand;
 use ZxArt\Groups\UseCases\JoinGroupAliasesHandler;
+use ZxArt\Groups\UseCases\SetGroupAliasMemberCommand;
 use ZxArt\Groups\UseCases\SetGroupAliasMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
 use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
 use ZxArt\Import\Services\ImportOriginsWriter;
 use ZxArt\Shared\EntityType;
@@ -39,7 +46,7 @@ use privilegesManager;
 use structureElement;
 use structureManager;
 
-final class GroupAliasDataServiceTest extends TestCase
+final class GroupAliasUseCasesTest extends TestCase
 {
     public function testDeleteRemovesElementAndReturnsItsId(): void
     {
@@ -54,32 +61,32 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::GroupAlias, 'publicDelete');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog)->delete(42);
+        $result = $this->handler(DeleteGroupAliasHandler::class, $element, $privilegesManager, $actionsLog)->handle(new DeleteGroupAliasCommand(42));
 
         self::assertSame(42, $result->id);
     }
 
     public function testDeleteWithoutIdIsBadRequest(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(400, fn() => $service->delete(0));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteGroupAliasCommand(0)));
     }
 
     public function testDeleteOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupAliasCommand(42)));
     }
 
     public function testDeleteOfAnotherEntityTypeIsNotFound(): void
     {
         $other = $this->createMock(groupElement::class);
         $other->expects($this->never())->method('deleteElementData');
-        $service = $this->createService($other, $this->privileges(true));
+        $handler = $this->handler(DeleteGroupAliasHandler::class, $other, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->delete(42));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupAliasCommand(42)));
     }
 
     public function testDeleteWithoutPrivilegeIsForbiddenAndDeletesNothing(): void
@@ -88,9 +95,9 @@ final class GroupAliasDataServiceTest extends TestCase
         $element->expects($this->never())->method('deleteElementData');
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->never())->method('log');
-        $service = $this->createService($element, $this->privileges(false), $actionsLog);
+        $handler = $this->handler(DeleteGroupAliasHandler::class, $element, $this->privileges(false), $actionsLog);
 
-        $this->assertStatus(403, fn() => $service->delete(42));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteGroupAliasCommand(42)));
     }
 
     public function testConvertToGroupReturnsCreatedEntityId(): void
@@ -108,7 +115,7 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::GroupAlias, 'convertToGroup');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, $groupsService)->convertToGroup(42);
+        $result = $this->handler(ConvertGroupAliasToGroupHandler::class, $element, $privilegesManager, $actionsLog, $groupsService)->handle(new ConvertGroupAliasToGroupCommand(42));
 
         self::assertSame(900, $result->id);
     }
@@ -117,18 +124,18 @@ final class GroupAliasDataServiceTest extends TestCase
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('convertGroupAliasToGroup');
-        $service = $this->createService($this->createStub(groupAliasElement::class), $this->privileges(false), null, $groupsService);
+        $handler = $this->handler(ConvertGroupAliasToGroupHandler::class, $this->createStub(groupAliasElement::class), $this->privileges(false), null, $groupsService);
 
-        $this->assertStatus(403, fn() => $service->convertToGroup(42));
+        $this->assertStatus(403, fn() => $handler->handle(new ConvertGroupAliasToGroupCommand(42)));
     }
 
     public function testFailedConvertToGroupIsServerError(): void
     {
         $groupsService = $this->createStub(GroupsService::class);
         $groupsService->method('convertGroupAliasToGroup')->willReturn(null);
-        $service = $this->createService($this->createStub(groupAliasElement::class), $this->privileges(true), null, $groupsService);
+        $handler = $this->handler(ConvertGroupAliasToGroupHandler::class, $this->createStub(groupAliasElement::class), $this->privileges(true), null, $groupsService);
 
-        $this->assertStatus(500, fn() => $service->convertToGroup(42));
+        $this->assertStatus(500, fn() => $handler->handle(new ConvertGroupAliasToGroupCommand(42)));
     }
 
     public function testUpdateWritesTheFieldsAndLogsTheChange(): void
@@ -145,7 +152,7 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::GroupAlias, 'publicReceive');
 
-        $result = $this->createService($element, $privilegesManager, $actionsLog, writer: $writer)->update(42, $fields);
+        $result = $this->handler(UpdateGroupAliasHandler::class, $element, $privilegesManager, $actionsLog, writer: $writer)->handle(new UpdateGroupAliasCommand(42, $fields));
 
         self::assertSame(42, $result->id);
     }
@@ -154,16 +161,16 @@ final class GroupAliasDataServiceTest extends TestCase
     {
         $writer = $this->createMock(GroupAliasFieldsWriter::class);
         $writer->expects($this->never())->method('apply');
-        $service = $this->createService($this->createStub(groupAliasElement::class), $this->privileges(false), writer: $writer);
+        $handler = $this->handler(UpdateGroupAliasHandler::class, $this->createStub(groupAliasElement::class), $this->privileges(false), writer: $writer);
 
-        $this->assertStatus(403, fn() => $service->update(42, new GroupAliasFieldsDto(title: 'New')));
+        $this->assertStatus(403, fn() => $handler->handle(new UpdateGroupAliasCommand(42, new GroupAliasFieldsDto(title: 'New'))));
     }
 
     public function testUpdateOfMissingElementIsNotFound(): void
     {
-        $service = $this->createService(null, $this->privileges(true));
+        $handler = $this->handler(UpdateGroupAliasHandler::class, null, $this->privileges(true));
 
-        $this->assertStatus(404, fn() => $service->update(42, new GroupAliasFieldsDto(title: 'New')));
+        $this->assertStatus(404, fn() => $handler->handle(new UpdateGroupAliasCommand(42, new GroupAliasFieldsDto(title: 'New'))));
     }
 
     public function testCreateChecksTheAddPrivilegeAndReturnsTheNewId(): void
@@ -183,7 +190,7 @@ final class GroupAliasDataServiceTest extends TestCase
         $user = $this->createMock(CurrentUser::class);
         $user->expects($this->once())->method('refreshPrivileges');
 
-        $result = $this->createService($this->createStub(groupElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->create($fields);
+        $result = $this->handler(CreateGroupAliasHandler::class, $this->createStub(groupElement::class), $privilegesManager, $actionsLog, creator: $creator, user: $user)->handle(new CreateGroupAliasCommand($fields));
 
         self::assertSame(55, $result->id);
     }
@@ -192,18 +199,18 @@ final class GroupAliasDataServiceTest extends TestCase
     {
         $creator = $this->createMock(GroupAliasCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(groupElement::class), $this->privileges(false), creator: $creator);
+        $handler = $this->handler(CreateGroupAliasHandler::class, $this->createStub(groupElement::class), $this->privileges(false), creator: $creator);
 
-        $this->assertStatus(403, fn() => $service->create(new GroupAliasFieldsDto(title: 'FNM', groupId: 5)));
+        $this->assertStatus(403, fn() => $handler->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'FNM', groupId: 5))));
     }
 
     public function testCreateForWhatIsNotAGroupIsBadRequestAndCreatesNothing(): void
     {
         $creator = $this->createMock(GroupAliasCreator::class);
         $creator->expects($this->never())->method('create');
-        $service = $this->createService($this->createStub(groupAliasElement::class), $this->privileges(true), creator: $creator);
+        $handler = $this->handler(CreateGroupAliasHandler::class, $this->createStub(groupAliasElement::class), $this->privileges(true), creator: $creator);
 
-        $this->assertStatus(400, fn() => $service->create(new GroupAliasFieldsDto(title: 'FNM', groupId: 5)));
+        $this->assertStatus(400, fn() => $handler->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'FNM', groupId: 5))));
     }
 
     public function testJoinMovesTheJoinedOneIntoThisOneAndLogsIt(): void
@@ -222,13 +229,13 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($main, StructureType::GroupAlias, 'join');
 
-        $result = $this->createService(
+        $result = $this->handler(JoinGroupAliasesHandler::class,
             null,
             $privilegesManager,
             $actionsLog,
             groupsService: $groupsService,
             elementsById: [42 => $main, 43 => $joined],
-        )->join(42, 43);
+        )->handle(new JoinGroupAliasesCommand(42, 43));
 
         self::assertSame(42, $result->id);
     }
@@ -237,9 +244,9 @@ final class GroupAliasDataServiceTest extends TestCase
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(null, $this->privileges(true), groupsService: $groupsService, elementsById: [42 => $this->createStub(groupAliasElement::class)]);
+        $handler = $this->handler(JoinGroupAliasesHandler::class, null, $this->privileges(true), groupsService: $groupsService, elementsById: [42 => $this->createStub(groupAliasElement::class)]);
 
-        $this->assertStatus(400, fn() => $service->join(42, 42));
+        $this->assertStatus(400, fn() => $handler->handle(new JoinGroupAliasesCommand(42, 42)));
     }
 
     public function testJoinWithoutThePrivilegeOnTheJoinedOneIsForbiddenAndJoinsNothing(): void
@@ -251,28 +258,28 @@ final class GroupAliasDataServiceTest extends TestCase
         ]);
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(
+        $handler = $this->handler(JoinGroupAliasesHandler::class,
             null,
             $privilegesManager,
             groupsService: $groupsService,
             elementsById: [42 => $this->createStub(groupAliasElement::class), 43 => $this->createStub(groupAliasElement::class)],
         );
 
-        $this->assertStatus(403, fn() => $service->join(42, 43));
+        $this->assertStatus(403, fn() => $handler->handle(new JoinGroupAliasesCommand(42, 43)));
     }
 
     public function testJoinOfAnotherEntityTypeIsNotFound(): void
     {
         $groupsService = $this->createMock(GroupsService::class);
         $groupsService->expects($this->never())->method('joinDeleteGroup');
-        $service = $this->createService(
+        $handler = $this->handler(JoinGroupAliasesHandler::class,
             null,
             $this->privileges(true),
             groupsService: $groupsService,
             elementsById: [42 => $this->createStub(groupAliasElement::class), 43 => $this->createStub(groupElement::class)],
         );
 
-        $this->assertStatus(404, fn() => $service->join(42, 43));
+        $this->assertStatus(404, fn() => $handler->handle(new JoinGroupAliasesCommand(42, 43)));
     }
 
     public function testSetMemberWritesTheRolesBumpsTheModificationTimeAndLogsIt(): void
@@ -291,13 +298,13 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::GroupAlias, 'publicReceive');
 
-        $result = $this->createService(
+        $result = $this->handler(SetGroupAliasMemberHandler::class,
             null,
             $privilegesManager,
             actionsLog: $actionsLog,
             elementsById: [42 => $element, 7 => $this->createStub(authorElement::class)],
             authorshipDbal: $authorship,
-        )->setMember(42, 7, ['coder', 'musician'], 788918400, 0);
+        )->handle(new SetGroupAliasMemberCommand(42, 7, ['coder', 'musician'], 788918400, 0));
 
         self::assertSame(42, $result->id);
     }
@@ -308,21 +315,21 @@ final class GroupAliasDataServiceTest extends TestCase
         $authorship->expects($this->once())
             ->method('setAuthorship')
             ->with(42, 7, EntityType::Group, ['unknown'], null, null);
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupAliasMemberHandler::class,
             null,
             $this->privileges(true),
             elementsById: [42 => $this->createStub(groupAliasElement::class), 7 => $this->createStub(authorAliasElement::class)],
             authorshipDbal: $authorship,
         );
 
-        $service->setMember(42, 7, []);
+        $handler->handle(new SetGroupAliasMemberCommand(42, 7, []));
     }
 
     public function testSetMemberOfWhatIsNotAnAuthorOrWithARoleOfAnotherKindIsBadRequest(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupAliasMemberHandler::class,
             null,
             $this->privileges(true),
             elementsById: [
@@ -333,22 +340,22 @@ final class GroupAliasDataServiceTest extends TestCase
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(400, fn() => $service->setMember(42, 8, ['coder']));
-        $this->assertStatus(400, fn() => $service->setMember(42, 7, ['code']));
+        $this->assertStatus(400, fn() => $handler->handle(new SetGroupAliasMemberCommand(42, 8, ['coder'])));
+        $this->assertStatus(400, fn() => $handler->handle(new SetGroupAliasMemberCommand(42, 7, ['code'])));
     }
 
     public function testSetMemberWithoutThePrivilegeIsForbidden(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('setAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(SetGroupAliasMemberHandler::class,
             null,
             $this->privileges(false),
             elementsById: [42 => $this->createStub(groupAliasElement::class), 7 => $this->createStub(authorElement::class)],
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(403, fn() => $service->setMember(42, 7, ['coder']));
+        $this->assertStatus(403, fn() => $handler->handle(new SetGroupAliasMemberCommand(42, 7, ['coder'])));
     }
 
     public function testDeleteMemberRemovesTheMembershipBumpsTheModificationTimeAndLogsIt(): void
@@ -369,12 +376,12 @@ final class GroupAliasDataServiceTest extends TestCase
         $actionsLog = $this->createMock(ActionsLogService::class);
         $actionsLog->expects($this->once())->method('log')->with($element, StructureType::GroupAlias, 'deleteAuthor');
 
-        $result = $this->createService(
+        $result = $this->handler(DeleteGroupAliasMemberHandler::class,
             $element,
             $privilegesManager,
             actionsLog: $actionsLog,
             authorshipDbal: $authorship,
-        )->deleteMember(42, 7);
+        )->handle(new DeleteGroupAliasMemberCommand(42, 7));
 
         self::assertSame(42, $result->id);
     }
@@ -384,30 +391,38 @@ final class GroupAliasDataServiceTest extends TestCase
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->method('findByElement')->willReturn([new AuthorshipDto(42, 8, [], 0, 0)]);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteGroupAliasMemberHandler::class,
             $this->createStub(groupAliasElement::class),
             $this->privileges(true),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(400, fn() => $service->deleteMember(42, 0));
-        $this->assertStatus(404, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(400, fn() => $handler->handle(new DeleteGroupAliasMemberCommand(42, 0)));
+        $this->assertStatus(404, fn() => $handler->handle(new DeleteGroupAliasMemberCommand(42, 7)));
     }
 
     public function testDeleteMemberWithoutThePrivilegeIsForbidden(): void
     {
         $authorship = $this->createMock(AuthorshipDbal::class);
         $authorship->expects($this->never())->method('deleteAuthorship');
-        $service = $this->createService(
+        $handler = $this->handler(DeleteGroupAliasMemberHandler::class,
             $this->createStub(groupAliasElement::class),
             $this->privileges(false),
             authorshipDbal: $authorship,
         );
 
-        $this->assertStatus(403, fn() => $service->deleteMember(42, 7));
+        $this->assertStatus(403, fn() => $handler->handle(new DeleteGroupAliasMemberCommand(42, 7)));
     }
 
-    private function createService(
+    /**
+     * The use case of the given class, over the given doubles.
+     *
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    private function handler(
+        string $class,
         ?structureElement $element,
         privilegesManager $privilegesManager,
         ?ActionsLogService $actionsLog = null,
@@ -417,7 +432,7 @@ final class GroupAliasDataServiceTest extends TestCase
         ?CurrentUser $user = null,
         ?array $elementsById = null,
         ?AuthorshipDbal $authorshipDbal = null,
-    ): GroupAliasDataService {
+    ): object {
         $structureManager = $this->createStub(structureManager::class);
         if ($elementsById !== null) {
             $structureManager->method('getElementById')->willReturnCallback(static fn(int $id) => $elementsById[$id] ?? null);
@@ -435,7 +450,7 @@ final class GroupAliasDataServiceTest extends TestCase
         $repository = new GroupAliasRepository($structureManager, $groupsService);
         $privileges = new GroupAliasPrivileges($privilegesManager, $structureManager);
 
-        return new GroupAliasDataService(
+        foreach ([
             new CreateGroupAliasHandler($transactionRunner, $privileges, $creator ?? $this->createStub(GroupAliasCreator::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog, $currentUserService),
             new UpdateGroupAliasHandler($transactionRunner, $repository, $privileges, $writer ?? $this->createStub(GroupAliasFieldsWriter::class), $this->createStub(ElementAuthorsWriter::class), $this->createStub(ImportOriginsWriter::class), $actionsLog),
             new DeleteGroupAliasHandler($transactionRunner, $repository, $privileges, $actionsLog),
@@ -443,7 +458,13 @@ final class GroupAliasDataServiceTest extends TestCase
             new JoinGroupAliasesHandler($transactionRunner, $repository, $privileges, $groupsService, $actionsLog),
             new SetGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $structureManager, $authorshipDbal, $actionsLog),
             new DeleteGroupAliasMemberHandler($transactionRunner, $repository, $privileges, $authorshipDbal, $actionsLog),
-        );
+        ] as $handler) {
+            if ($handler instanceof $class) {
+                return $handler;
+            }
+        }
+
+        throw new LogicException("No $class among the use cases");
     }
 
     private function privileges(bool $isAllowed): privilegesManager

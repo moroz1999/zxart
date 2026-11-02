@@ -17,11 +17,14 @@ use ZxArt\Authors\Dto\AuthorDataResultDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\AuthorStateDto;
 use ZxArt\Authors\Exception\AuthorDataException;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Services\AuthorStateService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Shared\EntityType;
 use ZxArt\Shared\References\EntityMentionDto;
 
@@ -223,19 +226,18 @@ final class AuthorWriteToolsTest extends WriteToolTestCase
 
     private function createAuthor(string $title): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: $title))->id;
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: $title)))->id;
     }
 
     private function createAlias(int $authorId, string $title): int
     {
-        return $this->container->get(AuthorAliasDataService::class)->create(new AuthorAliasFieldsDto(title: $title, authorId: $authorId))->id;
+        return $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(new AuthorAliasFieldsDto(title: $title, authorId: $authorId)))->id;
     }
 
     private function creditOnNewProd(int $authorId): void
     {
         // the counters count the productions of a category
-        $prodId = $this->container->get(ProdDataService::class)
-            ->create(new ProdFieldsDto(title: 'Goldwrite Demo', categoryIds: [self::CATEGORY_DEMO]))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo', categoryIds: [self::CATEGORY_DEMO])))->id;
         $this->addAuthorship($authorId, $prodId, 'prod');
     }
 

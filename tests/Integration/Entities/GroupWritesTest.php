@@ -9,27 +9,37 @@ require_once __DIR__ . '/EntityWriteTestCase.php';
 use Closure;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorDataService;
 use ZxArt\Authors\Dto\AuthorshipInputDto;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\Groups\Exception\GroupDataException;
-use ZxArt\Groups\Services\GroupAliasDataService;
-use ZxArt\Groups\Services\GroupDataService;
 use ZxArt\Groups\Services\GroupSearchService;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
+use ZxArt\Groups\UseCases\JoinGroupsCommand;
+use ZxArt\Groups\UseCases\JoinGroupsHandler;
+use ZxArt\Groups\UseCases\SetGroupMemberCommand;
+use ZxArt\Groups\UseCases\SetGroupMemberHandler;
+use ZxArt\Groups\UseCases\UpdateGroupCommand;
+use ZxArt\Groups\UseCases\UpdateGroupHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\ProdLink;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Groups\Services\GroupFieldsReader;
 use groupElement;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 
 /**
- * Groups written through {@see GroupDataService}.
+ * Groups written through their use cases.
  */
 #[RunTestsInSeparateProcesses]
 final class GroupWritesTest extends EntityWriteTestCase
@@ -48,7 +58,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
         $subGroupIds = [$this->createGroup('Goldmaster Division'), $this->createGroup('Goldmaster Branch')];
 
-        $groupId = $this->groupDataService()->create($this->everyField($subGroupIds))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($this->everyField($subGroupIds)))->id;
 
         self::assertSame($this->everyFieldStored(), $this->storedRow(self::TABLE, $groupId, self::COLUMNS));
         self::assertSame(['structureType' => 'letter', 'structureName' => 'g'], $this->letterOf($groupId));
@@ -60,7 +70,7 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
 
-        $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
 
         self::assertSame(
             ['group.deleteAuthor', 'group.deleteFile', 'group.publicDelete', 'group.publicReceive', 'group.showPublicForm'],
@@ -72,9 +82,9 @@ final class GroupWritesTest extends EntityWriteTestCase
     public function testTheCreatorMayUpdateTheGroupRightAway(): void
     {
         $this->signInAsRegisteredUser();
-        $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')))->id;
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(slogan: 'Pixels forever'));
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(slogan: 'Pixels forever')));
 
         self::assertSame('Pixels forever', $this->storedRow(self::TABLE, $groupId, ['slogan'])['slogan']);
     }
@@ -84,7 +94,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsRegisteredUser();
 
         try {
-            $this->groupDataService()->create(new GroupFieldsDto(title: ''));
+            $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: '')));
             self::fail('A group needs a name');
         } catch (GroupDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -102,7 +112,7 @@ final class GroupWritesTest extends EntityWriteTestCase
             new GroupFieldsDto(title: 'Goldmaster Guild', subGroupIds: [self::COUNTRY_POLAND]),
         ] as $fields) {
             try {
-                $this->groupDataService()->create($fields);
+                $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($fields));
                 self::fail('A wrong reference must be rejected');
             } catch (GroupDataException $exception) {
                 self::assertSame(400, $exception->getStatusCode());
@@ -118,7 +128,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signIn([self::PUBLIC_VISITORS]);
 
         try {
-            $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild'));
+            $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild')));
             self::fail('Creating must need group.publicAdd');
         } catch (GroupDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -130,14 +140,14 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $subGroupIds = [$this->createGroup('Goldmaster Division'), $this->createGroup('Goldmaster Branch')];
-        $groupId = $this->groupDataService()->create($this->everyField($subGroupIds))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($this->everyField($subGroupIds)))->id;
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(
             type: 'studio',
             countryId: self::COUNTRY_UNITED_KINGDOM,
             cityId: self::CITY_LONDON,
             endDate: $this->date('31.12.2001'),
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), [
@@ -156,9 +166,9 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $subGroupIds = [$this->createGroup('Goldmaster Division')];
-        $groupId = $this->groupDataService()->create($this->everyField($subGroupIds))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($this->everyField($subGroupIds)))->id;
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(
             abbreviation: '',
             countryId: 0,
             cityId: 0,
@@ -168,7 +178,7 @@ final class GroupWritesTest extends EntityWriteTestCase
             startDate: 0,
             endDate: 0,
             subGroupIds: [],
-        ));
+        )));
 
         self::assertSame(
             array_replace($this->everyFieldStored(), [
@@ -191,9 +201,9 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $divisionId = $this->createGroup('Goldmaster Division');
         $branchId = $this->createGroup('Goldmaster Branch');
-        $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild', subGroupIds: [$divisionId]))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild', subGroupIds: [$divisionId])))->id;
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(title: 'Zeta Guild', subGroupIds: [$branchId]));
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(title: 'Zeta Guild', subGroupIds: [$branchId])));
 
         self::assertSame('Zeta Guild', $this->storedRow(self::TABLE, $groupId, ['title'])['title']);
         self::assertSame(['structureType' => 'letter', 'structureName' => 'z'], $this->letterOf($groupId));
@@ -210,7 +220,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $stored = $this->db->table(self::TABLE)->where('id', '=', $groupId)->get();
 
         try {
-            $this->groupDataService()->update($groupId, new GroupFieldsDto(slogan: 'Pixels forever'));
+            $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(slogan: 'Pixels forever')));
             self::fail('Updating must need group.publicReceive');
         } catch (GroupDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -224,14 +234,14 @@ final class GroupWritesTest extends EntityWriteTestCase
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherAuthorId = $this->createAuthor('Goldmaster Painter');
 
-        $groupId = $this->groupDataService()->create(
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(
             new GroupFieldsDto(title: 'Goldmaster Guild'),
             members: [
                 new AuthorshipInputDto($authorId, ['coder'], $this->date('1991-02-03'), $this->date('1995-06-07')),
                 new AuthorshipInputDto($otherAuthorId),
             ],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7001')],
-        )->id;
+        ))->id;
 
         self::assertSame(
             [['roles' => ['coder'], 'startDate' => $this->date('1991-02-03'), 'endDate' => $this->date('1995-06-07')]],
@@ -246,19 +256,19 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherAuthorId = $this->createAuthor('Goldmaster Painter');
-        $groupId = $this->groupDataService()->create(
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(
             new GroupFieldsDto(title: 'Goldmaster Guild'),
             members: [new AuthorshipInputDto($authorId, ['coder'])],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7001')],
-        )->id;
+        ))->id;
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(), members: [new AuthorshipInputDto($otherAuthorId, ['graphician'])]);
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(), members: [new AuthorshipInputDto($otherAuthorId, ['graphician'])]));
 
         self::assertSame([], $this->authorshipRecords($groupId, $authorId, 'group'));
         self::assertSame([['roles' => ['graphician'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($groupId, $otherAuthorId, 'group'));
         self::assertSame([['origin' => 'zxdb', 'importId' => '7001']], $this->storedImportOrigins($groupId));
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(), importOrigins: []);
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(), importOrigins: []));
 
         self::assertSame([], $this->storedImportOrigins($groupId));
         self::assertSame([['roles' => ['graphician'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($groupId, $otherAuthorId, 'group'));
@@ -269,17 +279,17 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsEditor();
         $authorId = $this->createAuthor('Goldmaster Writer');
         $otherGroupId = $this->createGroup('Goldmaster Union');
-        $groupId = $this->groupDataService()->create(
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(
             new GroupFieldsDto(title: 'Goldmaster Guild'),
             members: [new AuthorshipInputDto($authorId, ['coder'])],
-        )->id;
+        ))->id;
 
-        $this->assertRefused(400, GroupDataException::class, fn() => $this->groupDataService()->update(
+        $this->assertRefused(400, GroupDataException::class, fn() => $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand(
             $groupId,
             new GroupFieldsDto(title: 'Zeta Guild'),
             members: [new AuthorshipInputDto($otherGroupId)],
             importOrigins: [new ImportOriginDto(ImportOrigin::Zxdb, '7001')],
-        ));
+        )));
 
         self::assertSame(['title' => 'Goldmaster Guild'], $this->storedRow(self::TABLE, $groupId, ['title']));
         self::assertSame([['roles' => ['coder'], 'startDate' => 0, 'endDate' => 0]], $this->authorshipRecords($groupId, $authorId, 'group'));
@@ -292,10 +302,10 @@ final class GroupWritesTest extends EntityWriteTestCase
         $authorId = $this->createAuthor('Goldmaster Writer');
         $createdBefore = $this->newElementIds();
 
-        $this->assertRefused(400, GroupDataException::class, fn() => $this->groupDataService()->create(
+        $this->assertRefused(400, GroupDataException::class, fn() => $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(
             new GroupFieldsDto(title: 'Goldmaster Guild'),
             members: [new AuthorshipInputDto($authorId, ['music'])],
-        ));
+        )));
 
         self::assertSame($createdBefore, $this->newElementIds());
     }
@@ -304,13 +314,12 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsJoiner();
         $mainId = $this->createGroup('Goldmaster Guild');
-        $joinedId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Union', website: 'https://union.example'))->id;
-        $aliasId = $this->container->get(GroupAliasDataService::class)
-            ->create(new GroupAliasFieldsDto(title: 'Union Alias', groupId: $joinedId))->id;
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $joinedId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Union', website: 'https://union.example')))->id;
+        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Union Alias', groupId: $joinedId)))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->addAuthorship($authorId, $joinedId, 'group');
 
-        $this->groupDataService()->join($mainId, $joinedId);
+        $this->container->get(JoinGroupsHandler::class)->handle(new JoinGroupsCommand($mainId, $joinedId));
 
         self::assertFalse($this->elementExists($joinedId));
         self::assertContains(['authorId' => $authorId, 'elementId' => $mainId, 'type' => 'group'], $this->authorshipRows($authorId));
@@ -324,11 +333,11 @@ final class GroupWritesTest extends EntityWriteTestCase
         $this->signInAsJoiner();
         $mainId = $this->createGroup('Goldmaster Guild');
         $joinedId = $this->createGroup('Goldmaster Union');
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->addAuthorship($authorId, $joinedId, 'group');
         $createdBefore = $this->newElementIds();
 
-        $this->groupDataService()->join($mainId, $joinedId, true);
+        $this->container->get(JoinGroupsHandler::class)->handle(new JoinGroupsCommand($mainId, $joinedId, true));
 
         self::assertFalse($this->elementExists($joinedId));
         $newIds = array_values(array_diff($this->newElementIds(), $createdBefore));
@@ -347,7 +356,7 @@ final class GroupWritesTest extends EntityWriteTestCase
         $joinedId = $this->createGroup('Goldmaster Union');
 
         try {
-            $this->groupDataService()->join($mainId, $joinedId);
+            $this->container->get(JoinGroupsHandler::class)->handle(new JoinGroupsCommand($mainId, $joinedId));
             self::fail('Joining must need group.join');
         } catch (GroupDataException $exception) {
             self::assertSame(403, $exception->getStatusCode());
@@ -359,11 +368,11 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
         $this->ageModificationTime($groupId);
 
-        $this->groupDataService()->setMember($groupId, $authorId, ['coder'], $this->date('01.01.1995'));
-        $this->groupDataService()->setMember($groupId, $authorId, ['musician'], endDate: $this->date('31.12.1999'));
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $authorId, ['coder'], $this->date('01.01.1995')));
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $authorId, ['musician'], endDate: $this->date('31.12.1999')));
 
         self::assertSame(
             [['roles' => ['musician'], 'startDate' => $this->date('01.01.1995'), 'endDate' => $this->date('31.12.1999')]],
@@ -376,10 +385,10 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsRegisteredUser();
         $groupId = $this->createGroup('Goldmaster Guild');
-        $authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldmaster Writer'))->id;
+        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldmaster Writer')))->id;
 
         try {
-            $this->groupDataService()->setMember($groupId, $authorId, ['code']);
+            $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($groupId, $authorId, ['code']));
             self::fail('"code" is a production role');
         } catch (GroupDataException $exception) {
             self::assertSame(400, $exception->getStatusCode());
@@ -390,8 +399,8 @@ final class GroupWritesTest extends EntityWriteTestCase
     public function testSearchFindsTheGroupByAbbreviationAndAlias(): void
     {
         $this->signInAsRegisteredUser();
-        $groupId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Guild', abbreviation: 'GMGLD'))->id;
-        $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldmaster Union', groupId: $groupId));
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Guild', abbreviation: 'GMGLD')))->id;
+        $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldmaster Union', groupId: $groupId)));
         $find = $this->finder();
 
         self::assertContains($groupId, $find(new GroupSearchFilterDto(name: 'gmgld')));
@@ -402,21 +411,20 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['group', 'publicReceive']]);
         $divisionId = $this->createGroup('Goldmaster Division');
-        $guildId = $this->groupDataService()->create(new GroupFieldsDto(
+        $guildId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(
             title: 'Goldmaster Guild',
             type: 'scene',
             countryId: self::COUNTRY_POLAND,
             cityId: self::CITY_WARSAW,
             startDate: $this->date('15.03.1995'),
             subGroupIds: [$divisionId],
-        ))->id;
-        $crewId = $this->container->get(GroupAliasDataService::class)->create(new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $guildId))->id;
-        $labelId = $this->groupDataService()->create(new GroupFieldsDto(title: 'Goldmaster Label', type: 'studio'))->id;
+        )))->id;
+        $crewId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldmaster Crew', groupId: $guildId)))->id;
+        $labelId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldmaster Label', type: 'studio')))->id;
         $authorId = $this->createAuthor('Goldmaster Coder');
-        $this->groupDataService()->setMember($divisionId, $authorId, ['coder']);
-        $prodDataService = $this->container->get(ProdDataService::class);
-        $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1990, groupIds: [$crewId], publisherIds: [$labelId]));
-        $gameId = $prodDataService->create(new ProdFieldsDto(title: 'Goldmaster Game', year: 1997, groupIds: [$labelId]))->id;
+        $this->container->get(SetGroupMemberHandler::class)->handle(new SetGroupMemberCommand($divisionId, $authorId, ['coder']));
+        $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo', year: 1990, groupIds: [$crewId], publisherIds: [$labelId])));
+        $gameId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Game', year: 1997, groupIds: [$labelId])))->id;
         $find = $this->finder();
 
         self::assertSame([$guildId, $labelId], $find(new GroupSearchFilterDto(name: 'goldmaster', prods: new ProdSearchFilterDto(title: 'goldmaster demo'))));
@@ -435,12 +443,12 @@ final class GroupWritesTest extends EntityWriteTestCase
     {
         $this->signInAsEditor();
         $subGroupIds = [$this->createGroup('Goldmaster Division'), $this->createGroup('Goldmaster Branch')];
-        $groupId = $this->groupDataService()->create($this->everyField($subGroupIds))->id;
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($this->everyField($subGroupIds)))->id;
         $reader = $this->container->get(GroupFieldsReader::class);
 
         self::assertEquals($this->everyField($subGroupIds), $reader->read($this->element($groupId)));
 
-        $this->groupDataService()->update($groupId, new GroupFieldsDto(type: 'studio', startDate: 0, subGroupIds: [$subGroupIds[1]]));
+        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(type: 'studio', startDate: 0, subGroupIds: [$subGroupIds[1]])));
 
         self::assertEquals(
             new GroupFieldsDto(...array_replace(get_object_vars($this->everyField($subGroupIds)), ['type' => 'studio', 'startDate' => 0, 'subGroupIds' => [$subGroupIds[1]]])),
@@ -481,12 +489,12 @@ final class GroupWritesTest extends EntityWriteTestCase
 
     private function createAuthor(string $title): int
     {
-        return $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: $title))->id;
+        return $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: $title)))->id;
     }
 
     private function createGroup(string $title): int
     {
-        return $this->groupDataService()->create(new GroupFieldsDto(title: $title))->id;
+        return $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: $title)))->id;
     }
 
     /**
@@ -555,10 +563,5 @@ final class GroupWritesTest extends EntityWriteTestCase
         self::assertInstanceOf(groupElement::class, $element);
 
         return $element;
-    }
-
-    private function groupDataService(): GroupDataService
-    {
-        return $this->container->get(GroupDataService::class);
     }
 }

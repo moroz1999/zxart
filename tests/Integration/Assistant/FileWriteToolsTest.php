@@ -16,12 +16,18 @@ use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
-use ZxArt\Prods\Services\ProdDataService;
 use ZxArt\Prods\Services\ProdStateService;
+use ZxArt\Prods\UseCases\AddProdFilesCommand;
+use ZxArt\Prods\UseCases\AddProdFilesHandler;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ReleaseFileKind;
-use ZxArt\Releases\Services\ReleaseDataService;
 use ZxArt\Releases\Services\ReleaseStateService;
+use ZxArt\Releases\UseCases\AddReleaseFilesCommand;
+use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
+use ZxArt\Releases\UseCases\CreateReleaseCommand;
+use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
@@ -62,8 +68,8 @@ final class FileWriteToolsTest extends WriteToolTestCase
     public function testAddProdFilesPreviewsTheListGrowingAndAdds(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $this->remember($this->prods()->addFiles($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')])->fileIds);
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $this->remember($this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds);
         $url = $this->server->url('/redirect-image');
         $arguments = '{"prodId": ' . $prodId . ', "kind": "maps", "urls": ["' . $url . '"]}';
 
@@ -80,7 +86,7 @@ final class FileWriteToolsTest extends WriteToolTestCase
     public function testAddProdFilesWithoutAUrlIsRefusedAtThePreview(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
 
         $this->assertRefused(400, ProdDataException::class, fn() => $this->preview('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}'));
     }
@@ -88,8 +94,8 @@ final class FileWriteToolsTest extends WriteToolTestCase
     public function testDeleteProdFilePreviewsTheListShrinkingAndDeletes(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
-        $fileIds = $this->prods()->addFiles($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')])->fileIds;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $fileIds = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds;
         $this->remember($fileIds);
         $arguments = '{"prodId": ' . $prodId . ', "fileId": ' . $fileIds[0] . '}';
 
@@ -111,7 +117,7 @@ final class FileWriteToolsTest extends WriteToolTestCase
             [new FieldChangeDto('inlays', [], [$url])],
             $this->preview('add_release_files', '{"releaseId": ' . $releaseId . ', "kind": "inlays", "urls": ["' . $url . '"]}')->changes,
         );
-        $fileIds = $this->releases()->addFiles($releaseId, ReleaseFileKind::Inlays, [$url])->fileIds;
+        $fileIds = $this->container->get(AddReleaseFilesHandler::class)->handle(new AddReleaseFilesCommand($releaseId, ReleaseFileKind::Inlays, [$url]))->fileIds;
         $this->remember($fileIds);
 
         self::assertEquals(
@@ -139,9 +145,9 @@ final class FileWriteToolsTest extends WriteToolTestCase
 
     private function createRelease(): int
     {
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Goldwrite Demo'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
 
-        return $this->releases()->create(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $prodId))->id;
+        return $this->container->get(CreateReleaseHandler::class)->handle(new CreateReleaseCommand(new ReleaseFieldsDto(title: 'Goldwrite Tape', prodId: $prodId)))->id;
     }
 
     /**
@@ -155,15 +161,5 @@ final class FileWriteToolsTest extends WriteToolTestCase
                 $this->storedPaths[] = $file->getFilePath();
             }
         }
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
-    }
-
-    private function releases(): ReleaseDataService
-    {
-        return $this->container->get(ReleaseDataService::class);
     }
 }

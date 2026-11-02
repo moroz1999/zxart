@@ -1,21 +1,10 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input} from '@angular/core';
 import {TranslateModule} from '@ngx-translate/core';
+import {ReleaseDataApiService} from '../../../../shared/api/release-data-api.service';
 import {
   ZxEditingControlAction,
   ZxEditingControlsComponent,
 } from '../../../../shared/ui/zx-editing-controls/zx-editing-controls.component';
-
-const RELEASE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
-  {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'release-details.edit'},
-  {
-    action: 'clone',
-    privilege: 'clone',
-    labelKey: 'release-details.clone',
-    color: 'secondary',
-    confirm: {messageKey: 'release-details.clone-confirm-message'},
-    run: {action: 'clone', targetPath: 'release', failureKey: 'release-details.clone-failed'},
-  },
-];
 
 @Component({
   selector: 'zx-release-editing-controls',
@@ -28,7 +17,19 @@ const RELEASE_EDIT_ACTIONS: readonly ZxEditingControlAction[] = [
 export class ZxReleaseEditingControlsComponent {
   @Input({required: true}) elementId!: number;
 
-  readonly editActions = RELEASE_EDIT_ACTIONS;
+  private readonly releaseDataApi = inject(ReleaseDataApiService);
+
+  readonly editActions: readonly ZxEditingControlAction[] = [
+    {action: 'showPublicForm', privilege: 'publicReceive', labelKey: 'release-details.edit'},
+    {
+      action: 'clone',
+      privilege: 'clone',
+      labelKey: 'release-details.clone',
+      color: 'secondary',
+      confirm: {messageKey: 'release-details.clone-confirm-message'},
+      run: {execute: id => this.releaseDataApi.clone(id), targetPath: 'release', failureKey: 'release-details.clone-failed'},
+    },
+  ];
 
   readonly buildActionUrl = (_action: string, elementId: number): string => `/release/${elementId}/edit`;
 }

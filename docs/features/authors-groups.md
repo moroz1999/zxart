@@ -117,7 +117,7 @@ Authors can be members of groups:
 - Both sides of the membership are editable with the same member/role editor. The group form edits the roster of one group and submits `addAuthorRole`/`addAuthorStartDate`/`addAuthorEndDate` per author ID; the author form edits the groups of one author and submits `addGroupRole`/`addGroupStartDate`/`addGroupEndDate` per group ID. Either side deletes the memberships its form no longer carries; the author form leaves the memberships of the author's aliases alone.
 - Removing a member in the group, prod or release form takes effect at once, not on save: `deleteMember` of that entity's data endpoint (`/group-data/`, `/prod-data/`, `/release-data/`) deletes the authorship of that entity type only. It needs the `deleteAuthor` privilege and answers `404` when the author was not a member; the form reports a failure.
 - The author form loads its memberships from the `groups` list of the form-data response and the roles it may pick from `groupRoles`. Membership roles are one fixed list (`ZxArt\Groups\GroupMemberRoles`), narrower than the authorship roles of works (`ZxArt\Authors\AuthorshipRoles`).
-- `setMember()` of the group, prod and release data services adds one member or replaces its roles (and, for groups, dates) outside the forms; see [php/entity-writes.md](../php/entity-writes.md#authors-and-members).
+- The set-member use cases of groups, group aliases, prods and releases add one member or replace its roles (and, for groups and their aliases, dates) outside the forms; see [php/entity-writes.md](../php/entity-writes.md#authors-and-members).
 - Group roster data is loaded through a separate endpoint after the group core response.
 - Group connections exclude group members and their author aliases from collaborator people.
 - The group connections tab is shown only when the core group response confirms real collaborator people or published developer groups.
@@ -194,7 +194,7 @@ When work is created by group:
 - `joinAsAlias` attaches the picked entity as an alias of the current one; `joinAndDelete` merges it in without keeping an alias.
 - Because the picked entity no longer exists afterwards, the form returns to the current entity page, which reloads its details.
 - Accounts whose `authorId` pointed at the absorbed author are re-pointed to the surviving one, so no user is left claiming a deleted author.
-- `AuthorDataService::join()`, `GroupDataService::join()` and the alias data services do the same outside the form, checking `join` on both entities (see [php/entity-writes.md](../php/entity-writes.md#joins)).
+- `JoinAuthorsHandler`, `JoinGroupsHandler` and the alias join use cases do the same outside the form, checking `join` on both entities (see [php/entity-writes.md](../php/entity-writes.md#joins)).
 
 #### Claimed Author Ownership
 - An account's claim is the `authorId` field on the user element, not a structure link, so nothing follows it on its own when the author disappears.
@@ -210,7 +210,7 @@ When work is created by group:
 
 #### Author and Group Editing Actions
 - Claiming authorship and the conversions (author → group, group → author, alias → standalone author/group) run straight from the details page: a confirmation dialog, then the action.
-- Each conversion is an action of the source's own data endpoint: `POST /author-data/?id=&action=convertToGroup`, `/group-data/…convertToAuthor`, `/author-alias-data/…convertToAuthor`, `/group-alias-data/…convertToGroup` (`AuthorDataService`, `GroupDataService`, `AuthorAliasDataService`, `GroupAliasDataService`). The source must grant the privilege named like the action (`403` otherwise). Success answers the created entity's `{id}` and is recorded in the actions log; errors come as HTTP statuses with `errorMessage`. The claim still runs its legacy action through `/ajax/`.
+- Each conversion is an action of the source's own data endpoint: `POST /author-data/?id=&action=convertToGroup`, `/group-data/…convertToAuthor`, `/author-alias-data/…convertToAuthor`, `/group-alias-data/…convertToGroup` (`ConvertAuthorToGroupHandler`, `ConvertGroupToAuthorHandler`, `ConvertAuthorAliasToAuthorHandler`, `ConvertGroupAliasToGroupHandler`). The source must grant the privilege named like the action (`403` otherwise). Success answers the created entity's `{id}` and is recorded in the actions log; errors come as HTTP statuses with `errorMessage`. The claim still runs its legacy action through `/ajax/`.
 - Converting an author alias copies the alias's own element privileges onto the new author.
 - A successful conversion navigates to the created entity; a claim reports the moderation-request result in a dialog.
 - These actions have no routed page of their own — see [zx-editing-controls](../design-system/zx-editing-controls.md) for the `confirm`/`run` action descriptors.
@@ -285,7 +285,7 @@ author, group, country-filter, and city-filter links from those identifiers.
 
 Authors, groups and both kinds of alias are created and edited through their
 `<Entity>FieldsWriter` and `<Entity>Creator`, the same path for the add and
-edit forms and the `<Entity>DataService` — see
+edit forms and the use cases of the data endpoints — see
 [../php/entity-writes.md](../php/entity-writes.md). Memberships, authorship,
 import origins and images stay with the form actions.
 

@@ -10,10 +10,13 @@ use LanguagesManager;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use ZxArt\Authors\Dto\AuthorAliasFieldsDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
-use ZxArt\Authors\Services\AuthorAliasDataService;
-use ZxArt\Authors\Services\AuthorDataService;
+use ZxArt\Authors\UseCases\CreateAuthorAliasCommand;
+use ZxArt\Authors\UseCases\CreateAuthorAliasHandler;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Prods\Services\ProdDataService;
+use ZxArt\Prods\UseCases\CreateProdCommand;
+use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Search\Dto\SearchResultPreviewDto;
 use ZxArt\Search\Dto\SearchResultsDto;
 use ZxArt\Search\Dto\SearchResultSetDto;
@@ -37,12 +40,12 @@ final class PublicSearchTest extends EntityWriteTestCase
     {
         parent::setUp();
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
-        $this->laterProdId = $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch Megademo'))->id;
-        $this->exactProdId = $this->prods()->create(new ProdFieldsDto(title: 'Goldsearch'))->id;
-        $this->authorId = $this->container->get(AuthorDataService::class)->create(new AuthorFieldsDto(title: 'Goldsearch Writer'))->id;
-        $this->aliasId = $this->container->get(AuthorAliasDataService::class)->create(
+        $this->laterProdId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Megademo')))->id;
+        $this->exactProdId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch')))->id;
+        $this->authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch Writer')))->id;
+        $this->aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand(
             new AuthorAliasFieldsDto(title: 'Goldsearch Wanderer', authorId: $this->authorId),
-        )->id;
+        ))->id;
     }
 
     public function testQuickSearchMergesAliasesAndPutsTheClosestTitlesFirst(): void
@@ -78,7 +81,7 @@ final class PublicSearchTest extends EntityWriteTestCase
 
     public function testBothSearchesFindATitleWithAnAmpersand(): void
     {
-        $prodId = $this->prods()->create(new ProdFieldsDto(title: 'Rock & Roll Goldsearch'))->id;
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Rock & Roll Goldsearch')))->id;
 
         $quick = $this->container->get(SearchService::class)->quickSearch('Rock & Roll', ['zxProd'], 10, $this->languageId());
         $paged = $this->container->get(SearchService::class)->search('Rock & Roll', 1, ['zxProd']);
@@ -133,10 +136,5 @@ final class PublicSearchTest extends EntityWriteTestCase
     private function languageId(): int
     {
         return (int)$this->container->get(LanguagesManager::class)->getCurrentLanguageId();
-    }
-
-    private function prods(): ProdDataService
-    {
-        return $this->container->get(ProdDataService::class);
     }
 }
