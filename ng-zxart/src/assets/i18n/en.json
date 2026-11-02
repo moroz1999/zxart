@@ -2337,6 +2337,7 @@
       "default": "Action",
       "search": "Catalogue search",
       "find_locations": "Place search",
+      "find_parties": "Party search",
       "search_prods": "Prod search",
       "search_releases": "Release search",
       "search_authors": "Author search",
@@ -2353,7 +2354,8 @@
       "get_group_alias": "Group alias card",
       "fetch_url": "Page fetch",
       "view_image": "Image view",
-      "describe_write_tool": "Fields a write needs"
+      "describe_write_tool": "Fields a write needs",
+      "load_skill": "Instructions"
     },
     "entity": {
       "prod": "Prod",

@@ -163,6 +163,12 @@ author or group, and an author or group is answered once, never its alias.
   their name in any language, named in the current one; a city with its
   country.
 
+- `ZxArt\Parties\Dbal\PartySearchDbal::find()` — parties by a part of the
+  title, abbreviation or original name, as typed or HTML-encoded as they are
+  stored, of one year or any (the year is the title of the year element the
+  party lies under); by title, each with its decoded title, abbreviation and
+  year.
+
 ## Entity phrase search
 
 `ZxArt\Search\Services\EntitySearchService::search(phrase, EntityType[] types, limit)`

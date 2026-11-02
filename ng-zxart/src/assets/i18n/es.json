@@ -2334,6 +2334,7 @@
       "default": "Acción",
       "search": "Búsqueda en el catálogo",
       "find_locations": "Búsqueda de lugar",
+      "find_parties": "Búsqueda de parties",
       "search_prods": "Búsqueda de prods",
       "search_releases": "Búsqueda de releases",
       "search_authors": "Búsqueda de autores",
@@ -2350,7 +2351,8 @@
       "get_group_alias": "Ficha del alias de grupo",
       "fetch_url": "Carga de página",
       "view_image": "Vista de imagen",
-      "describe_write_tool": "Campos que necesita una escritura"
+      "describe_write_tool": "Campos que necesita una escritura",
+      "load_skill": "Instrucciones"
     },
     "entity": {
       "prod": "Prod",

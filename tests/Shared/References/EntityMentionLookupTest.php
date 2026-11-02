@@ -10,6 +10,10 @@ require_once __DIR__ . '/../../Doubles/Elements/AuthorElementSpy.php';
 require_once __DIR__ . '/../../Doubles/Elements/AuthorAliasElementSpy.php';
 require_once __DIR__ . '/../../Doubles/Elements/GroupElementSpy.php';
 require_once __DIR__ . '/../../Doubles/Elements/GroupAliasElementSpy.php';
+require_once __DIR__ . '/../../Doubles/Elements/ZxProdCategoryElementSpy.php';
+require_once __DIR__ . '/../../Doubles/Elements/PartyElementSpy.php';
+require_once __DIR__ . '/../../Doubles/Elements/CountryElementSpy.php';
+require_once __DIR__ . '/../../Doubles/Elements/CityElementSpy.php';
 
 use controller;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +25,12 @@ use ZxArt\Shared\References\EntityMentionLookup;
 use ZxArt\Shared\References\MentionedEntityDto;
 use ZxArt\Tests\Doubles\Elements\AuthorAliasElementSpy;
 use ZxArt\Tests\Doubles\Elements\AuthorElementSpy;
+use ZxArt\Tests\Doubles\Elements\CityElementSpy;
+use ZxArt\Tests\Doubles\Elements\CountryElementSpy;
 use ZxArt\Tests\Doubles\Elements\GroupAliasElementSpy;
 use ZxArt\Tests\Doubles\Elements\GroupElementSpy;
+use ZxArt\Tests\Doubles\Elements\PartyElementSpy;
+use ZxArt\Tests\Doubles\Elements\ZxProdCategoryElementSpy;
 use ZxArt\Tests\Doubles\Elements\ZxProdElementSpy;
 use ZxArt\Tests\Doubles\Elements\ZxReleaseElementSpy;
 use ZxArt\Urls\EntityUrlResolver;
@@ -54,6 +62,28 @@ class EntityMentionLookupTest extends TestCase
             new EntityMentionDto(EntityType::AuthorAlias, 4),
             new EntityMentionDto(EntityType::Group, 5),
             new EntityMentionDto(EntityType::GroupAlias, 6),
+        ]));
+    }
+
+    public function testAnswersTheTitleAndThePageOfTheCataloguesTheFieldsName(): void
+    {
+        $lookup = $this->createLookup([
+            7 => $this->titled(new ZxProdCategoryElementSpy(7), 'Demos'),
+            8 => $this->titled(new PartyElementSpy(8), 'Chaos Constructions'),
+            9 => $this->titled(new CountryElementSpy(9), 'Russia'),
+            10 => $this->titled(new CityElementSpy(10), 'Saint Petersburg'),
+        ]);
+
+        self::assertEquals([
+            'category:7' => new MentionedEntityDto('Demos', '/prods?cat=7'),
+            'party:8' => new MentionedEntityDto('Chaos Constructions', '/party/8'),
+            'country:9' => new MentionedEntityDto('Russia', '/geo/country/9'),
+            'city:10' => new MentionedEntityDto('Saint Petersburg', '/geo/city/10'),
+        ], $lookup->lookup([
+            new EntityMentionDto(EntityType::Category, 7),
+            new EntityMentionDto(EntityType::Party, 8),
+            new EntityMentionDto(EntityType::Country, 9),
+            new EntityMentionDto(EntityType::City, 10),
         ]));
     }
 

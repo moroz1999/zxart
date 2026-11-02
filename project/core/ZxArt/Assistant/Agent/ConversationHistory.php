@@ -10,11 +10,15 @@ use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Llm\LlmMessageDto;
 use ZxArt\Assistant\Llm\LlmRole;
 use ZxArt\Assistant\Llm\LlmToolCallDto;
+use ZxArt\Assistant\Skills\SkillCatalogue;
+use ZxArt\Assistant\Skills\SkillDto;
 
 /**
- * What the model is told of a stored conversation: the system prompt, then each
- * message the way the model wrote or read it. Images a tool showed are not kept
+ * What the model is told of a stored conversation: the system prompt with the
+ * skills it may load, then each message the way the model wrote or read it. Images a tool showed are not kept
  * and are not shown again.
+ *
+ * @psalm-api
  */
 final readonly class ConversationHistory
 {
@@ -37,18 +41,37 @@ final readonly class ConversationHistory
         - Be brief.
         PROMPT;
 
+    private const string SKILLS_INTRO = 'Skills are instructions for particular tasks. Before you start a task that a skill '
+        . 'describes, load it with load_skill and follow it. The skills:';
+
+    public function __construct(
+        private SkillCatalogue $skills,
+    ) {
+    }
+
     /**
      * @param list<MessageDto> $messages in `seq` order
      * @return list<LlmMessageDto>
      */
     public function build(array $messages): array
     {
-        $history = [new LlmMessageDto(LlmRole::System, self::SYSTEM_PROMPT)];
+        $history = [new LlmMessageDto(LlmRole::System, $this->systemPrompt())];
         foreach ($messages as $message) {
             array_push($history, ...$this->told($message));
         }
 
         return $history;
+    }
+
+    private function systemPrompt(): string
+    {
+        $skills = $this->skills->all();
+        if ($skills === []) {
+            return self::SYSTEM_PROMPT;
+        }
+        $list = array_map(static fn(SkillDto $skill): string => "- {$skill->name}: {$skill->description}", $skills);
+
+        return self::SYSTEM_PROMPT . "\n\n" . self::SKILLS_INTRO . "\n" . implode("\n", $list);
     }
 
     /**

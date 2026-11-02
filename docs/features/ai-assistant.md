@@ -36,6 +36,7 @@ Read tools so far:
 |---|---|---|
 | `search` | `Search\SearchTool` | `EntitySearchService` (see [search.md](search.md#entity-phrase-search)); `types` is `SearchableType`, exactly the six types |
 | `find_locations` | `Search\FindLocationsTool` | `PlaceSearchService` |
+| `find_parties` | `Search\FindPartiesTool` | `Parties\Dbal\PartySearchDbal` (see [search.md](search.md#typed-searches)); `limit` is kept between 1 and 100 |
 | `search_prods` | `Search\SearchProdsTool` | `ProdSearchService`, then `FoundProdsReader` |
 | `search_releases` | `Search\SearchReleasesTool` | `ReleaseSearchService`, then `FoundReleasesReader` |
 | `search_authors` | `Search\SearchAuthorsTool` | `AuthorSearchService`, then `FoundAuthorsReader` |
@@ -45,6 +46,7 @@ Read tools so far:
 | `list_hardware` | `Catalogues\ListHardwareTool` | `HardwareCatalogService`: codes by group, named in the current language |
 | `list_options` | `Catalogues\ListOptionsTool` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
 | `get_prod`, `get_release`, `get_author`, `get_author_alias`, `get_group`, `get_group_alias` | `Entities\Get<Entity>Tool` | `<Entity>CardReader` in the entity's module |
+| `load_skill` | `Skills\LoadSkillTool` | `Assistant\Skills\SkillCatalogue` (see [Skills](#skills)) |
 | `fetch_url` | `Web\FetchUrlTool` | `Shared\Http\PageFetcher` |
 | `view_image` | `Web\ViewImageTool` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
 
@@ -250,6 +252,19 @@ environment variable (`docker-compose.yml` takes it from `.env`).
    step, told as a `stopped` message), `failed` after 20 steps, 10 minutes or a
    model failure, with an `error` message.
 
+### Skills
+
+A skill is the assistant's instructions for one kind of task, a Markdown file
+in `project/assistant-skills/`: `<name>.md`, opened by a frontmatter of `name`
+(the file's name) and `description` (when to load it); the rest is the
+instructions. `Skills\SkillCatalogue` reads them by name; a file that breaks
+this is a `LogicException`, and `SkillCatalogueTest` reads the project's
+skills, so a broken one fails the tests. `ConversationHistory` appends the
+list — `- name: description` — to the system prompt; the model loads a skill
+with `load_skill` before the task, and the instructions stay in the
+conversation as that call's result. An unknown name is an
+`UnknownSkillException`, told to the model with the names there are.
+
 ### Plans
 
 `Agent\PlanProposer` handles `propose_plan` (`title`, `actions` of `tool` and
@@ -289,7 +304,8 @@ supersedes a proposed plan and starts a `chat` run; `approvePlan` marks the plan
 `seq`, every plan, the active run and `refs` — the entities that the messages'
 `[[type:id]]` and the plans' previews mention, and those the plans' done
 actions created (the preview target's type, the result's `id`), found by
-`EntityMentionLookup`.
+`EntityMentionLookup`: productions, releases, authors, groups and their
+aliases, categories, parties, countries and cities.
 
 `Controllers\AssistantData` (`/assistant-data/`, see `api/assistant-data.yaml`)
 checks the user and the privilege, answers, and for `send` and `approvePlan`

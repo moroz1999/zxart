@@ -18,6 +18,7 @@ enum DatabaseTable: string
     case Comment = 'module_comment';
     case Country = 'module_country';
     case FilesRegistry = 'files_registry';
+    case Generic = 'module_generic';
     case Hardware = 'hardware';
     case HardwareName = 'hardware_name';
     case ImportOrigin = 'import_origin';

@@ -41,10 +41,10 @@ export function isDestructiveKind(kind: string | null): boolean {
 
 /** The read tools that have a phrase of their own (`assistant.tool.<name>`). */
 const PHRASED_TOOLS = new Set([
-  'search', 'find_locations', 'search_prods', 'search_releases', 'search_authors', 'search_groups',
+  'search', 'find_locations', 'find_parties', 'search_prods', 'search_releases', 'search_authors', 'search_groups',
   'find_tags', 'list_categories', 'list_hardware', 'list_options',
   'get_prod', 'get_release', 'get_author', 'get_author_alias', 'get_group', 'get_group_alias',
-  'fetch_url', 'view_image', 'describe_write_tool',
+  'fetch_url', 'view_image', 'describe_write_tool', 'load_skill',
 ]);
 
 /** The entity a `get_*` tool reads, by its `id` argument. */

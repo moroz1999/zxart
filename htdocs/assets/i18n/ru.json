@@ -2335,6 +2335,7 @@
       "default": "Действие",
       "search": "Поиск по каталогу",
       "find_locations": "Поиск места",
+      "find_parties": "Поиск пати",
       "search_prods": "Поиск продов",
       "search_releases": "Поиск релизов",
       "search_authors": "Поиск авторов",
@@ -2351,7 +2352,8 @@
       "get_group_alias": "Карточка псевдонима группы",
       "fetch_url": "Загрузка страницы",
       "view_image": "Просмотр картинки",
-      "describe_write_tool": "Какие поля нужны для записи"
+      "describe_write_tool": "Какие поля нужны для записи",
+      "load_skill": "Инструкция"
     },
     "entity": {
       "prod": "Прод",

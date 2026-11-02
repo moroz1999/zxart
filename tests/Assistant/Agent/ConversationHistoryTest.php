@@ -12,6 +12,7 @@ use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Llm\LlmMessageDto;
 use ZxArt\Assistant\Llm\LlmRole;
 use ZxArt\Assistant\Llm\LlmToolCallDto;
+use ZxArt\Assistant\Skills\SkillCatalogue;
 
 /**
  * What the model is told of a stored conversation.
@@ -20,7 +21,7 @@ final class ConversationHistoryTest extends TestCase
 {
     public function testTheSystemPromptLeadsAndProseFollowsAsWritten(): void
     {
-        $history = (new ConversationHistory())->build([
+        $history = $this->history()->build([
             $this->message(MessageRole::User, MessageKind::Text, 'Найди Elite'),
             $this->message(MessageRole::Assistant, MessageKind::Text, 'Нашёл [[prod:5]]'),
         ]);
@@ -32,9 +33,17 @@ final class ConversationHistoryTest extends TestCase
         ], array_slice($history, 1));
     }
 
+    public function testTheSystemPromptListsTheSkillsToLoad(): void
+    {
+        $prompt = $this->history()->build([])[0]->text;
+
+        self::assertStringContainsString('load_skill', $prompt);
+        self::assertStringContainsString("- import-prod: Importing a production from an external site.\n- merge-duplicates: Joining two entries of one production.", $prompt);
+    }
+
     public function testTheUserPageIsToldAlongWithTheMessage(): void
     {
-        $history = (new ConversationHistory())->build([
+        $history = $this->history()->build([
             $this->message(MessageRole::User, MessageKind::Text, 'Исправь год', [
                 'page' => ['url' => 'https://zxart.ee/eng/software/elite/', 'entityType' => 'prod', 'entityId' => 5],
             ]),
@@ -48,7 +57,7 @@ final class ConversationHistoryTest extends TestCase
 
     public function testAToolCallIsTheAssistantsCallAndItsResult(): void
     {
-        $history = (new ConversationHistory())->build([
+        $history = $this->history()->build([
             $this->message(MessageRole::Assistant, MessageKind::ToolCall, 'search', [
                 'callId' => 'call_1',
                 'tool' => 'search',
@@ -65,7 +74,7 @@ final class ConversationHistoryTest extends TestCase
 
     public function testAProposedPlanIsTheCallThatProposedIt(): void
     {
-        $history = (new ConversationHistory())->build([
+        $history = $this->history()->build([
             $this->message(MessageRole::Assistant, MessageKind::Plan, 'Fix the year', [
                 'callId' => 'call_2',
                 'arguments' => '{"title":"Fix the year","actions":[]}',
@@ -81,7 +90,7 @@ final class ConversationHistoryTest extends TestCase
 
     public function testPlanProgressIsToldAsANoteAndErrorsAreLeftOut(): void
     {
-        $history = (new ConversationHistory())->build([
+        $history = $this->history()->build([
             $this->message(MessageRole::Assistant, MessageKind::PlanProgress, 'Plan 12, action 1 (update_prod): done. {"id":5}'),
             $this->message(MessageRole::Assistant, MessageKind::Error, 'The model is unavailable'),
         ]);
@@ -94,6 +103,11 @@ final class ConversationHistoryTest extends TestCase
     /**
      * @param array<array-key, mixed>|null $payload
      */
+    private function history(): ConversationHistory
+    {
+        return new ConversationHistory(new SkillCatalogue(__DIR__ . '/../Skills/Fixtures/valid'));
+    }
+
     private function message(MessageRole $role, MessageKind $kind, string $text, ?array $payload = null): MessageDto
     {
         return new MessageDto(1, 1, 1, $role, $kind, $text, $payload, 0);

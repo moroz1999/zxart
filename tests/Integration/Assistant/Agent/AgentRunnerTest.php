@@ -189,7 +189,7 @@ final class AgentRunnerTest extends TestCase
             tools: $tools,
             requestBuilder: $this->container->get(ToolRequestBuilder::class),
             serializer: $this->container->get(SerializerInterface::class),
-            history: new ConversationHistory(),
+            history: $this->container->get(ConversationHistory::class),
             planProposer: $this->container->get(PlanProposer::class),
             writeTools: $this->container->get(WriteToolCatalogue::class),
             conversations: $this->container->get(ConversationsDbal::class),

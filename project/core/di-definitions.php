@@ -68,12 +68,15 @@ use ZxArt\Assistant\Tools\Web\ViewImageTool;
 use ZxArt\Assistant\Tools\Entities\GetProdTool;
 use ZxArt\Assistant\Tools\Entities\GetReleaseTool;
 use ZxArt\Assistant\Tools\Search\FindLocationsTool;
+use ZxArt\Assistant\Tools\Search\FindPartiesTool;
 use ZxArt\Assistant\Tools\Search\SearchAuthorsTool;
 use ZxArt\Assistant\Tools\Search\SearchGroupsTool;
 use ZxArt\Assistant\Tools\Search\SearchProdsTool;
 use ZxArt\Assistant\Tools\Search\SearchReleasesTool;
 use ZxArt\Assistant\Tools\Search\SearchTool;
 use ZxArt\Assistant\Tools\ToolRegistry;
+use ZxArt\Assistant\Tools\Skills\LoadSkillTool;
+use ZxArt\Assistant\Skills\SkillCatalogue;
 use ZxArt\Ai\Service\PressArticleParser;
 use ZxArt\Ai\Service\PressArticleSeo;
 use ZxArt\Ai\Service\ProdQueryService;
@@ -278,9 +281,12 @@ return [
     SerializerInterface::class => factory(static fn(): SerializerInterface => RequestDenormalizerFactory::create()),
 
     // the assistant's tools; a tool is listed here to be callable
+    SkillCatalogue::class => autowire()->constructor(dirname(__DIR__) . '/assistant-skills'),
     ToolRegistry::class => autowire()->constructor([
+        DI\get(LoadSkillTool::class),
         DI\get(SearchTool::class),
         DI\get(FindLocationsTool::class),
+        DI\get(FindPartiesTool::class),
         DI\get(SearchProdsTool::class),
         DI\get(SearchReleasesTool::class),
         DI\get(SearchAuthorsTool::class),
