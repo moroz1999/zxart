@@ -356,7 +356,9 @@ time limit, then the run continues in the same process.
   expanded to its JSON.
 - `AssistantPanelService` — open or closed, remembered per browser.
 - `AssistantStore` — the open conversation: a new one when the drawer starts,
-  created on the first message; messages merged by `seq`, plans and run
+  created on the first message and opened only once that message is sent,
+  together with its run — a fetch sent alongside the message would answer it
+  without the run and stop the polling; messages merged by `seq`, plans and run
   replaced from each poll; fetches a conversation once when it is opened and
   then polls every 2 s only while a run is active — an idle conversation
   changes only by the user's own send, approve or stop, which mark a run, and

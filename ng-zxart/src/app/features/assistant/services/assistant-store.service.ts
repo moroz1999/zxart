@@ -88,8 +88,9 @@ export class AssistantStore {
   send(text: string): Observable<void> {
     const page = this.pageContext.current();
     return this.conversationId().pipe(
-      switchMap(conversationId => this.api.send(conversationId, text, page)),
-      tap(started => this.markRunning(started.runId, 'chat')),
+      switchMap(conversationId => this.api.send(conversationId, text, page).pipe(
+        tap(started => this.markRunning(started.runId, 'chat', conversationId)),
+      )),
       map(() => undefined),
       catchError((error: unknown) => {
         this.fail(error);
@@ -169,15 +170,17 @@ export class AssistantStore {
     this.state.next(this.emptyState(null));
   }
 
+  /**
+   * The open conversation, or a new one created for the first message. A new
+   * one is not opened here: opening it fetches it, and a fetch sent alongside
+   * the message would answer it without the run and stop the polling.
+   */
   private conversationId(): Observable<number> {
     const current = this.state.getValue().conversationId;
     if (current !== null) {
       return of(current);
     }
-    return this.api.create().pipe(
-      map(conversation => conversation.id),
-      tap(id => this.state.next(this.emptyState(id))),
-    );
+    return this.api.create().pipe(map(conversation => conversation.id));
   }
 
   private merge(response: AssistantState): void {
@@ -202,9 +205,12 @@ export class AssistantStore {
     });
   }
 
-  private markRunning(runId: number, type: AssistantRun['type']): void {
+  /** Marks the run; a conversation not yet open is opened with it, so its first fetch already polls. */
+  private markRunning(runId: number, type: AssistantRun['type'], conversationId: number | null = null): void {
     const run: AssistantRun = {id: runId, type, status: 'running', steps: 0, error: null, startedAt: Date.now() / 1000, stopRequested: false};
-    this.state.next({...this.state.getValue(), activeRun: run, error: null});
+    const state = this.state.getValue();
+    const base = conversationId !== null && conversationId !== state.conversationId ? this.emptyState(conversationId) : state;
+    this.state.next({...base, activeRun: run, error: null});
   }
 
   private fail(error: unknown): void {

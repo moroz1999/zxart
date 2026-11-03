@@ -1,4 +1,4 @@
-import {firstValueFrom, of, throwError} from 'rxjs';
+import {firstValueFrom, of, Subject, throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {describe, expect, it, vi} from 'vitest';
 import {AssistantDataApiService} from '../../../shared/api/assistant-data-api.service';
@@ -63,6 +63,30 @@ describe('AssistantStore', () => {
     const view = await firstValueFrom(store.view$);
     expect(view.conversationId).toBe(8);
     expect(view.running).toBe(true);
+  });
+
+  it('opens a new conversation only once its first message is sent, so the opening fetch sees the run', async () => {
+    const run = {id: 3, type: 'chat' as const, status: 'running' as const, steps: 0, error: null, startedAt: 0, stopRequested: false};
+    const sent = new Subject<{runId: number}>();
+    const api = {
+      create: vi.fn().mockReturnValue(of({id: 8, title: '', createdAt: 0, lastMessageAt: 0})),
+      send: vi.fn().mockReturnValue(sent),
+      get: vi.fn().mockReturnValue(of(state({conversationId: 8, messages: [message(1)], activeRun: run}))),
+    };
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, pageContext);
+    const polling = store.polling$.subscribe();
+
+    const sending = firstValueFrom(store.send('Hello'), {defaultValue: undefined});
+    expect(api.get).not.toHaveBeenCalled();
+    sent.next({runId: 3});
+    sent.complete();
+    await sending;
+    polling.unsubscribe();
+
+    expect(api.get).toHaveBeenCalledWith(8, 0);
+    const view = await firstValueFrom(store.view$);
+    expect(view.running).toBe(true);
+    expect(view.items).toHaveLength(1);
   });
 
   it('shows why a request was refused', async () => {

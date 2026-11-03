@@ -56,32 +56,30 @@
       }
 
       <zx-inset padding="sm" class="ast-composer">
-        <form (ngSubmit)="submit()">
-          <zx-stack gap="sm">
-            <zx-textarea
-              [formControl]="text"
-              [rows]="3"
-              [placeholder]="(view.running ? 'assistant.placeholder-running' : 'assistant.placeholder') | translate"
-              (keydown)="onKeydown($event)"
-            ></zx-textarea>
-            <zx-inline gap="sm" align="center" justify="between">
-              <zx-inline class="ast-context" gap="xs" align="center">
-                <svg-icon name="file" class="ast-small-icon" aria-hidden="true"></svg-icon>
-                <span class="ast-context-text" appText="bodySm" tone="muted" [truncate]="true">
-                  {{ 'assistant.context' | translate: {title: pageTitle$ | async} }}
-                </span>
-              </zx-inline>
-              @if (view.running) {
-                <zx-button size="sm" color="outlined" (click)="stop()">
-                  <svg-icon name="stop" class="ast-small-icon" aria-hidden="true"></svg-icon>
-                  {{ 'assistant.stop' | translate }}
-                </zx-button>
-              } @else {
-                <zx-button type="submit" size="sm">{{ 'assistant.send' | translate }}</zx-button>
-              }
+        <zx-stack gap="sm">
+          <zx-textarea
+            [formControl]="text"
+            [rows]="3"
+            [placeholder]="(view.running ? 'assistant.placeholder-running' : 'assistant.placeholder') | translate"
+            (keydown)="onKeydown($event)"
+          ></zx-textarea>
+          <zx-inline gap="sm" align="center" justify="between">
+            <zx-inline class="ast-context" gap="xs" align="center">
+              <svg-icon name="file" class="ast-small-icon" aria-hidden="true"></svg-icon>
+              <span class="ast-context-text" appText="bodySm" tone="muted" [truncate]="true">
+                {{ 'assistant.context' | translate: {title: pageTitle$ | async} }}
+              </span>
             </zx-inline>
-          </zx-stack>
-        </form>
+            @if (view.running) {
+              <zx-button size="sm" color="outlined" (click)="stop()">
+                <svg-icon name="stop" class="ast-small-icon" aria-hidden="true"></svg-icon>
+                {{ 'assistant.stop' | translate }}
+              </zx-button>
+            } @else {
+              <zx-button size="sm" (click)="submit()">{{ 'assistant.send' | translate }}</zx-button>
+            }
+          </zx-inline>
+        </zx-stack>
       </zx-inset>
     }
   </zx-stack>
