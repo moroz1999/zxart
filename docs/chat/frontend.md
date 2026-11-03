@@ -84,7 +84,7 @@ is plain text.
 
 The debug icon on a tool call, a plan action or an error opens a large
 `zx-dialog` with the full JSON of the message's `payload` (arguments, result,
-preview, error), pretty-printed, with a copy button.
+state, error), pretty-printed, with a copy button.
 
 ## Polling
 

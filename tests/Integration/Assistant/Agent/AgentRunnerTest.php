@@ -11,6 +11,8 @@ use DI\Container;
 use Illuminate\Database\Connection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\SerializerInterface;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\ToolRegistry;
 use ZxArt\Assistant\Agent\AgentRunner;
 use ZxArt\Assistant\Agent\ConversationHistory;
 use ZxArt\Assistant\Agent\PlanProposer;
@@ -27,8 +29,7 @@ use ZxArt\Assistant\Llm\LlmException;
 use ZxArt\Assistant\Llm\LlmReplyDto;
 use ZxArt\Assistant\Llm\LlmRole;
 use ZxArt\Assistant\Llm\LlmToolCallDto;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
+use ZxArt\Assistant\Llm\LlmToolDto;
 
 /**
  * A run asks the model, calls the read tools it asks for, feeds the results
@@ -108,6 +109,45 @@ final class AgentRunnerTest extends TestCase
         self::assertStringContainsString('"name":"update_prod"', end($llm->askedWith[1])->text);
     }
 
+    public function testAReadActionOfTheAssistantIsCalledWithItsArguments(): void
+    {
+        $llm = new ScriptedLlmClient([
+            new LlmReplyDto('', [new LlmToolCallDto('call_1', 'echo', '{"text":"привет"}')], 100, 10),
+            new LlmReplyDto('', [new LlmToolCallDto('call_2', 'echo', '{"text":"привет","fields":true}')], 100, 10),
+            new LlmReplyDto('Понял', [], 100, 10),
+        ]);
+
+        $this->runAgent($llm, new ToolRegistry([new EchoAction()]));
+
+        self::assertSame('{"echoed":"привет"}', end($llm->askedWith[1])->text);
+        self::assertSame('Error: Unknown fields: fields', end($llm->askedWith[2])->text);
+        self::assertTrue($this->messages()[2]->payload['failed'] ?? null);
+    }
+
+    public function testTheReadActionsOfTheAssistantAreOfferedWithTheirSchemasAndItsWriteActionsAreNot(): void
+    {
+        $llm = new ScriptedLlmClient([new LlmReplyDto('Понял', [], 100, 10)]);
+
+        $this->runAgent($llm, new ToolRegistry([new EchoAction(), new RenameAction()]));
+
+        $offered = array_values(array_filter($llm->offered[0], static fn(LlmToolDto $tool): bool => $tool->name === 'echo'));
+        self::assertCount(1, $offered);
+        self::assertSame(Arguments::schema(EchoAction::SCHEMA), $offered[0]->parameters);
+        self::assertNotContains('rename_thing', $llm->offeredTools[0]);
+    }
+
+    public function testAWriteActionOfTheAssistantIsNotCalledOutsideAPlan(): void
+    {
+        $llm = new ScriptedLlmClient([
+            new LlmReplyDto('', [new LlmToolCallDto('call_1', 'rename_thing', '{"id":5}')], 100, 10),
+            new LlmReplyDto('Понял', [], 100, 10),
+        ]);
+
+        $this->runAgent($llm, new ToolRegistry([new RenameAction()]));
+
+        self::assertSame('Error: rename_thing changes the site; propose it in a plan', end($llm->askedWith[1])->text);
+    }
+
     public function testAFailedToolCallIsToldToTheModelAndTheRunGoesOn(): void
     {
         $llm = new ScriptedLlmClient([
@@ -131,7 +171,7 @@ final class AgentRunnerTest extends TestCase
             new LlmReplyDto('Понял', [], 100, 10),
         ]);
 
-        $this->runAgent($llm, new ToolRegistry([new EchoTool(), ...$this->container->get(ToolRegistry::class)->all()]));
+        $this->runAgent($llm, new ToolRegistry([new EchoAction(), ...$this->container->get(ToolRegistry::class)->all()]));
 
         self::assertSame('Error: update_prod changes the site; propose it in a plan', end($llm->askedWith[1])->text);
     }
@@ -183,11 +223,10 @@ final class AgentRunnerTest extends TestCase
     {
         $runs = $this->container->get(RunsDbal::class);
         $runId = $runs->start($this->conversationId, RunType::Chat, self::NOW);
-        $tools ??= new ToolRegistry([new EchoTool()]);
+        $tools ??= new ToolRegistry([new EchoAction()]);
         $runner = new AgentRunner(
             llm: $llm,
             tools: $tools,
-            requestBuilder: $this->container->get(ToolRequestBuilder::class),
             serializer: $this->container->get(SerializerInterface::class),
             history: $this->container->get(ConversationHistory::class),
             planProposer: $this->container->get(PlanProposer::class),

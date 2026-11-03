@@ -2285,7 +2285,6 @@
     "running": "Trabajando…",
     "approve": "Ejecutar el plan",
     "cancel": "Cancelar",
-    "created-in-step": "del paso {{step}}",
     "approve-confirm": {
       "title": "¿Aprobar el plan?",
       "message": "Se ejecutarán {{count}} acciones en orden.",

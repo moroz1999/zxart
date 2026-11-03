@@ -5,71 +5,34 @@ This document describes what exists.
 
 ## Tools
 
-`ZxArt\Assistant\Tools` holds what the assistant calls:
+Everything the assistant calls is an action (see [Actions](#actions)).
+`Actions\ToolRegistry` holds them by name, in the order given; two of one name
+are refused, an unknown name is an `UnknownToolException`. They are listed in
+`di-definitions.php`.
 
-- `Tool` — `name()` (snake case), `description()` (for the model),
-  `requestClass()` (the request DTO), `execute(request)` (a result DTO).
-  `ReadTool` and `WriteTool` extend it separately, so a listing of read tools
-  never holds a write; a `WriteTool` adds `preview(request): ChangePreviewDto`.
-- `ToolRegistry` — the tools by name, in the order given; two tools of one name
-  are refused, an unknown name is an `UnknownToolException`. The tools are
-  listed in `di-definitions.php`.
-- `JsonSchemaGenerator::forClass()` — the JSON Schema of a request DTO from its
-  constructor: the types the request deserializer reads (docblock first, then
-  the native type), `@param` descriptions, enums as their values, nested DTOs
-  and lists; a parameter without a default is required, and no other property
-  is allowed. A type with no schema (`mixed`, an untyped array) is a
-  `LogicException`.
-- `ToolRequestBuilder::build()` — the request DTO from a call's JSON arguments,
-  through the REST request serializer. Not JSON, not an object, a top-level
-  field the DTO does not have, a missing or mistyped field are a
-  `ToolArgumentsException` whose message names the field, for the model.
-- `Dto\ChangePreviewDto` — what a plan shows for a write: `ChangeKind`, the
-  target (`ChangeTargetDto`: type, id or the step that creates it, title), the
-  changed fields (`FieldChangeDto`: before and after, an entity value as an
-  `EntityMentionDto`), consequences in sentences, and the target's
-  modification time.
+Read actions besides the entity reads:
 
-Read tools so far:
-
-| Tool | Class | Service |
+| Action | Class | Service |
 |---|---|---|
-| `search` | `Search\SearchTool` | `EntitySearchService` (see [search.md](search.md#entity-phrase-search)); `types` is `SearchableType`, exactly the six types |
-| `find_locations` | `Search\FindLocationsTool` | `PlaceSearchService` |
-| `find_parties` | `Search\FindPartiesTool` | `Parties\Dbal\PartySearchDbal` (see [search.md](search.md#typed-searches)); `limit` is kept between 1 and 100 |
-| `search_prods` | `Search\SearchProdsTool` | `ProdSearchService`, then `FoundProdsReader` |
-| `search_releases` | `Search\SearchReleasesTool` | `ReleaseSearchService`, then `FoundReleasesReader` |
-| `search_authors` | `Search\SearchAuthorsTool` | `AuthorSearchService`, then `FoundAuthorsReader` |
-| `search_groups` | `Search\SearchGroupsTool` | `GroupSearchService`, then `FoundGroupsReader` |
-| `find_tags` | `Catalogues\FindTagsTool` | `Tags\Dbal\TagSearchDbal` (see [search.md](search.md#typed-searches)) |
-| `list_categories` | `Catalogues\ListCategoriesTool` | `CategoryManageService::getTree()`: id, parent, level, title, productions of the subtree |
-| `list_hardware` | `Catalogues\ListHardwareTool` | `HardwareCatalogService`: codes by group, named in the current language |
-| `list_options` | `Catalogues\ListOptionsTool` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
-| `get_prod`, `get_release`, `get_author`, `get_author_alias`, `get_group`, `get_group_alias` | `Entities\Get<Entity>Tool` | `<Entity>CardReader` in the entity's module |
-| `load_skill` | `Skills\LoadSkillTool` | `Assistant\Skills\SkillCatalogue` (see [Skills](#skills)) |
-| `fetch_url` | `Web\FetchUrlTool` | `Shared\Http\PageFetcher` |
-| `view_image` | `Web\ViewImageTool` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
+| `search` | `Search\SearchAction` | `EntitySearchService` (see [search.md](search.md#entity-phrase-search)); `types` is `SearchableType`, exactly the six types |
+| `find_locations` | `Search\FindLocationsAction` | `PlaceSearchService` |
+| `find_parties` | `Search\FindPartiesAction` | `Parties\Dbal\PartySearchDbal` (see [search.md](search.md#typed-searches)) |
+| `search_prods` | `Prods\SearchProdsAction` | `ProdSearchService`, then `FoundProdsReader` |
+| `search_releases` | `Releases\SearchReleasesAction` | `ReleaseSearchService`, then `FoundReleasesReader` |
+| `search_authors` | `Authors\SearchAuthorsAction` | `AuthorSearchService`, then `FoundAuthorsReader` |
+| `search_groups` | `Groups\SearchGroupsAction` | `GroupSearchService`, then `FoundGroupsReader` |
+| `find_tags` | `Catalogues\FindTagsAction` | `Tags\Dbal\TagSearchDbal` (see [search.md](search.md#typed-searches)) |
+| `list_categories` | `Catalogues\ListCategoriesAction` | `CategoryManageService::getTree()`: id, parent, level, title, productions of the subtree |
+| `list_hardware` | `Catalogues\ListHardwareAction` | `HardwareCatalogService`: codes by group, named in the current language |
+| `list_options` | `Catalogues\ListOptionsAction` | `LegalStatus`, `ReleaseTypes`, `ReleaseFormatsProvider`, `LanguageCodes`, `GroupTypes`, `AuthorshipRoles`, `GroupMemberRoles` |
+| `load_skill` | `Skills\LoadSkillAction` | `Assistant\Skills\SkillCatalogue` (see [Skills](#skills)) |
+| `fetch_url` | `Web\FetchUrlAction` | `Shared\Http\PageFetcher` |
+| `view_image` | `Web\ViewImageAction` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
 
-The `get_*` tools take `Dto\EntityIdRequestDto` (`id`) and answer a card
-(`<Entity>CardDto`) built for an edit:
-
-- `fields` — the entity's `<Entity>FieldsDto` from its fields reader, the very
-  shape its writes take;
-- `refs` — `EntityRefDto` of every entity the fields name by id (party,
-  categories, groups, publishers, series and compilation items, production,
-  country, city, subgroups, the owner of an alias), from `EntityRefsReader`,
-  which leaves out an id of nothing;
-- production: credited authors (`CreditDto`), its releases as
-  `FoundReleaseDto`, the files of every list (`ListedFileDto`: kind, id, file
-  name, from `ListedFilesReader`), the series and compilations it is part of;
-- release: credited authors, files, the release file's name and size, the
-  hardware and languages of its production;
-- author and group: aliases with dates (`AliasDto`), memberships from their own
-  side (`MembershipDto`: the other side's ref, roles, dates, from
-  `MembershipsReader`) — an alias's are on its own card — and the counters the
-  public page shows (`AuthorDetailsService::getCounters()`,
-  `GroupDetailsService::getCounters()`); a group also has the groups it is a
-  subgroup of.
+The catalogue lists take no arguments (`NoArgumentsDto`: no properties, none
+allowed); `OpenAiLlmClient` sends such a schema's `properties` as an empty
+object. Every `limit` is 20 when not given and kept between 1 and 100
+(`PageArguments::limit()`).
 
 Links that other entities make to the read one (series, compilations, parent
 groups) are read from `structure_links` through `StructureLinksDbal`, not from
@@ -99,63 +62,16 @@ the checked address, the bodies of redirects are dropped and the body of the
 last response goes to a consumer that can stop the transfer at a limit. A
 refused address or a failed transfer is `HttpRequestRefusedException`.
 
-Write tools, in `Prods\`, `Releases\`, `Authors\`, `AuthorAliases\`,
-`Groups\`, `GroupAliases\`:
-
-| Entity | Tools |
-|---|---|
-| prod | `create_prod`, `update_prod`, `delete_prod`, `join_prods`, `set_prod_author`, `remove_prod_author`, `add_prod_files`, `delete_prod_file` |
-| release | `create_release`, `update_release`, `delete_release`, `set_release_author`, `remove_release_author`, `add_release_files`, `delete_release_file`, `set_release_file` |
-| author | `create_author`, `update_author`, `delete_author`, `join_authors`, `convert_author_to_group` |
-| author alias | `create_author_alias`, `update_author_alias`, `delete_author_alias`, `join_author_aliases`, `convert_author_alias_to_author` |
-| group | `create_group`, `update_group`, `delete_group`, `join_groups`, `convert_group_to_author`, `set_group_member`, `remove_group_member` |
-| group alias | `create_group_alias`, `update_group_alias`, `delete_group_alias`, `join_group_aliases`, `convert_group_alias_to_group`, `set_group_alias_member`, `remove_group_alias_member` |
-
-`preview()` reads the state through `<Entity>StateService` and answers what
-would change; it does not check privileges or input rules, so an action the
-handler would refuse is previewed and fails when it runs. `execute()` builds the
-command of its use case, calls `handle()` (see
-[php/entity-writes.md](../php/entity-writes.md#use-cases)) and answers the handler's result: `{id}` — of the new entity for a
-create or a conversion — or, for added files, `AddedFilesDto` (`id`,
-`fileIds`).
-
-- `create_*` / `update_*` take the entity's `<Entity>FieldsDto` as `fields`
-  (an update also `id`): only the fields given change, a list given replaces
-  the list. Their rows come from `Previews\FieldChanges::diff()` — a row per
-  given field that differs from the state (every given field for a create).
-  The fields of entity ids and of dates are listed per fields DTO in
-  `FieldChanges`: ids show mentions (`Previews\Mentions`; an id of nothing
-  stays a number, 0 is no value), dates the day (`Previews\Dates`, `Y-m-d`);
-  an enum shows its value, every other field as it is (`zxTunesId` is a
-  number).
-- `delete_*`, `convert_*` take `Dto\EntityIdRequestDto`. A delete's
-  consequences name what the entity holds: a production's releases, an
-  author's or alias's credits (the public page's counters) and aliases, a
-  group's or group alias's members, productions made and publications
-  (`Previews\Quantities::phrase()`). A conversion says the entity is deleted
-  and what the new one of the same title takes.
-- `join_*` (`mainId`, `joinedId`; `releasesOnly` for productions, `asAlias` for
-  authors and groups) previews the joined entity's deletion and what moves,
-  as sentences with `[[type:id]]` mentions (`EntityMentionDto::text()`).
-- `set_*_author` / `set_*_member` and their `remove_*` show the author coming
-  or going, its roles and, for group members, the dates
-  (`Previews\CreditChanges`). Removing someone not credited is refused at the
-  preview (`404`).
-- `add_*_files` (`kind` of the entity's file kinds, `urls`) shows the list
-  with the URLs appended; `delete_*_file` the list without the file;
-  `set_release_file` (`url`, optional `fileName`) the release file's name
-  before and after.
-
-The modification time in a preview is the target's (the main entity's for a
-join); a create has none.
-
-A tool without input has an empty request DTO; its schema's `properties` is
-an empty object.
-
-The four typed searches take `{filter, limit, offset}`: `filter` is the
-service's own filter DTO (see [search.md](search.md#typed-searches)), so the
-schema the model sees is the one the search reads; `limit` is kept between 1
-and 100. They answer the total and one page of summaries, in the order the
+The four typed searches take the fields of their filter flat, beside `limit`
+and `offset` (`PageArguments`), and build the service's own filter DTO from
+them (see [search.md](search.md#typed-searches)). The production filter is
+written once (`Prods\ProdFilterArguments`: its properties, its schema and the
+DTO built from them): `search_prods` takes its fields, the release, author and
+group searches nest it as `prods`. The dates of adding a production are not
+offered. Closed lists — legal statuses, release types, roles, group types, how
+an entity is linked to a production — are `enum`s in the schema; language,
+hardware and format codes are strings from `list_options` and
+`list_hardware`. They answer the total and one page of summaries, in the order the
 search found them. A summary (`Found<Entity>Dto`, read by
 `Found<Entities>Reader` in the entity's module) names related entities as
 `Shared\References\EntityRefDto` (type, id, title, from `EntityRefs::of()`)
@@ -169,13 +85,150 @@ roles, from `CreditsReader`):
 - author: real name, country, city, aliases, groups;
 - group: abbreviation, type, country, city, aliases.
 
-Tests: `tests/Assistant/Tools/` (schema, request building, registry, each tool
-with its services mocked), `tests/Integration/Assistant/ToolCallTest.php` (a
-call resolved from the container and built from JSON, a nested filter among
-them) `tests/Integration/Entities/FoundEntitiesTest.php` (the summaries) and
-`tests/Integration/Entities/EntityCardsTest.php` (the cards);
-`tests/Integration/Assistant/*WriteToolsTest.php` (previews and writes of
-the write tools, refusals when they run, over `WriteToolTestCase`); `tests/Shared/Http/` and
+### Actions
+
+An action is a tool of the assistant's own, in `ZxArt\Assistant\Actions`:
+`Action` — `name()`, `description()`, `schema()`: the JSON Schema of its
+arguments as a string. `ReadAction::read(Arguments)` answers a result DTO;
+`WriteAction` adds `kind()` (`ChangeKind`), `entityType()`,
+`state(Arguments)` — the target as it is now, null for a create — and
+`write(Arguments)`, which builds the use case's command and answers its
+`{id}`.
+
+Each action has an arguments DTO (`<Action>ArgumentsDto`; `IdArgumentsDto` for
+`{id}`): its `SCHEMA` constant is the schema, written as JSON beside the
+constructor, with only the fields the task needs and
+`additionalProperties: false`; `from(Arguments)` builds the DTO field by field.
+The action returns that constant from `schema()` and reads its arguments
+through the DTO.
+
+`Arguments::parse(json, schema)` refuses what is not a JSON object, a field the
+schema does not have (`Unknown fields: …`) and a required one missing; `id()`,
+`requiredText()`, `number()`, `text()`, `flag()`, `ids()`, `texts()` read a
+value by its type and refuse another type, naming the field; `oneOf()` and
+`textsOf()` read a text, or texts, of a closed list and refuse any other;
+`object()` reads a nested object as arguments of its own schema, naming its
+fields by their path (`prods.title`). All are `ToolArgumentsException`s, told
+to the model. `Arguments::schema()` decodes a schema for whoever needs it
+as an array: the tool list offered to the model and `describe_write_tool`.
+
+The author actions, in `Assistant\Authors`, answer and show the assistant's own
+DTOs, built by `AuthorDtos` from the element:
+
+- `AuthorDto` — `id`, `title` (the nickname), `realName`, `countryId`,
+  `cityId`, `wikiLink`, `refs` (the country and city), `aliases` (`AliasDto`),
+  `groups` (`MembershipDto`), `counters` (`AuthorDetailsService::getCounters()`);
+- `AuthorAliasDto` — `id`, `title`, `authorId`, `startDate`, `endDate` (Unix
+  timestamps, 0 unknown), `refs` (the author), `groups`, `counters`.
+
+The group actions, in `Assistant\Groups`, the same way through `GroupDtos`:
+
+- `GroupDto` — `id`, `title`, `abbreviation`, `type` (`GroupTypes`),
+  `countryId`, `cityId`, `website`, `wikiLink`, `slogan`, `startDate`,
+  `endDate`, `subGroupIds`, `refs` (the country, city and subgroups),
+  `aliases`, `members` (`MembershipDto`), `parentGroups` (from
+  `structure_links`, `StructureLinksDbal::parentIds()`), `counters`
+  (`GroupDetailsService::getCounters()`);
+- `GroupAliasDto` — `id`, `title`, `groupId`, `startDate`, `endDate`, `refs`
+  (the group), `members`, `counters`.
+
+The production actions, in `Assistant\Prods`, through `ProdDtos`:
+
+- `ProdDto` — `id`, `title`, `altTitle`, `year`, `description`,
+  `instructions`, `legalStatus` (`LegalStatus`), `externalLink`, `youtubeId`,
+  `partyId`, `partyPlace`, `compo`, `languages`, `hardware`, `categoryIds`,
+  `groupIds` (groups and group aliases), `publisherIds` (groups, authors and
+  their aliases), `tags`, `compilationItemIds` (productions and releases),
+  `seriesProdIds`, `refs` (what the ids name), `authors` (`CreditDto`),
+  `releases` (`FoundReleaseDto`), `files` (`ListedFileDto`: kind, id, file
+  name), `inSeries`, `inCompilations` (from `structure_links`).
+
+The release actions, in `Assistant\Releases`, through `ReleaseDtos`:
+
+- `ReleaseDto` — `id`, `title`, `year`, `version`, `description`,
+  `releaseType` (`ReleaseTypes`), `releaseFormats`, `languages`, `hardware`,
+  `publisherIds`, `prodId`, `refs` (the publishers and the production),
+  `authors`, `files` (`ListedFileDto` of the release's file kinds),
+  `fileName`, `fileSize` (null when the release has no file or it is not
+  stored on this server), `prodHardware`, `prodLanguages` (of its
+  production).
+
+The deny flags and the HTML flags of the description and instructions are not
+offered; a text written by the assistant keeps the flag stored.
+
+The fields carry the names the write actions take, so a plan finds what each
+argument replaces in the state by its name.
+
+| Action | Arguments | State |
+|---|---|---|
+| `get_author`, `get_author_alias` | `id` | — |
+| `create_author` | `title`, `realName`, `countryId`, `cityId`, `wikiLink` | none |
+| `update_author` | `id` and the fields of `create_author` | the author |
+| `delete_author`, `convert_author_to_group` | `id` | the author |
+| `join_authors` | `mainId`, `joinedId`, `asAlias` | the joined author |
+| `create_author_alias` | `authorId`, `title`, `startDate`, `endDate` | none |
+| `update_author_alias` | `id` and the fields of `create_author_alias` | the alias |
+| `delete_author_alias`, `convert_author_alias_to_author` | `id` | the alias |
+| `join_author_aliases` | `mainId`, `joinedId` | the joined alias |
+| `get_group`, `get_group_alias` | `id` | — |
+| `create_group` | `title`, `abbreviation`, `type`, `countryId`, `cityId`, `website`, `wikiLink`, `slogan`, `startDate`, `endDate`, `subGroupIds` | none |
+| `update_group` | `id` and the fields of `create_group` | the group |
+| `delete_group`, `convert_group_to_author` | `id` | the group |
+| `join_groups` | `mainId`, `joinedId`, `asAlias` | the joined group |
+| `set_group_member` | `groupId`, `authorId`, `roles`, `startDate`, `endDate` | the group |
+| `remove_group_member` | `groupId`, `authorId` | the group |
+| `create_group_alias` | `groupId`, `title`, `startDate`, `endDate` | none |
+| `update_group_alias` | `id` and the fields of `create_group_alias` | the alias |
+| `delete_group_alias`, `convert_group_alias_to_group` | `id` | the alias |
+| `join_group_aliases` | `mainId`, `joinedId` | the joined alias |
+| `set_group_alias_member` | `aliasId`, `authorId`, `roles`, `startDate`, `endDate` | the alias |
+| `remove_group_alias_member` | `aliasId`, `authorId` | the alias |
+| `get_prod` | `id` | — |
+| `create_prod` | `title`, `altTitle`, `year`, `description`, `instructions`, `legalStatus`, `externalLink`, `youtubeId`, `partyId`, `partyPlace`, `compo`, `languages`, `hardware`, `categoryIds`, `groupIds`, `publisherIds`, `tags`, `compilationItemIds`, `seriesProdIds` | none |
+| `update_prod` | `id` and the fields of `create_prod` | the production |
+| `delete_prod` | `id` | the production |
+| `join_prods` | `mainId`, `joinedId`, `releasesOnly` | the joined production |
+| `set_prod_author` (link) | `prodId`, `authorId`, `roles` | the production |
+| `remove_prod_author` (unlink) | `prodId`, `authorId` | the production |
+| `add_prod_files` (attachFile) | `prodId`, `kind` (`ProdFileKind`), `urls` | the production |
+| `delete_prod_file` (deleteFile) | `prodId`, `fileId` | the production |
+| `get_release` | `id` | — |
+| `create_release` | `title`, `prodId`, `year`, `version`, `description`, `releaseType`, `releaseFormats`, `languages`, `hardware`, `publisherIds` | none |
+| `update_release` | `id` and the fields of `create_release` | the release |
+| `delete_release` | `id` | the release |
+| `set_release_author` (link) | `releaseId`, `authorId`, `roles` | the release |
+| `remove_release_author` (unlink) | `releaseId`, `authorId` | the release |
+| `add_release_files` (attachFile) | `releaseId`, `kind` (`ReleaseFileKind`), `urls` | the release |
+| `delete_release_file` (deleteFile) | `releaseId`, `fileId` | the release |
+| `set_release_file` (attachFile) | `releaseId`, `url`, `fileName` | the release |
+
+Adding files answers `AddedFilesDto` (`id`, `fileIds`); every other write
+`{id}` — of the new entity for a create or a conversion.
+
+`set_*_member` is a link and `remove_*_member` an unlink; `roles` replace the
+member's roles, a list given for `subGroupIds` replaces the stored one.
+
+A field not given is left as it is (`null` in the use case's fields DTO); an
+empty text or 0 clears it. The author's other settings (display flags, deny
+flags, music settings) are not offered.
+
+Tests: `tests/Assistant/Actions/ArgumentsTest.php`,
+`tests/Integration/Assistant/AuthorActionsTest.php`,
+`tests/Integration/Assistant/GroupActionsTest.php`,
+`tests/Integration/Assistant/ProdActionsTest.php`,
+`tests/Integration/Assistant/ReleaseActionsTest.php` (schemas, kinds, states,
+writes, refusals, over `WriteToolTestCase`); the file actions in
+`FileWriteToolsTest`; `tests/Integration/Entities/EntityDtosTest.php` (an id of
+nothing).
+
+Tests: `tests/Assistant/<Area>/` (the read actions with their services
+mocked: schemas, the filters built from the arguments, limits, refusals),
+`tests/Assistant/Actions/` (`Arguments`, the registry),
+`tests/Integration/Assistant/ToolCallTest.php` (calls resolved from the
+container and parsed from JSON, a nested filter among them, and every schema
+closed at every depth), `tests/Integration/Entities/FoundEntitiesTest.php`
+(the summaries);
+`tests/Shared/Http/` and
 `tests/Shared/Images/` fetch from PHP's built-in
 server (`tests/Doubles/Http/LocalFileServer`) behind `LoopbackUrlGuard`.
 
@@ -205,8 +258,9 @@ Each table has a Dbal class in `Assistant\Chat\Dbal`:
 client polls for everything after the last `seq` it holds.
 
 A plan action as stored: `tool`, `arguments` (the JSON as written),
-`preview` (the normalized `ChangePreviewDto`, or null), `dependsOn` (the
-actions it takes ids from), `status` (`PlanActionStatus`), `result`, `error`.
+`dependsOn` (the actions it takes ids from), `status` (`PlanActionStatus`),
+`result`, `error`, `kind`, `entityType` and `state` (the normalized state DTO,
+or null for a create and for an action that takes an id from an earlier one).
 
 ### The model
 
@@ -241,7 +295,8 @@ environment variable (`docker-compose.yml` takes it from `.env`).
    plan as the `propose_plan` call; plan progress as a system note; errors left
    out. The page a user wrote from is appended to their message. Images a tool
    showed are not kept.
-2. The model is offered every **read** tool, with its request's JSON schema,
+2. The model is offered every **read** tool, with its request's JSON schema
+   (a read action with its own),
    `describe_write_tool` and `propose_plan`. Each reply is stored first — prose as a `text`
    message, each call as a `toolCall` message with its result — then the
    results are fed back. A failed call (unknown tool, bad arguments, a write
@@ -268,25 +323,25 @@ conversation as that call's result. An unknown name is an
 ### Plans
 
 `Agent\PlanProposer` handles `propose_plan` (`title`, `actions` of `tool` and
-`arguments`). Its description lists the write tools by name only
+`arguments`, no other field at either level). Its description lists the write tools by name only
 (`Agent\WriteToolCatalogue`); the model reads what one does and its argument schema with
 `describe_write_tool` before it writes the tool into a plan, so the descriptions and schemas of
 some thirty write tools do not ride along with every request.
 Each action must name a write tool; `{"$ref": N}` in place of an id takes the
 id action N creates, and must point to an earlier action (`PlanReferences`).
-An action without references is built and previewed; when its arguments do not
-fit the tool or its preview finds nothing to change (an id of nothing), the plan
-is refused and the reason goes back to the model. The privileges and rules of
-the use case are not checked before the plan runs. An action with
-references is not previewed, because what it refers to does not exist yet.
+An action without references has its arguments checked against its schema
+and its state read; when the arguments do not fit or the state finds nothing
+(an id of nothing), the plan is refused and the reason goes back to the model.
+An action with references has neither, because what it refers to does not
+exist yet. The privileges and rules of the use case are not checked before the
+plan runs: the use case refuses in `handle()`.
 
 `Agent\PlanExecutor` runs an approved plan: each action through its write tool,
 references resolved from the earlier results' `id`, stopping at the first
 failure, or before the next action once the run is asked to stop (the rest are
-`skipped`, the plan `failed` or `stopped`). Each outcome is saved on the plan
-and told as a `planProgress` message. An action proposed without a preview,
-because it refers to an earlier one, is previewed right before it runs, with
-the ids in place, and that preview is saved on it. Unless it was stopped, a `chat` run
+`skipped`, the plan `failed` or `stopped`); an action writes from its
+arguments, the ids in place, parsed by its schema. Each outcome is saved on the
+plan and told as a `planProgress` message. Unless it was stopped, a `chat` run
 follows at once, so the assistant sums up what came of the plan; a failed
 action reaches it with its error, and the prompt tells it to fix the cause and
 propose a new plan of the actions left.
@@ -302,8 +357,12 @@ supersedes a proposed plan and starts a `chat` run; `approvePlan` marks the plan
 `executing` and starts an `execute` run; `cancelPlan` ends a proposed plan
 `cancelled` and tells it as a `planProgress` message, without a run. `state()` answers the messages after a
 `seq`, every plan, the active run and `refs` — the entities that the messages'
-`[[type:id]]` and the plans' previews mention, and those the plans' done
-actions created (the preview target's type, the result's `id`), found by
+`[[type:id]]` mention, an action's target and what it created (its
+`entityType`, the `id` of its state and of its result), the refs its state
+holds, and the ids its arguments and its state name in fields `<name>Id(s)`. Such a name tells no type
+(`groupIds` holds group aliases too, `publisherIds` authors as well), so
+`Chat\Mentions` reads those ids through `EntityRefsReader` and mentions each
+as what it is, leaving out an id of nothing. All are found by
 `EntityMentionLookup`: productions, releases, authors, groups and their
 aliases, categories, parties, countries and cities.
 
@@ -336,15 +395,19 @@ time limit, then the run continues in the same process.
   tool and what it was about. It is open while the run adds to it; "Details"
   shows each call's JSON.
 - `AssistantPlanComponent` — the plan's status chip (the steps done, the step
-  it stopped at), a `zx-step` per action: the entity type, the target (a link
-  once it exists, also for what the plan created), the kind of change, the
-  changed fields, consequences, an error, the step a skipped one waited for.
-  An action without a preview shows its arguments instead (its `fields`
-  opened), the title its fields give as the target, and an id it takes from an
-  earlier step as that step's target with the step's number, a link once the
-  step has created it.  An argument named `<type>Id(s)` after an entity type
-  names that entity with its title and id (the state's `refs` hold it); an
-  image address (png, jpg, gif, webp) shows as a small image.
+  it stopped at), a `zx-step` per action: its kind and entity type, its target
+  by the state's title (a link once known, also for what the plan created; a
+  create's by its `title` argument), each argument but `id` beside the value
+  the state held under that name, dates as days, an error, the step a skipped
+  one waited for, and for a delete, join or conversion the state's non-zero
+  counters, releases and aliases as consequences. An id taken from an earlier
+  step shows as that step's target with its number, a link once the step has
+  created it. An argument named `<name>Id(s)` names the entity of that id with
+  its title and id, found among the refs by the id alone (ids are unique
+  across the site), else `#id`; an image address (png, jpg, gif, webp) shows
+  as a small image. Adding files shows the files of that list in the state
+  before the addresses; deleting a file names it by its file name; setting the
+  release file shows the stored file name before the address.
   While the plan waits: "Run the plan", behind a confirm dialog that counts the
   destructive actions, and "Cancel".
 - `AssistantMarkdownComponent` — the assistant's prose: `marked`, loaded in a
@@ -375,12 +438,12 @@ The components are built from the design system only: layout through
 messages in tinted flat `zx-panel`s (`surface` `primary` for the user, `muted`
 for the assistant), plans and expanded JSON in flat panels too, steps in
 `zx-steps`, statuses and kinds in `zx-chip`s, JSON in `zx-preformatted`,
-preview rows in `zx-item-data`, controls as `zx-button`. Their SCSS keeps only
+action rows in `zx-item-data`, controls as `zx-button`. Their SCSS keeps only
 the drawer's contour and scrolling; the drawer's own tokens are in
 `shared/theme/_zx-assistant.theme.scss`.
 
 Tests: `tests/Integration/Assistant/Chat/` (storage, the service),
 `tests/Integration/Assistant/Agent/` (the run with a scripted model, plans
-proposed and executed with real write tools), `tests/Assistant/Agent/`
+proposed and executed with real actions), `tests/Assistant/Agent/`
 (history), `tests/Assistant/Llm/` (the OpenAI request and reply over the
 client's fake); the specs next to the panel's services.

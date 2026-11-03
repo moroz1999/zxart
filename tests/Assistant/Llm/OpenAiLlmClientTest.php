@@ -152,6 +152,21 @@ final class OpenAiLlmClientTest extends TestCase
         ]);
     }
 
+    public function testAToolWithoutArgumentsIsSentWithItsPropertiesAsAnObject(): void
+    {
+        $client = new ClientFake([CreateResponse::fake()]);
+
+        $this->client($client)->complete(
+            [new LlmMessageDto(LlmRole::User, 'List')],
+            [new LlmToolDto('list_options', 'Lists', ['type' => 'object', 'properties' => [], 'additionalProperties' => false])],
+            7,
+            1,
+        );
+
+        $client->assertSent(Responses::class, static fn(string $method, array $parameters): bool => $method === 'create'
+            && json_encode($parameters['tools'][0]['parameters']) === '{"type":"object","properties":{},"additionalProperties":false}');
+    }
+
     public function testTheAnswerIsReadWithItsToolCallsAndTokens(): void
     {
         $client = new ClientFake([CreateResponse::fake([

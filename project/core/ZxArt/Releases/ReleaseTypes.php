@@ -21,7 +21,7 @@ enum ReleaseTypes: string
     case demoversion = 'demoversion';
 
     /**
-     * @return array<string>
+     * @return list<string>
      */
     public static function getAllValues(): array
     {

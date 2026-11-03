@@ -81,8 +81,10 @@ rows the database then holds (`EntityWriteTestCase`):
 - joins are covered through the join use cases: what moves, what is deleted,
   and the refused privilege;
 - reads are checked in the process that wrote: each `*WritesTest` reads back
-  what a create and an update wrote through the entity's fields reader, and
-  `EntityStatesTest` checks each state service against what the test set up;
+  what a create and an update wrote through the entity's fields reader (for
+  the entities that have one), the `*ActionsTest`s check each assistant DTO
+  against what the test set up, and `EntityDtosTest` that an id of nothing is
+  refused;
   `EntitySearchTest` and `EntityMentionLookupTest` search and look up what the
   test wrote;
 - what a test refers to — authors, groups, productions — it creates; only

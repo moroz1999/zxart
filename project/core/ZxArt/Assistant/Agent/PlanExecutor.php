@@ -9,6 +9,8 @@ use JsonException;
 use RuntimeException;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\WriteAction;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
 use ZxArt\Assistant\Chat\Dbal\PlansDbal;
@@ -16,22 +18,18 @@ use ZxArt\Assistant\Chat\Dbal\RunsDbal;
 use ZxArt\Assistant\Chat\MessageKind;
 use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Chat\PlanStatus;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
-use ZxArt\Assistant\Tools\WriteTool;
+use ZxArt\Assistant\Actions\ToolRegistry;
 
 /**
- * Runs an approved plan's actions in order, each through its write tool, and
- * stops at the first that fails, or before the next one once the user asks the
- * run to stop. Every action's outcome is stored on the plan and told in the
- * conversation. An action the proposal could not preview, because it takes an
- * id an earlier one created, is previewed now, with that id in place.
+ * Runs an approved plan's actions in order, each through its write action with
+ * the ids earlier actions created in place, and stops at the first that fails,
+ * or before the next one once the user asks the run to stop. Every action's
+ * outcome is stored on the plan and told in the conversation.
  */
 final readonly class PlanExecutor
 {
     public function __construct(
         private ToolRegistry $tools,
-        private ToolRequestBuilder $requestBuilder,
         private SerializerInterface $serializer,
         private PlanReferences $references,
         private PlansDbal $plans,
@@ -65,11 +63,8 @@ final readonly class PlanExecutor
             }
             $toolName = (string)$action['tool'];
             try {
-                [$result, $preview] = $this->run($toolName, (string)$action['arguments'], $results, $action['preview'] === null);
+                $result = $this->run($toolName, (string)$action['arguments'], $results);
                 $results[$number] = $result;
-                if ($preview !== null) {
-                    $actions[$index]['preview'] = $preview;
-                }
                 $actions[$index]['status'] = PlanActionStatus::Done->value;
                 $actions[$index]['result'] = $result;
                 $outcome = 'done. ' . json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
@@ -103,16 +98,16 @@ final readonly class PlanExecutor
 
     /**
      * @param array<int, array<array-key, mixed>> $results
-     * @return array{array<array-key, mixed>, ?array<array-key, mixed>} the result, and the preview when asked for
+     * @return array<array-key, mixed> the result
      * @throws Exception
      */
-    private function run(string $toolName, string $arguments, array $results, bool $withPreview): array
+    private function run(string $toolName, string $arguments, array $results): array
     {
         $tool = $this->tools->get($toolName);
-        if (!$tool instanceof WriteTool) {
+        if (!$tool instanceof WriteAction) {
             throw new PlanRefusedException("$toolName does not change the site");
         }
-        $resolved = $this->references->resolve(
+        $resolved = json_encode($this->references->resolve(
             json_decode($arguments, false, 512, JSON_THROW_ON_ERROR),
             static function (int $action) use ($results): int {
                 $id = $results[$action]['id'] ?? null;
@@ -121,11 +116,8 @@ final readonly class PlanExecutor
                 }
                 return $id;
             },
-        );
-        $request = $this->requestBuilder->build($tool->requestClass(), json_encode($resolved, JSON_THROW_ON_ERROR));
-        $preview = $withPreview ? $this->normalize($tool->preview($request)) : null;
-
-        return [$this->normalize($tool->execute($request)), $preview];
+        ), JSON_THROW_ON_ERROR);
+        return $this->normalize($tool->write(Arguments::parse($resolved, $tool->schema())));
     }
 
     /**

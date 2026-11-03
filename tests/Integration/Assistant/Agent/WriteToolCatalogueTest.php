@@ -44,11 +44,25 @@ final class WriteToolCatalogueTest extends TestCase
 
     public function testDescribingAWriteToolAnswersTheSchemaOfItsArguments(): void
     {
-        $schema = json_decode($this->catalogue->describe('{"name":"update_prod"}'), true, 512, JSON_THROW_ON_ERROR);
+        $schema = json_decode($this->catalogue->describe('{"name":"update_release"}'), true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertSame('update_prod', $schema['name']);
+        self::assertSame('update_release', $schema['name']);
         self::assertStringStartsWith('Changes the fields', $schema['description']);
-        self::assertSame('object', $schema['arguments']['properties']['fields']['type']);
+        self::assertSame(['id', 'title', 'year', 'version', 'description', 'releaseType', 'releaseFormats', 'languages', 'hardware', 'publisherIds', 'prodId'], array_keys($schema['arguments']['properties']));
+    }
+
+    public function testDescribingAnActionOfTheAssistantAnswersItsOwnSchema(): void
+    {
+        $schema = json_decode($this->catalogue->describe('{"name":"update_author"}'), true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertSame('update_author', $schema['name']);
+        self::assertSame(['id', 'title', 'realName', 'countryId', 'cityId', 'wikiLink'], array_keys($schema['arguments']['properties']));
+    }
+
+    public function testTheListNamesTheActionsOfTheAssistantToo(): void
+    {
+        self::assertStringContainsString('update_author', $this->catalogue->list());
+        self::assertContains('update_author', $this->catalogue->describeTool()->parameters['properties']['name']['enum']);
     }
 
     public function testOnlyAWriteToolIsDescribed(): void

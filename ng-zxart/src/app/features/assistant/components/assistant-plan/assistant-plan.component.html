@@ -23,9 +23,6 @@
                 </zx-chip>
               }
             </zx-inline>
-            @if (action.targetCreatedInStep !== null) {
-              <span appText="bodySm" tone="muted">{{ 'assistant.created-in-step' | translate: {step: action.targetCreatedInStep} }}</span>
-            }
             @if (action.changes.length > 0) {
               <zx-item-data>
                 @for (change of action.changes; track change.field) {

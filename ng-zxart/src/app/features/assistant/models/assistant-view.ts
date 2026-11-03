@@ -27,15 +27,12 @@ export interface AssistantPlanActionView {
   number: number;
   tool: string;
   marker: ZxStepStatus;
-  /** The type of the entity the action changes; null when it has no preview. */
-  entityType: string | null;
-  /** The change kind of the preview; null when the action has none. */
-  changeKind: string | null;
-  /** The target, a link once it exists; for an action without a preview, the title its fields give. */
+  /** The type of the entity the action changes. */
+  entityType: string;
+  changeKind: string;
+  /** The target, a link once it exists, else the title its state or arguments give. */
   target: AssistantSegment[];
-  /** The plan step that creates the target, when it does not exist yet. */
-  targetCreatedInStep: number | null;
-  /** The preview's rows; for an action without a preview, its arguments. */
+  /** Its arguments, each beside what the target held. */
   changes: AssistantChangeView[];
   consequences: string[];
   dependsOn: number[];

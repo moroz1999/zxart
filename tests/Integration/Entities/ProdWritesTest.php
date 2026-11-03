@@ -23,7 +23,6 @@ use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\LegalStatus;
-use ZxArt\Prods\Services\ProdFieldsReader;
 use ZxArt\Prods\Services\ProdSearchService;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
@@ -522,33 +521,6 @@ final class ProdWritesTest extends EntityWriteTestCase
         self::assertSame([$demoId, $otherId], $search->search($filter, 0, 10)->ids);
     }
 
-    public function testReadAnswersWhatCreateAndUpdateWrote(): void
-    {
-        $this->signInAsEditor();
-        $references = $this->createReferences();
-        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand($this->everyField($references)))->id;
-        $reader = $this->container->get(ProdFieldsReader::class);
-
-        self::assertEquals($this->everyFieldRead($references), $reader->read($this->prod($prodId)));
-
-        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand($prodId, new ProdFieldsDto(
-            groupIds: [$references['otherGroupId']],
-            categoryIds: [self::CATEGORY_INTRO],
-            tags: [],
-            languages: [],
-        )));
-
-        self::assertEquals(
-            new ProdFieldsDto(...array_replace(get_object_vars($this->everyFieldRead($references)), [
-                'groupIds' => [$references['otherGroupId']],
-                'categoryIds' => [self::CATEGORY_INTRO],
-                'tags' => [],
-                'languages' => [],
-            ])),
-            $reader->read($this->prod($prodId)),
-        );
-    }
-
     private function signInAsRegisteredUser(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS]);
@@ -617,19 +589,6 @@ final class ProdWritesTest extends EntityWriteTestCase
         );
     }
 
-    /**
-     * {@see self::everyField()} as it reads back: the tags capitalised, every
-     * list set.
-     *
-     * @param array{groupId: int, otherGroupId: int, publisherId: int, itemId: int} $references
-     */
-    private function everyFieldRead(array $references): ProdFieldsDto
-    {
-        return new ProdFieldsDto(...array_replace(get_object_vars($this->everyField($references)), [
-            'tags' => ['Goldmaster-Tag-One', 'Goldmaster-Tag-Two'],
-            'seriesProdIds' => [],
-        ]));
-    }
 
     private function prod(int $prodId): zxProdElement
     {

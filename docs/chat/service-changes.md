@@ -35,7 +35,7 @@ form posts remain.
 Done: the join use cases of prods, authors, author aliases, groups and group
 aliases check `join` on both elements, log, then call the existing method; the
 conversion use cases have the same shape. The
-counts a preview needs are listed in
+counts a plan shows are listed in
 [php/entity-writes.md](../php/entity-writes.md#joins).
 
 ## 3. Authorship and membership
@@ -102,17 +102,13 @@ one list closest first, each result with its year and qualifier — see
 
 ## 6. Entity reads
 
-`get_*` tools read `<Entity>StateService::get()`: the editable fields through
-`<Entity>FieldsReader` (the DTO the writers take), the modification time, and
-what the entity is linked with as ids — authorship records with roles and
-dates, releases, aliases, parent groups — plus the counters of the author and
-group pages, the import origins (portal and id) of every type, and the file
-lists of a prod or a release with a release's file size (see
-[php/entity-writes.md](../php/entity-writes.md#reads)). Titles and URLs of
-those ids come from the batch lookup (section 9).
-
-Not in the states yet, for the tools to add when they need them: a release's
-inherited hardware and languages.
+`get_*` actions read the assistant's own entity DTOs (`<Entity>Dtos` in
+`ZxArt\Assistant\<Entities>`): the fields the writes take, authorship records
+with roles, releases, aliases, members, parent groups, the counters of the
+author and group pages, and the file lists of a prod or a release with a
+release's file size (see
+[features/ai-assistant.md](../features/ai-assistant.md#actions)). Titles of
+those ids come from `EntityRefsReader`.
 
 ## 7. Running as a user outside a request
 

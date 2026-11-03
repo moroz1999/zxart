@@ -1,5 +1,4 @@
 import {
-  AssistantChangePreview,
   AssistantConversationSummary,
   AssistantMention,
   AssistantMessage,
@@ -32,6 +31,13 @@ export interface AssistantViewInput {
 
 const MENTION = /\[\[(\w+):(\d+)]]/g;
 const DESTRUCTIVE_KINDS = ['delete', 'join', 'deleteFile'];
+/** The kinds that take the target away, so a plan says what goes with it. */
+const REMOVING_KINDS = ['delete', 'join', 'convert'];
+/** The argument that names an action's target; the target shows it. */
+const TARGET_ARGUMENT = 'id';
+const DATE_ARGUMENT = /Date$/;
+/** The lists of its state a removing action counts besides its counters. */
+const COUNTED_LISTS = ['releases', 'aliases'];
 const EMPTY = '—';
 
 /** A change that deletes or merges data away. */
@@ -216,6 +222,11 @@ function planView(plan: AssistantPlan, refs: Record<string, AssistantMention>, r
 
 type StepRef = (step: number) => AssistantSegment[];
 
+/**
+ * An action: its arguments as the model gave them, each
+ * beside what its target held, and for one that takes the target away, what
+ * goes with it.
+ */
 function actionView(
   action: AssistantPlanAction,
   number: number,
@@ -225,17 +236,19 @@ function actionView(
   isRunning: boolean,
   stoppedAt: number | null,
 ): AssistantPlanActionView {
-  const preview: AssistantChangePreview | null = action.preview;
+  const state = action.state;
+  const kind = action.kind;
   return {
     number,
     tool: action.tool,
     marker: actionMarker(action, isRunning),
-    entityType: preview?.target.type ?? null,
-    changeKind: preview?.kind ?? null,
+    entityType: action.entityType,
+    changeKind: kind,
     target,
-    targetCreatedInStep: preview?.target.createdInStep ?? null,
-    changes: preview ? preview.changes.map(change => changeView(change, refs)) : argumentRows(action.arguments, refs, stepRef),
-    consequences: preview?.consequences ?? [],
+    changes: Object.entries(parseArguments(action.arguments))
+      .filter(([field]) => field !== TARGET_ARGUMENT)
+      .map(([field, value]) => assistantChange(field, value, kind, action.arguments, state, refs, stepRef)),
+    consequences: state !== null && REMOVING_KINDS.includes(kind) ? takenAlong(state) : [],
     dependsOn: action.dependsOn,
     status: action.status,
     waitsFor: action.status === 'skipped' ? stoppedAt : null,
@@ -243,47 +256,134 @@ function actionView(
   };
 }
 
-/** What the action changes: the preview's target, else the title its fields give. */
-function actionTarget(action: AssistantPlanAction, refs: Record<string, AssistantMention>): AssistantSegment[] {
-  if (action.preview) {
-    const createdId = typeof action.result?.['id'] === 'number' ? action.result['id'] : null;
-    return targetSegments(action.preview, createdId, refs);
+/**
+ * A row of an action: the argument beside what the target holds under its
+ * name; the addresses of added files beside the files of their list, the
+ * address of a release file beside the file it replaces, a file by its name.
+ */
+function assistantChange(
+  field: string,
+  value: unknown,
+  kind: string,
+  json: string,
+  state: Record<string, unknown> | null,
+  refs: Record<string, AssistantMention>,
+  stepRef: StepRef,
+): AssistantChangeView {
+  const files = stateFiles(state);
+  if (field === 'urls' && kind === 'attachFile') {
+    const list = parseArguments(json)['kind'];
+    const names = files.filter(file => file.kind === list).map(file => file.fileName);
+    return {field, before: names.length > 0 ? assistantSegments(field, names, refs, stepRef) : [], after: assistantSegments(field, value, refs, stepRef)};
   }
-  const fields = parseArguments(action.arguments)['fields'];
-  const title = typeof fields === 'object' && fields !== null ? (fields as Record<string, unknown>)['title'] : null;
+  const fileName = state?.['fileName'];
+  if (field === 'url' && kind === 'attachFile' && typeof fileName === 'string' && fileName !== '') {
+    return {field, before: [{kind: 'text', text: fileName}], after: assistantSegments(field, value, refs, stepRef)};
+  }
+  const file = field === 'fileId' ? files.find(listed => listed.id === value) : undefined;
+  if (file) {
+    return {field, before: [], after: [{kind: 'text', text: `${file.fileName} #${file.id}`}]};
+  }
+  return {
+    field,
+    before: state !== null && !isUnset(state[field]) ? assistantSegments(field, state[field], refs, stepRef) : [],
+    after: assistantSegments(field, value, refs, stepRef),
+  };
+}
+
+interface StateFile {
+  kind: string;
+  id: number;
+  fileName: string;
+}
+
+/** The files a target's state lists. */
+function stateFiles(state: Record<string, unknown> | null): StateFile[] {
+  const files = state?.['files'];
+  return Array.isArray(files)
+    ? files.filter((file): file is StateFile => typeof file === 'object' && file !== null && typeof (file as StateFile).id === 'number')
+    : [];
+}
+
+/** A value of an action: a date as its day, the rest as arguments are shown. */
+function assistantSegments(field: string, value: unknown, refs: Record<string, AssistantMention>, stepRef: StepRef): AssistantSegment[] {
+  if (DATE_ARGUMENT.test(field) && typeof value === 'number') {
+    return [{kind: 'text', text: value === 0 ? EMPTY : dayOf(value)}];
+  }
+  return argumentSegments(value, ARGUMENT_ID.test(field), refs, stepRef);
+}
+
+/** A field the target holds no value in: empty, or 0 for an id or a date. */
+function isUnset(value: unknown): boolean {
+  return isEmpty(value) || value === 0;
+}
+
+/** A Unix timestamp as the day it falls on, here. */
+function dayOf(timestamp: number): string {
+  const date = new Date(timestamp * 1000);
+  const pad = (part: number) => String(part).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/** What the target's state counts: its works by kind, then its releases and aliases. */
+function takenAlong(state: Record<string, unknown>): string[] {
+  const counters = state['counters'];
+  const counted = typeof counters === 'object' && counters !== null
+    ? Object.entries(counters as Record<string, unknown>).filter(([, count]) => typeof count === 'number' && count > 0)
+    : [];
+  for (const name of COUNTED_LISTS) {
+    const list = state[name];
+    if (Array.isArray(list) && list.length > 0) {
+      counted.push([name, list.length]);
+    }
+  }
+  return counted.map(([name, count]) => `${name}: ${count}`);
+}
+
+/** What the action changes: linked once known, else the title its state or arguments give. */
+function actionTarget(action: AssistantPlanAction, refs: Record<string, AssistantMention>): AssistantSegment[] {
+  const createdId = typeof action.result?.['id'] === 'number' ? action.result['id'] : null;
+  const state = action.state;
+  const stateId = typeof state?.['id'] === 'number' ? state['id'] : null;
+  const id = stateId ?? createdId;
+  if (id !== null && refs[`${action.entityType}:${id}`]) {
+    return [entitySegment(action.entityType, id, refs)];
+  }
+  const title = state?.['title'] ?? parseArguments(action.arguments)['title'];
   return typeof title === 'string' && title !== '' ? [{kind: 'text', text: title}] : [];
 }
 
-/** An unpreviewed action's arguments as rows; `fields` is opened into its own. */
-function argumentRows(json: string, refs: Record<string, AssistantMention>, stepRef: StepRef): AssistantChangeView[] {
-  const args = parseArguments(json);
-  const fields = args['fields'];
-  const entries = Object.entries(args).flatMap(([key, value]) => key === 'fields' && typeof fields === 'object' && fields !== null && !Array.isArray(fields)
-    ? Object.entries(fields as Record<string, unknown>)
-    : [[key, value] as [string, unknown]]);
-  return entries.map(([field, value]) => ({field, before: [], after: argumentSegments(value, ARGUMENT_ID.exec(field)?.[1] ?? null, refs, stepRef)}));
-}
-
-/** An argument named `<type>Id` or `<type>Ids` gives entities of that type by id. */
-const ARGUMENT_ID = /^(\w+?)Ids?$/;
+/**
+ * An argument named `<name>Id` or `<name>Ids` gives entities by id. The name
+ * tells no type (`groupIds` holds group aliases too), so an id is found among
+ * the refs by itself: ids are unique across the site.
+ */
+const ARGUMENT_ID = /^\w+?Ids?$/;
 const IMAGE_URL = /^https?:\/\/[^?#]+\.(png|jpe?g|gif|webp)([?#].*)?$/i;
 
 /** An argument's value: an entity named by id with its title and id, an image as an image, the rest as values are. */
-function argumentSegments(value: unknown, entityType: string | null, refs: Record<string, AssistantMention>, stepRef: StepRef): AssistantSegment[] {
+function argumentSegments(value: unknown, isId: boolean, refs: Record<string, AssistantMention>, stepRef: StepRef): AssistantSegment[] {
   if (Array.isArray(value) && value.length > 0) {
-    const parts = value.map(item => argumentSegments(item, entityType, refs, stepRef));
+    const parts = value.map(item => argumentSegments(item, isId, refs, stepRef));
     return parts.flatMap((part, index) => index === 0 || (isImage(part) && isImage(parts[index - 1]))
       ? part
       : [{kind: 'text', text: ', '} as AssistantSegment, ...part]);
   }
-  if (entityType !== null && typeof value === 'number') {
-    const ref = refs[`${entityType}:${value}`];
-    return [ref ? {kind: 'link', text: `${ref.title} #${value}`, url: ref.url} : {kind: 'text', text: `${entityType} #${value}`}];
+  if (isId && typeof value === 'number') {
+    const ref = refById(refs, value);
+    return [ref ? {kind: 'link', text: `${ref.title} #${value}`, url: ref.url} : {kind: 'text', text: `#${value}`}];
   }
   if (typeof value === 'string' && IMAGE_URL.test(value)) {
     return [{kind: 'image', url: value}];
   }
-  return valueSegments(value, refs, stepRef);
+  return valueSegments(value, stepRef);
+}
+
+/** The ref of an id, whatever its type. */
+function refById(refs: Record<string, AssistantMention>, id: number): AssistantMention | undefined {
+  const suffix = `:${id}`;
+  const key = Object.keys(refs).find(candidate => candidate.endsWith(suffix));
+  return key !== undefined ? refs[key] : undefined;
 }
 
 function isImage(segments: AssistantSegment[]): boolean {
@@ -315,54 +415,27 @@ function actionMarker(action: AssistantPlanAction, isRunning: boolean): ZxStepSt
   }
 }
 
-function targetSegments(preview: AssistantChangePreview, createdId: number | null, refs: Record<string, AssistantMention>): AssistantSegment[] {
-  const target = preview.target;
-  const id = target.id ?? createdId;
-  if (id !== null && refs[`${target.type}:${id}`]) {
-    return [entitySegment(target.type, id, refs)];
-  }
-  return [{kind: 'text', text: target.title}];
-}
-
-function changeView(change: {field: string; before: unknown; after: unknown}, refs: Record<string, AssistantMention>): AssistantChangeView {
-  return {
-    field: change.field,
-    before: isEmpty(change.before) ? [] : valueSegments(change.before, refs),
-    after: valueSegments(change.after, refs),
-  };
-}
-
 function isEmpty(value: unknown): boolean {
   return value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0);
 }
 
-function valueSegments(value: unknown, refs: Record<string, AssistantMention>, stepRef: StepRef | null = null): AssistantSegment[] {
+function valueSegments(value: unknown, stepRef: StepRef): AssistantSegment[] {
   if (isEmpty(value)) {
     return [{kind: 'text', text: EMPTY}];
   }
   if (Array.isArray(value)) {
     return value.flatMap((item, index) => index === 0
-      ? valueSegments(item, refs, stepRef)
-      : [{kind: 'text', text: ', '} as AssistantSegment, ...valueSegments(item, refs, stepRef)]);
+      ? valueSegments(item, stepRef)
+      : [{kind: 'text', text: ', '} as AssistantSegment, ...valueSegments(item, stepRef)]);
   }
-  const step = stepRef !== null && typeof value === 'object' && value !== null ? (value as Record<string, unknown>)['$ref'] : undefined;
-  if (stepRef !== null && typeof step === 'number') {
+  const step = typeof value === 'object' && value !== null ? (value as Record<string, unknown>)['$ref'] : undefined;
+  if (typeof step === 'number') {
     return stepRef(step);
-  }
-  if (isEntityValue(value)) {
-    return [entitySegment(value.type, value.id, refs)];
   }
   if (typeof value === 'object') {
     return [{kind: 'text', text: JSON.stringify(value)}];
   }
   return [{kind: 'text', text: String(value)}];
-}
-
-function isEntityValue(value: unknown): value is {type: string; id: number} {
-  return typeof value === 'object' && value !== null
-    && typeof (value as Record<string, unknown>)['type'] === 'string'
-    && typeof (value as Record<string, unknown>)['id'] === 'number'
-    && Object.keys(value).length === 2;
 }
 
 function entitySegment(type: string, id: number, refs: Record<string, AssistantMention>): AssistantSegment {

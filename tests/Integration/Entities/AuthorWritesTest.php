@@ -37,7 +37,6 @@ use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\ProdLink;
 use ZxArt\Prods\Services\ProdSearchService;
-use ZxArt\Authors\Services\AuthorFieldsReader;
 use authorElement;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
@@ -439,22 +438,6 @@ final class AuthorWritesTest extends EntityWriteTestCase
         self::assertSame([$publisherId], $find(new AuthorSearchFilterDto(name: 'goldmaster', activeFrom: 1996)));
         self::assertSame([$gameId], $this->container->get(ProdSearchService::class)
             ->search(new ProdSearchFilterDto(title: 'goldmaster', publisherIds: [$publisherId]), 0, 10)->ids);
-    }
-
-    public function testReadAnswersWhatCreateAndUpdateWrote(): void
-    {
-        $this->signInAsEditor();
-        $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand($this->everyField()))->id;
-        $reader = $this->container->get(AuthorFieldsReader::class);
-
-        self::assertEquals($this->everyField(), $reader->read($this->element($authorId)));
-
-        $this->container->get(UpdateAuthorHandler::class)->handle(new UpdateAuthorCommand($authorId, new AuthorFieldsDto(title: 'Goldmaster Painter', countryId: 0, cityId: 0, chipType: 'ay')));
-
-        self::assertEquals(
-            new AuthorFieldsDto(...array_replace(get_object_vars($this->everyField()), ['title' => 'Goldmaster Painter', 'countryId' => 0, 'cityId' => 0, 'chipType' => 'ay'])),
-            $reader->read($this->element($authorId)),
-        );
     }
 
     /**

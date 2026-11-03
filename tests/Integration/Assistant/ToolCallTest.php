@@ -7,25 +7,25 @@ namespace ZxArt\Tests\Integration\Assistant;
 require_once __DIR__ . '/../Entities/EntityWriteTestCase.php';
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use ZxArt\Assistant\Tools\Catalogues\CategoriesDto;
-use ZxArt\Assistant\Tools\Catalogues\CategoryDto;
-use ZxArt\Assistant\Tools\Catalogues\FoundTagsDto;
-use ZxArt\Assistant\Tools\Catalogues\HardwareGroupDto;
-use ZxArt\Assistant\Tools\Catalogues\HardwareListDto;
-use ZxArt\Assistant\Tools\Catalogues\HardwareOptionDto;
-use ZxArt\Assistant\Tools\Catalogues\OptionsDto;
-use ZxArt\Assistant\Tools\Search\FoundProdsDto;
-use ZxArt\Assistant\Tools\Search\FoundAuthorsDto;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\ReadAction;
+use ZxArt\Assistant\Actions\ToolRegistry;
+use ZxArt\Assistant\Authors\FoundAuthorsDto;
+use ZxArt\Assistant\Catalogues\CategoriesDto;
+use ZxArt\Assistant\Catalogues\CategoryDto;
+use ZxArt\Assistant\Catalogues\FoundTagsDto;
+use ZxArt\Assistant\Catalogues\HardwareGroupDto;
+use ZxArt\Assistant\Catalogues\HardwareListDto;
+use ZxArt\Assistant\Catalogues\HardwareOptionDto;
+use ZxArt\Assistant\Catalogues\OptionsDto;
+use ZxArt\Assistant\Groups\GroupDto;
+use ZxArt\Assistant\Prods\FoundProdsDto;
+use ZxArt\Assistant\Search\FoundEntitiesDto;
 use ZxArt\Authors\Dto\AuthorFieldsDto;
 use ZxArt\Authors\Dto\FoundAuthorDto;
 use ZxArt\Authors\UseCases\CreateAuthorCommand;
 use ZxArt\Authors\UseCases\CreateAuthorHandler;
-use ZxArt\Groups\Dto\GroupCardDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
-use ZxArt\Assistant\Tools\Search\FoundEntitiesDto;
-use ZxArt\Assistant\Tools\JsonSchemaGenerator;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
 use ZxArt\Groups\UseCases\CreateGroupCommand;
 use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Prods\Dto\FoundProdDto;
@@ -42,8 +42,8 @@ use ZxArt\Shared\Images\ImageRefusedException;
 use ZxArt\Tests\Integration\Entities\EntityWriteTestCase;
 
 /**
- * A tool call as the assistant makes it: the tool resolved by name from the
- * container's registry, its arguments built from JSON.
+ * A call as the assistant makes it: the action resolved by name from the
+ * container's registry, its arguments parsed from JSON by its schema.
  */
 #[RunTestsInSeparateProcesses]
 final class ToolCallTest extends EntityWriteTestCase
@@ -55,31 +55,23 @@ final class ToolCallTest extends EntityWriteTestCase
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999)))->id;
 
-        $tool = $this->container->get(ToolRegistry::class)->get('search');
-        $request = $this->container->get(ToolRequestBuilder::class)->build(
-            $tool->requestClass(),
-            '{"phrase": "Goldsearch", "types": ["prod"]}',
-        );
-
         self::assertEquals(
             new FoundEntitiesDto([new FoundEntityDto(EntityType::Prod, $prodId, 'Goldsearch Demo', 1999, '')]),
-            $tool->execute($request),
+            $this->call('search', '{"phrase": "Goldsearch", "types": ["prod"]}'),
         );
     }
 
-    public function testASearchAuthorsCallTakesANestedSoftwareFilterFromJson(): void
+    public function testASearchAuthorsCallTakesANestedProductionFilterFromJson(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['zxProd', 'publicReceive']]);
         $authorId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldsearch Coder')))->id;
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldsearch Demo', year: 1999, legalStatus: LegalStatus::allowed)))->id;
         $this->container->get(SetProdMemberHandler::class)->handle(new SetProdMemberCommand($prodId, $authorId, ['code']));
 
-        $tool = $this->container->get(ToolRegistry::class)->get('search_authors');
-        $request = $this->container->get(ToolRequestBuilder::class)->build(
-            $tool->requestClass(),
-            '{"filter": {"name": "Goldsearch", "prodLink": "made", "prods": {"title": "goldsearch demo", "legalStatuses": ["allowed"]}}, "limit": 5}',
+        $result = $this->call(
+            'search_authors',
+            '{"name": "Goldsearch", "prodLink": "made", "prods": {"title": "goldsearch demo", "legalStatuses": ["allowed"]}, "limit": 5}',
         );
-        $result = $tool->execute($request);
 
         self::assertInstanceOf(FoundAuthorsDto::class, $result);
         self::assertSame(1, $result->total);
@@ -114,7 +106,7 @@ final class ToolCallTest extends EntityWriteTestCase
         $tags = $this->call('find_tags', '{"phrase": "goldtag shim"}');
         self::assertInstanceOf(FoundTagsDto::class, $tags);
         self::assertCount(1, $tags->tags);
-        $prods = $this->call('search_prods', '{"filter": {"tagIds": [' . $tags->tags[0]->id . ']}}');
+        $prods = $this->call('search_prods', '{"tagIds": [' . $tags->tags[0]->id . ']}');
 
         self::assertInstanceOf(FoundProdsDto::class, $prods);
         self::assertSame([$prodId], array_map(static fn(FoundProdDto $prod): int => $prod->id, $prods->results));
@@ -127,9 +119,9 @@ final class ToolCallTest extends EntityWriteTestCase
 
         $card = $this->call('get_group', '{"id": ' . $groupId . '}');
 
-        self::assertInstanceOf(GroupCardDto::class, $card);
+        self::assertInstanceOf(GroupDto::class, $card);
         self::assertSame($groupId, $card->id);
-        self::assertSame('Goldsearch Guild', $card->fields->title);
+        self::assertSame('Goldsearch Guild', $card->title);
     }
 
     public function testFetchUrlRefusesAnAddressInsideTheNetwork(): void
@@ -148,23 +140,47 @@ final class ToolCallTest extends EntityWriteTestCase
         $this->call('view_image', '{"fileId": ' . $groupId . '}');
     }
 
-    public function testEveryToolHasASchemaForItsRequest(): void
+    public function testEveryActionOffersAClosedSchema(): void
     {
-        $generator = $this->container->get(JsonSchemaGenerator::class);
         $names = [];
-        foreach ($this->container->get(ToolRegistry::class)->all() as $tool) {
-            self::assertSame('object', $generator->forClass($tool->requestClass())['type'], $tool->name());
-            $names[] = $tool->name();
+        foreach ($this->container->get(ToolRegistry::class)->all() as $action) {
+            $this->assertClosed(Arguments::schema($action->schema()), $action->name());
+            $names[] = $action->name();
         }
 
+        self::assertContains('search_releases', $names);
+        self::assertContains('view_image', $names);
         self::assertContains('set_group_alias_member', $names);
-        self::assertContains('delete_release_file', $names);
     }
 
-    private function call(string $toolName, string $arguments): object
+    /**
+     * An object of the schema, at any depth, allows no other field and
+     * requires only fields it has.
+     *
+     * @param array<array-key, mixed> $schema
+     */
+    private function assertClosed(array $schema, string $path): void
     {
-        $tool = $this->container->get(ToolRegistry::class)->get($toolName);
+        $types = (array)($schema['type'] ?? []);
+        if (in_array('object', $types, true)) {
+            self::assertFalse($schema['additionalProperties'] ?? null, $path);
+            self::assertIsArray($schema['properties'] ?? null, $path);
+            self::assertSame([], array_diff($schema['required'] ?? [], array_keys($schema['properties'])), $path);
+            foreach ($schema['properties'] as $name => $property) {
+                $this->assertClosed($property, "$path.$name");
+            }
+        }
+        if (in_array('array', $types, true)) {
+            self::assertIsArray($schema['items'] ?? null, $path);
+            $this->assertClosed($schema['items'], $path . '[]');
+        }
+    }
 
-        return $tool->execute($this->container->get(ToolRequestBuilder::class)->build($tool->requestClass(), $arguments));
+    private function call(string $actionName, string $arguments): object
+    {
+        $action = $this->container->get(ToolRegistry::class)->get($actionName);
+        self::assertInstanceOf(ReadAction::class, $action);
+
+        return $action->read(Arguments::parse($arguments, $action->schema()));
     }
 }

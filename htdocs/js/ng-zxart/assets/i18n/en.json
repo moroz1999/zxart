@@ -2288,7 +2288,6 @@
     "running": "Working…",
     "approve": "Run the plan",
     "cancel": "Cancel",
-    "created-in-step": "from step {{step}}",
     "approve-confirm": {
       "title": "Approve the plan?",
       "message": "{{count}} actions will be run in order.",

@@ -19,7 +19,7 @@ function plan(overrides: Partial<AssistantPlan>): AssistantPlan {
 }
 
 function action(overrides: Partial<AssistantPlanAction>): AssistantPlanAction {
-  return {tool: 'create_prod', arguments: '{}', preview: null, dependsOn: [], status: 'pending', result: null, error: null, ...overrides};
+  return {tool: 'create_prod', arguments: '{}', kind: 'create', entityType: 'prod', state: null, dependsOn: [], status: 'pending', result: null, error: null, ...overrides};
 }
 
 function input(messages: AssistantMessage[], plans: Record<number, AssistantPlan> = {}, activeRun: AssistantRun | null = null) {
@@ -138,18 +138,15 @@ describe('buildAssistantView: messages', () => {
 });
 
 describe('buildAssistantView: plans', () => {
-  it('shows a proposed action by its entity type, kind and fields', () => {
+  it('shows a proposed action by its entity type, kind, target and arguments', () => {
     const planView = planWith([
       action({
         tool: 'update_prod',
-        preview: {
-          kind: 'update',
-          target: {type: 'prod', id: 5, title: 'Elite', createdInStep: null},
-          changes: [{field: 'year', before: 0, after: 1985}, {field: 'groups', before: [], after: [{type: 'prod', id: 5}]}],
-          consequences: ['Moves it'],
-        },
+        kind: 'update',
+        arguments: JSON.stringify({id: 5, year: 1985, groupIds: [5]}),
+        state: {id: 5, title: 'Elite', year: 0, groupIds: []},
       }),
-      action({tool: 'set_prod_author', dependsOn: [1]}),
+      action({tool: 'set_prod_author', kind: 'link', dependsOn: [1]}),
     ], 'proposed');
 
     expect(planView.canApprove).toBe(true);
@@ -161,29 +158,24 @@ describe('buildAssistantView: plans', () => {
       entityType: 'prod',
       changeKind: 'update',
       target: [{kind: 'link', text: 'Elite', url: '/prod/5'}],
-      targetCreatedInStep: null,
       changes: [
-        {field: 'year', before: [{kind: 'text', text: '0'}], after: [{kind: 'text', text: '1985'}]},
-        {field: 'groups', before: [], after: [{kind: 'link', text: 'Elite', url: '/prod/5'}]},
+        {field: 'year', before: [], after: [{kind: 'text', text: '1985'}]},
+        {field: 'groupIds', before: [], after: [{kind: 'link', text: 'Elite #5', url: '/prod/5'}]},
       ],
-      consequences: ['Moves it'],
+      consequences: [],
       dependsOn: [],
       status: 'pending',
       waitsFor: null,
       error: null,
     });
-    expect(planView.actions[1].entityType).toBeNull();
     expect(planView.actions[1].dependsOn).toEqual([1]);
   });
 
-  it('shows the arguments of an action it could not preview, naming the steps it takes ids from', () => {
+  it('names the steps an action takes ids from by what those steps create', () => {
     const planView = planWith([
-      action({
-        tool: 'create_author',
-        preview: {kind: 'create', target: {type: 'author', id: null, title: 'Iker Lobo', createdInStep: null}, changes: [], consequences: []},
-      }),
-      action({tool: 'create_prod', arguments: JSON.stringify({fields: {title: 'TurboVektor', year: 2026, hardware: ['zx48', 'zx128']}})}),
-      action({tool: 'set_prod_author', dependsOn: [1, 2], arguments: JSON.stringify({prodId: {$ref: 2}, authorId: {$ref: 1}, roles: ['code']})}),
+      action({tool: 'create_author', entityType: 'author', arguments: JSON.stringify({title: 'Iker Lobo'})}),
+      action({tool: 'create_prod', arguments: JSON.stringify({title: 'TurboVektor', year: 2026, hardware: ['zx48', 'zx128']})}),
+      action({tool: 'set_prod_author', kind: 'link', dependsOn: [1, 2], arguments: JSON.stringify({prodId: {$ref: 2}, authorId: {$ref: 1}, roles: ['code']})}),
     ], 'proposed');
 
     expect(planView.actions[1].target).toEqual([{kind: 'text', text: 'TurboVektor'}]);
@@ -199,15 +191,15 @@ describe('buildAssistantView: plans', () => {
     ]);
   });
 
-  it('names an entity an argument gives by id with its title and id', () => {
+  it('names an entity an argument gives by id with its title and id, whatever type the field is named after', () => {
     const planView = planWith([
       action({tool: 'set_prod_author', arguments: JSON.stringify({prodId: 5, authorId: 9, groupIds: [5], roles: ['code']})}),
     ], 'proposed');
 
     expect(planView.actions[0].changes.map(change => change.after)).toEqual([
       [{kind: 'link', text: 'Elite #5', url: '/prod/5'}],
-      [{kind: 'text', text: 'author #9'}],
-      [{kind: 'text', text: 'group #5'}],
+      [{kind: 'text', text: '#9'}],
+      [{kind: 'link', text: 'Elite #5', url: '/prod/5'}],
       [{kind: 'text', text: 'code'}],
     ]);
   });
@@ -227,39 +219,151 @@ describe('buildAssistantView: plans', () => {
 
   it('links a step an action takes an id from once that step created it', () => {
     const planView = planWith([
-      action({
-        status: 'done',
-        result: {id: 5},
-        preview: {kind: 'create', target: {type: 'prod', id: null, title: 'Elite', createdInStep: null}, changes: [], consequences: []},
-      }),
-      action({tool: 'set_prod_author', status: 'done', arguments: JSON.stringify({prodId: {$ref: 1}})}),
+      action({status: 'done', result: {id: 5}, arguments: JSON.stringify({title: 'Elite'})}),
+      action({tool: 'set_prod_author', kind: 'link', status: 'done', arguments: JSON.stringify({prodId: {$ref: 1}})}),
     ], 'done');
 
     expect(planView.actions[1].changes[0].after).toEqual([{kind: 'link', text: 'Elite', url: '/prod/5'}]);
   });
 
-  it('shows the value a change replaces only when there was one', () => {
-    const planView = planWith([action({
-      preview: {
-        kind: 'create',
-        target: {type: 'author', id: null, title: 'Iker Lobo', createdInStep: null},
-        changes: [{field: 'title', before: null, after: 'Iker Lobo'}],
-        consequences: [],
-      },
-    })], 'proposed');
-
-    expect(planView.actions[0].changes[0]).toEqual({field: 'title', before: [], after: [{kind: 'text', text: 'Iker Lobo'}]});
-  });
-
   it('links what a done action created', () => {
-    const planView = planWith([action({
-      status: 'done',
-      result: {id: 5},
-      preview: {kind: 'create', target: {type: 'prod', id: null, title: 'Elite', createdInStep: null}, changes: [], consequences: []},
-    })], 'done');
+    const planView = planWith([action({status: 'done', result: {id: 5}, arguments: JSON.stringify({title: 'Elite'})})], 'done');
 
     expect(planView.actions[0].marker).toBe('done');
     expect(planView.actions[0].target).toEqual([{kind: 'link', text: 'Elite', url: '/prod/5'}]);
+  });
+
+  it('shows an action of the assistant by its kind and type, with what its target holds before each argument', () => {
+    const planView = planWith([action({
+      tool: 'update_author',
+      kind: 'update',
+      entityType: 'author',
+      arguments: JSON.stringify({id: 9, realName: 'Jan Kowalski', countryId: 8, wikiLink: 'https://speccy.info/Iker'}),
+      state: {id: 9, title: 'Iker Lobo', realName: '', countryId: 7, cityId: 0, wikiLink: '', refs: [], aliases: [], groups: [], counters: {pictures: 0, tunes: 0, prods: 2, comments: 0}},
+    })], 'proposed');
+
+    const view = planView.actions[0];
+    expect(view.entityType).toBe('author');
+    expect(view.changeKind).toBe('update');
+    expect(view.target).toEqual([{kind: 'text', text: 'Iker Lobo'}]);
+    expect(view.changes).toEqual([
+      {field: 'realName', before: [], after: [{kind: 'text', text: 'Jan Kowalski'}]},
+      {field: 'countryId', before: [{kind: 'text', text: '#7'}], after: [{kind: 'text', text: '#8'}]},
+      {field: 'wikiLink', before: [], after: [{kind: 'text', text: 'https://speccy.info/Iker'}]},
+    ]);
+    expect(view.consequences).toEqual([]);
+    expect(planView.destructiveCount).toBe(0);
+  });
+
+  it('links the target of an action of the assistant once its title is known', () => {
+    const planView = planWith([action({
+      tool: 'update_author',
+      kind: 'update',
+      entityType: 'prod',
+      arguments: JSON.stringify({id: 5, title: 'Elite 2'}),
+      state: {id: 5, title: 'Elite'},
+    })], 'proposed');
+
+    expect(planView.actions[0].target).toEqual([{kind: 'link', text: 'Elite', url: '/prod/5'}]);
+  });
+
+  it('counts what a destructive action of the assistant takes with it', () => {
+    const planView = planWith([action({
+      tool: 'delete_author',
+      kind: 'delete',
+      entityType: 'author',
+      arguments: JSON.stringify({id: 9}),
+      state: {id: 9, title: 'Iker Lobo', aliases: [{id: 10, title: 'Iker', startDate: 0, endDate: 0}], groups: [], counters: {pictures: 0, tunes: 3, prods: 2, comments: 0}},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes).toEqual([]);
+    expect(planView.actions[0].consequences).toEqual(['tunes: 3', 'prods: 2', 'aliases: 1']);
+    expect(planView.destructiveCount).toBe(1);
+  });
+
+  it('counts the releases a production takes with it', () => {
+    const planView = planWith([action({
+      tool: 'delete_prod',
+      kind: 'delete',
+      entityType: 'prod',
+      arguments: JSON.stringify({id: 5}),
+      state: {id: 5, title: 'Elite', releases: [{id: 6}, {id: 7}], files: [], authors: []},
+    })], 'proposed');
+
+    expect(planView.actions[0].consequences).toEqual(['releases: 2']);
+  });
+
+  it('shows the files of the list an action of the assistant adds to before the addresses it adds', () => {
+    const planView = planWith([action({
+      tool: 'add_prod_files',
+      kind: 'attachFile',
+      entityType: 'prod',
+      arguments: JSON.stringify({prodId: 5, kind: 'maps', urls: ['https://a.org/game.tap']}),
+      state: {id: 5, title: 'Elite', files: [{kind: 'maps', id: 20, fileName: 'map.png'}, {kind: 'inlays', id: 21, fileName: 'inlay.png'}]},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes[2]).toEqual({
+      field: 'urls',
+      before: [{kind: 'text', text: 'map.png'}],
+      after: [{kind: 'text', text: 'https://a.org/game.tap'}],
+    });
+  });
+
+  it('names the file an action of the assistant deletes by its name', () => {
+    const planView = planWith([action({
+      tool: 'delete_prod_file',
+      kind: 'deleteFile',
+      entityType: 'prod',
+      arguments: JSON.stringify({prodId: 5, fileId: 21}),
+      state: {id: 5, title: 'Elite', files: [{kind: 'maps', id: 20, fileName: 'map.png'}, {kind: 'inlays', id: 21, fileName: 'inlay.png'}]},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes[1]).toEqual({field: 'fileId', before: [], after: [{kind: 'text', text: 'inlay.png #21'}]});
+  });
+
+  it('shows the file a release has before the address its file is set from', () => {
+    const planView = planWith([action({
+      tool: 'set_release_file',
+      kind: 'attachFile',
+      entityType: 'release',
+      arguments: JSON.stringify({releaseId: 6, url: 'https://a.org/game.tap'}),
+      state: {id: 6, title: 'Tape', fileName: 'intro.tap', files: []},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes[1]).toEqual({
+      field: 'url',
+      before: [{kind: 'text', text: 'intro.tap'}],
+      after: [{kind: 'text', text: 'https://a.org/game.tap'}],
+    });
+  });
+
+  it('names what an action of the assistant creates by the title it gives', () => {
+    const planView = planWith([action({
+      tool: 'create_author',
+      kind: 'create',
+      entityType: 'author',
+      arguments: JSON.stringify({title: 'Iker Lobo', countryId: 5}),
+      state: null,
+    })], 'proposed');
+
+    expect(planView.actions[0].target).toEqual([{kind: 'text', text: 'Iker Lobo'}]);
+    expect(planView.actions[0].changes[0]).toEqual({field: 'title', before: [], after: [{kind: 'text', text: 'Iker Lobo'}]});
+  });
+
+  it('shows the dates an action of the assistant gives as days', () => {
+    const start = new Date(1994, 4, 1).getTime() / 1000;
+    const planView = planWith([action({
+      tool: 'update_author_alias',
+      kind: 'update',
+      entityType: 'authorAlias',
+      arguments: JSON.stringify({id: 10, startDate: start, endDate: 0}),
+      state: {id: 10, title: 'Iker', startDate: 0, endDate: 0},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes).toEqual([
+      {field: 'startDate', before: [], after: [{kind: 'text', text: '1994-05-01'}]},
+      {field: 'endDate', before: [], after: [{kind: 'text', text: '—'}]},
+    ]);
   });
 
   it('counts the done actions and marks the one running', () => {

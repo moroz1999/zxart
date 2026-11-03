@@ -195,30 +195,15 @@ What a join moves can be counted beforehand: `ReleasesDbal::countByProdId()`,
 
 | Piece | Job |
 |---|---|
-| `<Entity>FieldsReader::read()` | The element's editable fields as the `<Entity>FieldsDto` the writer takes, every field set: text decoded, an empty list `[]`, a reference or a date not set 0, an unknown stored type or legal status `null`. Reading back what a create or an update wrote gives the same DTO, in the same process. |
-| `<Entity>StateService::get()` | `<Entity>StateDto`: the id, the modification time (`getModifiedTimestamp()`), the fields, and what the entity is linked with. An id of another type is a `404` of the entity's `<Entity>DataException`. Checks no privilege beyond what loading the element checks. |
+| `ReleaseFieldsReader::read()` | The release's editable fields as the `ReleaseFieldsDto` the writer takes, every field set: text decoded, an empty list `[]`, a reference not set 0, an unknown stored type `null`. `ReleaseCloner` copies a release from it. |
 
-What a state holds beyond the fields:
-
-- **prod** — its authors (`AuthorshipDto`: author, roles, dates), its
-  release ids, and its file lists;
-- **release** — its authors, its file name and size, and its file lists;
-- **author** — its alias ids, its group memberships, and the counters the
-  author page shows (`AuthorDetailsService::getCounters()`);
-- **author alias** — its group memberships and counters;
-- **group** — its members, its parent group ids (read from the links), its
-  alias ids, and the counters the group page shows
-  (`GroupDetailsService::getCounters()`);
-- **group alias** — its members and counters.
-
-Every state also carries the entity's import origins (`ImportOriginDto`:
-portal and the entity's id there, `ImportOriginsReader`), ordered by portal
-and id. The file lists of a prod or a release (`AttachedFilesReader`) are keyed
-by kind (`ProdFileKind` / `ReleaseFileKind` values), each an `AttachedFileDto`
-list (file element id, decoded file name) in the order the files were added;
-the ids are read from the links, since the element's own list holds only what
-it loaded or was given since. A release's file size is `null` when it has no
-file or the file is not stored on this server.
+The assistant reads entities through its own DTOs
+([features/ai-assistant.md](../features/ai-assistant.md#actions)). The file
+lists of a prod or a release (`AttachedFilesReader`) are keyed by kind
+(`ProdFileKind` / `ReleaseFileKind` values), each an `AttachedFileDto` list
+(file element id, decoded file name) in the order the files were added; the
+ids are read from the links, since the element's own list holds only what it
+loaded or was given since.
 
 `AuthorshipDbal::findByElement()` / `findByAuthor()` read the authorship
 records of one type as stored: roles decoded (an empty column is `[]`), dates

@@ -17,7 +17,7 @@ import {AssistantPlanView} from '../../models/assistant-view';
 import {isDestructiveKind} from '../../services/assistant-view';
 import {AssistantTextComponent} from '../assistant-text/assistant-text.component';
 
-/** A plan: its steps with their previews and outcomes, and, while it waits, approve and cancel. */
+/** A plan: its steps with what each changes and its outcome, and, while it waits, approve and cancel. */
 @Component({
   selector: 'zx-assistant-plan',
   standalone: true,

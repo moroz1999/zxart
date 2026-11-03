@@ -9,6 +9,8 @@ use JsonException;
 use stdClass;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\WriteAction;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
 use ZxArt\Assistant\Chat\Dbal\PlansDbal;
@@ -16,15 +18,15 @@ use ZxArt\Assistant\Chat\Dto\PlanDto;
 use ZxArt\Assistant\Chat\MessageKind;
 use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Llm\LlmToolDto;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
-use ZxArt\Assistant\Tools\UnknownToolException;
-use ZxArt\Assistant\Tools\WriteTool;
+use ZxArt\Assistant\Actions\ToolRegistry;
+use ZxArt\Assistant\Actions\UnknownToolException;
 
 /**
- * The `propose_plan` call: checks every action, previews those it can, and
- * stores the plan for the user to approve. An action that takes an id an earlier
- * action creates is not previewed — what it refers to does not exist yet.
+ * The `propose_plan` call: checks every action and stores the plan for the user
+ * to approve. Each action keeps its kind, the type it changes and the state of
+ * its target, read as its arguments are checked against its schema. An action
+ * that takes an id an earlier action creates is given no state — what it
+ * refers to does not exist yet.
  */
 final readonly class PlanProposer
 {
@@ -32,7 +34,6 @@ final readonly class PlanProposer
 
     public function __construct(
         private ToolRegistry $tools,
-        private ToolRequestBuilder $requestBuilder,
         private SerializerInterface $serializer,
         private PlanReferences $references,
         private PlansDbal $plans,
@@ -71,10 +72,12 @@ final readonly class PlanProposer
                                 'arguments' => ['type' => 'object'],
                             ],
                             'required' => ['tool', 'arguments'],
+                            'additionalProperties' => false,
                         ],
                     ],
                 ],
                 'required' => ['title', 'actions'],
+                'additionalProperties' => false,
             ],
         );
     }
@@ -92,6 +95,10 @@ final readonly class PlanProposer
         }
         if (!$decoded instanceof stdClass || !is_string($decoded->title ?? null) || !is_array($decoded->actions ?? null)) {
             throw new PlanRefusedException('The plan needs a title and a list of actions');
+        }
+        $unknown = array_diff(array_keys(get_object_vars($decoded)), ['title', 'actions']);
+        if ($unknown !== []) {
+            throw new PlanRefusedException('Unknown fields: ' . implode(', ', $unknown));
         }
         if ($decoded->actions === []) {
             throw new PlanRefusedException('The plan has no actions');
@@ -122,12 +129,16 @@ final readonly class PlanProposer
         if (!$action instanceof stdClass || !is_string($action->tool ?? null) || !($action->arguments ?? null) instanceof stdClass) {
             throw new PlanRefusedException("Action $number needs a tool name and an arguments object");
         }
+        $unknown = array_diff(array_keys(get_object_vars($action)), ['tool', 'arguments']);
+        if ($unknown !== []) {
+            throw new PlanRefusedException("Action $number: unknown fields: " . implode(', ', $unknown));
+        }
         try {
             $tool = $this->tools->get($action->tool);
         } catch (UnknownToolException) {
             throw new PlanRefusedException("Action $number: there is no tool named {$action->tool}");
         }
-        if (!$tool instanceof WriteTool) {
+        if (!$tool instanceof WriteAction) {
             throw new PlanRefusedException("Action $number: {$action->tool} does not change the site; call it directly");
         }
         $dependsOn = $this->references->find($action->arguments);
@@ -137,23 +148,46 @@ final readonly class PlanProposer
             }
         }
         $arguments = json_encode($action->arguments, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-        $preview = null;
-        if ($dependsOn === []) {
-            try {
-                $preview = $tool->preview($this->requestBuilder->build($tool->requestClass(), $arguments));
-            } catch (Exception $exception) {
-                throw new PlanRefusedException("Action $number ({$action->tool}): " . $exception->getMessage(), 0, $exception);
-            }
-        }
 
         return [
             'tool' => $action->tool,
             'arguments' => $arguments,
-            'preview' => $preview === null ? null : json_decode($this->serializer->serialize($preview, 'json', [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE]), true, 512, JSON_THROW_ON_ERROR),
             'dependsOn' => $dependsOn,
             'status' => PlanActionStatus::Pending->value,
             'result' => null,
             'error' => null,
+            'kind' => $tool->kind()->value,
+            'entityType' => $tool->entityType()->value,
+            'state' => $dependsOn === [] ? $this->state($number, $tool, $arguments) : null,
         ];
+    }
+
+    /**
+     * The state of what the action changes, as the plan stores it; the
+     * arguments are checked against the action's schema on the way.
+     *
+     * @return array<array-key, mixed>|null
+     * @throws PlanRefusedException
+     * @throws JsonException
+     */
+    private function state(int $number, WriteAction $action, string $arguments): ?array
+    {
+        try {
+            $state = $action->state(Arguments::parse($arguments, $action->schema()));
+        } catch (Exception $exception) {
+            throw new PlanRefusedException("Action $number ({$action->name()}): " . $exception->getMessage(), 0, $exception);
+        }
+
+        return $state === null ? null : $this->normalized($state);
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     * @throws JsonException
+     */
+    private function normalized(object $dto): array
+    {
+        /** @var array<array-key, mixed> */
+        return json_decode($this->serializer->serialize($dto, 'json', [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE]), true, 512, JSON_THROW_ON_ERROR);
     }
 }

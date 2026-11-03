@@ -18,6 +18,15 @@ use ZxArt\Assistant\Chat\MessageRole;
 use ZxArt\Assistant\Chat\PlanStatus;
 use ZxArt\Assistant\Chat\RunStatus;
 use ZxArt\Assistant\Chat\RunType;
+use ZxArt\Authors\Dto\AuthorFieldsDto;
+use ZxArt\Authors\UseCases\CreateAuthorCommand;
+use ZxArt\Authors\UseCases\CreateAuthorHandler;
+use ZxArt\Groups\Dto\GroupAliasFieldsDto;
+use ZxArt\Groups\Dto\GroupFieldsDto;
+use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
+use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
+use ZxArt\Groups\UseCases\CreateGroupCommand;
+use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
@@ -147,12 +156,14 @@ final class AssistantChatServiceTest extends WriteToolTestCase
         $conversation = $service->create(self::USER_ID);
         $this->container->get(PlansDbal::class)->create($conversation->id, 'New game', [[
             'tool' => 'create_prod',
-            'arguments' => '{}',
-            'preview' => ['kind' => 'create', 'target' => ['type' => 'prod', 'id' => null, 'title' => 'Goldwrite Demo', 'createdInStep' => null], 'changes' => [], 'consequences' => []],
+            'arguments' => '{"title": "Goldwrite Demo"}',
             'dependsOn' => [],
             'status' => 'done',
             'result' => ['id' => $prodId],
             'error' => null,
+            'kind' => 'create',
+            'entityType' => 'prod',
+            'state' => null,
         ]], time());
 
         $state = $service->state(self::USER_ID, $conversation->id, 0);
@@ -160,25 +171,48 @@ final class AssistantChatServiceTest extends WriteToolTestCase
         self::assertSame(['prod:' . $prodId], array_keys($state->refs));
     }
 
-    public function testTheStateMentionsTheEntitiesAnUnpreviewedActionNamesById(): void
+    public function testTheStateMentionsTheIdsOfAnActionByTheTypeOfWhatTheyAreNotByTheirName(): void
     {
         $this->signInAsEditor();
+        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand(new GroupFieldsDto(title: 'Goldwrite Guild')))->id;
+        $crewId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand(new GroupAliasFieldsDto(title: 'Goldwrite Crew', groupId: $groupId)))->id;
+        $labelId = $this->container->get(CreateAuthorHandler::class)->handle(new CreateAuthorCommand(new AuthorFieldsDto(title: 'Goldwrite Label')))->id;
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
+        $introId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Intro')))->id;
         $service = $this->service();
         $conversation = $service->create(self::USER_ID);
-        $this->container->get(PlansDbal::class)->create($conversation->id, 'Credit', [[
-            'tool' => 'create_release',
-            'arguments' => json_encode(['fields' => ['title' => 'Tape', 'prodId' => $prodId, 'publisherIds' => [5], 'authorIds' => [['$ref' => 1]]]], JSON_THROW_ON_ERROR),
-            'preview' => null,
-            'dependsOn' => [1],
-            'status' => 'pending',
-            'result' => null,
-            'error' => null,
-        ]], time());
+        $this->container->get(PlansDbal::class)->create($conversation->id, 'Credit', [
+            [
+                'tool' => 'update_prod',
+                'arguments' => json_encode(['id' => $prodId, 'groupIds' => [$crewId], 'publisherIds' => [$labelId, 999999999]], JSON_THROW_ON_ERROR),
+                'kind' => 'update',
+                'entityType' => 'prod',
+                'state' => ['id' => $prodId, 'compilationItemIds' => [$introId]],
+                'dependsOn' => [],
+                'status' => 'pending',
+                'result' => null,
+                'error' => null,
+            ],
+            [
+                'tool' => 'set_prod_author',
+                'arguments' => json_encode(['prodId' => ['$ref' => 1], 'authorId' => $labelId, 'roles' => ['code']], JSON_THROW_ON_ERROR),
+                'kind' => 'link',
+                'entityType' => 'prod',
+                'state' => null,
+                'dependsOn' => [1],
+                'status' => 'pending',
+                'result' => null,
+                'error' => null,
+            ],
+        ], time());
 
         $state = $service->state(self::USER_ID, $conversation->id, 0);
 
-        self::assertSame(['prod:' . $prodId], array_keys($state->refs));
+        $keys = array_keys($state->refs);
+        sort($keys);
+        $expected = ['groupAlias:' . $crewId, 'author:' . $labelId, 'prod:' . $prodId, 'prod:' . $introId];
+        sort($expected);
+        self::assertSame($expected, $keys);
     }
 
     public function testTheStateIsWhatIsNewAndTheEntitiesItMentions(): void

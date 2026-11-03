@@ -33,8 +33,6 @@ use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\ProdLink;
-use ZxArt\Groups\Services\GroupFieldsReader;
-use groupElement;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
 
@@ -439,23 +437,6 @@ final class GroupWritesTest extends EntityWriteTestCase
         self::assertSame([$guildId], $find(new GroupSearchFilterDto(subGroupId: $divisionId)));
     }
 
-    public function testReadAnswersWhatCreateAndUpdateWrote(): void
-    {
-        $this->signInAsEditor();
-        $subGroupIds = [$this->createGroup('Goldmaster Division'), $this->createGroup('Goldmaster Branch')];
-        $groupId = $this->container->get(CreateGroupHandler::class)->handle(new CreateGroupCommand($this->everyField($subGroupIds)))->id;
-        $reader = $this->container->get(GroupFieldsReader::class);
-
-        self::assertEquals($this->everyField($subGroupIds), $reader->read($this->element($groupId)));
-
-        $this->container->get(UpdateGroupHandler::class)->handle(new UpdateGroupCommand($groupId, new GroupFieldsDto(type: 'studio', startDate: 0, subGroupIds: [$subGroupIds[1]])));
-
-        self::assertEquals(
-            new GroupFieldsDto(...array_replace(get_object_vars($this->everyField($subGroupIds)), ['type' => 'studio', 'startDate' => 0, 'subGroupIds' => [$subGroupIds[1]]])),
-            $reader->read($this->element($groupId)),
-        );
-    }
-
     /**
      * @return Closure(GroupSearchFilterDto): list<int>
      */
@@ -555,13 +536,5 @@ final class GroupWritesTest extends EntityWriteTestCase
         $newIds = $this->newElementIds();
 
         return $newIds === [] ? [] : $this->db->table(self::TABLE)->whereIn('id', $newIds)->get();
-    }
-
-    private function element(int $elementId): groupElement
-    {
-        $element = $this->structureManager->getElementById($elementId);
-        self::assertInstanceOf(groupElement::class, $element);
-
-        return $element;
     }
 }

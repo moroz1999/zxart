@@ -2286,7 +2286,6 @@
     "running": "Работаю…",
     "approve": "Выполнить план",
     "cancel": "Отмена",
-    "created-in-step": "из шага {{step}}",
     "approve-confirm": {
       "title": "Утвердить план?",
       "message": "Будет выполнено действий: {{count}}, по порядку.",

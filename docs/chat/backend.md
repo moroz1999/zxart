@@ -29,7 +29,7 @@ New tables, all **InnoDB** (the content tables are MyISAM, see
 | `ai_message` | `id`, `conversationId`, `seq`, `role` (`user`/`assistant`/`tool`/`system`), `kind`, `text`, `payload` (JSON), `createdAt` |
 | `ai_run` | `id`, `conversationId`, `type` (`chat`/`execute`), `status`, `stopRequested`, `startedAt`, `heartbeatAt`, `finishedAt`, `steps`, `tokensIn`, `tokensOut`, `error` |
 | `ai_plan` | `id`, `conversationId`, `messageId`, `title`, `status`, `approvedAt`, `finishedAt` |
-| `ai_plan_action` | `id`, `planId`, `position`, `tool`, `arguments` (JSON), `preview` (JSON), `status`, `result` (JSON), `error`, `executedAt` |
+| `ai_plan_action` | `id`, `planId`, `position`, `tool`, `arguments` (JSON), `kind`, `entityType`, `state` (JSON), `status`, `result` (JSON), `error`, `executedAt` |
 
 - `seq` grows per conversation and is what the poll asks for: "everything after
   `seq` N". Every row the run writes gets the next `seq`, so the panel never
@@ -38,7 +38,7 @@ New tables, all **InnoDB** (the content tables are MyISAM, see
   optionally with suggested answers), `toolCall` (one read tool call with its
   human-readable summary; full arguments and result in `payload`), `plan`
   (points at `ai_plan`), `planProgress` (execution of one action), `error`,
-  `stopped`. Assistant text and plan previews also carry `refs` in `payload` —
+  `stopped`. Assistant text and plans also carry `refs` in `payload` —
   see [Entity references](#entity-references).
 - Run `status`: `queued` → `running` → `done` / `waitingApproval` / `failed` /
   `stopped`. Plan `status`: `proposed` → `approved` → `executing` → `done` /
@@ -102,7 +102,7 @@ starter gets zero rows and leaves), and loops:
    message (summary + full arguments/result in `payload`), feed the result back.
 5. Control tools end the turn:
    - `ask_user` → `question` message, run `done`;
-   - `propose_plan` → the plan is validated and previewed
+   - `propose_plan` → the plan is validated and each target's state read
      (see [Plans](#plans)); a valid one becomes a `plan` message and the run
      ends `waitingApproval`; an invalid one is returned to the model as a tool
      error so it can correct it;
@@ -161,27 +161,21 @@ Validation before the plan is shown:
    `{"$ref": "<position>.<field>"}` — for example the `id` of the author created
    in action 1. A reference must point at an earlier action and at a field its
    result type declares.
-3. Each tool's `preview()` loads the current state and returns the
-   before/after rows (see [mcp-tools.md](mcp-tools.md)). A missing entity makes
-   the plan invalid; privileges and the use case's rules are checked only when
-   the action runs, and a refusal there is a failed step the assistant then
-   plans around. An action whose input is a reference previews with the
-   referenced entity as "created in step N".
-
-The stored preview is what the panel shows, and also the **baseline** for
-execution.
+3. Each action without references reads its target's current state
+   (`WriteAction::state()`), stored with the action for the panel. A missing
+   entity makes the plan invalid; privileges and the use case's rules are
+   checked only when the action runs, and a refusal there is a failed step the
+   assistant then plans around. An action whose input is a reference has no
+   state: what it refers to does not exist yet.
 
 ### Execution (`PlanExecutor`)
 
 An `execute` run walks the actions in order:
 
 1. Resolve references from the results of the actions already done.
-2. Check that the target entity has not changed since the preview (its
-   modification time, stored in the preview). A changed entity fails the action
-   as "changed since the plan was made".
-3. Run the tool's `execute()` as the user. The tool checks the privilege again
+2. Run the action's `write()` as the user: the use case checks the privilege
    and writes the actions log, as every entity write does.
-4. Store the result and status and write a `planProgress` message.
+3. Store the result and status and write a `planProgress` message.
 
 On the first failure the remaining actions are marked `skipped`, the plan
 `failed`, and a `chat` run is queued with a system note listing what was done
@@ -209,8 +203,8 @@ would not be enough even if it were:
   cache, the structure manager's in-memory elements and queued AI jobs.
 
 The conversion is planned in [innodb.md](innodb.md). Until it is done, plan
-execution relies on the full **preview pass** before anything is written (it
-catches missing entities, refused privileges and invalid input) and on **stop on
+execution relies on the **state pass** before anything is written (it catches
+missing entities and invalid input) and on **stop on
 first failure** with a clear report. Once the tables are InnoDB, the executor
 wraps the actions in `$db->transaction()`; files written to disk during a failed
 plan are deleted by the executor, and caches of the touched elements are
@@ -224,7 +218,7 @@ When a message is stored, the backend collects them, loads each entity and
 stores `refs: {"prod:123": {"title": "…", "url": "/prod/123"}}` in the
 message's `payload` (URLs from `EntityUrlResolver`). The panel renders links
 from `refs` without extra requests. A mention of something that does not exist
-stays plain text. Plan previews carry refs the same way.
+stays plain text. Plans carry refs the same way.
 
 ## Cron `/assistant-cron/`
 
@@ -263,8 +257,8 @@ Run every 15 minutes by the server's crontab, like the existing cron URLs.
 - [ ] `ToolCallingClient` interface + OpenAI implementation (tools, image input, token usage)
 - [ ] System prompt and history assembly with truncation
 - [ ] `AgentRunner`: claim, loop, stop, deadline, heartbeat, step and size limits
-- [ ] Control tools `ask_user`, `propose_plan`; plan validation, references, previews
-- [ ] `PlanExecutor`: references, staleness check, stop on failure, follow-up run
+- [ ] Control tools `ask_user`, `propose_plan`; plan validation, references, target states
+- [ ] `PlanExecutor`: references, stop on failure, follow-up run
 - [ ] Entity reference extraction into `refs`
 - [ ] `/assistant-data/` controller with request DTOs, REST DTOs, privilege and ownership checks
 - [ ] `ResponseCloser` (FPM / mod_php) + session close before the run

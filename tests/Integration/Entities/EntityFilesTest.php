@@ -9,10 +9,10 @@ require_once __DIR__ . '/../../Doubles/Http/LocalFileServer.php';
 require_once __DIR__ . '/../../Doubles/Http/LoopbackUrlGuard.php';
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use ZxArt\Assistant\Releases\ReleaseDtos;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
-use ZxArt\Prods\Services\ProdStateService;
 use ZxArt\Prods\UseCases\AddProdFilesCommand;
 use ZxArt\Prods\UseCases\AddProdFilesHandler;
 use ZxArt\Prods\UseCases\CreateProdCommand;
@@ -20,14 +20,13 @@ use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\Exception\ReleaseDataException;
 use ZxArt\Releases\ReleaseFileKind;
-use ZxArt\Releases\Services\ReleaseStateService;
 use ZxArt\Releases\UseCases\AddReleaseFilesCommand;
 use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
 use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Releases\UseCases\SetReleaseFileCommand;
 use ZxArt\Releases\UseCases\SetReleaseFileHandler;
-use ZxArt\Shared\Dto\AttachedFileDto;
+use ZxArt\Shared\Dto\ListedFileDto;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
 use ZxArt\Tests\Doubles\Http\LoopbackUrlGuard;
@@ -216,12 +215,9 @@ final class EntityFilesTest extends EntityWriteTestCase
         }
     }
 
-    public function testTheStatesListTheFilesOfEachKindAndTheReleaseFileSize(): void
+    public function testTheReleaseDtoListsTheFilesAndTheReleaseFileSize(): void
     {
         $this->signInAsEditor();
-        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
-        $prodFileIds = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds;
-        $this->rememberStoredFiles($prodFileIds);
         $releaseId = $this->createRelease();
         $releaseFileIds = $this->container->get(AddReleaseFilesHandler::class)->handle(new AddReleaseFilesCommand($releaseId, ReleaseFileKind::Inlays, [$this->server->url('/image.png')]))->fileIds;
         $this->rememberStoredFiles($releaseFileIds);
@@ -230,17 +226,9 @@ final class EntityFilesTest extends EntityWriteTestCase
         self::assertInstanceOf(zxReleaseElement::class, $release);
         $this->storedPaths[] = $release->getFilePath();
 
-        $prodState = $this->container->get(ProdStateService::class)->get($prodId);
-        $releaseState = $this->container->get(ReleaseStateService::class)->get($releaseId);
+        $releaseState = $this->container->get(ReleaseDtos::class)->release($releaseId);
 
-        self::assertEquals(
-            ['screenshots' => [], 'inlays' => [], 'maps' => [new AttachedFileDto($prodFileIds[0], 'image.png')], 'rzx' => []],
-            $prodState->files,
-        );
-        self::assertEquals(
-            ['screenshots' => [], 'inlays' => [new AttachedFileDto($releaseFileIds[0], 'image.png')], 'info' => [], 'ads' => []],
-            $releaseState->files,
-        );
+        self::assertEquals([new ListedFileDto('inlays', $releaseFileIds[0], 'image.png')], $releaseState->files);
         self::assertSame('intro.tap', $releaseState->fileName);
         self::assertSame(filesize($release->getFilePath()), $releaseState->fileSize);
     }

@@ -11,31 +11,29 @@ require_once __DIR__ . '/../../Doubles/Http/LoopbackUrlGuard.php';
 use fileElement;
 use Override;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use ZxArt\Assistant\Tools\Dto\ChangeKind;
-use ZxArt\Assistant\Tools\Dto\FieldChangeDto;
+use ZxArt\Assistant\Prods\ProdDto;
+use ZxArt\Assistant\Prods\ProdDtos;
+use ZxArt\Assistant\Releases\ReleaseDto;
+use ZxArt\Assistant\Releases\ReleaseDtos;
 use ZxArt\Prods\Dto\ProdFieldsDto;
 use ZxArt\Prods\Exception\ProdDataException;
 use ZxArt\Prods\ProdFileKind;
-use ZxArt\Prods\Services\ProdStateService;
 use ZxArt\Prods\UseCases\AddProdFilesCommand;
 use ZxArt\Prods\UseCases\AddProdFilesHandler;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
-use ZxArt\Releases\ReleaseFileKind;
-use ZxArt\Releases\Services\ReleaseStateService;
-use ZxArt\Releases\UseCases\AddReleaseFilesCommand;
-use ZxArt\Releases\UseCases\AddReleaseFilesHandler;
 use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
+use ZxArt\Shared\Dto\ListedFileDto;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
 use ZxArt\Tests\Doubles\Http\LoopbackUrlGuard;
 use zxReleaseElement;
 
 /**
- * The file tools of productions and releases, fetching from a local server the
+ * The file actions of productions and releases, fetching from a local server the
  * test guard lets through.
  */
 #[RunTestsInSeparateProcesses]
@@ -65,35 +63,33 @@ final class FileWriteToolsTest extends WriteToolTestCase
         parent::tearDown();
     }
 
-    public function testAddProdFilesPreviewsTheListGrowingAndAdds(): void
+    public function testAddProdFilesStateIsTheProductionWithItsFilesAndItAdds(): void
     {
         $this->signInAsEditor();
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
-        $this->remember($this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds);
-        $url = $this->server->url('/redirect-image');
-        $arguments = '{"prodId": ' . $prodId . ', "kind": "maps", "urls": ["' . $url . '"]}';
+        $mapIds = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand($prodId, ProdFileKind::Maps, [$this->server->url('/image.png')]))->fileIds;
+        $this->remember($mapIds);
+        $arguments = '{"prodId": ' . $prodId . ', "kind": "maps", "urls": ["' . $this->server->url('/redirect-image') . '"]}';
 
-        $preview = $this->preview('add_prod_files', $arguments);
+        $state = $this->actionState('add_prod_files', $arguments);
 
-        self::assertSame(ChangeKind::AttachFile, $preview->kind);
-        self::assertEquals([new FieldChangeDto('maps', ['image.png'], ['image.png', $url])], $preview->changes);
-        $added = $this->execute('add_prod_files', $arguments);
+        self::assertInstanceOf(ProdDto::class, $state);
+        self::assertEquals([new ListedFileDto('maps', $mapIds[0], 'image.png')], $state->files);
+        $added = $this->actionWrite('add_prod_files', $arguments);
         self::assertInstanceOf(AddedFilesDto::class, $added);
         $this->remember($added->fileIds);
-        self::assertCount(2, $this->container->get(ProdStateService::class)->get($prodId)->files['maps']);
+        self::assertCount(2, $this->container->get(ProdDtos::class)->prod($prodId)->files);
     }
 
-    public function testAddProdFilesWithoutAUrlIsPreviewedAndRefusedWhenItRuns(): void
+    public function testAddProdFilesWithoutAUrlIsRefusedWhenItRuns(): void
     {
         $this->signInAsEditor();
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
 
-        $this->preview('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}');
-
-        $this->assertRefused(400, ProdDataException::class, fn() => $this->execute('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}'));
+        $this->assertRefused(400, ProdDataException::class, fn() => $this->actionWrite('add_prod_files', '{"prodId": ' . $prodId . ', "kind": "maps", "urls": []}'));
     }
 
-    public function testDeleteProdFilePreviewsTheListShrinkingAndDeletes(): void
+    public function testDeleteProdFileStateIsTheProductionWithTheFileAndItDeletes(): void
     {
         $this->signInAsEditor();
         $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldwrite Demo')))->id;
@@ -101,48 +97,48 @@ final class FileWriteToolsTest extends WriteToolTestCase
         $this->remember($fileIds);
         $arguments = '{"prodId": ' . $prodId . ', "fileId": ' . $fileIds[0] . '}';
 
-        $preview = $this->preview('delete_prod_file', $arguments);
+        self::assertEquals($this->container->get(ProdDtos::class)->prod($prodId), $this->actionState('delete_prod_file', $arguments));
+        $this->actionWrite('delete_prod_file', $arguments);
 
-        self::assertSame(ChangeKind::DeleteFile, $preview->kind);
-        self::assertEquals([new FieldChangeDto('maps', ['image.png'], [])], $preview->changes);
-        $this->execute('delete_prod_file', $arguments);
         self::assertFalse($this->elementExists($fileIds[0]));
     }
 
-    public function testAddAndDeleteReleaseFilesPreviewTheirList(): void
+    public function testAddReleaseFilesStateIsTheReleaseWithItsFilesAndItAddsThenDeletes(): void
     {
         $this->signInAsEditor();
         $releaseId = $this->createRelease();
-        $url = $this->server->url('/image.png');
+        $arguments = '{"releaseId": ' . $releaseId . ', "kind": "inlays", "urls": ["' . $this->server->url('/image.png') . '"]}';
 
-        self::assertEquals(
-            [new FieldChangeDto('inlays', [], [$url])],
-            $this->preview('add_release_files', '{"releaseId": ' . $releaseId . ', "kind": "inlays", "urls": ["' . $url . '"]}')->changes,
-        );
-        $fileIds = $this->container->get(AddReleaseFilesHandler::class)->handle(new AddReleaseFilesCommand($releaseId, ReleaseFileKind::Inlays, [$url]))->fileIds;
-        $this->remember($fileIds);
+        self::assertEquals($this->release($releaseId), $this->actionState('add_release_files', $arguments));
+        $added = $this->actionWrite('add_release_files', $arguments);
 
-        self::assertEquals(
-            [new FieldChangeDto('inlays', ['image.png'], [])],
-            $this->preview('delete_release_file', '{"releaseId": ' . $releaseId . ', "fileId": ' . $fileIds[0] . '}')->changes,
-        );
+        self::assertInstanceOf(AddedFilesDto::class, $added);
+        $this->remember($added->fileIds);
+        self::assertEquals([new ListedFileDto('inlays', $added->fileIds[0], 'image.png')], $this->release($releaseId)->files);
+        $deleteArguments = '{"releaseId": ' . $releaseId . ', "fileId": ' . $added->fileIds[0] . '}';
+        self::assertEquals($this->release($releaseId), $this->actionState('delete_release_file', $deleteArguments));
+        $this->actionWrite('delete_release_file', $deleteArguments);
+        self::assertFalse($this->elementExists($added->fileIds[0]));
     }
 
-    public function testSetReleaseFilePreviewsTheFileItReplacesAndSetsIt(): void
+    public function testSetReleaseFileStateIsTheReleaseWithItsFileAndItReplacesIt(): void
     {
         $this->signInAsEditor();
         $releaseId = $this->createRelease();
         $arguments = '{"releaseId": ' . $releaseId . ', "url": "' . $this->server->url('/intro.tap') . '", "fileName": "game.tap"}';
 
-        $preview = $this->preview('set_release_file', $arguments);
+        self::assertEquals($this->release($releaseId), $this->actionState('set_release_file', $arguments));
+        $this->actionWrite('set_release_file', $arguments);
 
-        self::assertSame(ChangeKind::AttachFile, $preview->kind);
-        self::assertEquals([new FieldChangeDto('file', null, 'game.tap')], $preview->changes);
-        $this->execute('set_release_file', $arguments);
         $release = $this->structureManager->getElementById($releaseId);
         self::assertInstanceOf(zxReleaseElement::class, $release);
         $this->storedPaths[] = $release->getFilePath();
-        self::assertSame('game.tap', $this->container->get(ReleaseStateService::class)->get($releaseId)->fileName);
+        self::assertSame('game.tap', $this->release($releaseId)->fileName);
+    }
+
+    private function release(int $releaseId): ReleaseDto
+    {
+        return $this->container->get(ReleaseDtos::class)->release($releaseId);
     }
 
     private function createRelease(): int

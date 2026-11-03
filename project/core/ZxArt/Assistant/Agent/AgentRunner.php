@@ -10,6 +10,10 @@ use RuntimeException;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use ZxArt\Assistant\Actions\Action;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\ReadAction;
+use ZxArt\Assistant\Actions\ToolRegistry;
 use ZxArt\Assistant\Chat\Dbal\ConversationsDbal;
 use ZxArt\Assistant\Chat\Dbal\MessagesDbal;
 use ZxArt\Assistant\Chat\Dbal\RunsDbal;
@@ -22,19 +26,15 @@ use ZxArt\Assistant\Llm\LlmMessageDto;
 use ZxArt\Assistant\Llm\LlmRole;
 use ZxArt\Assistant\Llm\LlmToolCallDto;
 use ZxArt\Assistant\Llm\LlmToolDto;
-use ZxArt\Assistant\Tools\JsonSchemaGenerator;
-use ZxArt\Assistant\Tools\ReadTool;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
 use ZxArt\Shared\Images\ImageDto;
 
 /**
- * One chat run: asks the model, calls the read tools it asks for and feeds the
+ * One chat run: asks the model, calls the read actions it asks for and feeds the
  * results back until it answers in prose or proposes a plan. Every step is
  * stored as a message first, so the panel shows the run as it goes.
  *
- * Write tools are not offered; the model reaches them only through
- * `propose_plan`. A failed tool call is told to the model, which may try again.
+ * Write actions are not offered; the model reaches them only through
+ * `propose_plan`. A failed call is told to the model, which may try again.
  * A stop the user asked for is honoured before the next step.
  */
 final readonly class AgentRunner
@@ -42,7 +42,6 @@ final readonly class AgentRunner
     public function __construct(
         private LlmClient $llm,
         private ToolRegistry $tools,
-        private ToolRequestBuilder $requestBuilder,
         private SerializerInterface $serializer,
         private ConversationHistory $history,
         private PlanProposer $planProposer,
@@ -50,7 +49,6 @@ final readonly class AgentRunner
         private ConversationsDbal $conversations,
         private MessagesDbal $messages,
         private RunsDbal $runs,
-        private JsonSchemaGenerator $schemaGenerator = new JsonSchemaGenerator(),
         private int $maxSteps = 20,
         private int $timeLimitSeconds = 600,
     ) {
@@ -163,11 +161,7 @@ final readonly class AgentRunner
     private function callTool(int $conversationId, LlmToolCallDto $call, array &$images): string
     {
         try {
-            $tool = $this->tools->get($call->name);
-            if (!$tool instanceof ReadTool) {
-                throw new PlanRefusedException("{$call->name} changes the site; propose it in a plan");
-            }
-            $result = $tool->execute($this->requestBuilder->build($tool->requestClass(), $call->arguments));
+            $result = $this->read($this->tools->get($call->name), $call);
         } catch (Exception $exception) {
             $told = 'Error: ' . $exception->getMessage();
             $this->storeCall($conversationId, $call, $told, true);
@@ -185,14 +179,26 @@ final readonly class AgentRunner
     }
 
     /**
+     * @throws Exception
+     */
+    private function read(Action $tool, LlmToolCallDto $call): object
+    {
+        if ($tool instanceof ReadAction) {
+            return $tool->read(Arguments::parse($call->arguments, $tool->schema()));
+        }
+
+        throw new PlanRefusedException("{$call->name} changes the site; propose it in a plan");
+    }
+
+    /**
      * @return list<LlmToolDto>
      */
     private function offeredTools(): array
     {
         $offered = [];
         foreach ($this->tools->all() as $tool) {
-            if ($tool instanceof ReadTool) {
-                $offered[] = new LlmToolDto($tool->name(), $tool->description(), $this->schemaGenerator->forClass($tool->requestClass()));
+            if ($tool instanceof ReadAction) {
+                $offered[] = new LlmToolDto($tool->name(), $tool->description(), Arguments::schema($tool->schema()));
             }
         }
         $offered[] = $this->writeTools->describeTool();

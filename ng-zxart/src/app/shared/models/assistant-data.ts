@@ -35,17 +35,15 @@ export interface AssistantEntityValue {
   id: number;
 }
 
-export interface AssistantChangePreview {
-  kind: string;
-  target: {type: string; id: number | null; title: string; createdInStep: number | null};
-  changes: {field: string; before: unknown; after: unknown}[];
-  consequences: string[];
-}
-
 export interface AssistantPlanAction {
   tool: string;
   arguments: string;
-  preview: AssistantChangePreview | null;
+  /** The change kind. */
+  kind: string;
+  /** The type of the entity it changes. */
+  entityType: string;
+  /** Its target as it was when proposed; null when it creates it or takes it from an earlier step. */
+  state: Record<string, unknown> | null;
   dependsOn: number[];
   status: AssistantActionStatus;
   result: Record<string, unknown> | null;

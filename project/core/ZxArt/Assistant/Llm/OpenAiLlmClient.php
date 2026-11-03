@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace ZxArt\Assistant\Llm;
 
+use JsonException;
 use OpenAI\Contracts\ClientContract;
 use OpenAI\Responses\Responses\Output\OutputFunctionToolCall;
-use JsonException;
+use stdClass;
 use Throwable;
 use ZxArt\Logs\Log;
 use ZxArt\Shared\Images\ImageDto;
@@ -149,11 +150,17 @@ final class OpenAiLlmClient implements LlmClient
      */
     private function tool(LlmToolDto $tool): array
     {
+        $parameters = $tool->parameters;
+        if (($parameters['properties'] ?? null) === []) {
+            // a schema decoded to an array holds no properties as [], which encodes as a list
+            $parameters['properties'] = new stdClass();
+        }
+
         return [
             'type' => 'function',
             'name' => $tool->name,
             'description' => $tool->description,
-            'parameters' => $tool->parameters,
+            'parameters' => $parameters,
         ];
     }
 

@@ -6,11 +6,11 @@ namespace ZxArt\Assistant\Agent;
 
 use JsonException;
 use stdClass;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\WriteAction;
 use ZxArt\Assistant\Llm\LlmToolDto;
-use ZxArt\Assistant\Tools\JsonSchemaGenerator;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\UnknownToolException;
-use ZxArt\Assistant\Tools\WriteTool;
+use ZxArt\Assistant\Actions\ToolRegistry;
+use ZxArt\Assistant\Actions\UnknownToolException;
 
 /**
  * The write tools as the model learns them. The model never calls them; it
@@ -25,7 +25,6 @@ final readonly class WriteToolCatalogue
 
     public function __construct(
         private ToolRegistry $tools,
-        private JsonSchemaGenerator $schemaGenerator,
     ) {
     }
 
@@ -34,7 +33,7 @@ final readonly class WriteToolCatalogue
      */
     public function list(): string
     {
-        return implode(', ', array_map(static fn(WriteTool $tool): string => $tool->name(), $this->writeTools()));
+        return implode(', ', array_map(static fn(WriteAction $tool): string => $tool->name(), $this->writeTools()));
     }
 
     public function describeTool(): LlmToolDto
@@ -47,7 +46,7 @@ final readonly class WriteToolCatalogue
                 'properties' => [
                     'name' => [
                         'type' => 'string',
-                        'enum' => array_map(static fn(WriteTool $tool): string => $tool->name(), $this->writeTools()),
+                        'enum' => array_map(static fn(WriteAction $tool): string => $tool->name(), $this->writeTools()),
                     ],
                 ],
                 'required' => ['name'],
@@ -77,22 +76,29 @@ final readonly class WriteToolCatalogue
         } catch (UnknownToolException) {
             throw new PlanRefusedException("There is no tool named $name");
         }
-        if (!$tool instanceof WriteTool) {
+        if (!$tool instanceof WriteAction) {
             throw new PlanRefusedException("$name is not a write tool; call it directly");
         }
 
         return json_encode([
             'name' => $tool->name(),
             'description' => $tool->description(),
-            'arguments' => $this->schemaGenerator->forClass($tool->requestClass()),
+            'arguments' => Arguments::schema($tool->schema()),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 
     /**
-     * @return list<WriteTool>
+     * @return list<WriteAction>
      */
     private function writeTools(): array
     {
-        return array_values(array_filter($this->tools->all(), static fn(object $tool): bool => $tool instanceof WriteTool));
+        $writeTools = [];
+        foreach ($this->tools->all() as $tool) {
+            if ($tool instanceof WriteAction) {
+                $writeTools[] = $tool;
+            }
+        }
+
+        return $writeTools;
     }
 }

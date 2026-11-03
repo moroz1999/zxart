@@ -6,33 +6,52 @@ namespace ZxArt\Tests\Integration\Assistant;
 
 require_once __DIR__ . '/../Entities/EntityWriteTestCase.php';
 
-use ZxArt\Assistant\Tools\Dto\ChangePreviewDto;
-use ZxArt\Assistant\Tools\ToolRegistry;
-use ZxArt\Assistant\Tools\ToolRequestBuilder;
-use ZxArt\Assistant\Tools\WriteTool;
+use ZxArt\Assistant\Actions\Arguments;
+use ZxArt\Assistant\Actions\ReadAction;
+use ZxArt\Assistant\Actions\ToolRegistry;
+use ZxArt\Assistant\Actions\WriteAction;
 use ZxArt\Tests\Integration\Entities\EntityWriteTestCase;
 
 /**
- * A write tool as a plan runs it: resolved by name, built from JSON, previewed,
- * then executed.
+ * An action of the assistant as a plan runs it: resolved by name, its
+ * arguments parsed by its schema, its target's state read, then written.
  */
 abstract class WriteToolTestCase extends EntityWriteTestCase
 {
     private const array ACTIONS = ['publicReceive', 'publicDelete', 'join', 'deleteAuthor', 'convertToGroup', 'convertToAuthor', 'delete'];
     private const array TYPES = ['zxProd', 'zxRelease', 'author', 'authorAlias', 'group', 'groupAlias', 'file'];
 
-    protected function preview(string $toolName, string $arguments): ChangePreviewDto
+    protected function actionState(string $actionName, string $arguments): ?object
     {
-        $tool = $this->writeTool($toolName);
+        $action = $this->writeAction($actionName);
 
-        return $tool->preview($this->container->get(ToolRequestBuilder::class)->build($tool->requestClass(), $arguments));
+        return $action->state(Arguments::parse($arguments, $action->schema()));
     }
 
-    protected function execute(string $toolName, string $arguments): object
+    protected function actionWrite(string $actionName, string $arguments): object
     {
-        $tool = $this->writeTool($toolName);
+        $action = $this->writeAction($actionName);
 
-        return $tool->execute($this->container->get(ToolRequestBuilder::class)->build($tool->requestClass(), $arguments));
+        return $action->write(Arguments::parse($arguments, $action->schema()));
+    }
+
+    protected function actionRead(string $actionName, string $arguments): object
+    {
+        $action = $this->container->get(ToolRegistry::class)->get($actionName);
+        self::assertInstanceOf(ReadAction::class, $action);
+
+        return $action->read(Arguments::parse($arguments, $action->schema()));
+    }
+
+    /**
+     * @return array<string, mixed> the JSON schema of the action's arguments
+     */
+    protected function actionSchema(string $actionName): array
+    {
+        $action = $this->container->get(ToolRegistry::class)->get($actionName);
+        self::assertTrue($action instanceof ReadAction || $action instanceof WriteAction);
+
+        return Arguments::schema($action->schema());
     }
 
     protected function signInAsRegisteredUser(): void
@@ -55,11 +74,11 @@ abstract class WriteToolTestCase extends EntityWriteTestCase
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], $privileges);
     }
 
-    private function writeTool(string $toolName): WriteTool
+    protected function writeAction(string $actionName): WriteAction
     {
-        $tool = $this->container->get(ToolRegistry::class)->get($toolName);
-        self::assertInstanceOf(WriteTool::class, $tool);
+        $action = $this->container->get(ToolRegistry::class)->get($actionName);
+        self::assertInstanceOf(WriteAction::class, $action);
 
-        return $tool;
+        return $action;
     }
 }

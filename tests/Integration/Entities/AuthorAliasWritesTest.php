@@ -25,7 +25,6 @@ use ZxArt\Groups\UseCases\CreateGroupHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Prods\Dto\ProdFieldsDto;
-use ZxArt\Authors\Services\AuthorAliasFieldsReader;
 use authorAliasElement;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
@@ -320,24 +319,6 @@ final class AuthorAliasWritesTest extends EntityWriteTestCase
             self::assertSame(403, $exception->getStatusCode());
         }
         self::assertTrue($this->elementExists($joinedId));
-    }
-
-    public function testReadAnswersWhatCreateAndUpdateWrote(): void
-    {
-        $this->signInAsEditor();
-        $authorId = $this->createAuthor('Goldmaster Writer');
-        $otherAuthorId = $this->createAuthor('Goldmaster Painter');
-        $aliasId = $this->container->get(CreateAuthorAliasHandler::class)->handle(new CreateAuthorAliasCommand($this->everyField($authorId)))->id;
-        $reader = $this->container->get(AuthorAliasFieldsReader::class);
-
-        self::assertEquals($this->everyField($authorId), $reader->read($this->element($aliasId)));
-
-        $this->container->get(UpdateAuthorAliasHandler::class)->handle(new UpdateAuthorAliasCommand($aliasId, new AuthorAliasFieldsDto(authorId: $otherAuthorId, endDate: 0)));
-
-        self::assertEquals(
-            new AuthorAliasFieldsDto(...array_replace(get_object_vars($this->everyField($authorId)), ['authorId' => $otherAuthorId, 'endDate' => 0])),
-            $reader->read($this->element($aliasId)),
-        );
     }
 
     private function signInAsRegisteredUser(): void

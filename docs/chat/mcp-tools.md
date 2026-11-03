@@ -5,21 +5,21 @@ Services the tools stand on: [service-changes.md](service-changes.md).
 
 ## Shape of a tool
 
-A tool is a class in `ZxArt\Assistant\Tools\<Group>\` implementing one of two
-interfaces:
+A tool is an action (`ZxArt\Assistant\Actions`), in the folder of its entity
+or its area:
 
-- `ReadTool`: `name()`, `description()`, `requestClass()`, `execute(request): result`.
+- `ReadAction`: `name()`, `description()`, `schema()`, `read(arguments): result`.
   The agent calls it freely; it never writes.
-- `WriteTool`: the same, plus `preview(request): ChangePreviewDto`. It is
-  callable **only** as an action of an approved plan.
+- `WriteAction`: adds `kind()`, `entityType()`, `state(arguments)` and
+  `write(arguments)`; callable **only** as an action of an approved plan.
 
 Rules:
 
-- Input is a readonly request DTO. Its **JSON Schema is generated** from the DTO
-  (property types, enums, docblock descriptions), so the schema the model sees
-  and the deserialization the tool gets cannot drift apart. The serializer from
-  [rest-api.md](../php/rest-api.md) builds the DTO; a malformed call is reported
-  back to the model as a tool error naming the field.
+- Input is an arguments DTO whose `SCHEMA` constant is the JSON Schema the
+  model sees, with only the fields the task needs; `from(Arguments)` reads
+  each field by that schema, so a malformed call is reported back to the model
+  as a tool error naming the field — see
+  [features/ai-assistant.md](../features/ai-assistant.md#actions).
 - Output is a readonly result DTO, serialized to JSON for the model. Results
   contain ids and titles, never legacy URLs.
 - A tool is a thin adapter: it calls a domain service and maps its DTOs. Logic,
@@ -30,19 +30,17 @@ Rules:
   registry plus authentication.
 - Every tool runs as the current user ([backend.md](backend.md#running-as-the-user)).
 
-### Change preview
+### What a plan shows
 
-`preview()` returns what the plan message shows for the action:
+A plan shows each write action with its `kind` (`create`, `update`, `delete`,
+`join`, `convert`, `link`, `unlink`, `attachFile`, `deleteFile`), its entity
+type and `state` — the target as it is now, read when the plan is proposed —
+and the panel puts each argument beside the value the state holds under that
+name; a delete, join or conversion lists the counters, releases and aliases it
+takes along. A create, or an action that takes an id from an earlier one, has
+no state.
 
-- `kind`: `create`, `update`, `delete`, `join`, `convert`, `link`, `unlink`, `attachFile`, `deleteFile`;
-- `target`: the entity ref (`type`, `id`, `title`), or "created in step N";
-- `changes`: rows of `field`, `before`, `after` — only fields that change;
-  values that are entities are refs, so the panel can link them;
-- `consequences`: plain sentences the user must see — "3 releases move to
-  [[prod:12]]", "the author's 40 works lose this author";
-- `modifiedAt`: the target's modification time, for the staleness check.
-
-`execute()` returns the ids it produced (`id`, and for joins the surviving id),
+`write()` returns the ids it produced (`id`, and for joins the surviving id),
 which later actions may reference.
 
 ## Control tools
@@ -52,7 +50,7 @@ Handled by the runner itself, not by the registry.
 | Tool | Input | Effect |
 |---|---|---|
 | `ask_user` | `question`, optional `options[]` | Ends the turn with a question message; options become quick replies |
-| `propose_plan` | `title`, `summary`, `actions[]` of `{tool, arguments}` | Validates, previews, shows the plan; ends the turn |
+| `propose_plan` | `title`, `summary`, `actions[]` of `{tool, arguments}` | Validates, reads each target's state, shows the plan; ends the turn |
 
 ## Read tools
 
@@ -61,17 +59,17 @@ Handled by the runner itself, not by the registry.
 | Tool | Input | Returns |
 |---|---|---|
 | `search` | `phrase`, optional `types[]` (`prod`, `release`, `author`, `authorAlias`, `group`, `groupAlias`), `limit` | Matches across types, closest first: type, id, title, year, a short qualifier (author's real name and country, prod's year and groups, release's prod) |
-| `search_prods` | `filter` with any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `addedFrom`, `addedTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupLink` (`made`, `published`), `publisherIds[]` (authors or groups), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tagIds[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
-| `search_authors` | `filter` with any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of the software they made or published), `prodIds[]`, `prodRoles[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
-| `search_groups` | `filter` with any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodLink` (`made`, `published`), `prods` (a nested `search_prods` filter), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
-| `search_releases` | `filter` with any of: `title`, `fileName`, `md5`, `prodIds[]`, `prods` (a nested `search_prods` filter), `yearFrom`, `yearTo`, `releaseTypes[]`, `formats[]`, `hardware[]`, `languages[]`, `publisherIds[]` (authors or groups), `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`; `limit`, `offset` | Releases with prod, year, type, format, file name; total count |
+| `search_prods` | any of: `title`, `categoryIds[]`, `yearFrom`, `yearTo`, `releaseYearFrom`, `releaseYearTo`, `hardware[]`, `languages[]`, `legalStatuses[]`, `releaseTypes[]`, `formats[]`, `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`, `groupIds[]`, `groupLink` (`made`, `published`), `publisherIds[]` (authors or groups), `countryIds[]`, `cityIds[]`, `partyIds[]`, `compo`, `maxPartyPlace`, `seriesId`, `compilationId`, `includedProdId`, `tagIds[]`; `limit`, `offset` | Prods with year, authors, groups, categories; total count |
+| `search_authors` | any of: `name` (nickname, real name or alias), `countryIds[]`, `cityIds[]`, `groupIds[]`, `activeFrom`, `activeTo` (years of the software they made or published), `prodIds[]`, `prodRoles[]`, `prodLink` (`made`, `published`), `prods` (the `search_prods` filter, nested), `coAuthorId`; `limit`, `offset` | Authors with real name, location, aliases, groups; total count |
+| `search_groups` | any of: `name` (title, abbreviation or alias), `countryIds[]`, `cityIds[]`, `types[]`, `foundedFrom`, `foundedTo`, `endedFrom`, `endedTo`, `activeFrom`, `activeTo` (years of their software), `memberIds[]`, `prodIds[]`, `prodLink` (`made`, `published`), `prods` (the `search_prods` filter, nested), `parentGroupId`, `subGroupId`; `limit`, `offset` | Groups with location, type, aliases; total count |
+| `search_releases` | any of: `title`, `fileName`, `md5`, `prodIds[]`, `prods` (the `search_prods` filter, nested), `yearFrom`, `yearTo`, `releaseTypes[]`, `formats[]`, `hardware[]`, `languages[]`, `publisherIds[]` (authors or groups), `authorIds[]` (all credited, or any with `anyAuthor`), `authorRoles[]`; `limit`, `offset` | Releases with prod, year, type, format, file name; total count |
 | `find_locations` | `phrase` | Countries and cities with ids — the step behind "Alexander + Tallinn" |
 
 "Alexander + Tallinn" is `find_locations("Tallinn")` then
-`search_authors(filter: {name: "Alexander", cityIds: […]})`. "Game, Star Wars, 1983–1986" is
-`search_prods(filter: {title: "Star Wars", categoryIds: [games], yearFrom: 1983, yearTo: 1986})`.
+`search_authors({name: "Alexander", cityIds: […]})`. "Game, Star Wars, 1983–1986" is
+`search_prods({title: "Star Wars", categoryIds: [games], yearFrom: 1983, yearTo: 1986})`.
 "Who wrote music for Voronezh games of 1987" is
-`search_authors(filter: {prodRoles: ["music"], prods: {categoryIds: [games], yearFrom: 1987, yearTo: 1987, cityIds: […]}})`.
+`search_authors({prodRoles: ["music"], prods: {categoryIds: [games], yearFrom: 1987, yearTo: 1987, cityIds: […]}})`.
 
 ### Entities
 
@@ -108,13 +106,13 @@ tools, never by the agent.
 
 ## Write tools
 
-The tools and their previews are described in
-[features/ai-assistant.md](../features/ai-assistant.md#tools). Inputs:
+The actions are described in
+[features/ai-assistant.md](../features/ai-assistant.md#actions). Inputs:
 
-- `create_<entity>` — `fields`, the entity's fields DTO (the shape the SPA
-  saves); `update_<entity>` — `id` and `fields` with only the fields to change.
-  List-valued fields are **replaced as a whole** when given; the preview shows
-  the list before and after.
+- `create_<entity>` — the entity's fields as flat arguments, only those the
+  assistant may write; `update_<entity>` — `id` and only the fields to change.
+  List-valued fields are **replaced as a whole** when given; the plan shows
+  the stored list beside the new one.
 - `delete_<entity>`, `convert_<entity>_to_<type>` — `id`.
 - `join_<entities>` — `mainId`, `joinedId`; `releasesOnly` for productions,
   `asAlias` for authors and groups.
@@ -138,11 +136,11 @@ ids, tags as entities, parties, pictures, tunes, press.
 
 ## Checklist
 
-- [x] `ReadTool` / `WriteTool` interfaces, `ChangePreviewDto`, `ToolRegistry`, `ToolRequestBuilder` — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
-- [x] JSON Schema generation from request DTOs (+ tests on representative DTOs)
+- [x] Actions (`ReadAction` / `WriteAction`), `Arguments`, `ToolRegistry` — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
+- [x] Hand-written argument schemas, every one closed (+ a test over the registry)
 - [x] Search tools on the services from [service-changes.md](service-changes.md) — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] `get_*` tools for the six entity types — see [features/ai-assistant.md](../features/ai-assistant.md#tools)
 - [x] Catalogue tools, `find_tags`
 - [x] `fetch_url` with address guard and limits, body returned as is; `view_image`
-- [x] Write tools for prods, releases, authors, author aliases, groups, group aliases — each with `preview()` and `execute()`
-- [x] Tests per tool: request mapping, preview rows, refused privilege when it runs
+- [x] Actions for prods, releases, authors, author aliases, groups, group aliases — each with its arguments DTO, `state()` and `write()`
+- [x] Tests per action: schema, state, write, refused privilege when it runs

@@ -53,7 +53,7 @@ final class ElementFields
     /**
      * The ids of the elements a connected-elements field holds.
      *
-     * @return int[]
+     * @return list<int>
      */
     public static function ids(structureElement $element, string $field): array
     {
@@ -67,7 +67,7 @@ final class ElementFields
      * A list field such as a set of codes. Read from the stored value: a
      * value-set field keeps showing what it held before it was last assigned.
      *
-     * @return string[]
+     * @return list<string>
      */
     public static function strings(structureElement $element, string $field): array
     {

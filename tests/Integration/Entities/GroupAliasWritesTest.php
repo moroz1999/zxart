@@ -14,7 +14,6 @@ use ZxArt\Authors\UseCases\CreateAuthorHandler;
 use ZxArt\Groups\Dto\GroupAliasFieldsDto;
 use ZxArt\Groups\Dto\GroupFieldsDto;
 use ZxArt\Groups\Exception\GroupAliasDataException;
-use ZxArt\Groups\Services\GroupAliasFieldsReader;
 use ZxArt\Groups\UseCases\CreateGroupAliasCommand;
 use ZxArt\Groups\UseCases\CreateGroupAliasHandler;
 use ZxArt\Groups\UseCases\CreateGroupCommand;
@@ -29,7 +28,6 @@ use ZxArt\Groups\UseCases\UpdateGroupAliasCommand;
 use ZxArt\Groups\UseCases\UpdateGroupAliasHandler;
 use ZxArt\Import\Dto\ImportOriginDto;
 use ZxArt\Import\ImportOrigin;
-use groupAliasElement;
 
 /**
  * Group aliases written through their use cases.
@@ -315,24 +313,6 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
         self::assertTrue($this->elementExists($joinedId));
     }
 
-    public function testReadAnswersWhatCreateAndUpdateWrote(): void
-    {
-        $this->signInAsEditor();
-        $groupId = $this->createGroup('Goldmaster Guild');
-        $otherGroupId = $this->createGroup('Goldmaster Union');
-        $aliasId = $this->container->get(CreateGroupAliasHandler::class)->handle(new CreateGroupAliasCommand($this->everyField($groupId)))->id;
-        $reader = $this->container->get(GroupAliasFieldsReader::class);
-
-        self::assertEquals($this->everyField($groupId), $reader->read($this->element($aliasId)));
-
-        $this->container->get(UpdateGroupAliasHandler::class)->handle(new UpdateGroupAliasCommand($aliasId, new GroupAliasFieldsDto(groupId: $otherGroupId, startDate: 0)));
-
-        self::assertEquals(
-            new GroupAliasFieldsDto(...array_replace(get_object_vars($this->everyField($groupId)), ['groupId' => $otherGroupId, 'startDate' => 0])),
-            $reader->read($this->element($aliasId)),
-        );
-    }
-
     public function testMembersAreSetAndRemovedAndMoveTheModificationTime(): void
     {
         $this->signIn([self::PUBLIC_VISITORS, self::REGISTERED_USERS], [['groupAlias', 'publicReceive'], ['groupAlias', 'deleteAuthor']]);
@@ -400,13 +380,5 @@ final class GroupAliasWritesTest extends EntityWriteTestCase
             'startDate' => $this->date('15.03.1995'),
             'endDate' => $this->date('01.06.1999'),
         ];
-    }
-
-    private function element(int $elementId): groupAliasElement
-    {
-        $element = $this->structureManager->getElementById($elementId);
-        self::assertInstanceOf(groupAliasElement::class, $element);
-
-        return $element;
     }
 }
