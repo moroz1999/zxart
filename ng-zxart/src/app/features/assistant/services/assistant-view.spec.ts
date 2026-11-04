@@ -255,6 +255,18 @@ describe('buildAssistantView: plans', () => {
     expect(planView.destructiveCount).toBe(0);
   });
 
+  it('leaves out the arguments an action of the assistant gives as null: they are not given', () => {
+    const planView = planWith([action({
+      tool: 'update_author',
+      kind: 'update',
+      entityType: 'author',
+      arguments: JSON.stringify({id: 9, realName: 'Jan Kowalski', countryId: null, wikiLink: null}),
+      state: {id: 9, title: 'Iker Lobo', realName: '', countryId: 7, cityId: 0, wikiLink: '', refs: [], aliases: [], groups: [], counters: {pictures: 0, tunes: 0, prods: 2, comments: 0}},
+    })], 'proposed');
+
+    expect(planView.actions[0].changes.map(change => change.field)).toEqual(['realName']);
+  });
+
   it('links the target of an action of the assistant once its title is known', () => {
     const planView = planWith([action({
       tool: 'update_author',

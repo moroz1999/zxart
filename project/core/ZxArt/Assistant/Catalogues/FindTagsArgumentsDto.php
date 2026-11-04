@@ -18,7 +18,7 @@ final readonly class FindTagsArgumentsDto
             "type": "object",
             "properties": {
                 "phrase": {"type": "string", "description": "a part of the tag's name or of a synonym, in any language"},
-                "limit": {"type": "integer", "description": "the most tags to answer, 20 when not given, up to 100"}
+                "limit": {"type": ["integer", "null"], "description": "the most tags to answer, 20 when not given, up to 100"}
             },
             "required": ["phrase"],
             "additionalProperties": false

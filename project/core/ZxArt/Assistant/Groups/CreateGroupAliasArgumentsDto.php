@@ -17,8 +17,8 @@ final readonly class CreateGroupAliasArgumentsDto
             "properties": {
                 "groupId": {"type": "integer", "description": "the group the alias belongs to"},
                 "title": {"type": "string", "description": "the name"},
-                "startDate": {"type": "integer", "description": "when the group started using it, a Unix timestamp; 0 clears it"},
-                "endDate": {"type": "integer", "description": "when the group stopped using it, a Unix timestamp; 0 clears it"}
+                "startDate": {"type": ["integer", "null"], "description": "when the group started using it, a Unix timestamp; 0 clears it"},
+                "endDate": {"type": ["integer", "null"], "description": "when the group stopped using it, a Unix timestamp; 0 clears it"}
             },
             "required": ["groupId", "title"],
             "additionalProperties": false

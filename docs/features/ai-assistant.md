@@ -98,7 +98,10 @@ arguments as a string. `ReadAction::read(Arguments)` answers a result DTO;
 Each action has an arguments DTO (`<Action>ArgumentsDto`; `IdArgumentsDto` for
 `{id}`): its `SCHEMA` constant is the schema, written as JSON beside the
 constructor, with only the fields the task needs and
-`additionalProperties: false`; `from(Arguments)` builds the DTO field by field.
+`additionalProperties: false`; a field it does not require also takes `null`
+(in its type and its `enum`), which reads as not given, so a model that fills
+every field leaves it out with `null`. `from(Arguments)` builds the DTO field
+by field.
 The action returns that constant from `schema()` and reads its arguments
 through the DTO.
 
@@ -397,7 +400,7 @@ time limit, then the run continues in the same process.
 - `AssistantPlanComponent` — the plan's status chip (the steps done, the step
   it stopped at), a `zx-step` per action: its kind and entity type, its target
   by the state's title (a link once known, also for what the plan created; a
-  create's by its `title` argument), each argument but `id` beside the value
+  create's by its `title` argument), each argument but `id` and those given as `null` beside the value
   the state held under that name, dates as days, an error, the step a skipped
   one waited for, and for a delete, join or conversion the state's non-zero
   counters, releases and aliases as consequences. An id taken from an earlier

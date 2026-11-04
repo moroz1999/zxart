@@ -18,8 +18,8 @@ final readonly class SearchArgumentsDto
             "type": "object",
             "properties": {
                 "phrase": {"type": "string", "description": "a part of the title, or of an author's real name"},
-                "types": {"type": "array", "items": {"type": "string", "enum": ["prod", "release", "author", "authorAlias", "group", "groupAlias"]}, "description": "the types to search; all six when not given"},
-                "limit": {"type": "integer", "description": "the most results to answer, 20 when not given, up to 100"}
+                "types": {"type": ["array", "null"], "items": {"type": "string", "enum": ["prod", "release", "author", "authorAlias", "group", "groupAlias"]}, "description": "the types to search; all six when not given"},
+                "limit": {"type": ["integer", "null"], "description": "the most results to answer, 20 when not given, up to 100"}
             },
             "required": ["phrase"],
             "additionalProperties": false

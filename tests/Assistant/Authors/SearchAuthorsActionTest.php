@@ -43,7 +43,7 @@ final class SearchAuthorsActionTest extends TestCase
     {
         $prods = $this->schema()['properties']['prods'];
 
-        self::assertSame('object', $prods['type']);
+        self::assertSame(['object', 'null'], $prods['type']);
         self::assertFalse($prods['additionalProperties']);
         self::assertContains('legalStatuses', array_keys($prods['properties']));
         self::assertNotContains('limit', array_keys($prods['properties']));
@@ -55,7 +55,7 @@ final class SearchAuthorsActionTest extends TestCase
         $properties = $this->schema()['properties'];
 
         self::assertSame(AuthorshipRoles::LIST, $properties['prodRoles']['items']['enum']);
-        self::assertSame(array_column(ProdLink::cases(), 'value'), $properties['prodLink']['enum']);
+        self::assertSame([...array_column(ProdLink::cases(), 'value'), null], $properties['prodLink']['enum']);
     }
 
     public function testItAnswersThePageTheSearchFoundForTheFilterOfTheArguments(): void

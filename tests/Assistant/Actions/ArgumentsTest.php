@@ -65,6 +65,20 @@ final class ArgumentsTest extends TestCase
         self::assertNull($arguments->texts('roles'));
     }
 
+    public function testAnOptionalValueGivenAsNullIsNotGiven(): void
+    {
+        $arguments = Arguments::parse('{"id": 5, "title": null, "countryId": null, "asAlias": null, "subGroupIds": null, "roles": null}', self::SCHEMA);
+
+        self::assertNull($arguments->text('title'));
+        self::assertNull($arguments->number('countryId'));
+        self::assertFalse($arguments->flag('asAlias'));
+        self::assertNull($arguments->ids('subGroupIds'));
+        self::assertNull($arguments->texts('roles'));
+        self::assertNull($arguments->oneOf('title', ['scene']));
+        self::assertNull($arguments->textsOf('roles', ['coder']));
+        self::assertNull(Arguments::parse('{"title": "Elite", "prods": null}', self::NESTED)->object('prods', self::PRODS));
+    }
+
     public function testAValueOfAClosedListIsReadWhenItIsOneOfIt(): void
     {
         $arguments = Arguments::parse('{"id": 5, "title": "scene"}', self::SCHEMA);

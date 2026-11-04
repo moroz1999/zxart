@@ -353,8 +353,7 @@ class zxProdElement extends ZxArtItem implements
     {
         $urls = [];
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
-            $url = $fileElement->getImageUrl($preset);
-            $urls[] = str_replace('http://zxart.loc', 'https://zxart.ee', $url);
+            $urls[] = $fileElement->getImageUrl($preset);
         }
         return $urls;
     }
@@ -366,7 +365,6 @@ class zxProdElement extends ZxArtItem implements
         $urls = [];
         foreach ($this->getFilesList('connectedFile') as $fileElement) {
             $url = $fileElement->getImageUrl($preset);
-            $url = str_replace('http://zxart.loc', 'https://zxart.ee', $url);
             $url = str_replace('zximages', 'zximagesdownload', $url);
             $urls[] = $url;
         }

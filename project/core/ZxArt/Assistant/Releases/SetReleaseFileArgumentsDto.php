@@ -17,7 +17,7 @@ final readonly class SetReleaseFileArgumentsDto
             "properties": {
                 "releaseId": {"type": "integer", "description": "the release"},
                 "url": {"type": "string", "description": "an http or https address of the file"},
-                "fileName": {"type": "string", "description": "the name to store it under; without it the name comes from the address"}
+                "fileName": {"type": ["string", "null"], "description": "the name to store it under; without it the name comes from the address"}
             },
             "required": ["releaseId", "url"],
             "additionalProperties": false

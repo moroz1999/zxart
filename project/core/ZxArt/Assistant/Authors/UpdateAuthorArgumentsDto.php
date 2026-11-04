@@ -16,11 +16,11 @@ final readonly class UpdateAuthorArgumentsDto
             "type": "object",
             "properties": {
                 "id": {"type": "integer", "description": "the author"},
-                "title": {"type": "string", "description": "the nickname"},
-                "realName": {"type": "string", "description": "the real name, only when the source states it"},
-                "countryId": {"type": "integer", "description": "from find_locations; 0 clears it"},
-                "cityId": {"type": "integer", "description": "from find_locations; 0 clears it"},
-                "wikiLink": {"type": "string", "description": "the page on SpeccyWiki"}
+                "title": {"type": ["string", "null"], "description": "the nickname"},
+                "realName": {"type": ["string", "null"], "description": "the real name, only when the source states it"},
+                "countryId": {"type": ["integer", "null"], "description": "from find_locations; 0 clears it"},
+                "cityId": {"type": ["integer", "null"], "description": "from find_locations; 0 clears it"},
+                "wikiLink": {"type": ["string", "null"], "description": "the page on SpeccyWiki"}
             },
             "required": ["id"],
             "additionalProperties": false

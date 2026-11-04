@@ -10,8 +10,8 @@ namespace ZxArt\Assistant\Actions;
 final readonly class PageArguments
 {
     public const string PROPERTIES = <<<'JSON'
-        "limit": {"type": "integer", "description": "the most results to answer, 20 when not given, up to 100"},
-        "offset": {"type": "integer", "description": "how many results of the order to skip"}
+        "limit": {"type": ["integer", "null"], "description": "the most results to answer, 20 when not given, up to 100"},
+        "offset": {"type": ["integer", "null"], "description": "how many results of the order to skip"}
         JSON;
 
     private const int LIMIT = 20;

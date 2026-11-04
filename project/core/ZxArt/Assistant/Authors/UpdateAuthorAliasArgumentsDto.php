@@ -16,10 +16,10 @@ final readonly class UpdateAuthorAliasArgumentsDto
             "type": "object",
             "properties": {
                 "id": {"type": "integer", "description": "the author alias"},
-                "authorId": {"type": "integer", "description": "the author the alias belongs to"},
-                "title": {"type": "string", "description": "the name"},
-                "startDate": {"type": "integer", "description": "when the author started using it, a Unix timestamp; 0 clears it"},
-                "endDate": {"type": "integer", "description": "when the author stopped using it, a Unix timestamp; 0 clears it"}
+                "authorId": {"type": ["integer", "null"], "description": "the author the alias belongs to"},
+                "title": {"type": ["string", "null"], "description": "the name"},
+                "startDate": {"type": ["integer", "null"], "description": "when the author started using it, a Unix timestamp; 0 clears it"},
+                "endDate": {"type": ["integer", "null"], "description": "when the author stopped using it, a Unix timestamp; 0 clears it"}
             },
             "required": ["id"],
             "additionalProperties": false

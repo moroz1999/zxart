@@ -91,7 +91,7 @@ final class ProdActionsTest extends WriteToolTestCase
     public function testTheClosedListsAreTheLegalStatusesAndTheFileLists(): void
     {
         self::assertSame(
-            array_map(static fn(LegalStatus $status): string => $status->value, LegalStatus::cases()),
+            [...array_map(static fn(LegalStatus $status): string => $status->value, LegalStatus::cases()), null],
             $this->actionSchema('update_prod')['properties']['legalStatus']['enum'],
         );
         self::assertSame(

@@ -70,11 +70,9 @@ export class ZxProd {
         }
         if (data.listImagesUrls) {
             this.imagesUrls = data.listImagesUrls;
-            this.imagesUrls = this.imagesUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
         }
         if (data.inlaysUrls) {
             this.inlaysUrls = data.inlaysUrls;
-            this.inlaysUrls = this.inlaysUrls.map(image => image.replace('http://localhost', 'https://zxart.ee'));
         }
         this.votes = data.votes;
         this.votesAmount = data.votesAmount;

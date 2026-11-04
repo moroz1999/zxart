@@ -153,6 +153,35 @@ final class ToolCallTest extends EntityWriteTestCase
         self::assertContains('set_group_alias_member', $names);
     }
 
+    public function testEveryFieldAnActionDoesNotRequireMayBeNull(): void
+    {
+        foreach ($this->container->get(ToolRegistry::class)->all() as $action) {
+            $this->assertOptionalNullable(Arguments::schema($action->schema()), $action->name());
+        }
+    }
+
+    /**
+     * A field an object of the schema does not require, at any depth, takes
+     * null: in its type and, when it has one, in its enum.
+     *
+     * @param array<array-key, mixed> $schema
+     */
+    private function assertOptionalNullable(array $schema, string $path): void
+    {
+        foreach ($schema['properties'] ?? [] as $name => $property) {
+            if (!in_array($name, $schema['required'] ?? [], true)) {
+                self::assertContains('null', (array)$property['type'], "$path.$name");
+                if (isset($property['enum'])) {
+                    self::assertContains(null, $property['enum'], "$path.$name");
+                }
+            }
+            $this->assertOptionalNullable($property, "$path.$name");
+        }
+        if (isset($schema['items']) && is_array($schema['items'])) {
+            $this->assertOptionalNullable($schema['items'], $path . '[]');
+        }
+    }
+
     /**
      * An object of the schema, at any depth, allows no other field and
      * requires only fields it has.

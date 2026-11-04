@@ -18,8 +18,8 @@ final readonly class FindPartiesArgumentsDto
             "type": "object",
             "properties": {
                 "phrase": {"type": "string", "description": "a part of the party's title, abbreviation or original name"},
-                "year": {"type": "integer", "description": "the year of the party"},
-                "limit": {"type": "integer", "description": "the most parties to answer, 20 when not given, up to 100"}
+                "year": {"type": ["integer", "null"], "description": "the year of the party"},
+                "limit": {"type": ["integer", "null"], "description": "the most parties to answer, 20 when not given, up to 100"}
             },
             "required": ["phrase"],
             "additionalProperties": false

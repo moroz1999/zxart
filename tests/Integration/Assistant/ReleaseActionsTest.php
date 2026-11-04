@@ -80,7 +80,7 @@ final class ReleaseActionsTest extends WriteToolTestCase
     public function testTheClosedListsAreTheReleaseTypesAndTheFileLists(): void
     {
         self::assertSame(
-            array_map(static fn(ReleaseTypes $type): string => $type->value, ReleaseTypes::cases()),
+            [...array_map(static fn(ReleaseTypes $type): string => $type->value, ReleaseTypes::cases()), null],
             $this->actionSchema('update_release')['properties']['releaseType']['enum'],
         );
         self::assertSame(

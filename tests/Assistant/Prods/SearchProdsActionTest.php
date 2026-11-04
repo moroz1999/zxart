@@ -51,7 +51,7 @@ final class SearchProdsActionTest extends TestCase
         self::assertSame(array_column(LegalStatus::cases(), 'value'), $properties['legalStatuses']['items']['enum']);
         self::assertSame(ReleaseTypes::getAllValues(), $properties['releaseTypes']['items']['enum']);
         self::assertSame(AuthorshipRoles::LIST, $properties['authorRoles']['items']['enum']);
-        self::assertSame(array_column(ProdLink::cases(), 'value'), $properties['groupLink']['enum']);
+        self::assertSame([...array_column(ProdLink::cases(), 'value'), null], $properties['groupLink']['enum']);
     }
 
     public function testItAnswersThePageTheSearchFoundForTheFilterOfTheArguments(): void

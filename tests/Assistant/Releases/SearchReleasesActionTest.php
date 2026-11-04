@@ -43,7 +43,7 @@ final class SearchReleasesActionTest extends TestCase
     {
         $prods = $this->schema()['properties']['prods'];
 
-        self::assertSame('object', $prods['type']);
+        self::assertSame(['object', 'null'], $prods['type']);
         self::assertFalse($prods['additionalProperties']);
         self::assertContains('legalStatuses', array_keys($prods['properties']));
         self::assertNotContains('limit', array_keys($prods['properties']));

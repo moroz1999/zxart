@@ -19,21 +19,21 @@ use ZxArt\Prods\ProdLink;
 final readonly class SearchGroupsArgumentsDto
 {
     private const string PROPERTIES = <<<'JSON'
-        "name": {"type": "string", "description": "a part of the title, of the abbreviation or of an alias"},
-        "countryIds": {"type": "array", "items": {"type": "integer"}, "description": "countries from find_locations"},
-        "cityIds": {"type": "array", "items": {"type": "integer"}, "description": "cities from find_locations"},
-        "types": {"type": "array", "items": {"type": "string", "enum": ["unknown", "company", "crack", "studio", "scene", "education", "store", "science"]}},
-        "foundedFrom": {"type": "integer", "description": "founded at this Unix timestamp or later"},
-        "foundedTo": {"type": "integer", "description": "founded at this Unix timestamp or earlier"},
-        "endedFrom": {"type": "integer", "description": "ended at this Unix timestamp or later"},
-        "endedTo": {"type": "integer", "description": "ended at this Unix timestamp or earlier"},
-        "activeFrom": {"type": "integer", "description": "made or published a production of this year or later"},
-        "activeTo": {"type": "integer", "description": "made or published a production of this year or earlier"},
-        "memberIds": {"type": "array", "items": {"type": "integer"}, "description": "authors (or their aliases) recorded as members"},
-        "prodIds": {"type": "array", "items": {"type": "integer"}, "description": "made or published one of these productions, as prodLink narrows it"},
-        "prodLink": {"type": "string", "enum": ["made", "published"], "description": "what the group did for the productions given or found; alone, groups that did it for any"},
-        "parentGroupId": {"type": "integer", "description": "a subgroup of this group"},
-        "subGroupId": {"type": "integer", "description": "a group this group is a subgroup of"}
+        "name": {"type": ["string", "null"], "description": "a part of the title, of the abbreviation or of an alias"},
+        "countryIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "countries from find_locations"},
+        "cityIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "cities from find_locations"},
+        "types": {"type": ["array", "null"], "items": {"type": "string", "enum": ["unknown", "company", "crack", "studio", "scene", "education", "store", "science"]}},
+        "foundedFrom": {"type": ["integer", "null"], "description": "founded at this Unix timestamp or later"},
+        "foundedTo": {"type": ["integer", "null"], "description": "founded at this Unix timestamp or earlier"},
+        "endedFrom": {"type": ["integer", "null"], "description": "ended at this Unix timestamp or later"},
+        "endedTo": {"type": ["integer", "null"], "description": "ended at this Unix timestamp or earlier"},
+        "activeFrom": {"type": ["integer", "null"], "description": "made or published a production of this year or later"},
+        "activeTo": {"type": ["integer", "null"], "description": "made or published a production of this year or earlier"},
+        "memberIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "authors (or their aliases) recorded as members"},
+        "prodIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "made or published one of these productions, as prodLink narrows it"},
+        "prodLink": {"type": ["string", "null"], "enum": ["made", "published", null], "description": "what the group did for the productions given or found; alone, groups that did it for any"},
+        "parentGroupId": {"type": ["integer", "null"], "description": "a subgroup of this group"},
+        "subGroupId": {"type": ["integer", "null"], "description": "a group this group is a subgroup of"}
         JSON;
 
     public const string SCHEMA = '{"type": "object", "properties": {' . self::PROPERTIES . ', "prods": '

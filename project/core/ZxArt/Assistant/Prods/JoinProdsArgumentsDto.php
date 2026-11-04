@@ -17,7 +17,7 @@ final readonly class JoinProdsArgumentsDto
             "properties": {
                 "mainId": {"type": "integer", "description": "the production that stays"},
                 "joinedId": {"type": "integer", "description": "the duplicate, deleted"},
-                "releasesOnly": {"type": "boolean", "description": "move only the releases and materials, not the authors, groups, publishers, categories and fields"}
+                "releasesOnly": {"type": ["boolean", "null"], "description": "move only the releases and materials, not the authors, groups, publishers, categories and fields"}
             },
             "required": ["mainId", "joinedId"],
             "additionalProperties": false

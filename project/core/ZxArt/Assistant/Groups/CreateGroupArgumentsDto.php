@@ -17,16 +17,16 @@ final readonly class CreateGroupArgumentsDto
             "type": "object",
             "properties": {
                 "title": {"type": "string", "description": "the name"},
-                "abbreviation": {"type": "string", "description": "the short name"},
-                "type": {"type": "string", "description": "the kind of group, from list_options", "enum": ["unknown", "company", "crack", "studio", "scene", "education", "store", "science"]},
-                "countryId": {"type": "integer", "description": "from find_locations; 0 clears it"},
-                "cityId": {"type": "integer", "description": "from find_locations; 0 clears it"},
-                "website": {"type": "string", "description": "its own site"},
-                "wikiLink": {"type": "string", "description": "the page on SpeccyWiki"},
-                "slogan": {"type": "string", "description": "its motto"},
-                "startDate": {"type": "integer", "description": "when it was founded, a Unix timestamp; 0 clears it"},
-                "endDate": {"type": "integer", "description": "when it ended, a Unix timestamp; 0 clears it"},
-                "subGroupIds": {"type": "array", "items": {"type": "integer"}, "description": "the groups that belong to this one; the list replaces the stored one"}
+                "abbreviation": {"type": ["string", "null"], "description": "the short name"},
+                "type": {"type": ["string", "null"], "description": "the kind of group, from list_options", "enum": ["unknown", "company", "crack", "studio", "scene", "education", "store", "science", null]},
+                "countryId": {"type": ["integer", "null"], "description": "from find_locations; 0 clears it"},
+                "cityId": {"type": ["integer", "null"], "description": "from find_locations; 0 clears it"},
+                "website": {"type": ["string", "null"], "description": "its own site"},
+                "wikiLink": {"type": ["string", "null"], "description": "the page on SpeccyWiki"},
+                "slogan": {"type": ["string", "null"], "description": "its motto"},
+                "startDate": {"type": ["integer", "null"], "description": "when it was founded, a Unix timestamp; 0 clears it"},
+                "endDate": {"type": ["integer", "null"], "description": "when it ended, a Unix timestamp; 0 clears it"},
+                "subGroupIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "the groups that belong to this one; the list replaces the stored one"}
             },
             "required": ["title"],
             "additionalProperties": false

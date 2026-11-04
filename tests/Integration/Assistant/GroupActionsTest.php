@@ -90,7 +90,7 @@ final class GroupActionsTest extends WriteToolTestCase
 
     public function testTheGroupTypeIsOneOfTheGroupTypes(): void
     {
-        self::assertSame(GroupTypes::LIST, $this->actionSchema('update_group')['properties']['type']['enum']);
+        self::assertSame([...GroupTypes::LIST, null], $this->actionSchema('update_group')['properties']['type']['enum']);
     }
 
     /**

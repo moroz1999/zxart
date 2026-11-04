@@ -3,8 +3,8 @@ name: import-prod
 description: Adding a production from a page of another site.
 ---
 
-- First search for the production (title, alt title, year). If it exists, offer an update, not a new one.
-- Before searching authors, call `load_skill` with `find-authors` and follow it.
+- First identify the source's people: call `load_skill` with `find-authors` and follow it.
+- Then call `load_skill` with `find-prod` and follow it. Same work: offer an update, not a new one.
 - Create an author or group only if no author, group or alias of that name exists; say so in the plan.
 - Find the party with `find_parties` (title and year).
 - Pick a leaf category (e.g. Megademo), never a top-level section (e.g. Demoscene).

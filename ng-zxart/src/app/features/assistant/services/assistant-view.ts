@@ -246,7 +246,7 @@ function actionView(
     changeKind: kind,
     target,
     changes: Object.entries(parseArguments(action.arguments))
-      .filter(([field]) => field !== TARGET_ARGUMENT)
+      .filter(([field, value]) => field !== TARGET_ARGUMENT && value !== null)
       .map(([field, value]) => assistantChange(field, value, kind, action.arguments, state, refs, stepRef)),
     consequences: state !== null && REMOVING_KINDS.includes(kind) ? takenAlong(state) : [],
     dependsOn: action.dependsOn,

@@ -17,7 +17,7 @@ final readonly class JoinAuthorsArgumentsDto
             "properties": {
                 "mainId": {"type": "integer", "description": "the author that stays"},
                 "joinedId": {"type": "integer", "description": "the duplicate, deleted"},
-                "asAlias": {"type": "boolean", "description": "keep the duplicate's name as an alias of the main author"}
+                "asAlias": {"type": ["boolean", "null"], "description": "keep the duplicate's name as an alias of the main author"}
             },
             "required": ["mainId", "joinedId"],
             "additionalProperties": false

@@ -17,16 +17,16 @@ final readonly class UpdateReleaseArgumentsDto
             "type": "object",
             "properties": {
                 "id": {"type": "integer", "description": "the release"},
-                "title": {"type": "string", "description": "the title"},
-                "year": {"type": "integer", "description": "the year it came out; 0 clears it"},
-                "version": {"type": "string", "description": "its version"},
-                "description": {"type": "string", "description": "plain text"},
-                "releaseType": {"type": "string", "description": "from list_options", "enum": ["unknown", "original", "rerelease", "adaptation", "localization", "bugfix", "mod", "crack", "mia", "corrupted", "compilation", "incomplete", "demoversion"]},
-                "releaseFormats": {"type": "array", "items": {"type": "string"}, "description": "release format codes from list_options; the list replaces the stored one"},
-                "languages": {"type": "array", "items": {"type": "string"}, "description": "language codes from list_options; the list replaces the stored one"},
-                "hardware": {"type": "array", "items": {"type": "string"}, "description": "hardware codes from list_hardware the release needs beyond its production; the list replaces the stored one"},
-                "publisherIds": {"type": "array", "items": {"type": "integer"}, "description": "the groups, group aliases, authors or author aliases that published it; the list replaces the stored one"},
-                "prodId": {"type": "integer", "description": "the production it is a release of; another one moves it"}
+                "title": {"type": ["string", "null"], "description": "the title"},
+                "year": {"type": ["integer", "null"], "description": "the year it came out; 0 clears it"},
+                "version": {"type": ["string", "null"], "description": "its version"},
+                "description": {"type": ["string", "null"], "description": "plain text"},
+                "releaseType": {"type": ["string", "null"], "description": "from list_options", "enum": ["unknown", "original", "rerelease", "adaptation", "localization", "bugfix", "mod", "crack", "mia", "corrupted", "compilation", "incomplete", "demoversion", null]},
+                "releaseFormats": {"type": ["array", "null"], "items": {"type": "string"}, "description": "release format codes from list_options; the list replaces the stored one"},
+                "languages": {"type": ["array", "null"], "items": {"type": "string"}, "description": "language codes from list_options; the list replaces the stored one"},
+                "hardware": {"type": ["array", "null"], "items": {"type": "string"}, "description": "hardware codes from list_hardware the release needs beyond its production; the list replaces the stored one"},
+                "publisherIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "the groups, group aliases, authors or author aliases that published it; the list replaces the stored one"},
+                "prodId": {"type": ["integer", "null"], "description": "the production it is a release of; another one moves it"}
             },
             "required": ["id"],
             "additionalProperties": false

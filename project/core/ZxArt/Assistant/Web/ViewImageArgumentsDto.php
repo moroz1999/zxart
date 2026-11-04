@@ -16,8 +16,8 @@ final readonly class ViewImageArgumentsDto
         {
             "type": "object",
             "properties": {
-                "url": {"type": "string", "description": "an http or https address of the image; give this or fileId"},
-                "fileId": {"type": "integer", "description": "the id of a file on the site, as the get actions list it; give this or url"}
+                "url": {"type": ["string", "null"], "description": "an http or https address of the image; give this or fileId"},
+                "fileId": {"type": ["integer", "null"], "description": "the id of a file on the site, as the get actions list it; give this or url"}
             },
             "required": [],
             "additionalProperties": false

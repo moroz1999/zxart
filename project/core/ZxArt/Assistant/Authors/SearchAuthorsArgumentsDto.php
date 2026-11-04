@@ -19,16 +19,16 @@ use ZxArt\Prods\ProdLink;
 final readonly class SearchAuthorsArgumentsDto
 {
     private const string PROPERTIES = <<<'JSON'
-        "name": {"type": "string", "description": "a part of the nickname, of the real name in any language or of an alias"},
-        "countryIds": {"type": "array", "items": {"type": "integer"}, "description": "countries from find_locations"},
-        "cityIds": {"type": "array", "items": {"type": "integer"}, "description": "cities from find_locations"},
-        "groupIds": {"type": "array", "items": {"type": "integer"}, "description": "a member of the group or one of its aliases"},
-        "activeFrom": {"type": "integer", "description": "linked to a production of this year or later"},
-        "activeTo": {"type": "integer", "description": "linked to a production of this year or earlier"},
-        "prodIds": {"type": "array", "items": {"type": "integer"}, "description": "linked to one of these productions, as prodLink narrows it"},
-        "prodRoles": {"type": "array", "items": {"type": "string", "enum": ["unknown", "code", "release", "adaptation", "restoring", "music", "sfx", "support", "testing", "graphics", "loading_screen", "intro_code", "intro_graphics", "intro_music", "organizing", "direction", "3dmodels", "design", "logo", "font", "ascii", "illustrating", "tools", "localization", "concept", "gamedesign", "leveldesign", "story", "text", "editing", "translation", "video", "guest"]}, "description": "the roles of the credit on the productions given or found, or on any when none are; roles leave out the publishers, who hold none"},
-        "prodLink": {"type": "string", "enum": ["made", "published"], "description": "how the author is linked to the productions given or found; alone, authors linked so to any"},
-        "coAuthorId": {"type": "integer", "description": "credited on a production together with this author"}
+        "name": {"type": ["string", "null"], "description": "a part of the nickname, of the real name in any language or of an alias"},
+        "countryIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "countries from find_locations"},
+        "cityIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "cities from find_locations"},
+        "groupIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "a member of the group or one of its aliases"},
+        "activeFrom": {"type": ["integer", "null"], "description": "linked to a production of this year or later"},
+        "activeTo": {"type": ["integer", "null"], "description": "linked to a production of this year or earlier"},
+        "prodIds": {"type": ["array", "null"], "items": {"type": "integer"}, "description": "linked to one of these productions, as prodLink narrows it"},
+        "prodRoles": {"type": ["array", "null"], "items": {"type": "string", "enum": ["unknown", "code", "release", "adaptation", "restoring", "music", "sfx", "support", "testing", "graphics", "loading_screen", "intro_code", "intro_graphics", "intro_music", "organizing", "direction", "3dmodels", "design", "logo", "font", "ascii", "illustrating", "tools", "localization", "concept", "gamedesign", "leveldesign", "story", "text", "editing", "translation", "video", "guest"]}, "description": "the roles of the credit on the productions given or found, or on any when none are; roles leave out the publishers, who hold none"},
+        "prodLink": {"type": ["string", "null"], "enum": ["made", "published", null], "description": "how the author is linked to the productions given or found; alone, authors linked so to any"},
+        "coAuthorId": {"type": ["integer", "null"], "description": "credited on a production together with this author"}
         JSON;
 
     public const string SCHEMA = '{"type": "object", "properties": {' . self::PROPERTIES . ', "prods": '

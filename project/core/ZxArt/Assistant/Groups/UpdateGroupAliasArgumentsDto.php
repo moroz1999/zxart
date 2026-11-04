@@ -16,10 +16,10 @@ final readonly class UpdateGroupAliasArgumentsDto
             "type": "object",
             "properties": {
                 "id": {"type": "integer", "description": "the group alias"},
-                "groupId": {"type": "integer", "description": "the group the alias belongs to"},
-                "title": {"type": "string", "description": "the name"},
-                "startDate": {"type": "integer", "description": "when the group started using it, a Unix timestamp; 0 clears it"},
-                "endDate": {"type": "integer", "description": "when the group stopped using it, a Unix timestamp; 0 clears it"}
+                "groupId": {"type": ["integer", "null"], "description": "the group the alias belongs to"},
+                "title": {"type": ["string", "null"], "description": "the name"},
+                "startDate": {"type": ["integer", "null"], "description": "when the group started using it, a Unix timestamp; 0 clears it"},
+                "endDate": {"type": ["integer", "null"], "description": "when the group stopped using it, a Unix timestamp; 0 clears it"}
             },
             "required": ["id"],
             "additionalProperties": false

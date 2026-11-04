@@ -18,8 +18,8 @@ final readonly class SetGroupMemberArgumentsDto
                 "groupId": {"type": "integer", "description": "the group"},
                 "authorId": {"type": "integer", "description": "an author or an author alias"},
                 "roles": {"type": "array", "items": {"type": "string"}, "description": "member roles from list_options; they replace the member's roles, none stands for unknown"},
-                "startDate": {"type": "integer", "description": "when the membership started, a Unix timestamp; 0 clears it"},
-                "endDate": {"type": "integer", "description": "when it ended, a Unix timestamp; 0 clears it"}
+                "startDate": {"type": ["integer", "null"], "description": "when the membership started, a Unix timestamp; 0 clears it"},
+                "endDate": {"type": ["integer", "null"], "description": "when it ended, a Unix timestamp; 0 clears it"}
             },
             "required": ["groupId", "authorId", "roles"],
             "additionalProperties": false

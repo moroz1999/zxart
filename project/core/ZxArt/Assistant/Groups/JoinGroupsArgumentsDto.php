@@ -17,7 +17,7 @@ final readonly class JoinGroupsArgumentsDto
             "properties": {
                 "mainId": {"type": "integer", "description": "the group that stays"},
                 "joinedId": {"type": "integer", "description": "the duplicate, deleted"},
-                "asAlias": {"type": "boolean", "description": "keep the duplicate's name as an alias of the main group"}
+                "asAlias": {"type": ["boolean", "null"], "description": "keep the duplicate's name as an alias of the main group"}
             },
             "required": ["mainId", "joinedId"],
             "additionalProperties": false
