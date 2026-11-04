@@ -44,10 +44,9 @@ class zxReleaseDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getShortAuthorship(EntityType::Release->value);
             },
             'listImagesUrls' => function (zxReleaseElement $element) {
-                $preset = $element->getListImagePreset();
-                $urls = $element->getImagesUrls($preset);
+                $urls = $element->getListImagesUrls();
                 if ($prod = $element->getProd()) {
-                    $urls = array_merge($urls, $prod->getImagesUrls($preset));
+                    $urls = array_merge($urls, $prod->getListImagesUrls());
                 }
 
                 return $urls;

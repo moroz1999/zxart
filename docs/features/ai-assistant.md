@@ -441,15 +441,15 @@ time limit, then the run continues in the same process.
   expanded to its JSON.
 - `AssistantPanelService` — open or closed, remembered per browser.
 - `AssistantStore` — the open conversation: a new one when the drawer starts,
-  created on the first message and opened only once that message is sent,
-  together with its run — a fetch sent alongside the message would answer it
-  without the run and stop the polling; messages merged by `seq`, plans and run
-  replaced from each poll; fetches a conversation once when it is opened and
-  then polls every 2 s only while a run is active — an idle conversation
-  changes only by the user's own send, approve or stop, which mark a run, and
-  a cancelled plan is fetched once. `buildAssistantView()` turns it into the
-  stream the components draw: messages, and the tool calls between them as
-  activities; plan progress notes are left out, the plan shows them.
+  created on the first message. Sending starts polling immediately, even while
+  its POST remains open; at most five polls look for the run before its response
+  arrives. Once a poll sees the run, its `activeRun` state alone keeps polling
+  every 2 s and its disappearance stops it. Messages are merged by `seq`; plans
+  and the run are replaced from each poll. An idle conversation is fetched once
+  when opened, and a cancelled plan is fetched once. `buildAssistantView()`
+  turns the state into the stream the components draw: messages, and the tool
+  calls between them as activities; plan progress notes are left out, the plan
+  shows them.
 - `AssistantPageContextService` — the page sent with every message: the URL,
   and the entity type and id of an entity page; and the page's title, for the
   composer.

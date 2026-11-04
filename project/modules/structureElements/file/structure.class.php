@@ -55,6 +55,39 @@ class fileElement extends structureElement implements StructureElementUploadedFi
     }
 
     /**
+     * Native ZX screen files are rendered by their converter and therefore have
+     * no stored raster dimensions. PC image dimensions are read from the source
+     * so list thumbnails can distinguish a bordered screen from a 2x/3x image.
+     *
+     * @return array{width: int, height: int}|null
+     */
+    public function getRasterDimensions(): ?array
+    {
+        if ($this->getZxScreenType() !== null) {
+            return null;
+        }
+
+        $isRasterImage = match ($this->getFileExtension()) {
+            'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp' => true,
+            default => false,
+        };
+        $filePath = $this->getFilePath();
+        if ($isRasterImage === false || is_file($filePath) === false) {
+            return null;
+        }
+
+        $imageInfo = getimagesize($filePath);
+        if ($imageInfo === false) {
+            return null;
+        }
+
+        return [
+            'width' => $imageInfo[0],
+            'height' => $imageInfo[1],
+        ];
+    }
+
+    /**
      * @return string
      */
     public function getImageId()

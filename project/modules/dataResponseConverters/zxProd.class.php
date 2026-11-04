@@ -46,15 +46,14 @@ class zxProdDataResponseConverter extends StructuredDataResponseConverter
                 return $element->getFilesUrlList('inlayFilesSelector', 'release');
             },
             'listImagesUrls' => function (zxProdElement $element) {
-                $preset = $element->getListImagePreset();
-                $urls = $element->getImagesUrls($preset);
+                $urls = $element->getListImagesUrls();
                 foreach ($element->compilationItems as $prod) {
-                    if ($prodUrls = $prod->getImagesUrls($preset)) {
+                    if ($prodUrls = $prod->getListImagesUrls()) {
                         $urls[] = reset($prodUrls);
                     }
                 }
                 foreach ($element->seriesProds as $prod) {
-                    if ($prodUrls = $prod->getImagesUrls($preset)) {
+                    if ($prodUrls = $prod->getListImagesUrls()) {
                         $urls[] = reset($prodUrls);
                     }
                 }

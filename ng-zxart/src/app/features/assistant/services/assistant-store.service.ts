@@ -10,9 +10,13 @@ import {AssistantViewInput, buildAssistantView} from './assistant-view';
 import {AssistantMarkdownRenderer, createAssistantMarkdown} from './assistant-markdown';
 
 const FAST_POLL_MS = 2000;
+const START_POLL_LIMIT = 5;
 
 interface StoreState extends AssistantViewInput {
   lastSeq: number;
+  runPending: boolean;
+  runObserved: boolean;
+  startPollsLeft: number;
 }
 
 /**
@@ -32,8 +36,9 @@ export class AssistantStore {
 
   /**
    * While subscribed: fetches a conversation once when it is opened, then
-   * every 2 s while a run is active. Nothing changes an idle conversation but
-   * the user's own send, approve or stop, and each of those marks a run.
+   * every 2 s while a run is active. Sending starts at most five polls before
+   * its response arrives, so a server that keeps the POST open cannot prevent
+   * the run from being observed.
    */
   readonly polling$: Observable<void>;
 
@@ -56,7 +61,7 @@ export class AssistantStore {
       switchMap(conversationId => conversationId === null ? EMPTY : concat(
         this.refresh(),
         this.state.pipe(
-          map(state => state.activeRun !== null),
+          map(state => state.activeRun !== null || state.startPollsLeft > 0),
           distinctUntilChanged(),
           switchMap(active => active ? timer(0, FAST_POLL_MS) : EMPTY),
           exhaustMap(() => this.refresh()),
@@ -88,11 +93,15 @@ export class AssistantStore {
   send(text: string): Observable<void> {
     const page = this.pageContext.current();
     return this.conversationId().pipe(
-      switchMap(conversationId => this.api.send(conversationId, text, page).pipe(
-        tap(started => this.markRunning(started.runId, 'chat', conversationId)),
-      )),
+      switchMap(conversationId => {
+        this.startRunRequest(conversationId);
+        return this.api.send(conversationId, text, page).pipe(
+          tap(started => this.finishRunRequest(started.runId, 'chat')),
+        );
+      }),
       map(() => undefined),
       catchError((error: unknown) => {
+        this.cancelRunRequest();
         this.fail(error);
         return EMPTY;
       }),
@@ -201,16 +210,36 @@ export class AssistantStore {
       plans,
       refs: {...state.refs, ...response.refs},
       activeRun: response.activeRun,
+      runObserved: state.runObserved || response.activeRun !== null,
+      startPollsLeft: response.activeRun !== null ? 0 : Math.max(0, state.startPollsLeft - 1),
       error: null,
     });
   }
 
-  /** Marks the run; a conversation not yet open is opened with it, so its first fetch already polls. */
-  private markRunning(runId: number, type: AssistantRun['type'], conversationId: number | null = null): void {
+  private startRunRequest(conversationId: number): void {
+    const state = this.state.getValue();
+    const base = conversationId === state.conversationId ? state : this.emptyState(conversationId);
+    this.state.next({...base, runPending: true, runObserved: false, startPollsLeft: START_POLL_LIMIT, error: null});
+  }
+
+  private finishRunRequest(runId: number, type: AssistantRun['type']): void {
+    const state = this.state.getValue();
+    if (state.runObserved) {
+      this.state.next({...state, runPending: false, runObserved: false});
+      return;
+    }
+    this.markRunning(runId, type);
+  }
+
+  private cancelRunRequest(): void {
+    const state = this.state.getValue();
+    this.state.next({...state, runPending: false, runObserved: false, startPollsLeft: 0});
+  }
+
+  private markRunning(runId: number, type: AssistantRun['type']): void {
     const run: AssistantRun = {id: runId, type, status: 'running', steps: 0, error: null, startedAt: Date.now() / 1000, stopRequested: false};
     const state = this.state.getValue();
-    const base = conversationId !== null && conversationId !== state.conversationId ? this.emptyState(conversationId) : state;
-    this.state.next({...base, activeRun: run, error: null});
+    this.state.next({...state, activeRun: run, runPending: false, runObserved: false, startPollsLeft: 0, error: null});
   }
 
   private fail(error: unknown): void {
@@ -221,6 +250,17 @@ export class AssistantStore {
   }
 
   private emptyState(conversationId: number | null): StoreState {
-    return {conversationId, messages: [], plans: {}, refs: {}, activeRun: null, error: null, lastSeq: 0};
+    return {
+      conversationId,
+      messages: [],
+      plans: {},
+      refs: {},
+      activeRun: null,
+      error: null,
+      lastSeq: 0,
+      runPending: false,
+      runObserved: false,
+      startPollsLeft: 0,
+    };
   }
 }

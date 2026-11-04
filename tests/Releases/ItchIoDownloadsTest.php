@@ -81,6 +81,21 @@ class ItchIoDownloadsTest extends TestCase
         $downloads->open($this->game());
     }
 
+    public function testADownloadPageWithoutFilesIsRefusedNamingWhatCame(): void
+    {
+        $donationPrompt = $this->page('GAMETOKEN', '')
+            . '<script>init_ViewGame("#v", {"generate_download_url":"https:\/\/charlyitv.itch.io\/cats-and-dogs\/download_url"});</script>';
+        $downloads = $this->downloads(
+            new Response(200, [], $donationPrompt),
+            new Response(200, [], '{"url":"https:\/\/charlyitv.itch.io\/cats-and-dogs\/download\/eyJpZCI6MX0%3D"}'),
+            new Response(200, [], '<html><head><title>Download link expired - itch.io</title><meta name="csrf_token" value="PAGETOKEN" /></head><body></body></html>'),
+        );
+
+        $this->expectException(ItchIoUnavailableException::class);
+        $this->expectExceptionMessage('https://charlyitv.itch.io/cats-and-dogs/download/eyJpZCI6MX0%3D lists no files (HTTP 200, "Download link expired - itch.io")');
+        $downloads->open($this->game());
+    }
+
     public function testAGamePageThatDoesNotOpenIsRefused(): void
     {
         $downloads = $this->downloads(new Response(404, [], 'Not found'));

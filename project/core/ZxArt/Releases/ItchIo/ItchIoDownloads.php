@@ -7,6 +7,7 @@ namespace ZxArt\Releases\ItchIo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Opens the downloads of an itch.io game and asks the address of one of its
@@ -28,22 +29,35 @@ final readonly class ItchIoDownloads
     }
 
     /**
+     * Refuses downloads that list no file: what itch.io sent then is named,
+     * so a page it cut down shows in the error.
+     *
      * @throws ItchIoUnavailableException
      */
     public function open(ItchIoGameUrl $game): ItchIoDownloadsPage
     {
         // itch.io ties the download permission and the csrf token to the visitor's session
         $session = new CookieJar();
-        $page = $this->get($game->gameUrl, $session);
-        if ($this->parser->findUploads($page) === []) {
-            $page = $this->get($this->downloadPageUrl($game, $page, $session), $session);
+        $pageUrl = $game->gameUrl;
+        $response = $this->get($pageUrl, $session);
+        $page = (string)$response->getBody();
+        $uploads = $this->parser->findUploads($page);
+        if ($uploads === []) {
+            $pageUrl = $this->downloadPageUrl($game, $page, $session);
+            $response = $this->get($pageUrl, $session);
+            $page = (string)$response->getBody();
+            $uploads = $this->parser->findUploads($page);
+        }
+        if ($uploads === []) {
+            $title = $this->parser->findTitle($page) ?? '';
+            throw new ItchIoUnavailableException("$pageUrl lists no files (HTTP {$response->getStatusCode()}, \"$title\")");
         }
         $csrfToken = $this->parser->findCsrfToken($page);
         if ($csrfToken === null) {
             throw new ItchIoUnavailableException("The downloads of {$game->gameUrl} carry no csrf token");
         }
 
-        return new ItchIoDownloadsPage($game, $this->parser->findUploads($page), $csrfToken, $session);
+        return new ItchIoDownloadsPage($game, $uploads, $csrfToken, $session);
     }
 
     /**
@@ -77,7 +91,7 @@ final readonly class ItchIoDownloads
     /**
      * @throws ItchIoUnavailableException
      */
-    private function get(string $url, CookieJar $session): string
+    private function get(string $url, CookieJar $session): ResponseInterface
     {
         try {
             $response = $this->httpClient->get($url, [
@@ -89,7 +103,7 @@ final readonly class ItchIoDownloads
             throw new ItchIoUnavailableException("$url did not open: {$exception->getMessage()}", 0, $exception);
         }
 
-        return (string)$response->getBody();
+        return $response;
     }
 
     /**

@@ -1,23 +1,22 @@
 <?php
 
+use ZxArt\Screenshots\ListImagePresetResolver;
+
 trait ZxSoft
 {
-    static private array $extendedGraphics = ['zxevolution', 'zxnext', 'elementzxmb', 'zxuno', 'baseconf', 'tsconf', 'gmx'];
-
     /**
-     * Extended-graphics machines are computer codes, and after hardware moved to
-     * the production a release no longer repeats them — so this asks for the set
-     * that describes what the item actually runs on, not for its own codes.
-     *
-     * @psalm-return 'full'|'prodListImage'
+     * Chooses the list thumbnail treatment from the effective hardware and the
+     * source raster size. Native screen files have no raster dimensions here;
+     * their converter already renders them at the intended logical size.
      */
-    public function getListImagePreset(): string
+    public function getListImagePreset(?fileElement $image = null): string
     {
-        foreach ($this->getRunsOnHardwareCodes() as $code) {
-            if (in_array($code, self::$extendedGraphics, true)) {
-                return 'full';
-            }
-        }
-        return 'prodListImage';
+        $dimensions = $image?->getRasterDimensions();
+
+        return $this->getService(ListImagePresetResolver::class)->resolve(
+            $this->getRunsOnHardwareCodes(),
+            $dimensions['width'] ?? null,
+            $dimensions['height'] ?? null,
+        );
     }
 }

@@ -80,6 +80,12 @@ Screenshots, covers and inlays, maps, and recorded playthroughs. Covers of a
 production include the covers and advertising material of its releases, so
 everything printed for the work is in one place.
 
+Screenshot thumbnails in software lists always occupy a 256×192 frame. A
+classic screen at its original scale is cropped to that visible area, which
+removes an outer border. Enlarged screenshots and screens from machines with a
+different display size are proportionally resized to fill the frame and may be
+cropped at its edges.
+
 A production known to Spectrum Computing can take its loading, opening and
 running screens from there: an editor asks for them from the production's add menu, and
 the screens its entries publish are added to the gallery — loading screens

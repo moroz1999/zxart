@@ -65,28 +65,52 @@ describe('AssistantStore', () => {
     expect(view.running).toBe(true);
   });
 
-  it('opens a new conversation only once its first message is sent, so the opening fetch sees the run', async () => {
+  it('polls before send responds and stops when the run is over', () => {
+    vi.useFakeTimers();
     const run = {id: 3, type: 'chat' as const, status: 'running' as const, steps: 0, error: null, startedAt: 0, stopRequested: false};
     const sent = new Subject<{runId: number}>();
     const api = {
       create: vi.fn().mockReturnValue(of({id: 8, title: '', createdAt: 0, lastMessageAt: 0})),
       send: vi.fn().mockReturnValue(sent),
-      get: vi.fn().mockReturnValue(of(state({conversationId: 8, messages: [message(1)], activeRun: run}))),
+      get: vi.fn()
+        .mockReturnValueOnce(of(state({conversationId: 8, activeRun: run})))
+        .mockReturnValue(of(state({conversationId: 8, messages: [message(1)]}))),
     };
     const store = new AssistantStore(api as unknown as AssistantDataApiService, pageContext);
     const polling = store.polling$.subscribe();
 
-    const sending = firstValueFrom(store.send('Hello'), {defaultValue: undefined});
-    expect(api.get).not.toHaveBeenCalled();
-    sent.next({runId: 3});
-    sent.complete();
-    await sending;
-    polling.unsubscribe();
+    const sending = store.send('Hello').subscribe();
+    vi.advanceTimersByTime(60000);
 
-    expect(api.get).toHaveBeenCalledWith(8, 0);
-    const view = await firstValueFrom(store.view$);
-    expect(view.running).toBe(true);
-    expect(view.items).toHaveLength(1);
+    expect(api.get).toHaveBeenCalledTimes(2);
+    expect(api.get).toHaveBeenNthCalledWith(1, 8, 0);
+    expect(api.get).toHaveBeenNthCalledWith(2, 8, 0);
+    expect(sent.observed).toBe(true);
+
+    sending.unsubscribe();
+    polling.unsubscribe();
+    vi.useRealTimers();
+  });
+
+  it('limits polling while send has not exposed a run', () => {
+    vi.useFakeTimers();
+    const sent = new Subject<{runId: number}>();
+    const api = {
+      create: vi.fn().mockReturnValue(of({id: 8, title: '', createdAt: 0, lastMessageAt: 0})),
+      send: vi.fn().mockReturnValue(sent),
+      get: vi.fn().mockReturnValue(of(state({conversationId: 8}))),
+    };
+    const store = new AssistantStore(api as unknown as AssistantDataApiService, pageContext);
+    const polling = store.polling$.subscribe();
+
+    const sending = store.send('Hello').subscribe();
+    vi.advanceTimersByTime(60000);
+
+    expect(api.get).toHaveBeenCalledTimes(5);
+
+    sending.unsubscribe();
+    polling.unsubscribe();
+    vi.useRealTimers();
   });
 
   it('shows why a request was refused', async () => {

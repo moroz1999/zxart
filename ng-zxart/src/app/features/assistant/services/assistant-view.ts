@@ -26,6 +26,7 @@ export interface AssistantViewInput {
   plans: Record<number, AssistantPlan>;
   refs: Record<string, AssistantMention>;
   activeRun: AssistantRun | null;
+  runPending?: boolean;
   error: string | null;
 }
 
@@ -82,7 +83,7 @@ export function mentionSegments(text: string, refs: Record<string, AssistantMent
 }
 
 export function buildAssistantView(input: AssistantViewInput, markdown: AssistantMarkdownRenderer | null = null): AssistantView {
-  const running = input.activeRun !== null;
+  const running = input.activeRun !== null || input.runPending === true;
   const items: AssistantStreamItem[] = [];
   for (const message of input.messages) {
     if (message.kind === 'planProgress') {

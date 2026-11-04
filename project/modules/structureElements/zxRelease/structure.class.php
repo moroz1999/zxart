@@ -1020,6 +1020,22 @@ class zxReleaseElement extends ZxArtItem implements
     }
 
     /**
+     * @return list<string>
+     */
+    public function getListImagesUrls(): array
+    {
+        $urls = [];
+        foreach ($this->getFilesList('screenshotsSelector') as $fileElement) {
+            $url = $fileElement->getImageUrl($this->getListImagePreset($fileElement));
+            if ($url !== null) {
+                $urls[] = $url;
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
      * @return (mixed|string)[][]
      *
      * @psalm-return list{0?: array{id: mixed, title: string, url: mixed},...}

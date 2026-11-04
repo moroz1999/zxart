@@ -30,11 +30,11 @@ readonly class ProdsTransformer
             $partyPlace = (int)$element->partyplace;
         }
 
-        $imageUrls = $element->getImagesUrls('prodListImage');
+        $imageUrls = $element->getListImagesUrls();
         if (empty($imageUrls)) {
-            $fallback = $element->getImageUrl(0, 'prodListImage');
-            if ($fallback) {
-                $imageUrls = [(string)$fallback];
+            $fallback = $element->getListImageUrl();
+            if ($fallback !== null) {
+                $imageUrls = [$fallback];
             }
         }
 

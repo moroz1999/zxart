@@ -358,6 +358,34 @@ class zxProdElement extends ZxArtItem implements
         return $urls;
     }
 
+    /**
+     * @return list<string>
+     */
+    public function getListImagesUrls(): array
+    {
+        $urls = [];
+        foreach ($this->getFilesList('connectedFile') as $fileElement) {
+            $url = $fileElement->getImageUrl($this->getListImagePreset($fileElement));
+            if ($url !== null) {
+                $urls[] = $url;
+            }
+        }
+
+        return $urls;
+    }
+
+    public function getListImageUrl(int $number = 0): ?string
+    {
+        $image = $this->getImage($number);
+        if ($image instanceof fileElement) {
+            return $image->getImageUrl($this->getListImagePreset($image));
+        }
+
+        $url = $this->getImageUrl($number, $this->getListImagePreset());
+
+        return is_string($url) && $url !== '' ? $url : null;
+    }
+
     //used in AI services
     public function getImagesDownloadUrls(): array
     {

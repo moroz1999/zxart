@@ -16,6 +16,14 @@ final readonly class ItchIoPageParser
     private const string UPLOAD_MARKER = '<div class="upload">';
     private const string PLATFORMS_MARKER = '<span class="download_platforms">';
 
+    public function findTitle(string $html): ?string
+    {
+        if (preg_match('#<title>([^<]*)</title>#i', $html, $matches) !== 1) {
+            return null;
+        }
+        return html_entity_decode(trim($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
     public function findCsrfToken(string $html): ?string
     {
         if (preg_match('#name="csrf_token" value="([^"]+)"#', $html, $matches) !== 1) {

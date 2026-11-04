@@ -2,7 +2,7 @@
 
 interface ZxSoftInterface
 {
-    public function getListImagePreset();
+    public function getListImagePreset(?fileElement $image = null): string;
 
     /**
      * Every hardware code describing what this item runs on: for a production its

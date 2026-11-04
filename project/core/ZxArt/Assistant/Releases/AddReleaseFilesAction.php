@@ -35,8 +35,9 @@ final readonly class AddReleaseFilesAction implements WriteAction
     #[Override]
     public function description(): string
     {
-        return 'Downloads files from the web into a file list of a release: screenshots, inlays, info files or '
-            . 'advertisements.';
+        return 'Downloads files from the web into a file list of a release: screenshots, inlays, info files '
+            . '(instructions and manuals: PDF, text or pictures) or advertisements; never the release\'s program '
+            . 'file: set that with set_release_file.';
     }
 
     #[Override]

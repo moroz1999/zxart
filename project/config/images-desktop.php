@@ -132,6 +132,26 @@
         ],
         'path' => 'releases',
     ],
+    'prodListImageCover' => [
+        'filters' => [
+            [
+                'fit',
+                ['width' => 256, 'height' => 192],
+            ],
+            [
+                'crop',
+                ['width' => 256, 'height' => 192],
+            ],
+        ],
+        'format' => [
+            null,
+            'png',
+            '',
+            100,
+            true,
+        ],
+        'path' => 'releases',
+    ],
     'inspired2Image' => [
         'filters' => [
             [
