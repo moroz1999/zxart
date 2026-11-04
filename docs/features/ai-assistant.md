@@ -326,7 +326,7 @@ environment variable (`docker-compose.yml` takes it from `.env`).
    run goes on.
 3. The run ends `done` on a reply without calls, `waitingApproval` once a plan
    is proposed, `stopped` when the user asked it to stop (checked before each
-   step, told as a `stopped` message), `failed` after 20 steps, 10 minutes or a
+   step, told as a `stopped` message), `failed` after 30 steps, 5 minutes or a
    model failure, with an `error` message.
 
 ### Skills

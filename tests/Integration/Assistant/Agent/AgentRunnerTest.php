@@ -219,7 +219,7 @@ final class AgentRunnerTest extends TestCase
         self::assertSame(MessageKind::Stopped, $last->kind);
     }
 
-    private function runAgent(ScriptedLlmClient $llm, ?ToolRegistry $tools = null, int $maxSteps = 20): int
+    private function runAgent(ScriptedLlmClient $llm, ?ToolRegistry $tools = null, int $maxSteps = 30): int
     {
         $runs = $this->container->get(RunsDbal::class);
         $runId = $runs->start($this->conversationId, RunType::Chat, self::NOW);

@@ -49,8 +49,8 @@ final readonly class AgentRunner
         private ConversationsDbal $conversations,
         private MessagesDbal $messages,
         private RunsDbal $runs,
-        private int $maxSteps = 20,
-        private int $timeLimitSeconds = 600,
+        private int $maxSteps = 30,
+        private int $timeLimitSeconds = 300,
     ) {
     }
 
