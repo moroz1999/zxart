@@ -160,6 +160,19 @@ final class EntityFilesTest extends EntityWriteTestCase
         self::assertSame(['fileName' => 'Goldmaster+Intro.tap'], $this->storedRow('module_zxrelease', $releaseId, ['fileName']));
     }
 
+    public function testSetFileWithoutANameTakesTheNameTheResponseSends(): void
+    {
+        $this->signInAsEditor();
+        $releaseId = $this->createRelease();
+
+        $this->container->get(SetReleaseFileHandler::class)->handle(new SetReleaseFileCommand($releaseId, $this->server->url('/storage/18621174'), null));
+
+        $release = $this->structureManager->getElementById($releaseId);
+        self::assertInstanceOf(zxReleaseElement::class, $release);
+        $this->storedPaths[] = $release->getFilePath();
+        self::assertSame(['fileName' => urlencode('Like Cat and Dog Español.tap')], $this->storedRow('module_zxrelease', $releaseId, ['fileName']));
+    }
+
     public function testARefusedDownloadKeepsTheReleaseFile(): void
     {
         $this->signInAsEditor();

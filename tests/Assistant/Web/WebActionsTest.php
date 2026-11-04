@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Assistant\Web;
 
+use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ZxArt\Assistant\Actions\Arguments;
 use ZxArt\Assistant\Actions\ToolArgumentsException;
 use ZxArt\Assistant\Web\FetchUrlAction;
+use ZxArt\Assistant\Web\ItchIoFilesDto;
+use ZxArt\Assistant\Web\ListItchIoFilesAction;
 use ZxArt\Assistant\Web\ViewImageAction;
+use ZxArt\Releases\ItchIo\ItchIoDownloads;
+use ZxArt\Releases\ItchIo\ItchIoDownloadsPage;
+use ZxArt\Releases\ItchIo\ItchIoGameUrl;
+use ZxArt\Releases\ItchIo\ItchIoUpload;
 use ZxArt\Shared\Http\FetchedPageDto;
 use ZxArt\Shared\Http\PageFetcher;
 use ZxArt\Shared\Images\ImageDto;
@@ -68,6 +75,34 @@ final class WebActionsTest extends TestCase
         $this->expectException(ToolArgumentsException::class);
 
         $this->view($action, $json);
+    }
+
+    public function testListItchIoFilesAnswersTheFilesOfTheGameItsAddressNames(): void
+    {
+        $uploads = [
+            new ItchIoUpload(18621174, 'ZX Spectrum English .tap and .z80 files v1.2', false),
+            new ItchIoUpload(18633062, 'Windows English v1.2 (emulator embedded)', true),
+        ];
+        $game = ItchIoGameUrl::tryFrom('https://charlyitv.itch.io/cats-and-dogs');
+        self::assertNotNull($game);
+        $downloads = $this->createMock(ItchIoDownloads::class);
+        $downloads->method('open')->with($game)->willReturn(new ItchIoDownloadsPage($game, $uploads, 'TOKEN', new CookieJar()));
+        $action = new ListItchIoFilesAction($downloads);
+
+        self::assertSame('list_itch_io_files', $action->name());
+        self::assertSame(['url'], Arguments::schema($action->schema())['required']);
+        self::assertEquals(
+            new ItchIoFilesDto('https://charlyitv.itch.io/cats-and-dogs', $uploads),
+            $action->read(Arguments::parse('{"url": "https://charlyitv.itch.io/cats-and-dogs/devlog/1"}', $action->schema())),
+        );
+    }
+
+    public function testListItchIoFilesRefusesAnAddressThatIsNotOfAnItchIoGame(): void
+    {
+        $action = new ListItchIoFilesAction($this->createStub(ItchIoDownloads::class));
+        $this->expectException(ToolArgumentsException::class);
+
+        $action->read(Arguments::parse('{"url": "https://itch.io/games/tag-zx-spectrum"}', $action->schema()));
     }
 
     private function view(ViewImageAction $action, string $json): ImageDto

@@ -6,7 +6,6 @@ namespace ZxArt\Releases\ItchIo;
 
 use App\Users\CurrentUserService;
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\GuzzleException;
 use Monolog\Logger;
 use RuntimeException;
@@ -14,6 +13,7 @@ use ZipArchive;
 use structureManager;
 use ZxArt\Releases\ReleaseTypes;
 use ZxArt\Releases\Services\ArchiveFileResolverService;
+use ZxArt\Shared\Http\ContentDisposition;
 use zxProdElement;
 use zxReleaseElement;
 
@@ -32,7 +32,7 @@ final readonly class ItchIoReleasesImporter
     private const string ZIP_EXTENSION = 'zip';
 
     public function __construct(
-        private ItchIoPageParser $parser,
+        private ItchIoDownloads $downloads,
         private ArchiveFileResolverService $archiveFileResolverService,
         private structureManager $structureManager,
         private CurrentUserService $currentUserService,
@@ -50,22 +50,21 @@ final readonly class ItchIoReleasesImporter
         if ($game === null) {
             return 0;
         }
-        // itch.io ties the download permission and the csrf token to the visitor's session
-        $session = new CookieJar();
-        $page = $this->openDownloadsPage($game, $session);
-        $csrfToken = $page === null ? null : $this->parser->findCsrfToken($page);
-        if ($page === null || $csrfToken === null) {
+        try {
+            $page = $this->downloads->open($game);
+        } catch (ItchIoUnavailableException $exception) {
+            $this->logger->error('ItchIoReleasesImporter::import: ' . $exception->getMessage());
             return 0;
         }
 
         $releaseFileTypes = $this->archiveFileResolverService->getAllReleaseFileTypes();
         $knownHashes = $this->getReleaseHashes($prod);
         $added = 0;
-        foreach ($this->parser->findUploads($page) as $upload) {
+        foreach ($page->uploads as $upload) {
             if ($upload->nativeBuild) {
                 continue;
             }
-            $file = $this->downloadUpload($game, $upload, $csrfToken, $session, $releaseFileTypes);
+            $file = $this->downloadUpload($page, $upload, $releaseFileTypes);
             if ($file === null) {
                 continue;
             }
@@ -81,54 +80,22 @@ final readonly class ItchIoReleasesImporter
     }
 
     /**
-     * The game page itself when it offers the files, otherwise the download
-     * page its donation prompt leads to.
-     */
-    private function openDownloadsPage(ItchIoGameUrl $game, CookieJar $session): ?string
-    {
-        $gamePage = $this->get($game->gameUrl, $session);
-        if ($gamePage === null || $this->parser->findUploads($gamePage) !== []) {
-            return $gamePage;
-        }
-        $endpoint = $this->parser->findDownloadPageEndpoint($gamePage);
-        $csrfToken = $this->parser->findCsrfToken($gamePage);
-        if ($endpoint === null || $csrfToken === null) {
-            return null;
-        }
-        $downloadPageUrl = $this->requestUrl($endpoint, $csrfToken, $session);
-        return $downloadPageUrl === null ? null : $this->get($downloadPageUrl, $session);
-    }
-
-    /**
-     * The file endpoint answers with a short-lived storage address. A game of a
-     * new creator is quarantined by itch.io until reviewed; its visitors are
-     * warned and may download anyway, which is what `bypass_quarantine` says.
      * An upload's label need not be its file name, so the type is only known
      * from the name the storage sends; the body is read only when that type is
      * a release type.
      *
      * @param list<string> $releaseFileTypes
      */
-    private function downloadUpload(
-        ItchIoGameUrl $game,
-        ItchIoUpload $upload,
-        string $csrfToken,
-        CookieJar $session,
-        array $releaseFileTypes,
-    ): ?ItchIoFile {
-        $endpoint = $game->getFileEndpoint($upload->id) . '?source=game_download&bypass_quarantine=true';
-        $fileUrl = $this->requestUrl($endpoint, $csrfToken, $session);
-        if ($fileUrl === null) {
-            return null;
-        }
-
+    private function downloadUpload(ItchIoDownloadsPage $page, ItchIoUpload $upload, array $releaseFileTypes): ?ItchIoFile
+    {
         try {
+            $fileUrl = $this->downloads->fileUrl($page, $upload->id);
             $fileResponse = $this->httpClient->get($fileUrl, [
                 'timeout' => self::TIMEOUT_SECONDS,
                 'headers' => ['User-Agent' => self::USER_AGENT],
                 'stream' => true,
             ]);
-            $name = $this->parser->findFileName($fileResponse->getHeaderLine('Content-Disposition')) ?? $upload->name;
+            $name = ContentDisposition::fileName($fileResponse->getHeaderLine('Content-Disposition')) ?? $upload->name;
             $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
             if (!in_array($extension, $releaseFileTypes, true)) {
                 $fileResponse->getBody()->close();
@@ -137,7 +104,7 @@ final readonly class ItchIoReleasesImporter
             $file = new ItchIoFile($name, $fileResponse->getBody()->getContents());
             return $this->holdsReleaseFile($file, $releaseFileTypes) ? $file : null;
         } catch (GuzzleException|RuntimeException $exception) {
-            $this->logger->error('ItchIoReleasesImporter::downloadUpload: ' . $endpoint . ' ' . $exception->getMessage());
+            $this->logger->error('ItchIoReleasesImporter::downloadUpload: ' . $page->game->gameUrl . ' ' . $upload->id . ' ' . $exception->getMessage());
             return null;
         }
     }
@@ -209,47 +176,5 @@ final readonly class ItchIoReleasesImporter
         $release->persistElementData();
 
         $release->updateFileStructure();
-    }
-
-    private function get(string $url, CookieJar $session): ?string
-    {
-        try {
-            $response = $this->httpClient->get($url, [
-                'timeout' => self::TIMEOUT_SECONDS,
-                'headers' => ['User-Agent' => self::USER_AGENT],
-                'cookies' => $session,
-            ]);
-        } catch (GuzzleException $exception) {
-            $this->logger->error('ItchIoReleasesImporter::get: ' . $url . ' ' . $exception->getMessage());
-            return null;
-        }
-        return (string)$response->getBody();
-    }
-
-    /**
-     * Both endpoints the download needs answer a POST with `{url}`, or with
-     * `{errors}` / a lightbox when they refuse.
-     */
-    private function requestUrl(string $url, string $csrfToken, CookieJar $session): ?string
-    {
-        try {
-            $response = $this->httpClient->post($url, [
-                'timeout' => self::TIMEOUT_SECONDS,
-                'headers' => ['User-Agent' => self::USER_AGENT],
-                'cookies' => $session,
-                'form_params' => ['csrf_token' => $csrfToken],
-            ]);
-        } catch (GuzzleException $exception) {
-            $this->logger->error('ItchIoReleasesImporter::requestUrl: ' . $url . ' ' . $exception->getMessage());
-            return null;
-        }
-        $body = (string)$response->getBody();
-        /** @var array{url?: string}|null $decoded */
-        $decoded = json_decode($body, true);
-        $answeredUrl = $decoded['url'] ?? null;
-        if ($answeredUrl === null) {
-            $this->logger->error('ItchIoReleasesImporter::requestUrl: no address from ' . $url . ' ' . $body);
-        }
-        return $answeredUrl;
     }
 }

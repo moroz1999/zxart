@@ -37,15 +37,6 @@ class ItchIoPageParserTest extends TestCase
         );
     }
 
-    public function testReadsFileNameTheStorageSends(): void
-    {
-        $parser = new ItchIoPageParser();
-
-        $this->assertSame('ZX Spectrum English.zip', $parser->findFileName('attachment; filename="ZX Spectrum English.zip"'));
-        $this->assertSame('Español.tap', $parser->findFileName("attachment; filename*=UTF-8''Espa%C3%B1ol.tap"));
-        $this->assertNull($parser->findFileName(''));
-    }
-
     public function testIgnoresFilesListedWithoutDownloadButton(): void
     {
         $html = '<p>Click download now to get access to the following files:</p>'

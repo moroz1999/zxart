@@ -14,4 +14,6 @@ description: Adding a production from a page of another site.
 - Copy it verbatim without rewording; if it is available in several languages, use the English version.
 - Do not invent a description yourself.
 - Put the instructions into `instructions`, not into the description.
-- One plan: new authors/groups, prod, its authors and files, then each release with its authors and files.
+- Always add the source's pictures in the same plan: screens of the work as the production's `screenshots`, the cover or tape inlay as `inlays`, maps as `maps`. Look at a picture with `view_image` when unsure what it shows.
+- An itch.io game page has no direct download links: call `list_itch_io_files`. Skip native builds (PC, Mac, Android) and files that are no release (manuals, maps, artwork). Each other file is a release of its own: its language, version and formats from the file's label; store the file with `set_release_itch_io_file`.
+- One plan: new authors/groups, prod, its authors and pictures, then each release with its authors and its file.

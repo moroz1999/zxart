@@ -22,6 +22,12 @@ switch ($path) {
         header('Content-Type: application/octet-stream');
         echo "\x13\x00\x00\x03INTRO     " . str_repeat("\x00\xff", 64);
         break;
+    case '/storage/18621174':
+        // a storage address names the file only in its Content-Disposition
+        header('Content-Type: application/octet-stream');
+        header("Content-Disposition: attachment; filename*=UTF-8''Like%20Cat%20and%20Dog%20Espa%C3%B1ol.tap");
+        echo "\x13\x00\x00\x03INTRO     " . str_repeat("\x00\xff", 64);
+        break;
     case '/page.html':
         header('Content-Type: text/html');
         echo '<!doctype html><html><head><title>Page</title></head><body><p>Not a picture</p></body></html>';

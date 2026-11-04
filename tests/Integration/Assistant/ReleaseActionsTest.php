@@ -59,6 +59,7 @@ final class ReleaseActionsTest extends WriteToolTestCase
             'add_release_files' => ['add_release_files', ['releaseId', 'kind', 'urls'], ['releaseId', 'kind', 'urls']],
             'delete_release_file' => ['delete_release_file', ['releaseId', 'fileId'], ['releaseId', 'fileId']],
             'set_release_file' => ['set_release_file', ['releaseId', 'url', 'fileName'], ['releaseId', 'url']],
+            'set_release_itch_io_file' => ['set_release_itch_io_file', ['releaseId', 'url', 'uploadId'], ['releaseId', 'url', 'uploadId']],
         ];
     }
 
@@ -103,6 +104,7 @@ final class ReleaseActionsTest extends WriteToolTestCase
             'add_release_files' => ['add_release_files', ChangeKind::AttachFile],
             'delete_release_file' => ['delete_release_file', ChangeKind::DeleteFile],
             'set_release_file' => ['set_release_file', ChangeKind::AttachFile],
+            'set_release_itch_io_file' => ['set_release_itch_io_file', ChangeKind::AttachFile],
         ];
     }
 

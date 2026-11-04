@@ -9,8 +9,13 @@ require_once __DIR__ . '/../../Doubles/Http/LocalFileServer.php';
 require_once __DIR__ . '/../../Doubles/Http/LoopbackUrlGuard.php';
 
 use fileElement;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use Override;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use ZxArt\Assistant\Actions\ToolArgumentsException;
 use ZxArt\Assistant\Prods\ProdDto;
 use ZxArt\Assistant\Prods\ProdDtos;
 use ZxArt\Assistant\Releases\ReleaseDto;
@@ -23,6 +28,8 @@ use ZxArt\Prods\UseCases\AddProdFilesHandler;
 use ZxArt\Prods\UseCases\CreateProdCommand;
 use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
+use ZxArt\Releases\ItchIo\ItchIoDownloads;
+use ZxArt\Releases\ItchIo\ItchIoPageParser;
 use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
@@ -134,6 +141,49 @@ final class FileWriteToolsTest extends WriteToolTestCase
         self::assertInstanceOf(zxReleaseElement::class, $release);
         $this->storedPaths[] = $release->getFilePath();
         self::assertSame('game.tap', $this->release($releaseId)->fileName);
+    }
+
+    public function testSetReleaseItchIoFileStoresTheFileOfThatUploadUnderTheNameTheStorageSends(): void
+    {
+        $this->signInAsEditor();
+        $releaseId = $this->createRelease();
+        $this->container->set(ItchIoDownloads::class, $this->itchIoDownloads($this->server->url('/storage/18621174')));
+        $arguments = '{"releaseId": ' . $releaseId . ', "url": "https://charlyitv.itch.io/cats-and-dogs", "uploadId": 18621174}';
+
+        self::assertEquals($this->release($releaseId), $this->actionState('set_release_itch_io_file', $arguments));
+        $this->actionWrite('set_release_itch_io_file', $arguments);
+
+        $release = $this->structureManager->getElementById($releaseId);
+        self::assertInstanceOf(zxReleaseElement::class, $release);
+        $this->storedPaths[] = $release->getFilePath();
+        self::assertSame('Like Cat and Dog Español.tap', $this->release($releaseId)->fileName);
+    }
+
+    public function testSetReleaseItchIoFileOfAFileTheGameDoesNotOfferIsRefused(): void
+    {
+        $this->signInAsEditor();
+        $releaseId = $this->createRelease();
+        $this->container->set(ItchIoDownloads::class, $this->itchIoDownloads($this->server->url('/storage/18621174')));
+
+        $this->expectException(ToolArgumentsException::class);
+        $this->actionWrite('set_release_itch_io_file', '{"releaseId": ' . $releaseId . ', "url": "https://charlyitv.itch.io/cats-and-dogs", "uploadId": 1}');
+    }
+
+    /**
+     * itch.io answered from a script: a game page offering one file, then the
+     * storage address `$fileUrl` of that file.
+     */
+    private function itchIoDownloads(string $fileUrl): ItchIoDownloads
+    {
+        $page = '<meta name="csrf_token" value="TOKEN" /><div class="upload">'
+            . '<a href="javascript:void(0);" data-upload_id="18621174" class="button download_btn">Download</a>'
+            . '<strong title="ZX Spectrum Español .tap" class="name">ZX Spectrum Español .tap</strong></div>';
+        $handler = new MockHandler([
+            new Response(200, [], $page),
+            new Response(200, [], (string)json_encode(['url' => $fileUrl])),
+        ]);
+
+        return new ItchIoDownloads(new ItchIoPageParser(), new Client(['handler' => HandlerStack::create($handler)]));
     }
 
     private function release(int $releaseId): ReleaseDto

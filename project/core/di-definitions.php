@@ -36,6 +36,7 @@ use ZxArt\Assistant\Releases\DeleteReleaseAction;
 use ZxArt\Assistant\Releases\RemoveReleaseAuthorAction;
 use ZxArt\Assistant\Releases\SetReleaseAuthorAction;
 use ZxArt\Assistant\Releases\SetReleaseFileAction;
+use ZxArt\Assistant\Releases\SetReleaseItchIoFileAction;
 use ZxArt\Assistant\Releases\UpdateReleaseAction;
 use ZxArt\Assistant\Prods\AddProdFilesAction;
 use ZxArt\Assistant\Prods\DeleteProdFileAction;
@@ -64,6 +65,7 @@ use ZxArt\Assistant\Groups\RemoveGroupAliasMemberAction;
 use ZxArt\Assistant\Groups\SetGroupAliasMemberAction;
 use ZxArt\Assistant\Groups\UpdateGroupAliasAction;
 use ZxArt\Assistant\Web\FetchUrlAction;
+use ZxArt\Assistant\Web\ListItchIoFilesAction;
 use ZxArt\Assistant\Web\ViewImageAction;
 use ZxArt\Assistant\Prods\GetProdAction;
 use ZxArt\Assistant\Releases\GetReleaseAction;
@@ -303,6 +305,7 @@ return [
         DI\get(GetGroupAliasAction::class),
         DI\get(FetchUrlAction::class),
         DI\get(ViewImageAction::class),
+        DI\get(ListItchIoFilesAction::class),
         DI\get(CreateProdAction::class),
         DI\get(UpdateProdAction::class),
         DI\get(DeleteProdAction::class),
@@ -316,6 +319,7 @@ return [
         DI\get(RemoveReleaseAuthorAction::class),
         DI\get(SetReleaseAuthorAction::class),
         DI\get(SetReleaseFileAction::class),
+        DI\get(SetReleaseItchIoFileAction::class),
         DI\get(UpdateReleaseAction::class),
         DI\get(AddProdFilesAction::class),
         DI\get(DeleteProdFileAction::class),

@@ -15,6 +15,8 @@ final readonly class HttpResponseDto
         public string $contentType,
         /** The body consumer stopped the transfer before the body ended. */
         public bool $stopped,
+        /** The Content-Disposition header, empty when it came without one. */
+        public string $contentDisposition,
     ) {
     }
 }

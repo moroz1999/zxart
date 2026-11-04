@@ -59,6 +59,7 @@ final readonly class GuardedDownloader
             finalUrl: $response->finalUrl,
             contentType: (string)mime_content_type($destination),
             size: $size === false ? 0 : $size,
+            fileName: ContentDisposition::fileName($response->contentDisposition),
         );
     }
 

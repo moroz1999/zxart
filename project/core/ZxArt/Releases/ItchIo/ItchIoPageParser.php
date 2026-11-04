@@ -47,21 +47,6 @@ final readonly class ItchIoPageParser
     }
 
     /**
-     * The file name the storage sends the file under, which is the only place a
-     * relabelled upload's real name shows.
-     */
-    public function findFileName(string $contentDisposition): ?string
-    {
-        if (preg_match("#filename\\*=UTF-8''([^;]+)#i", $contentDisposition, $matches) === 1) {
-            return rawurldecode(trim($matches[1]));
-        }
-        if (preg_match('#filename="([^"]+)"#i', $contentDisposition, $matches) === 1) {
-            return $matches[1];
-        }
-        return null;
-    }
-
-    /**
      * A native build carries a platform icon ("Download for Windows") beside
      * its name.
      */

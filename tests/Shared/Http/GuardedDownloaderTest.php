@@ -46,6 +46,20 @@ class GuardedDownloaderTest extends TestCase
         self::assertSame(filesize($this->destination), $file->size);
     }
 
+    public function testTellsTheFileNameTheResponseSends(): void
+    {
+        $file = $this->createDownloader()->download($this->url('/storage/18621174'), $this->destination, 1000);
+
+        self::assertSame('Like Cat and Dog Español.tap', $file->fileName);
+    }
+
+    public function testAResponseWithoutAFileNameNamesNone(): void
+    {
+        $file = $this->createDownloader()->download($this->url('/intro.tap'), $this->destination, 1000);
+
+        self::assertNull($file->fileName);
+    }
+
     public function testTheRequestGoesToThePinnedAddressUnderTheHostsName(): void
     {
         $this->createDownloader()->download($this->url('/host'), $this->destination, 1000);

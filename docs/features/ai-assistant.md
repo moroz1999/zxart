@@ -28,6 +28,7 @@ Read actions besides the entity reads:
 | `load_skill` | `Skills\LoadSkillAction` | `Assistant\Skills\SkillCatalogue` (see [Skills](#skills)) |
 | `fetch_url` | `Web\FetchUrlAction` | `Shared\Http\PageFetcher` |
 | `view_image` | `Web\ViewImageAction` | `Shared\Images\RemoteImageReader` (`url`), `StoredImageReader` (`fileId`) |
+| `list_itch_io_files` | `Web\ListItchIoFilesAction` | `Releases\ItchIo\ItchIoDownloads::open()` (see [prod.md](prod.md)) |
 
 The catalogue lists take no arguments (`NoArgumentsDto`: no properties, none
 allowed); `OpenAiLlmClient` sends such a schema's `properties` as an empty
@@ -55,12 +56,22 @@ converter type by the extension) is rendered in process by
 controller uses, colours mixed, sRGB, zoom 2, no border — to a PNG, or a GIF
 for a flickering screen.
 
+`list_itch_io_files` takes the address of an itch.io game or of any of its
+pages (`ItchIoGameUrl`; another address is `ToolArgumentsException`) and
+answers `ItchIoFilesDto`: the game's address and its uploads (`ItchIoUpload`:
+id, the creator's label, native build), also those behind a donation prompt.
+itch.io pages have no direct download links, and a file's storage address
+lives a minute in the session that asked it, so a file is stored with
+`set_release_itch_io_file`, which asks for the address when it runs.
+
 Both go through `Shared\Http\GuardedHttpClient`, which `GuardedDownloader`
 uses too: `http`/`https` only, every address — the first and each redirect, at
 most 5 — passes `UrlGuard` (`PublicAddressGuard`), the request is pinned to
 the checked address, the bodies of redirects are dropped and the body of the
 last response goes to a consumer that can stop the transfer at a limit. A
-refused address or a failed transfer is `HttpRequestRefusedException`.
+refused address or a failed transfer is `HttpRequestRefusedException`. The
+last response's `Content-Disposition` comes back with it, and a download
+answers the file name it gives (`Shared\Http\ContentDisposition`).
 
 The four typed searches take the fields of their filter flat, beside `limit`
 and `offset` (`PageArguments`), and build the service's own filter DTO from
@@ -204,6 +215,14 @@ argument replaces in the state by its name.
 | `add_release_files` (attachFile) | `releaseId`, `kind` (`ReleaseFileKind`), `urls` | the release |
 | `delete_release_file` (deleteFile) | `releaseId`, `fileId` | the release |
 | `set_release_file` (attachFile) | `releaseId`, `url`, `fileName` | the release |
+| `set_release_itch_io_file` (attachFile) | `releaseId`, `url` (the itch.io game), `uploadId` | the release |
+
+`set_release_file` stores the file under `fileName`, else the name the
+response's `Content-Disposition` gives, else the one in the address.
+`set_release_itch_io_file` opens the game's downloads, refuses an upload the
+game does not offer (`ToolArgumentsException`, naming the ones it does), asks
+the upload's storage address and stores it through the same use case, under
+the name the storage sends.
 
 Adding files answers `AddedFilesDto` (`id`, `fileIds`); every other write
 `{id}` — of the new entity for a create or a conversion.

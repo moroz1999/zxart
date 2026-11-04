@@ -126,8 +126,8 @@ final readonly class ElementFileImporter
     }
 
     /**
-     * Makes the download the release's file, under the given name or the one
-     * in the URL, and reads its structure and formats as an upload does. A
+     * Makes the download the release's file, under the given name, else the
+     * one the response sends, else the one in the URL, and reads its structure and formats as an upload does. A
      * refused download leaves the release's file as it was.
      *
      * @throws AttachedFileRefusedException
@@ -138,7 +138,8 @@ final readonly class ElementFileImporter
         $downloaded = $this->download($url, $filePath, self::MAX_RELEASE_FILE_BYTES);
 
         $release->file = (string)$release->getPersistedId();
-        $release->fileName = $fileName !== null && $fileName !== '' ? basename($fileName) : $this->fileNameOf($downloaded->finalUrl);
+        $isNamed = $fileName !== null && $fileName !== '';
+        $release->fileName = basename($isNamed ? $fileName : ($downloaded->fileName ?? $this->fileNameOf($downloaded->finalUrl)));
         $release->parsed = 0;
         rename($filePath, $release->getFilePath());
         $this->releaseRepository->save($release);

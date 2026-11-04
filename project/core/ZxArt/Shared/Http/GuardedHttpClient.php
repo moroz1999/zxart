@@ -61,6 +61,7 @@ final readonly class GuardedHttpClient
             throw new HttpRequestRefusedException('curl could not start');
         }
         $stopped = false;
+        $contentDisposition = '';
         curl_setopt_array($handle, [
             CURLOPT_URL => $guardedUrl->url,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
@@ -70,6 +71,18 @@ final readonly class GuardedHttpClient
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_HTTPHEADER => ['Accept-Encoding: identity'],
+            CURLOPT_HEADERFUNCTION => static function (CurlHandle $handle, string $header) use (&$contentDisposition): int {
+                // each response of the redirects sends its headers; the last one's are kept
+                if (str_starts_with($header, 'HTTP/')) {
+                    $contentDisposition = '';
+                }
+                [$name, $value] = array_pad(explode(':', $header, 2), 2, '');
+                if (strcasecmp(trim($name), 'Content-Disposition') === 0) {
+                    $contentDisposition = trim($value);
+                }
+
+                return strlen($header);
+            },
             CURLOPT_WRITEFUNCTION => static function (CurlHandle $handle, string $chunk) use ($consumeChunk, &$stopped): int {
                 $status = (int)curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
                 if ($status >= 300 && $status < 400) {
@@ -103,6 +116,7 @@ final readonly class GuardedHttpClient
             status: $status,
             contentType: is_string($contentType) ? $contentType : '',
             stopped: $stopped,
+            contentDisposition: $contentDisposition,
         );
         $redirects = $status >= 300 && $status < 400 && $redirectUrl !== '';
 

@@ -15,7 +15,8 @@ use ZxArt\Shared\StructureType;
 use ZxArt\Shared\UseCases\TransactionRunner;
 
 /**
- * Makes the download the release's file, named as given or as in the URL; its
+ * Makes the download the release's file, named as given, else as the response
+ * names it, else as in the URL; its
  * structure and formats are read as for an upload. A refused download keeps
  * the file the release had.
  *
