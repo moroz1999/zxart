@@ -6,7 +6,6 @@ namespace ZxArt\Stats\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\JoinClause;
 use LanguagesManager;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
@@ -174,51 +173,61 @@ final readonly class StatsDbal extends AbstractDbal
         $prodTable = $this->tableName(DatabaseTable::ZxProd);
         $authorshipTable = $this->tableName(DatabaseTable::Authorship);
         $authorTable = $this->tableName(DatabaseTable::Author);
+        $authorAliasTable = $this->tableName(DatabaseTable::AuthorAlias);
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $groupTable = $this->tableName(DatabaseTable::Group);
+        $groupAliasTable = $this->tableName(DatabaseTable::GroupAlias);
         $countryTable = $this->tableName(DatabaseTable::Country);
 
         $authors = $this->db->table($authorshipTable)
-            ->join($authorTable, function (JoinClause $join) use ($authorTable, $authorshipTable, $languageId): void {
-                $join->on($authorTable . '.id', '=', $authorshipTable . '.authorId')
-                    ->where($authorTable . '.languageId', '=', $languageId);
-            })
+            ->join($authorTable, $authorTable . '.id', '=', $authorshipTable . '.authorId')
             ->join($prodTable, $prodTable . '.id', '=', $authorshipTable . '.elementId')
-            ->join($countryTable, function (JoinClause $join) use ($countryTable, $authorTable, $languageId): void {
-                $join->on($countryTable . '.id', '=', $authorTable . '.country')
-                    ->where($countryTable . '.languageId', '=', $languageId);
-            })
+            ->join($countryTable, $countryTable . '.id', '=', $authorTable . '.country')
             ->where($authorshipTable . '.type', '=', EntityType::Prod->value)
+            ->where($authorTable . '.languageId', '=', $languageId)
+            ->where($countryTable . '.languageId', '=', $languageId)
+            ->where($authorTable . '.country', '>', 0)
+            ->where($prodTable . '.year', '>', 0)
+            ->select([$prodTable . '.id AS workId', $prodTable . '.year AS year', $countryTable . '.title AS label']);
+
+        $authorAliases = $this->db->table($authorshipTable)
+            ->join($authorAliasTable, $authorAliasTable . '.id', '=', $authorshipTable . '.authorId')
+            ->join($authorTable, $authorTable . '.id', '=', $authorAliasTable . '.authorId')
+            ->join($prodTable, $prodTable . '.id', '=', $authorshipTable . '.elementId')
+            ->join($countryTable, $countryTable . '.id', '=', $authorTable . '.country')
+            ->where($authorshipTable . '.type', '=', EntityType::Prod->value)
+            ->where($authorTable . '.languageId', '=', $languageId)
+            ->where($countryTable . '.languageId', '=', $languageId)
             ->where($authorTable . '.country', '>', 0)
             ->where($prodTable . '.year', '>', 0)
             ->select([$prodTable . '.id AS workId', $prodTable . '.year AS year', $countryTable . '.title AS label']);
 
         $groups = $this->db->table($linksTable)
-            ->join($groupTable, function (JoinClause $join) use ($groupTable, $linksTable, $languageId): void {
-                $join->on($groupTable . '.id', '=', $linksTable . '.childStructureId')
-                    ->where($groupTable . '.languageId', '=', $languageId);
-            })
-            ->join($prodTable, $prodTable . '.id', '=', $linksTable . '.parentStructureId')
-            ->join($countryTable, function (JoinClause $join) use ($countryTable, $groupTable, $languageId): void {
-                $join->on($countryTable . '.id', '=', $groupTable . '.country')
-                    ->where($countryTable . '.languageId', '=', $languageId);
-            })
+            ->join($groupTable, $groupTable . '.id', '=', $linksTable . '.parentStructureId')
+            ->join($prodTable, $prodTable . '.id', '=', $linksTable . '.childStructureId')
+            ->join($countryTable, $countryTable . '.id', '=', $groupTable . '.country')
             ->where($linksTable . '.type', '=', LinkTypes::ZX_PROD_GROUPS->value)
+            ->where($countryTable . '.languageId', '=', $languageId)
             ->where($groupTable . '.country', '>', 0)
             ->where($prodTable . '.year', '>', 0)
             ->select([$prodTable . '.id AS workId', $prodTable . '.year AS year', $countryTable . '.title AS label']);
 
-        // union() de-duplicates identical (workId, year, country) rows, so a prod sharing a country
-        // through both an author and a group is counted once. Aggregation is then done in PHP.
+        $groupAliases = $this->db->table($linksTable)
+            ->join($groupAliasTable, $groupAliasTable . '.id', '=', $linksTable . '.parentStructureId')
+            ->join($groupTable, $groupTable . '.id', '=', $groupAliasTable . '.groupId')
+            ->join($prodTable, $prodTable . '.id', '=', $linksTable . '.childStructureId')
+            ->join($countryTable, $countryTable . '.id', '=', $groupTable . '.country')
+            ->where($linksTable . '.type', '=', LinkTypes::ZX_PROD_GROUPS->value)
+            ->where($countryTable . '.languageId', '=', $languageId)
+            ->where($groupTable . '.country', '>', 0)
+            ->where($prodTable . '.year', '>', 0)
+            ->select([$prodTable . '.id AS workId', $prodTable . '.year AS year', $countryTable . '.title AS label']);
+
+        // union() de-duplicates identical work, year, and country rows across every kind of credit.
         /** @var array<int, array{workId: int|string, year: int|string, label: string}> $rows */
-        $rows = $authors->union($groups)->get();
+        $rows = $authors->union($authorAliases)->union($groups)->union($groupAliases)->get();
 
-        $result = [];
-        foreach ($rows as $row) {
-            $result[(int)$row['year']][(string)$row['label']] = ($result[(int)$row['year']][(string)$row['label']] ?? 0) + 1;
-        }
-
-        return $result;
+        return $this->countryRowsToResult($rows);
     }
 
     /**
@@ -253,31 +262,37 @@ final readonly class StatsDbal extends AbstractDbal
         $languageId = $this->getCurrentLanguageId();
         $linksTable = $this->tableName(DatabaseTable::StructureLinks);
         $authorTable = $this->tableName(DatabaseTable::Author);
+        $authorAliasTable = $this->tableName(DatabaseTable::AuthorAlias);
         $countryTable = $this->tableName(DatabaseTable::Country);
         $workTableName = $this->tableName($workTable);
-        // selectRaw is not processed by the grammar, so the table prefix must be applied manually here.
-        $workIdColumn = $this->db->getTablePrefix() . $workTableName . '.id';
 
-        $query = $this->db->table($linksTable)
-            ->join($authorTable, function (JoinClause $join) use ($authorTable, $linksTable, $languageId): void {
-                $join->on($authorTable . '.id', '=', $linksTable . '.parentStructureId')
-                    ->where($authorTable . '.languageId', '=', $languageId);
-            })
+        $authors = $this->db->table($linksTable)
+            ->join($authorTable, $authorTable . '.id', '=', $linksTable . '.parentStructureId')
             ->join($workTableName, $workTableName . '.id', '=', $linksTable . '.childStructureId')
-            ->join($countryTable, function (JoinClause $join) use ($countryTable, $authorTable, $languageId): void {
-                $join->on($countryTable . '.id', '=', $authorTable . '.country')
-                    ->where($countryTable . '.languageId', '=', $languageId);
-            })
+            ->join($countryTable, $countryTable . '.id', '=', $authorTable . '.country')
             ->where($linksTable . '.type', '=', $authorLink->value)
+            ->where($authorTable . '.languageId', '=', $languageId)
+            ->where($countryTable . '.languageId', '=', $languageId)
             ->where($authorTable . '.country', '>', 0)
             ->where($workTableName . '.year', '>', 0)
-            ->select([$countryTable . '.title AS label', $workTableName . '.year AS year'])
-            ->selectRaw('COUNT(DISTINCT ' . $workIdColumn . ') AS amount');
+            ->select([$workTableName . '.id AS workId', $workTableName . '.year AS year', $countryTable . '.title AS label']);
 
-        /** @var array<int, array{label: string, year: int|string, amount: int|string}> $rows */
-        $rows = $this->groupBy($query, $workTableName . '.year', $countryTable . '.title')->get();
+        $authorAliases = $this->db->table($linksTable)
+            ->join($authorAliasTable, $authorAliasTable . '.id', '=', $linksTable . '.parentStructureId')
+            ->join($authorTable, $authorTable . '.id', '=', $authorAliasTable . '.authorId')
+            ->join($workTableName, $workTableName . '.id', '=', $linksTable . '.childStructureId')
+            ->join($countryTable, $countryTable . '.id', '=', $authorTable . '.country')
+            ->where($linksTable . '.type', '=', $authorLink->value)
+            ->where($authorTable . '.languageId', '=', $languageId)
+            ->where($countryTable . '.languageId', '=', $languageId)
+            ->where($authorTable . '.country', '>', 0)
+            ->where($workTableName . '.year', '>', 0)
+            ->select([$workTableName . '.id AS workId', $workTableName . '.year AS year', $countryTable . '.title AS label']);
 
-        return $this->distributionRowsToResult($rows);
+        /** @var array<int, array{workId: int|string, year: int|string, label: string}> $rows */
+        $rows = $authors->union($authorAliases)->get();
+
+        return $this->countryRowsToResult($rows);
     }
 
     /**
@@ -400,6 +415,23 @@ final readonly class StatsDbal extends AbstractDbal
         $result = [];
         foreach ($rows as $row) {
             $result[(int)$row['year']][$row['label']] = (int)$row['amount'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array<int, array{workId: int|string, year: int|string, label: string}> $rows
+     *
+     * @return array<int, array<string, int>>
+     */
+    private function countryRowsToResult(array $rows): array
+    {
+        $result = [];
+        foreach ($rows as $row) {
+            $year = (int)$row['year'];
+            $label = $row['label'];
+            $result[$year][$label] = ($result[$year][$label] ?? 0) + 1;
         }
 
         return $result;

@@ -20,6 +20,11 @@ Each of the three collections is described the same way:
 A work whose year of creation is unknown still counts towards the totals; it
 simply cannot appear in a year series.
 
+Country distributions use the countries of credited authors for graphics and
+music, and the countries of credited authors and developer groups for software.
+An alias uses the country of its author or group. A work counts once per country,
+even when several credits connect it to that country.
+
 ### Members
 The most active voters, commenters and taggers, each with their name and a link
 to their page.

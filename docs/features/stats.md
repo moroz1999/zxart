@@ -9,7 +9,7 @@ The statistics section is an Angular-powered dashboard exposed through the `zx-s
 - Category tab totals count all works in the corresponding table, including works without a known year.
 - Counts by year come from the `year` column of `module_zxprod`, `module_zxmusic` and `module_zxpicture` (rows with `year > 0`).
 - "Rated above average" counts use works whose `votes` exceed `zx.averageVote`.
-- Distributions group works by year: prods by top-level software category, required computer model and country; music by format and country; graphics by type and country.
+- Distributions group works by year: prods by top-level software category, required computer model and country; music by format and country; graphics by type and country. Country distributions resolve author and developer-group aliases to their owners and count each work once per country and year.
 - Daily history (last 30 days) comes from the aggregated events table via `EventsLog::countEvents`: software uploads (`addZxProd`), music plays (`play`), graphics views (`view`).
 - Top members come from `EventsLog` event counts (`addZxProd` / `addZxMusic` / `addZxPicture`, `comment`, `tagAdded`) and from `votes_history` for voters. User name, profile URL and badge are read from the user structure element.
 
