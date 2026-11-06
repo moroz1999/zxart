@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace ZxArt\Tests\Releases;
 
+require_once __DIR__ . '/../Doubles/Time/FakeClock.php';
+
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Override;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use ZxArt\Releases\ItchIo\ItchIoDownloads;
 use ZxArt\Releases\ItchIo\ItchIoGameUrl;
 use ZxArt\Releases\ItchIo\ItchIoPageParser;
+use ZxArt\Releases\ItchIo\ItchIoThrottle;
 use ZxArt\Releases\ItchIo\ItchIoUnavailableException;
 use ZxArt\Releases\ItchIo\ItchIoUpload;
+use ZxArt\Tests\Doubles\Time\FakeClock;
 
 /**
  * Talks to itch.io through a Guzzle handler that answers from a script and
@@ -27,6 +32,14 @@ class ItchIoDownloadsTest extends TestCase
 
     /** @var list<array{request: RequestInterface}> */
     private array $requests = [];
+
+    private FakeClock $clock;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->clock = new FakeClock();
+    }
 
     public function testOpensTheGamePageThatListsItsFiles(): void
     {
@@ -116,6 +129,72 @@ class ItchIoDownloadsTest extends TestCase
         $downloads->fileUrl($page, 18621174);
     }
 
+    public function testWaitsASecondBetweenRequests(): void
+    {
+        $downloads = $this->downloads(
+            new Response(200, [], $this->page('PAGETOKEN', $this->upload(18621174, 'ZX Spectrum English .tap'))),
+            new Response(200, [], '{"url":"https:\\/\\/storage.example\\/18621174"}'),
+        );
+
+        $downloads->fileUrl($downloads->open($this->game()), 18621174);
+
+        self::assertSame([1.0], $this->clock->sleeps);
+    }
+
+    public function testATooManyRequestsAnswerIsRetriedOnceAfterTheWaitItAsks(): void
+    {
+        $downloads = $this->downloads(
+            new Response(429, ['Retry-After' => '2'], 'Too Many Requests'),
+            new Response(200, [], $this->page('GAMETOKEN', $this->upload(18621174, 'ZX Spectrum English .tap'))),
+        );
+
+        $page = $downloads->open($this->game());
+
+        self::assertCount(1, $page->uploads);
+        self::assertCount(2, $this->requests);
+        self::assertSame([2.0], $this->clock->sleeps);
+    }
+
+    public function testASecondTooManyRequestsAnswerIsRefused(): void
+    {
+        $downloads = $this->downloads(
+            new Response(429, [], 'Too Many Requests'),
+            new Response(429, [], 'Too Many Requests'),
+        );
+
+        $this->expectException(ItchIoUnavailableException::class);
+        $downloads->open($this->game());
+    }
+
+    public function testTheSameGameIsOpenedOnce(): void
+    {
+        $downloads = $this->downloads(new Response(200, [], $this->page('GAMETOKEN', $this->upload(18621174, 'ZX Spectrum English .tap'))));
+
+        $first = $downloads->open($this->game());
+
+        self::assertSame($first, $downloads->open($this->game()));
+        self::assertCount(1, $this->requests);
+    }
+
+    public function testAGameWhoseFileWasRefusedIsOpenedAnew(): void
+    {
+        $gamePage = $this->page('GAMETOKEN', $this->upload(18621174, 'ZX Spectrum English .tap'));
+        $downloads = $this->downloads(
+            new Response(200, [], $gamePage),
+            new Response(200, [], '{"errors":["invalid upload"]}'),
+            new Response(200, [], $gamePage),
+        );
+        try {
+            $downloads->fileUrl($downloads->open($this->game()), 18621174);
+            self::fail('The file was not refused');
+        } catch (ItchIoUnavailableException) {
+        }
+
+        $downloads->open($this->game());
+
+        self::assertCount(3, $this->requests);
+    }
+
     private function game(): ItchIoGameUrl
     {
         $game = ItchIoGameUrl::tryFrom(self::GAME);
@@ -129,7 +208,7 @@ class ItchIoDownloadsTest extends TestCase
         $stack = HandlerStack::create(new MockHandler($responses));
         $stack->push(Middleware::history($this->requests));
 
-        return new ItchIoDownloads(new ItchIoPageParser(), new Client(['handler' => $stack]));
+        return new ItchIoDownloads(new ItchIoPageParser(), new Client(['handler' => $stack]), new ItchIoThrottle($this->clock));
     }
 
     private function page(string $csrfToken, string $body): string

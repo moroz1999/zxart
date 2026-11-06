@@ -6,6 +6,7 @@ namespace ZxArt\Releases\ItchIo;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 
@@ -15,16 +16,24 @@ use Psr\Http\Message\ResponseInterface;
  * page; a game that asks for a donation lists them on a download page, which
  * the "No thanks, just take me to the downloads" link of its prompt opens.
  *
+ * itch.io limits how fast it may be asked, so the downloads of a game are
+ * opened once per process and every request goes through the throttle.
+ *
  * @psalm-api
  */
-final readonly class ItchIoDownloads
+final class ItchIoDownloads
 {
     private const float TIMEOUT_SECONDS = 60.0;
     private const string USER_AGENT = 'zxart.ee releases import';
+    private const int TOO_MANY_REQUESTS = 429;
+
+    /** @var array<string, ItchIoDownloadsPage> by game address */
+    private array $opened = [];
 
     public function __construct(
-        private ItchIoPageParser $parser,
-        private Client $httpClient,
+        private readonly ItchIoPageParser $parser,
+        private readonly Client $httpClient,
+        private readonly ItchIoThrottle $throttle,
     ) {
     }
 
@@ -35,6 +44,14 @@ final readonly class ItchIoDownloads
      * @throws ItchIoUnavailableException
      */
     public function open(ItchIoGameUrl $game): ItchIoDownloadsPage
+    {
+        return $this->opened[$game->gameUrl] ??= $this->openAnew($game);
+    }
+
+    /**
+     * @throws ItchIoUnavailableException
+     */
+    private function openAnew(ItchIoGameUrl $game): ItchIoDownloadsPage
     {
         // itch.io ties the download permission and the csrf token to the visitor's session
         $session = new CookieJar();
@@ -63,15 +80,20 @@ final readonly class ItchIoDownloads
     /**
      * A short-lived storage address of the file. A game of a new creator is
      * quarantined by itch.io until reviewed; its visitors are warned and may
-     * download anyway, which is what `bypass_quarantine` says.
+     * download anyway, which is what `bypass_quarantine` says. A refusal
+     * forgets the opened downloads, as their session may be what failed.
      *
      * @throws ItchIoUnavailableException
      */
     public function fileUrl(ItchIoDownloadsPage $page, int $uploadId): string
     {
         $endpoint = $page->game->getFileEndpoint($uploadId) . '?source=game_download&bypass_quarantine=true';
-
-        return $this->requestUrl($endpoint, $page->csrfToken, $page->session);
+        try {
+            return $this->requestUrl($endpoint, $page->csrfToken, $page->session);
+        } catch (ItchIoUnavailableException $exception) {
+            unset($this->opened[$page->game->gameUrl]);
+            throw $exception;
+        }
     }
 
     /**
@@ -94,7 +116,7 @@ final readonly class ItchIoDownloads
     private function get(string $url, CookieJar $session): ResponseInterface
     {
         try {
-            $response = $this->httpClient->get($url, [
+            $response = $this->send('GET', $url, [
                 'timeout' => self::TIMEOUT_SECONDS,
                 'headers' => ['User-Agent' => self::USER_AGENT],
                 'cookies' => $session,
@@ -115,7 +137,7 @@ final readonly class ItchIoDownloads
     private function requestUrl(string $url, string $csrfToken, CookieJar $session): string
     {
         try {
-            $response = $this->httpClient->post($url, [
+            $response = $this->send('POST', $url, [
                 'timeout' => self::TIMEOUT_SECONDS,
                 'headers' => ['User-Agent' => self::USER_AGENT],
                 'cookies' => $session,
@@ -133,5 +155,28 @@ final readonly class ItchIoDownloads
         }
 
         return $answeredUrl;
+    }
+
+    /**
+     * A "429 Too Many Requests" is waited out and the request sent once more.
+     *
+     * @param array<string, mixed> $options
+     * @throws GuzzleException
+     */
+    private function send(string $method, string $url, array $options): ResponseInterface
+    {
+        $this->throttle->beforeRequest();
+        try {
+            return $this->httpClient->request($method, $url, $options);
+        } catch (ClientException $exception) {
+            $refusal = $exception->getResponse();
+            if ($refusal->getStatusCode() !== self::TOO_MANY_REQUESTS) {
+                throw $exception;
+            }
+            $this->throttle->afterRefusal($refusal->getHeaderLine('Retry-After'));
+        }
+        $this->throttle->beforeRequest();
+
+        return $this->httpClient->request($method, $url, $options);
     }
 }

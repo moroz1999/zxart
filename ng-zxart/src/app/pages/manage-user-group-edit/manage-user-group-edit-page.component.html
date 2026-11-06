@@ -1,0 +1,35 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">
+    {{ (creating ? 'manage-user-groups.add' : 'manage-user-groups.edit-title') | translate }}
+  </h1>
+
+  <div *ngIf="loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <form *ngIf="!loading" zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+    <zx-stack spacing="lg">
+      <zx-form-field>
+        <zx-form-label for="group-name" [required]="true">{{ 'manage-user-groups.name' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-input id="group-name" formControlName="groupName" type="text"></zx-input>
+          <zx-control-errors [control]="form.controls.groupName" [messages]="nameMessages"></zx-control-errors>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-field>
+        <zx-form-label for="group-description">{{ 'manage-user-groups.description' | translate }}</zx-form-label>
+        <zx-form-control>
+          <zx-textarea id="group-description" formControlName="description"></zx-textarea>
+        </zx-form-control>
+      </zx-form-field>
+
+      <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+
+      <zx-form-actions align="start">
+        <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'manage-user-groups.save' | translate }}</zx-button>
+        <zx-button color="transparent" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+      </zx-form-actions>
+    </zx-stack>
+  </form>
+</zx-page-layout>

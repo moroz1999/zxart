@@ -1,0 +1,81 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ details?.userName || ('manage-users.edit-title' | translate) }}</h1>
+  <zx-button
+    *ngIf="details && !details.banned && (mayBan$ | async)"
+    zxPageHeader
+    color="danger"
+    [disabled]="submitting"
+    (click)="onBan()"
+  >{{ 'manage-users.ban' | translate }}</zx-button>
+
+  <div *ngIf="loading">
+    <zx-spinner size="lg"></zx-spinner>
+  </div>
+
+  <zx-callout *ngIf="notFound" accent="danger">{{ 'manage-users.not-found' | translate }}</zx-callout>
+
+  <zx-stack *ngIf="details" spacing="lg">
+    <zx-callout *ngIf="details.banned" accent="danger">{{ 'manage-users.banned-notice' | translate }}</zx-callout>
+
+    <zx-facts>
+      <zx-fact>{{ 'manage-users.registered' | translate }} {{ details.dateCreated * 1000 | date: 'dd.MM.yyyy HH:mm' }}</zx-fact>
+      <zx-fact>{{ 'manage-users.comments-count' | translate: {count: details.commentsCount} }}</zx-fact>
+      <zx-fact>{{ 'manage-users.votes-count' | translate: {count: details.votesCount} }}</zx-fact>
+      <zx-fact *ngIf="details.authorId > 0">
+        {{ 'manage-users.author' | translate }}
+        <a [routerLink]="['/author', details.authorId]">{{ details.authorTitle || details.authorId }}</a>
+      </zx-fact>
+    </zx-facts>
+
+    <form zxForm [formGroup]="form" (ngSubmit)="onSubmit()">
+      <zx-stack spacing="lg">
+        <zx-form-field>
+          <zx-form-label for="user-name" [required]="true">{{ 'manage-users.name' | translate }}</zx-form-label>
+          <zx-form-control>
+            <zx-input id="user-name" formControlName="userName" type="text"></zx-input>
+            <zx-control-errors [control]="form.controls.userName" [messages]="userNameMessages"></zx-control-errors>
+          </zx-form-control>
+        </zx-form-field>
+
+        <zx-form-field>
+          <zx-form-label for="user-email">{{ 'manage-users.email' | translate }}</zx-form-label>
+          <zx-form-control>
+            <zx-input id="user-email" formControlName="email" type="email"></zx-input>
+          </zx-form-control>
+        </zx-form-field>
+
+        <zx-form-section [title]="'manage-users.flags' | translate">
+          <zx-checkbox-group>
+            <zx-checkbox-field formControlName="verified" [label]="'manage-users.verified' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="commentsAllowed" [label]="'manage-users.comments-allowed' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="showEmail" [label]="'manage-users.show-email' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="vip" [label]="'manage-users.vip' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="supporter" [label]="'manage-users.supporter' | translate"></zx-checkbox-field>
+            <zx-checkbox-field formControlName="volunteer" [label]="'manage-users.volunteer' | translate"></zx-checkbox-field>
+          </zx-checkbox-group>
+        </zx-form-section>
+
+        <zx-form-section [title]="'manage-users.groups' | translate" [formGroup]="groupsForm">
+          <zx-stack spacing="sm">
+            <span appText="caption" tone="muted">{{ 'manage-users.groups-hint' | translate }}</span>
+            <zx-checkbox-group>
+              <zx-checkbox-field
+                *ngFor="let group of groups; trackBy: trackByGroup"
+                [formControlName]="'' + group.id"
+                [label]="group.groupName"
+              ></zx-checkbox-field>
+            </zx-checkbox-group>
+          </zx-stack>
+        </zx-form-section>
+
+        <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+        <zx-form-message *ngIf="saved" variant="success">{{ 'manage-users.saved' | translate }}</zx-form-message>
+
+        <zx-form-actions align="start">
+          <zx-button color="primary" type="submit" [disabled]="submitting">{{ 'manage-users.save' | translate }}</zx-button>
+          <zx-button color="transparent" type="button" (click)="onCancel()">{{ 'form.cancel' | translate }}</zx-button>
+        </zx-form-actions>
+      </zx-stack>
+    </form>
+  </zx-stack>
+</zx-page-layout>

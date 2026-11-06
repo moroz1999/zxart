@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: ZxArt User Groups API
+  version: 1.0.0
+  description: >
+    The user groups of the management section. Reading requires
+    `root.manageUsers` or `userGroup.receive` on the public root; saving
+    requires `userGroup.receive`, deleting `userGroup.delete`. Every write
+    answers with the refreshed list.
+
+paths:
+  /user-groups-data/:
+    get:
+      summary: Every user group with its member count, by name
+      responses:
+        '200': {description: The groups, content: {application/json: {schema: {$ref: '#/components/schemas/UserGroups'}}}}
+        '403': {description: Lacks both privileges, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '500': {description: Internal server error}
+    post:
+      summary: Create, rename or delete one group
+      description: Deleting a group keeps its users, without it.
+      parameters:
+        - {in: query, name: action, required: true, schema: {type: string, enum: [create, update, delete]}}
+        - {in: query, name: id, description: The group, for update and delete, schema: {type: integer}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserGroupSaveRequest'
+      responses:
+        '200': {description: The refreshed groups, content: {application/json: {schema: {$ref: '#/components/schemas/UserGroups'}}}}
+        '400': {description: Unsupported action, a malformed body or a blank name, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '403': {description: Lacks userGroup.receive (create, update) or userGroup.delete (delete), content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '404': {description: No group with that id, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '500': {description: Internal server error}
+
+components:
+  schemas:
+    UserGroups:
+      type: array
+      items:
+        type: object
+        properties:
+          id: {type: integer}
+          groupName: {type: string}
+          description: {type: string}
+          membersCount: {type: integer}
+    UserGroupSaveRequest:
+      type: object
+      required: [groupName]
+      properties:
+        groupName: {type: string}
+        description: {type: string, default: ''}
+    Error:
+      type: object
+      properties:
+        errorMessage: {type: string}

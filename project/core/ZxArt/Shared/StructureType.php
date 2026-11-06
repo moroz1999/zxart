@@ -31,6 +31,8 @@ enum StructureType: string
     case Tag = 'tag';
     case Comment = 'comment';
     case User = 'user';
+    case UserGroup = 'userGroup';
+    case UserGroups = 'userGroups';
     case AuthorsCatalogue = 'authorsCatalogue';
     case GroupsCatalogue = 'groupsCatalogue';
     case PartiesCatalogue = 'partiesCatalogue';

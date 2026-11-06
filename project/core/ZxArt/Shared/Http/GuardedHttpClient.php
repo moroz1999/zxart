@@ -106,7 +106,6 @@ final readonly class GuardedHttpClient
         $status = (int)curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
         $contentType = curl_getinfo($handle, CURLINFO_CONTENT_TYPE);
         $redirectUrl = (string)curl_getinfo($handle, CURLINFO_REDIRECT_URL);
-        curl_close($handle);
 
         if ($succeeded === false && !$stopped) {
             throw new HttpRequestRefusedException("Request failed: $error ({$guardedUrl->url})");

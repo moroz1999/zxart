@@ -1,0 +1,95 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'manage-users.title' | translate }}</h1>
+
+  <zx-manage-tabs></zx-manage-tabs>
+
+  <zx-stack *ngIf="vm$ | async as vm" spacing="md">
+    <zx-filter-bar>
+      <zx-input
+        [placeholder]="'manage-users.search-placeholder' | translate"
+        [ngModel]="vm.query.search"
+        (ngModelChange)="onSearchInput($event)"
+      ></zx-input>
+      <zx-filter-picker
+        [label]="'manage-users.filter-group' | translate"
+        [items]="vm.groupItems"
+        [selectedIds]="vm.selectedGroupIds"
+        [multi]="false"
+        [searchEnabled]="true"
+        (selectedIdsChange)="onGroupChange($event)"
+      ></zx-filter-picker>
+      <zx-filter-picker
+        [label]="'manage-users.filter-status' | translate"
+        [items]="vm.statusItems"
+        [selectedIds]="vm.selectedStatusIds"
+        [multi]="false"
+        (selectedIdsChange)="onStatusChange($event)"
+      ></zx-filter-picker>
+    </zx-filter-bar>
+
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+    <div *ngIf="vm.error" appText="caption" tone="danger">{{ 'manage-users.error-load' | translate }}</div>
+
+    <span appText="caption" tone="muted">{{ 'manage-users.found' | translate: {count: vm.total} }}</span>
+
+    <div *ngIf="!vm.loading && !vm.error && vm.rows.length === 0" appText="bodySm" tone="muted">
+      {{ 'manage-users.empty' | translate }}
+    </div>
+
+    <zx-table *ngIf="vm.rows.length > 0" size="md" [zxLoadingState]="vm.loading">
+      <table>
+        <thead>
+        <tr>
+          <th>
+            <zx-button color="transparent" size="xs" (click)="onSort(vm.query, 'userName')">
+              {{ 'manage-users.col-name' | translate }} {{ sortMark(vm.query, 'userName') }}
+            </zx-button>
+          </th>
+          <th>
+            <zx-button color="transparent" size="xs" (click)="onSort(vm.query, 'email')">
+              {{ 'manage-users.col-email' | translate }} {{ sortMark(vm.query, 'email') }}
+            </zx-button>
+          </th>
+          <th>
+            <zx-button color="transparent" size="xs" (click)="onSort(vm.query, 'dateCreated')">
+              {{ 'manage-users.col-registered' | translate }} {{ sortMark(vm.query, 'dateCreated') }}
+            </zx-button>
+          </th>
+          <th>{{ 'manage-users.col-groups' | translate }}</th>
+          <th>{{ 'manage-users.col-status' | translate }}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of vm.rows; trackBy: trackByUser">
+          <td><a [routerLink]="['/manage/users', row.user.id]">{{ row.user.userName }}</a></td>
+          <td>{{ row.user.email }}</td>
+          <td>{{ row.user.dateCreated * 1000 | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ row.groupNames.join(', ') }}</td>
+          <td>
+            <zx-chip *ngIf="row.user.banned" color="danger" size="sm">{{ 'manage-users.banned' | translate }}</zx-chip>
+            <zx-chip *ngIf="!row.user.banned && !row.user.verified" size="sm">{{ 'manage-users.unverified' | translate }}</zx-chip>
+          </td>
+          <td>
+            <zx-button
+              *ngIf="!row.user.banned && (mayBan$ | async)"
+              color="danger"
+              size="xs"
+              (click)="onBan(row.user)"
+            >{{ 'manage-users.ban' | translate }}</zx-button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </zx-table>
+
+    <zx-pagination
+      *ngIf="vm.pagesAmount > 1"
+      [currentPage]="vm.query.page"
+      [pagesAmount]="vm.pagesAmount"
+      [queryParams]="vm.paginationParams"
+      [loading]="vm.loading"
+      (pageChange)="onPageChange($event)"
+    ></zx-pagination>
+  </zx-stack>
+</zx-page-layout>

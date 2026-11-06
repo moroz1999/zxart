@@ -7,6 +7,7 @@ namespace ZxArt\Tests\Integration\Assistant;
 require_once __DIR__ . '/WriteToolTestCase.php';
 require_once __DIR__ . '/../../Doubles/Http/LocalFileServer.php';
 require_once __DIR__ . '/../../Doubles/Http/LoopbackUrlGuard.php';
+require_once __DIR__ . '/../../Doubles/Time/FakeClock.php';
 
 use fileElement;
 use GuzzleHttp\Client;
@@ -30,6 +31,7 @@ use ZxArt\Prods\UseCases\CreateProdHandler;
 use ZxArt\Releases\Dto\ReleaseFieldsDto;
 use ZxArt\Releases\ItchIo\ItchIoDownloads;
 use ZxArt\Releases\ItchIo\ItchIoPageParser;
+use ZxArt\Releases\ItchIo\ItchIoThrottle;
 use ZxArt\Releases\UseCases\CreateReleaseCommand;
 use ZxArt\Releases\UseCases\CreateReleaseHandler;
 use ZxArt\Shared\Dto\AddedFilesDto;
@@ -37,6 +39,7 @@ use ZxArt\Shared\Dto\ListedFileDto;
 use ZxArt\Shared\Http\UrlGuard;
 use ZxArt\Tests\Doubles\Http\LocalFileServer;
 use ZxArt\Tests\Doubles\Http\LoopbackUrlGuard;
+use ZxArt\Tests\Doubles\Time\FakeClock;
 use zxReleaseElement;
 
 /**
@@ -183,7 +186,7 @@ final class FileWriteToolsTest extends WriteToolTestCase
             new Response(200, [], (string)json_encode(['url' => $fileUrl])),
         ]);
 
-        return new ItchIoDownloads(new ItchIoPageParser(), new Client(['handler' => HandlerStack::create($handler)]));
+        return new ItchIoDownloads(new ItchIoPageParser(), new Client(['handler' => HandlerStack::create($handler)]), new ItchIoThrottle(new FakeClock()));
     }
 
     private function release(int $releaseId): ReleaseDto

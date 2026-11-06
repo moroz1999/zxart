@@ -9,7 +9,9 @@ Screenshot thumbnail grid layout directive.
 - Apply `zxScreenshotsGrid` to a container of screenshot cells or their placeholders.
 - Five thumbnail columns on desktop, four below `lg`, two below `sm`.
 - The first cell of a grid that opens with an enlarged screenshot carries
-  `screenshots-grid-featured`, which spans two columns and two rows.
+  `screenshots-grid-featured`, which spans two columns and two rows. It is
+  exactly 512×384 px when the grid has enough room and shrinks proportionally
+  on narrower layouts.
 - Every cell keeps the thumbnail aspect ratio
   (`--zx-screenshots-grid-cell-ratio`), so a row's height does not depend on
   whether its images have arrived.

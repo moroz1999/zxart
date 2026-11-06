@@ -2,6 +2,8 @@
 
 // What LocalFileServer serves to the download tests.
 // Types go out as written, without a charset PHP would add to them.
+const STANDARD_SCREEN_SIZE = 6912;
+
 ini_set('default_charset', '');
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $port = $_SERVER['SERVER_PORT'];
@@ -17,6 +19,10 @@ switch ($path) {
     case '/image.png':
         header('Content-Type: image/png');
         echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+        break;
+    case '/screen.scr':
+        header('Content-Type: application/octet-stream');
+        echo str_repeat("\0", STANDARD_SCREEN_SIZE);
         break;
     case '/intro.tap':
         header('Content-Type: application/octet-stream');

@@ -508,11 +508,6 @@ trait ZxProdsList
                 $values = $this->getSelectorValue('formats');
                 $db = $this->getService('db');
                 /**
-                 * @var translationsManager $translationsManager
-                 */
-                $translationsManager = $this->getService(translationsManager::class);
-
-                /**
                  * @var QueryFiltersManager $queryFiltersManager
                  */
                 $queryFiltersManager = $this->getService(QueryFiltersManager::class);
@@ -522,17 +517,17 @@ trait ZxProdsList
                     ->distinct()
                     ->pluck('value');
 
-                $releaseFormatsProvider = $this->getService(ReleaseFormatsProvider::class);;
+                $releaseFormatsProvider = $this->getService(ReleaseFormatsProvider::class);
                 foreach ($releaseFormatsProvider->getGroupedReleaseFormats() as $groupName => $groupValues) {
                     if ($intersected = array_intersect($groupValues, $hwItems)) {
                         $group = [
-                            'title' => $translationsManager->getTranslationByName("formats.group_{$groupName}"),
+                            'title' => $groupName,
                             'values' => [],
                         ];
                         foreach ($intersected as $format) {
                             $group['values'][] = [
                                 'value' => $format,
-                                'title' => $translationsManager->getTranslationByName("zxRelease.filetype_{$format}"),
+                                'title' => $format,
                                 'selected' => $values && in_array($format, $values),
                             ];
                         }

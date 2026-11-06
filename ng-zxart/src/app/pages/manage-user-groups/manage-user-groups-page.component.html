@@ -1,0 +1,46 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'manage-user-groups.title' | translate }}</h1>
+  <zx-button zxPageHeader routerLink="/manage/user-groups/add" color="primary">
+    {{ 'manage-user-groups.add' | translate }}
+  </zx-button>
+
+  <zx-manage-tabs></zx-manage-tabs>
+
+  <zx-stack spacing="md">
+    <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+    <span appText="caption" tone="muted">{{ 'manage-user-groups.hint' | translate }}</span>
+
+    <zx-table *ngIf="groups$ | async as groups" size="md">
+      <table>
+        <thead>
+        <tr>
+          <th>{{ 'manage-user-groups.col-name' | translate }}</th>
+          <th>{{ 'manage-user-groups.col-description' | translate }}</th>
+          <th>{{ 'manage-user-groups.col-members' | translate }}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let group of groups; trackBy: trackByGroup">
+          <td>{{ group.groupName }}</td>
+          <td>{{ group.description }}</td>
+          <td>
+            <a *ngIf="mayListUsers$ | async; else plainCount" routerLink="/manage/users" [queryParams]="{group: group.id}">
+              {{ group.membersCount }}
+            </a>
+            <ng-template #plainCount>{{ group.membersCount }}</ng-template>
+          </td>
+          <td>
+            <zx-button [routerLink]="'/manage/user-groups/' + group.id" color="outlined" size="xs">
+              {{ 'manage-user-groups.edit' | translate }}
+            </zx-button>
+            <zx-button *ngIf="mayDelete$ | async" color="danger" size="xs" (click)="onDelete(group)">
+              {{ 'manage-user-groups.delete' | translate }}
+            </zx-button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </zx-table>
+  </zx-stack>
+</zx-page-layout>

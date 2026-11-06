@@ -11,6 +11,9 @@ belongs to the legacy Smarty panel, which these screens replace one by one (see
 | Hardware | `/manage/hardware` | `editHardware` | `/hardware-data/` | [hardware.md](hardware.md) |
 | Categories | `/manage/categories` | `zxProdCategory/receive`, `zxProdCategory/delete` | `/categories-data/` | [category.md](category.md) |
 | Countries | `/manage/countries` | `country/receive`, `country/delete`, `city/receive`, `city/delete` | `/countries-data/` | [geo.md](geo.md) |
+| Users overview | `/manage/user-stats` | `manageUsers` | `/users-stats-data/` | [users.md](users.md) |
+| Users | `/manage/users` | `manageUsers`, `user/ban` | `/users-data/` | [users.md](users.md) |
+| User groups | `/manage/user-groups` | `userGroup/receive`, `userGroup/delete` | `/user-groups-data/` | [users.md](users.md) |
 
 ## Privileges are element actions
 
@@ -18,8 +21,9 @@ Categories, countries and cities are ordinary structure elements and already
 carry a full set of per-type action privileges, so the screens ask for **the
 action they perform** — the same `receive` and `delete` the Smarty forms have
 always been gated on — rather than a privilege invented for the screen.
-`editHardware` is the one exception and stays one: the hardware catalogue is a
-plain table with no element behind it.
+Two exceptions: `editHardware`, because the hardware catalogue is a plain
+table with no element behind it, and `manageUsers`, because every visitor
+already holds `user/receive` and `users/showFullList` on the public root.
 
 An action privilege is asked for in `type.action` form and resolved **on the
 public root**, whose id comes from `/currentuser/`. Two things follow:
@@ -55,7 +59,9 @@ login.
 
 ## Shape of a section
 
-The three screens are deliberately the same shape, and a fourth should follow it:
+The hardware, category and country screens are deliberately the same shape.
+The users list is the exception: thousands of rows, so it is paged, searched
+and filtered on the server ([users.md](users.md)). The rest follow it:
 
 - **One endpoint per section**, named `<Thing>Data` so the SPA route of the same
   name stays free. `GET` returns the whole list — these are hundreds of rows, not

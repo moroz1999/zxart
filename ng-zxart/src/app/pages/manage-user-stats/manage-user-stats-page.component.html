@@ -1,0 +1,27 @@
+<zx-page-layout>
+  <h1 zxPageHeader appHeading="display">{{ 'manage-users.stats-title' | translate }}</h1>
+
+  <zx-manage-tabs></zx-manage-tabs>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <div *ngIf="vm.loading">
+      <zx-spinner size="lg"></zx-spinner>
+    </div>
+    <div *ngIf="vm.error" appText="caption" tone="danger">{{ 'manage-users.error-load' | translate }}</div>
+
+    <zx-stack *ngIf="!vm.loading && !vm.error" spacing="lg">
+      <zx-grid desktopColumns="5" tabletColumns="3" mobileColumns="2" gap="md">
+        <zx-panel *ngFor="let tile of vm.tiles; trackBy: trackByLabel" padding="md">
+          <zx-stack spacing="xs">
+            <span appHeading="headline">{{ tile.value }}</span>
+            <span appText="caption" tone="muted">{{ tile.labelKey | translate }}</span>
+          </zx-stack>
+        </zx-panel>
+      </zx-grid>
+
+      <zx-panel padding="md" [title]="'manage-users.stats-registrations' | translate">
+        <zx-stats-bar-chart [labels]="vm.chartLabels" [datasets]="vm.chartDatasets" height="md"></zx-stats-bar-chart>
+      </zx-panel>
+    </zx-stack>
+  </ng-container>
+</zx-page-layout>

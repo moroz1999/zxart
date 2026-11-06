@@ -29,6 +29,7 @@ enum DatabaseTable: string
     case Tag = 'module_tag';
     case StructureLinks = 'structure_links';
     case User = 'module_user';
+    case UserGroup = 'module_user_group';
     case VotesHistory = 'votes_history';
     case ZxMusic = 'module_zxmusic';
     case ZxPicture = 'module_zxpicture';

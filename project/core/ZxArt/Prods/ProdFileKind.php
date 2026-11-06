@@ -36,11 +36,15 @@ enum ProdFileKind: string implements AttachedFileKind
     }
 
     /**
-     * A recording is of any type; the other lists take pictures.
+     * A recording is of any type. Screenshots also take raw machine screens,
+     * whose formats have no dedicated media type and are detected as binary.
+     * The other lists take browser images.
      */
     #[Override]
     public function accepts(string $contentType): bool
     {
-        return $this === self::Rzx || in_array($contentType, AttachedFileTypes::IMAGES, true);
+        return $this === self::Rzx
+            || in_array($contentType, AttachedFileTypes::IMAGES, true)
+            || ($this === self::Screenshots && $contentType === AttachedFileTypes::BINARY);
     }
 }

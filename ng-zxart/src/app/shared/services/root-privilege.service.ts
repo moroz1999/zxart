@@ -18,6 +18,11 @@ export const PRIVILEGE_CATEGORY_DELETE = 'zxProdCategory.delete';
 export const PRIVILEGE_COUNTRY_SAVE = 'country.receive';
 export const PRIVILEGE_COUNTRY_DELETE = 'country.delete';
 export const PRIVILEGE_CITY_DELETE = 'city.delete';
+/** The users list, the users dashboard, a user's form and the groups a user belongs to. */
+export const ROOT_PRIVILEGE_MANAGE_USERS = 'manageUsers';
+export const PRIVILEGE_USER_BAN = 'user.ban';
+export const PRIVILEGE_USER_GROUP_SAVE = 'userGroup.receive';
+export const PRIVILEGE_USER_GROUP_DELETE = 'userGroup.delete';
 /** Talking to the editors' AI assistant and approving its plans. */
 export const ROOT_PRIVILEGE_AI_ASSISTANT = 'aiAssistant';
 
@@ -30,6 +35,8 @@ export const ROOT_PRIVILEGES_MANAGE: readonly string[] = [
   ROOT_PRIVILEGE_EDIT_HARDWARE,
   PRIVILEGE_CATEGORY_SAVE,
   PRIVILEGE_COUNTRY_SAVE,
+  ROOT_PRIVILEGE_MANAGE_USERS,
+  PRIVILEGE_USER_GROUP_SAVE,
 ];
 
 /**

@@ -119,6 +119,8 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   roles: string[] = [];
   enums: Record<string, EnumOption[]> = {};
   importOrigins: ImportOriginItem[] = [];
+  /** Release format codes come from the backend; their names are ours (`release-format.<code>`). */
+  releaseFormatOptions: EnumOption[] = [];
   /** Language codes come from the backend; their names are ours (`language.<code>`). */
   languageOptions: EnumOption[] = [];
   /** Hardware arrives labelled and grouped from the backend catalog. */
@@ -151,6 +153,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
   private newReleaseFiles: File[] = [];
   private selectorFiles: Record<string, File[]> = {};
   private fileChanges: Record<string, FileUploadChange> = {};
+  private releaseFormatCodes: EnumOption[] = [];
   private languageCodes: EnumOption[] = [];
   private hardwareCodes: EnumOption[] = [];
   private readonly subscriptions = new Subscription();
@@ -214,6 +217,7 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
           this.roles = data.roles;
           this.enums = data.enums;
           this.importOrigins = data.importOrigins;
+          this.releaseFormatCodes = data.enums['releaseFormat'] ?? [];
           this.languageCodes = data.enums['language'] ?? [];
           this.hardwareCodes = data.enums['hardwareRequired'] ?? [];
           this.buildClientLabelOptions();
@@ -231,8 +235,12 @@ export class ReleaseEditPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Labels the backend's bare language codes; hardware arrives already labelled. */
+  /** Labels the backend's bare release format and language codes; hardware arrives already labelled. */
   private buildClientLabelOptions(): void {
+    this.releaseFormatOptions = this.releaseFormatCodes.map(option => ({
+      value: option.value,
+      label: this.translate.instant(`release-format.${option.value}`),
+    }));
     this.languageOptions = this.languageCodes.map(option => ({
       value: option.value,
       label: this.translate.instant(`language.${option.value}`),

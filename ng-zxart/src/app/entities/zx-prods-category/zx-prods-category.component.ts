@@ -82,6 +82,8 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
     public languagesSelector: SelectorDto = [];
     /** Hardware filter, labelled from the SPA's own translations. */
     public hardwareSelector: SelectorDto = [];
+    /** Release format filter, labelled from the SPA's own translations. */
+    public formatsSelector: SelectorDto = [];
     public pagesAmount = 0;
     public currentPage = 1;
     public elementsOnPage = 100;
@@ -172,7 +174,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         this.routerSub = this.route.queryParams.subscribe(params => this.applyQueryParams(params));
         // Categories, legal statuses and release types are named by the backend in
         // the language of the request, so a switch has to fetch the page again;
-        // the languages and hardware we label ourselves come with it.
+        // the languages, hardware and release formats we label ourselves come with it.
         this.langSub = this.translate.onLangChange.subscribe(() => {
             if (this.model) {
                 this.loadData();
@@ -327,9 +329,22 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         }));
     }
 
+    /** Labels release format and group codes from the SPA's own translations. */
+    private buildFormatsSelector(selector: SelectorDto): SelectorDto {
+        return selector.map(group => ({
+            ...group,
+            title: this.translate.instant(`release-format-group.${group.title}`),
+            values: group.values.map(item => ({
+                ...item,
+                title: this.translate.instant(`release-format.${item.value}`),
+            })),
+        }));
+    }
+
     private buildClientLabelSelectors(): void {
         this.languagesSelector = this.buildLanguagesSelector(this.model.languagesSelector);
         this.hardwareSelector = this.buildHardwareSelector(this.model.hardwareSelector);
+        this.formatsSelector = this.buildFormatsSelector(this.model.formatsSelector);
     }
 
     private loadData(): void {

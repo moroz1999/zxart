@@ -119,6 +119,12 @@ paths:
     $ref: 'countries-data.yaml#/paths/~1countries-data~1'
   /assistant-data/:
     $ref: 'assistant-data.yaml#/paths/~1assistant-data~1'
+  /users-data/:
+    $ref: 'users-data.yaml#/paths/~1users-data~1'
+  /users-stats-data/:
+    $ref: 'users-data.yaml#/paths/~1users-stats-data~1'
+  /user-groups-data/:
+    $ref: 'user-groups-data.yaml#/paths/~1user-groups-data~1'
 components:
   schemas:
     CommentDto:

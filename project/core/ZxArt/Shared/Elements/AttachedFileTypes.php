@@ -10,6 +10,7 @@ namespace ZxArt\Shared\Elements;
  */
 final class AttachedFileTypes
 {
+    public const string BINARY = 'application/octet-stream';
     public const array IMAGES = ['image/png', 'image/jpeg', 'image/gif'];
     public const array DOCUMENTS = ['image/png', 'image/jpeg', 'image/gif', 'application/pdf', 'text/plain'];
     public const int MAX_IMAGE_BYTES = 10 * 1024 * 1024;

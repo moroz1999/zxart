@@ -83,6 +83,21 @@ final class EntityFilesTest extends EntityWriteTestCase
         self::assertContains('publicReceive', $this->loggedActions($prodId));
     }
 
+    public function testAddFilesStoresANativeZxScreenshot(): void
+    {
+        $this->signInAsEditor();
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+
+        $added = $this->container->get(AddProdFilesHandler::class)->handle(new AddProdFilesCommand(
+            $prodId,
+            ProdFileKind::Screenshots,
+            [$this->server->url('/screen.scr')],
+        ));
+        $this->rememberStoredFiles($added->fileIds);
+
+        self::assertSame(['screen.scr'], $this->storedFileNames($added->fileIds));
+    }
+
     public function testAFileOfATypeTheKindDoesNotTakeIsRefusedAndNothingIsStored(): void
     {
         $this->signInAsEditor();

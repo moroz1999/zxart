@@ -1,7 +1,9 @@
 import {
   PRIVILEGE_CATEGORY_SAVE,
   PRIVILEGE_COUNTRY_SAVE,
+  PRIVILEGE_USER_GROUP_SAVE,
   ROOT_PRIVILEGE_EDIT_HARDWARE,
+  ROOT_PRIVILEGE_MANAGE_USERS,
 } from '../../shared/services/root-privilege.service';
 
 export interface ManageSection {
@@ -22,4 +24,7 @@ export const MANAGE_SECTIONS: readonly ManageSection[] = [
   {href: '/manage/hardware', labelKey: 'manage.tab-hardware', privilege: ROOT_PRIVILEGE_EDIT_HARDWARE},
   {href: '/manage/categories', labelKey: 'manage.tab-categories', privilege: PRIVILEGE_CATEGORY_SAVE},
   {href: '/manage/countries', labelKey: 'manage.tab-countries', privilege: PRIVILEGE_COUNTRY_SAVE},
+  {href: '/manage/user-stats', labelKey: 'manage.tab-user-stats', privilege: ROOT_PRIVILEGE_MANAGE_USERS},
+  {href: '/manage/users', labelKey: 'manage.tab-users', privilege: ROOT_PRIVILEGE_MANAGE_USERS},
+  {href: '/manage/user-groups', labelKey: 'manage.tab-user-groups', privilege: PRIVILEGE_USER_GROUP_SAVE},
 ];

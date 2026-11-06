@@ -127,3 +127,7 @@ Detailed logic and structure: [domain/imported-entities.md](domain/imported-enti
 ### social posting
 Telegram announcements of newly added pictures, tunes, productions and releases.
 Detailed logic and structure: [domain/social-posting.md](domain/social-posting.md)
+
+### users and user groups
+Visitors' accounts, the groups that decide what a user may do, and how a user is banned.
+Detailed logic and structure: [domain/users.md](domain/users.md)

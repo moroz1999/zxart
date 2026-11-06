@@ -36,12 +36,14 @@ enum ReleaseFileKind: string implements AttachedFileKind
     }
 
     /**
-     * Instructions may also be a PDF or plain text; the other lists take
-     * pictures.
+     * Instructions may also be a PDF or plain text. Screenshots also take raw
+     * machine screens, whose formats have no dedicated media type and are
+     * detected as binary. The other lists take browser images.
      */
     #[Override]
     public function accepts(string $contentType): bool
     {
-        return in_array($contentType, $this === self::Info ? AttachedFileTypes::DOCUMENTS : AttachedFileTypes::IMAGES, true);
+        return in_array($contentType, $this === self::Info ? AttachedFileTypes::DOCUMENTS : AttachedFileTypes::IMAGES, true)
+            || ($this === self::Screenshots && $contentType === AttachedFileTypes::BINARY);
     }
 }

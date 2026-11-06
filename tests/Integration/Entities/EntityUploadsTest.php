@@ -37,6 +37,7 @@ use ZxArt\Releases\UseCases\CreateReleasesFromFilesCommand;
 use ZxArt\Releases\UseCases\CreateReleasesFromFilesHandler;
 use ZxArt\Releases\UseCases\UpdateReleaseCommand;
 use ZxArt\Releases\UseCases\UpdateReleaseHandler;
+use ZxArt\Screenshots\ScreenshotFormat;
 use ZxArt\Shared\Dto\UploadedFileDto;
 
 /**
@@ -122,6 +123,34 @@ final class EntityUploadsTest extends EntityWriteTestCase
         self::assertSame(['map.png'], $this->fileNames($this->linkedChildren($prodId, 'mapFilesSelector')));
         self::assertSame(['playthrough.rzx'], $this->fileNames($this->linkedChildren($prodId, 'rzx')));
         self::assertGreaterThan(1, $this->modificationTime($prodId));
+    }
+
+    public function testUpdateAddsANativeZxScreenshotToAProduction(): void
+    {
+        $this->signInAsProdEditor();
+        $prodId = $this->container->get(CreateProdHandler::class)->handle(new CreateProdCommand(new ProdFieldsDto(title: 'Goldmaster Demo')))->id;
+
+        $this->container->get(UpdateProdHandler::class)->handle(new UpdateProdCommand(
+            $prodId,
+            new ProdFieldsDto(),
+            files: [new ProdFileUploadDto(ProdFileKind::Screenshots, $this->nativeScreenshotUpload())],
+        ));
+
+        self::assertSame(['sshot_000000.scr'], $this->fileNames($this->linkedChildren($prodId, 'connectedFile')));
+    }
+
+    public function testUpdateAddsANativeZxScreenshotToARelease(): void
+    {
+        $this->signInAsReleaseEditor();
+        $releaseId = $this->createRelease();
+
+        $this->container->get(UpdateReleaseHandler::class)->handle(new UpdateReleaseCommand(
+            $releaseId,
+            new ReleaseFieldsDto(),
+            files: [new ReleaseFileUploadDto(ReleaseFileKind::Screenshots, $this->nativeScreenshotUpload())],
+        ));
+
+        self::assertSame(['sshot_000000.scr'], $this->fileNames($this->linkedChildren($releaseId, 'screenshotsSelector')));
     }
 
     public function testAFileTheKindDoesNotTakeRefusesTheWholeUpdate(): void
@@ -334,6 +363,15 @@ final class EntityUploadsTest extends EntityWriteTestCase
         $this->stagedPaths[] = $path;
 
         return new UploadedFileDto($path, $fileName ?? $fixture);
+    }
+
+    private function nativeScreenshotUpload(): UploadedFileDto
+    {
+        $path = (string)tempnam(sys_get_temp_dir(), 'upload');
+        file_put_contents($path, str_repeat("\0", ScreenshotFormat::Standard->getSize()));
+        $this->stagedPaths[] = $path;
+
+        return new UploadedFileDto($path, 'sshot_000000.scr');
     }
 
     /**

@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: ZxArt Users Management API
+  version: 1.0.0
+  description: >
+    The users of the management section and the users dashboard.
+
+    Everything requires `root.manageUsers` on the public root, except banning,
+    which requires `user.ban` there. The id of that root comes from
+    `/currentuser/`.
+
+paths:
+  /users-data/:
+    get:
+      summary: One page of the users list, or one user's details
+      description: >
+        Without `id`, one page of 50 users. `search` matches part of the name or
+        of the email (`%` and `_` are taken literally). Without `id` the answer
+        is a `UsersList`; with it, a `UserDetails`.
+      parameters:
+        - {in: query, name: id, schema: {type: integer}}
+        - {in: query, name: search, schema: {type: string}}
+        - {in: query, name: groupId, description: 0 for any group, schema: {type: integer, default: 0}}
+        - {in: query, name: status, schema: {type: string, enum: [all, active, banned], default: all}}
+        - {in: query, name: sort, schema: {type: string, enum: [dateCreated, userName, email], default: dateCreated}}
+        - {in: query, name: direction, schema: {type: string, enum: [asc, desc], default: desc}}
+        - {in: query, name: page, schema: {type: integer, default: 1}}
+      responses:
+        '200':
+          description: The page, or the user
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/UsersList'
+                  - $ref: '#/components/schemas/UserDetails'
+        '403': {description: Lacks root.manageUsers, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '404': {description: No user with that id, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '500': {description: Internal server error}
+    post:
+      summary: Save a user's form, or ban the user
+      description: >
+        `update` writes the given fields; a field left out is kept, and
+        `groupIds`, when given, replaces the user's groups. `ban` deletes the
+        user's comments and votes and keeps them from signing in; its body is
+        ignored. Both answer the user's details afresh.
+      parameters:
+        - {in: query, name: id, required: true, schema: {type: integer}}
+        - {in: query, name: action, required: true, schema: {type: string, enum: [update, ban]}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSaveRequest'
+      responses:
+        '200': {description: The user, content: {application/json: {schema: {$ref: '#/components/schemas/UserDetails'}}}}
+        '400':
+          description: >
+            Unsupported action, a malformed body, a blank name, a name or an
+            email another user has, or a group id that is no user group
+          content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}
+        '403': {description: Lacks root.manageUsers (update) or user.ban (ban), content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '404': {description: No user with that id, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '500': {description: Internal server error}
+
+  /users-stats-data/:
+    get:
+      summary: The figures of the users dashboard
+      responses:
+        '200': {description: The figures, content: {application/json: {schema: {$ref: '#/components/schemas/UsersStats'}}}}
+        '403': {description: Lacks root.manageUsers, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '500': {description: Internal server error}
+
+components:
+  schemas:
+    UserListItem:
+      type: object
+      required: [id, userName, email, dateCreated, verified, banned, groupIds]
+      properties:
+        id: {type: integer}
+        userName: {type: string}
+        email: {type: string}
+        dateCreated: {type: integer, description: Unix timestamp}
+        verified: {type: boolean}
+        banned: {type: boolean}
+        groupIds: {type: array, items: {type: integer}}
+    UsersList:
+      type: object
+      required: [total, pageSize, users]
+      properties:
+        total: {type: integer, description: Every user matching the filters}
+        pageSize: {type: integer}
+        users: {type: array, items: {$ref: '#/components/schemas/UserListItem'}}
+    UserDetails:
+      type: object
+      properties:
+        id: {type: integer}
+        userName: {type: string}
+        email: {type: string}
+        dateCreated: {type: integer, description: Unix timestamp}
+        verified: {type: boolean}
+        banned: {type: boolean}
+        commentsAllowed: {type: boolean}
+        showEmail: {type: boolean}
+        vip: {type: boolean}
+        supporter: {type: boolean}
+        volunteer: {type: boolean}
+        authorId: {type: integer, description: 0 when the user claims no author}
+        authorTitle: {type: string}
+        groupIds: {type: array, items: {type: integer}}
+        commentsCount: {type: integer}
+        votesCount: {type: integer}
+    UserSaveRequest:
+      type: object
+      properties:
+        userName: {type: string}
+        email: {type: string}
+        verified: {type: boolean}
+        commentsAllowed: {type: boolean}
+        showEmail: {type: boolean}
+        vip: {type: boolean}
+        supporter: {type: boolean}
+        volunteer: {type: boolean}
+        groupIds: {type: array, items: {type: integer}}
+    UsersStats:
+      type: object
+      properties:
+        total: {type: integer}
+        newLastWeek: {type: integer}
+        newLastMonth: {type: integer}
+        banned: {type: integer}
+        unverified: {type: integer}
+        registrationsByMonth:
+          type: array
+          description: The last twelve months, the current one included, oldest first
+          items:
+            type: object
+            properties:
+              month: {type: string, example: '2026-11'}
+              count: {type: integer}
+    Error:
+      type: object
+      properties:
+        errorMessage: {type: string}

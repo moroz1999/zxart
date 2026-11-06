@@ -564,6 +564,42 @@ const ROUTED_CHILDREN: Routes = [
     canActivate: [rootPrivilegeGuard],
     data: {kind: 'city', privilege: 'city.receive', titleKey: 'manage-countries.edit-city-title', noIndex: true},
   },
+  {
+    path: 'manage/user-stats',
+    loadComponent: () => import('./pages/manage-user-stats/manage-user-stats-page.component').then(m => m.ManageUserStatsPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'manageUsers', titleKey: 'manage-users.stats-title', noIndex: true},
+  },
+  {
+    path: 'manage/users/:id',
+    loadComponent: () => import('./pages/manage-user-edit/manage-user-edit-page.component').then(m => m.ManageUserEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'manageUsers', titleKey: 'manage-users.edit-title', noIndex: true},
+  },
+  {
+    path: 'manage/users',
+    loadComponent: () => import('./pages/manage-users/manage-users-page.component').then(m => m.ManageUsersPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'manageUsers', titleKey: 'manage-users.title', noIndex: true},
+  },
+  {
+    path: 'manage/user-groups/add',
+    loadComponent: () => import('./pages/manage-user-group-edit/manage-user-group-edit-page.component').then(m => m.ManageUserGroupEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {create: true, privilege: 'userGroup.receive', titleKey: 'manage-user-groups.add', noIndex: true},
+  },
+  {
+    path: 'manage/user-groups/:id',
+    loadComponent: () => import('./pages/manage-user-group-edit/manage-user-group-edit-page.component').then(m => m.ManageUserGroupEditPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'userGroup.receive', titleKey: 'manage-user-groups.edit-title', noIndex: true},
+  },
+  {
+    path: 'manage/user-groups',
+    loadComponent: () => import('./pages/manage-user-groups/manage-user-groups-page.component').then(m => m.ManageUserGroupsPageComponent),
+    canActivate: [rootPrivilegeGuard],
+    data: {privilege: 'userGroup.receive', titleKey: 'manage-user-groups.title', noIndex: true},
+  },
   // `/manage` resolves to the first section the user may open, so a fixed
   // redirect never lands them on a screen its own guard bounces them off.
   {path: 'manage', pathMatch: 'full', canActivate: [manageHomeGuard], children: []},

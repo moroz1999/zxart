@@ -38,4 +38,5 @@ enum LinkTypes: string
     case TAG = 'tagLink';
     case SOFT_CATALOGUE = 'softCatalogue';
     case COUNTRIES = 'countries';
+    case USER_RELATION = 'userRelation';
 }

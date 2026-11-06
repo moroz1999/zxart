@@ -434,7 +434,7 @@ class Formdata extends LoggedControllerApplication
      * already translated to the current language (so the SPA needs no extra i18n
      * keys). Fixed enums (border colour, rotation) stay hardcoded in Angular.
      * A `clientLabels` spec sends the bare values instead, for lists the SPA
-     * translates itself (language and hardware codes).
+     * translates itself (release format, language and hardware codes).
      *
      * @return array<string, list<array{value: string, label: string}>>
      */
@@ -548,7 +548,7 @@ class Formdata extends LoggedControllerApplication
             ],
             'zxRelease' => [
                 'releaseType' => ['method' => 'getReleaseTypes', 'prefix' => 'zxRelease.type_'],
-                'releaseFormat' => ['method' => 'getReleaseFormats', 'prefix' => 'zxRelease.filetype_'],
+                'releaseFormat' => ['method' => 'getReleaseFormats', 'clientLabels' => true],
                 'language' => ['method' => 'getLanguageCodes', 'clientLabels' => true],
                 'hardwareRequired' => ['method' => 'getHardwareOptions', 'mode' => 'options'],
                 'importOrigins' => ['method' => 'getImportOriginOptions', 'mode' => 'options'],

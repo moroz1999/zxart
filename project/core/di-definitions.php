@@ -119,6 +119,8 @@ use ZxArt\Ratings\RatingsService;
 use ZxArt\Social\SocialPostsService;
 use ZxArt\Stats\Services\StatsService;
 use ZxArt\Telegram\PostService;
+use ZxArt\Shared\Time\Clock;
+use ZxArt\Shared\Time\SystemClock;
 use function DI\autowire;
 use function DI\factory;
 
@@ -277,6 +279,8 @@ return [
         ->method('setAuthorsManager', DI\get(AuthorImportService::class))
         ->method('setGroupsService', DI\get(GroupsService::class))
         ->method('setCountriesManager', DI\get(CountriesManager::class)),
+
+    Clock::class => autowire(SystemClock::class),
 
     // Turns JSON request bodies into typed request DTOs; see the factory for why
     // it is configured the way it is.
