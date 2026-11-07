@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ZxArt\UserPreferences;
 
 use ZxArt\UserPreferences\Domain\PreferenceCode;
-use ZxArt\UserPreferences\Domain\ThemeValue;
 
 final class DefaultUserPreferencesProvider
 {
@@ -15,7 +14,6 @@ final class DefaultUserPreferencesProvider
     public function getDefaults(): array
     {
         return [
-            PreferenceCode::THEME->value => ThemeValue::DARK->value,
             PreferenceCode::HOMEPAGE_ORDER->value => 'newProds,newPictures,newTunes,bestNewDemos,bestNewGames,recentParties,bestPicturesOfMonth,bestTunesOfMonth,latestAddedProds,latestAddedReleases,supportProds,unvotedPictures,randomGoodPictures,unvotedTunes,randomGoodTunes',
             PreferenceCode::HOMEPAGE_DISABLED->value => '',
             PreferenceCode::HOMEPAGE_NEW_PRODS_LIMIT->value => '10',

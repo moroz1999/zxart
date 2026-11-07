@@ -16,7 +16,7 @@
           @if (view.hasConversation || (listOpen | async)) {
             <zx-button size="sm" color="transparent" (click)="startNew()">{{ 'assistant.new' | translate }}</zx-button>
           }
-          <zx-close-button size="sm" [ariaLabel]="'assistant.close' | translate" (closed)="close()"></zx-close-button>
+          <zx-close-button size="lg" [ariaLabel]="'assistant.close' | translate" (closed)="close()"></zx-close-button>
         </zx-inline>
       </zx-inline>
     </zx-inset>

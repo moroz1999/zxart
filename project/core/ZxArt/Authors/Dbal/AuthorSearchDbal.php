@@ -7,6 +7,7 @@ namespace ZxArt\Authors\Dbal;
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Authors\Dto\AuthorSearchFilterDto;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\ProdLink;
@@ -26,6 +27,7 @@ final readonly class AuthorSearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -67,14 +69,11 @@ final readonly class AuthorSearchDbal extends AbstractDbal
 
         $name = $filter->name !== null ? trim($filter->name) : '';
         if ($name !== '') {
-            // a backslash escapes the wildcards in MariaDB
-            $pattern = '%' . addcslashes($name, '\\%_') . '%';
-            $query->where(static function (Builder $nameQuery) use ($authorTable, $aliasTable, $pattern): void {
-                $nameQuery->where($authorTable . '.title', 'like', $pattern)
-                    ->orWhere($authorTable . '.realName', 'like', $pattern)
-                    ->orWhereIn($authorTable . '.id', static function (Builder $aliasQuery) use ($aliasTable, $pattern): void {
-                        $aliasQuery->select('authorId')->from($aliasTable)->where('title', 'like', $pattern);
-                    });
+            $query->where(function (Builder $nameQuery) use ($authorTable, $aliasTable, $name): void {
+                $this->titleMatch->where($nameQuery, [$authorTable . '.title', $authorTable . '.realName'], $name);
+                $nameQuery->orWhereIn($authorTable . '.id', function (Builder $aliasQuery) use ($aliasTable, $name): void {
+                    $this->titleMatch->where($aliasQuery->select('authorId')->from($aliasTable), ['title'], $name);
+                });
             });
         }
         if ($filter->countryIds !== []) {

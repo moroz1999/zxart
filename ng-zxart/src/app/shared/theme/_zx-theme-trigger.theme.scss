@@ -1,4 +1,6 @@
 :root {
   /* Trigger icon size */
   --zx-theme-trigger-icon-size: 20px;
+  /* Background behind the automatic-mode letter inside the icon */
+  --zx-theme-trigger-auto-bg: var(--zx-header-bg);
 }

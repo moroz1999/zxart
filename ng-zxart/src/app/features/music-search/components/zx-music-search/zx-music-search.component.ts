@@ -21,10 +21,10 @@ import {
 import {ZxBreakpoints} from '../../../../shared/breakpoints';
 import {ZxTuneDto} from '../../../../shared/models/zx-tune-dto';
 import {TagItem} from '../../../../shared/models/tag-item';
-import {TagsSearchService} from '../../../../shared/services/tags-search.service';
+import {EntityLookupApiService} from '../../../../shared/api/entity-lookup-api.service';
+import {TagLookupApiService} from '../../../../shared/api/tag-lookup-api.service';
 import {AuthorListItem} from '../../../author-browser/models/author-list-item';
 import {PlayerService} from '../../../player/services/player.service';
-import {LocationSearchService} from '../../../picture-search/services/location-search.service';
 import {MusicSearchApiService} from '../../services/music-search-api.service';
 import {
   countActiveMusicSearchFilters,
@@ -216,8 +216,8 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly api: MusicSearchApiService,
-    private readonly locationSearch: LocationSearchService,
-    private readonly tagsSearch: TagsSearchService,
+    private readonly entityLookup: EntityLookupApiService,
+    private readonly tagLookup: TagLookupApiService,
     private readonly playerService: PlayerService,
     private readonly translateService: TranslateService,
     private readonly breakpointObserver: BreakpointObserver,
@@ -245,16 +245,16 @@ export class ZxMusicSearchComponent implements OnInit, OnDestroy {
       this.tagsExcludeItemsStore,
       countryItems$,
       cityItems$,
-      this.createTagsSearchState(this.tagsIncludeQuery, query => this.tagsSearch.search(query).pipe(
+      this.createTagsSearchState(this.tagsIncludeQuery, query => this.tagLookup.lookup(query).pipe(
         map(tags => tags.map(tagToItem)),
       )),
-      this.createTagsSearchState(this.tagsExcludeQuery, query => this.tagsSearch.search(query).pipe(
+      this.createTagsSearchState(this.tagsExcludeQuery, query => this.tagLookup.lookup(query).pipe(
         map(tags => tags.map(tagToItem)),
       )),
-      this.createTagsSearchState(this.countryQuery, query => this.locationSearch.searchCountries(query).pipe(
+      this.createTagsSearchState(this.countryQuery, query => this.entityLookup.lookup('country', query).pipe(
         map(locations => this.locationsToTags(locations)),
       )),
-      this.createTagsSearchState(this.cityQuery, query => this.locationSearch.searchCities(query).pipe(
+      this.createTagsSearchState(this.cityQuery, query => this.entityLookup.lookup('city', query).pipe(
         map(locations => this.locationsToTags(locations)),
       )),
     ]).pipe(

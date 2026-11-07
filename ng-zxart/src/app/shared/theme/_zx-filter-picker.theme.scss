@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   --zx-filter-picker-gap: var(--space-4);
   --zx-filter-picker-control-gap: var(--space-4);
@@ -40,6 +42,6 @@
   --zx-filter-picker-disabled-opacity: 0.4;
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-filter-picker-item-hover-bg: var(--background-deep);
 }

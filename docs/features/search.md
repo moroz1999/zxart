@@ -5,63 +5,92 @@ Domain rules: [../domain/search.md](../domain/search.md).
 Public full search is served by `ZxArt\Controllers\Searchresults` at `/searchresults/`.
 The routed Angular entrypoint is `/search`; its `phrase`, `types`, and `page` state lives in query parameters.
 
-Angular header quick search uses the same REST endpoint with `mode=quick`. Quick mode uses title-oriented instant search filters and does not search full content.
+Angular header quick search uses the same REST endpoint with `mode=quick`. Quick mode matches titles only and does not search full content.
 
-The legacy `/ajaxSearch/` application is still used by admin and non-Angular autocomplete widgets, and by the Angular tag/country/city autocompletes (`types:tag|country|city`, `mode:public`).
-  A tag result's `title` is decorated for display (`Name, synonyms (description)`); the tag's own name is `value`. Every Angular tag picker turns results into items with `tagToItem()` (`shared/utils/tag-item.ts`), so forms save and searches filter by the real name. The search forms' tag pickers accept only existing tags (`allowCustomTags=false`).
+Relation pickers and tag pickers have endpoints of their own, apart from the public search:
+
+- `GET /entity-lookup/?types=&query=` (`ZxArt\Controllers\EntityLookup` → `ZxArt\Search\Services\EntityLookupService`, spec `api/entity-lookup.yaml`): one page of the given structure types through the phrase engine, each item `{id, title}` named by `FoundElementTitle` (an author's real name and place, an alias's owner, a work's year and authors). Angular calls it only through `EntityLookupApiService` (`zx-entity-autocomplete`, `zx-multi-entity-autocomplete`, the country/city pickers of the detailed searches).
+- `GET /tag-lookup/?query=` (`ZxArt\Controllers\TagLookup` → `ZxArt\Tags\Services\TagLookupService`, spec `api/tag-lookup.yaml`): the tags `TagSearchDbal` finds, loaded in the current language. Angular calls it only through `TagLookupApiService`.
+  A tag's `title` is decorated for display (`Name, synonyms (description)`); the tag's own name is `value`. Every Angular tag picker turns results into items with `tagToItem()` (`shared/utils/tag-item.ts`), so forms save and searches filter by the real name. The search forms' tag pickers accept only existing tags (`allowCustomTags=false`).
 - Tag filters (`tagsManager::getConnectedElementIdsByNames()`): included tags are intersected, and a name that is no tag, or tags no work carries, match nothing — the filter is never dropped. Excluded tags are gathered together.
+
+## Title matching
+
+Every search that compares a title with a phrase does it through
+`ZxArt\Search\Dbal\TitleMatch`: the phrase search, the typed searches, the
+detailed graphics and music searches with their `/api/` export filters
+(`zxPictureTitleSearch`, `zxMusicTitleSearch`, and `zxMusicSearch` /
+`authorSearch` of the zxnet and zxtune player APIs), the map's party search and
+the import's lookups by name.
+
+- Both sides are compared by their key: lower case, letters and digits of any
+  script only (`\p{L}\p{N}`), HTML entities left out. `key()` builds it in PHP,
+  `REGEXP_REPLACE` in SQL with the same patterns, so `rebel-star` finds
+  `Rebelstar` and a title stored HTML-encoded is matched by what it reads.
+- `where()` narrows a query by any of the given columns: `Contains` (the
+  searches) or `Exact` (the import's lookups, `Resolver::alphanumericValueMatches()`).
+  A phrase without a letter or a digit matches nothing. `%` and `_` never reach
+  a `like` pattern: they are not part of a key.
+- The query builder has no regular expressions, so `TitleMatch` is the only
+  class that writes raw SQL: the column is wrapped by the grammar and every
+  value is bound.
+- Full texts (descriptions, articles) are matched by a plain `like` on the
+  HTML-escaped phrase, in the full search only.
 
 ## Phrase search engine
 
-Every phrase search runs through `ZxArt\Search\Services\PhraseSearchEngine::find(PhraseSearchQueryDto)`,
-the only code that sets up the legacy `Search`. It answers the found elements
-(`PhraseSearchHitDto`: the type it was searched as, the element) in order, with
-the total; each caller maps them to its own DTOs. The query sets:
+Every phrase search runs through `ZxArt\Search\Services\PhraseSearchEngine::find(PhraseSearchQueryDto)`.
+It answers the found elements (`PhraseSearchHitDto`: the `PhraseSearchType` it
+was searched as, the element) in order, with the total; each caller maps them
+to its own DTOs. The query sets:
 
 - `mode` — `SinglePage` (each type's closest titles on one page) or `Paged` (a
   page cut at `offset` from one alphabetical list of the types in turn);
-- `types` — structure types; `aliases: MergeIntoOwner` makes `author` and
+- `types` — `PhraseSearchType` cases (a structure type each, with its table,
+  title columns and text columns); `aliases: MergeIntoOwner` makes `author` and
   `group` take in their aliases and answers an alias under its owner's type,
   `Separate` keeps an alias a type of its own;
 - `contentMatching` — texts too, not only titles;
-- `closestFirst` — reorder the page of all types by how close a title is to
-  the phrase: equal, then starting with it, then containing it;
-- `limit`, `languageId`.
+- `closestFirst` — reorder the page of all types together by how close a title's key is to
+  the phrase's: equal, then starting with it, then the rest;
+- `limit`, `languageId` (the language root elements are loaded under).
 
-The phrase is HTML-escaped before matching, since titles and texts are stored
-encoded.
+`ZxArt\Search\Dbal\PhraseSearchDbal` answers each type's ordered ids in one
+query (a full scan: titles are matched by key, so no index helps); the engine
+counts them, cuts the page out in PHP and loads the elements through
+`structureManager`. Crack intros (the `cracktro` category) are left out of the
+productions. Press articles are matched in one language only (the query's, or
+the current one), the language the visitor reads them in.
 
 | Caller | Settings |
 |---|---|
 | `SearchService::search()` (`/searchresults/`) | `Paged`, content matching, aliases merged, configured types |
 | `SearchService::quickSearch()` (`mode=quick`) | `SinglePage`, titles only, aliases merged, configured types |
+| `EntityLookupService::lookup()` (`/entity-lookup/`) | `SinglePage`, titles only, aliases separate, the picker's types |
 | `EntitySearchService::search()` (assistant) | `SinglePage`, titles only, aliases separate, six types, closest first |
 
 `SearchService` groups the hits into sets by type, in the order the types first
-come. Tests: `tests/Integration/Search/` (the engine's settings, and what the
-public searches answer).
+come. Tests: `tests/Integration/Search/` (the engine's settings, what the
+public searches and the pickers answer, every title-matching search),
+`tests/Search/` (the page shares and windows).
 
 ## Result ordering
 
-The database returns the results already ordered, `Search` (`trickster-cms/cms/core/Search.php`)
-only takes the ids in that order.
+The database orders the results, and an element stored in a row per language
+(`module_author` and friends) is grouped into one.
 
-- The order depends on the kind of search, and the caller picks it with `Search::setRelevanceOrdering()`:
-  - **paged search** (`SearchService::search()`) is ordered by title alone, so every page is a part
-    of one and the same alphabetical list;
-  - **instant search** (`SearchService::quickSearch()`, the legacy `/ajaxSearch/` application) shows
-    a single page, so it puts the closest matches on top: exact title first, then titles starting
-    with the phrase, then titles containing it, and alphabetically within every group.
-- `searchQueryFilter` exposes the main title of each type as `searchQueryFilter::SORT_TITLE_COLUMN`
-  and does not order anything itself. Keeping the title in the column list is what lets a `distinct`
-  query (authors, press articles) be ordered by it. A query without that column is left unordered.
-- `Search` asks `QueryFiltersManager` for the filter queries **without** the temporary table wrapper
-  (`$wrapTemporaryTables = false`): the wrapper re-selects the results from a temporary table and
-  would drop the `ORDER BY`. Ids are taken in the order the database returned them and are only
-  de-duplicated (a row exists per language in `module_author` and friends).
-- Types are queried separately and concatenated in the configured order (`searchtypes-public.search`),
-  so the page window walks through one type after another. The public searches never re-sort a
-  page; only the engine's `closestFirst` setting (the assistant's) does.
+- **Single page**: `SinglePageQuota` shares the limit out between the types
+  found — evenly, a type with fewer results than its share leaving the rest to
+  the others, the remainder going to the types that come first. Within a type
+  the closest main titles come first (`TitleMatch::orderGroupsByCloseness()`:
+  equal key, then a key starting with the phrase's), then alphabetically.
+  An element the visitor may not see is left out of the page and the total.
+- **Paged**: types are counted and concatenated in the configured order
+  (`searchtypes-public.search`), and `PageWindow` cuts the page out of that one
+  list, so a page can end one type and begin the next. Within a type the order
+  is the main title alone, so every page is a part of one alphabetical list.
+- The public searches never re-sort a page; only the engine's `closestFirst`
+  setting (the assistant's) does.
 - Ordering is the database collation, not a natural sort: `soft 10` comes before `Soft 2`.
 
 ## Detailed search
@@ -106,7 +135,8 @@ search by typed file name or md5.
 
 Searches by typed filters, for callers that know what they look for rather
 than a phrase. Each answers one page of ids by title and the total
-(`ZxArt\Shared\Dto\IdPageDto`):
+(`ZxArt\Shared\Dto\IdPageDto`); a part of a title, a name or a file name is
+matched through `TitleMatch` (see [Title matching](#title-matching)):
 
 Every filter given must hold; a list holds when any of its values does. What
 an alias is credited with, made, published or holds as members counts for its
@@ -164,8 +194,7 @@ author or group, and an author or group is answered once, never its alias.
   country.
 
 - `ZxArt\Parties\Dbal\PartySearchDbal::find()` — parties by a part of the
-  title, abbreviation or original name, as typed or HTML-encoded as they are
-  stored, of one year or any (the year is the title of the year element the
+  title, abbreviation or original name, of one year or any (the year is the title of the year element the
   party lies under); by title, each with its decoded title, abbreviation and
   year.
 
@@ -174,8 +203,8 @@ author or group, and an author or group is answered once, never its alias.
 `ZxArt\Search\Services\EntitySearchService::search(phrase, EntityType[] types, limit)`
 finds prods, releases, authors, author aliases, groups and group aliases by a
 phrase, for callers that need to tell entities of the same title apart (the
-assistant's `search` tool), through the engine above (the `<type>AjaxSearch`
-filters: titles, an author's real name, a prod's alternative title):
+assistant's `search` tool), through the engine above (titles, an author's
+real name, a prod's alternative title):
 
 - The types are exactly those six, and an alias is a type of its own rather
   than merged into its author or group. No types means all six; any other

@@ -100,9 +100,6 @@ class adminApplication extends controllerApplication implements ThemeCodeProvide
         $this->renderer->assign('user', $user);
         $this->renderer->assign('settings', $this->getService(settingsManager::class)->getSettingsList());
 
-        $allowedSearchTypes = $this->getService(ConfigManager::class)->getMerged('searchtypes-admin.search');
-        $this->renderer->assign('allowedSearchTypes', implode(',', $allowedSearchTypes));
-
         $resourcesUniterHelper = $this->getService(ResourcesUniterHelper::class);
         $this->renderer->assign('JSFileName', $this->getJsScripts($resourcesUniterHelper));
         $this->renderer->assign('CSSFileName', $resourcesUniterHelper->getResourceCacheFileName('css'));

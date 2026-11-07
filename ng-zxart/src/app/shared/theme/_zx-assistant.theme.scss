@@ -17,8 +17,7 @@
   --zx-assistant-image-radius: var(--radius-sm);
 }
 
-/* The panel background is set per theme, so the drawer follows it there */
-.dark-mode,
-.light-mode {
+/* The drawer follows the panel background in every theme mode. */
+:root {
   --zx-assistant-drawer-bg: var(--zx-panel-bg);
 }

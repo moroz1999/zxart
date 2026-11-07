@@ -17,23 +17,6 @@ class projectAdminDesignTheme extends DesignTheme
         $this->javascriptPath = $controller->getProjectPath() . 'js/admin/';
         $this->javascriptUrl = '/project/js/admin/';
         $this->javascriptFiles = [
-            'logics.tagForm.js',
-            'logics.authorForm.js',
-            'logics.groupForm.js',
-            'logics.partyForm.js',
-            'logics.zxItemForm.js',
-            'logics.countryForm.js',
-            'logics.cityForm.js',
-            'logics.authorAliasForm.js',
-            'component.joinTagForm.js',
-            'component.redirectForm.js',
-            'component.authorForm.js',
-            'component.groupForm.js',
-            'component.partyForm.js',
-            'component.zxItemForm.js',
-            'component.countryForm.js',
-            'component.cityForm.js',
-            'component.authorAliasForm.js',
         ];
         $this->imagesFolder = 'images/admin/';
         $this->imagesPath = PUBLIC_PATH . $this->imagesFolder;

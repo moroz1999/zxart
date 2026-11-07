@@ -108,6 +108,10 @@ Every visitor reads the site in the language they picked, and the choice follows
 their account across devices.
 How it is built: [i18n.md](i18n.md)
 
+### interface theme
+Visitors can use a light theme, a dark theme, or let the site follow their device preference.
+Detailed behavior: [domain/interface-theme.md](domain/interface-theme.md)
+
 ### playlists
 Personal collections of works owned by one visitor.
 Detailed logic and structure: [domain/playlists.md](domain/playlists.md)

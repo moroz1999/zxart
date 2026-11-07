@@ -11,11 +11,11 @@ import {catchError, debounceTime, distinctUntilChanged, map, switchMap} from 'rx
 import {ZxBreakpoints} from '../../../../shared/breakpoints';
 import {ZxPictureDto} from '../../../../shared/models/zx-picture-dto';
 import {TagItem} from '../../../../shared/models/tag-item';
-import {TagsSearchService} from '../../../../shared/services/tags-search.service';
+import {EntityLookupApiService} from '../../../../shared/api/entity-lookup-api.service';
+import {TagLookupApiService} from '../../../../shared/api/tag-lookup-api.service';
 import {AuthorListItem} from '../../../author-browser/models/author-list-item';
 import {PictureGalleryService} from '../../../picture-gallery/services/picture-gallery.service';
 import {PictureSearchApiService} from '../../services/picture-search-api.service';
-import {LocationSearchService} from '../../services/location-search.service';
 import {
   countActivePictureSearchFilters,
   createDefaultPictureSearchFilters,
@@ -152,8 +152,8 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly api: PictureSearchApiService,
-    private readonly locationSearch: LocationSearchService,
-    private readonly tagsSearch: TagsSearchService,
+    private readonly entityLookup: EntityLookupApiService,
+    private readonly tagLookup: TagLookupApiService,
     private readonly galleryService: PictureGalleryService,
     private readonly translateService: TranslateService,
     private readonly breakpointObserver: BreakpointObserver,
@@ -173,11 +173,11 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
       this.tagsExcludeResults = results;
       this.tagsExcludeLoading = false;
     }, () => this.tagsExcludeLoading = true);
-    this.connectLocationSearch(this.countryQuery, query => this.locationSearch.searchCountries(query), results => {
+    this.connectLocationSearch(this.countryQuery, query => this.entityLookup.lookup('country', query), results => {
       this.countryResults = results;
       this.countryLoading = false;
     }, () => this.countryLoading = true);
-    this.connectLocationSearch(this.cityQuery, query => this.locationSearch.searchCities(query), results => {
+    this.connectLocationSearch(this.cityQuery, query => this.entityLookup.lookup('city', query), results => {
       this.cityResults = results;
       this.cityLoading = false;
     }, () => this.cityLoading = true);
@@ -432,7 +432,7 @@ export class ZxPictureSearchComponent implements OnInit, OnDestroy {
           }
           markLoading();
           this.cdr.markForCheck();
-          return this.tagsSearch.search(normalized).pipe(
+          return this.tagLookup.lookup(normalized).pipe(
             map(tags => tags.map(tagToItem)),
             catchError(() => of([] as TagItem[])),
           );

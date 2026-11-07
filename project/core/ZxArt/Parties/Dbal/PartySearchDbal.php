@@ -6,6 +6,7 @@ namespace ZxArt\Parties\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Parties\Dto\FoundPartyDto;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
@@ -22,6 +23,7 @@ final readonly class PartySearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -34,19 +36,11 @@ final readonly class PartySearchDbal extends AbstractDbal
         if ($phrase === '') {
             return [];
         }
-        // a backslash escapes the wildcards in MariaDB
-        $patterns = array_unique(array_map(
-            static fn(string $text): string => '%' . addcslashes($text, '\\%_') . '%',
-            [$phrase, htmlspecialchars($phrase, ENT_QUOTES)],
-        ));
-        $query = $this->db->table($this->tableName(DatabaseTable::Party))
-            ->where(static function (Builder $query) use ($patterns): void {
-                foreach ($patterns as $pattern) {
-                    foreach (['title', 'abbreviation', 'originalName'] as $column) {
-                        $query->orWhere($column, 'like', $pattern);
-                    }
-                }
-            });
+        $query = $this->titleMatch->where(
+            $this->db->table($this->tableName(DatabaseTable::Party)),
+            ['title', 'abbreviation', 'originalName'],
+            $phrase,
+        );
         if ($year !== null) {
             $query->whereIn('id', $this->yearLinks()->select('childStructureId')->where($this->tableColumn(DatabaseTable::Generic, 'title'), '=', (string)$year));
         }

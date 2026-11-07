@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Text size for release type badges. */
   --zx-release-type-badge-font-size: var(--zx-font-size-xs);
@@ -32,7 +34,7 @@
   --zx-release-type-badge-unknown-bg: var(--secondary-500);
 }
 
-.dark-mode {
+@include mode.dark {
   /* Dark text keeps contrast on the brighter dark-theme warning ramp. */
   --zx-release-type-badge-translation-text: var(--secondary-50);
 }

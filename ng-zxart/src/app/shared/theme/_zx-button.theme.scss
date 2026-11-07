@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* ZxButton Component variables */
   --zx-button-xs-height: 24px;
@@ -55,7 +57,7 @@
   --zx-button-disabled-opacity: 0.8;
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-button-secondary-bg: var(--secondary-200);
   --zx-button-secondary-hover-bg: var(--secondary-300);
 

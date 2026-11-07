@@ -4,7 +4,7 @@
       <h3 appHeading="title" class="settings-section__title">{{ 'settings.theme' | translate }}</h3>
       <zx-toggle
         [options]="themeOptions"
-        [value]="currentTheme"
+        [value]="(themePreference$ | async) ?? ''"
         (valueChange)="onThemeChange($event)"
       ></zx-toggle>
     </div>

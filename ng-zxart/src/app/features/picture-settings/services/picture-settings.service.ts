@@ -102,11 +102,11 @@ export class PictureSettingsService {
     return this.isValidScale(raw) ? raw : PICTURE_SCALE_DEFAULT;
   }
 
-  private isValidScale(value: string | undefined): value is PictureScale {
+  private isValidScale(value: string | null | undefined): value is PictureScale {
     return PICTURE_SCALE_VALUES.includes(value as PictureScale);
   }
 
-  private isValidMode(value: string | undefined): value is PictureMode {
+  private isValidMode(value: string | null | undefined): value is PictureMode {
     return value === 'mix' || value === 'flicker' || value === 'interlace1' || value === 'interlace2';
   }
 }

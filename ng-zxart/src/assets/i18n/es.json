@@ -300,6 +300,8 @@
     "exe-file": "Archivo ejecutable",
     "batch-images": "Imágenes",
     "error-files-required": "Selecciona al menos una imagen",
+    "error-native-file": "Extensiones permitidas: {{extensions}}. Tamaños de archivo permitidos: {{sizes}}.",
+    "error-native-file-variable": "Extensiones permitidas: {{extensions}}. El tamaño del archivo debe corresponder al formato seleccionado.",
     "error-authors-required": "Selecciona al menos un autor"
   },
   "press-form": {
@@ -710,6 +712,7 @@
   "settings": {
     "title": "Configuración",
     "theme": "Tema",
+    "theme.auto": "Automático",
     "theme.light": "Claro",
     "theme.dark": "Oscuro"
   },

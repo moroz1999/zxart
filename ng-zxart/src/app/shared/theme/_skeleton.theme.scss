@@ -1,8 +1,10 @@
+@use './theme-mode' as mode;
+
 :root {
   --skeleton-bg: var(--secondary-100);
   --skeleton-shimmer: rgba(255, 255, 255, 0.6);
 }
 
-.dark-mode {
+@include mode.dark {
   --skeleton-shimmer: rgba(255, 255, 255, 0.08);
 }

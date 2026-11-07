@@ -1,5 +1,12 @@
 ## Search
 
+### Matching a title
+Wherever a title, a name or a file name is searched for — the full and quick
+searches, the pickers that link one entity to another, the detailed searches,
+the import finding what already exists — spaces, punctuation and case do not
+matter, and letters of every alphabet count: `rebel-star` finds `Rebelstar`,
+`Rebel Star` and `Rebel-Star 2`. A phrase of punctuation alone finds nothing.
+
 ### Full search
 One search covers the whole archive. The visitor types a phrase, optionally
 restricts it to certain kinds of entity, and pages through the results. The
@@ -13,7 +20,9 @@ that exists in several languages is listed once.
 The quick search in the site header answers the same question while typing, but
 looks at titles only rather than at full content. It has a single page of
 results, so it is ordered by closeness to the phrase instead: an exact title
-first, then titles beginning with it, then titles containing it.
+first, then titles beginning with it, then titles containing it. The page is
+shared out evenly between the kinds found, and what a kind with fewer results
+leaves goes to the others.
 
 ### Detailed search
 Graphics and music have a search of their own, because they are looked for by

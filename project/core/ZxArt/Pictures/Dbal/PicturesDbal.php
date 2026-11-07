@@ -6,7 +6,8 @@ namespace ZxArt\Pictures\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
+use ZxArt\Search\Dbal\TitleMatchMode;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\SortingParams;
@@ -17,7 +18,7 @@ readonly final class PicturesDbal
 
     public function __construct(
         private Connection               $db,
-        private AlphanumericColumnSearch $alphanumericColumnSearch,
+        private TitleMatch $titleMatch,
     )
     {
 
@@ -26,7 +27,7 @@ readonly final class PicturesDbal
     public function findPicturesByTitle(string $title): array
     {
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
+        $query = $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['title'], $title, TitleMatchMode::Exact));
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
 

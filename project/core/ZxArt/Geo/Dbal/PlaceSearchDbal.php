@@ -6,6 +6,7 @@ namespace ZxArt\Geo\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use LanguagesManager;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\DatabaseTable;
@@ -22,6 +23,7 @@ final readonly class PlaceSearchDbal extends AbstractDbal
     public function __construct(
         private Connection $db,
         private LanguagesManager $languagesManager,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -86,11 +88,8 @@ final readonly class PlaceSearchDbal extends AbstractDbal
 
     private function idsNamed(DatabaseTable $table, string $phrase): \Closure
     {
-        // a backslash escapes the wildcards in MariaDB
-        $pattern = '%' . addcslashes($phrase, '\\%_') . '%';
-
-        return function (Builder $query) use ($table, $pattern): void {
-            $query->select('id')->from($this->tableName($table))->where('title', 'like', $pattern);
+        return function (Builder $query) use ($table, $phrase): void {
+            $this->titleMatch->where($query->select('id')->from($this->tableName($table)), ['title'], $phrase);
         };
     }
 

@@ -45,8 +45,6 @@ import {SvgIconRegistryService} from 'angular-svg-icon';
 import {HeadingDirective} from '../../shared/ui/typography/directives/heading.directive';
 import {ZxLoadingStateDirective} from '../../shared/ui/zx-loading-state/zx-loading-state.directive';
 
-const defaultStatuses: string[] = ['allowed', 'forbidden', 'forbiddenzxart', 'allowedzxart', 'insales', 'donationware', 'recovered', 'unknown'];
-
 export type ZxProdsListLayout = 'loading' | 'screenshots' | 'inlays' | 'table';
 
 @Component({
@@ -194,7 +192,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
         this.years = this.splitParam(params['years']);
         this.hw = this.splitParam(params['hw']);
         this.languages = this.splitParam(params['languages']);
-        this.legalStatuses = params['statuses'] ? params['statuses'].split(',') : [...defaultStatuses];
+        this.legalStatuses = this.splitParam(params['statuses']);
         this.formats = this.splitParam(params['formats']);
         this.releaseTypes = this.splitParam(params['types']);
         this.letter = params['letter'] ?? '';
@@ -260,15 +258,7 @@ export class ZxProdsCategoryComponent implements OnInit, OnDestroy {
             parameters.languages = this.languages.join(',');
         }
         if (this.legalStatuses.length) {
-            const defaultSet = new Set(defaultStatuses);
-            const selectedSet = new Set(this.legalStatuses);
-
-            const areStatusesEqual = defaultSet.size === selectedSet.size &&
-                [...defaultSet].every(elem => selectedSet.has(elem));
-
-            if (!areStatusesEqual) {
-                parameters.statuses = this.legalStatuses.join(',');
-            }
+            parameters.statuses = this.legalStatuses.join(',');
         }
         if (this.formats.length) {
             parameters.formats = this.formats.join(',');

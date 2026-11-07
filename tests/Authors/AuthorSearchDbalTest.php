@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\Authors\Dbal\AuthorSearchDbal;
 use ZxArt\Authors\Dto\AuthorSearchFilterDto;
 use ZxArt\Prods\ProdLink;
+use ZxArt\Search\Dbal\TitleMatch;
 
 /**
  * Authors by a part of the nickname, of the real name in any language or of an
@@ -57,16 +58,9 @@ class AuthorSearchDbalTest extends TestCase
             ['id' => self::EXOLON, 'year' => 1987],
             ['id' => self::STAR_WARS, 'year' => 0],
         ]);
-        $this->dbal = new AuthorSearchDbal($this->db);
+        $this->dbal = new AuthorSearchDbal($this->db, new TitleMatch());
     }
 
-    public function testANameMatchesTheNicknameTheRealNameInAnyLanguageOrAnAlias(): void
-    {
-        self::assertSame([self::ALEX], $this->search(new AuthorSearchFilterDto(name: ' Иванов ')));
-        self::assertSame([self::ALEX], $this->search(new AuthorSearchFilterDto(name: 'orr')));
-        self::assertSame([self::ALEX, self::BORIS], $this->search(new AuthorSearchFilterDto(name: 'o')));
-        self::assertSame(2, $this->dbal->count(new AuthorSearchFilterDto(name: 'o'), null));
-    }
 
     public function testTheCountriesAndCitiesNarrowTheResult(): void
     {

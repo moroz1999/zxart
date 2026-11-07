@@ -1,21 +1,24 @@
 <?php
 
-class authorSearchQueryFilter extends searchQueryFilter
+use ZxArt\Search\Dbal\TitleMatch;
+
+/**
+ * Authors by a phrase in the nickname or the real name; the search of the zxnet player API.
+ */
+class authorSearchQueryFilter extends QueryFilter
 {
-    public function getTypeName(): string
+    public function getRequiredType()
     {
         return 'author';
     }
 
-    protected function getTitleFieldNames()
+    public function getFilteredIdList($argument, $query)
     {
-        return ['title', 'realName'];
-    }
+        if (is_array($argument)) {
+            $argument = reset($argument);
+        }
+        $table = $this->getTable();
 
-    /**
-     * @return void
-     */
-    protected function getContentFieldNames()
-    {
+        return $this->getService(TitleMatch::class)->where($query, [$table . '.title', $table . '.realName'], (string)$argument);
     }
 }

@@ -7,7 +7,7 @@ namespace ZxArt\Tests\Prods;
 use Illuminate\Database\SQLiteConnection;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Prods\Dbal\ProdsDbal;
 
 /**
@@ -30,7 +30,7 @@ class ProdsRepositoryReachabilityTest extends TestCase
         $pdo = $this->db->getPdo();
         $pdo->exec('CREATE TABLE module_zxprod (id INTEGER PRIMARY KEY, votes REAL, year INTEGER, dateAdded INTEGER, legalStatus TEXT)');
         $pdo->exec('CREATE TABLE structure_links (parentStructureId INTEGER, childStructureId INTEGER, type TEXT)');
-        $this->repository = new ProdsDbal($this->db, new AlphanumericColumnSearch());
+        $this->repository = new ProdsDbal($this->db, new TitleMatch());
     }
 
     public function testLatestAddedLeavesOutProdWithoutCategory(): void

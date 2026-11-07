@@ -8,7 +8,7 @@ readonly class PreferenceDto
 {
     public function __construct(
         public string $code,
-        public string $value,
+        public ?string $value,
     ) {
     }
 }

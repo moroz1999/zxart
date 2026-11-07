@@ -82,7 +82,7 @@ export class CommentsListComponent {
     this.showForm.set(false);
   }
 
-  /** Scrolls to the comment named by the route fragment (`#comment-123`). */
+  /** Scrolls to the comment named by the route fragment (`#comment123`). */
   private scrollToHashedComment(): void {
     const fragment = this.route.snapshot.fragment;
     if (!fragment) return;

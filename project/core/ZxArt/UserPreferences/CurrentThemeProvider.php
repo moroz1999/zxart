@@ -20,7 +20,7 @@ final readonly class CurrentThemeProvider
     ) {
     }
 
-    public function getTheme(): ThemeValue
+    public function getTheme(): ?ThemeValue
     {
         $user = $this->currentUserService->getCurrentUser();
         $isAuthorized = $user->isAuthorized();
@@ -46,15 +46,15 @@ final readonly class CurrentThemeProvider
         return $this->getDefaultTheme();
     }
 
-    public function getThemeClass(): string
+    public function getThemeClass(): ?string
     {
-        return $this->getTheme()->value . '-mode';
+        $theme = $this->getTheme();
+        return $theme === null ? null : $theme->value . '-mode';
     }
 
-    private function getDefaultTheme(): ThemeValue
+    private function getDefaultTheme(): ?ThemeValue
     {
         $default = $this->defaultsProvider->getDefault(PreferenceCode::THEME);
-        $theme = ThemeValue::tryFrom($default ?? '');
-        return $theme ?? ThemeValue::LIGHT;
+        return ThemeValue::tryFrom($default ?? '');
     }
 }

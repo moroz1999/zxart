@@ -28,6 +28,13 @@ Owners (`ThemeService`, `LanguageService`, `PictureSettingsService`) apply the
 stored value synchronously first and re-apply once `initialize()` resolves, so a
 preference set elsewhere wins without delaying the first render.
 
+The theme preference stores `light` or `dark` only for an explicit choice. A
+missing or `null` theme means automatic selection, so saving automatic mode
+removes the user's stored theme value. Existing explicit values remain valid.
+The frontend leaves the root without an explicit theme class in automatic mode;
+theme variables then follow `prefers-color-scheme`. Non-CSS consumers receive
+the effective light or dark theme resolved when the application starts.
+
 ## Auto-login
 
 Auto-login is driven from the frontend. `authGuard`

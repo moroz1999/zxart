@@ -18,4 +18,8 @@ export interface FormSavePayload {
 export interface FormSaveResult {
   id: number;
   errorMessage?: string;
+  errorParameters?: {
+    extensions: string[];
+    sizes: number[];
+  };
 }

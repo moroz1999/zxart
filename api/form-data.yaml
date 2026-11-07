@@ -124,6 +124,26 @@ paths:
                           group:
                             type: string
                             description: Only on grouped enums (hardware).
+                  pictureFileRules:
+                    type: object
+                    description: >
+                      Native picture upload constraints keyed by picture format.
+                      Empty for forms that do not upload native pictures.
+                    additionalProperties:
+                      type: object
+                      required:
+                        - extensions
+                        - sizes
+                      properties:
+                        extensions:
+                          type: array
+                          items:
+                            type: string
+                        sizes:
+                          type: array
+                          description: Allowed byte counts; empty for variable-size formats.
+                          items:
+                            type: integer
                 additionalProperties: true
         '400':
           description: Missing id or required creation context
@@ -184,6 +204,21 @@ paths:
                 properties:
                   id:
                     type: integer
+                  errorMessage:
+                    type: string
+                    description: Translation key present when the native picture file was rejected.
+                  errorParameters:
+                    type: object
+                    description: Allowed extensions and byte counts for a rejected native picture file.
+                    properties:
+                      extensions:
+                        type: array
+                        items:
+                          type: string
+                      sizes:
+                        type: array
+                        items:
+                          type: integer
         '400':
           description: Unsupported entity type or missing required creation context
         '401':

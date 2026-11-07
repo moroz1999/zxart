@@ -108,11 +108,18 @@ export class AssistantStore {
     );
   }
 
+  /** Shows the run as started at once, as sending does: the plan locks and the polling begins. */
   approvePlan(planId: number): Observable<void> {
+    const conversationId = this.state.getValue().conversationId;
+    if (conversationId === null) {
+      return EMPTY;
+    }
+    this.startRunRequest(conversationId);
     return this.api.approvePlan(planId).pipe(
-      tap(started => this.markRunning(started.runId, 'execute')),
+      tap(started => this.finishRunRequest(started.runId, 'execute')),
       map(() => undefined),
       catchError((error: unknown) => {
+        this.cancelRunRequest();
         this.fail(error);
         return EMPTY;
       }),

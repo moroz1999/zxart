@@ -7018,17 +7018,6 @@
       <code><![CDATA[__construct]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="project/core/ZxArt/Helpers/AlphanumericColumnSearch.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$propertyName]]></code>
-    </MissingParamType>
-    <NullableReturnStatement>
-      <code><![CDATA[preg_replace('/[^\p{L}\p{N}]/u', '', mb_strtolower(trim($input)))]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="project/core/ZxArt/Helpers/HtmlTagsStripper.php">
     <MixedArgument>
       <code><![CDATA[$element->firstChild]]></code>
@@ -19361,28 +19350,6 @@
       <code><![CDATA['db']]></code>
     </UndefinedClass>
   </file>
-  <file src="project/modules/queryFilters/authorAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[authorAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[authorAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/authorAliasAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[authorAliasAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[authorAliasAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/authorAliasFirstLetter.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[authorAliasFirstLetterQueryFilter]]></code>
@@ -19424,21 +19391,6 @@
     </MixedAssignment>
     <UnusedClass>
       <code><![CDATA[authorAliasOfItemTypeQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/authorAliasSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[authorAliasSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[false]]></code>
-    </ImplementedReturnTypeMismatch>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames(): bool]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[authorAliasSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/authorAll.class.php">
@@ -19547,61 +19499,6 @@
       <code><![CDATA[authorSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/queryFilters/cityAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[cityAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[cityAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/countryAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[countryAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[countryAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/detailedSearchAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[detailedSearchAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[detailedSearchAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/groupAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[groupAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[groupAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/groupAliasAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[groupAliasAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[groupAliasAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/groupAliasFirstLetter.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[groupAliasFirstLetterQueryFilter]]></code>
@@ -19628,18 +19525,6 @@
     </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[groupAliasIdQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/groupAliasSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[groupAliasSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[groupAliasSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/groupCity.class.php">
@@ -19692,29 +19577,6 @@
     </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[groupIdQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/groupSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[groupSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[groupSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/partyAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[partyAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[partyAjaxSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/partyAll.class.php">
@@ -19789,71 +19651,6 @@
       <code><![CDATA[partyOfItemTypeQueryFilter]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/queryFilters/partySearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[partySearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[false]]></code>
-    </ImplementedReturnTypeMismatch>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames(): bool]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[partySearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/pressArticleAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[pressArticleAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[pressArticleAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/pressArticleSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[pressArticleSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function assignExtraFilters(Builder $query): Builder]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[pressArticleSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/tagAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[tagAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[tagAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/tagSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[tagSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <ImplementedReturnTypeMismatch>
-      <code><![CDATA[false]]></code>
-    </ImplementedReturnTypeMismatch>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames(): bool]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[tagSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/zxMusicAddedDays.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[zxMusicAddedDaysQueryFilter]]></code>
@@ -19873,17 +19670,6 @@
     </MixedMethodCall>
     <UnusedClass>
       <code><![CDATA[zxMusicAddedDaysQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/zxMusicAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxMusicAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[zxMusicAjaxSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/zxMusicAll.class.php">
@@ -20155,17 +19941,6 @@
       <code><![CDATA[zxPictureAddedDaysQueryFilter]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/queryFilters/zxPictureAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxPictureAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[zxPictureAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/zxPictureAll.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[zxPictureAllQueryFilter]]></code>
@@ -20335,18 +20110,6 @@
       <code><![CDATA[zxPicturePartyPlaceQueryFilter]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/queryFilters/zxPictureSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxPictureSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[zxPictureSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/zxPictureStages.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[zxPictureStagesQueryFilter]]></code>
@@ -20459,26 +20222,6 @@
     </MixedMethodCall>
     <UnusedClass>
       <code><![CDATA[zxProdAddedDaysQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/zxProdAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxProdAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingClosureParamType>
-      <code><![CDATA[$subQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-    </MissingOverrideAttribute>
-    <MixedMethodCall>
-      <code><![CDATA[from]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[where]]></code>
-    </MixedMethodCall>
-    <UnusedClass>
-      <code><![CDATA[zxProdAjaxSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/zxProdAll.class.php">
@@ -20723,30 +20466,6 @@
       <code><![CDATA[zxProdNotStatusQueryFilter]]></code>
     </UnusedClass>
   </file>
-  <file src="project/modules/queryFilters/zxProdSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxProdSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingClosureParamType>
-      <code><![CDATA[$subQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <MixedMethodCall>
-      <code><![CDATA[from]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[where]]></code>
-    </MixedMethodCall>
-    <UnusedClass>
-      <code><![CDATA[zxProdSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="project/modules/queryFilters/zxProdStatus.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[zxProdStatusQueryFilter]]></code>
@@ -20819,17 +20538,6 @@
     </MixedMethodCall>
     <UnusedClass>
       <code><![CDATA[zxReleasReleaseTypeQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/zxReleaseAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxReleaseAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <UnusedClass>
-      <code><![CDATA[zxReleaseAjaxSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/queryFilters/zxReleaseEffectiveHardware.class.php">
@@ -20976,21 +20684,6 @@
     </MixedMethodCall>
     <UnusedClass>
       <code><![CDATA[zxReleaseReleaseTypeQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="project/modules/queryFilters/zxReleaseSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[zxReleaseSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[zxReleaseSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="project/modules/rendererPlugins/zxScreen.class.php">
@@ -36169,211 +35862,6 @@
       <code><![CDATA[break;]]></code>
     </UnevaluatedCode>
   </file>
-  <file src="trickster-cms/cms/core/Search.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['structureManager']]></code>
-    </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[Search]]></code>
-    </ClassMustBeFinal>
-    <InvalidOperand>
-      <code><![CDATA[$averageAmount - $typeResultsAmount]]></code>
-      <code><![CDATA[$extraAmount += $averageAmount - $typeResultsAmount]]></code>
-      <code><![CDATA[$extraAmount / $typesWithExtra]]></code>
-      <code><![CDATA[$slicedAmount += $baseSliceAmount]]></code>
-    </InvalidOperand>
-    <InvalidScalarArgument>
-      <code><![CDATA[$baseSliceAmount]]></code>
-      <code><![CDATA[$slicedAmount]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code><![CDATA[$enabled]]></code>
-      <code><![CDATA[$enabled]]></code>
-      <code><![CDATA[$enabled]]></code>
-      <code><![CDATA[$exact]]></code>
-      <code><![CDATA[$exclusions]]></code>
-      <code><![CDATA[$input]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$typePostfix]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$contentMatching]]></code>
-      <code><![CDATA[$languageId]]></code>
-      <code><![CDATA[$limit]]></code>
-      <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$partialMatching]]></code>
-      <code><![CDATA[$set->elements]]></code>
-      <code><![CDATA[$singlePageCombining]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getResult]]></code>
-      <code><![CDATA[performTypeSearch]]></code>
-      <code><![CDATA[setContentMatching]]></code>
-      <code><![CDATA[setFilters]]></code>
-      <code><![CDATA[setInput]]></code>
-      <code><![CDATA[setLanguageId]]></code>
-      <code><![CDATA[setLimit]]></code>
-      <code><![CDATA[setOffset]]></code>
-      <code><![CDATA[setPartialMatching]]></code>
-      <code><![CDATA[setSinglePageCombining]]></code>
-      <code><![CDATA[setTypes]]></code>
-    </MissingReturnType>
-    <MixedArgument>
-      <code><![CDATA[$this->limit / count($idsByType)]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$exclusions[$type]]]></code>
-    </MixedArrayAccess>
-    <MixedArrayAssignment>
-      <code><![CDATA[$queriesResults[$type . $typePostfix]]]></code>
-      <code><![CDATA[$searchResult->elements[]]]></code>
-      <code><![CDATA[$searchResult->elements[]]]></code>
-      <code><![CDATA[$searchResult->sets[]]]></code>
-      <code><![CDATA[$searchResult->sets[]]]></code>
-      <code><![CDATA[$set->elements[]]]></code>
-      <code><![CDATA[$set->elements[]]]></code>
-    </MixedArrayAssignment>
-    <MixedArrayOffset>
-      <code><![CDATA[$exclusions[$type]]]></code>
-      <code><![CDATA[$exclusions[$type]]]></code>
-      <code><![CDATA[$queryResult[$type]]]></code>
-    </MixedArrayOffset>
-    <MixedAssignment>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$element]]></code>
-      <code><![CDATA[$elementId]]></code>
-      <code><![CDATA[$elementId]]></code>
-      <code><![CDATA[$elements[]]]></code>
-      <code><![CDATA[$i]]></code>
-      <code><![CDATA[$i]]></code>
-      <code><![CDATA[$queryParameters['structureSkipId']]]></code>
-      <code><![CDATA[$resultsNeeded]]></code>
-      <code><![CDATA[$resultsNeeded]]></code>
-      <code><![CDATA[$type]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getElementById]]></code>
-      <code><![CDATA[getTotalCount]]></code>
-      <code><![CDATA[new $customSetName()]]></code>
-      <code><![CDATA[setTotalCount]]></code>
-      <code><![CDATA[setTotalCount]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$i]]></code>
-      <code><![CDATA[$resultsNeeded]]></code>
-      <code><![CDATA[$searchResult->count]]></code>
-      <code><![CDATA[$searchResult->count]]></code>
-      <code><![CDATA[$set->getTotalCount()]]></code>
-      <code><![CDATA[$this->limit]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$typePostfix]]></code>
-    </MixedOperand>
-    <MixedPropertyAssignment>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$searchResult]]></code>
-      <code><![CDATA[$searchResult]]></code>
-    </MixedPropertyAssignment>
-    <MixedPropertyFetch>
-      <code><![CDATA[$searchResult->count]]></code>
-      <code><![CDATA[$searchResult->count]]></code>
-      <code><![CDATA[$searchResult->count]]></code>
-      <code><![CDATA[$searchResult->elements]]></code>
-      <code><![CDATA[$searchResult->elements]]></code>
-      <code><![CDATA[$searchResult->sets]]></code>
-      <code><![CDATA[$searchResult->sets]]></code>
-    </MixedPropertyFetch>
-    <PossiblyUndefinedVariable>
-      <code><![CDATA[$queriesResults]]></code>
-    </PossiblyUndefinedVariable>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[Search]]></code>
-    </PropertyNotSetInConstructor>
-    <ReferenceReusedFromConfusingScope>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-    </ReferenceReusedFromConfusingScope>
-    <UnusedVariable>
-      <code><![CDATA[$type]]></code>
-    </UnusedVariable>
-  </file>
-  <file src="trickster-cms/cms/core/SearchResult.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SearchResult]]></code>
-    </ClassMustBeFinal>
-    <MissingPropertyType>
-      <code><![CDATA[$count]]></code>
-      <code><![CDATA[$elements]]></code>
-      <code><![CDATA[$exactMatches]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getSearchTotal]]></code>
-    </MissingReturnType>
-    <MixedAssignment>
-      <code><![CDATA[$allTotal]]></code>
-      <code><![CDATA[$allTotal]]></code>
-      <code><![CDATA[$subCount]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$allTotal]]></code>
-      <code><![CDATA[$allTotal]]></code>
-      <code><![CDATA[$subCount]]></code>
-    </MixedOperand>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getSearchTotal]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$count]]></code>
-      <code><![CDATA[$elements]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="trickster-cms/cms/core/SearchResultSet.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SearchResultSet]]></code>
-    </ClassMustBeFinal>
-    <MissingPropertyType>
-      <code><![CDATA[$elements]]></code>
-      <code><![CDATA[$partial]]></code>
-      <code><![CDATA[$template]]></code>
-      <code><![CDATA[$totalCount]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getJsonData]]></code>
-      <code><![CDATA[getSubCount]]></code>
-      <code><![CDATA[setTotalCount]]></code>
-    </MissingReturnType>
-    <MixedArgument>
-      <code><![CDATA[$this->elements]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$data['prods'][]]]></code>
-      <code><![CDATA[$element]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getElementData]]></code>
-    </MixedMethodCall>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->totalCount]]></code>
-    </MixedReturnStatement>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getJsonData]]></code>
-      <code><![CDATA[setTotalCount]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$partial]]></code>
-      <code><![CDATA[$template]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="trickster-cms/cms/core/SearchTypesProvider.trait.php">
     <MissingPropertyType>
       <code><![CDATA[$searchTypes]]></code>
@@ -38234,17 +37722,6 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$status]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="trickster-cms/cms/core/ajaxSearchQueryFilter.class.php">
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-    </MissingOverrideAttribute>
   </file>
   <file src="trickster-cms/cms/core/breadcrumbsManager.class.php">
     <ArgumentTypeCoercion>
@@ -40438,137 +39915,6 @@
       <code><![CDATA[empty($_SERVER['HTTP_RANGE'])]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="trickster-cms/cms/core/searchQueriesManager.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[searchQueriesManager]]></code>
-    </ClassMustBeFinal>
-    <DocblockTypeContradiction>
-      <code><![CDATA[is_null(self::$instance)]]></code>
-    </DocblockTypeContradiction>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidArgument>
-      <code><![CDATA["lastSearchId"]]></code>
-      <code><![CDATA["lastSearchPhrase"]]></code>
-    </InvalidArgument>
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$currentVisitor->id]]></code>
-      <code><![CDATA[$currentVisitor->id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[markLogAsClicked]]></code>
-      <code><![CDATA[updateSearchLog]]></code>
-    </MissingReturnType>
-    <MixedArgument>
-      <code><![CDATA[$lastSearchPhrase]]></code>
-      <code><![CDATA[$searchId]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-    </MixedArrayAccess>
-    <MixedAssignment>
-      <code><![CDATA[$lastSearchPhrase]]></code>
-      <code><![CDATA[$queryDataObjects]]></code>
-      <code><![CDATA[$queryDataObjects]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$searchId]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getEmptyObject]]></code>
-      <code><![CDATA[load]]></code>
-      <code><![CDATA[load]]></code>
-      <code><![CDATA[persist]]></code>
-      <code><![CDATA[persist]]></code>
-      <code><![CDATA[persist]]></code>
-    </MixedMethodCall>
-    <MixedPropertyAssignment>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$queryDataObjects[0]]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-      <code><![CDATA[$record]]></code>
-    </MixedPropertyAssignment>
-    <MixedPropertyFetch>
-      <code><![CDATA[$record->id]]></code>
-    </MixedPropertyFetch>
-    <MixedReturnStatement>
-      <code><![CDATA[$record->id]]></code>
-      <code><![CDATA[$searchId]]></code>
-      <code><![CDATA[$searchId]]></code>
-    </MixedReturnStatement>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$currentVisitor->id]]></code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getInstance]]></code>
-      <code><![CDATA[logInstantSearch]]></code>
-      <code><![CDATA[markLogAsClicked]]></code>
-    </PossiblyUnusedMethod>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[searchQueriesManager]]></code>
-    </PropertyNotSetInConstructor>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->dataCollection]]></code>
-      <code><![CDATA[$this->defaultRoles]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->dataCollection]]></code>
-      <code><![CDATA[$this->dataCollection]]></code>
-      <code><![CDATA[$this->dataCollection]]></code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="trickster-cms/cms/core/searchQueryFilter.class.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$finalQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-      <code><![CDATA[public function getRequiredType()]]></code>
-    </MissingOverrideAttribute>
-    <MissingParamType>
-      <code><![CDATA[$argument]]></code>
-    </MissingParamType>
-    <MixedArgument>
-      <code><![CDATA[$query]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$argumentWord]]></code>
-      <code><![CDATA[$argumentWord]]></code>
-      <code><![CDATA[$argumentWord]]></code>
-      <code><![CDATA[$query]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$argumentWord]]></code>
-      <code><![CDATA[$argumentWord]]></code>
-      <code><![CDATA[$argumentWord]]></code>
-    </MixedOperand>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->getTypeName()]]></code>
-    </MixedReturnStatement>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[generateQueryStrings]]></code>
-    </PossiblyUnusedMethod>
-    <UndefinedMethod>
-      <code><![CDATA[getTypeName]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="trickster-cms/cms/core/settingsManager.class.php">
     <ArgumentTypeCoercion>
       <code><![CDATA['db']]></code>
@@ -42358,80 +41704,6 @@
     <UnusedClass>
       <code><![CDATA[adminAjaxApplication]]></code>
     </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/applications/ajaxSearch.class.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['adminStructureManager']]></code>
-      <code><![CDATA['publicStructureManager']]></code>
-    </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-    </ClassMustBeFinal>
-    <InvalidReturnType>
-      <code><![CDATA[execute]]></code>
-      <code><![CDATA[initialize]]></code>
-    </InvalidReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[public function execute($controller)]]></code>
-      <code><![CDATA[public function getUrlName()]]></code>
-      <code><![CDATA[public function initialize()]]></code>
-    </MissingOverrideAttribute>
-    <MissingPropertyType>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$response->responseData]]></code>
-    </MissingPropertyType>
-    <MixedArgument>
-      <code><![CDATA[$controller->getParameter('types')]]></code>
-      <code><![CDATA[$filtersParameter]]></code>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[$this->mode]]></code>
-      <code><![CDATA[$this->mode]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$filtersParameter]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[$result]]></code>
-      <code><![CDATA[$set]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getSearchTotal]]></code>
-      <code><![CDATA[setRequestedPath]]></code>
-    </MixedMethodCall>
-    <MixedPropertyFetch>
-      <code><![CDATA[$result->count]]></code>
-      <code><![CDATA[$result->sets]]></code>
-      <code><![CDATA[$set->elements]]></code>
-      <code><![CDATA[$set->type]]></code>
-    </MixedPropertyFetch>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->getContainer()]]></code>
-    </PossiblyNullArgument>
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$_SERVER['REQUEST_METHOD']]]></code>
-    </PossiblyUndefinedArrayOffset>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-    </PropertyNotSetInConstructor>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$query]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedClass>
-      <code><![CDATA['adminStructureManager']]></code>
-      <code><![CDATA['publicStructureManager']]></code>
-    </UndefinedClass>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[Cache]]></code>
-    </UnnecessaryVarAnnotation>
-    <UnusedClass>
-      <code><![CDATA[ajaxSearchApplication]]></code>
-    </UnusedClass>
-    <UnusedVariable>
-      <code><![CDATA[$structureManager]]></code>
-    </UnusedVariable>
   </file>
   <file src="trickster-cms/cms/modules/applications/api.class.php">
     <ArgumentTypeCoercion>
@@ -45056,33 +44328,6 @@
       <code><![CDATA[userQueryFilterConverter]]></code>
     </UnusedClass>
   </file>
-  <file src="trickster-cms/cms/modules/queryFilters/adminTranslationAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[adminTranslationAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingClosureParamType>
-      <code><![CDATA[$subQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <MixedMethodCall>
-      <code><![CDATA[from]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$argument]]></code>
-    </MixedOperand>
-    <UnusedClass>
-      <code><![CDATA[adminTranslationAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
   <file src="trickster-cms/cms/modules/queryFilters/structureDateCreated.class.php">
     <ClassMustBeFinal>
       <code><![CDATA[structureDateCreatedQueryFilter]]></code>
@@ -45133,116 +44378,6 @@
     </MissingOverrideAttribute>
     <UnusedClass>
       <code><![CDATA[structureSkipIdQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/queryFilters/translationAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[translationAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingClosureParamType>
-      <code><![CDATA[$subQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <MixedMethodCall>
-      <code><![CDATA[from]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[where]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$argument]]></code>
-    </MixedOperand>
-    <UnusedClass>
-      <code><![CDATA[translationAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/queryFilters/translationSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[translationSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingClosureParamType>
-      <code><![CDATA[$subQuery]]></code>
-    </MissingClosureParamType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-      <code><![CDATA[public function getFilteredIdList($argument, $query)]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <MixedMethodCall>
-      <code><![CDATA[from]]></code>
-      <code><![CDATA[select]]></code>
-      <code><![CDATA[where]]></code>
-      <code><![CDATA[whereIn]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$argument]]></code>
-    </MixedOperand>
-    <UnusedClass>
-      <code><![CDATA[translationSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/queryFilters/userAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[userAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[userAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/queryFilters/userGroupAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[userGroupAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[userGroupAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/cms/modules/queryFilters/userSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[userSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[userSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="trickster-cms/cms/modules/rendererPlugins/CssUniter.class.php">
@@ -53155,362 +52290,6 @@
     </ClassMustBeFinal>
     <UnusedClass>
       <code><![CDATA[serviceQueryFilterConverter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/articleAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[articleAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[articleAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/articleSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[articleSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[articleSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/eventAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[eventAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[eventAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/eventSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[eventSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[eventSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/eventsListAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[eventsListAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[eventsListAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/folderAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[folderAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[folderAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/folderSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[folderSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[folderSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/formFieldAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[formFieldAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[formFieldAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/genericIconAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[genericIconAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[genericIconAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/genericIconSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[genericIconSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[genericIconSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/languageAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[languageAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[languageAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/languageSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[languageSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[languageSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/mapAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[mapAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[mapAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/mapSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[mapSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[mapSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/newsAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[newsAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[newsAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/newsListAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[newsListAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[newsListAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/newsListSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[newsListSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[newsListSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/newsSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[newsSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[newsSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/productionAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[productionAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[productionAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/productionSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[productionSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[productionSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/registrationInputAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[registrationInputAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[registrationInputAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/serviceAjaxSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[serviceAjaxSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[serviceAjaxSearchQueryFilter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="trickster-cms/homepage/modules/queryFilters/serviceSearch.class.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[serviceSearchQueryFilter]]></code>
-    </ClassMustBeFinal>
-    <FalsableReturnStatement>
-      <code><![CDATA[false]]></code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType>
-      <code><![CDATA[getContentFieldNames]]></code>
-    </InvalidFalsableReturnType>
-    <MissingOverrideAttribute>
-      <code><![CDATA[protected function getContentFieldNames()]]></code>
-      <code><![CDATA[protected function getTitleFieldNames()]]></code>
-    </MissingOverrideAttribute>
-    <MissingReturnType>
-      <code><![CDATA[getTypeName]]></code>
-    </MissingReturnType>
-    <UnusedClass>
-      <code><![CDATA[serviceSearchQueryFilter]]></code>
     </UnusedClass>
   </file>
   <file src="trickster-cms/homepage/modules/structureElements/article/action.receive.class.php">

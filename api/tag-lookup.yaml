@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Tag Lookup API
+  version: 1.0.0
+
+paths:
+  /tag-lookup/:
+    get:
+      summary: What a tag picker offers for a typed phrase
+      description: >
+        Tags whose name or synonym in any language holds the phrase, the most used
+        first, each in the current language. Spaces, punctuation and case do not matter.
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: game
+      responses:
+        '200':
+          description: The tags offered
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TagLookupItem'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    TagLookupItem:
+      type: object
+      required: [id, title, value, synonym, description, url]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: The name, its synonyms and its description, for the list of suggestions
+        value:
+          type: string
+          description: The tag's own name, the value forms save and searches filter by
+        synonym:
+          type: string
+          description: Comma-separated synonyms
+        description:
+          type: string
+        url:
+          type: string
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

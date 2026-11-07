@@ -62,6 +62,7 @@ components:
           example: "theme"
         value:
           type: string
+          nullable: true
           description: Preference value
           example: "light"
       required:

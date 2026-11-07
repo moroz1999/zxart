@@ -14,15 +14,7 @@ class homepageAdminDesignTheme extends DesignTheme
         $this->javascriptUrl = $controller->baseURL . $pathsManager->getRelativePath('trickster') . 'homepage/js/admin/';
         $this->javascriptPath = $tricksterPath . 'homepage/js/admin/';
         $this->javascriptFiles = [
-            'logics.languagesForm.js',
-            'logics.linkListItemForm.js',
-            'logics.linkListForm.js',
-            'logics.redirectForm.js',
             'logics.submenuListForm.js',
-            'component.languagesForm.js',
-            'component.linkListItemForm.js',
-            'component.linkListForm.js',
-            'component.redirectForm.js',
             'component.submenuListForm.js',
             'component.spoiler.js',
             'logics.visitor.js',

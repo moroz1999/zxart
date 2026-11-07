@@ -12,7 +12,6 @@ use groupElement;
 use partyElement;
 use pressArticleElement;
 use structureElement;
-use ZxArtItem;
 use ZxArt\AuthorList\AuthorListTransformer;
 use ZxArt\GroupList\GroupListTransformer;
 use ZxArt\Parties\PartiesTransformer;
@@ -45,6 +44,7 @@ readonly class SearchService
         private ProdsTransformer $prodsTransformer,
         private TunesTransformer $tunesTransformer,
         private PartiesTransformer $partiesTransformer,
+        private FoundElementTitle $foundElementTitle,
     ) {
     }
 
@@ -106,33 +106,35 @@ readonly class SearchService
      * The configured types, an alias type counted as its owner's: aliases are
      * hidden from the public API.
      *
-     * @return string[]
+     * @return PhraseSearchType[]
      */
     private function getAvailableTypes(): array
     {
-        /** @var string[] $types the structure types listed in `searchtypes-public.php` */
-        $types = $this->configManager->getMerged('searchtypes-public.search');
+        /** @var string[] $configured the structure types listed in `searchtypes-public.php` */
+        $configured = $this->configManager->getMerged('searchtypes-public.search');
         $public = [];
-        foreach ($types as $type) {
-            $publicType = PhraseSearchEngine::ALIAS_OWNERS[$type] ?? $type;
-            if (!in_array($publicType, $public, true)) {
-                $public[] = $publicType;
-            }
+        foreach ($configured as $structureType) {
+            $type = PhraseSearchType::from($structureType);
+            $publicType = $type->aliasOwner() ?? $type;
+            $public[$publicType->value] = $publicType;
         }
-        return $public;
+        return array_values($public);
     }
 
     /**
-     * @param string[] $requested
-     * @param string[] $available
-     * @return string[]
+     * @param string[] $requested structure types
+     * @param PhraseSearchType[] $available
+     * @return PhraseSearchType[]
      */
     private function filterPublicTypes(array $requested, array $available): array
     {
         if ($requested === []) {
             return $available;
         }
-        return array_values(array_intersect($available, $requested));
+        return array_values(array_filter(
+            $available,
+            static fn(PhraseSearchType $type): bool => in_array($type->value, $requested, true),
+        ));
     }
 
     /**
@@ -148,7 +150,7 @@ readonly class SearchService
         foreach ($result->hits as $hit) {
             $item = $buildItem($hit->element);
             if ($item !== null) {
-                $itemsByType[$hit->type][] = $item;
+                $itemsByType[$hit->type->value][] = $item;
             }
         }
 
@@ -167,25 +169,10 @@ readonly class SearchService
     {
         return new SearchResultPreviewDto(
             id: (int)$element->id,
-            title: $this->getQuickTitle($element),
+            title: $this->foundElementTitle->of($element),
             url: $this->entityUrlResolver->urlFor($element),
             structureType: (string)$element->structureType,
         );
-    }
-
-    private function getQuickTitle(structureElement $element): string
-    {
-        return match (true) {
-            $element instanceof authorElement,
-            $element instanceof authorAliasElement,
-            $element instanceof groupElement,
-            $element instanceof groupAliasElement,
-            $element instanceof partyElement,
-            $element instanceof pressArticleElement,
-            $element instanceof zxProdElement,
-            $element instanceof ZxArtItem => html_entity_decode($element->getSearchTitle(), ENT_QUOTES, 'UTF-8'),
-            default => html_entity_decode((string)$element->getTitle(), ENT_QUOTES, 'UTF-8'),
-        };
     }
 
     private function buildItem(structureElement $element, string $phrase): ?object

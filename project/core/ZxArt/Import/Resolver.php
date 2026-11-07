@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ZxArt\Import;
 
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
 
 final readonly class Resolver
 {
     public function __construct(
-        private AlphanumericColumnSearch $alphanumericColumnSearch,
+        private TitleMatch $titleMatch,
     )
     {
     }
@@ -30,7 +30,7 @@ final readonly class Resolver
     {
         $value1 = trim($value1 ?? '');
         $value2 = trim($value2 ?? '');
-        return !empty($value1) && !empty($value2) && $this->alphanumericColumnSearch->toAlphanumeric($value1) === $this->alphanumericColumnSearch->toAlphanumeric($value2);
+        return !empty($value1) && !empty($value2) && $this->titleMatch->key($value1) === $this->titleMatch->key($value2);
     }
 
     public function valueStartsWith(?string $haystack, ?string $needle): bool

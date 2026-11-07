@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Search\Dbal\TitleMatch;
+
 class zxMusicTitleSearchQueryFilter extends QueryFilter
 {
     public function getRequiredType()
@@ -13,13 +15,7 @@ class zxMusicTitleSearchQueryFilter extends QueryFilter
             $argument = reset($argument);
         }
         $table = $this->getTable();
-        $query->where(
-            function ($query) use ($argument, $table) {
-                $query->where($table . '.title', 'like', '%' . $argument . '%');
-                $query->orWhere($table . '.internalTitle', 'like', '%' . $argument . '%');
-            }
-        );
 
-        return $query;
+        return $this->getService(TitleMatch::class)->where($query, [$table . '.title', $table . '.internalTitle'], (string)$argument);
     }
 }

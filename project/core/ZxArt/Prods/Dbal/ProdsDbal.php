@@ -6,7 +6,8 @@ namespace ZxArt\Prods\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
+use ZxArt\Search\Dbal\TitleMatchMode;
 use ZxArt\LinkTypes;
 use ZxArt\Shared\SortingParams;
 
@@ -16,7 +17,7 @@ readonly final class ProdsDbal
 
     public function __construct(
         private Connection               $db,
-        private AlphanumericColumnSearch $alphanumericColumnSearch,
+        private TitleMatch $titleMatch,
     )
     {
 
@@ -27,15 +28,15 @@ readonly final class ProdsDbal
         $theTitle = 'The ' . $title;
 
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
+        $query = $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['title'], $title, TitleMatchMode::Exact));
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
 
-        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'altTitle');
+        $query = $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['altTitle'], $title, TitleMatchMode::Exact));
         $query->orWhere('altTitle', 'like', $title);
         $query->orWhere('altTitle', 'like', $title . '%');
 
-        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $theTitle, 'title');
+        $query = $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['title'], $theTitle, TitleMatchMode::Exact));
         $query->orWhere('title', 'like', $theTitle);
         $query->orWhere('title', 'like', $theTitle . '%');
 

@@ -101,7 +101,7 @@ final readonly class UserPreferencesService
     /**
      * @return PreferenceDto[]
      */
-    public function setPreference(string $code, string $value): array
+    public function setPreference(string $code, ?string $value): array
     {
         $preferenceCode = $this->validator->validateCode($code);
         $validatedValue = $this->validator->validateValue($preferenceCode, $value);

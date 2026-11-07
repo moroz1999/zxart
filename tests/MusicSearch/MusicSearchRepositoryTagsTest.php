@@ -17,6 +17,7 @@ use ZxArt\MusicSearch\MusicSearchSort;
 use ZxArt\MusicSearch\Dbal\MusicSearchDbal;
 use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
+use ZxArt\Search\Dbal\TitleMatch;
 
 /**
  * Included tags that no tune carries leave nothing to find; the filter must not
@@ -33,7 +34,7 @@ class MusicSearchRepositoryTagsTest extends TestCase
         $connection->method('table')->willReturnCallback(
             fn(string $table): Builder => (new Builder($connection, new MySqlGrammar(), new MySqlProcessor()))->from($table),
         );
-        $repository = new MusicSearchDbal($connection, $tagsManager, $this->createMock(LanguagesManager::class));
+        $repository = new MusicSearchDbal($connection, $tagsManager, $this->createMock(LanguagesManager::class), new TitleMatch());
 
         $sql = $repository->buildTunesQuery($this->queryWithTags(['No such tag']))->toSql();
 

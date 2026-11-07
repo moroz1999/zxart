@@ -5,7 +5,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {of, Subject, Subscription} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, switchMap, tap} from 'rxjs/operators';
 import {TagItem} from '../../models/tag-item';
-import {TagsSearchService} from '../../services/tags-search.service';
+import {TagLookupApiService} from '../../api/tag-lookup-api.service';
 import {ZxTagsInputComponent} from '../zx-tags-input/zx-tags-input.component';
 import {tagToItem} from '../../utils/tag-item';
 
@@ -57,7 +57,7 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
   private onTouched: () => void = () => undefined;
 
   constructor(
-    private readonly tagsSearch: TagsSearchService,
+    private readonly tagLookup: TagLookupApiService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -70,7 +70,7 @@ export class ZxTagsFieldComponent implements OnInit, OnDestroy, ControlValueAcce
           this.searchLoading = true;
           this.cdr.markForCheck();
         }),
-        switchMap(query => this.tagsSearch.search(query).pipe(
+        switchMap(query => this.tagLookup.lookup(query).pipe(
           map(tags => tags.map(tagToItem)),
           catchError(() => of([] as TagItem[])),
         )),

@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Semantic colors */
   --text-color: var(--secondary-800);
@@ -16,7 +18,7 @@
   --icon-yellow: var(--warning-400);
 }
 
-.dark-mode {
+@include mode.dark {
   --text-color: var(--secondary-900);
   --surface: var(--secondary-100);
   --background-page: var(--secondary-50);

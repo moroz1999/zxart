@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* ZX Picture */
   --zxpicture-short-radius: var(--radius-lg);
@@ -14,12 +16,12 @@
   --zxpicture-details-info-playlist-margin-left: var(--space-8);
 }
 
-.dark-mode {
+@include mode.dark {
   --zxpicture-short-bg: var(--secondary-100);
   --zxpicture-short-image-border: 1px solid var(--secondary-100);
 }
 
-.light-mode {
+@include mode.light {
   --zxpicture-short-bg: var(--white);
   --zxpicture-short-image-border: 1px solid var(--secondary-200);
 }

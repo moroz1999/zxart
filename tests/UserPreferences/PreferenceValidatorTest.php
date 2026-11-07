@@ -40,6 +40,17 @@ final class PreferenceValidatorTest extends TestCase
         $this->assertSame('dark', $this->sut->validateValue(PreferenceCode::THEME, 'dark'));
     }
 
+    public function testAutomaticThemeAcceptedAsNull(): void
+    {
+        $this->assertNull($this->sut->validateValue(PreferenceCode::THEME, null));
+    }
+
+    public function testNullRejectedForNonThemePreference(): void
+    {
+        $this->expectException(InvalidPreferenceValueException::class);
+        $this->sut->validateValue(PreferenceCode::PICTURE_BORDER, null);
+    }
+
     public function testInvalidThemeThrows(): void
     {
         $this->expectException(InvalidPreferenceValueException::class);

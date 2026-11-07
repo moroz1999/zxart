@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace ZxArt\Parties\Dbal;
 
 use Illuminate\Database\Connection;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
+use ZxArt\Search\Dbal\TitleMatchMode;
 
 final class PartiesDbal
 {
@@ -13,7 +15,7 @@ final class PartiesDbal
 
     public function __construct(
         private readonly Connection               $db,
-        private readonly AlphanumericColumnSearch $alphanumericColumnSearch,
+        private readonly TitleMatch $titleMatch,
     )
     {
     }
@@ -42,8 +44,8 @@ final class PartiesDbal
                         ->where('module_generic.title', '=', $year);
                 }
             );
-        $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'engine_module_party.title');
-        $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title . ' ' . $year, 'engine_module_party.title');
+        $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['module_party.title'], $title, TitleMatchMode::Exact));
+        $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['module_party.title'], $title . ' ' . $year, TitleMatchMode::Exact));
 
         if ($record = $query->first()) {
             return $record['id'];

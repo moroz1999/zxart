@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use structureManager;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Import\ImportOrigin;
 use ZxArt\Import\Prods\Dto\ProdImportDTO;
 use ZxArt\Import\Prods\HardwareCompatibilityService;
@@ -32,7 +32,7 @@ final class ProdResolverTest extends TestCase
         parent::setUp();
         $this->prodsDbal = $this->createMock(ProdsDbal::class);
         $this->structureManager = $this->createMock(structureManager::class);
-        $this->resolver = new Resolver(new AlphanumericColumnSearch());
+        $this->resolver = new Resolver(new TitleMatch());
         $this->hardware = $this->createMock(HardwareCompatibilityService::class);
     }
 

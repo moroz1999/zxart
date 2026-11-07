@@ -25,6 +25,7 @@ enum DatabaseTable: string
     case Group = 'module_group';
     case GroupAlias = 'module_groupalias';
     case Party = 'module_party';
+    case PressArticle = 'module_pressarticle';
     case StructureElements = 'structure_elements';
     case Tag = 'module_tag';
     case StructureLinks = 'structure_links';

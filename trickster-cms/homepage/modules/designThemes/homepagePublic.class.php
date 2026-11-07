@@ -15,7 +15,6 @@ class homepagePublicDesignTheme extends DesignTheme
         $this->javascriptPath = $tricksterPath . 'homepage/js/public/';
         $this->javascriptFiles = [
             'logics.contentToggler.js',
-            'logics.search.js',
             'logics.tabs.js',
             'logics.ajaxForm.js',
             'logics.feedbackForm.js',
@@ -56,7 +55,6 @@ class homepagePublicDesignTheme extends DesignTheme
             'component.ajaxForm.js',
             'component.passwordReminderForm.js',
             'component.lazyImage.js',
-            'component.searchForm.js',
             'component.redirectSelect.js',
             'component.darkLayer.js',
             'component.textarea.js',

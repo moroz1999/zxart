@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* ZX Tooltip */
   --zx-tooltip-bg: var(--neutral-light-800);
@@ -8,7 +10,7 @@
   --zx-tooltip-shadow: var(--shadow-sm);
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-tooltip-bg: var(--neutral-dark-700);
   --zx-tooltip-text: var(--white);
 }

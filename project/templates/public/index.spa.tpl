@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{$currentLanguage->iso6391|escape:'html'}" class="{$currentThemeClass|default:'dark-mode'|escape:'html'}">
+<html lang="{$currentLanguage->iso6391|escape:'html'}" class="{$currentThemeClass|default:''|escape:'html'}">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />

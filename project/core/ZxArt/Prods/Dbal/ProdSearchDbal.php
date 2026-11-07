@@ -7,6 +7,7 @@ namespace ZxArt\Prods\Dbal;
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Authors\Dbal\AuthorshipCredits;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
@@ -28,6 +29,7 @@ final readonly class ProdSearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -74,12 +76,7 @@ final readonly class ProdSearchDbal extends AbstractDbal
 
         $title = $filter->title !== null ? trim($filter->title) : '';
         if ($title !== '') {
-            // a backslash escapes the wildcards in MariaDB
-            $pattern = '%' . addcslashes($title, '\\%_') . '%';
-            $query->where(static function (Builder $titleQuery) use ($prodTable, $pattern): void {
-                $titleQuery->where($prodTable . '.title', 'like', $pattern)
-                    ->orWhere($prodTable . '.altTitle', 'like', $pattern);
-            });
+            $this->titleMatch->where($query, [$prodTable . '.title', $prodTable . '.altTitle'], $title);
         }
         $this->applyYears($query, $prodTable . '.year', $filter->yearFrom, $filter->yearTo);
         $this->applyRange($query, $prodTable . '.dateAdded', $filter->addedFrom, $filter->addedTo);

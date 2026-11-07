@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 @use 'shared/breakpoints' as bp;
 
 :root {
@@ -26,10 +28,10 @@
   }
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-header-bg: var(--secondary-100);
 }
 
-.light-mode {
+@include mode.light {
   --zx-header-bg: var(--white);
 }

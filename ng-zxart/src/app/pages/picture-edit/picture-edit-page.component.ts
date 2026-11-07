@@ -36,11 +36,16 @@ import {ZxSelectComponent, ZxSelectOption} from '../../shared/ui/zx-select/zx-se
 import {EntityRef} from '../../shared/models/entity-ref';
 import {nonEmptyArray} from '../../shared/utils/non-empty-array.validator';
 import {enumDefaultValue} from '../../shared/utils/enum-default';
-import {EnumOption, FormParentRef} from '../../shared/models/form-data-response';
+import {EnumOption, FormParentRef, PictureFileFormatRule} from '../../shared/models/form-data-response';
 import {FileUploadField, FormFieldValue} from '../../shared/models/form-save';
 import {ZxFileSelectorComponent} from '../../shared/ui/zx-file-selector/zx-file-selector.component';
 import {FormDataApiService} from '../../shared/services/form-data-api.service';
 import {FormSaveApiService} from '../../shared/services/form-save-api.service';
+import {
+  NativePictureFileValidationMessage,
+  nativePictureFileRequirements,
+  validateNativePictureFiles,
+} from './native-picture-file.validator';
 
 /**
  * expectedFields preserved unchanged on save until they get dedicated UI.
@@ -134,11 +139,6 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   /** Image fields shown with zx-image-upload (all imageDataChunk on zxPicture). */
   readonly imageFields: readonly string[] = ['image', 'inspired', 'inspired2', 'sequence'];
-  /**
-   * The main file is a native ZX Spectrum screen whose extension follows the
-   * format it was saved in, so the picker takes any file. The fields beside it
-   * hold ordinary reference images.
-   */
   readonly imageAccept: Record<string, string> = {
     image: '',
     inspired: 'image/*',
@@ -149,9 +149,12 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   loading = true;
   submitting = false;
   errorMessage = '';
+  errorMessageParams: Record<string, string> = {};
+  nativeFileError: NativePictureFileValidationMessage | null = null;
   /** Batch mode uploads several pictures at once and has no element of its own. */
   batchUpload = false;
   enums: Record<string, EnumOption[]> = {};
+  pictureFileRules: Record<string, PictureFileFormatRule> = {};
   imageUrls: Record<string, string> = {};
   fileNames: Record<string, string> = {};
   readonly emptyFiles = [];
@@ -197,6 +200,12 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
       this.elementId = Number(this.route.snapshot.paramMap.get('id')) || 0;
       this.returnUrl = `/picture/${this.elementId}`;
     }
+    this.subscriptions.add(
+      this.form.controls['type'].valueChanges.subscribe(() => {
+        this.updateNativeFileAccept();
+        this.updateNativeFileError();
+      }),
+    );
     const formData$ = this.batchUpload
       ? this.formData.loadCreate('pictureBatch', ['party', 'prod'], undefined, this.parentId)
       : this.formData.load(this.elementId, ['party', 'prod']);
@@ -210,6 +219,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
             return;
           }
           this.pageMetadata.applyFormTitle(this.route.snapshot, data.entityTitle);
+          this.pictureFileRules = data.pictureFileRules;
           this.form.patchValue({
             title: String(data.fields[this.batchUpload ? 'pictureTitle' : 'title'] ?? ''),
             authors: data.authorRefs,
@@ -232,6 +242,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
           this.enums = data.enums;
           this.imageUrls = data.images;
           this.fileNames = data.files;
+          this.updateNativeFileError();
           for (const field of PASSTHROUGH_FIELDS) {
             this.passthrough[field] = data.fields[field] ?? '';
           }
@@ -257,6 +268,9 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
   onImageChanged(field: string, change: ImageUploadChange): void {
     this.fileChanges[field] = change;
+    if (field === 'image') {
+      this.updateNativeFileError();
+    }
   }
 
   /**
@@ -278,9 +292,15 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
   onBatchFiles(files: File[]): void {
     this.batchFiles = files;
     this.form.controls['batchFiles'].setValue(files);
+    this.updateNativeFileError();
   }
 
   onSubmit(): void {
+    this.updateNativeFileError();
+    if (this.nativeFileError !== null) {
+      this.form.markAllAsTouched();
+      return;
+    }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -288,6 +308,7 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
 
     this.submitting = true;
     this.errorMessage = '';
+    this.errorMessageParams = {};
     const value = this.form.getRawValue();
     const files: FileUploadField[] = Object.entries(this.fileChanges).map(([field, change]) => ({
       field,
@@ -328,6 +349,9 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
           if (result.id <= 0) {
             this.submitting = false;
             this.errorMessage = result.errorMessage ?? 'picture-form.error-save';
+            this.errorMessageParams = result.errorParameters
+              ? nativePictureFileRequirements(result.errorParameters).params
+              : {};
             this.cdr.markForCheck();
             return;
           }
@@ -336,9 +360,31 @@ export class PictureEditPageComponent implements OnInit, OnDestroy {
         error: (err: HttpErrorResponse) => {
           this.submitting = false;
           this.errorMessage = err.error?.errorMessage ?? 'picture-form.error-save';
+          this.errorMessageParams = err.error?.errorParameters
+            ? nativePictureFileRequirements(err.error.errorParameters).params
+            : {};
           this.cdr.markForCheck();
         },
       }),
     );
+  }
+
+  private updateNativeFileError(): void {
+    const rule = this.pictureFileRules[this.form.controls['type'].value];
+    if (!rule) {
+      this.nativeFileError = null;
+      return;
+    }
+
+    const imageFile = this.fileChanges['image']?.file;
+    const files = this.batchUpload
+      ? this.batchFiles
+      : imageFile === null || imageFile === undefined ? [] : [imageFile];
+    this.nativeFileError = validateNativePictureFiles(files, rule);
+  }
+
+  private updateNativeFileAccept(): void {
+    const rule = this.pictureFileRules[this.form.controls['type'].value];
+    this.imageAccept['image'] = rule?.extensions.map(extension => `.${extension}`).join(',') ?? '';
   }
 }

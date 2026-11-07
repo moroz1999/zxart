@@ -11,7 +11,7 @@ The project follows a component-based approach for the design system.
 5. **Borders**: See [Borders](design-system/borders.md) for available tokens and rules.
 5a. **Breakpoints**: See [Breakpoints](design-system/breakpoints.md) for SCSS breakpoints, Angular CDK constants, and mobile detection rules.
 6. **No Hardcoded Palette in Components**: In component styles, it is forbidden to use base palette variables like `--blue-dark-500` directly. Use semantic variables like `--text-color`, `--zx-button-bg`, `--primary-500`, etc. If a needed semantic variable is missing, define it in the theme.
-7. **Themes**: The project supports Dark (class `.dark-mode`) and Light (class `.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
+7. **Themes**: The project supports Dark (class `.dark-mode`), Light (class `.light-mode`), and automatic themes. Automatic mode has no explicit theme class and resolves through `prefers-color-scheme`. Always use semantic variables to ensure correct theme switching.
 8. **Semantic Usage**: All components must be used semantically and for their intended purpose.
 9. **Material UI — Phaseout Plan**: Material UI is being phased out entirely. No new Material imports are allowed anywhere.
     - **Phase 1 (current)**: Remove Material from `shared/ui` design system primitives. Use native/custom markup with theme variables.

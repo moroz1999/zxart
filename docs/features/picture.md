@@ -42,6 +42,17 @@ render it: the form shows only the picked file's name and takes the thumbnail of
 the stored one from `getImageUrl()`. The reference images beside it (`inspired`,
 `inspired2`, `sequence`) are ordinary images and preview normally.
 
+`NativePictureFileValidator` owns the native extension and byte-size table. The
+form-data response publishes the same rules to the Angular form, which limits
+the picker and reports invalid selected files immediately. The receive action
+validates the staged file again before persisting it; its response returns the
+allowed extensions and sizes for the selected format. PC image signatures are
+rejected independently of the filename, except for the palette-limited BMP used
+by ZX Evolution.
+
+Batch upload performs the same validation for every staged file before creating
+the first picture. A rejected file therefore rejects the complete batch.
+
 The production the picture belongs to is the `prod` field, linked through
 `gameLink` by `ZxArtItem::updateProdLink()`. The link type keeps its historical
 name; the column does not.

@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Checkbox */
   --checkbox-size: 18px;
@@ -8,7 +10,7 @@
   --checkbox-checked-bg: var(--input-bg);
 }
 
-.dark-mode {
+@include mode.dark {
   --checkbox-border-color: var(--secondary-300);
   --checkbox-border-focus-color: var(--white);
   --checkbox-check-color: var(--secondary-900);

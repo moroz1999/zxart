@@ -80,6 +80,7 @@ export class FormDataApiService {
       importOrigins: [],
       tags: [],
       enums: {},
+      pictureFileRules: {},
     };
   }
 }

@@ -98,8 +98,11 @@
     <zx-form-field *ngIf="batchUpload" [fullWidth]="true">
       <zx-form-label [required]="true">{{ 'picture-form.batch-images' | translate }}</zx-form-label>
       <zx-form-control>
-        <zx-file-selector [files]="emptyFiles" (filesChange)="onBatchFiles($event)"></zx-file-selector>
+        <zx-file-selector [files]="emptyFiles" [accept]="imageAccept['image']" (filesChange)="onBatchFiles($event)"></zx-file-selector>
         <zx-control-errors [control]="form.controls['batchFiles']" [messages]="batchFilesMessages"></zx-control-errors>
+        <zx-form-message *ngIf="nativeFileError" variant="error">
+          {{ nativeFileError.key | translate:nativeFileError.params }}
+        </zx-form-message>
       </zx-form-control>
     </zx-form-field>
 
@@ -107,6 +110,9 @@
       <zx-form-label>{{ 'picture-form.' + field | translate }}</zx-form-label>
       <zx-form-control>
         <zx-image-upload [imageUrl]="imageUrls[field] || null" [accept]="imageAccept[field]" (changed)="onImageChanged(field, $event)"></zx-image-upload>
+        <zx-form-message *ngIf="field === 'image' && nativeFileError" variant="error">
+          {{ nativeFileError.key | translate:nativeFileError.params }}
+        </zx-form-message>
       </zx-form-control>
     </zx-form-field>
 
@@ -141,7 +147,7 @@
     </zx-form-field>
   </zx-form-section>
 
-  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate }}</zx-form-message>
+  <zx-form-message *ngIf="errorMessage" variant="error">{{ errorMessage | translate:errorMessageParams }}</zx-form-message>
 
   <zx-form-actions [sticky]="true" align="end">
     <zx-button-controls>

@@ -1,0 +1,23 @@
+@mixin dark {
+  .dark-mode {
+    @content;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light-mode):not(.dark-mode) {
+      @content;
+    }
+  }
+}
+
+@mixin light {
+  .light-mode {
+    @content;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not(.light-mode):not(.dark-mode) {
+      @content;
+    }
+  }
+}

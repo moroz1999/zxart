@@ -82,11 +82,11 @@ export class UserPreferencesService {
     return {...(this.store.getValue() ?? this.loadStoredData()?.values ?? {})};
   }
 
-  getPreference(code: string): string | undefined {
+  getPreference(code: string): string | null | undefined {
     return this.getPreferences()[code];
   }
 
-  setPreference(code: string, value: string): Observable<PreferenceValues> {
+  setPreference(code: string, value: string | null): Observable<PreferenceValues> {
     return this.initialize().pipe(
       take(1),
       switchMap(() => this.currentUserService.user$.pipe(take(1))),
@@ -148,7 +148,7 @@ export class UserPreferencesService {
     return this.defaults$;
   }
 
-  getDefaultValue(code: string): Observable<string | undefined> {
+  getDefaultValue(code: string): Observable<string | null | undefined> {
     return this.getDefaults().pipe(
       map(defaults => defaults[code])
     );

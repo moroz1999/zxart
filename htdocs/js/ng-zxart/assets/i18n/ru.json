@@ -300,6 +300,8 @@
     "exe-file": "Исполняемый файл",
     "batch-images": "Картинки",
     "error-files-required": "Выберите хотя бы одну картинку",
+    "error-native-file": "Допустимые расширения: {{extensions}}. Допустимые размеры файла: {{sizes}}.",
+    "error-native-file-variable": "Допустимые расширения: {{extensions}}. Размер файла должен соответствовать выбранному формату.",
     "error-authors-required": "Выберите хотя бы одного автора"
   },
   "press-form": {
@@ -710,6 +712,7 @@
   "settings": {
     "title": "Настройки",
     "theme": "Тема",
+    "theme.auto": "Авто",
     "theme.light": "Светлая",
     "theme.dark": "Тёмная"
   },

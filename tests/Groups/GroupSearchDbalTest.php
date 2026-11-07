@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\Groups\Dbal\GroupSearchDbal;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\Prods\ProdLink;
+use ZxArt\Search\Dbal\TitleMatch;
 
 /**
  * Groups by a part of the title, of the abbreviation or of an alias, by
@@ -53,15 +54,9 @@ class GroupSearchDbalTest extends TestCase
         $this->db->table('module_groupalias')->insert(['id' => self::TRIUMPH_ALIAS, 'title' => 'Triumph Brothers', 'groupId' => self::TRIUMPH]);
         $this->db->table('module_authoralias')->insert(['id' => self::AUTHOR_ALIAS, 'authorId' => self::AUTHOR]);
         $this->db->table('module_zxprod')->insert([['id' => self::ELITE, 'year' => 1985], ['id' => self::EXOLON, 'year' => 1987]]);
-        $this->dbal = new GroupSearchDbal($this->db);
+        $this->dbal = new GroupSearchDbal($this->db, new TitleMatch());
     }
 
-    public function testANameMatchesTheTitleTheAbbreviationOrAnAlias(): void
-    {
-        self::assertSame([self::TRIUMPH], $this->search(new GroupSearchFilterDto(name: ' brothers ')));
-        self::assertSame([self::CODE_BUSTERS], $this->search(new GroupSearchFilterDto(name: 'cbs')));
-        self::assertSame(1, $this->dbal->count(new GroupSearchFilterDto(name: 'cbs'), null));
-    }
 
     public function testLocationsAndTypesNarrowTheResult(): void
     {

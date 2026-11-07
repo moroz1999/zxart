@@ -20,6 +20,6 @@ export class AssistantTriggerComponent {
     readonly panel: AssistantPanelService,
     iconReg: SvgIconRegistryService,
   ) {
-    iconReg.loadSvg(`${environment.svgUrl}chat.svg`, 'chat')?.subscribe();
+    iconReg.loadSvg(`${environment.svgUrl}sparkles.svg`, 'sparkles')?.subscribe();
   }
 }

@@ -1,7 +1,6 @@
 import {PreferenceValues} from './preference.dto';
 
 export const DEFAULT_USER_PREFERENCES: Readonly<PreferenceValues> = {
-  theme: 'dark',
   homepage_order: 'newProds,newPictures,newTunes,bestNewDemos,bestNewGames,recentParties,bestPicturesOfMonth,bestTunesOfMonth,latestAddedProds,latestAddedReleases,supportProds,unvotedPictures,randomGoodPictures,unvotedTunes,randomGoodTunes',
   homepage_disabled: '',
   homepage_new_prods_limit: '10',

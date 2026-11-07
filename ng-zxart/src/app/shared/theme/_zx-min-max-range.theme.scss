@@ -1,7 +1,9 @@
+@use './theme-mode' as mode;
+
 :root {
   --zx-min-max-range-values-justify: space-between;
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-min-max-range-values-justify: space-between;
 }

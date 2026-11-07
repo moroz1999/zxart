@@ -7,6 +7,7 @@ namespace ZxArt\Releases\Dbal;
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Authors\Dbal\AuthorshipCredits;
 use ZxArt\LinkTypes;
 use ZxArt\Releases\Dto\ReleaseSearchFilterDto;
@@ -27,6 +28,7 @@ final readonly class ReleaseSearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -113,8 +115,7 @@ final readonly class ReleaseSearchDbal extends AbstractDbal
         if ($part === '') {
             return;
         }
-        // a backslash escapes the wildcards in MariaDB
-        $query->where($column, 'like', '%' . addcslashes($part, '\\%_') . '%');
+        $this->titleMatch->where($query, [$column], $part);
     }
 
     /**

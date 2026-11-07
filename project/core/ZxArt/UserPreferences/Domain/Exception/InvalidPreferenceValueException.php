@@ -6,8 +6,9 @@ namespace ZxArt\UserPreferences\Domain\Exception;
 
 final class InvalidPreferenceValueException extends UserPreferencesException
 {
-    public static function forPreference(string $code, string $value): self
+    public static function forPreference(string $code, ?string $value): self
     {
-        return new self("Invalid value '{$value}' for preference '{$code}'");
+        $displayValue = $value ?? 'null';
+        return new self("Invalid value '{$displayValue}' for preference '{$code}'");
     }
 }

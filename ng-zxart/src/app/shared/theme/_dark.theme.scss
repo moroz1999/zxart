@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 @mixin dark-base-ramps {
   /* This file is for BASE RAMPS ONLY.
      NEVER add component-specific colors here.
@@ -113,7 +115,7 @@
   --role-intro: oklch(70% 0.18 35);
 }
 
-.dark-mode {
+@include mode.dark {
   @include dark-base-ramps;
 
   --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.15);

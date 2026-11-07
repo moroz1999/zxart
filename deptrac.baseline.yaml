@@ -409,6 +409,28 @@ deptrac:
       - renderer
       - rendererPlugin
       - structureManager
+    ZxArt\Controllers\EntityLookup:
+      - App\Logging\LogRecordDto
+      - App\Logging\LogRecordUpdateDto
+      - App\Logging\LogRequestDto
+      - App\Logging\RedisRequestLogger
+      - App\Paths\PathsManager
+      - App\Users\CurrentUserService
+      - CmsHttpResponse
+      - ConfigManager
+      - DependencyInjectionContextInterface
+      - DependencyInjectionContextTrait
+      - DesignThemesManager
+      - ErrorLog
+      - LanguagesManager
+      - RequestsLogger
+      - ServerSessionManager
+      - controller
+      - controllerApplication
+      - errorLogger
+      - renderer
+      - rendererPlugin
+      - structureManager
     ZxArt\Controllers\FeedbackData:
       - App\Logging\LogRecordDto
       - App\Logging\LogRecordUpdateDto
@@ -1955,6 +1977,28 @@ deptrac:
       - renderer
       - rendererPlugin
       - structureManager
+    ZxArt\Controllers\TagLookup:
+      - App\Logging\LogRecordDto
+      - App\Logging\LogRecordUpdateDto
+      - App\Logging\LogRequestDto
+      - App\Logging\RedisRequestLogger
+      - App\Paths\PathsManager
+      - App\Users\CurrentUserService
+      - CmsHttpResponse
+      - ConfigManager
+      - DependencyInjectionContextInterface
+      - DependencyInjectionContextTrait
+      - DesignThemesManager
+      - ErrorLog
+      - LanguagesManager
+      - RequestsLogger
+      - ServerSessionManager
+      - controller
+      - controllerApplication
+      - errorLogger
+      - renderer
+      - rendererPlugin
+      - structureManager
     ZxArt\Controllers\Tags:
       - App\Logging\LogRecordDto
       - App\Logging\LogRecordUpdateDto
@@ -2436,6 +2480,8 @@ deptrac:
       - structureManager
     ZxArt\Screenshots\SpectrumComputing\SpectrumComputingScreenshotsImporter:
       - structureManager
+    ZxArt\Search\Services\PhraseSearchEngine:
+      - structureManager
     ZxArt\Search\Services\SearchService:
       - ConfigManager
     ZxArt\Shared\Elements\CreatorPrivilegesGranter:
@@ -2456,6 +2502,8 @@ deptrac:
       - structureManager
     ZxArt\TagsList\TagsListService:
       - LanguagesManager
+      - structureManager
+    ZxArt\Tags\Services\TagLookupService:
       - structureManager
     ZxArt\Tags\TagPageService:
       - LanguagesManager

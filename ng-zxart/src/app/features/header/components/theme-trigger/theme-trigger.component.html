@@ -4,5 +4,9 @@
   [ariaLabel]="'header.theme-trigger.label' | translate"
   (click)="toggle()"
 >
-  <svg-icon name="theme" class="tt-icon"></svg-icon>
+  @if ((themePreference$ | async) === null) {
+    <svg-icon name="theme-auto" class="tt-icon"></svg-icon>
+  } @else {
+    <svg-icon name="theme" class="tt-icon"></svg-icon>
+  }
 </zx-button>

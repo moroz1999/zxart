@@ -164,7 +164,10 @@ describe('UserPreferencesService', () => {
     const http = createHttpMock();
     const service = createService(http as unknown as HttpClient, anonymousUser, storage);
 
-    expect(await firstValueFrom(service.getDefaults())).toEqual(DEFAULT_USER_PREFERENCES);
+    const defaults = await firstValueFrom(service.getDefaults());
+
+    expect(defaults).toEqual(DEFAULT_USER_PREFERENCES);
+    expect(defaults['theme']).toBeUndefined();
     expect(http.get).not.toHaveBeenCalled();
   });
 

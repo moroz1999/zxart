@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Header font size */
   --zx-table-header-font-size: var(--zx-font-size-sm);
@@ -28,7 +30,7 @@
   --zx-table-font-size-md: var(--zx-font-size-md);
 }
 
-.dark-mode {
+@include mode.dark {
   /* Solid row background (darker) */
   --zx-table-row-bg: var(--secondary-100);
   /* Solid alternate row background (lighter) */
@@ -37,7 +39,7 @@
   --zx-table-header-bg: var(--secondary-50);
 }
 
-.light-mode {
+@include mode.light {
   /* Solid row background (white) */
   --zx-table-row-bg: var(--secondary-50);
   /* Solid alternate row background (light gray) */

@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Entity Lookup API
+  version: 1.0.0
+
+paths:
+  /entity-lookup/:
+    get:
+      summary: What a relation picker offers for a typed phrase
+      description: >
+        One page of the entities of the given types whose titles hold the phrase.
+        Spaces, punctuation and case do not matter. Aliases are a type of their own;
+        each type's closest titles come first.
+      parameters:
+        - name: types
+          in: query
+          required: true
+          description: >
+            Comma-separated structure types: author, authorAlias, group, groupAlias,
+            zxProd, zxRelease, zxPicture, zxMusic, party, pressArticle, country, city.
+            Unknown types are skipped.
+          schema:
+            type: string
+            example: author,authorAlias
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: rebel-star
+      responses:
+        '200':
+          description: The entities offered
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityLookupItem'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    EntityLookupItem:
+      type: object
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: The title with what tells the entity apart (an author's real name and country, an alias's owner, a work's year and authors)
+    ErrorResponse:
+      type: object
+      required: [errorMessage]
+      properties:
+        errorMessage:
+          type: string

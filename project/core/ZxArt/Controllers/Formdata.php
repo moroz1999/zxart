@@ -24,7 +24,9 @@ use ZxArt\Forms\FormValidationException;
 use ZxArt\Forms\FormCreateType;
 use ZxArt\Groups\GroupMemberRoles;
 use ZxArt\Import\ImportOriginsHolder;
+use ZxArt\Pictures\Validation\NativePictureFileValidator;
 use ZxArt\Shared\EntityType;
+use ZxArt\Shared\StructureType;
 use ZxArt\Tags\TagsHolderInterface;
 use zxPictureElement;
 
@@ -55,6 +57,7 @@ class Formdata extends LoggedControllerApplication
         private readonly FormLanguagesProvider $formLanguagesProvider,
         private readonly FormCreateService $formCreateService,
         private readonly translationsManager $translationsManager,
+        private readonly NativePictureFileValidator $nativePictureFileValidator,
     ) {
         parent::__construct($controller, $logger);
     }
@@ -218,7 +221,7 @@ class Formdata extends LoggedControllerApplication
 
     /**
      * @param string[] $refFields
-     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<FormLanguageDto>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, importOrigins: list<array{origin: string, importId: string}>, tags: list<string>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>}
+     * @return array{entityTitle: string, fields: array<string, mixed>, multilang: array<string, array<int, string>>, refs: array<string, array{id: int, title: string}>, multiRefs: array<string, list<array{id: int, title: string}>>, images: array<string, string>, files: array<string, string>, languages: list<FormLanguageDto>, categoriesTree: list<array{id: int, title: string, level: int, selected: bool}>, authorRefs: list<array{id: int, title: string}>, originalAuthorRefs: list<array{id: int, title: string}>, importOrigins: list<array{origin: string, importId: string}>, tags: list<string>, enums: array<string, list<array{value: string, label: string}>>, fileSelectors: array<string, list<array{id: int, title: string, isImage: bool, imageUrl: string|null}>>, aiStatuses: array<string, string>, pictureFileRules: array<string, array{extensions: list<string>, sizes: list<int>}>}
      */
     private function buildFormData(structureElement $element, array $refFields): array
     {
@@ -321,6 +324,11 @@ class Formdata extends LoggedControllerApplication
             'enums' => $this->buildEnums($element),
             'fileSelectors' => $this->buildFileSelectors($element),
             'aiStatuses' => $this->buildAiStatuses($element),
+            'pictureFileRules' => in_array(
+                (string)$element->structureType,
+                [StructureType::ZxPicture->value, StructureType::PicturesUploadForm->value],
+                true,
+            ) ? $this->nativePictureFileValidator->getRules() : [],
         ];
     }
 

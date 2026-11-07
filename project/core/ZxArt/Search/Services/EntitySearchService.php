@@ -30,14 +30,14 @@ final readonly class EntitySearchService
 {
     private const int MAX_LIMIT = 100;
 
-    /** Entity type => the structure type the legacy search knows it by. */
+    /** Entity type => the type the phrase search knows it by. */
     private const array SEARCHED_TYPES = [
-        EntityType::Prod->value => 'zxProd',
-        EntityType::Release->value => 'zxRelease',
-        EntityType::Author->value => 'author',
-        EntityType::AuthorAlias->value => 'authorAlias',
-        EntityType::Group->value => 'group',
-        EntityType::GroupAlias->value => 'groupAlias',
+        EntityType::Prod->value => PhraseSearchType::ZxProd,
+        EntityType::Release->value => PhraseSearchType::ZxRelease,
+        EntityType::Author->value => PhraseSearchType::Author,
+        EntityType::AuthorAlias->value => PhraseSearchType::AuthorAlias,
+        EntityType::Group->value => PhraseSearchType::Group,
+        EntityType::GroupAlias->value => PhraseSearchType::GroupAlias,
     ];
 
     public function __construct(
@@ -54,7 +54,7 @@ final readonly class EntitySearchService
     {
         $result = $this->phraseSearchEngine->find(new PhraseSearchQueryDto(
             phrase: $phrase,
-            types: $this->structureTypes($types),
+            types: $this->searchedTypes($types),
             limit: min(max(1, $limit), self::MAX_LIMIT),
             mode: PhraseSearchMode::SinglePage,
             closestFirst: true,
@@ -67,23 +67,23 @@ final readonly class EntitySearchService
 
     /**
      * @param EntityType[] $types
-     * @return string[]
+     * @return PhraseSearchType[]
      */
-    private function structureTypes(array $types): array
+    private function searchedTypes(array $types): array
     {
         if ($types === []) {
             return array_values(self::SEARCHED_TYPES);
         }
-        $structureTypes = [];
+        $searchedTypes = [];
         foreach ($types as $type) {
-            $structureType = self::SEARCHED_TYPES[$type->value] ?? null;
-            if ($structureType === null) {
+            $searchedType = self::SEARCHED_TYPES[$type->value] ?? null;
+            if ($searchedType === null) {
                 throw new InvalidArgumentException("The search does not cover {$type->value}");
             }
-            $structureTypes[] = $structureType;
+            $searchedTypes[$searchedType->value] = $searchedType;
         }
 
-        return array_values(array_unique($structureTypes));
+        return array_values($searchedTypes);
     }
 
     private function toDto(structureElement $element): ?FoundEntityDto

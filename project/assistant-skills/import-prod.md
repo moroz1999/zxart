@@ -10,6 +10,7 @@ description: Adding a production from a page of another site.
 - Pick a leaf category (e.g. Megademo), never a top-level section (e.g. Demoscene).
 - Always add a release, even without a downloadable file; give it its year, authors and their roles.
 - Collect the hardware carefully, also from the features the page mentions (AY, Kempston, 128K, Beta Disk…).
+- Hardware is split between the production and its releases. The production holds only what every release needs. Each release MUST get in `hardware` what is unique to it: its machine and whatever only that version uses (e.g. a ZX81 .p release gets ZX81, a 128K version gets 128K). A work for several machines never puts them all on the production, or every release inherits all of them.
 - Copy the source's description of the work into the production's `description`: exactly and in full, no rewording, no retelling, no cuts, nothing added of your own. If it is available in several languages, use the English version. Do not invent a description yourself.
 - One text describing the work is the production's, even when it names a version or says what the version brings.
 - A release gets a description only when the source describes that release apart from the work, e.g. the changes of each version in a list of several. Never put the work's description into a release.

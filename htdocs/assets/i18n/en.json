@@ -300,6 +300,8 @@
     "exe-file": "Executable file",
     "batch-images": "Images",
     "error-files-required": "Select at least one image",
+    "error-native-file": "Allowed extensions: {{extensions}}. Allowed file sizes: {{sizes}}.",
+    "error-native-file-variable": "Allowed extensions: {{extensions}}. The file size must match the selected format.",
     "error-authors-required": "Select at least one author"
   },
   "press-form": {
@@ -710,6 +712,7 @@
   "settings": {
     "title": "Settings",
     "theme": "Theme",
+    "theme.auto": "Auto",
     "theme.light": "Light",
     "theme.dark": "Dark"
   },

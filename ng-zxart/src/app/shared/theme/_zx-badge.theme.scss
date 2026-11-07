@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* ZX Badge */
   --zx-badge-font-size: var(--zx-font-size-xs);
@@ -15,7 +17,7 @@
   --zx-badge-secondary-border: var(--secondary-400);
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-badge-secondary-bg: var(--secondary-100);
   --zx-badge-secondary-text: var(--secondary-800);
   --zx-badge-secondary-border: var(--secondary-200);

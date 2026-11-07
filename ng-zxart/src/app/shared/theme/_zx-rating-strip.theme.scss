@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Rating value color in light mode. */
   --zx-rating-strip-value-color: var(--warning-700);
@@ -5,7 +7,7 @@
   --zx-rating-strip-value-font: var(--font-mono);
 }
 
-.dark-mode {
+@include mode.dark {
   /* Rating value color in dark mode. */
   --zx-rating-strip-value-color: var(--warning-400);
 }

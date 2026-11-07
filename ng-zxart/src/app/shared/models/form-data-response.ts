@@ -27,6 +27,12 @@ export interface CategoryTreeNode {
   selected: boolean;
 }
 
+/** Upload constraints for one native picture format. Empty sizes mean variable-size content. */
+export interface PictureFileFormatRule {
+  extensions: string[];
+  sizes: number[];
+}
+
 /**
  * Generic entity form-data response from `/formdata/`.
  * - `fields`    — raw current values for text/checkbox/date inputs.
@@ -78,6 +84,8 @@ export interface FormDataResponse {
   tags: string[];
   /** Enum options; client-owned enums carry their code in both fields. */
   enums: Record<string, EnumOption[]>;
+  /** Native picture upload constraints keyed by picture format; empty for other forms. */
+  pictureFileRules: Record<string, PictureFileFormatRule>;
   /** Only on creation forms started from an element; `null` otherwise. */
   parent?: FormParentRef | null;
 }

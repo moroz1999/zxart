@@ -6,6 +6,7 @@ namespace ZxArt\PictureSearch\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use LanguagesManager;
 use tagsManager;
 use ZxArt\PictureSearch\Dto\PictureSearchQuery;
@@ -27,6 +28,7 @@ readonly final class PictureSearchDbal
         private Connection $db,
         private tagsManager $tagsManager,
         private LanguagesManager $languagesManager,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -72,7 +74,7 @@ readonly final class PictureSearchDbal
     private function applyContentFilters(Builder $builder, PictureSearchQuery $query): void
     {
         if ($query->titleWord !== null) {
-            $builder->where('title', 'like', '%' . $query->titleWord . '%');
+            $this->titleMatch->where($builder, ['title'], $query->titleWord);
         }
         $years = $this->buildYearRange($query->startYear, $query->endYear);
         if ($years !== []) {

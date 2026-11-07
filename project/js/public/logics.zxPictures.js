@@ -10,13 +10,6 @@ window.zxPicturesLogics = new function() {
 			replaceFlickering = true;
 		}
 	};
-	var initComponents = function() {
-		var elements, i;
-		elements = _('.picturetags_form');
-		for (i = 0; i < elements.length; i++) {
-			new PictureTagsFormComponent(elements[i]);
-		}
-	};
 	this.getReplaceFlickering = function() {
 		return replaceFlickering;
 	};
@@ -34,5 +27,4 @@ window.zxPicturesLogics = new function() {
 	};
 
 	window.controller.addListener('initLogics', init);
-	window.controller.addListener('initDom', initComponents);
 };

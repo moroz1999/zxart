@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 ﻿:root {
   --zx-player-max-width: 960px;
   --zx-player-offset: 0;
@@ -26,7 +28,7 @@
   --zx-player-error-color: var(--error-color);
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-player-progress-bg: var(--secondary-100);
   --zx-player-progress-fill: var(--secondary-300);
   --zx-player-progress-border: var(--secondary-300);

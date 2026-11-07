@@ -17,7 +17,7 @@ import {Tag} from '../../models/tag';
 import {ChipItem} from '../../models/chip-item';
 import {TagItem} from '../../models/tag-item';
 import {ElementPrivilegesApiService} from '../../services/element-privileges-api.service';
-import {TagsSearchService} from '../../services/tags-search.service';
+import {TagLookupApiService} from '../../api/tag-lookup-api.service';
 import {
   TagsQuickFormEditorComponent
 } from '../tags-quick-form-editor/tags-quick-form-editor.component';
@@ -82,7 +82,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
     private readonly cdr: ChangeDetectorRef,
     private readonly translate: TranslateService,
     private readonly tagsApiService: TagsApiService,
-    private readonly tagsSearchService: TagsSearchService,
+    private readonly tagLookup: TagLookupApiService,
     private readonly elementPrivilegesApiService: ElementPrivilegesApiService,
   ) {}
 
@@ -118,7 +118,7 @@ export class TagsListComponent implements OnChanges, OnDestroy, OnInit {
           this.searchLoading = true;
           this.cdr.markForCheck();
 
-          return this.tagsSearchService.search(normalizedQuery).pipe(
+          return this.tagLookup.lookup(normalizedQuery).pipe(
             map(tags => this.mapSearchTags(tags)),
             catchError(() => of([] as TagItem[])),
           );

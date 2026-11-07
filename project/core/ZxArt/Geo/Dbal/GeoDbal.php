@@ -6,6 +6,7 @@ namespace ZxArt\Geo\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use LanguagesManager;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
@@ -16,6 +17,7 @@ final readonly class GeoDbal extends AbstractDbal
     public function __construct(
         private Connection $db,
         private LanguagesManager $languagesManager,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -236,7 +238,7 @@ final readonly class GeoDbal extends AbstractDbal
         $this->applyLocationFilters($query, DatabaseTable::Party, $countryId, $cityId, $north, $south, $east, $west);
 
         if ($search !== null && $search !== '') {
-            $query->where($this->tableColumn(DatabaseTable::Party, 'title'), 'like', '%' . $search . '%');
+            $this->titleMatch->where($query, [$this->tableColumn(DatabaseTable::Party, 'title')], $search);
         }
 
         return $query;

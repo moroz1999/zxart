@@ -8,7 +8,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Tunes\Dbal\TunesDbal;
 
@@ -21,7 +21,7 @@ class TunesRepositoryRadioTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturn($builder);
 
-        $repository = new TunesDbal($db, $this->createMock(AlphanumericColumnSearch::class));
+        $repository = new TunesDbal($db, new TitleMatch());
         $criteria = $this->makeCriteria(bestVotesLimit: 10);
 
         $this->assertNull($repository->findRandomIdByCriteria($criteria));
@@ -34,7 +34,7 @@ class TunesRepositoryRadioTest extends TestCase
         $db = $this->createMock(Connection::class);
         $db->method('table')->willReturnOnConsecutiveCalls($topBuilder, $randomBuilder);
 
-        $repository = new TunesDbal($db, $this->createMock(AlphanumericColumnSearch::class));
+        $repository = new TunesDbal($db, new TitleMatch());
         $criteria = $this->makeCriteria(bestVotesLimit: 10);
 
         $this->assertSame(11, $repository->findRandomIdByCriteria($criteria));

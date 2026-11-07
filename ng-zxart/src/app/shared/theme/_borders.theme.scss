@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Border widths */
   --border-width-thin: 1px;
@@ -13,7 +15,7 @@
   --border-light: var(--border-width-thin) solid var(--secondary-200);
 }
 
-.dark-mode {
+@include mode.dark {
   --border-focused: var(--white);
   --border-primary: var(--primary-400);
   --border-form: var(--secondary-200);

@@ -33,7 +33,8 @@ failed translation is retried and never blocks the rest.
 Comments appear on the entity they belong to, and the whole site's comments are
 also listed on one page, newest first, page by page. The newest comments are also
 shown beside every page; a new, edited, deleted or freshly translated comment
-shows up there at once.
+shows up there at once. A link from a comment list opens the material at that
+exact comment.
 
 A work's comment count covers its whole discussion, replies included, and follows
 every comment posted or deleted on it.

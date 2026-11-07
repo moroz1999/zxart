@@ -57,6 +57,10 @@ paths:
     $ref: 'group-data.yaml#/paths/~1group-data~1'
   /group-alias-data/:
     $ref: 'group-alias-data.yaml#/paths/~1group-alias-data~1'
+  /entity-lookup/:
+    $ref: 'entity-lookup.yaml#/paths/~1entity-lookup~1'
+  /tag-lookup/:
+    $ref: 'tag-lookup.yaml#/paths/~1tag-lookup~1'
   /menu/:
     $ref: 'menu.yaml#/paths/~1menu~1'
   /tags/:

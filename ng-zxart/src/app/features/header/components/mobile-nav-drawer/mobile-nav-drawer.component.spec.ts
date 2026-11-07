@@ -1,7 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {CommonModule} from '@angular/common';
-import {provideRouter} from '@angular/router';
+import {provideRouter, Router} from '@angular/router';
 import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {TranslateModule} from '@ngx-translate/core';
 import {SvgIconRegistryService} from 'angular-svg-icon';
@@ -36,5 +36,30 @@ describe('MobileNavDrawerComponent', () => {
     link.click();
 
     expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('closes all mobile overlays when a nested panel starts navigation', async () => {
+    const dialog = {open: vi.fn(), closeAll: vi.fn()};
+    TestBed.configureTestingModule({
+      imports: [MobileNavDrawerComponent, TranslateModule.forRoot()],
+      providers: [
+        provideRouter([{path: '**', children: []}]),
+        {provide: DialogRef, useValue: {close: vi.fn()}},
+        {provide: Dialog, useValue: dialog},
+        {provide: SvgIconRegistryService, useValue: {loadSvg: vi.fn()}},
+        {provide: CurrentRouteService, useValue: {isActive: () => false}},
+      ],
+    });
+    TestBed.overrideComponent(MobileNavDrawerComponent, {
+      set: {
+        imports: [CommonModule, TranslateModule, ZxPopoverMenuItemComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      },
+    });
+    TestBed.createComponent(MobileNavDrawerComponent).detectChanges();
+
+    await TestBed.inject(Router).navigateByUrl('/author/1');
+
+    expect(dialog.closeAll).toHaveBeenCalledOnce();
   });
 });

@@ -3,6 +3,7 @@
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
 use ZxArt\Authors\Constants;
+use ZxArt\Pictures\Validation\NativePictureFileValidator;
 
 class publicReceiveZxPicture extends structureElementAction
 {
@@ -14,6 +15,22 @@ class publicReceiveZxPicture extends structureElementAction
     public function execute(structureManager $structureManager, controller $controller, structureElement $structureElement): void
     {
         if ($this->validated) {
+            $nativePictureFileValidator = $this->getService(NativePictureFileValidator::class);
+            $imageChunk = $structureElement->getDataChunk('image');
+            if ($imageChunk instanceof imageDataChunk && $imageChunk->originalName !== null) {
+                $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
+                $filePath = $cachePath . $imageChunk->temporaryName;
+                $error = $nativePictureFileValidator->validate(
+                    (string)$structureElement->type,
+                    (string)$imageChunk->originalName,
+                    $filePath,
+                );
+                if ($error !== null) {
+                    $this->respondNativeFileRejected((string)$structureElement->type, $nativePictureFileValidator);
+                    return;
+                }
+            }
+
             $structureElement->prepareActualData();
 
             if (trim($structureElement->title) === '') {
@@ -108,6 +125,24 @@ class publicReceiveZxPicture extends structureElementAction
 
     public function setValidators(&$validators): void
     {
+    }
+
+    private function respondNativeFileRejected(
+        string $format,
+        NativePictureFileValidator $nativePictureFileValidator,
+    ): void {
+        $rule = $nativePictureFileValidator->getRules()[$format] ?? [
+            'extensions' => [],
+            'sizes' => [],
+        ];
+        $renderer = $this->getService(renderer::class);
+        $renderer->assign('body', [
+            'id' => 0,
+            'errorMessage' => $rule['sizes'] === []
+                ? 'picture-form.error-native-file-variable'
+                : 'picture-form.error-native-file',
+            'errorParameters' => $rule,
+        ]);
     }
 }
 

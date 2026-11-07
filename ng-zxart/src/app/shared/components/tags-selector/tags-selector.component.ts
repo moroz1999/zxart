@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {ChipItem} from '../../models/chip-item';
-import {TagsSearchService} from '../../services/tags-search.service';
+import {TagLookupApiService} from '../../api/tag-lookup-api.service';
 import {Tag} from '../../models/tag';
 import {ZxInputComponent} from '../../ui/zx-input/zx-input.component';
 import {ZxChipsComponent} from '../../ui/zx-chips/zx-chips.component';
@@ -54,7 +54,7 @@ export class TagsSelectorComponent {
         debounceTime(300),
         distinctUntilChanged(),
         switchMap(query => query.length > 2
-            ? this.tagsSearch.search(query).pipe(catchError(() => of([] as Tag[])))
+            ? this.tagLookup.lookup(query).pipe(catchError(() => of([] as Tag[])))
             : of([] as Tag[])),
         startWith([] as Tag[]),
         shareReplay({bufferSize: 1, refCount: true}),
@@ -71,7 +71,7 @@ export class TagsSelectorComponent {
         })),
     );
 
-    constructor(private tagsSearch: TagsSearchService) {}
+    constructor(private tagLookup: TagLookupApiService) {}
 
     change(value: string): void {
         this.tagText = value;

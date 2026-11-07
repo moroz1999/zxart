@@ -9,7 +9,10 @@
 
 ## Themes
 
-The project supports Dark (`.dark-mode`) and Light (`.light-mode`) themes. Always use semantic variables to ensure correct theme switching.
+The project supports Dark (`.dark-mode`), Light (`.light-mode`), and automatic
+themes. With no explicit theme class, the same variable sets are selected by
+`prefers-color-scheme`. Explicit classes take priority. Always use semantic
+variables to ensure correct theme switching.
 
 ## Rules
 

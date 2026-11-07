@@ -7,6 +7,7 @@ namespace ZxArt\Groups\Dbal;
 use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Groups\Dto\GroupSearchFilterDto;
 use ZxArt\LinkTypes;
 use ZxArt\Prods\ProdLink;
@@ -26,6 +27,7 @@ final readonly class GroupSearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -66,14 +68,11 @@ final readonly class GroupSearchDbal extends AbstractDbal
 
         $name = $filter->name !== null ? trim($filter->name) : '';
         if ($name !== '') {
-            // a backslash escapes the wildcards in MariaDB
-            $pattern = '%' . addcslashes($name, '\\%_') . '%';
-            $query->where(static function (Builder $nameQuery) use ($groupTable, $aliasTable, $pattern): void {
-                $nameQuery->where($groupTable . '.title', 'like', $pattern)
-                    ->orWhere($groupTable . '.abbreviation', 'like', $pattern)
-                    ->orWhereIn($groupTable . '.id', static function (Builder $aliasQuery) use ($aliasTable, $pattern): void {
-                        $aliasQuery->select('groupId')->from($aliasTable)->where('title', 'like', $pattern);
-                    });
+            $query->where(function (Builder $nameQuery) use ($groupTable, $aliasTable, $name): void {
+                $this->titleMatch->where($nameQuery, [$groupTable . '.title', $groupTable . '.abbreviation'], $name);
+                $nameQuery->orWhereIn($groupTable . '.id', function (Builder $aliasQuery) use ($aliasTable, $name): void {
+                    $this->titleMatch->where($aliasQuery->select('groupId')->from($aliasTable), ['title'], $name);
+                });
             });
         }
         if ($filter->countryIds !== []) {

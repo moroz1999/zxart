@@ -29,11 +29,6 @@ class UserPreferencesServiceTest extends TestCase
         return count((new DefaultUserPreferencesProvider())->getDefaults());
     }
 
-    private function getDefaultPreferenceValue(string $code): ?string
-    {
-        return (new DefaultUserPreferencesProvider())->getDefaults()[$code] ?? null;
-    }
-
     private function createCurrentUserServiceMock(CurrentUser $user): CurrentUserService
     {
         $currentUserService = $this->createMock(CurrentUserService::class);
@@ -78,8 +73,7 @@ class UserPreferencesServiceTest extends TestCase
 
         $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
         $this->assertInstanceOf(PreferenceDto::class, $preferences[0]);
-        $this->assertSame('theme', $preferences[0]->code);
-        $this->assertSame($this->getDefaultPreferenceValue('theme'), $preferences[0]->value);
+        $this->assertNull($this->findPreferenceByCode($preferences, PreferenceCode::THEME->value));
         $this->assertSame(
             'eng',
             $this->findPreferenceByCode($preferences, PreferenceCode::LANGUAGE->value)?->value,
@@ -116,7 +110,7 @@ class UserPreferencesServiceTest extends TestCase
         $this->assertSame('dark', $themePreference->value);
     }
 
-    public function testGetAllPreferencesUsesDefaultWhenUserHasNoValue(): void
+    public function testGetAllPreferencesOmitsThemeWhenUserHasNoValue(): void
     {
         $user = $this->createUserMock(true, 5);
 
@@ -139,9 +133,7 @@ class UserPreferencesServiceTest extends TestCase
         $preferences = $service->getAllPreferences();
 
         $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
-        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
-        $this->assertNotNull($themePreference);
-        $this->assertSame($this->getDefaultPreferenceValue('theme'), $themePreference->value);
+        $this->assertNull($this->findPreferenceByCode($preferences, PreferenceCode::THEME->value));
     }
 
     public function testSetPreferenceThrowsExceptionForInvalidCode(): void
@@ -236,9 +228,7 @@ class UserPreferencesServiceTest extends TestCase
         $preferences = $service->setPreference('theme', 'dark');
 
         $this->assertCount($this->getDefaultPreferencesCount(), $preferences);
-        $themePreference = $this->findPreferenceByCode($preferences, 'theme');
-        $this->assertNotNull($themePreference);
-        $this->assertSame($this->getDefaultPreferenceValue('theme'), $themePreference->value);
+        $this->assertNull($this->findPreferenceByCode($preferences, PreferenceCode::THEME->value));
     }
 
     public function testSetPreferenceThrowsWhenPreferenceIsNotConfigured(): void
@@ -299,6 +289,38 @@ class UserPreferencesServiceTest extends TestCase
 
         $this->assertSame('dark', $this->findPreferenceByCode($preferences, 'theme')?->value);
         $this->assertSame('0', $this->findPreferenceByCode($preferences, 'picture_border')?->value);
+    }
+
+    public function testSetPreferencesDeletesThemeForAutomaticMode(): void
+    {
+        $user = $this->createUserMock(true, 5);
+        $themePreference = new Preference(1, PreferenceCode::THEME, 'string');
+
+        $preferencesRepo = $this->createMock(PreferencesDbal::class);
+        $preferencesRepo->method('findByCode')
+            ->with(PreferenceCode::THEME)
+            ->willReturn($themePreference);
+        $preferencesRepo->method('findAll')->willReturn([$themePreference]);
+
+        $valuesRepo = $this->createMock(UserPreferenceValuesDbal::class);
+        $valuesRepo->expects($this->once())
+            ->method('upsertMany')
+            ->with(5, [1 => null]);
+        $valuesRepo->method('findByUserId')->with(5)->willReturn([]);
+
+        $service = new UserPreferencesService(
+            $this->createCurrentUserServiceMock($user),
+            $preferencesRepo,
+            $valuesRepo,
+            new DefaultUserPreferencesProvider(),
+            new PreferenceValidator(),
+        );
+
+        $preferences = $service->setPreferences([
+            new PreferenceDto('theme', null),
+        ]);
+
+        $this->assertNull($this->findPreferenceByCode($preferences, PreferenceCode::THEME->value));
     }
 
     public function testSetPreferencesDoesNotWritePartialBatchWhenPreferenceIsNotConfigured(): void

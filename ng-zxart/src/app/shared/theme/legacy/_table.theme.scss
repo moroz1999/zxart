@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* Table Component */
   --table-header-font-size: var(--font-xs);
@@ -9,7 +11,7 @@
   --table-row-alternate-bg: var(--secondary-bg);
 }
 
-.dark-mode {
+@include mode.dark {
   --table-row-alternate-bg: var(--secondary-50);
 }
 

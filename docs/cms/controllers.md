@@ -25,7 +25,7 @@ Kebab-case URL segments are converted to PascalCase via `toPascalCase()` (= `str
 
 - **Public apps** — use the default SM: `$this->getService(structureManager::class)`.
 - **Admin apps** — call `$this->getService('adminStructureManager')` directly.
-- **Complex apps** that switch between admin/public based on a request parameter (e.g. `ajaxSearch`, `api`) — explicitly request the appropriate SM:
+- **Complex apps** that switch between admin/public based on a request parameter (e.g. `api`) — explicitly request the appropriate SM:
 ```php
 if ($this->mode === 'admin') {
     $structureManager = $this->getService('adminStructureManager');

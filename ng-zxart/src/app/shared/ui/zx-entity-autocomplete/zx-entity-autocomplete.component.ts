@@ -6,7 +6,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {EntityRef} from '../../models/entity-ref';
-import {EntitySearchService} from '../../services/entity-search.service';
+import {EntityLookupApiService} from '../../api/entity-lookup-api.service';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 import {ZxCloseButtonComponent} from '../zx-close-button/zx-close-button.component';
@@ -16,7 +16,7 @@ import {listKeyboardNav} from '../../utils/list-keyboard-nav';
 /**
  * Single-select relation picker (country, city, author, group, party, …) for
  * forms. Implements ControlValueAccessor: the value is an `EntityRef | null`
- * (the form submits `value?.id`). Searches via {@link EntitySearchService}.
+ * (the form submits `value?.id`). Searches via {@link EntityLookupApiService}.
  */
 @Component({
   selector: 'zx-entity-autocomplete',
@@ -66,7 +66,7 @@ export class ZxEntityAutocompleteComponent implements OnInit, OnDestroy, Control
   private onTouched: () => void = () => undefined;
 
   constructor(
-    private readonly entitySearch: EntitySearchService,
+    private readonly entityLookup: EntityLookupApiService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -79,7 +79,7 @@ export class ZxEntityAutocompleteComponent implements OnInit, OnDestroy, Control
           this.loading = true;
           this.cdr.markForCheck();
         }),
-        switchMap(query => this.entitySearch.search(this.types, query)),
+        switchMap(query => this.entityLookup.lookup(this.types, query)),
       ).subscribe(results => {
         this.searchResults = results;
         this.activeIndex = 0;

@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* Layout & Application */
   --content-padding: var(--space-16);
@@ -52,14 +54,14 @@
   --content-background: var(--white);
 }
 
-.dark-mode {
+@include mode.dark {
   --main-background: var(--secondary-50);
   --secondary-bg: var(--secondary-100);
   --content-background: var(--secondary-50);
   --gallery-item-border-color: var(--secondary-50);
 }
 
-.light-mode {
+@include mode.light {
   --main-background: var(--secondary-50);
   --secondary-bg: var(--secondary-50);
   --content-background: var(--white);

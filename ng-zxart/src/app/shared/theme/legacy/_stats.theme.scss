@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* Stats */
   --stats-section-gap: var(--gap-lg);
@@ -5,7 +7,7 @@
   --stats-chart-bg: var(--secondary-100);
 }
 
-.dark-mode {
+@include mode.dark {
   --stats-chart-bg: var(--white);
 }
 

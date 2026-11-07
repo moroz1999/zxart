@@ -18,7 +18,7 @@ import {
 } from '../../../../shared/lib/tags-quick-form-editor/tags-quick-form-editor.component';
 import {TagItem} from '../../../../shared/models/tag-item';
 import {InViewportDirective} from '../../../../shared/directives/in-viewport.directive';
-import {TagsSearchService} from '../../../../shared/services/tags-search.service';
+import {TagLookupApiService} from '../../../../shared/api/tag-lookup-api.service';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPanelComponent} from '../../../../shared/ui/zx-panel/zx-panel.component';
 import {
@@ -66,7 +66,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
     private readonly cdr: ChangeDetectorRef,
     private readonly translate: TranslateService,
     private readonly tagsApiService: TagsApiService,
-    private readonly tagsSearchService: TagsSearchService,
+    private readonly tagLookup: TagLookupApiService,
     private readonly elementPrivilegesApiService: ElementPrivilegesApiService,
   ) {}
 
@@ -87,7 +87,7 @@ export class TagsQuickFormComponent implements OnChanges, OnDestroy, OnInit {
           this.searchLoading = true;
           this.cdr.markForCheck();
 
-          return this.tagsSearchService.search(normalizedQuery).pipe(
+          return this.tagLookup.lookup(normalizedQuery).pipe(
             map(tags => tags.map(tagToItem)),
             catchError(() => of([] as TagItem[])),
           );

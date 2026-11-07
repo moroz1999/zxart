@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* ZxPanel Component variables */
   --zx-panel-radius-sm: var(--radius-sm);
@@ -24,7 +26,7 @@
   --zx-panel-flat-border: var(--border-light);
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-panel-bg: var(--secondary-100);
   /* Tinted surfaces of nested panels */
   --zx-panel-bg-muted: var(--secondary-200);
@@ -32,7 +34,7 @@
   --zx-panel-shadow: var(--shadow-md);
 }
 
-.light-mode {
+@include mode.light {
   --zx-panel-bg: var(--white);
   /* Tinted surfaces of nested panels */
   --zx-panel-bg-muted: var(--secondary-100);

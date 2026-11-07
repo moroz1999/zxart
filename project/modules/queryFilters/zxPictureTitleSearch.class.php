@@ -1,5 +1,7 @@
 <?php
 
+use ZxArt\Search\Dbal\TitleMatch;
+
 class zxPictureTitleSearchQueryFilter extends QueryFilter
 {
     public function getRequiredType()
@@ -12,8 +14,7 @@ class zxPictureTitleSearchQueryFilter extends QueryFilter
         if (is_array($argument)) {
             $argument = reset($argument);
         }
-        $query->where($this->getTable() . '.title', 'like', '%' . $argument . '%');
 
-        return $query;
+        return $this->getService(TitleMatch::class)->where($query, [$this->getTable() . '.title'], (string)$argument);
     }
 }

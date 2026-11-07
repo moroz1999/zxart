@@ -6,6 +6,7 @@ namespace ZxArt\Tags\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
+use ZxArt\Search\Dbal\TitleMatch;
 use ZxArt\Shared\DatabaseTable;
 use ZxArt\Shared\Dbal\AbstractDbal;
 use ZxArt\Tags\Dto\FoundTagDto;
@@ -21,6 +22,7 @@ final readonly class TagSearchDbal extends AbstractDbal
 {
     public function __construct(
         private Connection $db,
+        private TitleMatch $titleMatch,
     ) {
     }
 
@@ -60,12 +62,6 @@ final readonly class TagSearchDbal extends AbstractDbal
 
     private function matching(string $phrase): Builder
     {
-        // a backslash escapes the wildcards in MariaDB
-        $pattern = '%' . addcslashes($phrase, '\\%_') . '%';
-
-        return $this->db->table($this->tableName(DatabaseTable::Tag))
-            ->where(static function (Builder $query) use ($pattern): void {
-                $query->where('title', 'like', $pattern)->orWhere('synonym', 'like', $pattern);
-            });
+        return $this->titleMatch->where($this->db->table($this->tableName(DatabaseTable::Tag)), ['title', 'synonym'], $phrase);
     }
 }

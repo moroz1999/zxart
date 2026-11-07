@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Font size tiers for component theme variables. */
   --zx-font-size-xs: 12px;
@@ -57,6 +59,6 @@
   --zx-input-line-height: var(--zx-body-line-height);
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-link-color: var(--primary-700);
 }

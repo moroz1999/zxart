@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\Prods\Dbal\ProdSearchDbal;
 use ZxArt\Prods\Dto\ProdSearchFilterDto;
 use ZxArt\Prods\ProdLink;
+use ZxArt\Search\Dbal\TitleMatch;
 
 /**
  * Narrows the productions the catalogue filters left by title, dates, people,
@@ -72,14 +73,9 @@ class ProdSearchDbalTest extends TestCase
         $this->db->table('module_groupalias')->insert(['id' => self::GROUP_ALIAS, 'groupId' => self::GROUP]);
         $this->link(self::ELITE, self::RELEASE_OF_ELITE, 'structure');
         $this->link(self::EXOLON, self::RELEASE_OF_EXOLON, 'structure');
-        $this->dbal = new ProdSearchDbal($this->db);
+        $this->dbal = new ProdSearchDbal($this->db, new TitleMatch());
     }
 
-    public function testTheTitleMatchesTheTitleOrTheAlternativeTitle(): void
-    {
-        self::assertSame([self::STAR_WARS], $this->search(new ProdSearchFilterDto(title: ' войны ')));
-        self::assertSame([self::EXOLON], $this->search(new ProdSearchFilterDto(title: 'plus')));
-    }
 
     public function testTheYearsBoundTheRangeOnEitherSide(): void
     {

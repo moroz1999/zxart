@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* ZX Item */
   --zxitem-images-gap: var(--space-16);
@@ -9,13 +11,13 @@
   --zxitem-file-block-margin-bottom: var(--space-8);
 }
 
-.dark-mode {
+@include mode.dark {
   --zxitem-image-button-bg: var(--secondary-200);
   --zxitem-image-button-border: 1px solid var(--secondary-300);
   --zxitem-image-button-hover-bg: var(--secondary-400);
 }
 
-.light-mode {
+@include mode.light {
   --zxitem-image-button-bg: var(--secondary-100);
   --zxitem-image-button-border: 1px solid var(--secondary-200);
   --zxitem-image-button-hover-bg: var(--secondary-200);

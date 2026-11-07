@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 @use 'shared/breakpoints' as bp;
 
 :root {
@@ -89,7 +91,7 @@
   --zx-geo-tiles-filter: none;
 }
 
-.dark-mode {
+@include mode.dark {
   /* Geo map tiles filter turning the light basemap into a dark one. */
   --zx-geo-tiles-filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
 }

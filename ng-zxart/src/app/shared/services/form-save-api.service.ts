@@ -114,11 +114,17 @@ export class FormSaveApiService {
   }
 
   private failedResult(error: unknown): FormSaveResult {
+    if (error instanceof HttpErrorResponse) {
+      return {
+        id: 0,
+        errorMessage: error.error?.errorMessage ?? 'form.error-save',
+        errorParameters: error.error?.errorParameters,
+      };
+    }
+
     return {
       id: 0,
-      errorMessage: error instanceof HttpErrorResponse
-        ? error.error?.errorMessage ?? 'form.error-save'
-        : 'form.error-save',
+      errorMessage: 'form.error-save',
     };
   }
 }

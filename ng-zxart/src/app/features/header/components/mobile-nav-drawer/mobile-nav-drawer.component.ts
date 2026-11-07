@@ -1,8 +1,11 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CommonModule} from '@angular/common';
+import {NavigationStart, Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {SvgIconComponent, SvgIconRegistryService} from 'angular-svg-icon';
+import {filter} from 'rxjs';
 import {ZxButtonComponent} from '../../../../shared/ui/zx-button/zx-button.component';
 import {ZxPopoverMenuItemComponent} from '../../../../shared/ui/zx-popover-menu-item/zx-popover-menu-item.component';
 import {CurrentRouteService} from '../../services/current-route.service';
@@ -43,10 +46,17 @@ export class MobileNavDrawerComponent {
     private iconReg: SvgIconRegistryService,
     private dialog: Dialog,
     private dialogRef: DialogRef<void>,
+    router: Router,
+    destroyRef: DestroyRef,
   ) {
     this.iconReg.loadSvg(`${environment.svgUrl}x.svg`, 'mn-x')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}star.svg`, 'mn-star')?.subscribe();
     this.iconReg.loadSvg(`${environment.svgUrl}chat.svg`, 'mn-chat')?.subscribe();
+
+    router.events.pipe(
+      filter(event => event instanceof NavigationStart),
+      takeUntilDestroyed(destroyRef),
+    ).subscribe(() => this.dialog.closeAll());
   }
 
   close(): void {

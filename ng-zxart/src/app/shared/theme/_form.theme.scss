@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Forms */
   --form-border-radius: var(--radius-md);
@@ -45,7 +47,7 @@
   --ajaxselect-search-icon-color: var(--secondary-100);
 }
 
-.dark-mode {
+@include mode.dark {
   --form-label-color: var(--secondary-700);
   --form-helper-tip-bg: var(--secondary-100);
   --form-helper-tip-text-color: var(--secondary-900);

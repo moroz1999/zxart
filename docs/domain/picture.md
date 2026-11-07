@@ -18,6 +18,52 @@ the thumbnail appears once the site has converted the stored screen. The
 reference images beside it (inspiration sources, next image in a sequence) are
 ordinary pictures of the archive.
 
+PNG, GIF and JPEG files are not accepted as native screens, even when renamed.
+BMP is accepted only for ZX Evolution screens and must use no more than 16
+colours. Extension matching is case-insensitive. Formats with a fixed payload
+size accept only the byte counts listed below; variable-size formats still
+require one of their listed native extensions.
+
+| Picture format | Allowed extensions | Allowed file sizes, bytes |
+|---|---|---:|
+| Standard | `.scr`, `.bin`, `.c` | 6912 |
+| Flash | `.scr` | 6912 |
+| Monochrome | `.bin`, `.scr`, `.c` | 6144 |
+| Tricolor | `.rgb`, `.3`, `.c` | 18432 |
+| Multicolor | `.ifl`, `.c` | 9216 |
+| Multicolor 4 | `.ifl` | 7680 |
+| Timex 81 | `.scr`, `.mlt` | 12288 |
+| Timex high resolution | `.scr` | 12289 |
+| Timex high-resolution graphics | `.hrg` | 24578 |
+| SAM mode 2 | `.ss2` | 12288 |
+| SAM mode 3 | `.ss3`, `.ssx` | 24580, 24617 |
+| SAM mode 4 | `.ss4`, `.ssx`, `.scr` | 24592, 24617, 24681 |
+| BSC | `.bsc`, `.scr` | 11136 |
+| BSP | `.bsp` | Variable |
+| BMC4 | `.bmc4` | 11904 |
+| MLT | `.mlt` | 12288 |
+| MC | `.mc` | 12288 |
+| Gigascreen | `.img`, `.gsc`, `.scr`, `.c` | 13824 |
+| LCE | `.lce` | 13824 |
+| MultiArtist 1 | `.mg1`, `.c` | 19456 |
+| MultiArtist 2 | `.mg2`, `.c` | 18688 |
+| MultiArtist 4 | `.mg4` | 15616 |
+| MultiArtist 8 | `.mg8`, `.c` | 14080 |
+| Attributes | `.atr`, `.attr`, `.c`, `.scr` | 768 |
+| Low-resolution gigascreen | `.hlr`, `.c` | 1628 |
+| Stellar | `.stl`, `.c`, `.bin` | 3072 |
+| CHR$ | `.chr$`, `.ch$`, `.$c` | Variable |
+| ULAplus | `.scr` | 6976 |
+| ZX Evolution | `.bmp` | Variable |
+| SXG | `.sxg` | Variable |
+| GRF | `.grf` | Variable |
+| NXI | `.nxi` | 49664 |
+| SL2 | `.sl2` | 49152, 49280, 49408, 49664, 81920, 81936, 81952, 82176, 82432 |
+| SPECASCII | `.specscii`, `.c` | Variable |
+| S80 | `.s80` | 768 |
+| S81 | `.s81` | 768 |
+| SCA | `.sca` | Variable |
+
 ### Technical Image Parameters
 
 #### Type and Palette
@@ -126,7 +172,8 @@ account has stored, so the default reads as 3× on a desktop and as full width o
 a tablet or phone.
 
 ### Constraints and Rules
-1. The image must be in one of the native ZX Spectrum formats.
+1. The image must meet the extension and size rules of its selected native ZX
+   Spectrum format.
 2. The palette and the format must match each other.
 3. The border colour is one of the eight standard ZX Spectrum colours.
 4. Rotation exists to correct the orientation of the stored screen.

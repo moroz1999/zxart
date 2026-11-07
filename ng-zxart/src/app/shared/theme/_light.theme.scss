@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 @mixin light-base-ramps {
   --black: #000;
   --white: #fff;
@@ -108,7 +110,7 @@
   --role-intro: oklch(50% 0.18 35);
 }
 
-.light-mode {
+@include mode.light {
   @include light-base-ramps;
 
   --shadow-sm: 0 1px 3px 1px rgba(0, 0, 0, 0.06);

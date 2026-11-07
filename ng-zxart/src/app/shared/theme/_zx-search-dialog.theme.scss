@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Search dialog close button icon size */
   --zx-search-dialog-close-icon-size: 20px;
@@ -39,14 +41,14 @@
   --zx-search-dialog-result-icon-size: 16px;
 }
 
-.light-mode {
+@include mode.light {
   /* Result item hover background */
   --zx-search-dialog-item-hover-bg: var(--secondary-100);
   /* Result item focused background (keyboard navigation) */
   --zx-search-dialog-item-focused-bg: var(--primary-100);
 }
 
-.dark-mode {
+@include mode.dark {
   /* Result item hover background */
   --zx-search-dialog-item-hover-bg: var(--secondary-200);
   /* Result item focused background (keyboard navigation) */

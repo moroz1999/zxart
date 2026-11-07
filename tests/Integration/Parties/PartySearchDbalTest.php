@@ -64,9 +64,10 @@ final class PartySearchDbalTest extends TestCase
         self::assertSame([self::FEST_2094, self::RIVAL], $this->ids($this->dbal->find('zqx', 2094, 20)));
     }
 
-    public function testAWildcardInThePhraseIsTakenLiterally(): void
+    public function testSpacesAndPunctuationDoNotMatter(): void
     {
-        self::assertSame([self::RIVAL], $this->ids($this->dbal->find('zqx_', null, 20)));
+        self::assertSame([self::RIVAL], $this->ids($this->dbal->find('zqx rival', null, 20)));
+        self::assertSame([self::FEST_2093], $this->ids($this->dbal->find('zqx-party fest 2093', null, 20)));
     }
 
     public function testTheLimitCapsTheList(): void

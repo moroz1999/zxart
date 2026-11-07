@@ -47,8 +47,16 @@ final readonly class UserPreferenceValuesDbal
         return $row['value'] ?? null;
     }
 
-    public function upsert(int $userId, int $preferenceId, string $value): void
+    public function upsert(int $userId, int $preferenceId, ?string $value): void
     {
+        if ($value === null) {
+            $this->db->table(self::TABLE)
+                ->where('user_id', $userId)
+                ->where('preference_id', $preferenceId)
+                ->delete();
+            return;
+        }
+
         $this->db->table(self::TABLE)->updateOrInsert(
             ['user_id' => $userId, 'preference_id' => $preferenceId],
             ['value' => $value]
@@ -56,7 +64,7 @@ final readonly class UserPreferenceValuesDbal
     }
 
     /**
-     * @param array<int, string> $valuesByPreferenceId
+     * @param array<int, string|null> $valuesByPreferenceId
      */
     public function upsertMany(int $userId, array $valuesByPreferenceId): void
     {

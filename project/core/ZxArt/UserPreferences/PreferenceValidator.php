@@ -21,8 +21,15 @@ final class PreferenceValidator
         return $preferenceCode;
     }
 
-    public function validateValue(PreferenceCode $code, string $value): string
+    public function validateValue(PreferenceCode $code, ?string $value): ?string
     {
+        if ($value === null) {
+            if ($code === PreferenceCode::THEME) {
+                return null;
+            }
+            throw InvalidPreferenceValueException::forPreference($code->value, null);
+        }
+
         return match ($code) {
             PreferenceCode::THEME => $this->validateThemeValue($value),
             PreferenceCode::HOMEPAGE_ORDER,

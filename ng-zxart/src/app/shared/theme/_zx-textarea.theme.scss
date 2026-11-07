@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   --textarea-width-lg: 300px;
   --textarea-padding: var(--space-4) var(--space-4) 0;
@@ -10,7 +12,7 @@
   --textarea-border-error-color: var(--error-color);
 }
 
-.dark-mode {
+@include mode.dark {
   --textarea-border-color: var(--secondary-300);
   --textarea-border-focus-color: var(--white);
 }

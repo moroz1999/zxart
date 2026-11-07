@@ -56,8 +56,8 @@ $this->getSelectSql()->whereIn('id', $topIds)->inRandomOrder()->limit($limit)->p
 ```
 
 ## Matching a Phrase
-- A `like` on a user's phrase escapes the wildcards: `'%' . addcslashes($phrase, '\\%_') . '%'`. MariaDB's escape character is the backslash.
-- SQLite has no default escape character, so the SQLite unit tests cannot show the escaping; an integration test on MariaDB does (`tests/Integration/Geo/PlaceSearchTest.php`).
+- A title, name or file name is matched with a user's phrase only through `ZxArt\Search\Dbal\TitleMatch::where()` ([features/search.md](../features/search.md#title-matching)), never a `like` of its own. It is the one class allowed raw SQL: the query builder has no regular expressions.
+- SQLite has no `REGEXP_REPLACE`, so a title match is tested on MariaDB (`tests/Integration/Search/TitleMatchingSearchesTest.php`).
 
 ## Database Query Results
 

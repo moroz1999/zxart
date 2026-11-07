@@ -13,9 +13,10 @@ import {ZxStackComponent} from "../../../../shared/ui/zx-stack/zx-stack.componen
 import {ZxInlineComponent} from '../../../../shared/ui/zx-inline/zx-inline.component';
 import {ZxInsetComponent} from '../../../../shared/ui/zx-inset/zx-inset.component';
 import {TextDirective} from '../../../../shared/ui/typography/directives/text.directive';
+import {RouterLink} from '@angular/router';
+import {CommentLink, commentLink} from '../../utils/comment-link';
 
-
-import {RouterLink} from '@angular/router';@Component({
+@Component({
   selector: 'zx-comment',
   standalone: true,
   imports: [RouterLink, 
@@ -51,6 +52,10 @@ export class CommentComponent {
 
   get hasImage(): boolean {
     return !!this.comment.target?.imageUrl;
+  }
+
+  get targetLink(): CommentLink | null {
+    return this.comment.target ? commentLink(this.comment.id, this.comment.target) : null;
   }
 
   get safeContent(): SafeHtml {

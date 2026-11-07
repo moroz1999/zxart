@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   --input-bg: var(--white);
   --input-text: var(--secondary-800);
@@ -29,7 +31,7 @@
   --input-line-height: var(--input-md-line-height);
 }
 
-.dark-mode {
+@include mode.dark {
   --input-bg: var(--secondary-50);
   --input-text: var(--secondary-800);
   --input-placeholder: var(--secondary-500);

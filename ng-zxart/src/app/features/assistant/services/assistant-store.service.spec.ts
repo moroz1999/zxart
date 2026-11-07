@@ -177,6 +177,44 @@ describe('AssistantStore', () => {
     expect(api.get).toHaveBeenCalledWith(5, 0);
   });
 
+  it('shows an approved plan as running before approve responds and polls for its progress', async () => {
+    vi.useFakeTimers();
+    const proposed = {id: 3, title: 'Fix', status: 'proposed' as const, actions: [], createdAt: 0, approvedAt: null, finishedAt: null};
+    const planMessage = {...message(1), role: 'assistant' as const, kind: 'plan' as const, payload: {planId: 3}};
+    const approved = new Subject<{runId: number}>();
+    const api = {
+      get: vi.fn().mockReturnValue(of(state({messages: [planMessage], plans: [proposed]}))),
+      approvePlan: vi.fn().mockReturnValue(approved),
+    };
+    const store = openStore(api);
+    const polling = store.polling$.subscribe();
+
+    const approving = store.approvePlan(3).subscribe();
+    const view = await firstValueFrom(store.view$);
+    vi.advanceTimersByTime(10000);
+
+    expect(view.running).toBe(true);
+    expect(view.items[0].kind === 'message' ? view.items[0].message.plan?.canApprove : null).toBe(false);
+    expect(api.get.mock.calls.length).toBeGreaterThan(1);
+
+    approving.unsubscribe();
+    polling.unsubscribe();
+    vi.useRealTimers();
+  });
+
+  it('stops showing a run when approving a plan is refused', async () => {
+    const api = {
+      approvePlan: vi.fn().mockReturnValue(throwError(() => new HttpErrorResponse({status: 409, error: {errorMessage: 'Still working'}}))),
+    };
+    const store = openStore(api);
+
+    await firstValueFrom(store.approvePlan(3), {defaultValue: undefined});
+
+    const view = await firstValueFrom(store.view$);
+    expect(view.running).toBe(false);
+    expect(view.error).toBe('Still working');
+  });
+
   it('fetches an idle conversation once and then waits for the user', () => {
     vi.useFakeTimers();
     const api = {get: vi.fn().mockReturnValue(of(state({messages: [message(1)]})))};

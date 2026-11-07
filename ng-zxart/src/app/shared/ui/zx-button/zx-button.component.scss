@@ -28,9 +28,6 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  --zx-button-current-height: var(--zx-button-md-height);
-  --zx-button-ripple-mix: 24%;
-  --zx-button-ripple-start-opacity: 0.36;
   --zx-button-ripple-duration: 560ms;
   transition: background-color var(--zx-button-transition-time) ease-in-out,
   color var(--zx-button-transition-time) ease-in-out,
@@ -41,8 +38,7 @@
     box-shadow: 0 0 0 var(--border-width-thick) var(--border-focused);
   }
 
-  &:disabled,
-  &.zx-button--disabled {
+  &:is(:disabled, .zx-button--disabled) {
     cursor: not-allowed;
     opacity: var(--zx-button-disabled-opacity);
     pointer-events: none;
@@ -54,82 +50,81 @@
     background-color: var(--zx-button-primary-bg);
     color: var(--zx-button-primary-text);
 
-    &:hover:not(:disabled):not(.zx-button--disabled) {
+    &:hover:not(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-primary-hover-bg);
     }
 
-    &:disabled,
-    &.zx-button--disabled {
+    &:is(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-primary-disabled-bg);
       color: var(--zx-button-primary-disabled-text);
     }
   }
 
-  &--secondary {
+  &--secondary,
+  &--danger {
     --zx-button-ripple-mix: 22%;
     --zx-button-ripple-start-opacity: 0.34;
+  }
+
+  &--secondary {
     background-color: var(--zx-button-secondary-bg);
     color: var(--zx-button-secondary-text);
 
-    &:hover:not(:disabled):not(.zx-button--disabled) {
+    &:hover:not(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-secondary-hover-bg);
     }
 
-    &:disabled,
-    &.zx-button--disabled {
+    &:is(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-secondary-disabled-bg);
       color: var(--zx-button-secondary-disabled-text);
     }
   }
 
   &--danger {
-    --zx-button-ripple-mix: 22%;
-    --zx-button-ripple-start-opacity: 0.34;
     background-color: var(--zx-button-danger-bg);
     color: var(--zx-button-danger-text);
 
-    &:hover:not(:disabled):not(.zx-button--disabled) {
+    &:hover:not(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-danger-hover-bg);
     }
 
-    &:disabled,
-    &.zx-button--disabled {
+    &:is(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-danger-disabled-bg);
       color: var(--zx-button-danger-disabled-text);
     }
   }
 
-  &--transparent {
+  &--transparent,
+  &--outlined {
     --zx-button-ripple-mix: 18%;
     --zx-button-ripple-start-opacity: 0.28;
+  }
+
+  &--transparent {
     background-color: var(--zx-button-transparent-bg);
     color: var(--zx-button-transparent-text);
 
-    &:hover:not(:disabled):not(.zx-button--disabled) {
+    &:hover:not(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-transparent-hover-bg);
     }
 
-    &:disabled,
-    &.zx-button--disabled {
+    &:is(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-transparent-disabled-bg);
       color: var(--zx-button-transparent-disabled-text);
     }
   }
 
   &--outlined {
-    --zx-button-ripple-mix: 18%;
-    --zx-button-ripple-start-opacity: 0.28;
     background-color: var(--zx-button-outlined-bg);
     color: var(--zx-button-outlined-text);
     border-color: var(--zx-button-outlined-border);
 
-    &:hover:not(:disabled):not(.zx-button--disabled),
-    &:focus-visible:not(:disabled):not(.zx-button--disabled) {
+    &:hover:not(:disabled, .zx-button--disabled),
+    &:focus-visible:not(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-outlined-hover-bg);
     }
 
-    &:disabled,
-    &.zx-button--disabled {
+    &:is(:disabled, .zx-button--disabled) {
       background-color: var(--zx-button-outlined-disabled-bg);
       color: var(--zx-button-outlined-disabled-text);
       border-color: var(--zx-button-outlined-disabled-border);
@@ -138,7 +133,6 @@
 
   &--xs {
     --zx-button-current-height: var(--zx-button-xs-height);
-    min-width: var(--zx-button-xs-min-width);
     height: var(--zx-button-xs-height);
     padding: var(--zx-button-xs-padding);
     font-size: var(--zx-button-xs-font-size);
@@ -146,7 +140,6 @@
 
   &--sm {
     --zx-button-current-height: var(--zx-button-sm-height);
-    min-width: var(--zx-button-sm-min-width);
     height: var(--zx-button-sm-height);
     padding: var(--zx-button-sm-padding);
     font-size: var(--zx-button-sm-font-size);
@@ -154,20 +147,17 @@
 
   &--md {
     --zx-button-current-height: var(--zx-button-md-height);
-    min-width: var(--zx-button-md-min-width);
     height: var(--zx-button-md-height);
     padding: var(--zx-button-md-padding);
     font-size: var(--zx-button-md-font-size);
   }
 
-  &--square {
-    width: var(--zx-button-current-height);
-    min-width: 0;
-    padding: 0;
-  }
-
   &--round {
     border-radius: var(--zx-button-round-radius);
+  }
+
+  &--square,
+  &--round {
     width: var(--zx-button-current-height);
     min-width: 0;
     padding: 0;

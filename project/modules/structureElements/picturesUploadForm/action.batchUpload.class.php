@@ -3,6 +3,7 @@
 use App\Paths\PathsManager;
 use App\Users\CurrentUserService;
 use ZxArt\Authors\Constants;
+use ZxArt\Pictures\Validation\NativePictureFileValidator;
 
 class batchUploadPicturesUploadForm extends structureElementAction
 {
@@ -15,14 +16,27 @@ class batchUploadPicturesUploadForm extends structureElementAction
     {
         $firstPicture = null;
         if ($imagesInfo = $structureElement->image) {
+            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
+            $nativePictureFileValidator = $this->getService(NativePictureFileValidator::class);
+            foreach ($imagesInfo as $imageInfo) {
+                $filePath = $cachePath . basename((string)$imageInfo['tmp_name']);
+                $error = $nativePictureFileValidator->validate(
+                    (string)$structureElement->type,
+                    (string)$imageInfo['name'],
+                    $filePath,
+                );
+                if ($error !== null) {
+                    $this->respondNativeFileRejected((string)$structureElement->type, $nativePictureFileValidator);
+                    return;
+                }
+            }
+
             $privilegesManager = $this->getService(privilegesManager::class);
             $linksManager = $this->getService(linksManager::class);
             $currentUserService = $this->getService(CurrentUserService::class);
             $user = $currentUserService->getCurrentUser();
 
             $currentElement = $structureManager->getElementsFirstParent($structureElement->id);
-
-            $cachePath = $this->getService(PathsManager::class)->getPath('uploadsCache');
 
             foreach ($imagesInfo as $imageInfo) {
                 /**
@@ -160,6 +174,24 @@ class batchUploadPicturesUploadForm extends structureElementAction
             'denyVoting',
             'denyComments',
         ];
+    }
+
+    private function respondNativeFileRejected(
+        string $format,
+        NativePictureFileValidator $nativePictureFileValidator,
+    ): void {
+        $rule = $nativePictureFileValidator->getRules()[$format] ?? [
+            'extensions' => [],
+            'sizes' => [],
+        ];
+        $renderer = $this->getService(renderer::class);
+        $renderer->assign('body', [
+            'id' => 0,
+            'errorMessage' => $rule['sizes'] === []
+                ? 'picture-form.error-native-file-variable'
+                : 'picture-form.error-native-file',
+            'errorParameters' => $rule,
+        ]);
     }
 }
 

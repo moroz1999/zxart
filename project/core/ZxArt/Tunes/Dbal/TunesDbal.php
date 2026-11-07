@@ -6,7 +6,8 @@ namespace ZxArt\Tunes\Dbal;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use ZxArt\Helpers\AlphanumericColumnSearch;
+use ZxArt\Search\Dbal\TitleMatch;
+use ZxArt\Search\Dbal\TitleMatchMode;
 use ZxArt\LinkTypes;
 use ZxArt\Radio\Dto\RadioCriteriaDto;
 use ZxArt\Shared\DatabaseTable;
@@ -19,7 +20,7 @@ readonly final class TunesDbal extends AbstractDbal
 {
     public function __construct(
         private Connection               $db,
-        private AlphanumericColumnSearch $alphanumericColumnSearch,
+        private TitleMatch $titleMatch,
     )
     {
 
@@ -28,7 +29,7 @@ readonly final class TunesDbal extends AbstractDbal
     public function findTunesByTitle(string $title): array
     {
         $query = $this->getSelectSql();
-        $query = $this->alphanumericColumnSearch->addSearchByAlphanumeric($query, $title, 'title');
+        $query = $query->orWhere(fn(Builder $exactQuery): Builder => $this->titleMatch->where($exactQuery, ['title'], $title, TitleMatchMode::Exact));
         $query->orWhere('title', 'like', $title);
         $query->orWhere('title', 'like', $title . '%');
         $query->orWhere('internalTitle', 'like', $title);

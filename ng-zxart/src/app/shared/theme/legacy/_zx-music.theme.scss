@@ -1,3 +1,5 @@
+@use '../theme-mode' as mode;
+
 :root {
   /* ZX Music */
   --zxmusic-details-padding: var(--space-16);
@@ -15,12 +17,12 @@
   --zxmusic-controls-link-margin-left: var(--space-16);
 }
 
-.dark-mode {
+@include mode.dark {
   --zxmusic-progress-bg: var(--secondary-200);
   --zxmusic-progress-body-bg: var(--secondary-400);
 }
 
-.light-mode {
+@include mode.light {
   --zxmusic-progress-bg: var(--secondary-100);
   --zxmusic-progress-body-bg: var(--secondary-200);
 

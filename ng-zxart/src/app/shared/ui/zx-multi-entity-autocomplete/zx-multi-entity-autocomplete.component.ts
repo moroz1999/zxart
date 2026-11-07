@@ -16,7 +16,7 @@ import {Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, tap} from 'rxjs/operators';
 import {EntityRef} from '../../models/entity-ref';
 import {ChipItem} from '../../models/chip-item';
-import {EntitySearchService} from '../../services/entity-search.service';
+import {EntityLookupApiService} from '../../api/entity-lookup-api.service';
 import {ZxInputComponent} from '../zx-input/zx-input.component';
 import {ZxSpinnerComponent} from '../zx-spinner/zx-spinner.component';
 import {ZxChipsComponent} from '../zx-chips/zx-chips.component';
@@ -85,7 +85,7 @@ export class ZxMultiEntityAutocompleteComponent implements OnInit, OnDestroy, Co
   private onTouched: () => void = () => undefined;
 
   constructor(
-    private readonly entitySearch: EntitySearchService,
+    private readonly entityLookup: EntityLookupApiService,
     private readonly cdr: ChangeDetectorRef,
   ) {}
 
@@ -98,7 +98,7 @@ export class ZxMultiEntityAutocompleteComponent implements OnInit, OnDestroy, Co
           this.loading = true;
           this.cdr.markForCheck();
         }),
-        switchMap(query => this.entitySearch.search(this.types, query)),
+        switchMap(query => this.entityLookup.lookup(this.types, query)),
       ).subscribe(results => {
         this.searchResults = results;
         this.loading = false;

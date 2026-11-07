@@ -118,4 +118,46 @@ class UserPreferenceValuesRepositoryTest extends TestCase
             [['user_id' => 5, 'preference_id' => 2], ['value' => '0']],
         ], $savedValues);
     }
+
+    public function testUpsertManyDeletesNullValueInsideTransaction(): void
+    {
+        $deletedValues = [];
+
+        $db = $this->createMock(Connection::class);
+        $db->expects($this->once())
+            ->method('transaction')
+            ->willReturnCallback(static function (callable $callback): mixed {
+                return $callback();
+            });
+        $db->method('table')->willReturnCallback(
+            static function () use (&$deletedValues) {
+                return new class($deletedValues) {
+                    private array $conditions = [];
+
+                    public function __construct(private array &$deletedValues)
+                    {
+                    }
+
+                    public function where(string $column, int $value): self
+                    {
+                        $this->conditions[$column] = $value;
+                        return $this;
+                    }
+
+                    public function delete(): int
+                    {
+                        $this->deletedValues[] = $this->conditions;
+                        return 1;
+                    }
+                };
+            },
+        );
+
+        $repository = new UserPreferenceValuesDbal($db);
+        $repository->upsertMany(5, [1 => null]);
+
+        $this->assertSame([
+            ['user_id' => 5, 'preference_id' => 1],
+        ], $deletedValues);
+    }
 }

@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
-use ZxArt\Prods\LegalStatus;
 use ZxArt\Prods\Dbal\ProdHardwareDbal;
 use ZxArt\Prods\Dbal\ProdsDbal;
 use ZxArt\Releases\Services\ReleaseFormatsProvider;
@@ -47,17 +46,6 @@ trait ZxProdsList
     abstract public function getProdsListBaseQuery();
 
     private $type = 'zxProd';
-
-    private const array defaultStatuses = [
-        LegalStatus::allowed,
-        LegalStatus::forbidden,
-        LegalStatus::forbiddenzxart,
-        LegalStatus::allowedzxart,
-        LegalStatus::donationware,
-        LegalStatus::insales,
-        LegalStatus::recovered,
-        LegalStatus::unknown
-    ];
 
     public function getProdsInfo(): array
     {
@@ -741,8 +729,6 @@ trait ZxProdsList
                     foreach ($values as $value) {
                         $this->selectorValues[$selectorName][] = trim($value);
                     }
-                } elseif ($selectorName === 'statuses') {
-                    $this->selectorValues[$selectorName] = $this->getDefaultStatuses();
                 } elseif ($selectorName === 'page') {
                     $this->selectorValues[$selectorName] = $this->getCurrentPage();
                 }
@@ -750,11 +736,6 @@ trait ZxProdsList
         }
 
         return $this->selectorValues[$name];
-    }
-
-    private function getDefaultStatuses(): array
-    {
-        return array_map(static fn(LegalStatus $value) => $value->name, self::defaultStatuses);
     }
 
     private function getFilteredQuery(): ?Builder
@@ -816,13 +797,9 @@ trait ZxProdsList
     public function hasDefaultSelectors(): bool
     {
         $selectors = $this->getSelectorValues();
-        $difference1 = array_diff($selectors['statuses'], $this->getDefaultStatuses());
-        $difference2 = array_diff($this->getDefaultStatuses(), $selectors['statuses']);
-        $statusesDefault = $difference1 === [] && $difference2 === [];
-
         return !$selectors['letter']
             && !$selectors['years']
-            && $statusesDefault
+            && !$selectors['statuses']
             && !$selectors['tags']
             && !$selectors['countries']
             && !$selectors['hw']

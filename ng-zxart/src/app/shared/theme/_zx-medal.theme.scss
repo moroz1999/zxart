@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   /* Fixed medal circle size. */
   --zx-medal-size: 20px;
@@ -21,6 +23,6 @@
   --zx-medal-outlined-border-width: var(--border-width-thin);
 }
 
-.light-mode {
+@include mode.light {
   --zx-medal-podium-text: var(--white);
 }

@@ -2,9 +2,8 @@ import {ChangeDetectionStrategy, Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DialogRef} from '@angular/cdk/dialog';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import {map, Observable, Subscription} from 'rxjs';
 import {ThemeService} from '../../services/theme.service';
-import {Theme} from '../../models/preference.dto';
 import {ZxToggleComponent, ZxToggleOption} from '../../../../shared/ui/zx-toggle/zx-toggle.component';
 import {ZxStackComponent} from '../../../../shared/ui/zx-stack/zx-stack.component';
 import {ZxDialogComponent} from '../../../../shared/ui/zx-dialog/zx-dialog.component';
@@ -27,6 +26,7 @@ import {HeadingDirective} from '../../../../shared/ui/typography/directives/head
 })
 export class SettingsDialogComponent implements OnDestroy {
   themeOptions: ZxToggleOption[] = [];
+  readonly themePreference$: Observable<string>;
 
   private readonly subscriptions = new Subscription();
 
@@ -35,10 +35,14 @@ export class SettingsDialogComponent implements OnDestroy {
     private themeService: ThemeService,
     private translateService: TranslateService,
   ) {
+    this.themePreference$ = this.themeService.preference$.pipe(
+      map(theme => theme ?? ''),
+    );
     this.subscriptions.add(
-      this.translateService.stream(['settings.theme.light', 'settings.theme.dark'])
+      this.translateService.stream(['settings.theme.auto', 'settings.theme.light', 'settings.theme.dark'])
         .subscribe(translations => {
           this.themeOptions = [
+            {value: '', label: translations['settings.theme.auto']},
             {value: 'light', label: translations['settings.theme.light']},
             {value: 'dark', label: translations['settings.theme.dark']},
           ];
@@ -50,12 +54,8 @@ export class SettingsDialogComponent implements OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  get currentTheme(): Theme {
-    return this.themeService.currentTheme;
-  }
-
   onThemeChange(theme: string): void {
-    this.themeService.setTheme(theme as Theme);
+    this.themeService.setTheme(theme === 'light' || theme === 'dark' ? theme : null);
   }
 
   close(): void {

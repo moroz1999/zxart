@@ -1,3 +1,5 @@
+@use './theme-mode' as mode;
+
 :root {
   --zx-range-gap: var(--space-8);
   --zx-range-values-gap: var(--space-8);
@@ -15,7 +17,7 @@
   --zx-range-disabled-opacity: 0.5;
 }
 
-.dark-mode {
+@include mode.dark {
   --zx-range-value-color: var(--text-light-color);
   --zx-range-track-color: var(--secondary-300);
   --zx-range-track-active-color: var(--primary-300);

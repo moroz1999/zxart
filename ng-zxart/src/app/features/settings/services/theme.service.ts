@@ -2,15 +2,16 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError, distinctUntilChanged, map, tap} from 'rxjs/operators';
 import {UserPreferencesService} from './user-preferences.service';
-import {Theme} from '../models/preference.dto';
+import {Theme, ThemePreference} from '../models/preference.dto';
 
-const DEFAULT_THEME: Theme = 'dark';
+const DEFAULT_EFFECTIVE_THEME: Theme = 'dark';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
-  private currentTheme$ = new BehaviorSubject<Theme>(DEFAULT_THEME);
+  private readonly currentPreference$ = new BehaviorSubject<ThemePreference>(null);
+  private readonly effectiveTheme$ = new BehaviorSubject<Theme>(this.resolveSystemTheme());
   private initialized = false;
 
   constructor(
@@ -18,11 +19,15 @@ export class ThemeService {
   ) {}
 
   get theme$(): Observable<Theme> {
-    return this.currentTheme$.asObservable();
+    return this.effectiveTheme$.asObservable();
   }
 
-  get currentTheme(): Theme {
-    return this.currentTheme$.value;
+  get preference$(): Observable<ThemePreference> {
+    return this.currentPreference$.asObservable();
+  }
+
+  get currentTheme(): ThemePreference {
+    return this.currentPreference$.value;
   }
 
   initialize(): void {
@@ -44,28 +49,39 @@ export class ThemeService {
     ).subscribe();
   }
 
-  setTheme(theme: Theme): void {
+  setTheme(theme: ThemePreference): void {
     this.userPreferencesService.setPreference('theme', theme).pipe(
       catchError(() => EMPTY)
     ).subscribe();
   }
 
-  private applyTheme(theme: Theme): void {
+  private applyTheme(theme: ThemePreference): void {
     if (typeof document === 'undefined') {
-      this.currentTheme$.next(theme);
+      this.currentPreference$.next(theme);
+      this.effectiveTheme$.next(theme ?? DEFAULT_EFFECTIVE_THEME);
       return;
     }
 
     const html = document.documentElement;
     html.classList.remove('light-mode', 'dark-mode');
-    html.classList.add(`${theme}-mode`);
-    this.currentTheme$.next(theme);
+    if (theme !== null) {
+      html.classList.add(`${theme}-mode`);
+    }
+    this.currentPreference$.next(theme);
+    this.effectiveTheme$.next(theme ?? this.resolveSystemTheme());
   }
 
-  private validateTheme(value: string | undefined): Theme {
+  private validateTheme(value: string | null | undefined): ThemePreference {
     if (value === 'dark' || value === 'light') {
       return value;
     }
-    return DEFAULT_THEME;
+    return null;
+  }
+
+  private resolveSystemTheme(): Theme {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return DEFAULT_EFFECTIVE_THEME;
+    }
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
 }

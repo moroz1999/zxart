@@ -87,6 +87,17 @@ final class RequestDtoSerializerTest extends TestCase
         self::assertSame([], $radio->criteria?->countriesInclude);
     }
 
+    public function testDeserializesAutomaticThemeAsNull(): void
+    {
+        $preferences = $this->deserialize(
+            '{"preferences":[{"code":"theme","value":null}]}',
+            PreferencesUpdateRequestDto::class,
+        );
+
+        self::assertInstanceOf(PreferenceDto::class, $preferences->preferences[0]);
+        self::assertNull($preferences->preferences[0]->value);
+    }
+
     public function testRejectsMalformedNestedDtoFields(): void
     {
         $this->expectException(SerializerException::class);

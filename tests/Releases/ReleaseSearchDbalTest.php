@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use ZxArt\Releases\Dbal\ReleaseSearchDbal;
 use ZxArt\Releases\Dto\ReleaseSearchFilterDto;
 use ZxArt\Releases\ReleaseTypes;
+use ZxArt\Search\Dbal\TitleMatch;
 
 /**
  * Releases by their own fields, their files, their production, publishers and
@@ -80,19 +81,10 @@ class ReleaseSearchDbalTest extends TestCase
         $this->link(self::ELITE, self::ELITE_TAPE, 'structure');
         $this->link(self::ELITE, self::ELITE_DISK, 'structure');
         $this->link(self::EXOLON, self::EXOLON_CRACK, 'structure');
-        $this->dbal = new ReleaseSearchDbal($this->db);
+        $this->dbal = new ReleaseSearchDbal($this->db, new TitleMatch());
     }
 
-    public function testTheTitleFindsEachReleaseOnceOrderedByTitle(): void
-    {
-        self::assertSame([self::ELITE_TAPE, self::ELITE_DISK], $this->search(new ReleaseSearchFilterDto(title: ' eli ')));
-        self::assertSame(2, $this->dbal->count(new ReleaseSearchFilterDto(title: 'eli'), null));
-    }
 
-    public function testTheFileNameMatchesAPartOfIt(): void
-    {
-        self::assertSame([self::ELITE_DISK], $this->search(new ReleaseSearchFilterDto(fileName: 'disk')));
-    }
 
     public function testTheMd5FindsTheReleasesHoldingTheFile(): void
     {

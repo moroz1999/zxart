@@ -18,6 +18,7 @@ use ZxArt\PictureSearch\PictureSearchOrder;
 use ZxArt\PictureSearch\PictureSearchResultsType;
 use ZxArt\PictureSearch\PictureSearchSort;
 use ZxArt\PictureSearch\Dbal\PictureSearchDbal;
+use ZxArt\Search\Dbal\TitleMatch;
 
 #[AllowMockObjectsWithoutExpectations]
 class SearchAuthorLocalizationTest extends TestCase
@@ -29,6 +30,7 @@ class SearchAuthorLocalizationTest extends TestCase
             $connection,
             $this->createMock(tagsManager::class),
             $this->createLanguagesManager(),
+            new TitleMatch(),
         );
 
         self::assertSame($builder, $repository->buildAuthorsQuery($this->createPictureQuery()));
@@ -45,6 +47,7 @@ class SearchAuthorLocalizationTest extends TestCase
             $connection,
             $this->createMock(tagsManager::class),
             $this->createLanguagesManager(),
+            new TitleMatch(),
         );
 
         self::assertSame($builder, $repository->buildAuthorsQuery($this->createMusicQuery()));

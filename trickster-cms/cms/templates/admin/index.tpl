@@ -110,12 +110,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="left_panel_ajaxsearch_block ajaxsearch_block">
-			<div class="placeholder_icon">
-				<span class="icon icon_search"></span>
-			</div>
-			<input type="text" class="ajaxsearch_input" placeholder="{translations name="header.search"}" value=""{if $allowedSearchTypes} data-types="{$allowedSearchTypes}"{/if} />
-		</div>
 		<div class="treemenu_component">
 			{include file=$theme->template('block.tree.tpl') menuLevel=$leftMenu level=0 requests_level = 0}
 		</div>
