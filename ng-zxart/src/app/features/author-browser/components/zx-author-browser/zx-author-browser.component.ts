@@ -1,9 +1,19 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit,} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {combineLatest, Subject, Subscription} from 'rxjs';
+import {combineLatest, ReplaySubject, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {AuthorBrowserService} from '../../services/author-browser.service';
 import {AuthorListItem} from '../../models/author-list-item';
@@ -49,7 +59,7 @@ import {InViewportDirective} from '../../../../shared/directives/in-viewport.dir
   styleUrls: ['./zx-author-browser.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
+export class ZxAuthorBrowserComponent implements OnChanges, OnInit, OnDestroy {
   @Input() elementId = 0;
   /** 'full' shows filters, pagination and URL state; 'simple' shows table only */
   @Input() mode: 'full' | 'simple' = 'full';
@@ -84,6 +94,7 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
   loadStarted = false;
 
   private readonly subscriptions = new Subscription();
+  private readonly letterChanges = new ReplaySubject<string>(1);
   private readonly searchSubject = new Subject<string>();
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -105,10 +116,9 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
       );
 
       this.subscriptions.add(combineLatest([
-        this.route.paramMap,
+        this.letterChanges.pipe(distinctUntilChanged()),
         this.route.queryParamMap,
-      ]).subscribe(([pathParams, queryParams]) => {
-        this.letter = pathParams.get('letter') ?? '';
+      ]).subscribe(([, queryParams]) => {
         this.search = queryParams.get('q') ?? '';
         this.selectedCountryIds = queryParams.get('country') ? [queryParams.get('country')!] : [];
         this.selectedCityIds = queryParams.get('city') ? [queryParams.get('city')!] : [];
@@ -123,6 +133,12 @@ export class ZxAuthorBrowserComponent implements OnInit, OnDestroy {
     if (!this.loadOnViewport) {
       this.loadStarted = true;
       this.loadPage();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['letter']) {
+      this.letterChanges.next(this.letter);
     }
   }
 
